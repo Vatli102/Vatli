@@ -4,17 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đề Tham Khảo Bộ GD&ĐT 2025 - Trắc Nghiệm Vật Lí Trực Tuyến</title>
-    <!-- Automatic URL Trailing Slash Fix for Clean GitHub Pages relative paths -->
     <script>
         if (!window.location.pathname.endsWith('/') && !window.location.pathname.endsWith('.html')) {
             window.history.replaceState(null, '', window.location.pathname + '/' + window.location.search);
         }
     </script>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
@@ -32,7 +28,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-dark); line-height: 1.6; padding-bottom: 60px; }
 
-        /* Floating Capsule Nav */
         .nav-capsule-wrap {
             position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 99999;
             width: 96%; max-width: 760px; pointer-events: auto;
@@ -88,8 +83,8 @@
             background: white; border-radius: 14px; padding: 22px; margin-bottom: 20px;
             border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
-        .question-title { font-weight: 700; font-size: 1.02rem; color: var(--text-dark); margin-bottom: 14px; line-height: 1.6; }
-        .question-img { max-width: 100%; max-height: 380px; border-radius: 10px; margin: 12px auto; display: block; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #cbd5e1; }
+        .question-title { font-weight: 700; font-size: 1.02rem; color: var(--text-dark); margin-bottom: 14px; line-height: 1.65; white-space: pre-line; }
+        .question-img { max-width: 100%; max-height: 380px; border-radius: 10px; margin: 14px auto; display: block; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #cbd5e1; }
         
         .nuclide { display: inline-block; text-align: right; line-height: 1; vertical-align: middle; margin-right: 2px; font-size: 0.85em; font-weight: 800; }
         .nuclide sup { display: block; font-size: 0.75em; line-height: 1; }
@@ -106,7 +101,7 @@
         .option-prefix { background: white; border: 1px solid #cbd5e1; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.82rem; flex-shrink: 0; }
         .option-btn.selected .option-prefix { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .tf-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 8px; border-bottom: 1px solid var(--border); gap: 10px; }
+        .tf-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 8px; border-bottom: 1px solid var(--border); gap: 10px; line-height: 1.5; }
         .tf-buttons { display: flex; gap: 8px; flex-shrink: 0; }
         .btn-tf { padding: 6px 16px; border-radius: 8px; border: 1.5px solid var(--border); background: white; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.15s; }
         .btn-tf.selected-true { background: #dcfce7; border-color: #22c55e; color: #15803d; }
@@ -171,9 +166,10 @@
     <div class="exam-banner">
         <h1>📖 Đề Tham Khảo Bộ GD&ĐT 2025</h1>
         <p>Đề thi minh họa chính thức Bộ Giáo dục & Đào tạo (Kèm Hình Vẽ & Ký Hiệu Hạt Nhân Sắc Nét)</p>
-        <span class="badge-exam">⏱ Thời gian làm bài: 50 Phút | 28 Câu Hỏi Trắc Nghiệm (Có Đồ Thị & Sơ Đồ)</span>
+        <span class="badge-exam">⏱ Thời gian làm bài: 50 Phút | 28 Câu Hỏi Trắc Nghiệm (Có Đồ Thị & Sơ Đồ Chi Tiết)</span>
     </div>
 
+    <!-- Khung Nhập Thông Tin -->
     <div id="studentLoginCard" class="login-card">
         <div style="width: 50px; height: 50px; background: #e0e7ff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 12px auto;">📝</div>
         <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 8px;">THÔNG TIN HỌC SINH LÀM BÀI THI</h2>
@@ -190,6 +186,7 @@
         <button type="button" class="btn-start" onclick="startQuizExam()">🚀 BẮT ĐẦU LÀM BÀI THI</button>
     </div>
 
+    <!-- Nội dung bài thi tương tác -->
     <div id="quizContent" style="display: none;">
         <div class="section-header">📌 PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn (18 câu)</div>
         <div id="part1Container"></div>
@@ -268,7 +265,6 @@ let userPart3 = {};
 function fixImgPath(src) {
     if (!src) return '';
     if (src.startsWith('http') || src.startsWith('data:')) return src;
-    // Strip leading ./ or /
     let clean = src.replace(/^\.\//, '').replace(/^\//, '');
     return './' + clean;
 }
