@@ -513,6 +513,8 @@
     </footer>
 
     <script>
+        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
+
         function openSubscribeModal() {
             document.getElementById('subscribeModal').classList.add('active');
         }
@@ -530,6 +532,24 @@
             const subs = JSON.parse(localStorage.getItem('user_subscriptions') || '[]');
             subs.push({ name, contact, date: new Date().toISOString() });
             localStorage.setItem('user_subscriptions', JSON.stringify(subs));
+
+            // Tự động gửi thông tin Đăng ký về Google Sheets
+            if (typeof GOOGLE_SHEETS_URL !== 'undefined' && GOOGLE_SHEETS_URL) {
+                try {
+                    fetch(GOOGLE_SHEETS_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "text/plain;charset=utf-8" },
+                        body: JSON.stringify({
+                            name: name,
+                            className: "ĐĂNG KÝ THEO DÕI",
+                            lesson: "Đăng ký nhận bài mới (Trang chủ)",
+                            correct: contact,
+                            score: "Đăng ký"
+                        }),
+                        redirect: "follow"
+                    }).catch(err => console.error(err));
+                } catch(err){}
+            }
 
             document.getElementById('subscribeForm').style.display = 'none';
             document.getElementById('subSuccess').style.display = 'block';

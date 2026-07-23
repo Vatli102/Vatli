@@ -459,6 +459,28 @@ function saveNavSub(e) {
     var subs = JSON.parse(localStorage.getItem('user_subscriptions') || '[]');
     subs.push({ name: name, contact: contact, date: new Date().toISOString() });
     localStorage.setItem('user_subscriptions', JSON.stringify(subs));
+    
+    if (typeof GOOGLE_SHEETS_URL !== 'undefined' && GOOGLE_SHEETS_URL) {
+        try {
+            fetch(GOOGLE_SHEETS_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({
+                    name: name,
+                    className: "ĐĂNG KÝ THEO DÕI",
+                    lesson: "Đăng ký nhận thông báo bài học",
+                    correct: contact,
+                    score: "Đăng ký"
+                }),
+                redirect: "follow"
+            }).catch(function(err){ console.error(err); });
+        } catch(err){}
+    }
+
+    document.getElementById('navSubMsg').style.display = 'block';
+    setTimeout(function() { closeNavSubModal(); }, 1500);
+});
+    localStorage.setItem('user_subscriptions', JSON.stringify(subs));
     document.getElementById('navSubMsg').style.display = 'block';
     setTimeout(function() { closeNavSubModal(); }, 1500);
 }
@@ -1175,6 +1197,7 @@ function saveNavSub(e) {
     </script>
 </body>
 </html>
+
 
 
 
