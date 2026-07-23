@@ -1,0 +1,6200 @@
+﻿<!DOCTYPE html>
+
+
+
+
+
+
+
+<html lang="vi">
+
+
+
+
+
+
+
+<head>
+
+
+
+
+
+
+
+    <meta charset="UTF-8">
+
+
+
+
+
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
+
+
+
+    <title>Bài Tập Trực Tuyến: Bài 2 - Mô tả dao động điều hòa</title>
+
+
+
+
+
+
+
+    <!-- Google Fonts -->
+
+
+
+
+
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+
+
+
+
+
+    <!-- FontAwesome Icons -->
+
+
+
+
+
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+
+
+
+
+
+    <!-- MathJax for LaTeX Equations -->
+
+
+
+
+
+
+
+    <script>
+
+
+
+
+
+
+
+    const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxurUg71wnhjSSMlULQ7UKr40fwGyuz30xpvOBzVAPvxeHaEFm9JWRBToi2hDOVOvsdOw/exec";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        window.MathJax = {
+
+
+
+
+
+
+
+            tex: {
+
+
+
+
+
+
+
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+
+
+
+
+
+
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+
+
+
+
+
+
+                processEscapes: true
+
+
+
+
+
+
+
+            },
+
+
+
+
+
+
+
+            options: {
+
+
+
+
+
+
+
+                ignoreHtmlClass: 'tex2jax_ignore',
+
+
+
+
+
+
+
+                processHtmlClass: 'tex2jax_process'
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+        };
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    // Xử lý bắt đầu làm bài và lưu thông tin học sinh
+
+    window.startBloggerQuiz = function() {
+
+        const name = document.getElementById('studentName').value.trim();
+
+        const className = document.getElementById('studentClass').value.trim();
+
+        if (!name || !className) {
+
+            alert("Vui lòng điền đầy đủ thông tin Họ tên, Lớp!");
+
+            return;
+
+        }
+
+        localStorage.setItem('saved_student_name', name);
+
+        localStorage.setItem('saved_student_class', className);
+
+        
+
+        // Đồng bộ giá trị sang form cũ của file gốc (nếu có) để tránh lỗi chấm điểm
+
+        const oldClassInput = document.getElementById('className') || document.getElementById('class');
+
+        if (oldClassInput) {
+
+            oldClassInput.value = className;
+
+        }
+
+        const oldNameInput = document.getElementById('name');
+
+        if (oldNameInput) {
+
+            oldNameInput.value = name;
+
+        }
+
+        
+
+        document.getElementById('studentLoginCard').style.display = 'none';
+
+        document.getElementById('quizRealContent').style.display = 'block';
+
+    };
+
+    
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const savedName = localStorage.getItem('saved_student_name');
+
+        const savedClass = localStorage.getItem('saved_student_class');
+
+        if (savedName) document.getElementById('studentName').value = savedName;
+
+        if (savedClass) document.getElementById('studentClass').value = savedClass;
+
+    });
+
+
+
+
+
+
+
+            
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+
+
+
+
+
+
+
+    // Xử lý bắt đầu làm bài và lưu thông tin học sinh
+
+    window.startBloggerQuiz = function() {
+
+        const name = document.getElementById('studentName').value.trim();
+
+        const className = document.getElementById('studentClass').value.trim();
+
+        if (!name || !className) {
+
+            alert("Vui lòng điền đầy đủ thông tin Họ tên, Lớp!");
+
+            return;
+
+        }
+
+        localStorage.setItem('saved_student_name', name);
+
+        localStorage.setItem('saved_student_class', className);
+
+        
+
+        // Đồng bộ giá trị sang form cũ của file gốc (nếu có) để tránh lỗi chấm điểm
+
+        const oldClassInput = document.getElementById('className') || document.getElementById('class');
+
+        if (oldClassInput) {
+
+            oldClassInput.value = className;
+
+        }
+
+        const oldNameInput = document.getElementById('name');
+
+        if (oldNameInput) {
+
+            oldNameInput.value = name;
+
+        }
+
+        
+
+        document.getElementById('studentLoginCard').style.display = 'none';
+
+        document.getElementById('quizRealContent').style.display = 'block';
+
+    };
+
+    
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const savedName = localStorage.getItem('saved_student_name');
+
+        const savedClass = localStorage.getItem('saved_student_class');
+
+        if (savedName) document.getElementById('studentName').value = savedName;
+
+        if (savedClass) document.getElementById('studentClass').value = savedClass;
+
+    });
+
+
+
+
+
+
+
+            
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+    <!-- Canvas Confetti -->
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js">
+
+
+
+
+
+
+
+    // Xử lý bắt đầu làm bài và lưu thông tin học sinh
+
+    window.startBloggerQuiz = function() {
+
+        const name = document.getElementById('studentName').value.trim();
+
+        const className = document.getElementById('studentClass').value.trim();
+
+        if (!name || !className) {
+
+            alert("Vui lòng điền đầy đủ thông tin Họ tên, Lớp!");
+
+            return;
+
+        }
+
+        localStorage.setItem('saved_student_name', name);
+
+        localStorage.setItem('saved_student_class', className);
+
+        
+
+        // Đồng bộ giá trị sang form cũ của file gốc (nếu có) để tránh lỗi chấm điểm
+
+        const oldClassInput = document.getElementById('className') || document.getElementById('class');
+
+        if (oldClassInput) {
+
+            oldClassInput.value = className;
+
+        }
+
+        const oldNameInput = document.getElementById('name');
+
+        if (oldNameInput) {
+
+            oldNameInput.value = name;
+
+        }
+
+        
+
+        document.getElementById('studentLoginCard').style.display = 'none';
+
+        document.getElementById('quizRealContent').style.display = 'block';
+
+    };
+
+    
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const savedName = localStorage.getItem('saved_student_name');
+
+        const savedClass = localStorage.getItem('saved_student_class');
+
+        if (savedName) document.getElementById('studentName').value = savedName;
+
+        if (savedClass) document.getElementById('studentClass').value = savedClass;
+
+    });
+
+
+
+
+
+
+
+            
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    <style>
+        :root {
+            --bg-gradient: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: rgba(15, 23, 42, 0.15);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --primary-color: #4f46e5;
+            --primary-hover: #3730a3;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        .container, .container * {
+            box-sizing: border-box !important;
+        }
+
+        body {
+            background: var(--bg-gradient) !important;
+            color: var(--text-primary) !important;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-y: auto;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-bg) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+            position: relative;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: sticky;
+            top: 0;
+            background: var(--card-bg) !important;
+            padding: 1rem 0;
+            margin-top: -2.5rem;
+            margin-bottom: 2rem;
+            z-index: 10;
+            border-bottom: 1px solid var(--border-color) !important;
+        }
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.08) !important;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #4f46e5, #06b6d4) !important;
+            transition: width 0.3s ease;
+        }
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-secondary) !important;
+            margin-top: 0.5rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary) !important;
+            -webkit-text-fill-color: var(--text-primary) !important;
+            background: none !important;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-secondary) !important;
+            font-size: 0.95rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            border-left: 4px solid var(--primary-color) !important;
+            padding-left: 0.75rem;
+            margin: 2rem 0 1.25rem 0;
+            color: var(--text-primary) !important;
+        }
+
+        .section-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary) !important;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Question Cards */
+        .question-card {
+            background: #f8fafc !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .question-card:hover {
+            border-color: rgba(79, 70, 229, 0.3) !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05) !important;
+        }
+
+        .question-header {
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+            display: block !important;
+            color: var(--text-primary) !important;
+        }
+
+        .question-num {
+            color: var(--primary-color) !important;
+            display: inline !important;
+            margin-right: 0.25rem !important;
+        }
+
+        /* Part I: Option Cards */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        .option-card {
+            background: #ffffff !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s ease;
+            text-align: left;
+            color: var(--text-primary) !important;
+        }
+
+        .option-card:hover {
+            background: #f1f5f9 !important;
+            border-color: rgba(79, 70, 229, 0.4) !important;
+        }
+
+        .option-card.selected {
+            background: #e0e7ff !important;
+            border-color: var(--primary-color) !important;
+        }
+
+        .option-letter {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f1f5f9 !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+
+        .option-card.selected .option-letter {
+            background: var(--primary-color) !important;
+            color: white !important;
+            border-color: var(--primary-color) !important;
+        }
+
+        .option-text {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: var(--text-primary) !important;
+            min-width: 0 !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
+        }
+
+        /* Part II: True/False Rows */
+        .tf-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .tf-row {
+            background: #ffffff !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .tf-text {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: var(--text-primary) !important;
+            min-width: 0 !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
+        }
+
+        .tf-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .tf-btn {
+            padding: 0.4rem 0.9rem;
+            border: 1px solid var(--border-color) !important;
+            background: #f8fafc !important;
+            color: var(--text-secondary) !important;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .tf-btn:hover {
+            background: #e2e8f0 !important;
+            color: var(--text-primary) !important;
+        }
+
+        .tf-btn.selected-true {
+            background: var(--success-color) !important;
+            color: white !important;
+            border-color: var(--success-color) !important;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2) !important;
+        }
+
+        .tf-btn.selected-false {
+            background: var(--error-color) !important;
+            color: white !important;
+            border-color: var(--error-color) !important;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.2) !important;
+        }
+
+        /* Part III: Short Answer */
+        .short-answer-input {
+            width: 100%;
+            max-width: 250px;
+            background: #ffffff !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary) !important;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .short-answer-input:focus {
+            border-color: var(--primary-color) !important;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15) !important;
+        }
+
+        /* Thu nhỏ riêng phần giải thích đáp án xuống 85% để không bị tràn màn hình */
+        body .container .question-card .explanation-box,
+        body .container .question-card .explanation,
+        .explanation-box, .explanation {
+            margin-top: 1rem !important;
+            margin-bottom: 1rem !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            padding: 0.8rem 1rem !important;
+            background: #f0f2ff !important;
+            border-left: 4px solid var(--primary-color) !important;
+            border-radius: 8px !important;
+            font-size: 0.82rem !important;
+            line-height: 1.5 !important;
+            color: var(--text-primary) !important;
+            display: none;
+            width: 85% !important;
+            max-width: 85% !important;
+            word-wrap: break-word !important;
+            box-sizing: border-box !important;
+            position: relative !important;
+            left: 0 !important;
+            right: 0 !important;
+            overflow-x: auto !important; /* Hỗ trợ cuộn ngang bên trong khung 85% nếu nội dung quá dài */
+        }
+
+        .option-card.correct {
+            border-color: var(--success-color) !important;
+            background: rgba(16, 185, 129, 0.1) !important;
+            color: var(--success-color) !important;
+        }
+
+        .option-card.incorrect {
+            border-color: var(--error-color) !important;
+            background: rgba(239, 68, 68, 0.1) !important;
+            color: var(--error-color) !important;
+        }
+
+        .tf-row.correct-row {
+            border-color: rgba(16, 185, 129, 0.4) !important;
+        }
+
+        .tf-row.incorrect-row {
+            border-color: rgba(239, 68, 68, 0.4) !important;
+        }
+
+        .input-correct {
+            border-color: var(--success-color) !important;
+            background: rgba(16, 185, 129, 0.05) !important;
+        }
+
+        .input-incorrect {
+            border-color: var(--error-color) !important;
+            background: rgba(239, 68, 68, 0.05) !important;
+        }
+
+        .correct-answer-text {
+            color: var(--success-color) !important;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Action Buttons */
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .btn {
+            padding: 0.85rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%) !important;
+            color: white !important;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3) !important;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.5) !important;
+        }
+
+        .btn-retry {
+            background: #ffffff !important;
+            color: var(--text-primary) !important;
+            border: 1px solid var(--border-color) !important;
+            display: none;
+        }
+
+        .btn-retry:hover {
+            background: #f1f5f9 !important;
+        }
+
+        /* Results Panel */
+        .results-panel, .result-panel {
+            background: #f8fafc !important;
+            border: 2px solid var(--primary-color) !important;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            display: none;
+            animation: slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            color: var(--text-primary) !important;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #f0f2ff !important;
+            border: 4px solid var(--primary-color) !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 1.5rem auto;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.15) !important;
+        }
+
+        .score-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary) !important;
+        }
+
+        .score-desc {
+            color: var(--text-secondary) !important;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .details-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .summary-card {
+            background: #ffffff !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .summary-num {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary) !important;
+        }
+
+        .summary-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary) !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem !important;
+                border-radius: 16px !important;
+            }
+            .question-card {
+                padding: 1rem !important;
+                border-radius: 12px !important;
+            }
+            /* Thu nhỏ riêng công thức toán/lý trong phần giải thích để không bao giờ bị tràn trên di động */
+            .explanation-box mjx-container {
+                font-size: 0.85em !important;
+            }
+            .progress-container {
+                position: relative !important;
+                top: auto !important;
+                margin-top: 0 !important;
+                margin-bottom: 1.5rem !important;
+                padding: 0.5rem 0 !important;
+                background: transparent !important;
+            }
+            .tf-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+            .tf-buttons {
+                align-self: flex-end;
+            }
+            .details-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    
+        .competency-tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .tag-ntvl { background: #e0e7ff !important; color: #4338ca !important; border: 1px solid #c7d2fe !important; }
+        .tag-thtn { background: #ecfeff !important; color: #0e7490 !important; border: 1px solid #c5f2f7 !important; }
+        .tag-vdkt { background: #d1fae5 !important; color: #047857 !important; border: 1px solid #a7f3d0 !important; }
+
+        /* Styles cho Khung Đăng Nhập Học Sinh */
+        .card-login {
+            background: #f8fafc !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            color: var(--text-primary) !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+        }
+        .card-login h3 {
+            margin-top: 0;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: var(--text-primary) !important;
+        }
+        .card-login .input-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .card-login label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary) !important;
+            text-align: left;
+        }
+        .card-login input {
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color) !important;
+            background: #ffffff !important;
+            color: var(--text-primary) !important;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .card-login input:focus {
+            border-color: var(--primary-color) !important;
+        }
+        .card-login button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: none;
+            background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%) !important;
+            color: #fff !important;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 10px;
+        }
+        .card-login button:hover {
+            transform: translateY(-1px);
+        }
+            
+        /* 16:9 Aspect Ratio Responsive Wrapper */
+        .bq-video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+            border: 1px solid var(--border-color) !important;
+            background-color: #f1f5f9 !important;
+            margin-bottom: 25px;
+        }
+        .bq-video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+</style>
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+
+<body class="tex2jax_ignore">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container">
+
+
+
+
+
+
+
+    <!-- Khung Nhập Thông Tin Học Sinh -->
+
+
+
+
+
+
+
+    <div id="studentLoginCard" class="card-login">
+
+
+
+
+
+
+
+        <h3>THÔNG TIN HỌC SINH</h3>
+
+
+
+
+
+
+
+        <p style="font-size: 0.85rem; color: #cbd5e1; text-align: center; margin-bottom: 20px;">Vui lòng điền đầy đủ thông tin để bắt đầu làm bài trắc nghiệm.</p>
+
+
+
+
+
+
+
+        <div class="input-group">
+
+
+
+
+
+
+
+            <label for="studentName">Họ và tên <span style="color: #ef4444;">*</span></label>
+
+
+
+
+
+
+
+            <input type="text" id="studentName" placeholder="Ví dụ: Nguyễn Văn A" required>
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+        <div class="input-group">
+
+
+
+
+
+
+
+            <label for="studentClass">Lớp <span style="color: #ef4444;">*</span></label>
+
+
+
+
+
+
+
+            <input type="text" id="studentClass" placeholder="Ví dụ: 11A1" required>
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        <button type="button" onclick="startBloggerQuiz()">Bắt đầu làm bài <i class="fa-solid fa-circle-play" style="margin-left:5px;"></i></button>
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    <!-- Nội dung bài trắc nghiệm (ẩn mặc định) -->
+
+
+
+
+
+
+
+    <div id="quizRealContent" style="display: none;">
+
+
+
+
+
+
+
+    <div class="progress-container">
+
+
+
+
+
+
+
+        <div class="progress-bar-bg">
+
+
+
+
+
+
+
+            <div class="progress-bar-fill" id="progressBar"></div>
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+        <div class="progress-text">
+
+
+
+
+
+
+
+            <span>Tiến độ làm bài</span>
+
+
+
+
+
+
+
+            <span id="progressLabel">0/17 ý hoàn thành</span>
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <header>
+
+
+
+
+
+
+
+        <h1 id="quizTitle">Bài 2: Mô tả dao động điều hòa</h1>
+
+
+
+
+
+
+
+        <p>Phiếu Bài Tập Trắc Nghiệm Vật Lí 11 Đánh Giá Năng Lực (GDPT 2018)</p>
+
+
+
+
+
+
+
+    </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Results Panel -->
+
+
+
+
+
+
+
+    <div class="results-panel" id="resultsPanel">
+
+
+
+
+
+
+
+        <div class="score-circle" id="scoreCircle">0.0</div>
+
+
+
+
+
+
+
+        <div class="score-title" id="scoreTitle">Kết Quả Bài Làm</div>
+
+
+
+
+
+
+
+        <div class="score-desc" id="scoreDesc">Chúc mừng bạn đã hoàn thành bài tập trắc nghiệm!</div>
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        <div class="details-summary">
+
+
+
+
+
+
+
+            <div class="summary-card">
+
+
+
+
+
+
+
+                <div class="summary-num" id="correctCountText" style="color: var(--success-color);">0</div>
+
+
+
+
+
+
+
+                <div class="summary-label">Ý Đúng</div>
+
+
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+
+            <div class="summary-card">
+
+
+
+
+
+
+
+                <div class="summary-num" id="incorrectCountText" style="color: var(--error-color);">0</div>
+
+
+
+
+
+
+
+                <div class="summary-label">Ý Sai / Trống</div>
+
+
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+
+            <div class="summary-card">
+
+
+
+
+
+
+
+                <div class="summary-num" id="gradeText" style="color: #60a5fa;">0.0/11</div>
+
+
+
+
+
+
+
+                <div class="summary-label">Điểm Thang 10</div>
+
+
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <form id="quizForm">
+
+
+
+
+
+
+
+        <!-- Question areas will be rendered here by JS -->
+
+
+
+
+
+
+
+        <div id="quizContent" class="tex2jax_process"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="actions">
+
+
+
+
+
+
+
+            <button type="button" class="btn btn-submit" id="btnSubmit" onclick="gradeQuiz()">
+
+
+
+
+
+
+
+                <i class="fa-solid fa-paper-plane"></i> Nộp Bài & Xem Giải Thích
+
+
+
+
+
+
+
+            </button>
+
+
+
+
+
+
+
+            <button type="button" class="btn btn-retry" id="btnRetry" onclick="resetQuiz()">
+
+
+
+
+
+
+
+                <i class="fa-solid fa-rotate-left"></i> Làm Lại
+
+
+
+
+
+
+
+            </button>
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+    </form>
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+
+
+
+
+
+
+    // Quiz data containing questions, options, answers, and explanations
+
+
+
+
+
+
+
+    const quizData = {
+
+
+
+
+
+
+
+        title: "BÀI 2: MÔ TẢ DAO ĐỘNG ĐIỀU HÒA",
+
+
+
+
+
+
+
+        part1: [
+
+
+
+
+
+
+
+            {
+
+
+
+
+
+
+
+                id: 1,
+
+
+
+
+
+
+
+                competency: "NTVL",
+
+
+
+
+
+
+
+                question: "Chu kỳ $T$ của một vật dao động điều hòa là",
+
+
+
+
+
+
+
+                options: {
+
+
+
+
+
+
+
+                    A: "số dao động toàn phần vật thực hiện được trong một giây.",
+
+
+
+
+
+
+
+                    B: "khoảng thời gian ngắn nhất sau đó trạng thái dao động được lặp lại như cũ.",
+
+
+
+
+
+
+
+                    C: "tốc độ biến thiên pha của dao động theo thời gian.",
+
+
+
+
+
+
+
+                    D: "độ lệch pha giữa hai dao động cùng chu kỳ."
+
+
+
+
+
+
+
+                },
+
+
+
+
+
+
+
+                answer: "B",
+
+
+
+
+
+
+
+                explanation: "Chu kỳ $T$ của dao động điều hòa là khoảng thời gian ngắn nhất sau đó trạng thái dao động của vật được lặp lại như cũ (đi hết 1 dao động toàn phần)."
+
+
+
+
+
+
+
+            },
+
+
+
+
+
+
+
+            {
+
+
+
+
+
+
+
+                id: 2,
+
+
+
+
+
+
+
+                competency: "NTVL",
+
+
+
+
+
+
+
+                question: "Đơn vị đo của tần số dao động điều hòa $f$ là",
+
+
+
+
+
+
+
+                options: {
+
+
+
+
+
+
+
+                    A: "giây (s).",
+
+
+
+
+
+
+
+                    B: "Hertz (Hz).",
+
+
+
+
+
+
+
+                    C: "radian trên giây (rad/s).",
+
+
+
+
+
+
+
+                    D: "radian (rad)."
+
+
+
+
+
+
+
+                },
+
+
+
+
+
+
+
+                answer: "B",
+
+
+
+
+
+
+
+                explanation: "Đơn vị chuẩn của tần số $f$ là Hertz (Hz)."
+
+
+
+
+
+
+
+            },
+
+
+
+
+
+
+
+            {
+
+
+
+
+
+
+
+                id: 3,
+
+
+
+
+
+
+
+                competency: "NTVL",
+
+
+
+
+
+
+
+                question: "Mối liên hệ giữa tần số góc $\\omega$, chu kỳ $T$ và tần số $f$ của dao động điều hòa là",
+
+
+
+
+
+
+
+                options: {
+
+
+
+
+
+
+
+                    A: "$\\omega = \\frac{2\\pi}{T} = 2\\pi f$.",
+
+
+
+
+
+
+
+                    B: "$\\omega = 2\\pi T = \\frac{2\\pi}{f}$.",
+
+
+
+
+
+
+
+                    C: "$\\omega = \\frac{T}{2\\pi} = \\frac{2\\pi}{f}$.",
+
+
+
+
+
+
+
+                    D: "$\\omega = \\frac{2\\pi}{T} = \\frac{2\\pi}{f}$."
+
+
+
+
+
+
+
+                },
+
+
+
+
+
+
+
+                answer: "A",
+
+
+
+
+
+
+
+                explanation: "Công thức liên hệ chuẩn giữa tần số góc, chu kỳ và tần số là $\\omega = \\frac{2\\pi}{T} = 2\\pi f$."
+
+
+
+
+
+
+
+            },
+
+
+
+
+
+
+
+            {
+
+
+
+
+
+
+
+                id: 4,
+
+
+
+
+
+
+
+                competency: "NTVL",
+
+
+
+
+
+
+
+                question: "Khi so sánh hai dao động điều hòa cùng chu kỳ, đại lượng đặc trưng cho sự lệch nhau về trạng thái của chúng ở cùng một thời điểm là",
+
+
+
+
+
+
+
+                options: {
+
+
+
+
+
+
+
+                    A: "biên độ dao động.",
+
+
+
+
+
+
+
+                    B: "tần số góc.",
+
+
+
+
+
+
+
+                    C: "độ lệch pha.",
+
+
+
+
+
+
+
+                    D: "li độ dao động."
+
+
+
+
+
+
+
+                },
+
+
+
+
+
+
+
+                answer: "C",
+
+
+
+
+
+
+
+                explanation: "Độ lệch pha $\\Delta \\varphi$ là đại lượng đặc trưng cho sự lệch nhau về trạng thái (vị trí, hướng) giữa hai dao động cùng tần số tại cùng một thời điểm."
+
+
+
+
+
+
+
+            },
+
+
+
+
+
+
+
+            {
+
+
+
+
+
+
+
+                id: 5,
+
+
+
+
+
+
+
+                competency: "VDKT",
+
+
+
+
+
+
+
+                question: "Hai dao động điều hòa cùng chu kỳ có phương trình li độ lần lượt là $x_1 = A_1 \\cos(\\omega t + \\frac{\\pi}{3})$ và $x_2 = A_2 \\cos(\\omega t - \\frac{2\\pi}{3})$. Nhận xét nào sau đây là <strong>đúng</strong> về pha của hai dao động?",
+
+
+
+
+
+
+
+                options: {
+
+
+
+
+
+
+
+                    A: "Hai dao động cùng pha.",
+
+
+
+
+
+
+
+                    B: "Hai dao động ngược pha.",
+
+
+
+
+
+
+
+                    C: "Hai dao động vuông pha.",
+
+
+
+
+
+
+
+                    D: "Dao động thứ nhất trễ pha hơn dao động thứ hai."
+
+
+
+
+
+
+
+                },
+
+
+
+
+
+
+
+                answer: "B",
+
+
+
+
+
+
+
+                explanation: "Độ lệch pha giữa hai dao động: $\\Delta \\varphi = \\varphi_1 - \\varphi_2 = \\frac{\\pi}{3} - (-\\frac{2\\pi}{3}) = \\pi\\,\\text{rad}$. Lệch pha bằng $\\pi\\,\\text{rad}$ nghĩa là hai dao động ngược pha hoàn toàn."
+
+
+
+
+
+
+
+            },
+
+
+
+
+
+
+
+            {
+
+
+
+
+
+
+
+                id: 6,
+
+
+
+
+
+
+
+                competency: "THTN",
+
+
+
+
+
+
+
+                question: "Trên đồ thị li độ - thời gian $x-t$ của một vật dao động điều hòa, khoảng thời gian giữa hai đỉnh sóng liên tiếp đại diện cho đại lượng nào?",
+
+
+
+
+
+
+
+                options: {
+
+
+
+
+
+
+
+                    A: "Biên độ dao động $A$.",
+
+
+
+
+
+
+
+                    B: "Chu kỳ dao động $T$.",
+
+
+
+
+
+
+
+                    C: "Tần số dao động $f$.",
+
+
+
+
+
+
+
+                    D: "Pha ban đầu $\\varphi$."
+
+
+
+
+
+
+
+                },
+
+
+
+
+
+
+
+                answer: "B",
+
+
+
+
+
+
+
+                explanation: "Trục hoành biểu thị thời gian $t$. Khoảng cách thời gian giữa hai đỉnh sóng liên tiếp (hai biên dương liên tiếp) tương ứng với đúng 1 Chu kỳ dao động $T$."
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+        ],
+
+
+
+
+
+
+
+        part2: [
+
+
+
+
+
+
+
+            {
+
+
+
+
+
+
+
+                id: 1,
+
+
+
+
+
+
+
+                context: "Xét hai vật dao động điều hòa cùng tần số có đồ thị li độ - thời gian song song và lệch nhau trên hệ tọa độ.",
+
+
+
+
+
+
+
+                subQuestions: [
+
+
+
+
+
+
+
+                    {
+
+
+
+
+
+
+
+                        key: "a",
+
+
+
+
+
+
+
+                        competency: "NTVL",
+
+
+
+
+
+
+
+                        text: "Hai dao động cùng tần số thì có chu kỳ dao động bằng nhau.",
+
+
+
+
+
+
+
+                        answer: "Đ",
+
+
+
+
+
+
+
+                        explanation: "Vì chu kỳ $T = 2\\pi / \\omega$ nên cùng tần số thì chu kỳ bằng nhau."
+
+
+
+
+
+
+
+                    },
+
+
+
+
+
+
+
+                    {
+
+
+
+
+
+
+
+                        key: "b",
+
+
+
+
+
+
+
+                        competency: "NTVL",
+
+
+
+
+
+
+
+                        text: "Độ lệch pha giữa hai dao động cùng chu kỳ là đại lượng không đổi theo thời gian.",
+
+
+
+
+
+
+
+                        answer: "Đ",
+
+
+
+
+
+
+
+                        explanation: "Độ lệch pha \\Delta \\varphi = \\varphi_2 - \\varphi_1 của hai dao động cùng chu kỳ là một hằng số không đổi theo thời gian."
+
+
+
+
+
+
+
+                    },
+
+
+
+
+
+
+
+                    {
+
+
+
+
+
+
+
+                        key: "c",
+
+
+
+
+
+
+
+                        competency: "VDKT",
+
+
+
+
+
+
+
+                        text: "Nếu hai dao động ngược pha nhau thì tại mọi thời điểm, li độ của chúng luôn có giá trị bằng nhau nhưng ngược dấu.",
+
+
+
+
+
+
+
+                        answer: "S",
+
+
+
+
+
+
+
+                        explanation: "Hai dao động ngược pha có li độ ngược dấu ($x_1 = -kx_2$ với $k > 0$), nhưng độ lớn chỉ bằng nhau khi chúng có cùng biên độ. Nếu biên độ khác nhau thì độ lớn li độ sẽ khác nhau."
+
+
+
+
+
+
+
+                    },
+
+
+
+
+
+
+
+                    {
+
+
+
+
+
+
+
+                        key: "d",
+
+
+
+
+
+
+
+                        competency: "NTVL",
+
+
+
+
+
+
+
+                        text: "Hai dao động vuông pha nhau khi độ lệch pha của chúng bằng một số nguyên lần của \\pi rad.",
+
+
+
+
+
+
+
+                        answer: "S",
+
+
+
+
+
+
+
+                        explanation: "Hai dao động vuông pha nhau khi độ lệch pha của chúng bằng một số lẻ lần của \\frac{\\pi}{2} rad, tức là \\Delta \\varphi = (2k + 1)\\frac{\\pi}{2} rad."
+
+
+
+
+
+
+
+                    }
+
+
+
+
+
+
+
+                ]
+
+
+
+
+
+
+
+            },
+
+
+
+
+
+
+
+            {
+
+
+
+
+
+
+
+                id: 2,
+
+
+
+
+
+
+
+                context: "Xét các đặc điểm của các đại lượng đặc trưng mô tả dao động điều hòa.",
+
+
+
+
+
+
+
+                subQuestions: [
+
+
+
+
+
+
+
+                    {
+
+
+
+
+
+
+
+                        key: "a",
+
+
+
+
+
+
+
+                        competency: "NTVL",
+
+
+
+
+
+
+
+                        text: "Biên độ, chu kỳ và tần số của một dao động điều hòa xác định là những hằng số không thay đổi theo thời gian.",
+
+
+
+
+
+
+
+                        answer: "Đ",
+
+
+
+
+
+
+
+                        explanation: "Các đại lượng đặc trưng của một dao động điều hòa xác định là hằng số."
+
+
+
+
+
+
+
+                    },
+
+
+
+
+
+
+
+                    {
+
+
+
+
+
+
+
+                        key: "b",
+
+
+
+
+
+
+
+                        competency: "NTVL",
+
+
+
+
+
+
+
+                        text: "Pha ban đầu $\\varphi$ phụ thuộc vào cách chọn mốc thời gian $t = 0$.",
+
+
+
+
+
+
+
+                        answer: "Đ",
+
+
+
+
+
+
+
+                        explanation: "Pha ban đầu $\\varphi$ phụ thuộc vào việc chọn gốc thời gian $t = 0$ vật ở đâu và đi theo chiều nào."
+
+
+
+
+
+
+
+                    },
+
+
+
+
+
+
+
+                    {
+
+
+
+
+
+
+
+                        key: "c",
+
+
+
+
+
+
+
+                        competency: "VDKT",
+
+
+
+
+
+
+
+                        text: "Hai dao động cùng chu kỳ có độ lệch pha $\\Delta \\varphi = \\pi\\,\\text{rad}$ thì tại mọi thời điểm, li độ của chúng luôn cùng dấu.",
+
+
+
+
+
+
+
+                        answer: "S",
+
+
+
+
+
+
+
+                        explanation: "Độ lệch pha bằng $\\pi$ (ngược pha) thì tại mọi thời điểm, li độ hai vật luôn trái dấu nhau: $x_1 = -kx_2$ (với $k > 0$)."
+
+
+
+
+
+
+
+                    },
+
+
+
+
+
+
+
+                    {
+
+
+
+
+
+
+
+                        key: "d",
+
+
+
+
+
+
+
+                        competency: "THTN",
+
+
+
+
+
+
+
+                        text: "Từ đồ thị li độ - thời gian, ta có thể xác định được cả biên độ, chu kỳ và pha ban đầu của dao động.",
+
+
+
+
+
+
+
+                        answer: "Đ",
+
+
+
+
+
+
+
+                        explanation: "Từ đồ thị ta đọc được chiều cao đỉnh ($A$), khoảng cách giữa hai đỉnh ($T$) và vị trí lúc $t = 0$ để suy ra $\\varphi$."
+
+
+
+
+
+
+
+                    }
+
+
+
+
+
+
+
+                ]
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+        ],
+
+
+
+
+
+
+
+        part3: [
+
+
+
+
+
+
+
+            {
+
+
+
+
+
+
+
+                id: 1,
+
+
+
+
+
+
+
+                competency: "VDKT",
+
+
+
+
+
+
+
+                question: "Một vật dao động điều hòa có chu kỳ $T = 0,2\\,\\text{s}$. Tần số dao động $f$ của vật có giá trị là bao nhiêu $\\text{Hz}$?",
+
+
+
+
+
+
+
+                answer: "5",
+
+
+
+
+
+
+
+                explanation: "Tần số dao động $f = \\frac{1}{T} = \\frac{1}{0,2} = 5\\,\\text{Hz}$."
+
+
+
+
+
+
+
+            },
+
+
+
+
+
+
+
+            {
+
+
+
+
+
+
+
+                id: 2,
+
+
+
+
+
+
+
+                competency: "THTN",
+
+
+
+
+
+
+
+                question: "Trên đồ thị li độ - thời gian của một chất điểm dao động điều hòa, khoảng cách thời gian giữa 3 đỉnh sóng liên tiếp (tương ứng với 3 vị trí biên dương liên tiếp) đo được là $2\\,\\text{s}$. Hãy xác định chu kỳ dao động $T$ của chất điểm (theo đơn vị giây).",
+
+
+
+
+
+
+
+                answer: "1",
+
+
+
+
+
+
+
+                explanation: "Khoảng cách giữa 3 đỉnh sóng liên tiếp tương ứng với đúng 2 chu kỳ dao động ($2T$). Ta có: $2T = 2\\,\\text{s} \\implies T = 1\\,\\text{s}$."
+
+
+
+
+
+
+
+            },
+
+
+
+
+
+
+
+            {
+
+
+
+
+
+
+
+                id: 3,
+
+
+
+
+
+
+
+                competency: "VDKT",
+
+
+
+
+
+
+
+                question: "Hai dao động điều hòa cùng chu kỳ có pha ban đầu lần lượt là $\\varphi_1 = \\frac{\\pi}{3}\\,\\text{rad}$ và $\\varphi_2 = -\\frac{\\pi}{6}\\,\\text{rad}$. Tính độ lớn độ lệch pha giữa hai dao động này theo đơn vị độ ($^\\circ$).",
+
+
+
+
+
+
+
+                answer: "90",
+
+
+
+
+
+
+
+                explanation: "Độ lệch pha tính theo radian: $|\\Delta \\varphi| = |\\varphi_1 - \\varphi_2| = |\\frac{\\pi}{3} - (-\\frac{\\pi}{6})| = \\frac{\\pi}{2}\\,\\text{rad}$. Đổi sang độ: $\\frac{\\pi}{2}\\,\\text{rad} = 90^\\circ$."
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+        ]
+
+
+
+
+
+
+
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // User's responses state
+
+
+
+
+
+
+
+    let userAnswers = {
+
+
+
+
+
+
+
+        part1: {},
+
+
+
+
+
+
+
+        part2: {},
+
+
+
+
+
+
+
+        part3: {}
+
+
+
+
+
+
+
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    let isSubmitted = false;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Total elements for progress tracking
+
+
+
+
+
+
+
+    const totalItems = quizData.part1.length + (quizData.part2.reduce((acc, q) => acc + q.subQuestions.length, 0)) + quizData.part3.length;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Initialize Quiz
+
+
+
+
+
+
+
+    window.addEventListener('DOMContentLoaded', () => {
+
+
+
+
+
+
+
+        renderQuiz();
+
+
+
+
+
+
+
+        updateProgress();
+
+
+
+
+
+
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function getCompTag(comp) {
+
+
+
+
+
+
+
+        if (comp === "NTVL") return `<span class="competency-tag tag-ntvl">Nhận thức Vật lí</span>`;
+
+
+
+
+
+
+
+        if (comp === "THTN") return `<span class="competency-tag tag-thtn">Tìm hiểu Tự nhiên</span>`;
+
+
+
+
+
+
+
+        if (comp === "VDKT") return `<span class="competency-tag tag-vdkt">Vận dụng kiến thức</span>`;
+
+
+
+
+
+
+
+        return '';
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function renderQuiz() {
+
+
+
+
+
+
+
+        const contentDiv = document.getElementById('quizContent');
+
+
+
+
+
+
+
+        let html = '';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // 1. Render Part I
+
+
+
+
+
+
+
+        html += `<div class="section-title">PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn</div>`;
+
+
+
+
+
+
+
+        html += `<div class="section-desc">Thí sinh trả lời từ Câu 1 đến Câu ${quizData.part1.length}. Mỗi câu hỏi thí sinh chỉ lựa chọn một phương án.</div>`;
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        quizData.part1.forEach((q, idx) => {
+
+
+
+
+
+
+
+            html += `
+
+
+
+
+
+
+
+                <div class="question-card" id="part1-q${q.id}">
+
+
+
+
+
+
+
+                    <div class="question-header">
+
+
+
+
+
+
+
+                        <span class="question-num">Câu ${idx + 1}:</span>
+
+
+
+
+
+
+
+                        <span>${getCompTag(q.competency)}${q.question}</span>
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="options-grid">
+
+
+
+
+
+
+
+            `;
+
+
+
+
+
+
+
+            for (let opt in q.options) {
+
+
+
+
+
+
+
+                html += `
+
+
+
+
+
+
+
+                    <div class="option-card" id="part1-q${q.id}-opt${opt}" onclick="selectOption(${q.id}, '${opt}')">
+
+
+
+
+
+
+
+                        <div class="option-letter">${opt}</div>
+
+
+
+
+
+
+
+                        <div class="option-text">${q.options[opt]}</div>
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                `;
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+            html += `
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="explanation-box" id="part1-q${q.id}-explanation">
+
+
+
+
+
+
+
+                        <strong>Giải thích:</strong> ${q.explanation}
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                </div>
+
+
+
+
+
+
+
+            `;
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // 2. Render Part II
+
+
+
+
+
+
+
+        html += `<div class="section-title">PHẦN II. Câu trắc nghiệm đúng sai</div>`;
+
+
+
+
+
+
+
+        html += `<div class="section-desc">Thí sinh trả lời từ Câu 1 đến Câu ${quizData.part2.length}. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng hoặc sai.</div>`;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        quizData.part2.forEach((q, idx) => {
+
+
+
+
+
+
+
+            html += `
+
+
+
+
+
+
+
+                <div class="question-card" id="part2-q${q.id}">
+
+
+
+
+
+
+
+                    <div class="question-header">
+
+
+
+
+
+
+
+                        <span class="question-num">Câu ${idx + 1}:</span>
+
+
+
+
+
+
+
+                        <span>${q.context}</span>
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="tf-container">
+
+
+
+
+
+
+
+            `;
+
+
+
+
+
+
+
+            q.subQuestions.forEach(sub => {
+
+
+
+
+
+
+
+                html += `
+
+
+
+
+
+
+
+                    <div class="tf-row" id="part2-q${q.id}-tf-${sub.key}">
+
+
+
+
+
+
+
+                        <div class="tf-text">${getCompTag(sub.competency)} <strong>${sub.key})</strong> ${sub.text}</div>
+
+
+
+
+
+
+
+                        <div class="tf-buttons">
+
+
+
+
+
+
+
+                            <button type="button" class="tf-btn" id="part2-q${q.id}-tf-${sub.key}-T" onclick="selectTF(${q.id}, '${sub.key}', 'Đ')">Đúng</button>
+
+
+
+
+
+
+
+                            <button type="button" class="tf-btn" id="part2-q${q.id}-tf-${sub.key}-F" onclick="selectTF(${q.id}, '${sub.key}', 'S')">Sai</button>
+
+
+
+
+
+
+
+                        </div>
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                `;
+
+
+
+
+
+
+
+            });
+
+
+
+
+
+
+
+            html += `
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="explanation-box" id="part2-q${q.id}-explanation">
+
+
+
+
+
+
+
+                        <strong>Giải thích chi tiết:</strong><br>
+
+
+
+
+
+
+
+                        ${q.subQuestions.map(sub => `<strong>${sub.key}) [${sub.answer}]:</strong> ${sub.explanation}`).join('<br>')}
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                </div>
+
+
+
+
+
+
+
+            `;
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // 3. Render Part III
+
+
+
+
+
+
+
+        html += `<div class="section-title">PHẦN III. Câu trắc nghiệm trả lời ngắn</div>`;
+
+
+
+
+
+
+
+        html += `<div class="section-desc">Thí sinh trả lời từ Câu 1 đến Câu ${quizData.part3.length}. Viết đáp án số tương ứng.</div>`;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        quizData.part3.forEach((q, idx) => {
+
+
+
+
+
+
+
+            html += `
+
+
+
+
+
+
+
+                <div class="question-card" id="part3-q${q.id}">
+
+
+
+
+
+
+
+                    <div class="question-header">
+
+
+
+
+
+
+
+                        <span class="question-num">Câu ${idx + 1}:</span>
+
+
+
+
+
+
+
+                        <span>${getCompTag(q.competency)}${q.question}</span>
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                    <input type="text" class="short-answer-input" id="part3-q${q.id}-input" placeholder="Nhập đáp số..." oninput="inputShort(${q.id}, this.value)">
+
+
+
+
+
+
+
+                    <div class="correct-answer-text" id="part3-q${q.id}-correct" style="display:none;"></div>
+
+
+
+
+
+
+
+                    <div class="explanation-box" id="part3-q${q.id}-explanation">
+
+
+
+
+
+
+
+                        <strong>Giải thích:</strong> ${q.explanation}
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                </div>
+
+
+
+
+
+
+
+            `;
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        contentDiv.innerHTML = html;
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        // Rerender MathJax equations
+
+
+
+
+
+
+
+        if (window.MathJax) {
+
+
+
+
+
+
+
+            MathJax.typesetPromise();
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Interaction handlers
+
+
+
+
+
+
+
+    window.selectOption = function(qId, opt) {
+
+
+
+
+
+
+
+        if (isSubmitted) return;
+
+
+
+
+
+
+
+        userAnswers.part1[qId] = opt;
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        // Update UI
+
+
+
+
+
+
+
+        const options = ['A', 'B', 'C', 'D'];
+
+
+
+
+
+
+
+        options.forEach(o => {
+
+
+
+
+
+
+
+            const el = document.getElementById(`part1-q${qId}-opt${o}`);
+
+
+
+
+
+
+
+            if (o === opt) {
+
+
+
+
+
+
+
+                el.classList.add('selected');
+
+
+
+
+
+
+
+            } else {
+
+
+
+
+
+
+
+                el.classList.remove('selected');
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+        updateProgress();
+
+
+
+
+
+
+
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    window.selectTF = function(qId, key, choice) {
+
+
+
+
+
+
+
+        if (isSubmitted) return;
+
+
+
+
+
+
+
+        if (!userAnswers.part2[qId]) {
+
+
+
+
+
+
+
+            userAnswers.part2[qId] = {};
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+        userAnswers.part2[qId][key] = choice;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Update UI
+
+
+
+
+
+
+
+        const btnT = document.getElementById(`part2-q${qId}-tf-${key}-T`);
+
+
+
+
+
+
+
+        const btnF = document.getElementById(`part2-q${qId}-tf-${key}-F`);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        if (choice === 'Đ') {
+
+
+
+
+
+
+
+            btnT.classList.add('selected-true');
+
+
+
+
+
+
+
+            btnF.classList.remove('selected-false');
+
+
+
+
+
+
+
+        } else {
+
+
+
+
+
+
+
+            btnF.classList.add('selected-false');
+
+
+
+
+
+
+
+            btnT.classList.remove('selected-true');
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+        updateProgress();
+
+
+
+
+
+
+
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    window.inputShort = function(qId, val) {
+
+
+
+
+
+
+
+        if (isSubmitted) return;
+
+
+
+
+
+
+
+        userAnswers.part3[qId] = val.trim();
+
+
+
+
+
+
+
+        updateProgress();
+
+
+
+
+
+
+
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function updateProgress() {
+
+
+
+
+
+
+
+        let completedCount = 0;
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        // Count Part 1
+
+
+
+
+
+
+
+        completedCount += Object.keys(userAnswers.part1).length;
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        // Count Part 2
+
+
+
+
+
+
+
+        for (let qId in userAnswers.part2) {
+
+
+
+
+
+
+
+            completedCount += Object.keys(userAnswers.part2[qId]).length;
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Count Part 3
+
+
+
+
+
+
+
+        for (let qId in userAnswers.part3) {
+
+
+
+
+
+
+
+            if (userAnswers.part3[qId] !== '') {
+
+
+
+
+
+
+
+                completedCount++;
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        const percentage = Math.min((completedCount / totalItems) * 100, 100);
+
+
+
+
+
+
+
+        document.getElementById('progressBar').style.width = `${percentage}%`;
+
+
+
+
+
+
+
+        document.getElementById('progressLabel').textContent = `${completedCount}/${totalItems} ý hoàn thành`;
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Grade and Show Answers
+
+
+
+
+
+
+
+    window.gradeQuiz = function() {
+
+
+
+
+
+
+
+        if (isSubmitted) return;
+
+
+
+
+
+
+
+        isSubmitted = true;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        let totalCorrect = 0;
+
+
+
+
+
+
+
+        let maxPossibleScore = quizData.part1.length + quizData.part2.length + quizData.part3.length;
+
+
+
+
+
+
+
+        let earnedPoints = 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // 1. Grade Part I
+
+
+
+
+
+
+
+        quizData.part1.forEach(q => {
+
+
+
+
+
+
+
+            const userChoice = userAnswers.part1[q.id];
+
+
+
+
+
+
+
+            const correctOpt = q.answer;
+
+
+
+
+
+
+
+            const explanationBox = document.getElementById(`part1-q${q.id}-explanation`);
+
+
+
+
+
+
+
+            
+
+
+
+
+
+
+
+            explanationBox.style.display = 'block';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            const optCards = ['A', 'B', 'C', 'D'];
+
+
+
+
+
+
+
+            optCards.forEach(o => {
+
+
+
+
+
+
+
+                const el = document.getElementById(`part1-q${q.id}-opt${o}`);
+
+
+
+
+
+
+
+                if (o === correctOpt) {
+
+
+
+
+
+
+
+                    el.classList.add('correct');
+
+
+
+
+
+
+
+                } else if (userChoice === o && userChoice !== correctOpt) {
+
+
+
+
+
+
+
+                    el.classList.add('incorrect');
+
+
+
+
+
+
+
+                }
+
+
+
+
+
+
+
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            if (userChoice === correctOpt) {
+
+
+
+
+
+
+
+                earnedPoints += 1.0;
+
+
+
+
+
+
+
+                totalCorrect++;
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // 2. Grade Part II
+
+
+
+
+
+
+
+        quizData.part2.forEach(q => {
+
+
+
+
+
+
+
+            let correctSubCount = 0;
+
+
+
+
+
+
+
+            const explanationBox = document.getElementById(`part2-q${q.id}-explanation`);
+
+
+
+
+
+
+
+            explanationBox.style.display = 'block';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            q.subQuestions.forEach(sub => {
+
+
+
+
+
+
+
+                const userChoice = userAnswers.part2[q.id] ? userAnswers.part2[q.id][sub.key] : null;
+
+
+
+
+
+
+
+                const correctChoice = sub.answer;
+
+
+
+
+
+
+
+                const rowEl = document.getElementById(`part2-q${q.id}-tf-${sub.key}`);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                if (userChoice === correctChoice) {
+
+
+
+
+
+
+
+                    correctSubCount++;
+
+
+
+
+
+
+
+                    totalCorrect++;
+
+
+
+
+
+
+
+                    rowEl.classList.add('correct-row');
+
+
+
+
+
+
+
+                } else {
+
+
+
+
+
+
+
+                    rowEl.classList.add('incorrect-row');
+
+
+
+
+
+
+
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                const btnT = document.getElementById(`part2-q${q.id}-tf-${sub.key}-T`);
+
+
+
+
+
+
+
+                const btnF = document.getElementById(`part2-q${q.id}-tf-${sub.key}-F`);
+
+
+
+
+
+
+
+                
+
+
+
+
+
+
+
+                if (correctChoice === 'Đ') {
+
+
+
+
+
+
+
+                    btnT.style.border = '2px solid var(--success-color)';
+
+
+
+
+
+
+
+                    if (userChoice === 'Đ') {
+
+
+
+
+
+
+
+                        btnT.classList.add('selected-true');
+
+
+
+
+
+
+
+                    } else if (userChoice === 'S') {
+
+
+
+
+
+
+
+                        btnF.classList.add('selected-false');
+
+
+
+
+
+
+
+                    }
+
+
+
+
+
+
+
+                } else {
+
+
+
+
+
+
+
+                    btnF.style.border = '2px solid var(--success-color)';
+
+
+
+
+
+
+
+                    if (userChoice === 'S') {
+
+
+
+
+
+
+
+                        btnF.classList.add('selected-false');
+
+
+
+
+
+
+
+                    } else if (userChoice === 'Đ') {
+
+
+
+
+
+
+
+                        btnT.classList.add('selected-true');
+
+
+
+
+
+
+
+                    }
+
+
+
+
+
+
+
+                }
+
+
+
+
+
+
+
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            if (correctSubCount === 1) earnedPoints += 0.1;
+
+
+
+
+
+
+
+            else if (correctSubCount === 2) earnedPoints += 0.25;
+
+
+
+
+
+
+
+            else if (correctSubCount === 3) earnedPoints += 0.5;
+
+
+
+
+
+
+
+            else if (correctSubCount === 4) earnedPoints += 1.0;
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // 3. Grade Part III
+
+
+
+
+
+
+
+        quizData.part3.forEach(q => {
+
+
+
+
+
+
+
+            const userChoice = userAnswers.part3[q.id] || "";
+
+
+
+
+
+
+
+            const correctAns = q.answer.trim();
+
+
+
+
+
+
+
+            const inputEl = document.getElementById(`part3-q${q.id}-input`);
+
+
+
+
+
+
+
+            const correctTextEl = document.getElementById(`part3-q${q.id}-correct`);
+
+
+
+
+
+
+
+            const explanationBox = document.getElementById(`part3-q${q.id}-explanation`);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            explanationBox.style.display = 'block';
+
+
+
+
+
+
+
+            inputEl.disabled = true;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            const cleanUser = userChoice.replace(',', '.');
+
+
+
+
+
+
+
+            const cleanCorrect = correctAns.replace(',', '.');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            if (cleanUser && parseFloat(cleanUser) === parseFloat(cleanCorrect)) {
+
+
+
+
+
+
+
+                earnedPoints += 1.0;
+
+
+
+
+
+
+
+                totalCorrect++;
+
+
+
+
+
+
+
+                inputEl.classList.add('input-correct');
+
+
+
+
+
+
+
+            } else {
+
+
+
+
+
+
+
+                inputEl.classList.add('input-incorrect');
+
+
+
+
+
+
+
+                correctTextEl.innerHTML = `<i class="fa-solid fa-circle-info"></i> Đáp án đúng: <strong>${correctAns}</strong>`;
+
+
+
+
+
+
+
+                correctTextEl.style.display = 'block';
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        const finalGrade = ((earnedPoints / maxPossibleScore) * 10).toFixed(2);
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        document.getElementById('resultsPanel').style.display = 'block';
+
+
+
+
+
+
+
+        // Gửi kết quả tự động lên Google Sheet
+
+
+
+
+
+
+
+        // Gửi kết quả tự động lên Google Sheet (Bảo vệ an toàn bằng try-catch để tránh crash luồng chấm điểm chính)
+
+        if (typeof GOOGLE_SHEETS_URL !== 'undefined' && GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== "YOUR_GOOGLE_SHEET_WEBAPP_URL" && GOOGLE_SHEETS_URL !== "") {
+
+            try {
+
+                const name = document.getElementById('studentName').value.trim();
+
+                const className = document.getElementById('studentClass').value.trim();
+
+                const school = ""; // Bỏ thông tin trường theo yêu cầu
+
+                
+
+                // Tự động phát hiện biến số câu đúng phù hợp với mọi phiên bản file HTML bài tập
+
+                let correctCountVal = 0;
+
+                if (typeof totalCorrectValText !== 'undefined') correctCountVal = totalCorrectValText;
+
+                else if (typeof totalCorrect !== 'undefined') correctCountVal = totalCorrect;
+
+                else if (typeof correctCount !== 'undefined') correctCountVal = correctCount;
+
+                
+
+                // Tự động phát hiện biến tổng số câu
+
+                let totalItemsVal = 10;
+
+                if (typeof maxPossibleScore !== 'undefined') totalItemsVal = maxPossibleScore;
+
+                else if (typeof totalItems !== 'undefined') totalItemsVal = totalItems;
+
+                
+
+                const finalScore = typeof finalGrade !== 'undefined' ? finalGrade : (typeof score !== 'undefined' ? score : 0);
+
+                
+
+                const reportData = {
+
+                    name: name,
+
+                    className: className,
+
+                    school: school,
+
+                    score: finalScore,
+
+                    correct: `${correctCountVal}/${totalItemsVal}`,
+
+                    time: "00:00",
+
+                    lesson: quizData.title
+
+                };
+
+                fetch(GOOGLE_SHEETS_URL, {
+
+                    method: "POST",
+
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+
+                    body: JSON.stringify(reportData),
+
+                    redirect: "follow"
+
+                }).catch(err => console.error("Lỗi gửi báo cáo Google Sheets:", err));
+
+            } catch (sheetErr) {
+
+                console.error("Lỗi xử lý gửi Google Sheet:", sheetErr);
+
+            }
+
+        }
+
+
+
+
+
+
+
+            
+
+
+
+
+
+
+
+        document.getElementById('scoreCircle').textContent = finalGrade;
+
+
+
+
+
+
+
+        document.getElementById('correctCountText').textContent = totalCorrect;
+
+
+
+
+
+
+
+        document.getElementById('incorrectCountText').textContent = totalItems - totalCorrect;
+
+
+
+
+
+
+
+        document.getElementById('gradeText').textContent = `${earnedPoints.toFixed(2)}/${maxPossibleScore}`;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        let titleText = "Cố Gắng Lên!";
+
+
+
+
+
+
+
+        let descText = "Hãy ôn tập lại lý thuyết và xem kĩ lời giải chi tiết bên dưới nhé.";
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        if (parseFloat(finalGrade) >= 8.5) {
+
+
+
+
+
+
+
+            titleText = "Xuất Sắc! 🎉";
+
+
+
+
+
+
+
+            descText = "Bạn nắm rất chắc kiến thức của bài học này!";
+
+
+
+
+
+
+
+            triggerConfetti();
+
+
+
+
+
+
+
+        } else if (parseFloat(finalGrade) >= 6.5) {
+
+
+
+
+
+
+
+            titleText = "Khá Tốt!";
+
+
+
+
+
+
+
+            descText = "Bạn hiểu bài tốt, làm thêm một ít bài tập để đạt điểm tuyệt đối nhé.";
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        document.getElementById('scoreTitle').textContent = titleText;
+
+
+
+
+
+
+
+        document.getElementById('scoreDesc').textContent = descText;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        document.getElementById('btnSubmit').style.display = 'none';
+
+
+
+
+
+
+
+        document.getElementById('btnRetry').style.display = 'flex';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        document.getElementById('resultsPanel').scrollIntoView({ behavior: 'smooth' });
+
+
+
+
+
+
+
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    window.resetQuiz = function() {
+
+
+
+
+
+
+
+        isSubmitted = false;
+
+
+
+
+
+
+
+        userAnswers = { part1: {}, part2: {}, part3: {} };
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        renderQuiz();
+
+
+
+
+
+
+
+        updateProgress();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        document.getElementById('resultsPanel').style.display = 'none';
+
+
+
+
+
+
+
+        document.getElementById('btnSubmit').style.display = 'flex';
+
+
+
+
+
+
+
+        document.getElementById('btnRetry').style.display = 'none';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+
+
+
+
+
+
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function triggerConfetti() {
+
+
+
+
+
+
+
+        var duration = 3 * 1000;
+
+
+
+
+
+
+
+        var end = Date.now() + duration;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        (function frame() {
+
+
+
+
+
+
+
+            confetti({
+
+
+
+
+
+
+
+                particleCount: 5,
+
+
+
+
+
+
+
+                angle: 60,
+
+
+
+
+
+
+
+                spread: 55,
+
+
+
+
+
+
+
+                origin: { x: 0 }
+
+
+
+
+
+
+
+            });
+
+
+
+
+
+
+
+            confetti({
+
+
+
+
+
+
+
+                particleCount: 5,
+
+
+
+
+
+
+
+                angle: 120,
+
+
+
+
+
+
+
+                spread: 55,
+
+
+
+
+
+
+
+                origin: { x: 1 }
+
+
+
+
+
+
+
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            if (Date.now() < end) {
+
+
+
+
+
+
+
+                requestAnimationFrame(frame);
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+        }());
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Xử lý bắt đầu làm bài và lưu thông tin học sinh
+
+    window.startBloggerQuiz = function() {
+
+        const name = document.getElementById('studentName').value.trim();
+
+        const className = document.getElementById('studentClass').value.trim();
+
+        if (!name || !className) {
+
+            alert("Vui lòng điền đầy đủ thông tin Họ tên, Lớp!");
+
+            return;
+
+        }
+
+        localStorage.setItem('saved_student_name', name);
+
+        localStorage.setItem('saved_student_class', className);
+
+        
+
+        // Đồng bộ giá trị sang form cũ của file gốc (nếu có) để tránh lỗi chấm điểm
+
+        const oldClassInput = document.getElementById('className') || document.getElementById('class');
+
+        if (oldClassInput) {
+
+            oldClassInput.value = className;
+
+        }
+
+        const oldNameInput = document.getElementById('name');
+
+        if (oldNameInput) {
+
+            oldNameInput.value = name;
+
+        }
+
+        
+
+        document.getElementById('studentLoginCard').style.display = 'none';
+
+        document.getElementById('quizRealContent').style.display = 'block';
+
+    };
+
+    
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const savedName = localStorage.getItem('saved_student_name');
+
+        const savedClass = localStorage.getItem('saved_student_class');
+
+        if (savedName) document.getElementById('studentName').value = savedName;
+
+        if (savedClass) document.getElementById('studentClass').value = savedClass;
+
+    });
+
+
+
+
+
+
+
+            
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+</body>
+
+
+
+
+
+
+
+</html>
+
+
+
+
+
+
+

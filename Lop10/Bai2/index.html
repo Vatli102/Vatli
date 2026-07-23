@@ -1,0 +1,4867 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+<html lang="vi">
+
+
+
+
+
+
+
+<head>
+
+
+
+
+
+
+
+    <meta charset="UTF-8">
+
+
+
+
+
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
+
+
+
+    <title>Bài Tập Trực Tuyến: Bài 4 - Vật Lí 10</title>
+
+
+
+
+
+
+
+    <!-- Google Fonts -->
+
+
+
+
+
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+
+
+
+
+
+    <!-- FontAwesome Icons -->
+
+
+
+
+
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+
+
+
+
+
+    <!-- MathJax for LaTeX Equations -->
+
+
+
+
+
+
+
+    <script>
+
+
+
+
+
+
+
+        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxurUg71wnhjSSMlULQ7UKr40fwGyuz30xpvOBzVAPvxeHaEFm9JWRBToi2hDOVOvsdOw/exec";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        window.MathJax = {
+
+
+
+
+
+
+
+            tex: {
+
+
+
+
+
+
+
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+
+
+
+
+
+
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+
+
+
+
+
+
+                processEscapes: true
+
+
+
+
+
+
+
+            },
+
+
+
+
+
+
+
+            options: {
+
+
+
+
+
+
+
+                ignoreHtmlClass: 'tex2jax_ignore',
+
+
+
+
+
+
+
+                processHtmlClass: 'tex2jax_process'
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+        };
+
+
+
+
+
+
+
+    </script>
+
+
+
+
+
+
+
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+
+
+
+
+
+    <!-- Canvas Confetti -->
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    <style>
+        :root {
+            --bg-gradient: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: rgba(15, 23, 42, 0.15);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --primary-color: #4f46e5;
+            --primary-hover: #3730a3;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        .container, .container * {
+            box-sizing: border-box !important;
+        }
+
+        body {
+            background: var(--bg-gradient) !important;
+            color: var(--text-primary) !important;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-y: auto;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-bg) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+            position: relative;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: sticky;
+            top: 0;
+            background: var(--card-bg) !important;
+            padding: 1rem 0;
+            margin-top: -2.5rem;
+            margin-bottom: 2rem;
+            z-index: 10;
+            border-bottom: 1px solid var(--border-color) !important;
+        }
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.08) !important;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #4f46e5, #06b6d4) !important;
+            transition: width 0.3s ease;
+        }
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-secondary) !important;
+            margin-top: 0.5rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary) !important;
+            -webkit-text-fill-color: var(--text-primary) !important;
+            background: none !important;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-secondary) !important;
+            font-size: 0.95rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            border-left: 4px solid var(--primary-color) !important;
+            padding-left: 0.75rem;
+            margin: 2rem 0 1.25rem 0;
+            color: var(--text-primary) !important;
+        }
+
+        .section-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary) !important;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Question Cards */
+        .question-card {
+            background: #f8fafc !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .question-card:hover {
+            border-color: rgba(79, 70, 229, 0.3) !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05) !important;
+        }
+
+        .question-header {
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+            display: block !important;
+            color: var(--text-primary) !important;
+        }
+
+        .question-num {
+            color: var(--primary-color) !important;
+            display: inline !important;
+            margin-right: 0.25rem !important;
+        }
+
+        /* Part I: Option Cards */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        .option-card {
+            background: #ffffff !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s ease;
+            text-align: left;
+            color: var(--text-primary) !important;
+        }
+
+        .option-card:hover {
+            background: #f1f5f9 !important;
+            border-color: rgba(79, 70, 229, 0.4) !important;
+        }
+
+        .option-card.selected {
+            background: #e0e7ff !important;
+            border-color: var(--primary-color) !important;
+        }
+
+        .option-letter {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f1f5f9 !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+
+        .option-card.selected .option-letter {
+            background: var(--primary-color) !important;
+            color: white !important;
+            border-color: var(--primary-color) !important;
+        }
+
+        .option-text {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: var(--text-primary) !important;
+            min-width: 0 !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
+        }
+
+        /* Part II: True/False Rows */
+        .tf-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .tf-row {
+            background: #ffffff !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .tf-text {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: var(--text-primary) !important;
+            min-width: 0 !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
+        }
+
+        .tf-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .tf-btn {
+            padding: 0.4rem 0.9rem;
+            border: 1px solid var(--border-color) !important;
+            background: #f8fafc !important;
+            color: var(--text-secondary) !important;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .tf-btn:hover {
+            background: #e2e8f0 !important;
+            color: var(--text-primary) !important;
+        }
+
+        .tf-btn.selected-true {
+            background: var(--success-color) !important;
+            color: white !important;
+            border-color: var(--success-color) !important;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2) !important;
+        }
+
+        .tf-btn.selected-false {
+            background: var(--error-color) !important;
+            color: white !important;
+            border-color: var(--error-color) !important;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.2) !important;
+        }
+
+        /* Part III: Short Answer */
+        .short-answer-input {
+            width: 100%;
+            max-width: 250px;
+            background: #ffffff !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary) !important;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .short-answer-input:focus {
+            border-color: var(--primary-color) !important;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15) !important;
+        }
+
+        /* Thu nhỏ riêng phần giải thích đáp án xuống 85% để không bị tràn màn hình */
+        body .container .question-card .explanation-box,
+        body .container .question-card .explanation,
+        .explanation-box, .explanation {
+            margin-top: 1rem !important;
+            margin-bottom: 1rem !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            padding: 0.8rem 1rem !important;
+            background: #f0f2ff !important;
+            border-left: 4px solid var(--primary-color) !important;
+            border-radius: 8px !important;
+            font-size: 0.82rem !important;
+            line-height: 1.5 !important;
+            color: var(--text-primary) !important;
+            display: none;
+            width: 85% !important;
+            max-width: 85% !important;
+            word-wrap: break-word !important;
+            box-sizing: border-box !important;
+            position: relative !important;
+            left: 0 !important;
+            right: 0 !important;
+            overflow-x: auto !important; /* Hỗ trợ cuộn ngang bên trong khung 85% nếu nội dung quá dài */
+        }
+
+        .option-card.correct {
+            border-color: var(--success-color) !important;
+            background: rgba(16, 185, 129, 0.1) !important;
+            color: var(--success-color) !important;
+        }
+
+        .option-card.incorrect {
+            border-color: var(--error-color) !important;
+            background: rgba(239, 68, 68, 0.1) !important;
+            color: var(--error-color) !important;
+        }
+
+        .tf-row.correct-row {
+            border-color: rgba(16, 185, 129, 0.4) !important;
+        }
+
+        .tf-row.incorrect-row {
+            border-color: rgba(239, 68, 68, 0.4) !important;
+        }
+
+        .input-correct {
+            border-color: var(--success-color) !important;
+            background: rgba(16, 185, 129, 0.05) !important;
+        }
+
+        .input-incorrect {
+            border-color: var(--error-color) !important;
+            background: rgba(239, 68, 68, 0.05) !important;
+        }
+
+        .correct-answer-text {
+            color: var(--success-color) !important;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Action Buttons */
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .btn {
+            padding: 0.85rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%) !important;
+            color: white !important;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3) !important;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.5) !important;
+        }
+
+        .btn-retry {
+            background: #ffffff !important;
+            color: var(--text-primary) !important;
+            border: 1px solid var(--border-color) !important;
+            display: none;
+        }
+
+        .btn-retry:hover {
+            background: #f1f5f9 !important;
+        }
+
+        /* Results Panel */
+        .results-panel, .result-panel {
+            background: #f8fafc !important;
+            border: 2px solid var(--primary-color) !important;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            display: none;
+            animation: slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            color: var(--text-primary) !important;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #f0f2ff !important;
+            border: 4px solid var(--primary-color) !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 1.5rem auto;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.15) !important;
+        }
+
+        .score-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary) !important;
+        }
+
+        .score-desc {
+            color: var(--text-secondary) !important;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .details-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .summary-card {
+            background: #ffffff !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .summary-num {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary) !important;
+        }
+
+        .summary-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary) !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem !important;
+                border-radius: 16px !important;
+            }
+            .question-card {
+                padding: 1rem !important;
+                border-radius: 12px !important;
+            }
+            /* Thu nhỏ riêng công thức toán/lý trong phần giải thích để không bao giờ bị tràn trên di động */
+            .explanation-box mjx-container {
+                font-size: 0.85em !important;
+            }
+            .progress-container {
+                position: relative !important;
+                top: auto !important;
+                margin-top: 0 !important;
+                margin-bottom: 1.5rem !important;
+                padding: 0.5rem 0 !important;
+                background: transparent !important;
+            }
+            .tf-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+            .tf-buttons {
+                align-self: flex-end;
+            }
+            .details-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    
+        .competency-tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .tag-ntvl { background: #e0e7ff !important; color: #4338ca !important; border: 1px solid #c7d2fe !important; }
+        .tag-thtn { background: #ecfeff !important; color: #0e7490 !important; border: 1px solid #c5f2f7 !important; }
+        .tag-vdkt { background: #d1fae5 !important; color: #047857 !important; border: 1px solid #a7f3d0 !important; }
+
+        /* Styles cho Khung Đăng Nhập Học Sinh */
+        .card-login {
+            background: #f8fafc !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            color: var(--text-primary) !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+        }
+        .card-login h3 {
+            margin-top: 0;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: var(--text-primary) !important;
+        }
+        .card-login .input-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .card-login label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary) !important;
+            text-align: left;
+        }
+        .card-login input {
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color) !important;
+            background: #ffffff !important;
+            color: var(--text-primary) !important;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .card-login input:focus {
+            border-color: var(--primary-color) !important;
+        }
+        .card-login button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: none;
+            background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%) !important;
+            color: #fff !important;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 10px;
+        }
+        .card-login button:hover {
+            transform: translateY(-1px);
+        }
+            
+        /* 16:9 Aspect Ratio Responsive Wrapper */
+        .bq-video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+            border: 1px solid var(--border-color) !important;
+            background-color: #f1f5f9 !important;
+            margin-bottom: 25px;
+        }
+        .bq-video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+</style>
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+
+<body class="tex2jax_ignore">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container">
+
+
+
+
+
+
+
+    <!-- Khung Nhập Thông Tin Học Sinh -->
+
+
+
+
+
+
+
+    <div id="studentLoginCard" class="card-login">
+
+
+
+
+
+
+
+        <h3>THÔNG TIN HỌC SINH</h3>
+
+
+
+
+
+
+
+        <p style="font-size: 0.85rem; color: #cbd5e1; text-align: center; margin-bottom: 20px;">Vui lòng điền đầy đủ thông tin để bắt đầu làm bài trắc nghiệm.</p>
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        <div class="input-group">
+
+
+
+
+
+
+
+            <label for="studentName">Họ và tên <span style="color: #ef4444;">*</span></label>
+
+
+
+
+
+
+
+            <input type="text" id="studentName" placeholder="Ví dụ: Nguyễn Văn A" required>
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+        <div class="input-group">
+
+
+
+
+
+
+
+            <label for="studentClass">Lớp <span style="color: #ef4444;">*</span></label>
+
+
+
+
+
+
+
+            <input type="text" id="studentClass" placeholder="Ví dụ: 12A1" required>
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        <button type="button" onclick="startBloggerQuiz()">Bắt đầu làm bài <i class="fa-solid fa-circle-play" style="margin-left:5px;"></i></button>
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    <!-- Nội dung bài trắc nghiệm (ẩn mặc định) -->
+
+
+
+
+
+
+
+    <div id="quizRealContent" style="display: none;">
+
+
+
+
+
+
+
+        <div class="progress-container">
+
+
+
+
+
+
+
+            <div class="progress-bar-bg">
+
+
+
+
+
+
+
+                <div class="progress-bar-fill" id="progressBar"></div>
+
+
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+
+            <div class="progress-text">
+
+
+
+
+
+
+
+                <span>Tiến độ làm bài</span>
+
+
+
+
+
+
+
+                <span id="progressLabel">0/40 ý hoàn thành</span>
+
+
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <header>
+
+
+
+
+
+
+
+            <h1>Vật lí 10 - Bài 4: Độ dịch chuyển và quãng đường đi được</h1>
+
+
+
+
+
+
+
+            <p>Phiếu Bài Tập Trắc Nghiệm Ôn Tập Tổng Hợp Chương 1 (Vật Lí Nhiệt) Tương Tác</p>
+
+
+
+
+
+
+
+        </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!-- Results Panel -->
+
+
+
+
+
+
+
+        <div class="results-panel" id="resultsPanel">
+
+
+
+
+
+
+
+            <div class="score-circle" id="scoreCircle">0.0</div>
+
+
+
+
+
+
+
+            <div class="score-title" id="scoreTitle">Kết Quả Bài Làm</div>
+
+
+
+
+
+
+
+            <div class="score-desc" id="scoreDesc">Chúc mừng bạn đã hoàn thành bài tập trắc nghiệm!</div>
+
+
+
+
+
+
+
+            
+
+
+
+
+
+
+
+            <div class="details-summary">
+
+
+
+
+
+
+
+                <div class="summary-card">
+
+
+
+
+
+
+
+                    <div class="summary-num" id="correctCountText" style="color: var(--success-color);">0</div>
+
+
+
+
+
+
+
+                    <div class="summary-label">Ý Đúng</div>
+
+
+
+
+
+
+
+                </div>
+
+
+
+
+
+
+
+                <div class="summary-card">
+
+
+
+
+
+
+
+                    <div class="summary-num" id="incorrectCountText" style="color: var(--error-color);">0</div>
+
+
+
+
+
+
+
+                    <div class="summary-label">Ý Sai / Trống</div>
+
+
+
+
+
+
+
+                </div>
+
+
+
+
+
+
+
+                <div class="summary-card">
+
+
+
+
+
+
+
+                    <div class="summary-num" id="gradeText" style="color: #60a5fa;">0.0/10</div>
+
+
+
+
+
+
+
+                    <div class="summary-label">Điểm Thang 10</div>
+
+
+
+
+
+
+
+                </div>
+
+
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <form id="quizForm">
+
+
+
+
+
+
+
+            <!-- Question areas will be rendered here by JS -->
+
+
+
+
+
+
+
+            <div id="quizContent" class="tex2jax_process"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <div class="actions">
+
+
+
+
+
+
+
+                <button type="button" class="btn btn-submit" id="btnSubmit" onclick="gradeQuiz()">
+
+
+
+
+
+
+
+                    <i class="fa-solid fa-paper-plane"></i> Nộp Bài & Xem Giải Thích
+
+
+
+
+
+
+
+                </button>
+
+
+
+
+
+
+
+                <button type="button" class="btn btn-retry" id="btnRetry" onclick="resetQuiz()">
+
+
+
+
+
+
+
+                    <i class="fa-solid fa-rotate-left"></i> Làm Lại
+
+
+
+
+
+
+
+                </button>
+
+
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+
+        </form>
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+
+
+
+
+
+
+    // Quiz data containing questions, options, answers, and explanations
+
+
+
+
+
+
+
+        const quizData = {
+    "title": "Vật lí 10 - Bài 2: Các quy tắc an toàn trong phòng thực hành Vật lí",
+    "part1": [
+        {
+            "id": 1,
+            "competency": "NTVL",
+            "question": "Để đảm bảo an toàn tuyệt đối về điện khi bắt đầu tiến hành thí nghiệm Vật lí, thao tác đúng quy tắc đầu tiên của học sinh là",
+            "options": {
+                "A": "cắm ngay phích điện vào nguồn lưới 220V để kiểm tra thiết bị.",
+                "B": "kiểm tra xem công tắc nguồn điện đã tắt và núm điều chỉnh điện áp máy biến áp đã đưa về mức 0V hay chưa.",
+                "C": "dùng tay trần chạm vào dây dẫn để thử xem có rò rỉ điện hay không.",
+                "D": "bật tất cả các thiết bị điện trong phòng thí nghiệm cùng một lúc."
+            },
+            "answer": "B",
+            "explanation": "Trước khi cắm điện phải đảm bảo tắt công tắc và đưa nguồn máy biến áp về $0\\text{V}$ để tránh quá dòng chập cháy."
+        },
+        {
+            "id": 2,
+            "competency": "NTVL",
+            "question": "Khi thực hiện các thí nghiệm tiếp xúc với hóa chất độc hại hoặc chất dễ bay hơi, trang bị bảo hộ cá nhân bắt buộc nào sau đây học sinh phải sử dụng?",
+            "options": {
+                "A": "Kính bảo hộ, găng tay chống hóa chất và áo khoác phòng thí nghiệm (áo lab).",
+                "B": "Kính râm trang trí và găng tay len.",
+                "C": "Khẩu trang vải thông thường và dép lê.",
+                "D": "Không cần trang bị nếu thao tác nhanh."
+            },
+            "answer": "A",
+            "explanation": "Thí nghiệm hóa chất cần bảo vệ mắt (kính bảo hộ), da tay (găng tay) và cơ thể (áo lab)."
+        },
+        {
+            "id": 3,
+            "competency": "NTVL",
+            "question": "Để dập tắt một đám cháy nhỏ xảy ra do chập thiết bị điện tại bàn thí nghiệm, dụng cụ chữa cháy nào sau đây là phù hợp và an toàn nhất?",
+            "options": {
+                "A": "Xô nước sạch đặt ở góc phòng thí nghiệm.",
+                "B": "Bình chữa cháy khí CO2 chuyên dụng.",
+                "C": "Bình chữa cháy bọt hóa chất có chứa nước.",
+                "D": "Khăn ướt thấm đẫm nước."
+            },
+            "answer": "B",
+            "explanation": "Đám cháy điện dùng bình $CO_2$ cách điện tốt, không gây hỏng hóc vi mạch và không gây giật."
+        },
+        {
+            "id": 4,
+            "competency": "THTN",
+            "question": "Khi rút phích cắm điện của các thiết bị thí nghiệm ra khỏi ổ cắm trên bàn thực hành, thao tác nào sau đây là **đúng quy chuẩn an toàn**?",
+            "options": {
+                "A": "Cầm dây dẫn điện giật mạnh về phía sau.",
+                "B": "Một tay giữ chặt ổ cắm trên tường/bàn, tay kia nắm chắc phần chuôi cách điện của phích cắm và rút thẳng ra.",
+                "C": "Dùng tay ướt rút phích cắm nếu thao tác dứt khoát.",
+                "D": "Dùng kìm kim loại không bọc cách điện để kẹp rút phích cắm."
+            },
+            "answer": "B",
+            "explanation": "Rút phích cắm đúng cách: một tay giữ ổ cắm, tay kia cầm chuôi nhựa phích cắm rút thẳng. Không giật dây."
+        },
+        {
+            "id": 5,
+            "competency": "THTN",
+            "question": "Biển báo có hình tròn viền đỏ, nền trắng và có hình vẽ màu đen kèm một gạch chéo đỏ biểu thị thông điệp nào dưới đây?",
+            "options": {
+                "A": "Biển báo hiệu lệnh bắt buộc phải thực hiện.",
+                "B": "Biển báo cấm thực hiện hành động ghi trong biển.",
+                "C": "Biển báo cảnh báo nguy hiểm.",
+                "D": "Biển chỉ dẫn đường thoát hiểm."
+            },
+            "answer": "B",
+            "explanation": "Hình tròn viền đỏ nền trắng gạch chéo đỏ là biển báo CẤM."
+        },
+        {
+            "id": 6,
+            "competency": "THTN",
+            "question": "Nguy cơ mất an toàn nào sau đây liên quan trực tiếp đến việc sử dụng các bình chứa khí nén hoặc thiết bị thí nghiệm áp suất cao?",
+            "options": {
+                "A": "Nguy cơ cháy nổ do phóng điện hồ quang.",
+                "B": "Nguy cơ vỡ nổ cơ học giải phóng mảnh vỡ với động năng lớn gây chấn thương.",
+                "C": "Nguy cơ ngộ độc hơi acid.",
+                "D": "Nguy cơ mù lòa do tia cực tím."
+            },
+            "answer": "B",
+            "explanation": "Thiết bị áp suất cao khi nổ sẽ giải phóng mảnh vỡ với động năng lớn gây tổn thương nghiêm trọng."
+        },
+        {
+            "id": 7,
+            "competency": "VDKT",
+            "question": "Một học sinh đang làm thí nghiệm thì bị hóa chất lỏng bắn vào mắt. Hành động sơ cứu đầu tiên và đúng đắn nhất là gì?",
+            "options": {
+                "A": "Dùng khăn khô lau mắt rồi nhỏ thuốc nhỏ mắt thông thường.",
+                "B": "Nhắm chặt mắt lại và chạy ngay về nhà.",
+                "C": "Xả nhẹ nước sạch liên tục vào mắt bị thương dưới vòi nước rửa mắt chuyên dụng trong ít nhất 15 phút, sau đó báo giáo viên và đi y tế.",
+                "D": "Dùng dung dịch kiềm nhẹ để trung hòa hóa chất acid bắn vào mắt."
+            },
+            "answer": "C",
+            "explanation": "Rửa mắt bằng nước sạch liên tục ít nhất 15 phút để làm loãng hóa chất, sau đó báo y tế."
+        },
+        {
+            "id": 8,
+            "competency": "THTN",
+            "question": "Thiết bị nào sau đây thường được lắp đặt trong hệ thống điện của phòng thực hành Vật lí để tự động ngắt nguồn điện ngay lập tức khi xảy ra sự cố quá tải hoặc chập mạch rò điện?",
+            "options": {
+                "A": "Đồng hồ đo điện năng (Công tơ điện).",
+                "B": "Aptomat (Aptomat chống rò/chống quá tải - ELCB/MCB).",
+                "C": "Máy biến áp nguồn.",
+                "D": "Đèn tín hiệu giao thông."
+            },
+            "answer": "B",
+            "explanation": "Aptomat (ELCB/MCB) tự động ngắt điện khi quá tải hoặc ngắn mạch chống cháy nổ."
+        },
+        {
+            "id": 9,
+            "competency": "VDKT",
+            "question": "Học sinh phát hiện một dây dẫn điện nối với máy biến áp nguồn bị trầy xước hở lõi đồng bên trong. Hành động nào sau đây là **đúng quy tắc an toàn**?",
+            "options": {
+                "A": "Tiếp tục dùng dây đó làm thí nghiệm nếu điện áp nguồn thấp dưới 12V.",
+                "B": "Dùng băng dính giấy quấn tạm lại và làm thí nghiệm tiếp.",
+                "C": "Ngừng sử dụng ngay lập tức, báo cáo giáo viên hướng dẫn để được đổi dây dẫn mới an toàn.",
+                "D": "Tự ý cắt bỏ đoạn dây hở và dùng tay nối lại."
+            },
+            "answer": "C",
+            "explanation": "Dây hở lõi copper cực kỳ nguy hiểm, phải báo giáo viên đổi dây mới ngay lập tức."
+        },
+        {
+            "id": 10,
+            "competency": "VDKT",
+            "question": "Khi làm thí nghiệm đo quang học sử dụng nguồn phát tia Laser, quy tắc an toàn quan trọng nhất để tránh tổn thương vĩnh viễn cho mắt là",
+            "options": {
+                "A": "nhìn trực diện vào chùm tia laser để kiểm tra độ sáng.",
+                "B": "tuyệt đối không nhìn trực tiếp vào chùm tia laser hoặc chiếu chùm laser vào mắt người khác.",
+                "C": "đeo kính râm thông thường khi làm thí nghiệm laser.",
+                "D": "tăng công suất laser lên mức tối đa để dề quan sát."
+            },
+            "answer": "B",
+            "explanation": "Tia Laser có mật độ năng lượng cao, chiếu thẳng vào mắt có thể làm hỏng võng mạc gây mù."
+        }
+    ],
+    "part2": [
+        {
+            "id": 1,
+            "context": "Trong phòng thực hành Vật lí 10, học sinh chuẩn bị tiến hành thí nghiệm khảo sát mạch điện xoay chiều sử dụng máy biến áp nguồn và các hộp điện trở.",
+            "subQuestions": [
+                {
+                    "key": "a",
+                    "competency": "NTVL",
+                    "text": "Học sinh được phép tự ý cắm trực tiếp các thiết bị thí nghiệm hoạt động ở điện áp thấp vào ổ điện lưới 220V mà không cần máy biến áp.",
+                    "answer": "S",
+                    "explanation": "Thiết bị hạ áp cắm trực tiếp vào 220V sẽ bị cháy nổ ngay lập tức."
+                },
+                {
+                    "key": "b",
+                    "competency": "VDKT",
+                    "text": "Trước khi cắm phích điện vào nguồn, học sinh bắt buộc phải xoay núm điều chỉnh điện áp của máy biến áp nguồn về giá trị 0V.",
+                    "answer": "Đ",
+                    "explanation": "Đưa về $0\\text{V}$ giúp tránh dòng điện tăng đột ngột khi vừa đóng mạch."
+                },
+                {
+                    "key": "c",
+                    "competency": "NTVL",
+                    "text": "Khi phát hiện vỏ cao su cách điện của dây dẫn bị bong tróc hở lõi đồng, học sinh vẫn có thể dùng bình thường nếu điện áp dưới 12V.",
+                    "answer": "S",
+                    "explanation": "Dây hở lõi đồng có thể gây ngắn mạch hoặc giật điện kể cả ở điện áp thấp."
+                },
+                {
+                    "key": "d",
+                    "competency": "VDKT",
+                    "text": "Mọi thao tác thay đổi dây nối, cắm thêm linh kiện vào bảng mạch chỉ được thực hiện sau khi đã ngắt hoàn toàn công tắc nguồn điện.",
+                    "answer": "Đ",
+                    "explanation": "Tắt nguồn điện giúp bảo vệ thiết bị và người thao tác khỏi sự cố chập mạch."
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "context": "Quy trình thực hành an toàn và các biện pháp ứng phó với sự cố ngoài ý muốn trong phòng thí nghiệm.",
+            "subQuestions": [
+                {
+                    "key": "a",
+                    "competency": "NTVL",
+                    "text": "Khi xảy ra cháy do chập điện, việc đầu tiên cần làm là ngắt ngay cầu dao/aptomat điện tổng của phòng thực hành.",
+                    "answer": "Đ",
+                    "explanation": "Ngắt aptomat điện tổng giúp loại bỏ nguồn nguy hiểm đầu tiên."
+                },
+                {
+                    "key": "b",
+                    "competency": "THTN",
+                    "text": "Có thể dùng nước dập tắt đám cháy thiết bị điện đang cắm điện lưới 220V.",
+                    "answer": "S",
+                    "explanation": "Dùng nước dập cháy điện đang cắm nguồn sẽ bị điện giật vì nước dẫn điện."
+                },
+                {
+                    "key": "c",
+                    "competency": "THTN",
+                    "text": "Sau khi kết thúc buổi thực hành, học sinh cần dọn dẹp dụng cụ, tắt hết nguồn điện và rửa sạch tay bằng xà phòng trước khi ra về.",
+                    "answer": "Đ",
+                    "explanation": "Quy trình vệ sinh và an toàn sau thực hành."
+                },
+                {
+                    "key": "d",
+                    "competency": "VDKT",
+                    "text": "Khi bị bỏng nhiệt nhẹ do chạm vào điện trở đang nóng, cần ngâm ngay vết bỏng vào nước sạch mát trong khoảng 15-20 phút.",
+                    "answer": "Đ",
+                    "explanation": "Ngâm nước mát 15-20 phút giúp giảm nhiệt độ vùng da bị bỏng, giảm đau tổn thương sâu."
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "context": "Nhận biết các ký hiệu cảnh báo an toàn và biển báo trong phòng thực hành Vật lí.",
+            "subQuestions": [
+                {
+                    "key": "a",
+                    "competency": "NTVL",
+                    "text": "Biển báo có hình tam giác vàng viền đen kèm hình vẽ tia sét màu đen là biển cảnh báo nguy cơ điện giật cao áp.",
+                    "answer": "Đ",
+                    "explanation": "Tam giác vàng viền đen hình tia sét là cảnh báo nguy hiểm điện cao áp."
+                },
+                {
+                    "key": "b",
+                    "competency": "THTN",
+                    "text": "Biển báo hình chữ nhật nền xanh lá cây có hình người chạy là biển chỉ dẫn lối thoát hiểm khẩn cấp (Exit).",
+                    "answer": "Đ",
+                    "explanation": "Biển xanh lá cây hình người chạy chỉ dẫn lối thoát hiểm."
+                },
+                {
+                    "key": "c",
+                    "competency": "THTN",
+                    "text": "Ký hiệu hình cánh quạt 3 cánh màu đen trên nền vàng là ký hiệu cảnh báo khu vực có chất độc hóa học ăn mòn.",
+                    "answer": "S",
+                    "explanation": "Ký hiệu cánh quạt 3 cánh là cảnh báo chất phóng xạ (không phải hóa chất ăn mòn)."
+                },
+                {
+                    "key": "d",
+                    "competency": "VDKT",
+                    "text": "Đồ ăn và nước uống giải khát có thể mang vào đặt trên bàn thí nghiệm nếu học sinh chú ý không làm đổ.",
+                    "answer": "S",
+                    "explanation": "Tuyệt đối cấm mang đồ ăn thức uống vào phòng thực hành vì nguy cơ nhiễm độc hóa chất."
+                }
+            ]
+        }
+    ],
+    "part3": [
+        {
+            "id": 1,
+            "competency": "THTN",
+            "question": "Để đảm bảo an toàn cho học sinh, nguồn điện thí nghiệm điện một chiều (DC) trên bàn thực hành Vật lí phổ thông thường được điều chỉnh ở mức điện áp an toàn tối đa không vượt quá bao nhiêu Volts ($\\text{V}$)?",
+            "answer": "24",
+            "explanation": "Điện áp an toàn thí nghiệm học sinh thường không vượt quá $24\\text{ V}$ (hoặc dưới $40\\text{ V}$)."
+        },
+        {
+            "id": 2,
+            "competency": "THTN",
+            "question": "Khi hóa chất hoặc chất bẩn bắn vào mắt, thời gian tối thiểu (tính theo phút) được khuyến cáo để rửa mắt liên tục dưới vòi nước sạch cấp cứu là bao nhiêu phút?",
+            "answer": "15",
+            "explanation": "Thời gian rửa mắt tối thiểu khuyến cáo là $15\\text{ phút}$."
+        },
+        {
+            "id": 3,
+            "competency": "VDKT",
+            "question": "Một cầu chì bảo vệ mạch điện thí nghiệm được thiết kế ngắt mạch khi dòng điện vượt quá $2\\text{ A}$. Nếu cắm vào mạch các thiết bị tiêu thụ dòng điện tổng cộng là $2,5\\text{ A}$, hãy xác định trạng thái của cầu chì (Viết $1$ nếu cầu chì bị nóng chảy ngắt mạch, viết $0$ nếu cầu chì không ngắt).",
+            "answer": "1",
+            "explanation": "Dòng điện $2,5\\text{ A} > 2\\text{ A}$ $\\Rightarrow$ cầu chì bị nóng chảy ngắt mạch (Đáp số: 1)."
+        },
+        {
+            "id": 4,
+            "competency": "VDKT",
+            "question": "Trong phòng thực hành có 4 loại bình chữa cháy: Bình A (Nước), Bình B ($CO_2$), Bình C (Bọt hóa chất chứa nước), Bình D (Cát khô). Có bao nhiêu loại trong số 4 loại trên có thể sử dụng an toàn để dập đám cháy do chập thiết bị điện đang nối nguồn?",
+            "answer": "2",
+            "explanation": "Có 2 loại an toàn cho cháy điện: Bình B ($CO_2$) và Bình D (Cát khô). (Nước và bọt chứa nước dẫn điện)."
+        }
+    ]
+};
+
+    // User's responses state
+    let userAnswers = {
+
+
+
+
+
+
+
+        part1: {}, // questionId -> selectedOption ('A', 'B', 'C', 'D')
+
+
+
+
+
+
+
+        part2: {}, // questionId -> { 'a': 'Đ'/'S', 'b': 'Đ'/'S', ... }
+
+
+
+
+
+
+
+        part3: {}  // questionId -> inputText
+
+
+
+
+
+
+
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    let isSubmitted = false;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Total elements for progress tracking
+
+
+
+
+
+
+
+    const totalItems = quizData.part1.length + (quizData.part2.reduce((acc, q) => acc + q.subQuestions.length, 0)) + quizData.part3.length;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Initialize Quiz
+
+
+
+
+
+
+
+    window.addEventListener('DOMContentLoaded', () => {
+
+
+
+
+
+
+
+        renderQuiz();
+
+
+
+
+
+
+
+        updateProgress();
+
+
+
+
+
+
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function getCompTag(comp) {
+
+
+
+
+
+
+
+        if (comp === "NTVL") return `<span class="competency-tag tag-ntvl">NTVL</span>`;
+
+
+
+
+
+
+
+        if (comp === "THTN") return `<span class="competency-tag tag-thtn">THTN</span>`;
+
+
+
+
+
+
+
+        if (comp === "VDKT") return `<span class="competency-tag tag-vdkt">VDKT</span>`;
+
+
+
+
+
+
+
+        return '';
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function renderQuiz() {
+
+
+
+
+
+
+
+        const contentDiv = document.getElementById('quizContent');
+
+
+
+
+
+
+
+        let html = '';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // 1. Render Part I
+
+
+
+
+
+
+
+        html += `<div class="section-title">PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn</div>`;
+
+
+
+
+
+
+
+        html += `<div class="section-desc">Thí sinh trả lời từ Câu 1 đến Câu ${quizData.part1.length}. Mỗi câu hỏi thí sinh chỉ lựa chọn một phương án.</div>`;
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        quizData.part1.forEach((q, idx) => {
+
+
+
+
+
+
+
+            html += `
+
+
+
+
+
+
+
+                <div class="question-card" id="part1-q${q.id}">
+
+
+
+
+
+
+
+                    <div class="question-header">
+
+
+
+
+
+
+
+                        <span class="question-num">Câu ${idx + 1}:</span>
+
+
+
+
+
+
+
+                        <span>${getCompTag(q.competency)}${q.question}</span>
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="options-grid">
+
+
+
+
+
+
+
+            `;
+
+
+
+
+
+
+
+            for (let opt in q.options) {
+
+
+
+
+
+
+
+                html += `
+
+
+
+
+
+
+
+                    <div class="option-card" id="part1-q${q.id}-opt${opt}" onclick="selectOption(${q.id}, '${opt}')">
+
+
+
+
+
+
+
+                        <div class="option-letter">${opt}</div>
+
+
+
+
+
+
+
+                        <div class="option-text">${q.options[opt]}</div>
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                `;
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+            html += `
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="explanation-box" id="part1-q${q.id}-explanation">
+
+
+
+
+
+
+
+                        <strong>Giải thích:</strong> ${q.explanation}
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                </div>
+
+
+
+
+
+
+
+            `;
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // 2. Render Part II
+
+
+
+
+
+
+
+        html += `<div class="section-title">PHẦN II. Câu trắc nghiệm đúng sai</div>`;
+
+
+
+
+
+
+
+        html += `<div class="section-desc">Thí sinh trả lời từ Câu 1 đến Câu ${quizData.part2.length}. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng hoặc sai.</div>`;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        quizData.part2.forEach((q, idx) => {
+
+
+
+
+
+
+
+            html += `
+
+
+
+
+
+
+
+                <div class="question-card" id="part2-q${q.id}">
+
+
+
+
+
+
+
+                    <div class="question-header">
+
+
+
+
+
+
+
+                        <span class="question-num">Câu ${idx + 1}:</span>
+
+
+
+
+
+
+
+                        <span>${q.context}</span>
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="tf-container">
+
+
+
+
+
+
+
+            `;
+
+
+
+
+
+
+
+            q.subQuestions.forEach(sub => {
+
+
+
+
+
+
+
+                html += `
+
+
+
+
+
+
+
+                    <div class="tf-row" id="part2-q${q.id}-tf-${sub.key}">
+
+
+
+
+
+
+
+                        <div class="tf-text">${getCompTag(sub.competency)} <strong>${sub.key})</strong> ${sub.text}</div>
+
+
+
+
+
+
+
+                        <div class="tf-buttons">
+
+
+
+
+
+
+
+                            <button type="button" class="tf-btn" id="part2-q${q.id}-tf-${sub.key}-T" onclick="selectTF(${q.id}, '${sub.key}', 'Đ')">Đúng</button>
+
+
+
+
+
+
+
+                            <button type="button" class="tf-btn" id="part2-q${q.id}-tf-${sub.key}-F" onclick="selectTF(${q.id}, '${sub.key}', 'S')">Sai</button>
+
+
+
+
+
+
+
+                        </div>
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                `;
+
+
+
+
+
+
+
+            });
+
+
+
+
+
+
+
+            html += `
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="explanation-box" id="part2-q${q.id}-explanation">
+
+
+
+
+
+
+
+                        <strong>Giải thích chi tiết:</strong><br>
+
+
+
+
+
+
+
+                        ${q.subQuestions.map(sub => `<strong>${sub.key}) [${sub.answer}]:</strong> ${sub.explanation}`).join('<br>')}
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                </div>
+
+
+
+
+
+
+
+            `;
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // 3. Render Part III
+
+
+
+
+
+
+
+        html += `<div class="section-title">PHẦN III. Câu trắc nghiệm trả lời ngắn</div>`;
+
+
+
+
+
+
+
+        html += `<div class="section-desc">Thí sinh trả lời từ Câu 1 đến Câu ${quizData.part3.length}. Viết đáp án số tương ứng.</div>`;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        quizData.part3.forEach((q, idx) => {
+
+
+
+
+
+
+
+            html += `
+
+
+
+
+
+
+
+                <div class="question-card" id="part3-q${q.id}">
+
+
+
+
+
+
+
+                    <div class="question-header">
+
+
+
+
+
+
+
+                        <span class="question-num">Câu ${idx + 1}:</span>
+
+
+
+
+
+
+
+                        <span>${getCompTag(q.competency)}${q.question}</span>
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                    <input type="text" class="short-answer-input" id="part3-q${q.id}-input" placeholder="Nhập đáp số..." oninput="inputShort(${q.id}, this.value)">
+
+
+
+
+
+
+
+                    <div class="correct-answer-text" id="part3-q${q.id}-correct" style="display:none;"></div>
+
+
+
+
+
+
+
+                    <div class="explanation-box" id="part3-q${q.id}-explanation">
+
+
+
+
+
+
+
+                        <strong>Giải thích:</strong> ${q.explanation}
+
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                </div>
+
+
+
+
+
+
+
+            `;
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        contentDiv.innerHTML = html;
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        // Rerender MathJax equations
+
+
+
+
+
+
+
+        if (window.MathJax) {
+
+
+
+
+
+
+
+            MathJax.typesetPromise();
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Interaction handlers
+
+
+
+
+
+
+
+    window.selectOption = function(qId, opt) {
+
+
+
+
+
+
+
+        if (isSubmitted) return;
+
+
+
+
+
+
+
+        userAnswers.part1[qId] = opt;
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        // Update UI
+
+
+
+
+
+
+
+        const options = ['A', 'B', 'C', 'D'];
+
+
+
+
+
+
+
+        options.forEach(o => {
+
+
+
+
+
+
+
+            const el = document.getElementById(`part1-q${qId}-opt${o}`);
+
+
+
+
+
+
+
+            if (o === opt) {
+
+
+
+
+
+
+
+                el.classList.add('selected');
+
+
+
+
+
+
+
+            } else {
+
+
+
+
+
+
+
+                el.classList.remove('selected');
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+        updateProgress();
+
+
+
+
+
+
+
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    window.selectTF = function(qId, key, choice) {
+
+
+
+
+
+
+
+        if (isSubmitted) return;
+
+
+
+
+
+
+
+        if (!userAnswers.part2[qId]) {
+
+
+
+
+
+
+
+            userAnswers.part2[qId] = {};
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+        userAnswers.part2[qId][key] = choice;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Update UI
+
+
+
+
+
+
+
+        const btnT = document.getElementById(`part2-q${qId}-tf-${key}-T`);
+
+
+
+
+
+
+
+        const btnF = document.getElementById(`part2-q${qId}-tf-${key}-F`);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        if (choice === 'Đ') {
+
+
+
+
+
+
+
+            btnT.classList.add('selected-true');
+
+
+
+
+
+
+
+            btnF.classList.remove('selected-false');
+
+
+
+
+
+
+
+        } else {
+
+
+
+
+
+
+
+            btnF.classList.add('selected-false');
+
+
+
+
+
+
+
+            btnT.classList.remove('selected-true');
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+        updateProgress();
+
+
+
+
+
+
+
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    window.inputShort = function(qId, val) {
+
+
+
+
+
+
+
+        if (isSubmitted) return;
+
+
+
+
+
+
+
+        userAnswers.part3[qId] = val.trim();
+
+
+
+
+
+
+
+        updateProgress();
+
+
+
+
+
+
+
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function updateProgress() {
+
+
+
+
+
+
+
+        let completedCount = 0;
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        // Count Part 1
+
+
+
+
+
+
+
+        completedCount += Object.keys(userAnswers.part1).length;
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        // Count Part 2
+
+
+
+
+
+
+
+        for (let qId in userAnswers.part2) {
+
+
+
+
+
+
+
+            completedCount += Object.keys(userAnswers.part2[qId]).length;
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Count Part 3
+
+
+
+
+
+
+
+        for (let qId in userAnswers.part3) {
+
+
+
+
+
+
+
+            if (userAnswers.part3[qId] !== '') {
+
+
+
+
+
+
+
+                completedCount++;
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        const percentage = Math.min((completedCount / totalItems) * 100, 100);
+
+
+
+
+
+
+
+        document.getElementById('progressBar').style.width = `${percentage}%`;
+
+
+
+
+
+
+
+        document.getElementById('progressLabel').textContent = `${completedCount}/${totalItems} ý hoàn thành`;
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Grade and Show Answers
+
+
+
+
+
+
+
+    window.gradeQuiz = function() {
+
+
+
+
+
+
+
+        if (isSubmitted) return;
+
+
+
+
+
+
+
+        isSubmitted = true;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        let totalCorrectValText = 0;
+
+
+
+
+
+
+
+        let maxPossibleScore = (quizData.part1.length * 0.25) + (quizData.part2.length * 1.0) + (quizData.part3.length * 0.25);
+
+
+
+
+
+
+
+        let earnedPoints = 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // 1. Grade Part I
+
+
+
+
+
+
+
+        quizData.part1.forEach(q => {
+
+
+
+
+
+
+
+            const userChoice = userAnswers.part1[q.id];
+
+
+
+
+
+
+
+            const correctOpt = q.answer;
+
+
+
+
+
+
+
+            const explanationBox = document.getElementById(`part1-q${q.id}-explanation`);
+
+
+
+
+
+
+
+            
+
+
+
+
+
+
+
+            explanationBox.style.display = 'block';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            const optCards = ['A', 'B', 'C', 'D'];
+
+
+
+
+
+
+
+            optCards.forEach(o => {
+
+
+
+
+
+
+
+                const el = document.getElementById(`part1-q${q.id}-opt${o}`);
+
+
+
+
+
+
+
+                if (o === correctOpt) {
+
+
+
+
+
+
+
+                    el.classList.add('correct');
+
+
+
+
+
+
+
+                } else if (userChoice === o && userChoice !== correctOpt) {
+
+
+
+
+
+
+
+                    el.classList.add('incorrect');
+
+
+
+
+
+
+
+                }
+
+
+
+
+
+
+
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            if (userChoice === correctOpt) {
+
+
+
+
+
+
+
+                earnedPoints += 0.25;
+
+
+
+
+
+
+
+                totalCorrectValText++;
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // 2. Grade Part II
+
+
+
+
+
+
+
+        quizData.part2.forEach(q => {
+
+
+
+
+
+
+
+            let correctSubCount = 0;
+
+
+
+
+
+
+
+            const explanationBox = document.getElementById(`part2-q${q.id}-explanation`);
+
+
+
+
+
+
+
+            explanationBox.style.display = 'block';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            q.subQuestions.forEach(sub => {
+
+
+
+
+
+
+
+                const userChoice = userAnswers.part2[q.id] ? userAnswers.part2[q.id][sub.key] : null;
+
+
+
+
+
+
+
+                const correctChoice = sub.answer;
+
+
+
+
+
+
+
+                const rowEl = document.getElementById(`part2-q${q.id}-tf-${sub.key}`);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                if (userChoice === correctChoice) {
+
+
+
+
+
+
+
+                    correctSubCount++;
+
+
+
+
+
+
+
+                    totalCorrectValText++;
+
+
+
+
+
+
+
+                    rowEl.classList.add('correct-row');
+
+
+
+
+
+
+
+                } else {
+
+
+
+
+
+
+
+                    rowEl.classList.add('incorrect-row');
+
+
+
+
+
+
+
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                const btnT = document.getElementById(`part2-q${q.id}-tf-${sub.key}-T`);
+
+
+
+
+
+
+
+                const btnF = document.getElementById(`part2-q${q.id}-tf-${sub.key}-F`);
+
+
+
+
+
+
+
+                
+
+
+
+
+
+
+
+                if (correctChoice === 'Đ') {
+
+
+
+
+
+
+
+                    btnT.style.border = '2px solid var(--success-color)';
+
+
+
+
+
+
+
+                    if (userChoice === 'Đ') {
+
+
+
+
+
+
+
+                        btnT.classList.add('selected-true');
+
+
+
+
+
+
+
+                    } else if (userChoice === 'S') {
+
+
+
+
+
+
+
+                        btnF.classList.add('selected-false');
+
+
+
+
+
+
+
+                    }
+
+
+
+
+
+
+
+                } else {
+
+
+
+
+
+
+
+                    btnF.style.border = '2px solid var(--success-color)';
+
+
+
+
+
+
+
+                    if (userChoice === 'S') {
+
+
+
+
+
+
+
+                        btnF.classList.add('selected-false');
+
+
+
+
+
+
+
+                    } else if (userChoice === 'Đ') {
+
+
+
+
+
+
+
+                        btnT.classList.add('selected-true');
+
+
+
+
+
+
+
+                    }
+
+
+
+
+
+
+
+                }
+
+
+
+
+
+
+
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            if (correctSubCount === 1) earnedPoints += 0.1;
+
+
+
+
+
+
+
+            else if (correctSubCount === 2) earnedPoints += 0.25;
+
+
+
+
+
+
+
+            else if (correctSubCount === 3) earnedPoints += 0.5;
+
+
+
+
+
+
+
+            else if (correctSubCount === 4) earnedPoints += 1.0;
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // 3. Grade Part III
+
+
+
+
+
+
+
+        quizData.part3.forEach(q => {
+
+
+
+
+
+
+
+            const userChoice = userAnswers.part3[q.id] || "";
+
+
+
+
+
+
+
+            const correctAns = q.answer.trim();
+
+
+
+
+
+
+
+            const inputEl = document.getElementById(`part3-q${q.id}-input`);
+
+
+
+
+
+
+
+            const correctTextEl = document.getElementById(`part3-q${q.id}-correct`);
+
+
+
+
+
+
+
+            const explanationBox = document.getElementById(`part3-q${q.id}-explanation`);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            explanationBox.style.display = 'block';
+
+
+
+
+
+
+
+            inputEl.disabled = true;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            const cleanUser = userChoice.replace(',', '.');
+
+
+
+
+
+
+
+            const cleanCorrect = correctAns.replace(',', '.');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            if (cleanUser && parseFloat(cleanUser) === parseFloat(cleanCorrect)) {
+
+
+
+
+
+
+
+                earnedPoints += 0.25;
+
+
+
+
+
+
+
+                totalCorrectValText++;
+
+
+
+
+
+
+
+                inputEl.classList.add('input-correct');
+
+
+
+
+
+
+
+            } else {
+
+
+
+
+
+
+
+                inputEl.classList.add('input-incorrect');
+
+
+
+
+
+
+
+                correctTextEl.innerHTML = `<i class="fa-solid fa-circle-info"></i> Đáp án đúng: <strong>${correctAns}</strong>`;
+
+
+
+
+
+
+
+                correctTextEl.style.display = 'block';
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        const finalGrade = earnedPoints.toFixed(2);
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        document.getElementById('resultsPanel').style.display = 'block';
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        // Report automatically to Google Sheets
+
+
+
+
+
+
+
+        // Gửi kết quả tự động lên Google Sheet (Bảo vệ an toàn bằng try-catch để tránh crash luồng chấm điểm chính)
+
+        if (typeof GOOGLE_SHEETS_URL !== 'undefined' && GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== "YOUR_GOOGLE_SHEET_WEBAPP_URL" && GOOGLE_SHEETS_URL !== "") {
+
+            try {
+
+                const name = document.getElementById('studentName').value.trim();
+
+                const className = document.getElementById('studentClass').value.trim();
+
+                const school = ""; // Bỏ thông tin trường theo yêu cầu
+
+                
+
+                // Tự động phát hiện biến số câu đúng phù hợp với mọi phiên bản file HTML bài tập
+
+                let correctCountVal = 0;
+
+                if (typeof totalCorrectValText !== 'undefined') correctCountVal = totalCorrectValText;
+
+                else if (typeof totalCorrect !== 'undefined') correctCountVal = totalCorrect;
+
+                else if (typeof correctCount !== 'undefined') correctCountVal = correctCount;
+
+                
+
+                // Tự động phát hiện biến tổng số câu
+
+                let totalItemsVal = 10;
+
+                if (typeof maxPossibleScore !== 'undefined') totalItemsVal = maxPossibleScore;
+
+                else if (typeof totalItems !== 'undefined') totalItemsVal = totalItems;
+
+                
+
+                const finalScore = typeof finalGrade !== 'undefined' ? finalGrade : (typeof score !== 'undefined' ? score : 0);
+
+                
+
+                const reportData = {
+
+                    name: name,
+
+                    className: className,
+
+                    school: school,
+
+                    score: finalScore,
+
+                    correct: `${correctCountVal}/${totalItemsVal}`,
+
+                    time: "00:00",
+
+                    lesson: quizData.title
+
+                };
+
+                fetch(GOOGLE_SHEETS_URL, {
+
+                    method: "POST",
+
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+
+                    body: JSON.stringify(reportData),
+
+                    redirect: "follow"
+
+                }).catch(err => console.error("Lỗi gửi báo cáo Google Sheets:", err));
+
+            } catch (sheetErr) {
+
+                console.error("Lỗi xử lý gửi Google Sheet:", sheetErr);
+
+            }
+
+        }
+
+
+
+
+
+
+
+            
+
+
+
+
+
+
+
+        document.getElementById('scoreCircle').textContent = finalGrade;
+
+
+
+
+
+
+
+        document.getElementById('correctCountText').textContent = totalCorrectValText;
+
+
+
+
+
+
+
+        document.getElementById('incorrectCountText').textContent = totalItems - totalCorrectValText;
+
+
+
+
+
+
+
+        document.getElementById('gradeText').textContent = `${earnedPoints.toFixed(2)}/${maxPossibleScore}`;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        let titleText = "Cố Gắng Lên!";
+
+
+
+
+
+
+
+        let descText = "Hãy ôn tập lại lý thuyết và xem kĩ lời giải chi tiết bên dưới nhé.";
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        if (parseFloat(finalGrade) >= 8.5) {
+
+
+
+
+
+
+
+            titleText = "Xuất Sắc! 🎉";
+
+
+
+
+
+
+
+            descText = "Bạn nắm rất chắc kiến thức của chương này!";
+
+
+
+
+
+
+
+            triggerConfetti();
+
+
+
+
+
+
+
+        } else if (parseFloat(finalGrade) >= 6.5) {
+
+
+
+
+
+
+
+            titleText = "Khá Tốt!";
+
+
+
+
+
+
+
+            descText = "Bạn hiểu bài tốt, làm thêm một ít bài tập để đạt điểm tuyệt đối nhé.";
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        document.getElementById('scoreTitle').textContent = titleText;
+
+
+
+
+
+
+
+        document.getElementById('scoreDesc').textContent = descText;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        document.getElementById('btnSubmit').style.display = 'none';
+
+
+
+
+
+
+
+        document.getElementById('btnRetry').style.display = 'flex';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        document.getElementById('resultsPanel').scrollIntoView({ behavior: 'smooth' });
+
+
+
+
+
+
+
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    window.resetQuiz = function() {
+
+
+
+
+
+
+
+        isSubmitted = false;
+
+
+
+
+
+
+
+        userAnswers = { part1: {}, part2: {}, part3: {} };
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        renderQuiz();
+
+
+
+
+
+
+
+        updateProgress();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        document.getElementById('resultsPanel').style.display = 'none';
+
+
+
+
+
+
+
+        document.getElementById('btnSubmit').style.display = 'flex';
+
+
+
+
+
+
+
+        document.getElementById('btnRetry').style.display = 'none';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+
+
+
+
+
+
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function triggerConfetti() {
+
+
+
+
+
+
+
+        var duration = 3 * 1000;
+
+
+
+
+
+
+
+        var end = Date.now() + duration;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        (function frame() {
+
+
+
+
+
+
+
+            confetti({
+
+
+
+
+
+
+
+                particleCount: 5,
+
+
+
+
+
+
+
+                angle: 60,
+
+
+
+
+
+
+
+                spread: 55,
+
+
+
+
+
+
+
+                origin: { x: 0 }
+
+
+
+
+
+
+
+            });
+
+
+
+
+
+
+
+            confetti({
+
+
+
+
+
+
+
+                particleCount: 5,
+
+
+
+
+
+
+
+                angle: 120,
+
+
+
+
+
+
+
+                spread: 55,
+
+
+
+
+
+
+
+                origin: { x: 1 }
+
+
+
+
+
+
+
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            if (Date.now() < end) {
+
+
+
+
+
+
+
+                requestAnimationFrame(frame);
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+        }());
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Student identity login and localStorage
+
+
+
+
+
+
+
+    // Xử lý bắt đầu làm bài và lưu thông tin học sinh
+
+    window.startBloggerQuiz = function() {
+
+        const name = document.getElementById('studentName').value.trim();
+
+        const className = document.getElementById('studentClass').value.trim();
+
+        if (!name || !className) {
+
+            alert("Vui lòng điền đầy đủ thông tin Họ tên, Lớp!");
+
+            return;
+
+        }
+
+        localStorage.setItem('saved_student_name', name);
+
+        localStorage.setItem('saved_student_class', className);
+
+        
+
+        // Đồng bộ giá trị sang form cũ của file gốc (nếu có) để tránh lỗi chấm điểm
+
+        const oldClassInput = document.getElementById('className') || document.getElementById('class');
+
+        if (oldClassInput) {
+
+            oldClassInput.value = className;
+
+        }
+
+        const oldNameInput = document.getElementById('name');
+
+        if (oldNameInput) {
+
+            oldNameInput.value = name;
+
+        }
+
+        
+
+        document.getElementById('studentLoginCard').style.display = 'none';
+
+        document.getElementById('quizRealContent').style.display = 'block';
+
+    };
+
+    
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const savedName = localStorage.getItem('saved_student_name');
+
+        const savedClass = localStorage.getItem('saved_student_class');
+
+        if (savedName) document.getElementById('studentName').value = savedName;
+
+        if (savedClass) document.getElementById('studentClass').value = savedClass;
+
+    });
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+
+
+
+
+
+
+        const savedName = localStorage.getItem('saved_student_name');
+
+
+
+
+
+
+
+        const savedClass = localStorage.getItem('saved_student_class');
+
+
+
+
+
+
+
+        if (savedName) document.getElementById('studentName').value = savedName;
+
+
+
+
+
+
+
+        if (savedClass) document.getElementById('studentClass').value = savedClass;
+
+
+
+
+
+
+
+    });
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+</body>
+
+
+
+
+
+
+
+</html>
+
+
+
+
+
+
+
