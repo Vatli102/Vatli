@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Bài Tập & Trắc Nghiệm Vật Lí - Lớp 10, 11, 12</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --accent: #06b6d4;
+            --bg-body: #f8fafc;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -5px rgba(79, 70, 229, 0.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-dark); line-height: 1.6; }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+            padding: 0.8rem 2rem; display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .logo { display: flex; align-items: center; gap: 0.75rem; font-weight: 800; font-size: 1.25rem; color: var(--primary); text-decoration: none; }
+        .logo-icon { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+        .btn-subscribe { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; border: none; padding: 0.6rem 1.3rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25); transition: all 0.2s ease; }
+        .btn-subscribe:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(79, 70, 229, 0.35); }
+
+        /* Hero */
+        .hero { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%); color: white; padding: 3.5rem 1.5rem; text-align: center; position: relative; overflow: hidden; }
+        .hero-title { font-size: 2.3rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: -0.5px; }
+        .hero-subtitle { font-size: 1.1rem; color: #c7d2fe; max-width: 700px; margin: 0 auto 1.8rem auto; }
+
+        /* Quick Grade Jump Tabs */
+        .grade-tabs { display: flex; justify-content: center; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
+        .tab-btn { background: rgba(255, 255, 255, 0.15); color: white; border: 1px solid rgba(255, 255, 255, 0.3); padding: 0.6rem 1.5rem; border-radius: 30px; font-weight: 700; text-decoration: none; font-size: 0.95rem; backdrop-filter: blur(5px); transition: all 0.2s; }
+        .tab-btn:hover { background: rgba(255, 255, 255, 0.3); }
+
+        /* Main Container */
+        .main-container { max-width: 1100px; margin: 2.5rem auto; padding: 0 1.5rem; }
+        
+        .grade-section { margin-bottom: 3.5rem; scroll-margin-top: 80px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border); padding-bottom: 0.8rem; }
+        .section-title { font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 0.6rem; color: var(--text-dark); }
+        .badge-count { background: #e0e7ff; color: var(--primary); font-size: 0.85rem; padding: 0.2rem 0.6rem; border-radius: 20px; font-weight: 700; }
+
+        .grid-lessons { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 1.5rem; }
+
+        /* Lesson Card */
+        .lesson-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; transition: all 0.25s ease; display: flex; flex-direction: column; justify-content: space-between; }
+        .lesson-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: #c7d2fe; }
+        .card-badge { display: inline-block; padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.8rem; width: fit-content; }
+        .badge-12 { background: #e0e7ff; color: #3730a3; }
+        .badge-11 { background: #ecfeff; color: #0891b2; }
+        .badge-10 { background: #fef3c7; color: #b45309; }
+        
+        .lesson-title { font-size: 1.15rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.6rem; }
+        .lesson-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.2rem; }
+        .btn-card { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; padding: 0.75rem; border-radius: 10px; font-weight: 600; font-size: 0.95rem; text-decoration: none; background: #f1f5f9; color: var(--primary); transition: all 0.2s ease; }
+        .lesson-card:hover .btn-card { background: var(--primary); color: white; }
+
+        /* Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: all 0.25s ease; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-box { background: white; width: 90%; max-width: 440px; border-radius: 20px; padding: 2rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); position: relative; }
+        .modal-close { position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; font-size: 1.2rem; color: var(--text-muted); cursor: pointer; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; }
+        .form-control { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; outline: none; }
+        .btn-submit-sub { width: 100%; padding: 0.85rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+
+        footer { text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 4rem; }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="./" class="logo">
+            <div class="logo-icon"><i class="fa-solid fa-atom"></i></div>
+            <span>Vật Lí Trực Tuyến</span>
+        </a>
+        <button class="btn-subscribe" onclick="openSubscribeModal()">
+            <i class="fa-solid fa-bell"></i> Đăng ký theo dõi
+        </button>
+    </nav>
+
+    <!-- Hero -->
+    <header class="hero">
+        <h1 class="hero-title">Kho Bài Tập Trắc Nghiệm Vật Lí 10 - 11 - 12</h1>
+        <p class="hero-subtitle">Hệ thống bài tập trực tuyến, câu hỏi trắc nghiệm tương tác & đề thi ôn luyện chuẩn theo chương trình Vật lí THPT.</p>
+        <div class="grade-tabs">
+            <a href="#lop12" class="tab-btn">🎓 Vật Lí 12</a>
+            <a href="#lop11" class="tab-btn">🎓 Vật Lí 11</a>
+            <a href="#lop10" class="tab-btn">🎓 Vật Lí 10</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+
+        <!-- LỚP 12 -->
+        <section id="lop12" class="grade-section">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fa-solid fa-graduation-cap" style="color: var(--primary);"></i> Chương Trình Vật Lí 12</h2>
+                <span class="badge-count">7 bài học & đề thi</span>
+            </div>
+            <div class="grid-lessons">
+                <div class="lesson-card">
+                    <div>
+                        <span class="card-badge badge-12">Lớp 12 - Bài 1</span>
+                        <h3 class="lesson-title">Cấu trúc của chất. Sự chuyển thể</h3>
+                        <p class="lesson-desc">Mô hình động học phân tử, cấu trúc các thể chất và hiện tượng chuyển thể.</p>
+                    </div>
+                    <a href="./Lop12/Bai1" class="btn-card">Vào làm bài ngay <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+
+                <div class="lesson-card">
+                    <div>
+                        <span class="card-badge badge-12">Lớp 12 - Bài 2</span>
+                        <h3 class="lesson-title">Nội năng. Định luật I nhiệt động lực học</h3>
+                        <p class="lesson-desc">Nội năng, các cách làm thay đổi nội năng và định luật I nhiệt động lực học.</p>
+                    </div>
+                    <a href="./Lop12/Bai2" class="btn-card">Vào làm bài ngay <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+
+                <div class="lesson-card">
+                    <div>
+                        <span class="card-badge badge-12">Lớp 12 - Bài 3</span>
+                        <h3 class="lesson-title">Thang nhiệt độ. Nhiệt kế</h3>
+                        <p class="lesson-desc">Các loại thang nhiệt độ Celsius, Kelvin, nguyên lý nhiệt kế và đo nhiệt độ.</p>
+                    </div>
+                    <a href="./Lop12/Bai3" class="btn-card">Vào làm bài ngay <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+
+                <div class="lesson-card">
+                    <div>
+                        <span class="card-badge badge-12">Lớp 12 - Bài 4</span>
+                        <h3 class="lesson-title">Nhiệt dung riêng</h3>
+                        <p class="lesson-desc">Nhiệt dung riêng, công thức tính nhiệt lượng và thí nghiệm đo nhiệt dung riêng.</p>
+                    </div>
+                    <a href="./Lop12/Bai4" class="btn-card">Vào làm bài ngay <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+
+                <div class="lesson-card">
+                    <div>
+                        <span class="card-badge badge-12">Lớp 12 - Bài 5</span>
+                        <h3 class="lesson-title">Nhiệt nóng chảy riêng</h3>
+                        <p class="lesson-desc">Khái niệm nhiệt nóng chảy riêng, phương trình cân bằng nhiệt và bài tập thực tế.</p>
+                    </div>
+                    <a href="./Lop12/Bai5" class="btn-card">Vào làm bài ngay <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+
+                <div class="lesson-card">
+                    <div>
+                        <span class="card-badge badge-12" style="background:#fef3c7; color:#b45309;">Lớp 12 - Ôn tập</span>
+                        <h3 class="lesson-title">Ôn tập Chương 1 - Đề 1</h3>
+                        <p class="lesson-desc">Đề thi tổng hợp kiến thức Chương 1 Vật Lí 12 phân loại học sinh.</p>
+                    </div>
+                    <a href="./Lop12/de1-chuong1" class="btn-card">Vào làm bài ngay <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+
+                <div class="lesson-card">
+                    <div>
+                        <span class="card-badge badge-12" style="background:#fef3c7; color:#b45309;">Lớp 12 - Ôn tập</span>
+                        <h3 class="lesson-title">Ôn tập Chương 1 - Đề 2</h3>
+                        <p class="lesson-desc">Đề thi thử ôn tập Chương 1 Vật Lí 12 cấu trúc nâng cao.</p>
+                    </div>
+                    <a href="./Lop12/de2-chuong1" class="btn-card">Vào làm bài ngay <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- LỚP 11 -->
+        <section id="lop11" class="grade-section">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fa-solid fa-wave-square" style="color: var(--accent);"></i> Chương Trình Vật Lí 11</h2>
+                <span class="badge-count">2 bài học</span>
+            </div>
+            <div class="grid-lessons">
+                <div class="lesson-card">
+                    <div>
+                        <span class="card-badge badge-11">Lớp 11 - Bài 1</span>
+                        <h3 class="lesson-title">Dao động điều hòa</h3>
+                        <p class="lesson-desc">Khái niệm dao động điều hòa, li độ, biên độ, chu kỳ và tần số dao động.</p>
+                    </div>
+                    <a href="./Lop11/Bai1" class="btn-card">Vào làm bài ngay <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+
+                <div class="lesson-card">
+                    <div>
+                        <span class="card-badge badge-11">Lớp 11 - Bài 2</span>
+                        <h3 class="lesson-title">Mô tả dao động điều hòa</h3>
+                        <p class="lesson-desc">Phương trình dao động, đồ thị li độ và mối liên hệ pha trong dao động.</p>
+                    </div>
+                    <a href="./Lop11/Bai2" class="btn-card">Vào làm bài ngay <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- LỚP 10 -->
+        <section id="lop10" class="grade-section">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fa-solid fa-flask" style="color: #b45309;"></i> Chương Trình Vật Lí 10</h2>
+                <span class="badge-count">2 bài học</span>
+            </div>
+            <div class="grid-lessons">
+                <div class="lesson-card">
+                    <div>
+                        <span class="card-badge badge-10">Lớp 10 - Bài 1</span>
+                        <h3 class="lesson-title">Làm quen với Vật lí</h3>
+                        <p class="lesson-desc">Đối tượng nghiên cứu của Vật lí, phương pháp nghiên cứu và vai trò của Vật lí.</p>
+                    </div>
+                    <a href="./Lop10/Bai1" class="btn-card">Vào làm bài ngay <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+
+                <div class="lesson-card">
+                    <div>
+                        <span class="card-badge badge-10">Lớp 10 - Bài 2</span>
+                        <h3 class="lesson-title">Các quy tắc an toàn trong phòng thực hành</h3>
+                        <p class="lesson-desc">Quy tắc an toàn khi sử dụng các thiết bị thí nghiệm Vật lí và phòng chống cháy nổ.</p>
+                    </div>
+                    <a href="./Lop10/Bai2" class="btn-card">Vào làm bài ngay <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal Đăng Ký Theo Dõi -->
+    <div id="subscribeModal" class="modal-overlay">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeSubscribeModal()"><i class="fa-solid fa-xmark"></i></button>
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <div style="width: 50px; height: 50px; background: #e0e7ff; color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 1rem auto;"><i class="fa-solid fa-bell"></i></div>
+                <h3 style="font-size: 1.25rem; font-weight: 700;">Đăng Ký Theo Dõi Bài Học</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Nhận thông báo khi có bài tập mới từ Thầy Cô!</p>
+            </div>
+            <form id="subscribeForm" onsubmit="handleSubscribe(event)">
+                <div class="form-group">
+                    <label for="subName">Họ và tên học sinh <span style="color:red;">*</span></label>
+                    <input type="text" id="subName" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
+                </div>
+                <div class="form-group">
+                    <label for="subContact">Số điện thoại / Zalo hoặc Email <span style="color:red;">*</span></label>
+                    <input type="text" id="subContact" class="form-control" placeholder="Nhập Zalo hoặc Email" required>
+                </div>
+                <button type="submit" class="btn-submit-sub">🔔 Đăng Ký Nhận Thông Báo</button>
+            </form>
+            <div id="subSuccess" style="display: none; text-align: center; color: #059669; font-weight: 600; margin-top: 1rem;">
+                ✓ Cảm ơn bạn! Đăng ký theo dõi thành công.
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Vật Lí THPT - Hệ thống Bài tập & Trắc nghiệm Vật lí Trực tuyến.</p>
+    </footer>
+
+    <script>
+        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
+
+        function openSubscribeModal() { document.getElementById('subscribeModal').classList.add('active'); }
+        function closeSubscribeModal() { document.getElementById('subscribeModal').classList.remove('active'); }
+
+        function handleSubscribe(e) {
+            e.preventDefault();
+            const name = document.getElementById('subName').value;
+            const contact = document.getElementById('subContact').value;
+            const subs = JSON.parse(localStorage.getItem('user_subscriptions') || '[]');
+            subs.push({ name, contact, date: new Date().toISOString() });
+            localStorage.setItem('user_subscriptions', JSON.stringify(subs));
+
+            if (typeof GOOGLE_SHEETS_URL !== 'undefined' && GOOGLE_SHEETS_URL) {
+                try {
+                    fetch(GOOGLE_SHEETS_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "text/plain;charset=utf-8" },
+                        body: JSON.stringify({
+                            name: name,
+                            className: "ĐĂNG KÝ THEO DÕI",
+                            lesson: "Đăng ký nhận bài mới (Trang chủ chung 10-11-12)",
+                            correct: contact,
+                            score: "Đăng ký"
+                        }),
+                        redirect: "follow"
+                    }).catch(err => console.error(err));
+                } catch(err){}
+            }
+
+            document.getElementById('subscribeForm').style.display = 'none';
+            document.getElementById('subSuccess').style.display = 'block';
+            setTimeout(() => { closeSubscribeModal(); }, 1800);
+        }
+    </script>
+</body>
+</html>
