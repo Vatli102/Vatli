@@ -1103,6 +1103,142 @@
 
 
 <body class="tex2jax_ignore">
+<!-- Top Navigation Bar for Exercises -->
+<style>
+.top-nav-bar {
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+.top-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.btn-nav-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #e0e7ff;
+    color: #3730a3;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+.btn-nav-home:hover {
+    background: #c7d2fe;
+}
+.lesson-select {
+    padding: 0.45rem 0.8rem;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 0.85rem;
+    outline: none;
+    background: #f8fafc;
+    color: #0f172a;
+    font-weight: 500;
+}
+.btn-nav-sub {
+    background: linear-gradient(135deg, #4f46e5, #4338ca);
+    color: white;
+    border: none;
+    padding: 0.5rem 1.1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    box-shadow: 0 2px 8px rgba(79,70,229,0.2);
+}
+.btn-nav-sub:hover {
+    opacity: 0.95;
+}
+.sub-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 10000;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: all 0.25s ease;
+}
+.sub-modal-overlay.active { opacity: 1; pointer-events: auto; }
+.sub-modal-card {
+    background: white; width: 90%; max-width: 420px;
+    border-radius: 16px; padding: 1.8rem; position: relative;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+</style>
+
+<div class="top-nav-bar">
+    <div class="top-nav-left">
+        <a href="../" class="btn-nav-home"><i class="fa-solid fa-house"></i> Trang chủ</a>
+        <select class="lesson-select" onchange="if(this.value) window.location.href=this.value;">
+            <option value="">-- Chuyển bài tập --</option>
+            <option value="../Bai1">Bài 1: Cấu trúc của chất</option>
+            <option value="../Bai2">Bài 2: Nội năng & Định luật I</option>
+            <option value="../Bai3">Bài 3: Thang nhiệt độ</option>
+            <option value="../Bai4">Bài 4: Nhiệt dung riêng</option>
+            <option value="../Bai5">Bài 5: Nhiệt nóng chảy riêng</option>
+            <option value="../de1-chuong1">Ôn tập Chương 1 - Đề 1</option>
+            <option value="../de2-chuong1">Ôn tập Chương 1 - Đề 2</option>
+        </select>
+    </div>
+    <button class="btn-nav-sub" onclick="openNavSubModal()"><i class="fa-solid fa-bell"></i> Đăng ký theo dõi</button>
+</div>
+
+<!-- Modal Popup Đăng ký -->
+<div id="navSubModal" class="sub-modal-overlay">
+    <div class="sub-modal-card">
+        <button style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.2rem; cursor: pointer;" onclick="closeNavSubModal()">✕</button>
+        <div style="text-align: center; margin-bottom: 1.2rem;">
+            <div style="width: 48px; height: 48px; background: #e0e7ff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin: 0 auto 0.8rem auto;">🔔</div>
+            <h3 style="font-size: 1.2rem; font-weight: 700; color: #0f172a;">Đăng Ký Theo Dõi Bài Học</h3>
+            <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.2rem;">Nhận thông báo bài tập mới & cập nhật từ Thầy Cô!</p>
+        </div>
+        <form onsubmit="saveNavSub(event)">
+            <div style="margin-bottom: 0.8rem;">
+                <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.3rem; color: #334155;">Họ và tên học sinh *</label>
+                <input type="text" id="navSubName" required placeholder="Ví dụ: Nguyễn Văn A" style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; outline: none;">
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.3rem; color: #334155;">Số điện thoại / Zalo hoặc Email *</label>
+                <input type="text" id="navSubContact" required placeholder="Nhập Zalo hoặc Email" style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; outline: none;">
+            </div>
+            <button type="submit" style="width: 100%; padding: 0.75rem; background: #4f46e5; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer;">🔔 Đăng Ký Nhận Bài Học</button>
+        </form>
+        <div id="navSubMsg" style="display: none; text-align: center; color: #059669; font-weight: 600; margin-top: 0.8rem; font-size: 0.9rem;">
+            ✓ Đăng ký theo dõi thành công! Cảm ơn bạn.
+        </div>
+    </div>
+</div>
+
+<script>
+function openNavSubModal() { document.getElementById('navSubModal').classList.add('active'); }
+function closeNavSubModal() { document.getElementById('navSubModal').classList.remove('active'); }
+function saveNavSub(e) {
+    e.preventDefault();
+    const name = document.getElementById('navSubName').value;
+    const contact = document.getElementById('navSubContact').value;
+    const subs = JSON.parse(localStorage.getItem('user_subscriptions') || '[]');
+    subs.push({ name, contact, date: new Date().toISOString() });
+    localStorage.setItem('user_subscriptions', JSON.stringify(subs));
+    document.getElementById('navSubMsg').style.display = 'block';
+    setTimeout(() => { closeNavSubModal(); }, 1500);
+}
+</script>
 
 
 
@@ -6053,6 +6189,7 @@ function renderQuiz() {
 
 
 </html>
+
 
 
 
