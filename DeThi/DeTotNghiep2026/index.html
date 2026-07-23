@@ -3,10 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đề Thi Tốt Nghiệp THPT 2026 - Bài Thi Trắc Nghiệm Trực Tuyến</title>
+    <title>Đề Thi Tốt Nghiệp THPT 2026 - Trắc Nghiệm Vật Lí Trực Tuyến</title>
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- MathJax 3 for rendering physics & math formulas & nuclear symbols -->
+    <script>
+        MathJax = {
+            tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
     <style>
         :root {
             --primary: #4f46e5;
@@ -22,6 +34,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-dark); line-height: 1.6; padding-bottom: 60px; }
 
+        /* Floating Capsule Nav */
         .nav-capsule-wrap {
             position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 99999;
             width: 96%; max-width: 760px; pointer-events: auto;
@@ -44,7 +57,7 @@
             padding: 6px 8px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3); background: #ffffff; color: #0f172a; font-weight: 600; font-size: 0.8rem; outline: none; cursor: pointer; max-width: 140px; text-overflow: ellipsis; flex-shrink: 1;
         }
 
-        .quiz-container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
+        .quiz-container { max-width: 920px; margin: 20px auto; padding: 0 15px; }
         
         .exam-banner {
             background: linear-gradient(135deg, #1e1b4b, #3730a3); color: white;
@@ -74,11 +87,11 @@
             border-radius: 12px; font-weight: 800; font-size: 1.1rem; margin: 30px 0 15px 0; border-left: 5px solid var(--primary);
         }
         .question-card {
-            background: white; border-radius: 14px; padding: 20px; margin-bottom: 20px;
+            background: white; border-radius: 14px; padding: 22px; margin-bottom: 20px;
             border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
-        .question-title { font-weight: 700; font-size: 1rem; color: var(--text-dark); margin-bottom: 12px; }
-        .question-title img { max-width: 100%; height: auto; border-radius: 8px; margin: 10px 0; display: block; }
+        .question-title { font-weight: 700; font-size: 1rem; color: var(--text-dark); margin-bottom: 14px; line-height: 1.6; }
+        .question-img { max-width: 100%; max-height: 380px; border-radius: 10px; margin: 12px auto; display: block; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #cbd5e1; }
         
         .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
         @media (min-width: 600px) { .options-grid { grid-template-columns: 1fr 1fr; } }
@@ -88,18 +101,18 @@
         }
         .option-btn:hover { background: #f1f5f9; }
         .option-btn.selected { background: #e0e7ff; border-color: var(--primary); font-weight: 700; color: #3730a3; }
-        .option-prefix { background: white; border: 1px solid #cbd5e1; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; flex-shrink: 0; }
+        .option-prefix { background: white; border: 1px solid #cbd5e1; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.82rem; flex-shrink: 0; }
         .option-btn.selected .option-prefix { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .tf-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--border); gap: 10px; }
+        .tf-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 8px; border-bottom: 1px solid var(--border); gap: 10px; }
         .tf-buttons { display: flex; gap: 8px; flex-shrink: 0; }
-        .btn-tf { padding: 6px 14px; border-radius: 8px; border: 1.5px solid var(--border); background: white; font-weight: 700; font-size: 0.82rem; cursor: pointer; }
+        .btn-tf { padding: 6px 16px; border-radius: 8px; border: 1.5px solid var(--border); background: white; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.15s; }
         .btn-tf.selected-true { background: #dcfce7; border-color: #22c55e; color: #15803d; }
         .btn-tf.selected-false { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
 
         .explanation-box {
-            background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 12px 15px;
-            margin-top: 15px; font-size: 0.88rem; color: #0369a1; display: none;
+            background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 14px 16px;
+            margin-top: 15px; font-size: 0.9rem; color: #0369a1; display: none; line-height: 1.6;
         }
         .explanation-box.show { display: block; }
 
@@ -118,6 +131,7 @@
 </head>
 <body>
 
+<!-- Dynamic Floating Capsule Navigation Bar -->
 <div class="nav-capsule-wrap">
     <div class="nav-capsule-body">
         <a href="../../" class="nav-btn-home">🏠 Trang chủ</a>
@@ -155,14 +169,15 @@
 <div class="quiz-container">
     <div class="exam-banner">
         <h1>📖 Đề Thi Tốt Nghiệp THPT 2026</h1>
-        <p>Mã đề 0230 - Đề thi chính thức Bộ Giáo dục & Đào tạo</p>
-        <span class="badge-exam">⏱ Thời gian làm bài: 50 Phút | 28 Câu Hỏi Trắc Nghiệm</span>
+        <p>Mã đề 0230 - Đề thi chính thức Bộ Giáo dục & Đào tạo (Kèm Hình Vẽ & Công Thức)</p>
+        <span class="badge-exam">⏱ Thời gian làm bài: 50 Phút | 28 Câu Hỏi Trắc Nghiệm (Có Đồ Thị & Sơ Đồ)</span>
     </div>
 
+    <!-- Khung Nhập Thông Tin -->
     <div id="studentLoginCard" class="login-card">
         <div style="width: 50px; height: 50px; background: #e0e7ff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 12px auto;">📝</div>
         <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 8px;">THÔNG TIN HỌC SINH LÀM BÀI THI</h2>
-        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px;">Điền Họ tên và Lớp để bắt đầu tính giờ làm bài & lưu bảng điểm tự động.</p>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px;">Điền Họ tên và Lớp để bắt đầu làm bài thi & tự động lưu điểm số.</p>
         
         <div class="form-group">
             <label>Họ và tên học sinh <span style="color:red;">*</span></label>
@@ -175,6 +190,7 @@
         <button type="button" class="btn-start" onclick="startQuizExam()">🚀 BẮT ĐẦU LÀM BÀI THI</button>
     </div>
 
+    <!-- Nội dung bài thi tương tác -->
     <div id="quizContent" style="display: none;">
         <div class="section-header">📌 PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn (18 câu)</div>
         <div id="part1Container"></div>
@@ -211,6 +227,7 @@
     </div>
 </div>
 
+<!-- Modal Popup Đăng Ký -->
 <div id="navSubModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 10000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: all 0.25s ease;">
     <div style="background: white; width: 90%; max-width: 420px; border-radius: 16px; padding: 1.8rem; position: relative;">
         <button style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b;" onclick="closeNavSubModal()">✕</button>
@@ -240,9 +257,9 @@
 const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
 const examTitleStr = "Đề Thi Tốt Nghiệp THPT 2026";
 
-const part1Data = [{"id": 1, "question": "Hai hạt nhân X và Y có năng lượng liên kết bằng nhau. Nếu số nucleon của hạt nhân X nhỏ hơn số nucleon của Y thì", "options": ["Độ hụt khối của Y lớn hơn X", "Độ hụt khối của X lớn hơn Y", "Hạt nhân X bền vững hơn hạt nhân Y", "Hạt nhân Y bền vững hơn hạt nhân X"], "answer": 2, "explanation": "E_lk bằng nhau, X có số A_X nhỏ hơn nên năng lượng liên kết riêng (E_lk / A_X) lớn hơn => X bền vững hơn Y."}, {"id": 2, "question": "Khi truyền cùng nhiệt lượng Q cho hai vật cùng khối lượng m làm từ 2 chất khác nhau:", "options": ["Vật có nhiệt dung riêng lớn hơn có độ biến thiên nhiệt độ lớn hơn", "Hai vật có độ biến thiên nhiệt độ bằng nhau", "Hai vật không thay đổi nhiệt độ", "Vật có nhiệt dung riêng lớn hơn có độ biến thiên nhiệt độ nhỏ hơn"], "answer": 3, "explanation": "Δt = Q / (m.c). Với c càng lớn thì độ biến thiên nhiệt độ Δt càng nhỏ."}, {"id": 3, "question": "Một nguồn phóng xạ dùng trong y tế được bảo quản trong bình chì. Phát biểu nào sau đây đúng?", "options": ["Số phân rã phụ thuộc độ mạnh chùm chiếu", "Phụ thuộc số lần mở cửa bình", "Không phụ thuộc số lần mở bình hay độ mạnh chùm chiếu", "Phụ thuộc cả hai"], "answer": 2, "explanation": "Sự phân rã phóng xạ xảy ra tự phát bên trong hạt nhân, không phụ thuộc tác động bên ngoài."}, {"id": 4, "question": "Phân tử khí lí tưởng gây ra áp suất lên thành bình chứa do chúng", "options": ["Va chạm vào thành bình", "Hút nhau", "Va chạm với nhau", "Đẩy nhau"], "answer": 0, "explanation": "Áp suất chất khí lên thành bình là tổng hợp các lực va chạm của vô số phân tử khí lên bề mặt thành bình."}, {"id": 5, "question": "Trong từ trường đều, một proton chuyển động tròn đều chỉ do tác dụng của lực từ. Phát biểu nào đúng?", "options": ["Vận tốc không đổi", "Động năng tăng", "Lực từ không sinh công", "Gia tốc không đổi"], "answer": 2, "explanation": "Lực từ vuông góc với vận tốc v nên công của lực từ A = 0 (lực từ không sinh công)."}, {"id": 6, "question": "Khi đặt vật 1 tiếp xúc nhiệt với vật 2 có sự truyền nhiệt từ vật 1 sang vật 2, phát biểu đúng là", "options": ["Vật 1 chứa nhiều nhiệt lượng", "Vật 2 chứa ít nhiệt lượng", "Vật 1 có nhiệt độ cao hơn vật 2", "Vật 1 và 2 không có nhiệt độ"], "answer": 2, "explanation": "Nhiệt tự truyền từ vật có nhiệt độ cao hơn (vật 1) sang vật có nhiệt độ thấp hơn (vật 2)."}, {"id": 7, "question": "Khi ở gần nhau", "options": ["Hai điện tích trái dấu đẩy nhau", "Hai cực từ khác loại của hai nam châm hút nhau", "Hai dòng điện ngược chiều hút nhau", "Hai cực từ cùng loại hút nhau"], "answer": 1, "explanation": "Hai cực từ khác loại (Bắc - Nam) của hai nam châm thì hút nhau."}, {"id": 8, "question": "Khi một khối khí lí tưởng xác định dãn nở đẳng nhiệt thì", "options": ["Áp suất khí tăng", "Áp suất khí giảm", "Nhiệt độ khí tăng", "Thể tích khí giảm"], "answer": 1, "explanation": "Đắng nhiệt: p.V = const. Dãn nở V tăng nên áp suất p phải giảm."}, {"id": 9, "question": "Một khối khí lí tưởng biến đổi đẳng tích từ trạng thái X sang Y có nhiệt độ tăng lên. Công mà khí thực hiện là", "options": ["Dương", "Âm", "Bằng biến thiên nội năng", "Bằng 0"], "answer": 3, "explanation": "Quá trình đẳng tích V = const (không đổi thể tích) nên công A = 0."}, {"id": 10, "question": "Khi đun một ấm nước đang sôi, dù tiếp tục cấp nhiệt thì nhiệt độ của nước", "options": ["Tiếp tục tăng mạnh", "Giảm xuống", "Tăng chậm", "Không thay đổi (giữ nguyên ở 100°C)"], "answer": 3, "explanation": "Trong quá trình chuyển thể (sôi), nhiệt độ của chất lỏng giữ không đổi."}, {"id": 11, "question": "Trong chẩn đoán y tế, chọn đồng vị phóng xạ đưa vào cơ thể nên có chu kỳ bán rã", "options": ["Rất dài vài ngàn năm", "Vừa phải vài triệu năm", "Không có chu kỳ", "Ngắn (vài giờ đến vài ngày)"], "answer": 3, "explanation": "Đồng vị y học cần chu kỳ bán rã ngắn để nhanh chóng đào thải/phân rã hết, giảm tác hại tia phóng xạ cho bệnh nhân."}, {"id": 12, "question": "Một khối chất lỏng có đặc điểm", "options": ["Có thể tích và hình dạng xác định", "Có thể tích xác định nhưng không có hình dạng xác định", "Không có thể tích xác định", "Dễ bị nén ép"], "answer": 1, "explanation": "Chất lỏng có thể tích xác định nhưng lấy hình dạng của bình chứa nó."}, {"id": 13, "question": "Định luật Charles mô tả mối liên hệ giữa", "options": ["Áp suất và thể tích đẳng nhiệt", "Nhiệt độ và khối lượng", "Thể tích và nhiệt độ tuyệt đối khi áp suất không đổi", "Nhiệt lượng và công"], "answer": 2, "explanation": "Định luật Charles: V/T = hằng số trong quá trình đẳng áp."}, {"id": 14, "question": "Quá trình chuyển thể từ rắn sang lỏng gọi là", "options": ["Sự ngưng tụ", "Sự nóng chảy", "Sự hóa hơi", "Sự đông đặc"], "answer": 1, "explanation": "Quá trình chuyển thể từ rắn sang lỏng gọi là sự nóng chảy."}, {"id": 15, "question": "Phát biểu đúng về dòng điện xoay chiều:", "options": ["Có chiều không đổi", "Có cường độ không đổi", "Có cường độ biến thiên điều hòa theo thời gian", "Không có tần số"], "answer": 2, "explanation": "Dòng điện xoay chiều có cường độ biến thiên điều hòa i = I0.cos(ωt + φ)."}, {"id": 16, "question": "Theo định luật Lenz, dòng điện cảm ứng xuất hiện có chiều sao cho từ trường do nó sinh ra", "options": ["Cùng chiều từ trường ban đầu", "Chống lại sự biến thiên từ thông sinh ra nó", "Làm tăng từ thông", "Triệt tiêu từ trường ngoài"], "answer": 1, "explanation": "Định luật Lenz: Từ trường cảm ứng luôn chống lại nguyên nhân sinh ra nó (chống sự biến thiên từ thông)."}, {"id": 17, "question": "Một proton đứng yên sẽ", "options": ["Tạo ra từ trường mạnh", "Tạo ra cả điện trường và từ trường", "Tạo ra điện trường xung quanh nó", "Không tạo ra trường nào"], "answer": 2, "explanation": "Đứng yên mang điện dương +e nên proton tạo ra điện trường tĩnh xung quanh."}, {"id": 18, "question": "Nén một khối khí lí tưởng trong xilanh cách nhiệt. Nội năng của khối khí", "options": ["Giảm đi", "Không đổi", "Bằng 0", "Tăng lên"], "answer": 3, "explanation": "Xilanh cách nhiệt Q = 0. Nén khí làm công nhận A > 0 => ΔU = A > 0 => Nội năng tăng."}];
-const part2Data = [{"id": 1, "question": "Khung dây dẫn hình vuông cạnh a = 10 cm đặt trong từ trường đều B = 0,05 T:", "subQuestions": [{"text": "a) Từ thông qua khung dây cực đại khi mặt phẳng khung vuông góc đường sức từ.", "answer": true}, {"text": "b) Từ thông cực đại Φmax = B.S = 5.10^-4 Wb.", "answer": true}, {"text": "c) Khi khung dây song song với đường sức từ thì từ thông bằng 0.", "answer": true}, {"text": "d) Đột ngột tăng B thì từ trường cảm ứng cùng chiều B ban đầu.", "answer": false}], "explanation": "Khi B tăng (từ thông tăng), từ trường cảm ứng B_cu phải NGƯỢC CHIỀU với B ban đầu để chống lại sự tăng."}, {"id": 2, "question": "Xét thí nghiệm tán xạ hạt alpha của Rutherford:", "subQuestions": [{"text": "a) Chứng minh nguyên tử có cấu tạo rỗng.", "answer": true}, {"text": "b) Hạt nhân nguyên tử tập trung hầu như toàn bộ khối lượng nguyên tử.", "answer": true}, {"text": "c) Các hạt alpha bị bật ngược trở lại là do va chạm với electron.", "answer": false}, {"text": "d) Kích thước hạt nhân rất nhỏ so với kích thước nguyên tử.", "answer": true}], "explanation": "Hạt alpha bị bật lại là do đẩy tĩnh điện cực mạnh từ HẠT NHÂN mang điện dương, không phải do electron."}, {"id": 3, "question": "Xét công thức đo nhiệt dung riêng c = Q / (m.Δt):", "subQuestions": [{"text": "a) Đơn vị của c trong hệ SI là J/(kg.K).", "answer": true}, {"text": "b) Nhiệt dung riêng là nhiệt lượng cần cung cấp cho 1 kg chất đó tăng thêm 1 K.", "answer": true}, {"text": "c) Các chất khác nhau thì nhiệt dung riêng giống nhau.", "answer": false}, {"text": "d) Nước có nhiệt dung riêng lớn hơn nhiều so với kim loại đồng.", "answer": true}], "explanation": "Mỗi chất có một nhiệt dung riêng đặc trưng riêng (không giống nhau)."}, {"id": 4, "question": "Xét xilanh cách nhiệt chứa khí lí tưởng phân làm 2 ngăn bởi pittông cách nhiệt:", "subQuestions": [{"text": "a) Khí ở hai ngăn không trao đổi nhiệt với nhau.", "answer": true}, {"text": "b) Khi pittông dịch chuyển làm ngăn 1 nén khí thì nội năng ngăn 1 tăng.", "answer": true}, {"text": "c) Ngăn 2 dãn nở làm công nên nội năng ngăn 2 giảm.", "answer": true}, {"text": "d) Tổng nội năng của hai ngăn không đổi trong suốt quá trình.", "answer": true}], "explanation": "Hệ hai ngăn kín cách nhiệt toàn phần nên tổng nội năng của hệ được bảo toàn."}];
-const part3Data = [{"id": 1, "question": "Pin hạt nhân cung cấp năng lượng điện trong giây đầu tiên là bao nhiêu mJ? (Nhập số nguyên)", "answer": "120", "explanation": "P = 120 mW = 120 mJ/s => E = 120 mJ."}, {"id": 2, "question": "Sau t = 10 năm, số hạt nhân Pu-238 còn lại chiếm bao nhiêu phần trăm ban đầu (biết T = 87.7 năm)? (Làm tròn 1 chữ số thập phân)", "answer": "92.4", "explanation": "N/N0 = (1/2)^(10 / 87.7) ≈ 0.924 = 92.4%."}, {"id": 3, "question": "Áp suất lốp xe khuyến nghị 2.2 bar. Khi chạy nóng áp suất tăng lên 2.53 bar. Áp suất tăng bao nhiêu phần trăm? (Làm tròn số nguyên)", "answer": "15", "explanation": "% tăng = (2.53 - 2.2) / 2.2 = 0.33 / 2.2 = 15%."}, {"id": 4, "question": "Người lái xe xả bớt khí để áp suất về lại 2.2 bar ở nhiệt độ cao. Phần trăm khối lượng khí đã xả bớt là bao nhiêu %? (Làm tròn số nguyên)", "answer": "13", "explanation": "% xả = (2.53 - 2.2) / 2.53 ≈ 13%."}, {"id": 5, "question": "Thanh kim loại dài 20 cm di chuyển với tốc độ 5 m/s trong từ trường B = 0.4 T. Suất điện động cảm ứng xuất hiện là bao nhiêu mV? (Nhập số nguyên)", "answer": "400", "explanation": "e = B.v.L = 0.4 * 5 * 0.2 = 0.4 V = 400 mV."}, {"id": 6, "question": "Cho điện trở thanh R = 2.0 Ω. Công suất tỏa nhiệt trên thanh là bao nhiêu mW? (Nhập số nguyên)", "answer": "80", "explanation": "P = e^2 / R = (0.4)^2 / 2.0 = 0.16 / 2 = 0.08 W = 80 mW."}];
+const part1Data = [{"id": 1, "question": "Hai hạt nhân X và Y có năng lượng liên kết bằng nhau. Nếu số nucleon của X nhỏ hơn Y thì", "options": ["Độ hụt khối Y lớn hơn X", "Độ hụt khối X lớn hơn Y", "Hạt nhân X bền vững hơn Y", "Hạt nhân Y bền vững hơn X"], "answer": 2, "explanation": "E_lk / A_X > E_lk / A_Y do A_X < A_Y. Do đó X bền vững hơn Y."}, {"id": 2, "question": "Khi truyền cùng nhiệt lượng Q cho 2 vật cùng khối lượng m làm từ 2 chất khác nhau:", "options": ["Vật có nhiệt dung riêng c lớn hơn có Δt lớn hơn", "Hai vật có Δt bằng nhau", "Hai vật không đổi nhiệt độ", "Vật có nhiệt dung riêng c lớn hơn có Δt nhỏ hơn"], "answer": 3, "explanation": "Δt = Q / (m.c). c lớn hơn thì Δt nhỏ hơn."}, {"id": 3, "question": "Nguồn phóng xạ y tế bảo quản trong bình chì. Phát biểu nào đúng?", "options": ["Phụ thuộc độ mạnh chùm chiếu", "Phụ thuộc số lần mở bình", "Không phụ thuộc số lần mở bình hay độ mạnh chùm chiếu", "Phụ thuộc cả hai"], "answer": 2, "explanation": "Phóng xạ là quá trình tự phát bên trong hạt nhân."}, {"id": 4, "question": "Các phân tử khí lí tưởng gây ra áp suất lên thành bình chứa do", "options": ["Va chạm vào thành bình", "Hút nhau", "Va chạm với nhau", "Đẩy nhau"], "answer": 0, "explanation": "Áp suất là tổng lực va chạm của vô số phân tử khí lên thành bình."}, {"id": 5, "question": "Trong từ trường đều, một proton chuyển động tròn đều do lực từ. Phát biểu đúng là", "options": ["Vận tốc không đổi", "Động năng tăng", "Lực từ không sinh công", "Gia tốc không đổi"], "answer": 2, "explanation": "Lực từ vuông góc với vận tốc nên công của lực từ A = 0."}, {"id": 6, "question": "Khi đặt vật 1 tiếp xúc nhiệt với vật 2 có sự truyền nhiệt từ vật 1 sang vật 2, phát biểu đúng là", "options": ["Vật 1 chứa nhiều nhiệt lượng", "Vật 2 chứa ít nhiệt lượng", "Vật 1 có nhiệt độ cao hơn vật 2", "Vật 1 và 2 không có nhiệt độ"], "answer": 2, "explanation": "Nhiệt tự truyền từ vật có nhiệt độ cao sang vật có nhiệt độ thấp."}, {"id": 7, "question": "Khi ở gần nhau", "options": ["Hai điện tích trái dấu đẩy nhau", "Hai cực từ khác loại của hai nam châm hút nhau", "Hai dòng điện ngược chiều hút nhau", "Hai cực từ cùng loại hút nhau"], "answer": 1, "explanation": "Hai cực từ khác loại thì hút nhau."}, {"id": 8, "question": "Khi khối khí lí tưởng dãn nở đẳng nhiệt thì", "options": ["Áp suất khí tăng", "Áp suất khí giảm", "Nhiệt độ khí tăng", "Thể tích khí giảm"], "answer": 1, "explanation": "Đắng nhiệt p.V = const. V tăng thì p giảm."}, {"id": 9, "question": "Khối khí biến đổi đẳng tích từ trạng thái X sang Y có nhiệt độ tăng. Công mà khí thực hiện là", "options": ["Dương", "Âm", "Bằng ΔU", "Bằng 0"], "answer": 3, "explanation": "Đắng tích V không đổi nên công A = 0."}, {"id": 10, "question": "Khi đun ấm nước đang sôi, dù tiếp tục cấp nhiệt lượng thì nhiệt độ của nước", "options": ["Tăng mạnh", "Giảm xuống", "Tăng chậm", "Không thay đổi (100°C)"], "answer": 3, "explanation": "Trong quá trình sôi, nhiệt độ giữ nguyên."}, {"id": 11, "question": "Trong chẩn đoán y tế, đồng vị phóng xạ đưa vào cơ thể nên có chu kỳ bán rã", "options": ["Rất dài", "Vừa phải vài triệu năm", "Không có chu kỳ", "Ngắn (vài giờ đến vài ngày)"], "answer": 3, "explanation": "Chu kỳ ngắn để đào thải/phân rã nhanh, giảm tác hại tia phóng xạ."}, {"id": 12, "question": "Khối chất lỏng có đặc điểm", "options": ["Có thể tích và hình dạng xác định", "Có thể tích xác định nhưng không có hình dạng xác định", "Không có thể tích xác định", "Dễ bị nén"], "answer": 1, "explanation": "Chất lỏng có thể tích xác định nhưng không có hình dạng riêng."}, {"id": 13, "question": "Định luật Charles mô tả mối liên hệ giữa", "options": ["Áp suất và thể tích đẳng nhiệt", "Nhiệt độ và khối lượng", "Thể tích và nhiệt độ tuyệt đối khi áp suất không đổi", "Nhiệt lượng và công"], "answer": 2, "explanation": "V/T = const khi p không đổi."}, {"id": 14, "question": "Quá trình chuyển thể từ rắn sang lỏng gọi là", "options": ["Sự ngưng tụ", "Sự nóng chảy", "Sự hóa hơi", "Sự đông đặc"], "answer": 1, "explanation": "Quá trình chuyển từ rắn sang lỏng là sự nóng chảy."}, {"id": 15, "question": "Phát biểu đúng về dòng điện xoay chiều:", "options": ["Có chiều không đổi", "Có cường độ không đổi", "Có cường độ biến thiên điều hòa theo thời gian", "Không có tần số"], "answer": 2, "explanation": "Dòng điện xoay chiều biến thiên điều hòa theo thời gian."}, {"id": 16, "question": "Theo định luật Lenz, dòng điện cảm ứng sinh ra từ trường có chiều sao cho", "options": ["Cùng chiều từ trường ban đầu", "Chống lại sự biến thiên từ thông sinh ra nó", "Làm tăng từ thông", "Triệt tiêu từ trường ngoài"], "answer": 1, "explanation": "Từ trường cảm ứng chống lại nguyên nhân sinh ra nó."}, {"id": 17, "question": "Một proton đứng yên sẽ", "options": ["Tạo ra từ trường mạnh", "Tạo ra điện trường và từ trường", "Tạo ra điện trường xung quanh nó", "Không tạo ra trường nào"], "answer": 2, "explanation": "Đứng yên tạo điện trường tĩnh xung quanh."}, {"id": 18, "question": "Nén khối khí lí tưởng trong xilanh cách nhiệt. Nội năng của khối khí", "options": ["Giảm đi", "Không đổi", "Bằng 0", "Tăng lên"], "answer": 3, "explanation": "Q = 0, nén khí A > 0 => ΔU = A > 0 làm nội năng tăng."}];
+const part2Data = [{"id": 1, "question": "Khung dây vuông cạnh a = 10 cm đặt trong từ trường đều B = 0,05 T:", "image": "DeTotNghiep2026_files/image001.gif", "subQuestions": [{"text": "a) Từ thông cực đại khi mặt phẳng khung vuông góc đường sức từ.", "answer": true}, {"text": "b) Từ thông cực đại Φmax = B.S = 5.10^-4 Wb.", "answer": true}, {"text": "c) Khi khung song song đường sức từ thì từ thông bằng 0.", "answer": true}, {"text": "d) Đột ngột tăng B thì từ trường cảm ứng cùng chiều B ban đầu.", "answer": false}], "explanation": "Tăng B làm từ thông tăng nên B_cu phải ngược chiều B ban đầu."}, {"id": 2, "question": "Xét thí nghiệm tán xạ hạt alpha của Rutherford:", "image": "DeTotNghiep2026_files/image008.jpg", "subQuestions": [{"text": "a) Chứng minh nguyên tử cấu tạo rỗng.", "answer": true}, {"text": "b) Hạt nhân tập trung hầu hết khối lượng nguyên tử.", "answer": true}, {"text": "c) Hạt alpha bật lại do va chạm với electron.", "answer": false}, {"text": "d) Kích thước hạt nhân rất nhỏ so với nguyên tử.", "answer": true}], "explanation": "Hạt alpha bị bật lại do lực đẩy tĩnh điện mạnh từ hạt nhân."}, {"id": 3, "question": "Xét công thức đo nhiệt dung riêng c = Q / (m.Δt):", "subQuestions": [{"text": "a) Đơn vị của c trong hệ SI là J/(kg.K).", "answer": true}, {"text": "b) Nhiệt dung riêng là nhiệt lượng làm 1 kg chất tăng thêm 1 K.", "answer": true}, {"text": "c) Các chất khác nhau thì nhiệt dung riêng giống nhau.", "answer": false}, {"text": "d) Nước có nhiệt dung riêng lớn hơn nhiều so với đồng.", "answer": true}], "explanation": "Mỗi chất có nhiệt dung riêng đặc trưng khác nhau."}, {"id": 4, "question": "Xét xilanh cách nhiệt chia 2 ngăn bởi pit-tông cách nhiệt:", "image": "DeTotNghiep2026_files/image027.jpg", "subQuestions": [{"text": "a) Khí 2 ngăn không trao đổi nhiệt với nhau.", "answer": true}, {"text": "b) Khi pit-tông dịch chuyển nén ngăn 1 thì nội năng ngăn 1 tăng.", "answer": true}, {"text": "c) Ngăn 2 dãn nở làm công nên nội năng ngăn 2 giảm.", "answer": true}, {"text": "d) Tổng nội năng của hai ngăn không đổi.", "answer": true}], "explanation": "Tất cả 4 ý đều đúng theo định luật bảo toàn năng lượng."}];
+const part3Data = [{"id": 1, "question": "Pin hạt nhân cung cấp năng lượng điện trong giây đầu tiên là bao nhiêu mJ? (Nhập số nguyên)", "answer": "120", "explanation": "P = 120 mW = 120 mJ/s => E = 120 mJ."}, {"id": 2, "question": "Sau t = 10 năm, phần trăm số hạt nhân Pu-238 chưa phân rã là bao nhiêu % (T = 87,7 năm)? (Làm tròn 1 chữ số thập phân)", "answer": "92.4", "explanation": "N/N0 = (1/2)^(10 / 87.7) ≈ 92,4%."}, {"id": 3, "question": "Áp suất lốp xe khuyến nghị 2,2 bar. Khi chạy nóng tăng lên 2,53 bar. Áp suất tăng bao nhiêu %? (Làm tròn số nguyên)", "answer": "15", "explanation": "% tăng = (2,53 - 2,2) / 2,2 = 15%."}, {"id": 4, "question": "Xả bớt khí để áp suất về 2,2 bar ở nhiệt độ cao. Phần trăm khối lượng khí đã xả bớt là bao nhiêu %? (Làm tròn số nguyên)", "answer": "13", "explanation": "% xả = (2,53 - 2,2) / 2,53 ≈ 13%."}, {"id": 5, "question": "Thanh kim loại dài 20 cm di chuyển với tốc độ 5 m/s trong từ trường B = 0,4 T. Suất điện động cảm ứng là bao nhiêu mV? (Nhập số nguyên)", "answer": "400", "explanation": "e = B.v.L = 0,4 * 5 * 0,2 = 0,4 V = 400 mV."}, {"id": 6, "question": "Cho điện trở thanh R = 2,0 Ω. Công suất tỏa nhiệt trên thanh là bao nhiêu mW? (Nhập số nguyên)", "answer": "80", "explanation": "P = e^2 / R = (0,4)^2 / 2,0 = 0,08 W = 80 mW."}];
 
 let userPart1 = {};
 let userPart2 = {};
@@ -291,6 +308,7 @@ function renderExamQuestions() {
     p1Container.innerHTML = part1Data.map((q, idx) => `
         <div class="question-card" id="p1-q-${q.id}">
             <div class="question-title">Câu ${idx + 1}: ${q.question}</div>
+            ${q.image ? `<img src="${q.image}" class="question-img" alt="Hình vẽ câu ${idx + 1}">` : ''}
             <div class="options-grid">
                 ${q.options.map((opt, oIdx) => `
                     <div class="option-btn" onclick="selectP1(${q.id}, ${oIdx}, this)" id="p1-q-${q.id}-opt-${oIdx}">
@@ -309,6 +327,7 @@ function renderExamQuestions() {
     p2Container.innerHTML = part2Data.map((q, idx) => `
         <div class="question-card" id="p2-q-${q.id}">
             <div class="question-title">Câu ${idx + 1}: ${q.question}</div>
+            ${q.image ? `<img src="${q.image}" class="question-img" alt="Hình vẽ câu ${idx + 1}">` : ''}
             ${q.subQuestions.map((sub, sIdx) => `
                 <div class="tf-row">
                     <div><b>${sub.text}</b></div>
@@ -328,6 +347,7 @@ function renderExamQuestions() {
     p3Container.innerHTML = part3Data.map((q, idx) => `
         <div class="question-card" id="p3-q-${q.id}">
             <div class="question-title">Câu ${idx + 1}: ${q.question}</div>
+            ${q.image ? `<img src="${q.image}" class="question-img" alt="Hình vẽ câu ${idx + 1}">` : ''}
             <div style="margin-top: 10px;">
                 <input type="text" class="form-control" style="max-width: 250px;" placeholder="Nhập đáp số..." onchange="userPart3[${q.id}] = this.value.trim()">
             </div>
@@ -336,6 +356,11 @@ function renderExamQuestions() {
             </div>
         </div>
     `).join('');
+
+    // Trigger MathJax re-render after rendering HTML
+    if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise();
+    }
 }
 
 function selectP1(qId, oIdx, btn) {
