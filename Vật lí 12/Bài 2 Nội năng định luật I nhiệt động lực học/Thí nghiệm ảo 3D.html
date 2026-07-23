@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thí Nghiệm Ảo 3D Vật Lý: Xilanh Pít-tông & Định Luật 1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e1b4b 100%);
+            --glass-bg: rgba(15, 23, 42, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent-orange: #f97316;
+            --accent-orange-glow: rgba(249, 115, 22, 0.4);
+            --accent-blue: #0ea5e9;
+            --accent-blue-glow: rgba(14, 165, 233, 0.4);
+            --accent-green: #10b981;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 1.5rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        header h1 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #f97316, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 30px rgba(129, 140, 248, 0.15);
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 968px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Glass Panels */
+        .panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            backdrop-filter: blur(16px);
+            padding: 1.8rem;
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .simulation-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        canvas {
+            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8), 0 4px 20px rgba(0,0,0,0.5);
+            cursor: grab;
+            width: 100%;
+            max-width: 500px;
+            height: 480px;
+        }
+        
+        canvas:active {
+            cursor: grabbing;
+        }
+
+        /* Interactive Canvas Control Bar */
+        .canvas-controls {
+            display: flex;
+            gap: 0.8rem;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 1rem;
+        }
+
+        .btn-action {
+            padding: 0.8rem 1.2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.9rem;
+        }
+
+        .btn-play {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            flex: 2;
+        }
+        .btn-play:hover {
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-pause {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            flex: 2;
+        }
+        .btn-pause:hover {
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            flex: 1.2;
+        }
+        .btn-reset:hover {
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+            transform: translateY(-1px);
+        }
+
+        /* Right Panel Controls */
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-orange);
+            padding-left: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hud-meters {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .meter-box {
+            background: rgba(15, 23, 42, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 0.9rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .meter-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .meter-value {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: var(--accent-orange);
+            text-shadow: 0 0 10px var(--accent-orange-glow);
+        }
+
+        .meter-value.cool {
+            color: var(--accent-blue);
+            text-shadow: 0 0 10px var(--accent-blue-glow);
+        }
+
+        .meter-value.normal {
+            color: var(--text-primary);
+            text-shadow: none;
+        }
+
+        /* First Law Equation Box */
+        .formula-container {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 1.4rem;
+            text-align: center;
+            margin-bottom: 1.2rem;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .formula-title {
+            font-size: 0.85rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.4rem;
+        }
+
+        .formula-math {
+            font-size: 2.3rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 12px rgba(14, 165, 233, 0.4);
+        }
+
+        .formula-breakdown {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .formula-val {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .formula-val span:last-child {
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin-top: 2px;
+        }
+
+        .pos-sign { color: var(--accent-orange); }
+        .neg-sign { color: var(--accent-blue); }
+
+        /* Presets */
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .btn-preset {
+            flex: 1;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #fff;
+            padding: 0.9rem;
+            border-radius: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-preset:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-preset.active-fast {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            border-color: #f97316;
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
+        }
+
+        .btn-preset.active-slow {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            border-color: #38bdf8;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+        }
+
+        .btn-preset small {
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 400;
+            margin-top: 3px;
+        }
+
+        .instruction-box {
+            background: rgba(15, 23, 42, 0.3);
+            border-radius: 16px;
+            padding: 1rem;
+            font-size: 0.92rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+
+        .instruction-box ul {
+            margin-left: 1.1rem;
+            margin-top: 0.4rem;
+        }
+
+        .instruction-box li {
+            margin-bottom: 0.3rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-idle {
+            background: rgba(148, 163, 184, 0.12);
+            color: var(--text-secondary);
+            border: 1px solid rgba(148,163,184,0.2);
+        }
+
+        .status-paused {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .status-hot {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            100% { box-shadow: 0 0 12px 4px rgba(239, 68, 68, 0.2); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Thí Nghiệm Ảo 3D: Pít-tông Khí & Định Luật 1</h1>
+        <p>Học thuyết Động học phân tử & Định luật 1 Nhiệt động lực học - Vật lí 12</p>
+    </header>
+
+    <div class="main-container">
+        <!-- Left: Interactive Canvas -->
+        <div class="panel simulation-area">
+            <div style="width: 100%; display: flex; justify-content: space-between; margin-bottom: 0.8rem; align-items: center;">
+                <span class="meter-label" style="font-weight:600;">Mô phỏng xilanh khí 3D</span>
+                <span id="txt-status" class="status-badge status-idle">Trạng thái: Đang chạy</span>
+            </div>
+            
+            <canvas id="simCanvas" width="400" height="420"></canvas>
+            
+            <!-- Play/Pause/Reset Control Bar -->
+            <div class="canvas-controls">
+                <button id="btn-play-pause" class="btn-action btn-pause" onclick="togglePlayPause()">
+                    <span id="btn-play-text">⏸ Dừng (Pause)</span>
+                </button>
+                <button class="btn-action btn-reset" onclick="resetSim()">
+                    <span>🔄 Đặt lại (Reset)</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Right: HUD Meters & Control Panel -->
+        <div class="panel controls-panel">
+            <div>
+                <div class="section-title">
+                    <span>Thông số đo lường (HUD)</span>
+                </div>
+                
+                <div class="hud-meters">
+                    <div class="meter-box">
+                        <span class="meter-label">Nhiệt độ khí (T)</span>
+                        <span id="meter-temp" class="meter-value normal">300 K</span>
+                    </div>
+                    <div class="meter-box">
+                        <span class="meter-label">Áp suất khí (P)</span>
+                        <span id="meter-pres" class="meter-value normal">1.0 atm</span>
+                    </div>
+                </div>
+
+                <!-- First Law Equation Box -->
+                <div class="formula-container">
+                    <div class="formula-title">Định luật 1 Nhiệt động lực học</div>
+                    <div class="formula-math">ΔU = A + Q</div>
+                    <div class="formula-breakdown">
+                        <div class="formula-val">
+                            <span class="meter-label">Biến thiên nội năng (ΔU)</span>
+                            <span id="val-du" style="font-size: 1.15rem; font-weight: 800;">0 J</span>
+                        </div>
+                        <div class="formula-val">
+                            <span class="meter-label">Công nhận (A)</span>
+                            <span id="val-a" class="pos-sign">0 J</span>
+                        </div>
+                        <div class="formula-val">
+                            <span class="meter-label">Nhiệt truyền (Q)</span>
+                            <span id="val-q" class="neg-sign">0 J</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title">Chế độ nén tự động</div>
+                <div class="btn-group">
+                    <button id="btn-fast" class="btn-preset" onclick="runPreset('fast')">
+                        <span>Nén Nhanh (Q ≈ 0)</span>
+                        <small>Vỏ bình nóng lên rõ rệt</small>
+                    </button>
+                    <button id="btn-slow" class="btn-preset" onclick="runPreset('slow')">
+                        <span>Nén Chậm (Đẳng nhiệt)</span>
+                        <small>Nhiệt lượng truyền ra ngoài dần</small>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Explanatory text -->
+            <div class="instruction-box">
+                <strong>💡 Giải thích hiện tượng thực tế:</strong>
+                <ul>
+                    <li><strong>Xilanh nóng lên khi nén nhanh:</strong> Khi nén nhanh, công thực hiện $A > 0$ biến đổi thành động năng nhiệt của phân tử khí làm nhiệt độ tăng. Nhiệt năng này truyền qua vỏ kim loại ($Q < 0$ đối với khí) làm tay ta cảm thấy nóng (như trường hợp vỏ bơm xe đạp nóng lên khi bơm nhanh).</li>
+                    <li><strong>Nếu nén rất chậm:</strong> Nhiệt sinh ra kịp tỏa hết ra ngoài vỏ bình ($Q < 0$ bù trừ với $A > 0$), nội năng thay đổi rất ít nên vỏ bình hầu như không nóng lên.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Physical limits and dimensions (represented in 3D projection)
+        const cylinderRadius = 45; // Simulating narrow bicycle pump
+        const cylinderXCenter = 140; // Shifted left to make space for bicycle tire
+        const cylinderTopY = 60;
+        const cylinderBottomY = 350;
+        const cylinderHeight = cylinderBottomY - cylinderTopY;
+
+        let pistonY = cylinderTopY + 10;
+        const minPistonY = cylinderTopY + 10;
+        const maxPistonY = cylinderBottomY - 40;
+        const pistonThickness = 18;
+
+        let prevPistonY = pistonY;
+        let molecules = [];
+        const numMolecules = 65;
+
+        // Bicycle Tire State Variables
+        let tireInflation = 0.1; // flat initially (0.0 to 1.0)
+        let maxTireRadius = 45;
+        let minTireRadius = 38;
+
+        // Thermodynamic state variables
+        let temperature = 300;
+        let pressure = 1.0;
+        let workDone = 0;
+        let heatTransferred = 0;
+        let internalEnergyChange = 0;
+        
+        // App state
+        let isRunning = true;
+        let isDragging = false;
+        let autoMode = null;
+        let autoSpeed = 0;
+        let hasSpokenHot = false;
+
+        // Initialize 3D molecules in the pump cylinder
+        function initMolecules() {
+            molecules = [];
+            for (let i = 0; i < numMolecules; i++) {
+                const r = Math.random() * (cylinderRadius - 5);
+                const theta = Math.random() * Math.PI * 2;
+                
+                const x = Math.cos(theta) * r;
+                const z = Math.sin(theta) * r;
+                
+                const yStart = (pistonY + pistonThickness + 10) + Math.random() * (cylinderBottomY - pistonY - pistonThickness - 20);
+                
+                const speed = 1.4 + Math.random() * 1.5;
+                const phi = Math.random() * Math.PI * 2;
+                const cosPsi = -1 + Math.random() * 2;
+                const sinPsi = Math.sqrt(1 - cosPsi * cosPsi);
+
+                molecules.push({
+                    x: x,
+                    y: yStart,
+                    z: z,
+                    vx: Math.cos(phi) * sinPsi * speed,
+                    vy: cosPsi * speed,
+                    vz: Math.sin(phi) * sinPsi * speed,
+                    baseRadius: 3.0
+                });
+            }
+        }
+
+        // Mouse/Touch Interactions
+        canvas.addEventListener('mousedown', (e) => {
+            if (!isRunning) return;
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+            // Check if mouse is on the piston handle
+            if (mouseX >= cylinderXCenter - cylinderRadius - 20 && mouseX <= cylinderXCenter + cylinderRadius + 20 &&
+                mouseY >= pistonY - 45 && mouseY <= pistonY + pistonThickness + 5) {
+                isDragging = true;
+                autoMode = null;
+                clearPresetButtons();
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDragging || !isRunning) return;
+            const rect = canvas.getBoundingClientRect();
+            const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
+            
+            pistonY = Math.max(minPistonY, Math.min(maxPistonY, mouseY - pistonThickness / 2));
+        });
+
+        // App Controls
+        function togglePlayPause() {
+            isRunning = !isRunning;
+            const btn = document.getElementById('btn-play-pause');
+            const btnText = document.getElementById('btn-play-text');
+            const statusBadge = document.getElementById('txt-status');
+
+            if (isRunning) {
+                btn.className = 'btn-action btn-pause';
+                btnText.innerText = '⏸ Dừng (Pause)';
+                if (temperature > 380) {
+                    statusBadge.className = 'status-badge status-hot';
+                    statusBadge.innerText = 'Trạng thái: VỎ BƠM NÓNG!';
+                } else {
+                    statusBadge.className = 'status-badge status-idle';
+                    statusBadge.innerText = 'Trạng thái: Đang chạy';
+                }
+            } else {
+                btn.className = 'btn-action btn-play';
+                btnText.innerText = '▶ Tiếp tục (Play)';
+                statusBadge.className = 'status-badge status-paused';
+                statusBadge.innerText = 'Trạng thái: Tạm dừng';
+            }
+        }
+
+        function resetSim() {
+            pistonY = cylinderTopY + 10;
+            prevPistonY = pistonY;
+            temperature = 300;
+            pressure = 1.0;
+            workDone = 0;
+            heatTransferred = 0;
+            internalEnergyChange = 0;
+            tireInflation = 0.1;
+            autoMode = null;
+            hasSpokenHot = false;
+            
+            const statusBadge = document.getElementById('txt-status');
+            if (isRunning) {
+                statusBadge.className = 'status-badge status-idle';
+                statusBadge.innerText = 'Trạng thái: Đang chạy';
+            } else {
+                statusBadge.className = 'status-badge status-paused';
+                statusBadge.innerText = 'Trạng thái: Tạm dừng';
+            }
+
+            clearPresetButtons();
+            initMolecules();
+        }
+
+        function runPreset(mode) {
+            if (!isRunning) togglePlayPause();
+            resetSim();
+            autoMode = mode;
+            if (mode === 'fast') {
+                document.getElementById('btn-fast').classList.add('active-fast');
+                autoSpeed = 5.2; // fast stroke
+            } else {
+                document.getElementById('btn-slow').classList.add('active-slow');
+                autoSpeed = 0.6; // slow stroke
+            }
+        }
+
+        function clearPresetButtons() {
+            document.getElementById('btn-fast').classList.remove('active-fast');
+            document.getElementById('btn-slow').classList.remove('active-slow');
+        }
+
+        // Draw Cylinder, Piston, Hose, and Bicycle Tire
+        function drawSimulationComponents() {
+            const rx = cylinderRadius;
+            const ry = 10;
+
+            // 1. Draw connection Hose (dây bơm)
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 6;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(cylinderXCenter, cylinderBottomY);
+            ctx.bezierCurveTo(cylinderXCenter + 50, cylinderBottomY + 40, 270, 380, 290, 310);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // 2. Draw Bicycle Tire/Wheel on the Right
+            const wheelX = 300;
+            const wheelY = 220;
+            const rimRadius = 55;
+            
+            // Draw Wheel Spokes (Căm xe)
+            ctx.strokeStyle = 'rgba(203, 213, 225, 0.4)';
+            ctx.lineWidth = 1.5;
+            for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 6) {
+                ctx.beginPath();
+                ctx.moveTo(wheelX, wheelY);
+                ctx.lineTo(wheelX + Math.cos(angle) * rimRadius, wheelY + Math.sin(angle) * rimRadius);
+                ctx.stroke();
+            }
+
+            // Draw Metal Rim (Vành xe)
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.arc(wheelX, wheelY, rimRadius, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Draw Rubber Tire (Lốp xe) - Inflation alters its thickness & visual scale
+            const tireWidth = minTireRadius + (maxTireRadius - minTireRadius) * tireInflation;
+            ctx.strokeStyle = '#090d16'; // deep dark black
+            ctx.lineWidth = tireWidth;
+            ctx.beginPath();
+            ctx.arc(wheelX, wheelY, rimRadius + tireWidth / 2, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Add tire tread highlights
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(wheelX, wheelY, rimRadius + tireWidth / 2 + 2, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Display inflation percentage overlay on the tire center
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 12px Outfit';
+            ctx.textAlign = 'center';
+            ctx.fillText("LỐP XE", wheelX, wheelY - 5);
+            ctx.fillStyle = tireInflation > 0.85 ? 'var(--accent-green)' : 'var(--text-secondary)';
+            ctx.fillText(`${Math.round(tireInflation * 100)}%`, wheelX, wheelY + 12);
+
+            // 3. Draw Cylinder Back Ellipse
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.ellipse(cylinderXCenter, cylinderTopY, rx, ry, 0, Math.PI, 0);
+            ctx.stroke();
+
+            // 4. Draw Cylinder Body shading
+            // Heat glows on cylinder wall if temperature is high
+            const g = ctx.createLinearGradient(cylinderXCenter - rx, 0, cylinderXCenter + rx, 0);
+            if (temperature > 370) {
+                const alpha = Math.min(0.5, (temperature - 370) / 300);
+                g.addColorStop(0, `rgba(249, 115, 22, ${alpha + 0.1})`);
+                g.addColorStop(0.15, 'rgba(255, 255, 255, 0.02)');
+                g.addColorStop(0.5, `rgba(249, 115, 22, ${alpha * 0.3})`);
+                g.addColorStop(0.85, 'rgba(255, 255, 255, 0.01)');
+                g.addColorStop(1, `rgba(249, 115, 22, ${alpha + 0.15})`);
+            } else {
+                g.addColorStop(0, 'rgba(255, 255, 255, 0.12)');
+                g.addColorStop(0.15, 'rgba(255, 255, 255, 0.02)');
+                g.addColorStop(0.5, 'rgba(255, 255, 255, 0.05)');
+                g.addColorStop(0.85, 'rgba(255, 255, 255, 0.01)');
+                g.addColorStop(1, 'rgba(255, 255, 255, 0.15)');
+            }
+
+            ctx.fillStyle = g;
+            ctx.fillRect(cylinderXCenter - rx, cylinderTopY, rx * 2, cylinderHeight);
+
+            // Glass Cylinder borders
+            ctx.strokeStyle = temperature > 370 ? 'rgba(249, 115, 22, 0.6)' : 'rgba(255, 255, 255, 0.25)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(cylinderXCenter - rx, cylinderTopY);
+            ctx.lineTo(cylinderXCenter - rx, cylinderBottomY);
+            ctx.moveTo(cylinderXCenter + rx, cylinderTopY);
+            ctx.lineTo(cylinderXCenter + rx, cylinderBottomY);
+            ctx.stroke();
+
+            // Cylinder base plate
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(cylinderXCenter - rx - 10, cylinderBottomY, rx * 2 + 20, 10);
+        }
+
+        // Draw Piston
+        function drawPiston3D() {
+            const rx = cylinderRadius - 2;
+            const ry = 8;
+
+            // Draw metal piston shaft
+            const rodW = 8;
+            const rodG = ctx.createLinearGradient(cylinderXCenter - rodW/2, 0, cylinderXCenter + rodW/2, 0);
+            rodG.addColorStop(0, '#475569');
+            rodG.addColorStop(0.3, '#94a3b8');
+            rodG.addColorStop(0.7, '#475569');
+            rodG.addColorStop(1, '#1e293b');
+
+            ctx.fillStyle = rodG;
+            ctx.fillRect(cylinderXCenter - rodW/2, 0, rodW, pistonY);
+
+            // Piston head
+            const pistonG = ctx.createLinearGradient(cylinderXCenter - rx, 0, cylinderXCenter + rx, 0);
+            pistonG.addColorStop(0, '#64748b');
+            pistonG.addColorStop(0.25, '#cbd5e1');
+            pistonG.addColorStop(0.65, '#64748b');
+            pistonG.addColorStop(1, '#334155');
+
+            ctx.fillStyle = pistonG;
+            ctx.fillRect(cylinderXCenter - rx, pistonY, rx * 2, pistonThickness);
+
+            // Bottom ellipse
+            ctx.fillStyle = '#334155';
+            ctx.beginPath();
+            ctx.ellipse(cylinderXCenter, pistonY + pistonThickness, rx, ry, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Top ellipse
+            ctx.fillStyle = '#94a3b8';
+            ctx.beginPath();
+            ctx.ellipse(cylinderXCenter, pistonY, rx, ry, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Piston T-Bar Handle
+            ctx.fillStyle = isDragging ? '#38bdf8' : '#0284c7';
+            ctx.fillRect(cylinderXCenter - 35, pistonY - 12, 70, 8);
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(cylinderXCenter - 35, pistonY - 12, 70, 8);
+        }
+
+        // Draw molecules sorted by depth
+        function drawMolecules3D() {
+            molecules.sort((a, b) => a.z - b.z);
+
+            molecules.forEach(m => {
+                const scale = (250 + m.z) / 250;
+                const projX = cylinderXCenter + m.x * scale;
+                const projRadius = m.baseRadius * scale;
+
+                const speed = Math.sqrt(m.vx*m.vx + m.vy*m.vy + m.vz*m.vz);
+                const heatFactor = Math.min(1, (speed - 1.2) / 6.0);
+                
+                const lightScale = 0.5 + 0.5 * scale;
+                const red = Math.round((heatFactor * 255) * lightScale);
+                const green = Math.round((210 - heatFactor * 160) * lightScale);
+                const blue = Math.round((255 - heatFactor * 190) * lightScale);
+                const color = `rgb(${red}, ${green}, ${blue})`;
+
+                const grad = ctx.createRadialGradient(
+                    projX - projRadius*0.3, m.y - projRadius*0.3, projRadius * 0.1,
+                    projX, m.y, projRadius
+                );
+                grad.addColorStop(0, '#ffffff');
+                grad.addColorStop(0.2, color);
+                grad.addColorStop(1, '#020617');
+
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(projX, m.y, projRadius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        // Physics Update loop
+        function updatePhysics3D() {
+            if (!isRunning) return;
+
+            let pistonVel = pistonY - prevPistonY;
+            prevPistonY = pistonY;
+
+            // Handle Preset Automations
+            if (autoMode) {
+                if (pistonY < maxPistonY - 6) {
+                    pistonY += autoSpeed;
+                } else {
+                    autoMode = null;
+                    clearPresetButtons();
+                }
+            }
+
+            // Calculate work done: dA = -P * dV. dV is proportional to displacement of piston.
+            let dV = -(pistonY - prevPistonY);
+            if (Math.abs(dV) > 0.02) {
+                let dWork = pressure * dV * 1.4;
+                workDone += dWork;
+            }
+
+            // Energy dissipation / thermal conductivity parameter
+            let coolingRate = 0.0015; 
+            if (autoMode === 'slow' || (!autoMode && Math.abs(pistonVel) < 0.7)) {
+                coolingRate = 0.025; // Heat dissipates fast into metal walls (isothermal)
+            }
+
+            let sumSqVelocities = 0;
+
+            molecules.forEach(m => {
+                m.x += m.vx;
+                m.y += m.vy;
+                m.z += m.vz;
+
+                // Heat transfer (thermal relaxation to wall temperature 300K)
+                const currentSpeed = Math.sqrt(m.vx*m.vx + m.vy*m.vy + m.vz*m.vz);
+                const baselineSpeed = 2.0; 
+                if (currentSpeed > 0.01) {
+                    if (currentSpeed > baselineSpeed) {
+                        m.vx -= (m.vx / currentSpeed) * (currentSpeed - baselineSpeed) * coolingRate;
+                        m.vy -= (m.vy / currentSpeed) * (currentSpeed - baselineSpeed) * coolingRate;
+                        m.vz -= (m.vz / currentSpeed) * (currentSpeed - baselineSpeed) * coolingRate;
+                    } else {
+                        // Wall warms up the gas if it is colder than baseline (expansion cooling)
+                        m.vx += (m.vx / currentSpeed) * (baselineSpeed - currentSpeed) * coolingRate;
+                        m.vy += (m.vy / currentSpeed) * (baselineSpeed - currentSpeed) * coolingRate;
+                        m.vz += (m.vz / currentSpeed) * (baselineSpeed - currentSpeed) * coolingRate;
+                    }
+                }
+
+                // Cylindrical Wall Collision
+                const distXZ = Math.sqrt(m.x*m.x + m.z*m.z);
+                const wallLimit = cylinderRadius - 4;
+
+                if (distXZ >= wallLimit) {
+                    const nx = m.x / distXZ;
+                    const nz = m.z / distXZ;
+
+                    const dot = m.vx * nx + m.vz * nz;
+                    m.vx = m.vx - 2 * dot * nx;
+                    m.vz = m.vz - 2 * dot * nz;
+
+                    m.x = nx * (wallLimit - 0.2);
+                    m.z = nz * (wallLimit - 0.2);
+                }
+
+                // Cylinder bottom boundary collision
+                if (m.y + m.baseRadius >= cylinderBottomY) {
+                    m.y = cylinderBottomY - m.baseRadius;
+                    m.vy = -m.vy;
+                }
+
+                // Piston bottom head collision
+                const pistonBottom = pistonY + pistonThickness;
+                if (m.y - m.baseRadius <= pistonBottom) {
+                    m.y = pistonBottom + m.baseRadius;
+                    
+                    if (m.vy < 0) {
+                        m.vy = -m.vy;
+                    }
+
+                    // Work done by moving piston on molecule
+                    if (pistonVel > 0.15) {
+                        m.vy += pistonVel * 0.7; 
+                        m.vx += (Math.random() - 0.5) * pistonVel * 0.3;
+                    }
+                }
+
+                const speed = Math.sqrt(m.vx*m.vx + m.vy*m.vy + m.vz*m.vz);
+                if (speed > 18) {
+                    m.vx = (m.vx / speed) * 18;
+                    m.vy = (m.vy / speed) * 18;
+                    m.vz = (m.vz / speed) * 18;
+                }
+
+                sumSqVelocities += (m.vx*m.vx + m.vy*m.vy + m.vz*m.vz);
+            });
+
+            // Thermodynamics state values updates
+            temperature = Math.round(100 + (sumSqVelocities / numMolecules) * 70);
+            
+            const volumeRatio = (cylinderHeight - 20) / (cylinderBottomY - pistonY - pistonThickness);
+            pressure = parseFloat(( (temperature / 300) * volumeRatio ).toFixed(1));
+
+            // Tire Inflation increments when nén piston
+            if (pistonVel > 0.2) {
+                // If compressing, air is pumped to tire
+                tireInflation += 0.005 * pistonVel;
+                if (tireInflation > 1.0) tireInflation = 1.0;
+            }
+
+            // First Law mathematical updates
+            // Delta U = C * dT. Where C is heat capacity
+            internalEnergyChange = Math.round((temperature - 300) * 1.8);
+            
+            // Q = Delta U - A
+            heatTransferred = internalEnergyChange - workDone;
+
+            // Update status badge based on temperature
+            const statusBadge = document.getElementById('txt-status');
+            if (temperature > 375) {
+                statusBadge.className = 'status-badge status-hot';
+                statusBadge.innerText = 'Trạng thái: VỎ BƠM NÓNG!';
+            } else {
+                statusBadge.className = 'status-badge status-idle';
+                statusBadge.innerText = 'Trạng thái: Đang chạy';
+            }
+        }
+
+        // HUD Render Updater
+        function updateHUDValues() {
+            const meterTemp = document.getElementById('meter-temp');
+            const meterPres = document.getElementById('meter-pres');
+            const valDu = document.getElementById('val-du');
+            const valA = document.getElementById('val-a');
+            const valQ = document.getElementById('val-q');
+
+            meterTemp.innerText = `${temperature} K (${Math.round(temperature - 273)}°C)`;
+            if (temperature > 375) {
+                meterTemp.className = 'meter-value';
+            } else if (temperature < 310) {
+                meterTemp.className = 'meter-value cool';
+            } else {
+                meterTemp.className = 'meter-value normal';
+            }
+
+            // Show pressure in tire (scale based on inflation)
+            const psiVal = Math.round(tireInflation * 45);
+            meterPres.innerText = `${psiVal} PSI (${parseFloat((psiVal * 0.068).toFixed(1))} atm)`;
+
+            const jouleWork = Math.round(workDone);
+            const jouleHeat = Math.round(heatTransferred);
+            const jouleDU = Math.round(internalEnergyChange);
+
+            valA.innerText = `${jouleWork} J`;
+            valQ.innerText = `${jouleHeat} J`;
+            valDu.innerText = `${jouleDU} J`;
+
+            if (jouleDU > 0) {
+                valDu.style.color = 'var(--accent-green)';
+                valDu.style.textShadow = '0 0 10px rgba(16, 185, 129, 0.4)';
+            } else {
+                valDu.style.color = '#fff';
+                valDu.style.textShadow = 'none';
+            }
+        }
+
+        // Loop animation
+        function loop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            updatePhysics3D();
+            drawSimulationComponents();
+            drawMolecules3D();
+            drawPiston3D();
+            updateHUDValues();
+
+            requestAnimationFrame(loop);
+        }
+
+        // Run Init
+        initMolecules();
+        loop();
+    </script>
+</body>
+</html>

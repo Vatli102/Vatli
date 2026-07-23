@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô Phỏng Lực Tương Tác Phân Tử - Vật lí 12</title>
+    <!-- Nhúng Google Font Outfit và Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --panel-bg: rgba(22, 30, 49, 0.7);
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --accent-gold: #facc15;
+            --accent-cyan: #06b6d4;
+            --accent-red: #ef4444;
+            --accent-green: #22c55e;
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(6, 182, 212, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(239, 68, 68, 0.08) 0px, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            padding: 20px 40px;
+            background: rgba(11, 15, 25, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--panel-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        header h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        header h1 span {
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 4px 8px;
+            border: 1px solid var(--accent-cyan);
+            border-radius: 6px;
+            color: var(--accent-cyan);
+            -webkit-text-fill-color: var(--accent-cyan);
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+        }
+
+        main {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 24px;
+            padding: 24px 40px;
+            max-width: 1600px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 1024px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Glassmorphism Panel styles */
+        .panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+        }
+
+        .panel-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Simulation Canvas Container */
+        .simulation-container {
+            position: relative;
+            width: 100%;
+            height: 380px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 16px;
+        }
+
+        #simCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border-radius: 12px;
+        }
+
+        .sim-tooltip {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(15, 23, 42, 0.9);
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.85rem;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sim-tooltip div span {
+            font-weight: 600;
+        }
+
+        /* HUD Live values */
+        .hud-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .hud-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .hud-card .hud-label {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .hud-card .hud-val {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .hud-card.repulsive .hud-val { color: var(--accent-red); }
+        .hud-card.attractive .hud-val { color: var(--accent-cyan); }
+        .hud-card.equilibrium .hud-val { color: var(--accent-green); }
+
+        /* Graph Area */
+        .graph-container {
+            width: 100%;
+            height: 250px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 16px;
+        }
+
+        #graphCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border-radius: 12px;
+        }
+
+        /* Controllers panel */
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .control-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+        }
+
+        .control-label span.val {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent-cyan);
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--accent-cyan);
+            transition: 0.15s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background: var(--accent-cyan);
+            color: #000;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+        }
+
+        button.active {
+            background: var(--accent-red);
+            color: white;
+            border-color: var(--accent-red);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            background: rgba(15, 23, 42, 0.6);
+            border-left: 4px solid var(--accent-cyan);
+            border-radius: 4px 8px 8px 4px;
+            padding: 16px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-body);
+            margin-top: auto;
+            min-height: 100px;
+            transition: all 0.3s ease;
+        }
+
+        .explanation-box h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 6px;
+            color: var(--accent-cyan);
+        }
+
+        .audio-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            transition: 0.2s;
+        }
+
+        .audio-toggle:hover {
+            color: var(--accent-gold);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <h1>MÔ PHỎNG LỰC TƯƠNG TÁC PHÂN TỬ <span>Vật lí 12</span></h1>
+            <p class="subtitle">Mô hình lò xo biểu diễn lực đẩy, lực hút giữa hai phân tử cấu tạo nên chất</p>
+        </div>
+    </header>
+
+    <main>
+        <!-- Left Panel: Interactive Simulation area -->
+        <div class="panel">
+            <div class="panel-title">
+                Kéo thả quả cầu màu đỏ để thay đổi khoảng cách
+            </div>
+            
+            <div class="simulation-container">
+                <canvas id="simCanvas"></canvas>
+                <div class="sim-tooltip">
+                    <div>Khoảng cách cân bằng: <span style="color: var(--accent-green)">r₀ = 150 pm</span></div>
+                    <div>Nhấp quả cầu đỏ và kéo sang ngang</div>
+                </div>
+            </div>
+
+            <!-- HUD Grid of live telemetry -->
+            <div class="hud-grid">
+                <div class="hud-card" id="hudDist">
+                    <div class="hud-label">Khoảng cách (r)</div>
+                    <div class="hud-val"><span id="hudDistVal">150</span> pm</div>
+                </div>
+                <div class="hud-card" id="hudForce">
+                    <div class="hud-label">Giá trị Lực (F)</div>
+                    <div class="hud-val"><span id="hudForceVal">0.00</span> nN</div>
+                </div>
+                <div class="hud-card equilibrium" id="hudState">
+                    <div class="hud-label">Trạng thái Lực</div>
+                    <div class="hud-val" id="hudStateVal" style="font-size: 1.1rem; line-height: 1.4;">Cân bằng</div>
+                </div>
+            </div>
+
+            <!-- Contextual Explanation Box -->
+            <div class="explanation-box" id="explainBox">
+                <h4 id="explainTitle">Khoảng cách cân bằng (r = r₀)</h4>
+                <p id="explainDesc">Lò xo ở trạng thái tự nhiên, không bị nén hay giãn. Lực đẩy phân tử cân bằng hoàn hảo với lực hút phân tử. Lực tương tác tổng hợp bằng 0. Hai phân tử dao động ổn định.</p>
+            </div>
+        </div>
+
+        <!-- Right Panel: Live graphing and Control settings -->
+        <div class="panel">
+            <button class="audio-toggle" id="audioBtn" title="Bật/Tắt âm thanh tổng hợp">🔊</button>
+            <div class="panel-title">Đồ thị Lực tương tác F(r)</div>
+
+            <div class="graph-container">
+                <canvas id="graphCanvas"></canvas>
+            </div>
+
+            <div class="panel-title" style="margin-top: 10px;">Bảng Điều Khiển</div>
+
+            <div class="control-group">
+                <!-- Oscillation/Temperature control -->
+                <div class="control-item">
+                    <div class="control-label">
+                        <span>Chuyển động nhiệt (Dao động tự do)</span>
+                        <span class="val" id="tempVal">Tắt</span>
+                    </div>
+                    <input type="range" id="tempSlider" min="0" max="100" value="0">
+                </div>
+
+                <!-- Stiffness (Spring constant) -->
+                <div class="control-item">
+                    <div class="control-label">
+                        <span>Độ bền liên kết (Độ cứng lò xo k)</span>
+                        <span class="val" id="stiffVal">Trung bình</span>
+                    </div>
+                    <input type="range" id="stiffSlider" min="10" max="60" value="30">
+                </div>
+
+                <!-- Equilibrium distance r0 -->
+                <div class="control-item">
+                    <div class="control-label">
+                        <span>Vị trí cân bằng r₀</span>
+                        <span class="val" id="r0Val">150 pm</span>
+                    </div>
+                    <input type="range" id="r0Slider" min="100" max="220" value="150">
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button id="oscillateBtn">▶ Chạy tự động</button>
+                <button id="resetBtn">Đặt lại mặc định</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Setup canvases
+        const simCanvas = document.getElementById('simCanvas');
+        const simCtx = simCanvas.getContext('2d');
+        const graphCanvas = document.getElementById('graphCanvas');
+        const graphCtx = graphCanvas.getContext('2d');
+
+        // Telemetry DOM elements
+        const hudDistVal = document.getElementById('hudDistVal');
+        const hudForceVal = document.getElementById('hudForceVal');
+        const hudState = document.getElementById('hudState');
+        const hudStateVal = document.getElementById('hudStateVal');
+
+        // Control DOM elements
+        const tempSlider = document.getElementById('tempSlider');
+        const tempVal = document.getElementById('tempVal');
+        const stiffSlider = document.getElementById('stiffSlider');
+        const stiffVal = document.getElementById('stiffVal');
+        const r0Slider = document.getElementById('r0Slider');
+        const r0Val = document.getElementById('r0Val');
+        const oscillateBtn = document.getElementById('oscillateBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const audioBtn = document.getElementById('audioBtn');
+
+        // Explanation Box elements
+        const explainTitle = document.getElementById('explainTitle');
+        const explainDesc = document.getElementById('explainDesc');
+        const explainBox = document.getElementById('explainBox');
+
+        // Simulation parameters
+        let r0 = 150; // Equilibrium position (pixels or pm equivalent)
+        let r = r0;   // Current distance
+        let stiffness = 30; // Spring constant
+        let temperature = 0; // Oscillation amplitude
+        let autoOscillate = false;
+        let time = 0;
+
+        // Interaction state
+        let isDragging = false;
+        let p1 = { x: 120, y: 190 }; // Fixed molecule 1 (blue)
+        let p2 = { x: 120 + r0, y: 190 }; // Draggable molecule 2 (red)
+        const radius = 32;
+
+        // Audio state
+        let audioCtx = null;
+        let oscillator = null;
+        let gainNode = null;
+        let soundEnabled = true;
+
+        // Resize Canvas dynamically
+        function resizeCanvases() {
+            simCanvas.width = simCanvas.offsetWidth;
+            simCanvas.height = simCanvas.offsetHeight;
+            graphCanvas.width = graphCanvas.offsetWidth;
+            graphCanvas.height = graphCanvas.offsetHeight;
+            
+            p1.y = simCanvas.height / 2;
+            p2.y = simCanvas.height / 2;
+            p1.x = simCanvas.width * 0.25;
+            p2.x = p1.x + r;
+        }
+
+        window.addEventListener('resize', resizeCanvases);
+        resizeCanvases();
+
+        // Audio synthesizer initialization (HTML5 Web Audio API)
+        function initAudio() {
+            if (audioCtx) return;
+            try {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                oscillator = audioCtx.createOscillator();
+                gainNode = audioCtx.createGain();
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(100, audioCtx.currentTime); // Low baseline hum
+                gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.start();
+            } catch (e) {
+                console.log("Audio Context not supported");
+            }
+        }
+
+        function updateAudioPitch(force) {
+            if (!soundEnabled || !audioCtx) return;
+            // Map force magnitude to frequency
+            const mag = Math.abs(force);
+            const freq = 100 + (mag * 60); // rising pitch based on force
+            oscillator.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.05);
+            
+            // Adjust volume based on force (louder when force is high)
+            const vol = Math.min(0.08, 0.01 + (mag * 0.008));
+            gainNode.gain.setTargetAtTime(vol, audioCtx.currentTime, 0.05);
+        }
+
+        function stopAudio() {
+            if (gainNode && audioCtx) {
+                gainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 0.05);
+            }
+        }
+
+        audioBtn.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            if (soundEnabled) {
+                audioBtn.innerHTML = "🔊";
+                initAudio();
+                if (gainNode) gainNode.gain.setTargetAtTime(0.02, audioCtx.currentTime, 0.05);
+            } else {
+                audioBtn.innerHTML = "🔇";
+                stopAudio();
+            }
+        });
+
+        // Lennard-Jones/Spring potential model approximation for Force calculation
+        // F = -dU/dr. A spring F = -k*(r - r0) matches well around equilibrium, 
+        // but we add Lennard-Jones shape for realism: steep at short distances, zero at infinity.
+        function getForce(dist, eqDist) {
+            const dr = dist - eqDist;
+            if (dist < eqDist) {
+                // Extremely strong repulsive force at very short distance
+                // We use power-based repulsive curve
+                const ratio = eqDist / dist;
+                return stiffness * 0.8 * (Math.pow(ratio, 4) - 1); 
+            } else {
+                // Restoring attractive force that fades at long distances
+                // F = -k * dr * exp(-beta * dr)
+                const beta = 0.012;
+                return -stiffness * 0.15 * dr * Math.exp(-beta * dr);
+            }
+        }
+
+        // Draw spring representation
+        function drawSpring(ctx, startX, startY, endX, endY, rCurrent, rEquilibrium) {
+            const coils = 18;
+            const width = 16;
+            const dx = endX - startX;
+            const dy = endY - startY;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            
+            ctx.save();
+            ctx.translate(startX, startY);
+            const angle = Math.atan2(dy, dx);
+            ctx.rotate(angle);
+
+            // Determine color based on compression/stretching
+            let springColor = 'rgba(148, 163, 184, 0.6)'; // Neutral grey
+            if (rCurrent < rEquilibrium) {
+                // Compressed (Red glow)
+                const factor = Math.min(1, (rEquilibrium - rCurrent) / 60);
+                springColor = `rgba(239, 68, 68, ${0.4 + factor * 0.6})`;
+            } else if (rCurrent > rEquilibrium) {
+                // Stretched (Cyan/Blue glow)
+                const factor = Math.min(1, (rCurrent - rEquilibrium) / 150);
+                springColor = `rgba(6, 182, 212, ${0.4 + factor * 0.6})`;
+            }
+
+            // Draw line
+            ctx.strokeStyle = springColor;
+            ctx.shadowBlur = (rCurrent !== rEquilibrium) ? 8 : 0;
+            ctx.shadowColor = springColor;
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            
+            const startConnector = 30;
+            const endConnector = 30;
+            const springLen = dist - startConnector - endConnector;
+            
+            ctx.lineTo(startConnector, 0);
+            
+            for (let i = 0; i < coils; i++) {
+                const x = startConnector + (springLen / coils) * (i + 0.5);
+                const y = (i % 2 === 0 ? 1 : -1) * width;
+                ctx.lineTo(x, y);
+            }
+            
+            ctx.lineTo(dist - endConnector, 0);
+            ctx.lineTo(dist, 0);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        // Mouse/Touch interaction listeners
+        function getMousePos(canvas, evt) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: (evt.clientX - rect.left) * (canvas.width / rect.width),
+                y: (evt.clientY - rect.top) * (canvas.height / rect.height)
+            };
+        }
+
+        function onStart(pos) {
+            const d = Math.hypot(pos.x - p2.x, pos.y - p2.y);
+            if (d < radius + 15) {
+                isDragging = true;
+                autoOscillate = false;
+                oscillateBtn.innerHTML = "▶ Chạy tự động";
+                oscillateBtn.classList.remove('active');
+                initAudio();
+            }
+        }
+
+        function onMove(pos) {
+            if (!isDragging) return;
+            // Drag along x axis
+            const minX = p1.x + 35; // Minimum physical overlap constraint
+            const maxX = simCanvas.width - radius - 20;
+            p2.x = Math.max(minX, Math.min(maxX, pos.x));
+            r = p2.x - p1.x;
+        }
+
+        function onEnd() {
+            isDragging = false;
+            if (!autoOscillate && tempSlider.value == 0) {
+                stopAudio();
+            }
+        }
+
+        simCanvas.addEventListener('mousedown', (e) => onStart(getMousePos(simCanvas, e)));
+        window.addEventListener('mousemove', (e) => onMove(getMousePos(simCanvas, e)));
+        window.addEventListener('mouseup', onEnd);
+
+        simCanvas.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                onStart(getMousePos(simCanvas, e.touches[0]));
+            }
+        });
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 1 && isDragging) {
+                onMove(getMousePos(simCanvas, e.touches[0]));
+            }
+        });
+        window.addEventListener('touchend', onEnd);
+
+        // UI Controls event handlers
+        tempSlider.addEventListener('input', () => {
+            temperature = parseInt(tempSlider.value);
+            tempVal.innerHTML = temperature > 0 ? `${temperature} K (Tương đối)` : "Tắt";
+            if (temperature > 0) {
+                initAudio();
+            }
+        });
+
+        stiffSlider.addEventListener('input', () => {
+            stiffness = parseInt(stiffSlider.value);
+            if (stiffness < 20) stiffVal.innerHTML = "Yếu";
+            else if (stiffness < 45) stiffVal.innerHTML = "Trung bình";
+            else stiffVal.innerHTML = "Mạnh";
+        });
+
+        r0Slider.addEventListener('input', () => {
+            r0 = parseInt(r0Slider.value);
+            r0Val.innerHTML = `${r0} pm`;
+            if (!isDragging && !autoOscillate) {
+                r = r0;
+                p2.x = p1.x + r;
+            }
+        });
+
+        oscillateBtn.addEventListener('click', () => {
+            autoOscillate = !autoOscillate;
+            initAudio();
+            if (autoOscillate) {
+                oscillateBtn.innerHTML = "⏸ Tạm dừng";
+                oscillateBtn.classList.add('active');
+            } else {
+                oscillateBtn.innerHTML = "▶ Chạy tự động";
+                oscillateBtn.classList.remove('active');
+                stopAudio();
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            r0 = 150;
+            r = r0;
+            stiffness = 30;
+            temperature = 0;
+            autoOscillate = false;
+            isDragging = false;
+            
+            r0Slider.value = 150;
+            r0Val.innerHTML = "150 pm";
+            stiffSlider.value = 30;
+            stiffVal.innerHTML = "Trung bình";
+            tempSlider.value = 0;
+            tempVal.innerHTML = "Tắt";
+            oscillateBtn.innerHTML = "▶ Chạy tự động";
+            oscillateBtn.classList.remove('active');
+            
+            p2.x = p1.x + r;
+            stopAudio();
+        });
+
+        // Contextual Explanation Logic based on current state
+        function updateExplanation(forceValue, currentR) {
+            const dr = currentR - r0;
+            explainBox.className = "explanation-box";
+            
+            if (Math.abs(dr) <= 2) {
+                explainTitle.innerHTML = "Khoảng cách cân bằng (r = r₀)";
+                explainDesc.innerHTML = "Lò xo ở trạng thái tự nhiên, không bị nén hay giãn. Lực đẩy phân tử cân bằng hoàn hảo với lực hút phân tử. Lực tương tác tổng hợp bằng 0. Đây là khoảng cách ổn định nhất của phân tử.";
+                explainBox.style.borderLeftColor = "var(--accent-green)";
+                explainBox.style.boxShadow = "inset 0 0 10px rgba(34, 197, 94, 0.1)";
+            } else if (dr < 0) {
+                explainTitle.innerHTML = "Lực đẩy chiếm ưu thế (r < r₀)";
+                explainDesc.innerHTML = `Các phân tử bị ép quá gần, lò xo bị co nén. Lực đẩy phân tử (màu đỏ) tăng vọt vượt lên trên lực hút. Lực đẩy này giúp các hạt ngăn cản việc đâm xuyên qua nhau, tạo nên tính khó nén của chất lỏng và chất rắn.`;
+                explainBox.style.borderLeftColor = "var(--accent-red)";
+                explainBox.style.boxShadow = "inset 0 0 10px rgba(239, 68, 68, 0.1)";
+            } else if (dr <= 100) {
+                explainTitle.innerHTML = "Lực hút chiếm ưu thế (r > r₀)";
+                explainDesc.innerHTML = `Hai phân tử bị kéo giãn ra xa, lò xo căng ra. Lực hút phân tử (màu xanh) chiếm ưu thế để kéo hai phân tử lại với nhau. Đây là lực liên kết giúp các vật rắn và lỏng giữ được thể tích của chúng.`;
+                explainBox.style.borderLeftColor = "var(--accent-cyan)";
+                explainBox.style.boxShadow = "inset 0 0 10px rgba(6, 182, 212, 0.1)";
+            } else {
+                explainTitle.innerHTML = "Khoảng cách quá xa (r ≫ r₀)";
+                explainDesc.innerHTML = `Khoảng cách giữa hai phân tử quá lớn. Lực liên kết lò xo gần như biến mất hoàn toàn. Lực tương tác tiệm cận bằng 0. Đây là tính chất của các hạt trong thể khí chuyển động tự do.`;
+                explainBox.style.borderLeftColor = "var(--text-sub)";
+                explainBox.style.boxShadow = "none";
+            }
+        }
+
+        // Loop execution function
+        function loop() {
+            time += 0.05;
+
+            // Physics calculation for auto-oscillation & heat motion
+            if (autoOscillate) {
+                // Auto sine wave oscillation
+                const amp = 50;
+                r = r0 + Math.sin(time * 1.5) * amp;
+                p2.x = p1.x + r;
+            } else if (temperature > 0 && !isDragging) {
+                // Thermal random jitter (Harmonic oscillator with damping)
+                const thermalAmp = temperature * 0.45;
+                const restoringForce = getForce(r, r0) * 0.05;
+                const damping = 0.08;
+                
+                // Acceleration a = F / m (assuming mass=1)
+                // Random thermal collision kick
+                const kick = (Math.random() - 0.5) * thermalAmp * 0.2;
+                
+                // Simplified Euler integration
+                if (this.vel === undefined) this.vel = 0;
+                this.vel += restoringForce + kick;
+                this.vel *= (1 - damping);
+                
+                r += this.vel;
+                
+                // Boundaries
+                if (r < 35) { r = 35; this.vel = 0; }
+                if (r > simCanvas.width - p1.x - radius - 20) { r = simCanvas.width - p1.x - radius - 20; this.vel = 0; }
+                
+                p2.x = p1.x + r;
+            }
+
+            // If dragging, recalculate r based on cursor pos
+            if (isDragging) {
+                r = p2.x - p1.x;
+            }
+
+            const currentForce = getForce(r, r0);
+
+            // Update Telemetry display values
+            hudDistVal.innerText = Math.round(r);
+            hudForceVal.innerText = currentForce.toFixed(2);
+
+            // Update HUD styling card based on force direction
+            hudState.className = "hud-card";
+            if (currentForce > 0.05) {
+                hudState.classList.add('repulsive');
+                hudStateVal.innerText = "Lực Đẩy";
+            } else if (currentForce < -0.05) {
+                hudState.classList.add('attractive');
+                hudStateVal.innerText = "Lực Hút";
+            } else {
+                hudState.classList.add('equilibrium');
+                hudStateVal.innerText = "Cân Bằng";
+            }
+
+            updateExplanation(currentForce, r);
+            updateAudioPitch(currentForce);
+
+            // DRAW SIMULATION CANVAS
+            simCtx.clearRect(0, 0, simCanvas.width, simCanvas.height);
+            
+            // Draw grid line background
+            simCtx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+            simCtx.lineWidth = 1;
+            for (let i = 0; i < simCanvas.width; i += 40) {
+                simCtx.beginPath();
+                simCtx.moveTo(i, 0);
+                simCtx.lineTo(i, simCanvas.height);
+                simCtx.stroke();
+            }
+
+            // Draw line connecting
+            simCtx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            simCtx.lineWidth = 2;
+            simCtx.beginPath();
+            simCtx.moveTo(p1.x, p1.y);
+            simCtx.lineTo(p2.x, p2.y);
+            simCtx.stroke();
+
+            // Draw spring
+            drawSpring(simCtx, p1.x, p1.y, p2.x, p2.y, r, r0);
+
+            // Draw Force Indicators (Visual Arrows on both balls)
+            if (Math.abs(currentForce) > 0.02) {
+                const arrowLength = Math.min(100, Math.abs(currentForce) * 2.8);
+                const arrowDir = currentForce > 0 ? 1 : -1; // 1: push outward, -1: pull inward
+                
+                simCtx.lineWidth = 5;
+                simCtx.lineCap = 'round';
+                simCtx.shadowBlur = 10;
+
+                if (arrowDir === 1) { // Repulsive force arrow (Red)
+                    simCtx.strokeStyle = 'rgba(239, 68, 68, 0.8)';
+                    simCtx.shadowColor = 'rgba(239, 68, 68, 0.8)';
+                    
+                    // Left ball arrow (points left)
+                    drawArrow(simCtx, p1.x - radius, p1.y, p1.x - radius - arrowLength, p1.y);
+                    // Right ball arrow (points right)
+                    drawArrow(simCtx, p2.x + radius, p2.y, p2.x + radius + arrowLength, p2.y);
+                } else { // Attractive force arrow (Cyan)
+                    simCtx.strokeStyle = 'rgba(6, 182, 212, 0.8)';
+                    simCtx.shadowColor = 'rgba(6, 182, 212, 0.8)';
+                    
+                    // Left ball arrow (points right)
+                    drawArrow(simCtx, p1.x + radius, p1.y, p1.x + radius + arrowLength, p1.y);
+                    // Right ball arrow (points left)
+                    drawArrow(simCtx, p2.x - radius, p2.y, p2.x - radius - arrowLength, p2.y);
+                }
+                simCtx.shadowBlur = 0;
+            }
+
+            // Draw Equilibrium marker line
+            simCtx.setLineDash([5, 5]);
+            simCtx.strokeStyle = 'rgba(34, 197, 94, 0.4)';
+            simCtx.lineWidth = 1.5;
+            simCtx.beginPath();
+            simCtx.moveTo(p1.x + r0, 0);
+            simCtx.lineTo(p1.x + r0, simCanvas.height);
+            simCtx.stroke();
+            simCtx.setLineDash([]);
+            
+            // Text for equilibrium position
+            simCtx.font = '11px Inter';
+            simCtx.fillStyle = 'rgba(34, 197, 94, 0.7)';
+            simCtx.fillText('Vị trí cân bằng r₀', p1.x + r0 + 5, 20);
+
+            // Draw Molecule 1 (Fixed - Blue)
+            drawBall(simCtx, p1.x, p1.y, radius, 'rgba(6, 182, 212, 0.85)', 'rgba(6, 182, 212, 1)', '');
+            // Draw Molecule 2 (Draggable - Red)
+            drawBall(simCtx, p2.x, p2.y, radius, 'rgba(239, 68, 68, 0.85)', 'rgba(239, 68, 68, 1)', '');
+
+            // DRAW GRAPH CANVAS
+            drawGraph(currentForce);
+
+            requestAnimationFrame(loop);
+        }
+
+        function drawBall(ctx, x, y, r, fill, stroke, label) {
+            ctx.save();
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = stroke;
+            
+            // Outer glowing ring
+            ctx.strokeStyle = stroke;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Inner ball gradient
+            const gradient = ctx.createRadialGradient(x - r/3, y - r/3, r/6, x, y, r);
+            gradient.addColorStop(0, '#ffffff');
+            gradient.addColorStop(0.2, fill);
+            gradient.addColorStop(1, '#020617');
+            
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(x, y, r - 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // Ball text label
+            if (label) {
+                ctx.font = 'bold 11px Inter';
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.fillText(label, x, y + 4);
+            }
+        }
+
+        function drawArrow(ctx, fromX, fromY, toX, toY) {
+            const headlen = 10; // length of head in pixels
+            const dx = toX - fromX;
+            const dy = toY - fromY;
+            const angle = Math.atan2(dy, dx);
+            
+            ctx.beginPath();
+            ctx.moveTo(fromX, fromY);
+            ctx.lineTo(toX, toY);
+            ctx.lineTo(toX - headlen * Math.cos(angle - Math.PI / 6), toY - headlen * Math.sin(angle - Math.PI / 6));
+            ctx.moveTo(toX, toY);
+            ctx.lineTo(toX - headlen * Math.cos(angle + Math.PI / 6), toY - headlen * Math.sin(angle + Math.PI / 6));
+            ctx.stroke();
+        }
+
+        // Draw Force graph F(r) vs r
+        function drawGraph(currentForce) {
+            graphCtx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
+            
+            const w = graphCanvas.width;
+            const h = graphCanvas.height;
+            const originY = h * 0.6; // Position of zero force line (y = 0)
+            const scaleX = w / (w - 80); // map x positions
+            
+            // Draw axis lines
+            graphCtx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            graphCtx.lineWidth = 1.5;
+            
+            // X-axis (F=0)
+            graphCtx.beginPath();
+            graphCtx.moveTo(40, originY);
+            graphCtx.lineTo(w - 20, originY);
+            graphCtx.stroke();
+
+            // Y-axis (F)
+            graphCtx.beginPath();
+            graphCtx.moveTo(45, 15);
+            graphCtx.lineTo(45, h - 15);
+            graphCtx.stroke();
+
+            // Draw axis labels
+            graphCtx.font = '10px Inter';
+            graphCtx.fillStyle = 'var(--text-sub)';
+            graphCtx.textAlign = 'right';
+            graphCtx.fillText('Lực đẩy (+F)', 40, 25);
+            graphCtx.fillText('Lực hút (-F)', 40, h - 20);
+            graphCtx.fillText('0', 38, originY + 4);
+            graphCtx.textAlign = 'right';
+            graphCtx.fillText('Khoảng cách (r)', w - 20, originY + 16);
+
+            // Shading zones: Repulsive (light red) and Attractive (light cyan)
+            graphCtx.fillStyle = 'rgba(239, 68, 68, 0.03)'; // Repulsive region
+            graphCtx.fillRect(45, 15, (r0 * 0.8) - 10, originY - 15);
+
+            graphCtx.fillStyle = 'rgba(6, 182, 212, 0.03)'; // Attractive region
+            graphCtx.fillRect((r0 * 0.8) + 35, originY, w - 80, h - originY - 15);
+
+            // Draw F(r) curve line
+            graphCtx.beginPath();
+            graphCtx.lineWidth = 2.5;
+            graphCtx.strokeStyle = 'rgba(250, 204, 21, 0.85)'; // Gold curve
+            
+            let started = false;
+            for (let graphX = 45; graphX < w - 25; graphX++) {
+                // Map graph x back to simulation r equivalent
+                // Graph origin x offset represents the p1 center.
+                // For graph drawing, we map: r_sim = (graphX - 45) * 1.5 + 40
+                const rSimVal = (graphX - 45) * 1.2 + 35;
+                const fVal = getForce(rSimVal, r0);
+                
+                // Map force back to graph y coordinates
+                // y_graph = originY - fVal * scaleFactor
+                const graphY = originY - fVal * 4.2;
+                
+                // Draw line points if within y bounds
+                if (graphY > 15 && graphY < h - 15) {
+                    if (!started) {
+                        graphCtx.moveTo(graphX, graphY);
+                        started = true;
+                    } else {
+                        graphCtx.lineTo(graphX, graphY);
+                    }
+                }
+            }
+            graphCtx.stroke();
+
+            // Draw Equilibrium point r0 label on X-axis
+            const r0GraphX = (r0 - 35) / 1.2 + 45;
+            graphCtx.strokeStyle = 'rgba(34, 197, 94, 0.6)';
+            graphCtx.lineWidth = 1;
+            graphCtx.setLineDash([3, 3]);
+            graphCtx.beginPath();
+            graphCtx.moveTo(r0GraphX, 15);
+            graphCtx.lineTo(r0GraphX, h - 15);
+            graphCtx.stroke();
+            graphCtx.setLineDash([]);
+            
+            graphCtx.fillStyle = 'var(--accent-green)';
+            graphCtx.fillText('r₀', r0GraphX + 8, originY - 6);
+
+            // Draw current active position dot on the curve
+            const curGraphX = (r - 35) / 1.2 + 45;
+            const curGraphY = originY - currentForce * 4.2;
+
+            if (curGraphX > 45 && curGraphX < w - 20 && curGraphY > 15 && curGraphY < h - 15) {
+                // Outer ring glow
+                graphCtx.save();
+                const dotColor = currentForce > 0.05 ? 'var(--accent-red)' : (currentForce < -0.05 ? 'var(--accent-cyan)' : 'var(--accent-green)');
+                graphCtx.shadowBlur = 10;
+                graphCtx.shadowColor = dotColor;
+                graphCtx.fillStyle = dotColor;
+                graphCtx.beginPath();
+                graphCtx.arc(curGraphX, curGraphY, 6, 0, Math.PI * 2);
+                graphCtx.fill();
+                graphCtx.restore();
+            }
+        }
+
+        // Start loop
+        loop();
+    </script>
+</body>
+</html>

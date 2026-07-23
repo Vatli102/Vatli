@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô Phỏng Hoạt Động Động Cơ Đốt Trong & Định Luật I Nhiệt Động Lực Học</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e1b4b 100%);
+            --glass-bg: rgba(15, 23, 42, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent-orange: #f97316;
+            --accent-orange-glow: rgba(249, 115, 22, 0.4);
+            --accent-blue: #0ea5e9;
+            --accent-blue-glow: rgba(14, 165, 233, 0.4);
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-purple: #a855f7;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 1.5rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        header h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #f97316, #ef4444, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 30px rgba(249, 115, 22, 0.15);
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Glass Panels */
+        .panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            backdrop-filter: blur(16px);
+            padding: 1.5rem;
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .simulation-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .canvas-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        canvas {
+            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8), 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        #engineCanvas {
+            width: 320px;
+            height: 420px;
+        }
+
+        #graphCanvas {
+            width: 300px;
+            height: 420px;
+        }
+
+        @media (max-width: 640px) {
+            #engineCanvas, #graphCanvas {
+                width: 100%;
+                max-width: 340px;
+                height: 360px;
+            }
+        }
+
+        /* Controls and HUD styles */
+        .canvas-controls {
+            display: flex;
+            gap: 0.8rem;
+            width: 100%;
+            max-width: 630px;
+        }
+
+        .btn-action {
+            padding: 0.8rem 1.2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            user-select: none;
+        }
+
+        .btn-play {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            flex: 2;
+        }
+        .btn-play:hover {
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-pause {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            flex: 2;
+        }
+        .btn-pause:hover {
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-step {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            flex: 1.5;
+        }
+        .btn-step:hover {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            flex: 1.2;
+        }
+        .btn-reset:hover {
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-orange);
+            padding-left: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Real-time Indicators */
+        .hud-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .hud-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 0.8rem;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .hud-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .hud-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .hud-val.orange { color: var(--accent-orange); text-shadow: 0 0 10px var(--accent-orange-glow); }
+        .hud-val.blue { color: var(--accent-blue); text-shadow: 0 0 10px var(--accent-blue-glow); }
+        .hud-val.green { color: var(--accent-green); }
+        .hud-val.red { color: var(--accent-red); }
+
+        /* Thermodynamics First Law Box */
+        .thermo-box {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 20px;
+            padding: 1.2rem;
+            margin-bottom: 1.2rem;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6);
+        }
+
+        .thermo-title {
+            font-size: 0.8rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .thermo-equation {
+            font-size: 2rem;
+            font-weight: 800;
+            text-align: center;
+            color: #fff;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
+        }
+
+        .thermo-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .bar-container {
+            display: grid;
+            grid-template-columns: 80px 1fr 60px;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .bar-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .bar-bg {
+            background: rgba(255, 255, 255, 0.05);
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+
+        .bar-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 6px;
+            transition: width 0.1s ease, background-color 0.3s ease;
+        }
+
+        .bar-fill.dU { background: linear-gradient(90deg, #a855f7, #c084fc); }
+        .bar-fill.A { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+        .bar-fill.Q { background: linear-gradient(90deg, #ef4444, #f87171); }
+
+        .bar-value {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .thermo-explain {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.8rem;
+            line-height: 1.4;
+            padding-top: 0.8rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            min-height: 2.8em;
+            font-style: italic;
+        }
+
+        /* Config sliders */
+        .config-group {
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 16px;
+            padding: 1rem;
+            border: 1px solid rgba(255,255,255,0.03);
+            margin-bottom: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .slider-row {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .slider-header span:last-child {
+            color: var(--accent-orange);
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: rgba(255,255,255,0.1);
+            height: 6px;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent-orange);
+            cursor: pointer;
+            box-shadow: 0 0 8px var(--accent-orange-glow);
+            transition: transform 0.1s;
+        }
+
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* Engine/Fuel Presets */
+        .preset-group {
+            display: flex;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn-preset {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+            padding: 0.7rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .btn-preset:hover {
+            border-color: rgba(255,255,255,0.2);
+            color: #fff;
+        }
+
+        .btn-preset.active {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            border-color: #f97316;
+            color: #fff;
+            box-shadow: 0 4px 15px var(--accent-orange-glow);
+        }
+
+        /* Status & Badges */
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-intake { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+        .badge-compression { background: rgba(14, 165, 233, 0.2); color: #38bdf8; border: 1px solid rgba(14, 165, 233, 0.4); }
+        .badge-power { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); animation: pulse 0.5s infinite alternate; }
+        .badge-exhaust { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.4); }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            100% { box-shadow: 0 0 10px 3px rgba(239, 68, 68, 0.3); }
+        }
+
+        /* Info box */
+        .study-guide {
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 1.8rem;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        th {
+            background: rgba(15, 23, 42, 0.8);
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255,255,255,0.02);
+        }
+
+        /* Quiz Box */
+        .quiz-container {
+            margin-top: 1.5rem;
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 1.2rem;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+            color: #fff;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .quiz-option {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quiz-option:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255,255,255,0.15);
+        }
+
+        .quiz-option.correct {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: var(--accent-green);
+            color: #34d399;
+        }
+
+        .quiz-option.wrong {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: var(--accent-red);
+            color: #f87171;
+        }
+
+        .quiz-feedback {
+            margin-top: 0.8rem;
+            font-size: 0.85rem;
+            min-height: 1.2rem;
+            font-weight: 500;
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .btn-quiz-nav {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Mô Phỏng Hoạt Động Động Cơ Đốt Trong 4 Kỳ</h1>
+        <p>Liên hệ Động lực học chất khí & Định luật I Nhiệt động lực học - Vật lí 12</p>
+    </header>
+
+    <div class="main-container">
+        <!-- Cột trái: Khu vực vẽ Canvas mô phỏng & Đồ thị p-V -->
+        <div class="panel simulation-container">
+            <div class="status-header">
+                <span class="hud-label" style="font-weight:700; color: #fff;">Không gian thí nghiệm trực quan</span>
+                <span id="strokeBadge" class="status-badge badge-intake">Kỳ 1: Nạp khí</span>
+            </div>
+
+            <div class="canvas-wrapper">
+                <!-- Canvas vẽ Động Cơ -->
+                <canvas id="engineCanvas" width="320" height="420"></canvas>
+                <!-- Canvas vẽ Đồ thị p-V -->
+                <canvas id="graphCanvas" width="300" height="420"></canvas>
+            </div>
+
+            <!-- Các nút điều khiển động cơ -->
+            <div class="canvas-controls">
+                <button id="btnPlayPause" class="btn-action btn-pause" onclick="togglePlay()">
+                    <span id="playIcon">⏸</span> <span id="playText">Tạm dừng (Pause)</span>
+                </button>
+                <button class="btn-action btn-step" onclick="stepEngine()">
+                    <span>⏯</span> Bước tiếp theo
+                </button>
+                <button class="btn-action btn-reset" onclick="resetEngine()">
+                    <span>🔄</span> Đặt lại
+                </button>
+            </div>
+        </div>
+
+        <!-- Cột phải: Bảng số liệu, biểu đồ Định luật I & Cấu hình -->
+        <div class="panel">
+            <div class="section-title">
+                <span>Chỉ số động lực học khí</span>
+                <small id="txtEngineType" style="font-size:0.75rem; color: var(--accent-orange); font-weight:700;">ĐỘNG CƠ XĂNG (OTTO)</small>
+            </div>
+
+            <!-- Màn hình HUD các giá trị T, p, V -->
+            <div class="hud-grid">
+                <div class="hud-card">
+                    <div class="hud-label">Nhiệt độ (T)</div>
+                    <div id="valT" class="hud-val green">300 K</div>
+                    <div id="valTCel" style="font-size:0.75rem; color: var(--text-secondary); margin-top:2px;">(27 °C)</div>
+                </div>
+                <div class="hud-card">
+                    <div class="hud-label">Áp suất (p)</div>
+                    <div id="valP" class="hud-val orange">1.0 atm</div>
+                    <div id="valPBar" style="font-size:0.75rem; color: var(--text-secondary); margin-top:2px;">(1.01 bar)</div>
+                </div>
+                <div class="hud-card">
+                    <div class="hud-label">Thể tích (V)</div>
+                    <div id="valV" class="hud-val blue">450 cc</div>
+                    <div id="valVPercent" style="font-size:0.75rem; color: var(--text-secondary); margin-top:2px;">V_max (100%)</div>
+                </div>
+            </div>
+
+            <!-- Bảng phân tích Định luật I Nhiệt động lực học -->
+            <div class="thermo-box">
+                <div class="thermo-title">Phân tích Định luật I: ΔU = A + Q</div>
+                <div id="thermoEq" class="thermo-equation">ΔU = 0 = 0 + 0</div>
+                <div class="thermo-bars">
+                    <div class="bar-container">
+                        <span class="bar-label">Nhiệt Q (J)</span>
+                        <div class="bar-bg"><div id="barQ" class="bar-fill Q"></div></div>
+                        <span id="lblValQ" class="bar-value red">0 J</span>
+                    </div>
+                    <div class="bar-container">
+                        <span class="bar-label">Công A (J)</span>
+                        <div class="bar-bg"><div id="barA" class="bar-fill A"></div></div>
+                        <span id="lblValA" class="bar-value blue">0 J</span>
+                    </div>
+                    <div class="bar-container">
+                        <span class="bar-label">Nội năng ΔU</span>
+                        <div class="bar-bg"><div id="barDU" class="bar-fill dU"></div></div>
+                        <span id="lblValDU" class="bar-value dU">0 J</span>
+                    </div>
+                </div>
+                <div id="thermoExplain" class="thermo-explain">
+                    Đang hút hỗn hợp nhiên liệu mát vào xilanh ở áp suất không đổi.
+                </div>
+            </div>
+
+            <div class="section-title">Cấu hình Động cơ</div>
+
+            <!-- Chọn loại Nhiên liệu / Chu trình -->
+            <div class="preset-group">
+                <button id="btnPetrol" class="btn-preset active" onclick="setEngineType('petrol')">Động cơ Xăng<br><small>(Đánh lửa bugi)</small></button>
+                <button id="btnDiesel" class="btn-preset" onclick="setEngineType('diesel')">Động cơ Diesel<br><small>(Tự nén nổ)</small></button>
+            </div>
+
+            <!-- Điều chỉnh Thông số (RPM, Tỷ số nén) -->
+            <div class="config-group">
+                <div class="slider-row">
+                    <div class="slider-header">
+                        <span>Tốc độ quay động cơ</span>
+                        <span id="lblRPM">60 RPM</span>
+                    </div>
+                    <input type="range" id="sliderRPM" min="10" max="300" value="60" oninput="updateRPM(this.value)">
+                </div>
+
+                <div class="slider-row">
+                    <div class="slider-header">
+                        <span>Tỉ số nén (Compression Ratio - r<sub>c</sub>)</span>
+                        <span id="lblCR">8.0 : 1</span>
+                    </div>
+                    <input type="range" id="sliderCR" min="6.0" max="12.0" step="0.5" value="8.0" oninput="updateCR(this.value)">
+                </div>
+
+                <div style="display:flex; justify-content:space-between; font-size:0.85rem; border-top:1px solid rgba(255,255,255,0.05); padding-top:0.6rem;">
+                    <span style="color:var(--text-secondary)">Hiệu suất lý thuyết (η):</span>
+                    <span id="valEfficiency" style="color:var(--accent-green); font-weight:700;">56.5%</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-top:-0.3rem;">
+                    <span style="color:var(--text-secondary)">Góc trục khuỷu:</span>
+                    <span id="valAngle" style="color:#fff; font-weight:600;">0.0°</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hướng dẫn chi tiết & bảng đối chiếu vật lí -->
+    <div class="study-guide">
+        <h2 style="font-size:1.4rem; font-weight:700; color: #fff; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:0.6rem; margin-bottom:1rem; display:flex; align-items:center; gap:8px;">
+            <span>📘</span> Cẩm nang học tập: Động cơ 4 kỳ và Định luật I Nhiệt động lực học
+        </h2>
+        <p style="font-size:0.95rem; color:var(--text-secondary); line-height:1.6; margin-bottom:1rem;">
+            Động cơ đốt trong 4 kỳ (Chu trình Otto/Diesel) hoạt động bằng cách đốt cháy nhiên liệu trong buồng kín để biến nhiệt năng thành cơ năng. Quá trình này liên hệ mật thiết với <strong>Định luật I Nhiệt động lực học: ΔU = A + Q</strong>. Trong đó:
+            <br>• <strong>Q</strong> là nhiệt lượng khí nhận được từ ngoài (Q > 0 khi nhiên liệu bốc cháy tỏa nhiệt vào khí; Q &lt; 0 khi khí thải mang nhiệt ra ngoài).
+            <br>• <strong>A</strong> là công khí nhận được từ bên ngoài (A > 0 khi khí bị nén, thể tích giảm; A &lt; 0 khi khí tự dãn nở đẩy piston sinh công ra ngoài).
+            <br>• <strong>ΔU</strong> là biến thiên nội năng của khí, trực tiếp quyết định sự tăng/giảm nhiệt độ (T) của khí.
+        </p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tên Kỳ (Stroke)</th>
+                        <th>Trạng thái Piston & Van</th>
+                        <th>Biến đổi trạng thái khí (p, V, T)</th>
+                        <th>Mối liên hệ Định luật I (ΔU = A + Q)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-weight:700; color:#34d399;">1. Kỳ Nạp (Intake)</td>
+                        <td>Piston đi từ <b>ĐC Trên → ĐC Dưới</b>.<br>Van nạp <b>MỞ</b>, van xả ĐÓNG.</td>
+                        <td>Khí nạp mát đi vào. <b>V tăng</b>, áp suất duy trì gần <b>p<sub>atm</sub></b>, nhiệt độ mát mẻ <b>T ≈ 300 K</b>.</td>
+                        <td>Không có biến đổi nhiệt/công lớn. <b>Q ≈ 0, A ≈ 0</b> (được kéo bởi bánh đà), <b>ΔU ≈ 0</b>.</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:700; color:#38bdf8;">2. Kỳ Nén (Compression)</td>
+                        <td>Piston đi từ <b>ĐC Dưới → ĐC Trên</b>.<br>Cả hai van đều <b>ĐÓNG</b>.</td>
+                        <td>Khí bị nén mạnh. <b>V giảm</b> cực nhanh, <b>p tăng cao</b>, nhiệt độ tăng mạnh <b>T ↑</b>.</td>
+                        <td>Nén nhanh nên trao đổi nhiệt không đáng kể <b>Q ≈ 0</b>. Khí nhận công từ ngoài: <b>A > 0</b>.<br>Do đó: <b>ΔU = A > 0</b> → Nội năng tăng, làm nhiệt độ tăng.</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:700; color:#f87171;">3. Kỳ Nổ - Sinh Công (Power)</td>
+                        <td>Bugi đánh lửa (Xăng) hoặc Phun dầu tự cháy (Diesel) ở ĐC Trên.<br>Piston bị đẩy xuống <b>ĐC Trên → ĐC Dưới</b>. Cả hai van <b>ĐÓNG</b>.</td>
+                        <td>Nhiên liệu cháy cực nhanh, áp suất vọt lên cực đại <b>p<sub>max</sub></b> (lên tới 50-80 atm) và nhiệt độ cực cao <b>T<sub>max</sub> ≈ 2500K</b>. Khí giãn nở nhanh.</td>
+                        <td>Khí nhận nhiệt lượng cực lớn từ phản ứng cháy: <b>Q > 0</b>.<br>Khí dãn nở mạnh, đẩy piston đi xuống để làm quay trục khuỷu, sinh công ra ngoài: <b>A &lt; 0</b>.<br><b>ΔU = Q + A</b> (trong đó Q lớn hơn trị số A, nội năng tổng thể tăng vọt rồi giảm bớt khi sinh công). Đây là kỳ duy nhất sinh công cơ học.</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:700; color:#cbd5e1;">4. Kỳ Xả (Exhaust)</td>
+                        <td>Piston đi từ <b>ĐC Dưới → ĐC Trên</b>.<br>Van nạp ĐÓNG, van xả <b>MỞ</b>.</td>
+                        <td>Khí thải nóng bị đẩy ra ngoài. <b>V giảm</b> về tối thiểu, áp suất hạ nhanh về <b>p<sub>atm</sub></b>, nhiệt độ giảm dần.</td>
+                        <td>Khí thải nóng mang nhiệt lượng thoát ra ngoài: <b>Q &lt; 0</b> (hệ tỏa nhiệt).<br>Piston đẩy khí ra ngoài, công thực hiện nhỏ <b>A ≈ 0</b>.<br><b>ΔU = Q &lt; 0</b> → Nội năng hệ giảm mạnh, chuẩn bị cho chu trình mới.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Trắc nghiệm củng cố -->
+        <div class="quiz-container">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
+                <h3 style="font-size:1.1rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:6px;">
+                    <span>📝</span> Trắc nghiệm ôn tập nhanh
+                </h3>
+                <span id="quizScore" style="font-size:0.85rem; color:var(--accent-orange); font-weight:700;">Câu hỏi 1 / 3</span>
+            </div>
+            
+            <div id="quizQuestion" class="quiz-question">
+                Trong hoạt động của động cơ xăng 4 kỳ, kỳ nào khí trong xilanh thực hiện công lên piston (khí sinh công)?
+            </div>
+            
+            <div id="quizOptions" class="quiz-options">
+                <!-- Sẽ được điền bằng JS -->
+            </div>
+
+            <div id="quizFeedback" class="quiz-feedback"></div>
+
+            <div class="quiz-navigation">
+                <button id="btnPrevQuiz" class="btn-action btn-quiz-nav" style="background:#334155;" onclick="changeQuestion(-1)" disabled>◀ Câu trước</button>
+                <button id="btnNextQuiz" class="btn-action btn-quiz-nav" style="background:var(--accent-orange);" onclick="changeQuestion(1)">Câu tiếp theo ▶</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. BIẾN TOÀN CỤC & THIẾT LẬP BAN ĐẦU ---
+        let isPlaying = true;
+        let engineType = 'petrol'; // 'petrol' (spark ignition) hoặc 'diesel' (compression ignition)
+        let angle = 0;             // Góc trục khuỷu (0 đến 720 độ)
+        let rpm = 60;              // Tốc độ (vòng/phút)
+        let compressionRatio = 8.0;// Tỉ số nén (rc)
+        let lastTime = 0;
+        
+        // Nhiệt động lực học tức thời
+        let P = 1.0;          // Áp suất (atm)
+        let T = 300.0;        // Nhiệt độ (K)
+        let V = 450.0;        // Thể tích (cc)
+        let V_c = 450.0 / 8.0;// Thể tích buồng cháy
+        let V_h = 450.0 - (450.0 / 8.0); // Thể tích công tác
+        let cumulativeA = 0;  // Công lũy kế trong kỳ hiện tại (J)
+        let cumulativeQ = 0;  // Nhiệt lượng lũy kế (J)
+        let deltaU = 0;       // Biến thiên nội năng (J)
+        
+        // Cấu hình vật lý động cơ
+        const V_max = 450.0;  // Thể tích tối đa (cc)
+        const P_atm = 1.0;    // Áp suất khí quyển (atm)
+        const T_atm = 300.0;  // Nhiệt độ nạp ban đầu (K)
+        const gamma = 1.4;    // Chỉ số đoạn nhiệt của khí lý tưởng lưỡng nguyên tử
+
+        // Canvas Động Cơ
+        const canvas = document.getElementById('engineCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Canvas Đồ Thị p-V
+        const graphCanvas = document.getElementById('graphCanvas');
+        const gCtx = graphCanvas.getContext('2d');
+
+        // --- 2. CÁC HÀM CƠ HỌC & ĐỘNG HỌC ---
+        // Kích thước vẽ cơ học
+        const cx = canvas.width / 2; // Tâm quay trục khuỷu X
+        const cy = 330;             // Tâm quay trục khuỷu Y
+        const crankR = 36;          // Bán kính tay quay (pixel) - hành trình piston S = 2 * crankR = 72px
+        const rodL = 120;           // Chiều dài thanh truyền (pixel)
+        
+        // Tính vị trí Y của Piston dựa trên góc quay alpha (radian)
+        // alpha = 0 tương ứng TDC (piston cao nhất)
+        function getPistonY(alpha) {
+            const crankpinY = cy - crankR * Math.cos(alpha);
+            const crankpinX = crankR * Math.sin(alpha);
+            const y_wrist = crankpinY - Math.sqrt(rodL * rodL - crankpinX * crankpinX);
+            return y_wrist;
+        }
+
+        // Tần số quét cập nhật vẽ hình
+        function update(timestamp) {
+            if (!lastTime) lastTime = timestamp;
+            let dt = (timestamp - lastTime) / 1000;
+            lastTime = timestamp;
+
+            // Giới hạn dt để tránh giật khi chuyển tab
+            if (dt > 0.1) dt = 0.1;
+
+            if (isPlaying) {
+                // Tốc độ tăng góc quay (độ mỗi giây): rpm * 360 / 60 = rpm * 6
+                const dAngle = rpm * 6 * dt;
+                angle = (angle + dAngle) % 720;
+                calculateThermodynamics();
+            }
+
+            drawEngine();
+            drawPVGraph();
+            updateHUD();
+
+            requestAnimationFrame(update);
+        }
+
+        // Thay đổi loại động cơ
+        function setEngineType(type) {
+            engineType = type;
+            document.getElementById('btnPetrol').classList.toggle('active', type === 'petrol');
+            document.getElementById('btnDiesel').classList.toggle('active', type === 'diesel');
+            document.getElementById('txtEngineType').textContent = type === 'petrol' ? 'ĐỘNG CƠ XĂNG (OTTO)' : 'ĐỘNG CƠ DIESEL (SABATHÉ)';
+            
+            // Động cơ Diesel có tỉ số nén cao hơn
+            const crSlider = document.getElementById('sliderCR');
+            if (type === 'diesel') {
+                crSlider.min = 14.0;
+                crSlider.max = 22.0;
+                crSlider.value = 16.5;
+                updateCR(16.5);
+            } else {
+                crSlider.min = 6.0;
+                crSlider.max = 12.0;
+                crSlider.value = 8.0;
+                updateCR(8.0);
+            }
+            resetEngine();
+        }
+
+        function updateRPM(val) {
+            rpm = parseInt(val);
+            document.getElementById('lblRPM').textContent = rpm + " RPM";
+        }
+
+        function updateCR(val) {
+            compressionRatio = parseFloat(val);
+            document.getElementById('lblCR').textContent = compressionRatio.toFixed(1) + " : 1";
+            
+            // Tính toán hiệu suất lý thuyết
+            // η = 1 - 1 / (rc^(γ-1))
+            const efficiency = 1 - (1 / Math.pow(compressionRatio, gamma - 1));
+            document.getElementById('valEfficiency').textContent = (efficiency * 100).toFixed(1) + "%";
+            
+            calculateThermodynamics();
+        }
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            document.getElementById('btnPlayPause').className = isPlaying ? "btn-action btn-pause" : "btn-action btn-play";
+            document.getElementById('playText').textContent = isPlaying ? "Tạm dừng (Pause)" : "Tiếp tục (Play)";
+            document.getElementById('playIcon').textContent = isPlaying ? "⏸" : "▶";
+        }
+
+        function stepEngine() {
+            isPlaying = false;
+            document.getElementById('btnPlayPause').className = "btn-action btn-play";
+            document.getElementById('playText').textContent = "Tiếp tục (Play)";
+            document.getElementById('playIcon').textContent = "▶";
+            
+            // Nhảy 10 độ một lần bấm
+            angle = (angle + 10) % 720;
+            calculateThermodynamics();
+        }
+
+        function resetEngine() {
+            angle = 0;
+            cumulativeA = 0;
+            cumulativeQ = 0;
+            deltaU = 0;
+            calculateThermodynamics();
+        }
+
+        // Xác định Kỳ hiện tại dựa trên góc trục khuỷu
+        // Kỳ 1: 0 - 180 (Nạp)
+        // Kỳ 2: 180 - 360 (Nén)
+        // Kỳ 3: 360 - 540 (Nổ)
+        // Kỳ 4: 540 - 720 (Xả)
+        function getCurrentStroke() {
+            if (angle >= 0 && angle < 180) return 1;
+            if (angle >= 180 && angle < 360) return 2;
+            if (angle >= 360 && angle < 540) return 3;
+            return 4;
+        }
+
+        // --- 3. TÍNH TOÁN NHIỆT ĐỘNG LỰC HỌC ---
+        function calculateThermodynamics() {
+            const stroke = getCurrentStroke();
+            
+            // 1. Thể tích V tính theo góc trục khuỷu
+            // Thể tích buồng cháy V_c = V_max / rc
+            // Thể tích công tác V_h = V_max - V_c = V_max * (1 - 1/rc)
+            V_c = V_max / compressionRatio;
+            V_h = V_max - V_c;
+            
+            // Tính vị trí piston cực đại/cực tiểu
+            const y_TDC = getPistonY(0);
+            const y_BDC = getPistonY(Math.PI);
+            const y_curr = getPistonY(angle * Math.PI / 180);
+            
+            const fraction = (y_curr - y_TDC) / (y_BDC - y_TDC);
+            V = V_c + V_h * fraction; // cc (cm³)
+
+            // Tỉ số nén tức thời từ BDC
+            const rc_instant = V_max / V;
+
+            // 2. Tính Áp suất p và Nhiệt độ T tùy thuộc từng Kỳ
+            if (stroke === 1) { // NẠP
+                const phase = (angle / 180) * Math.PI;
+                P = P_atm - 0.08 * Math.sin(phase);
+                T = T_atm; // Nhiệt độ mát mẻ bên ngoài
+                
+                cumulativeA = 0; // Reset tích lũy năng lượng khi bắt đầu kỳ nạp
+                cumulativeQ = 0;
+                deltaU = 0;
+            }
+            else if (stroke === 2) { // NÉN
+                P = P_atm * Math.pow(rc_instant, gamma);
+                T = T_atm * Math.pow(rc_instant, gamma - 1);
+                
+                // Công nhận vào A = - ∫ p dV > 0. Xấp xỉ công tích lũy:
+                // Đổi đơn vị sang Joule: p(atm) * V(cc) * 0.1013 = J
+                const P_start = P_atm;
+                const V_start = V_max;
+                cumulativeA = ((P * V - P_start * V_start) * 0.1013) / (gamma - 1);
+                cumulativeQ = 0; // Đoạn nhiệt
+                deltaU = cumulativeA + cumulativeQ;
+            }
+            else if (stroke === 3) { // NỔ - SINH CÔNG
+                const localAngle = angle - 360; 
+                
+                const P_comp_TDC = P_atm * Math.pow(compressionRatio, gamma);
+                const T_comp_TDC = T_atm * Math.pow(compressionRatio, gamma - 1);
+                
+                const Q_heat = engineType === 'petrol' ? 450 : 550; // Nhiệt năng tỏa ra (J)
+                
+                if (engineType === 'petrol') {
+                    const T_max = T_comp_TDC + 1800;
+                    const P_max = P_comp_TDC * (T_max / T_comp_TDC);
+                    
+                    if (localAngle < 8) { // Giai đoạn cháy nhanh
+                        const t = localAngle / 8;
+                        T = T_comp_TDC + 1800 * t;
+                        P = P_comp_TDC * (T / T_comp_TDC);
+                        cumulativeQ = Q_heat * t;
+                        cumulativeA = -((P * V - P_comp_TDC * V_c) * 0.1013) / (gamma - 1);
+                    } else {
+                        P = P_max * Math.pow(V_c / V, gamma);
+                        T = T_max * Math.pow(V_c / V, gamma - 1);
+                        cumulativeQ = Q_heat;
+                        cumulativeA = -Q_heat + ((P * V - P_max * V_c) * 0.1013) / (gamma - 1);
+                    }
+                } else {
+                    // Diesel: Phun dầu cháy đẳng áp một đoạn (localAngle từ 0 đến 25 độ)
+                    const burnEndAngle = 25;
+                    const T_max = T_comp_TDC + 1900;
+                    
+                    if (localAngle < burnEndAngle) {
+                        const t = localAngle / burnEndAngle;
+                        T = T_comp_TDC + 1900 * t;
+                        P = P_comp_TDC; // Đẳng áp
+                        cumulativeQ = Q_heat * t;
+                        cumulativeA = -P * (V - V_c) * 0.1013;
+                    } else {
+                        const V_cut = V_c + V_h * (getPistonY( (360 + burnEndAngle)*Math.PI/180 ) - y_TDC) / (y_BDC - y_TDC);
+                        P = P_comp_TDC * Math.pow(V_cut / V, gamma);
+                        T = T_max * Math.pow(V_cut / V, gamma - 1);
+                        cumulativeQ = Q_heat;
+                        
+                        const A_constant_P = -P_comp_TDC * (V_cut - V_c) * 0.1013;
+                        const A_adiabatic = ((P * V - P_comp_TDC * V_cut) * 0.1013) / (gamma - 1);
+                        cumulativeA = A_constant_P + A_adiabatic;
+                    }
+                }
+                deltaU = cumulativeA + cumulativeQ;
+            }
+            else { // XẢ
+                const localAngle = angle - 540;
+                
+                const P_ex_start = P_atm * Math.pow(compressionRatio, gamma) * 0.25; // Xấp xỉ áp suất xả cuối kỳ nổ
+                
+                if (localAngle < 15) {
+                    const t = localAngle / 15;
+                    P = P_ex_start - (P_ex_start - P_atm) * t;
+                    T = 1000 - 400 * t;
+                } else {
+                    P = P_atm + 0.1 * Math.sin((localAngle/180) * Math.PI);
+                    T = 600 - 300 * ((localAngle - 15) / 165);
+                }
+                
+                const Q_loss = engineType === 'petrol' ? -300 : -350;
+                cumulativeQ = Q_loss * (localAngle / 180);
+                cumulativeA = 50 * (localAngle / 180); // Công piston đẩy khí ra ngoài
+                deltaU = cumulativeA + cumulativeQ;
+            }
+        }
+
+        // --- 4. HÀM VẼ ĐỘNG CƠ (CANVAS CHÍNH) ---
+        function drawEngine() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const stroke = getCurrentStroke();
+            const rad = angle * Math.PI / 180;
+            const y_wrist = getPistonY(rad);
+            
+            const crankpinX = cx + crankR * Math.sin(rad);
+            const crankpinY = cy - crankR * Math.cos(rad);
+
+            // A. Vẽ các đường ống nạp (trái) và ống xả (phải)
+            ctx.lineWidth = 14;
+            ctx.lineCap = 'round';
+            
+            ctx.strokeStyle = 'rgba(71, 85, 105, 0.4)';
+            ctx.beginPath();
+            ctx.moveTo(cx - 30, 110);
+            ctx.bezierCurveTo(cx - 70, 110, cx - 110, 80, cx - 120, 80);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(cx + 30, 110);
+            ctx.bezierCurveTo(cx + 70, 110, cx + 110, 80, cx + 120, 80);
+            ctx.stroke();
+
+            // B. Vẽ Khí gas trong Buồng đốt (Combustion Chamber)
+            const y_piston_top = y_wrist - 25;
+            const chamberH = y_piston_top - 110;
+            
+            if (chamberH > 0) {
+                let fillGradient = ctx.createLinearGradient(cx, 110, cx, y_piston_top);
+                
+                if (stroke === 1) { // Nạp: Hỗn hợp xăng mát (xanh lá nhạt) hoặc khí mát
+                    const alpha = (angle / 180) * 0.5 + 0.1;
+                    fillGradient.addColorStop(0, `rgba(16, 185, 129, ${alpha})`);
+                    fillGradient.addColorStop(1, `rgba(16, 185, 129, ${alpha * 0.4})`);
+                    
+                    ctx.fillStyle = '#34d399';
+                    for (let i = 0; i < 8; i++) {
+                        const hAngle = (angle * 0.05 + i * 5) % 10;
+                        const px = cx - 35 - hAngle * 8;
+                        const py = 110 + hAngle * 4;
+                        if (px > cx - 100 && py < y_piston_top) {
+                            ctx.beginPath();
+                            ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+                }
+                else if (stroke === 2) { // Nén: Cam nóng dần
+                    const ratio = (angle - 180) / 180;
+                    const r_color = Math.floor(16 + 210 * ratio);
+                    const g_color = Math.floor(185 - 80 * ratio);
+                    const b_color = Math.floor(129 - 100 * ratio);
+                    fillGradient.addColorStop(0, `rgba(${r_color}, ${g_color}, ${b_color}, 0.7)`);
+                    fillGradient.addColorStop(1, `rgba(${r_color}, ${g_color}, ${b_color}, 0.3)`);
+                }
+                else if (stroke === 3) { // Nổ: Lửa đỏ rực rỡ và lóe sáng
+                    const localAngle = angle - 360;
+                    if (localAngle < 30) {
+                        fillGradient.addColorStop(0, 'rgba(253, 224, 71, 0.95)'); // Vàng sáng
+                        fillGradient.addColorStop(0.3, 'rgba(249, 115, 22, 0.9)'); // Cam
+                        fillGradient.addColorStop(1, 'rgba(239, 68, 68, 0.7)');   // Đỏ
+                        
+                        ctx.fillStyle = 'rgba(253, 224, 71, 0.15)';
+                        ctx.beginPath();
+                        ctx.arc(cx, 120, 90, 0, Math.PI * 2);
+                        ctx.fill();
+                    } else {
+                        const ratio = (localAngle - 30) / 150;
+                        const r_color = Math.floor(239 - 100 * ratio);
+                        const g_color = Math.floor(115 - 85 * ratio);
+                        const b_color = Math.floor(22 - 12 * ratio);
+                        fillGradient.addColorStop(0, `rgba(${r_color}, ${g_color}, ${b_color}, 0.8)`);
+                        fillGradient.addColorStop(1, `rgba(${r_color}, ${g_color}, ${b_color}, 0.35)`);
+                    }
+                }
+                else { // Xả: Xám khói
+                    const localAngle = angle - 540;
+                    const alpha = 0.6 * (1 - localAngle / 180);
+                    fillGradient.addColorStop(0, `rgba(100, 116, 139, ${alpha})`);
+                    fillGradient.addColorStop(1, `rgba(100, 116, 139, ${alpha * 0.3})`);
+                    
+                    ctx.fillStyle = 'rgba(148, 163, 184, 0.5)';
+                    for (let i = 0; i < 6; i++) {
+                        const sAngle = (localAngle * 0.06 + i * 8) % 12;
+                        const px = cx + 35 + sAngle * 7;
+                        const py = 110 - sAngle * 2;
+                        if (px < cx + 120) {
+                            ctx.beginPath();
+                            ctx.arc(px, py, 3 + sAngle*0.5, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+                }
+                
+                ctx.fillStyle = fillGradient;
+                ctx.beginPath();
+                ctx.moveTo(cx - 45, 110);
+                ctx.lineTo(cx + 45, 110);
+                ctx.lineTo(cx + 45, y_piston_top);
+                ctx.lineTo(cx - 45, y_piston_top);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            // C. Vẽ Vách Xilanh cố định
+            ctx.lineWidth = 6;
+            ctx.strokeStyle = '#475569';
+            ctx.lineJoin = 'miter';
+            ctx.beginPath();
+            ctx.moveTo(cx - 48, 90);
+            ctx.lineTo(cx - 48, 280);
+            ctx.moveTo(cx + 48, 90);
+            ctx.lineTo(cx + 48, 280);
+            ctx.stroke();
+
+            // Vẽ các lá tản nhiệt
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = '#334155';
+            for (let y = 130; y <= 250; y += 20) {
+                ctx.beginPath();
+                ctx.moveTo(cx - 48, y);
+                ctx.lineTo(cx - 65, y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(cx + 48, y);
+                ctx.lineTo(cx + 65, y);
+                ctx.stroke();
+            }
+
+            // D. Vẽ Van nạp (trái) & Van xả (phải)
+            let intakeOffset = 0;
+            let exhaustOffset = 0;
+            if (stroke === 1) {
+                intakeOffset = 8 * Math.sin((angle / 180) * Math.PI);
+            } else if (stroke === 4) {
+                exhaustOffset = 8 * Math.sin(((angle - 540) / 180) * Math.PI);
+            }
+
+            // Vẽ Van nạp
+            ctx.save();
+            ctx.translate(cx - 25, 110 + intakeOffset);
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = stroke === 1 ? '#34d399' : '#94a3b8';
+            ctx.beginPath();
+            ctx.moveTo(0, -25);
+            ctx.lineTo(0, 0);
+            ctx.stroke();
+            ctx.fillStyle = stroke === 1 ? '#10b981' : '#64748b';
+            ctx.beginPath();
+            ctx.moveTo(-10, 0);
+            ctx.lineTo(10, 0);
+            ctx.lineTo(7, -3);
+            ctx.lineTo(-7, -3);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            ctx.restore();
+
+            // Vẽ Van xả
+            ctx.save();
+            ctx.translate(cx + 25, 110 + exhaustOffset);
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = stroke === 4 ? '#cbd5e1' : '#94a3b8';
+            ctx.beginPath();
+            ctx.moveTo(0, -25);
+            ctx.lineTo(0, 0);
+            ctx.stroke();
+            ctx.fillStyle = stroke === 4 ? '#94a3b8' : '#64748b';
+            ctx.beginPath();
+            ctx.moveTo(-10, 0);
+            ctx.lineTo(10, 0);
+            ctx.lineTo(7, -3);
+            ctx.lineTo(-7, -3);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            ctx.restore();
+
+            // E. Vẽ Bugi hoặc Vòi phun
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = '#94a3b8';
+            ctx.fillStyle = '#1e293b';
+            ctx.beginPath();
+            ctx.rect(cx - 8, 90, 16, 20);
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.strokeStyle = '#475569';
+            ctx.beginPath();
+            ctx.moveTo(cx - 4, 110);
+            ctx.lineTo(cx - 4, 114);
+            ctx.moveTo(cx + 4, 110);
+            ctx.lineTo(cx + 4, 114);
+            ctx.stroke();
+
+            if (engineType === 'petrol') {
+                // BUGI ĐÁNH LỬA
+                if (stroke === 3 && (angle - 360) < 15) {
+                    ctx.strokeStyle = '#facc15';
+                    ctx.lineWidth = 2.5;
+                    ctx.beginPath();
+                    ctx.moveTo(cx, 114);
+                    let sparkY = 114;
+                    for (let j = 0; j < 4; j++) {
+                        sparkY += 4;
+                        let sparkX = cx + (Math.random() - 0.5) * 14;
+                        ctx.lineTo(sparkX, sparkY);
+                    }
+                    ctx.stroke();
+                    
+                    ctx.fillStyle = 'rgba(253, 224, 71, 0.4)';
+                    ctx.beginPath();
+                    ctx.arc(cx, 122, 18, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            } else {
+                // VÒI PHUN NHIÊN LIỆU DIESEL
+                const localAngle = angle - 360;
+                if (stroke === 3 && localAngle < 25) {
+                    ctx.strokeStyle = 'rgba(254, 240, 138, 0.7)';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(cx, 114);
+                    ctx.lineTo(cx - 15, 135);
+                    ctx.moveTo(cx, 114);
+                    ctx.lineTo(cx - 6, 140);
+                    ctx.moveTo(cx, 114);
+                    ctx.lineTo(cx + 6, 140);
+                    ctx.moveTo(cx, 114);
+                    ctx.lineTo(cx + 15, 135);
+                    ctx.stroke();
+                }
+            }
+
+            // F. Vẽ Piston
+            ctx.save();
+            ctx.translate(cx, y_wrist);
+            
+            let pistonGrad = ctx.createLinearGradient(-45, 0, 45, 0);
+            pistonGrad.addColorStop(0, '#64748b');
+            pistonGrad.addColorStop(0.3, '#cbd5e1');
+            pistonGrad.addColorStop(0.7, '#cbd5e1');
+            pistonGrad.addColorStop(1, '#475569');
+            
+            ctx.fillStyle = pistonGrad;
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 3;
+            
+            ctx.beginPath();
+            ctx.rect(-45, -25, 90, 50);
+            ctx.fill();
+            ctx.stroke();
+
+            // Các rãnh xéc-măng
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(-45, -20, 4, 3);
+            ctx.fillRect(-45, -13, 4, 3);
+            ctx.fillRect(-45, -6, 4, 3);
+            ctx.fillRect(41, -20, 4, 3);
+            ctx.fillRect(41, -13, 4, 3);
+            ctx.fillRect(41, -6, 4, 3);
+
+            // Chốt piston
+            ctx.fillStyle = '#475569';
+            ctx.beginPath();
+            ctx.arc(0, 0, 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.restore();
+
+            // G. Vẽ Thanh Truyền
+            ctx.save();
+            ctx.lineWidth = 8;
+            ctx.lineCap = 'round';
+            let rodGrad = ctx.createLinearGradient(cx, y_wrist, crankpinX, crankpinY);
+            rodGrad.addColorStop(0, '#94a3b8');
+            rodGrad.addColorStop(1, '#475569');
+            ctx.strokeStyle = rodGrad;
+            
+            ctx.beginPath();
+            ctx.moveTo(cx, y_wrist);
+            ctx.lineTo(crankpinX, crankpinY);
+            ctx.stroke();
+            
+            ctx.fillStyle = '#cbd5e1';
+            ctx.beginPath();
+            ctx.arc(cx, y_wrist, 5, 0, Math.PI * 2);
+            ctx.arc(crankpinX, crankpinY, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // H. Vẽ Trục Khuỷu & Bánh Đà
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = '#334155';
+            ctx.fillStyle = '#1e293b';
+            ctx.beginPath();
+            ctx.arc(cx, cy, 50, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.lineWidth = 14;
+            ctx.strokeStyle = '#475569';
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(crankpinX, crankpinY);
+            ctx.stroke();
+
+            ctx.fillStyle = '#f97316';
+            ctx.beginPath();
+            ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = '#fff';
+            ctx.stroke();
+        }
+
+        // --- 5. HÀM VẼ ĐỒ THỊ p-V (CANVAS ĐỒ THỊ NHIỆT ĐỘNG LỰC HỌC) ---
+        function drawPVGraph() {
+            gCtx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
+            
+            const w = graphCanvas.width;
+            const h = graphCanvas.height;
+            const padLeft = 45;
+            const padBottom = 40;
+            const padTop = 30;
+            const padRight = 20;
+
+            const graphW = w - padLeft - padRight;
+            const graphH = h - padBottom - padTop;
+
+            gCtx.lineWidth = 2;
+            gCtx.strokeStyle = 'rgba(255,255,255,0.3)';
+            gCtx.fillStyle = 'rgba(255,255,255,0.7)';
+            gCtx.font = '11px Outfit';
+            
+            gCtx.beginPath();
+            gCtx.moveTo(padLeft, padTop - 10);
+            gCtx.lineTo(padLeft, h - padBottom);
+            gCtx.stroke();
+            
+            gCtx.beginPath();
+            gCtx.moveTo(padLeft - 4, padTop - 8);
+            gCtx.lineTo(padLeft, padTop - 15);
+            gCtx.lineTo(padLeft + 4, padTop - 8);
+            gCtx.fill();
+
+            gCtx.beginPath();
+            gCtx.moveTo(padLeft, h - padBottom);
+            gCtx.lineTo(w - padRight + 10, h - padBottom);
+            gCtx.stroke();
+
+            gCtx.beginPath();
+            gCtx.moveTo(w - padRight + 8, h - padBottom - 4);
+            gCtx.lineTo(w - padRight + 15, h - padBottom);
+            gCtx.lineTo(w - padRight + 8, h - padBottom + 4);
+            gCtx.fill();
+
+            gCtx.fillText("p (atm)", padLeft - 38, padTop - 5);
+            gCtx.fillText("V (cc)", w - padRight - 15, h - padBottom + 20);
+            
+            gCtx.strokeStyle = 'rgba(255,255,255,0.1)';
+            gCtx.beginPath();
+            gCtx.moveTo(padLeft + graphW * 0.15, h - padBottom);
+            gCtx.lineTo(padLeft + graphW * 0.15, h - padBottom + 5);
+            gCtx.moveTo(padLeft + graphW * 0.9, h - padBottom);
+            gCtx.lineTo(padLeft + graphW * 0.9, h - padBottom + 5);
+            gCtx.stroke();
+            gCtx.fillText("V_min", padLeft + graphW * 0.15 - 12, h - padBottom + 16);
+            gCtx.fillText("V_max", padLeft + graphW * 0.9 - 12, h - padBottom + 16);
+
+            const x_min = padLeft + graphW * 0.15;
+            const x_max = padLeft + graphW * 0.90;
+            const y_atm = h - padBottom - graphH * 0.08;
+            
+            const compRatioFactor = (compressionRatio - 6) / (22 - 6); 
+            const y_comp = y_atm - graphH * (0.2 + compRatioFactor * 0.15);
+            const y_comb = y_comp - graphH * (0.35 + (engineType === 'diesel' ? 0.08 : 0.15));
+            const y_ex_start = y_atm - (y_comp - y_comb) * 0.35;
+
+            function drawAdiabaticCurve(x1, y1, x2, y2, color) {
+                gCtx.strokeStyle = color;
+                gCtx.lineWidth = 2.5;
+                gCtx.beginPath();
+                gCtx.moveTo(x1, y1);
+                
+                const steps = 30;
+                for (let i = 1; i <= steps; i++) {
+                    const t = i / steps;
+                    const currX = x1 + (x2 - x1) * t;
+                    const v1 = x1;
+                    const v2 = x2;
+                    const v_curr = currX;
+                    
+                    const p_ratio = Math.pow(v1 / v_curr, 1.4);
+                    const currY = h - padBottom - (h - padBottom - y1) * p_ratio;
+                    
+                    const error = y2 - (h - padBottom - (h - padBottom - y1) * Math.pow(v1 / v2, 1.4));
+                    const adjustedY = currY + error * t;
+                    
+                    gCtx.lineTo(currX, adjustedY);
+                }
+                gCtx.stroke();
+            }
+
+            // Vẽ toàn bộ đường Chu Trình lý thuyết (Nền mờ)
+            gCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            gCtx.lineWidth = 2;
+            gCtx.beginPath();
+            gCtx.moveTo(x_min, y_atm);
+            gCtx.lineTo(x_max, y_atm);
+            gCtx.stroke();
+
+            drawAdiabaticCurve(x_max, y_atm, x_min, y_comp, 'rgba(14, 165, 233, 0.2)');
+
+            gCtx.strokeStyle = 'rgba(239, 68, 68, 0.2)';
+            gCtx.beginPath();
+            if (engineType === 'petrol') {
+                gCtx.moveTo(x_min, y_comp);
+                gCtx.lineTo(x_min, y_comb);
+            } else {
+                const x_cut = x_min + (x_max - x_min) * 0.12;
+                gCtx.moveTo(x_min, y_comp);
+                gCtx.lineTo(x_min, y_comb); 
+                gCtx.lineTo(x_cut, y_comb); 
+            }
+            gCtx.stroke();
+
+            const x_start_exp = engineType === 'petrol' ? x_min : x_min + (x_max - x_min) * 0.12;
+            drawAdiabaticCurve(x_start_exp, y_comb, x_max, y_ex_start, 'rgba(249, 115, 22, 0.2)');
+
+            gCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            gCtx.beginPath();
+            gCtx.moveTo(x_max, y_ex_start);
+            gCtx.lineTo(x_max, y_atm);
+            gCtx.stroke();
+
+            gCtx.fillStyle = 'rgba(255,255,255,0.15)';
+            gCtx.beginPath();
+            gCtx.moveTo(padLeft + graphW*0.5, y_atm - graphH*0.1);
+            gCtx.lineTo(padLeft + graphW*0.5 - 6, y_atm - graphH*0.14);
+            gCtx.lineTo(padLeft + graphW*0.5 + 2, y_atm - graphH*0.16);
+            gCtx.fill();
+            gCtx.beginPath();
+            gCtx.moveTo(padLeft + graphW*0.5, y_atm - graphH*0.3);
+            gCtx.lineTo(padLeft + graphW*0.5 + 6, y_atm - graphH*0.26);
+            gCtx.lineTo(padLeft + graphW*0.5 - 2, y_atm - graphH*0.24);
+            gCtx.fill();
+
+            const stroke = getCurrentStroke();
+            const currX = x_min + (V - V_c) * (x_max - x_min) / V_h;
+            
+            const p_max_val = P_atm * Math.pow(compressionRatio, gamma) * (engineType === 'petrol' ? 4.5 : 3.5);
+            const p_min_val = 0.5;
+            const fractionP = (P - p_min_val) / (p_max_val - p_min_val);
+            const currY = h - padBottom - Math.max(0.05, Math.min(0.98, fractionP)) * graphH;
+
+            // Vẽ nét đậm cho kỳ hiện tại
+            gCtx.lineWidth = 3.5;
+            if (stroke === 1) {
+                gCtx.strokeStyle = 'var(--accent-green)';
+                gCtx.beginPath();
+                gCtx.moveTo(x_min, y_atm);
+                gCtx.lineTo(currX, y_atm);
+                gCtx.stroke();
+            }
+            else if (stroke === 2) {
+                gCtx.strokeStyle = 'var(--accent-blue)';
+                drawAdiabaticCurve(x_max, y_atm, currX, currY, 'var(--accent-blue)');
+            }
+            else if (stroke === 3) {
+                gCtx.strokeStyle = 'var(--accent-red)';
+                gCtx.beginPath();
+                if (engineType === 'petrol') {
+                    gCtx.moveTo(x_min, y_comp);
+                    if (V === V_c) {
+                        gCtx.lineTo(x_min, currY);
+                    } else {
+                        gCtx.lineTo(x_min, y_comb);
+                        gCtx.stroke();
+                        drawAdiabaticCurve(x_min, y_comb, currX, currY, 'var(--accent-orange)');
+                    }
+                } else {
+                    gCtx.moveTo(x_min, y_comp);
+                    if (V <= V_c + V_h * 0.12) {
+                        gCtx.lineTo(x_min, y_comb);
+                        gCtx.lineTo(currX, y_comb);
+                    } else {
+                        gCtx.lineTo(x_min, y_comb);
+                        const x_cut = x_min + (x_max - x_min) * 0.12;
+                        gCtx.lineTo(x_cut, y_comb);
+                        gCtx.stroke();
+                        drawAdiabaticCurve(x_cut, y_comb, currX, currY, 'var(--accent-orange)');
+                    }
+                }
+                gCtx.stroke();
+            }
+            else {
+                gCtx.strokeStyle = '#cbd5e1';
+                gCtx.beginPath();
+                gCtx.moveTo(x_max, y_ex_start);
+                if (currX > x_max - 5) {
+                    gCtx.lineTo(x_max, currY);
+                } else {
+                    gCtx.lineTo(x_max, y_atm);
+                    gCtx.stroke();
+                    gCtx.beginPath();
+                    gCtx.strokeStyle = '#cbd5e1';
+                    gCtx.moveTo(x_max, y_atm);
+                    gCtx.lineTo(currX, y_atm);
+                }
+                gCtx.stroke();
+            }
+
+            // Điểm trạng thái phát sáng
+            gCtx.shadowBlur = 15;
+            if (stroke === 1) {
+                gCtx.shadowColor = 'var(--accent-green)';
+                gCtx.fillStyle = '#34d399';
+            } else if (stroke === 2) {
+                gCtx.shadowColor = 'var(--accent-blue)';
+                gCtx.fillStyle = '#38bdf8';
+            } else if (stroke === 3) {
+                gCtx.shadowColor = 'var(--accent-orange)';
+                gCtx.fillStyle = '#f97316';
+            } else {
+                gCtx.shadowColor = '#fff';
+                gCtx.fillStyle = '#f8fafc';
+            }
+            
+            gCtx.beginPath();
+            gCtx.arc(currX, currY, 6, 0, Math.PI * 2);
+            gCtx.fill();
+            gCtx.shadowBlur = 0; 
+            gCtx.strokeStyle = '#fff';
+            gCtx.lineWidth = 1.5;
+            gCtx.stroke();
+        }
+
+        // --- 6. CẬP NHẬT HUD VÀ BẢNG SỐ LIỆU ---
+        function updateHUD() {
+            document.getElementById('valAngle').textContent = angle.toFixed(1) + "°";
+            
+            const stroke = getCurrentStroke();
+            const badge = document.getElementById('strokeBadge');
+            
+            if (stroke === 1) {
+                badge.className = "status-badge badge-intake";
+                badge.textContent = "Kỳ 1: Nạp khí";
+                document.getElementById('thermoExplain').textContent = "Hỗn hợp khí mát đi vào xilanh ở áp suất không đổi (Đẳng áp). Nhiệt độ duy trì mát mẻ.";
+            } else if (stroke === 2) {
+                badge.className = "status-badge badge-compression";
+                badge.textContent = "Kỳ 2: Nén khí";
+                document.getElementById('thermoExplain').textContent = "Cả hai van đóng. Piston đi lên nén khí cực nhanh (Đoạn nhiệt), khí nhận công (A > 0), nội năng tăng làm nhiệt độ và áp suất tăng vọt.";
+            } else if (stroke === 3) {
+                badge.className = "status-badge badge-power";
+                badge.textContent = "Kỳ 3: Nổ - Sinh công";
+                document.getElementById('thermoExplain').textContent = "Nhiên liệu cháy tỏa nhiệt lượng cực lớn (Q > 0). Khí giãn nở cực mạnh đẩy piston đi xuống sinh công ra ngoài (A < 0). Đây là kỳ sinh công hữu ích.";
+            } else {
+                badge.className = "status-badge badge-exhaust";
+                badge.textContent = "Kỳ 4: Xả khí";
+                document.getElementById('thermoExplain').textContent = "Van xả mở. Khí thải nóng bị đẩy ra ngoài mang theo nhiệt lượng lớn (Q < 0, hệ tỏa nhiệt). Nội năng hệ giảm về ban đầu.";
+            }
+
+            document.getElementById('valT').textContent = Math.round(T) + " K";
+            document.getElementById('valTCel').textContent = "(" + Math.round(T - 273.15) + " °C)";
+            
+            document.getElementById('valP').textContent = P.toFixed(1) + " atm";
+            document.getElementById('valPBar').textContent = "(" + (P * 1.013).toFixed(1) + " bar)";
+            
+            document.getElementById('valV').textContent = Math.round(V) + " cc";
+            const vPercent = Math.round((V / V_max) * 100);
+            document.getElementById('valVPercent').textContent = "V_tức thời (" + vPercent + "%)";
+
+            const scaleMax = 600.0;
+            
+            function updateBar(elementId, valueId, val) {
+                const fill = document.getElementById(elementId);
+                const lbl = document.getElementById(valueId);
+                
+                let formattedVal = Math.round(val) + " J";
+                if (val > 0) formattedVal = "+" + formattedVal;
+                lbl.textContent = formattedVal;
+                
+                const percentage = Math.min(100, Math.max(0, (Math.abs(val) / scaleMax) * 100));
+                fill.style.width = percentage + "%";
+                
+                if (elementId === 'barA') {
+                    if (val > 0) {
+                        fill.style.background = 'linear-gradient(90deg, #3b82f6, #60a5fa)'; 
+                        lbl.style.color = 'var(--accent-blue)';
+                    } else if (val < 0) {
+                        fill.style.background = 'linear-gradient(90deg, #10b981, #34d399)'; 
+                        lbl.style.color = 'var(--accent-green)';
+                    } else {
+                        lbl.style.color = 'var(--text-secondary)';
+                    }
+                }
+                else if (elementId === 'barQ') {
+                    if (val > 0) {
+                        fill.style.background = 'linear-gradient(90deg, #ef4444, #f87171)'; 
+                        lbl.style.color = 'var(--accent-red)';
+                    } else if (val < 0) {
+                        fill.style.background = 'linear-gradient(90deg, #f59e0b, #fbbf24)'; 
+                        lbl.style.color = '#fbbf24';
+                    } else {
+                        lbl.style.color = 'var(--text-secondary)';
+                    }
+                }
+                else if (elementId === 'barDU') {
+                    if (val > 0) {
+                        fill.style.background = 'linear-gradient(90deg, #a855f7, #c084fc)'; 
+                        lbl.style.color = 'var(--accent-purple)';
+                    } else if (val < 0) {
+                        fill.style.background = 'linear-gradient(90deg, #64748b, #94a3b8)'; 
+                        lbl.style.color = 'var(--text-secondary)';
+                    } else {
+                        lbl.style.color = 'var(--text-secondary)';
+                    }
+                }
+            }
+
+            updateBar('barQ', 'lblValQ', cumulativeQ);
+            updateBar('barA', 'lblValA', cumulativeA);
+            updateBar('barDU', 'lblValDU', deltaU);
+
+            const dU_str = Math.round(deltaU);
+            const A_str = Math.round(cumulativeA) >= 0 ? "+" + Math.round(cumulativeA) : Math.round(cumulativeA);
+            const Q_str = Math.round(cumulativeQ) >= 0 ? "+" + Math.round(cumulativeQ) : Math.round(cumulativeQ);
+            document.getElementById('thermoEq').textContent = `ΔU = ${dU_str} J = (${A_str}) + (${Q_str})`;
+        }
+
+
+        // --- 7. BỘ CÂU HỎI TRẮC NGHIỆM TƯƠNG TÁC ---
+        const quizData = [
+            {
+                question: "Trong hoạt động của động cơ xăng 4 kỳ, kỳ nào khí trong xilanh nhận nhiệt lượng lớn từ phản ứng đốt cháy (Q > 0) và tự dãn nở sinh công đẩy piston đi xuống (A < 0)?",
+                options: [
+                    "Kỳ 1: Nạp khí",
+                    "Kỳ 2: Nén khí",
+                    "(Recommended) Kỳ 3: Nổ - Sinh công",
+                    "Kỳ 4: Xả khí"
+                ],
+                correct: 2,
+                explain: "Đúng! Ở kỳ nổ, bugi đánh lửa đốt cháy nhiên liệu tỏa nhiệt lượng cực lớn (Q > 0), làm khí giãn nở sinh công (A < 0) đẩy piston đi xuống."
+            },
+            {
+                question: "Khi piston nén khí nhanh ở kỳ 2 (van nạp và xả đều đóng), theo Định luật I nhiệt động lực học, quá trình này biến đổi năng lượng như thế nào?",
+                options: [
+                    "Khí tỏa nhiệt (Q < 0) và giảm nội năng (ΔU < 0).",
+                    "(Recommended) Khí nhận công từ ngoài (A > 0), trao đổi nhiệt không đáng kể (Q ≈ 0) nên nội năng tăng (ΔU > 0).",
+                    "Khí sinh công (A < 0) và tăng nhiệt độ.",
+                    "Không có sự biến đổi năng lượng nào xảy ra."
+                ],
+                correct: 1,
+                explain: "Đúng! Quá trình nén nhanh là quá trình đoạn nhiệt (Q ≈ 0), công thực hiện lên khí (A > 0). Theo ĐL I: ΔU = A + Q ≈ A > 0 nên nội năng khí tăng, làm nhiệt độ khí tăng cao."
+            },
+            {
+                question: "Điểm khác biệt căn bản về nguyên lý hoạt động giữa Động cơ Diesel và Động cơ Xăng là gì?",
+                options: [
+                    "Động cơ Diesel không có kỳ xả khí thải.",
+                    "Động cơ Diesel hoạt động chỉ với 2 kỳ thay vì 4 kỳ.",
+                    "(Recommended) Động cơ Diesel không dùng bugi đánh lửa; nó nén khí đạt nhiệt độ rất cao rồi phun sương dầu tự bốc cháy.",
+                    "Động cơ Diesel sinh công ở kỳ nén khí."
+                ],
+                correct: 2,
+                explain: "Đúng! Động cơ Diesel có tỷ số nén rất cao (rc = 14-22), nén không khí nóng tới mức khi phun sương dầu Diesel vào, dầu tự bốc cháy ngay lập tức mà không cần bugi đánh lửa."
+            }
+        ];
+
+        let currentQuizIndex = 0;
+
+        function loadQuizQuestion() {
+            const data = quizData[currentQuizIndex];
+            document.getElementById('quizScore').textContent = `Câu hỏi ${currentQuizIndex + 1} / ${quizData.length}`;
+            document.getElementById('quizQuestion').textContent = data.question.replace("(Recommended) ", "");
+            
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+            
+            data.options.forEach((opt, idx) => {
+                const displayOpt = opt.replace("(Recommended) ", "");
+                
+                const btn = document.createElement('div');
+                btn.className = 'quiz-option';
+                btn.innerHTML = `<span></span> ${displayOpt}`;
+                btn.onclick = () => checkAnswer(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quizFeedback').textContent = '';
+            document.getElementById('quizFeedback').className = 'quiz-feedback';
+            
+            document.getElementById('btnPrevQuiz').disabled = currentQuizIndex === 0;
+            document.getElementById('btnNextQuiz').textContent = currentQuizIndex === quizData.length - 1 ? "Hoàn thành" : "Câu tiếp theo ▶";
+        }
+
+        function checkAnswer(selectedIdx, element) {
+            const data = quizData[currentQuizIndex];
+            const options = document.getElementById('quizOptions').children;
+            
+            for (let i = 0; i < options.length; i++) {
+                options[i].onclick = null;
+            }
+
+            if (selectedIdx === data.correct) {
+                element.classList.add('correct');
+                element.firstChild.textContent = '✅';
+                document.getElementById('quizFeedback').textContent = "Chính xác! " + data.explain;
+                document.getElementById('quizFeedback').style.color = '#34d399';
+            } else {
+                element.classList.add('wrong');
+                element.firstChild.textContent = '❌';
+                options[data.correct].classList.add('correct');
+                options[data.correct].firstChild.textContent = '✅';
+                document.getElementById('quizFeedback').textContent = "Chưa đúng. " + data.explain;
+                document.getElementById('quizFeedback').style.color = '#f87171';
+            }
+        }
+
+        function changeQuestion(dir) {
+            currentQuizIndex += dir;
+            if (currentQuizIndex < 0) currentQuizIndex = 0;
+            if (currentQuizIndex >= quizData.length) {
+                alert("Chúc mừng bạn đã hoàn thành bài ôn tập trắc nghiệm nhanh!");
+                currentQuizIndex = 0;
+            }
+            loadQuizQuestion();
+        }
+
+        // --- KHỞI CHẠY HỆ THỐNG ---
+        requestAnimationFrame(update);
+        loadQuizQuestion();
+        calculateThermodynamics();
+
+    </script>
+</body>
+</html>

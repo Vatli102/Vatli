@@ -1,0 +1,139 @@
+# PHIẾU BÀI TẬP TỰ LUYỆN
+## BÀI 3. NHIỆT ĐỘ. THANG NHIỆT ĐỘ. NHIỆT KẾ
+*Phiếu bài tập được xây dựng theo chuẩn đánh giá năng lực của Chương trình GDPT 2018, tập trung đánh giá 3 năng lực thành phần môn Vật lí:*
+1.  **[Năng lực Nhận thức vật lí - NTVL]:** Nhận biết, phát biểu và tái hiện kiến thức cốt lõi.
+2.  **[Năng lực Tìm hiểu tự nhiên - THTN]:** Đọc đồ thị, phân tích dữ liệu thực nghiệm và hình vẽ trực quan.
+3.  **[Năng lực Vận dụng kiến thức - VDKT]:** Giải thích hiện tượng, tính toán định lượng và giải quyết vấn đề.
+
+
+---
+
+
+### PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn
+*Thí sinh trả lời từ Câu 1 đến Câu 6. Mỗi câu hỏi thí sinh chỉ lựa chọn một phương án.*
+
+
+**Câu 1 [NTVL]:** Hai vật ở trạng thái cân bằng nhiệt với nhau khi chúng có cùng
+A. nội năng.  
+B. nhiệt độ.  
+C. nhiệt lượng.  
+D. khối lượng.  
+
+
+**Câu 2 [NTVL]:** Khi hai vật có nhiệt độ khác nhau tiếp xúc với nhau, nhiệt lượng sẽ tự truyền từ
+A. vật có nội năng lớn hơn sang vật có nội năng nhỏ hơn.  
+B. vật có nhiệt dung riêng lớn hơn sang vật có nhiệt dung riêng nhỏ hơn.  
+C. vật có nhiệt độ cao hơn sang vật có nhiệt độ thấp hơn.  
+D. vật có khối lượng lớn hơn sang vật có khối lượng nhỏ hơn.  
+
+
+**Câu 3 [NTVL]:** Nhiệt kế y tế hoạt động dựa trên tính chất vật lí nào của thủy ngân?
+A. Sự thay đổi điện trở theo nhiệt độ.  
+B. Sự phát xạ tia hồng ngoại theo nhiệt độ.  
+C. Sự nở vì nhiệt của chất lỏng.  
+D. Sự thay đổi màu sắc theo nhiệt độ.  
+
+
+**Câu 4 [NTVL]:** Hệ thức liên hệ giữa nhiệt độ tuyệt đối $T$ (Kelvin) và nhiệt độ thông thường $t$ (Celsius) là
+A. $T = t + 273$.  
+B. $T = t - 273$.  
+C. $t = T + 273$.  
+D. $T = 273 - t$.  
+
+
+**Câu 5 [VDKT]:** Ở nhiệt độ không tuyệt đối ($0\text{ K}$), động năng chuyển động nhiệt của các phân tử cấu tạo nên vật chất sẽ
+A. đạt giá trị cực đại.  
+B. bằng không.  
+C. không thay đổi.  
+D. dao động tuần hoàn.  
+
+
+**Câu 6 [VDKT]:** Thiết bị đo nhiệt độ không cần tiếp xúc trực tiếp với vật cần đo, hoạt động dựa trên cảm biến bức xạ điện từ của vật là
+A. nhiệt kế thủy ngân.  
+B. nhiệt kế hồng ngoại.  
+C. nhiệt kế kim loại kép.  
+D. nhiệt kế điện trở bán dẫn.  
+
+
+---
+
+
+### PHẦN II. Câu trắc nghiệm đúng sai
+*Thí sinh trả lời từ Câu 1 đến Câu 2. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng hoặc sai.*
+
+
+**Câu 1:** Sử dụng nhiệt kế thủy ngân y tế để đo nhiệt độ cơ thể của một người.
+a) **[NTVL]** Khi kẹp nhiệt kế vào nách, nhiệt lượng tự truyền từ cơ thể sang nhiệt kế vì cơ thể có nhiệt độ cao hơn.
+b) **[NTVL]** Quá trình truyền nhiệt dừng lại khi hệ đạt cân bằng nhiệt, lúc này nhiệt độ của thủy ngân trong nhiệt kế bằng nhiệt độ của cơ thể.
+c) **[NTVL]** Thủy ngân dâng lên trong ống quản của nhiệt kế là do các phân tử thủy ngân nở to ra khi nhiệt độ tăng.
+d) **[NTVL]** Nếu ngâm bầu nhiệt kế vào nước đá đang tan ở áp suất chuẩn, mực thủy ngân sẽ hạ xuống và chỉ đúng vạch số $0^\circ\text{C}$ trên thang đo Celsius.
+
+
+**Câu 2:** Xem xét thang nhiệt độ Celsius (độ C) và thang nhiệt độ Kelvin (K).
+a) **[NTVL]** Khoảng cách $1^\circ\text{C}$ (độ chia Celsius) có độ lớn bằng đúng khoảng cách $1\text{ K}$ (độ chia Kelvin).
+b) **[NTVL]** Không có bất kỳ nhiệt độ nào dưới mức $0\text{ K}$ (nhiệt độ không tuyệt đối) vì các phân tử dừng chuyển động nhiệt hoàn toàn ở trạng thái này.
+c) **[NTVL]** Nếu nhiệt độ phòng tăng thêm $5^\circ\text{C}$ thì nhiệt độ trong thang Kelvin cũng tăng thêm $278\text{ K}$.
+d) **[NTVL]** Một vật có nhiệt độ là $-40^\circ\text{C}$ thì trong thang Kelvin nhiệt độ của nó sẽ là một giá trị âm.
+
+
+---
+
+
+### PHẦN III. Câu trắc nghiệm trả lời ngắn
+*Thí sinh trả lời từ Câu 1 đến Câu 3. Viết đáp án số tương ứng.*
+
+
+**Câu 1 [VDKT]:** Nhiệt độ nóng chảy của vàng là $1064^\circ\text{C}$. Hãy tính nhiệt độ này trong thang nhiệt độ Kelvin (theo đơn vị $\text{K}$, lấy giá trị chuyển đổi $T = t + 273$).
+*Đáp số:* ....................
+
+
+**Câu 2 [VDKT]:** Một linh kiện điện tử hoạt động ổn định ở nhiệt độ tối đa là $358\text{ K}$. Hãy tính giới hạn nhiệt độ này theo thang nhiệt độ Celsius (độ C, lấy giá trị chuyển đổi $T = t + 273$).
+*Đáp số:* ....................
+
+
+**Câu 3 [VDKT]:** Một nhiệt kế điện trở có điện trở thay đổi theo nhiệt độ tuân theo công thức gần đúng: $R(t) = R_0 (1 + \alpha t)$, với $R_0 = 100\ \Omega$ ở $0^\circ\text{C}$, và hệ số nhiệt điện trở $\alpha = 3,9 \cdot 10^{-3}\ \text{K}^{-1}$. Khi nhúng đầu đo của nhiệt kế này vào một cốc dầu nóng, thiết bị đo hiển thị giá trị điện trở là $178\ \Omega$. Nhiệt độ của cốc dầu đó là bao nhiêu độ Celsius ($^\circ\text{C}$)? (Làm tròn kết quả đến chữ số hàng đơn vị).
+*Đáp số:* ....................
+
+## ĐÁP ÁN & HƯỚNG DẪN GIẢI CHI TIẾT
+
+
+### PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn
+| Câu | Đáp án | Năng lực | Giải thích |
+|:---:|:---:|:---:|:---|
+| **1** | **B** | **NTVL** | Hai vật đạt cân bằng nhiệt khi nhiệt độ của chúng bằng nhau, không còn sự truyền nhiệt ròng giữa chúng. |
+| **2** | **C** | **NTVL** | Nhiệt lượng sẽ tự động truyền từ vật có nhiệt độ cao hơn sang vật có nhiệt độ thấp hơn cho đến khi hai vật đạt trạng thái cân bằng nhiệt. |
+| **3** | **C** | **NTVL** | Nhiệt kế thủy ngân đo nhiệt độ dựa trên sự nở vì nhiệt của chất lỏng thủy ngân chứa trong bầu đo. |
+| **4** | **A** | **NTVL** | Công thức liên hệ chuẩn giữa thang đo Celsius và Kelvin là $T = t + 273$. |
+| **5** | **B** | **VDKT** | Ở nhiệt độ không tuyệt đối ($0\text{ K}$), năng lượng chuyển động nhiệt của phân tử tối thiểu, coi như dừng chuyển động nhiệt hoàn toàn. |
+| **6** | **B** | **VDKT** | Nhiệt kế hồng ngoại đo năng lượng bức xạ hồng ngoại phát ra từ vật, không cần tiếp xúc. |
+
+
+### PHẦN II. Câu trắc nghiệm đúng sai
+**Câu 1:**
+*   **a) [NTVL] Đúng.** Sự truyền nhiệt tự phát luôn xảy ra từ vật có nhiệt độ cao (cơ thể) sang vật có nhiệt độ thấp (nhiệt kế).
+*   **b) [NTVL] Đúng.** Khi đạt cân bằng nhiệt, nhiệt độ của hai vật bằng nhau, nhiệt kế chỉ đúng nhiệt độ cơ thể.
+*   **c) [NTVL] Sai.** Thủy ngân nở ra là do khoảng cách trung bình giữa các phân tử thủy ngân tăng lên, không phải bản thân kích thước phân tử tăng lên.
+*   **d) [NTVL] Đúng.** Nước đá đang tan ở áp suất chuẩn định nghĩa mốc $0^\circ\text{C}$ của thang Celsius.
+
+
+**Câu 2:**
+*   **a) [NTVL] Đúng.** Một độ chia Celsius bằng đúng một độ chia Kelvin ($\Delta T = \Delta t$).
+*   **b) [NTVL] Đúng.** $0\text{ K}$ là mốc nhiệt độ thấp nhất có thể đạt được trên lý thuyết, không thể hạ nhiệt độ thấp hơn vì động năng chuyển động nhiệt không thể âm.
+*   **c) [NTVL] Sai.** Khi $\Delta t = 5^\circ\text{C}$ thì độ tăng nhiệt độ Kelvin $\Delta T$ cũng bằng đúng $5\text{ K}$ (vì kích thước độ chia bằng nhau).
+*   **d) [NTVL] Sai.** Nhiệt độ Kelvin thấp nhất là $0\text{ K}$ (không tuyệt đối). Nhiệt độ Kelvin tương ứng với $-40^\circ\text{C}$ là $T = -40 + 273 = 233\text{ K} > 0$.
+
+
+### PHẦN III. Câu trắc nghiệm trả lời ngắn
+**Câu 1 [VDKT]:**
+*   Áp dụng công thức: $T = t + 273 = 1064 + 273 = 1337\text{ K}$.
+*   *Đáp số:* **1337**
+
+
+**Câu 2 [VDKT]:**
+*   Áp dụng công thức: $t = T - 273 = 358 - 273 = 85^\circ\text{C}$.
+*   *Đáp số:* **85**
+
+
+**Câu 3 [VDKT]:**
+*   Ta có: $R(t) = R_0 (1 + \alpha t) \rightarrow 178 = 100 \cdot (1 + 3,9 \cdot 10^{-3} \cdot t) \rightarrow 1,78 = 1 + 3,9 \cdot 10^{-3} \cdot t \rightarrow 0,78 = 3,9 \cdot 10^{-3} \cdot t \rightarrow t = 200^\circ\text{C}$.
+*   *Đáp số:* **200**
