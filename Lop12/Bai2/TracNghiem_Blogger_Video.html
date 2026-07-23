@@ -708,27 +708,62 @@
     </style>
 </head>
 <body>
-<!-- Dynamic Floating Capsule Navigation Bar (Scroll-Proof & Centered) -->
-<div style="position: fixed; top: 12px; left: 50%; transform: translateX(-50%); z-index: 99999; width: 94%; max-width: 760px; font-family: 'Inter', sans-serif; pointer-events: auto;">
-    <div style="background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 50px; padding: 7px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); gap: 8px;">
-        <a href="../" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.2); color: #ffffff; padding: 6px 14px; border-radius: 30px; font-weight: 700; text-decoration: none; font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.3); white-space: nowrap; transition: all 0.2s;">
+<!-- Dynamic Floating Capsule Navigation Bar (Reordered for Mobile: Trang chu | Theo doi | Chuyen bai) -->
+<style>
+.nav-capsule-wrap {
+    position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 99999;
+    width: 96%; max-width: 760px; font-family: 'Inter', sans-serif; pointer-events: auto;
+}
+.nav-capsule-body {
+    background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 50px; padding: 6px 12px;
+    display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35); gap: 6px;
+}
+.nav-btn-home {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(255,255,255,0.2); color: #ffffff;
+    padding: 6px 12px; border-radius: 30px; font-weight: 700; text-decoration: none;
+    font-size: 0.82rem; border: 1px solid rgba(255,255,255,0.3); white-space: nowrap; flex-shrink: 0;
+}
+.nav-btn-sub {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: linear-gradient(135deg, #06b6d4, #0891b2); color: #ffffff;
+    padding: 6px 14px; border-radius: 30px; font-weight: 700; border: none; cursor: pointer;
+    font-size: 0.82rem; box-shadow: 0 4px 12px rgba(6,182,212,0.4); white-space: nowrap; flex-shrink: 0;
+}
+.nav-select-lesson {
+    padding: 6px 8px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3);
+    background: #ffffff; color: #0f172a; font-weight: 600; font-size: 0.8rem;
+    outline: none; cursor: pointer; max-width: 140px; text-overflow: ellipsis; flex-shrink: 1;
+}
+@media (max-width: 480px) {
+    .nav-btn-home, .nav-btn-sub { padding: 5px 9px; font-size: 0.78rem; }
+    .nav-select-lesson { max-width: 105px; padding: 5px 6px; font-size: 0.75rem; }
+}
+</style>
+
+<div class="nav-capsule-wrap">
+    <div class="nav-capsule-body">
+        <!-- Trái: Trang chủ -->
+        <a href="../" class="nav-btn-home">
             🏠 Trang chủ
         </a>
-        <div style="display: flex; align-items: center; gap: 8px;">
-            <select onchange="if(this.value) window.location.href=this.value;" style="padding: 6px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3); background: #ffffff; color: #0f172a; font-weight: 600; font-size: 0.82rem; outline: none; cursor: pointer;">
-                <option value="">-- 📚 Chuyển bài --</option>
-                <option value="../Bai1">Bài 1: Cấu trúc của chất</option>
-                <option value="../Bai2">Bài 2: Nội năng & Định luật I</option>
-                <option value="../Bai3">Bài 3: Thang nhiệt độ</option>
-                <option value="../Bai4">Bài 4: Nhiệt dung riêng</option>
-                <option value="../Bai5">Bài 5: Nhiệt nóng chảy riêng</option>
-                <option value="../de1-chuong1">Ôn tập Chương 1 - Đề 1</option>
-                <option value="../de2-chuong1">Ôn tập Chương 1 - Đề 2</option>
-            </select>
-            <button type="button" onclick="openNavSubModal()" style="display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #06b6d4, #0891b2); color: #ffffff; padding: 6px 14px; border-radius: 30px; font-weight: 700; border: none; cursor: pointer; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(6,182,212,0.4); white-space: nowrap; transition: all 0.2s;">
-                🔔 Theo dõi
-            </button>
-        </div>
+        <!-- Giữa: Đăng ký Theo dõi -->
+        <button type="button" onclick="openNavSubModal()" class="nav-btn-sub">
+            🔔 Theo dõi
+        </button>
+        <!-- Phải: Chuyển bài -->
+        <select onchange="if(this.value) window.location.href=this.value;" class="nav-select-lesson">
+            <option value="">📚 Bài tập</option>
+            <option value="../Bai1">Bài 1: Cấu trúc của chất</option>
+            <option value="../Bai2">Bài 2: Nội năng & Định luật I</option>
+            <option value="../Bai3">Bài 3: Thang nhiệt độ</option>
+            <option value="../Bai4">Bài 4: Nhiệt dung riêng</option>
+            <option value="../Bai5">Bài 5: Nhiệt nóng chảy riêng</option>
+            <option value="../de1-chuong1">Ôn tập Chương 1 - Đề 1</option>
+            <option value="../de2-chuong1">Ôn tập Chương 1 - Đề 2</option>
+        </select>
     </div>
 </div>
 <div style="height: 48px;"></div>
@@ -1648,6 +1683,7 @@ function saveNavSub(e) {
 </script>
 </body>
 </html>
+
 
 
 
