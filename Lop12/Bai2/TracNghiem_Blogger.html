@@ -1,691 +1,1379 @@
-﻿<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trắc nghiệm Tương tác: Bài 2 - Vật lí 12</title>
-    <!-- Google Fonts: Inter & Montserrat -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome for Premium Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- MathJax for LaTeX Equations -->
-    <script>
-    const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
-
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                processEscapes: true
-            },
-            options: {
-                ignoreHtmlClass: 'tex2jax_ignore',
-                processHtmlClass: 'tex2jax_process'
-            }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <!-- Canvas Confetti for Celebration -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-    <style>
-        /* Container namespace to prevent Blogger CSS conflicts */
-        #quiz-blogger-wrapper {
-            --primary: #6366f1;
-            --primary-light: #818cf8;
-            --primary-dark: #4f46e5;
-            --secondary: #06b6d4;
-            --success: #10b981;
-            --success-light: #d1fae5;
-            --error: #ef4444;
-            --error-light: #fee2e2;
-            --warning: #f59e0b;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --bg-light: #f8fafc;
-            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
-            --border-radius: 16px;
-            
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            color: var(--text-main);
-            background-color: var(--bg-light);
-            line-height: 1.6;
-            width: 100%;
-            max-width: 680px; /* Standard phone-first/tablet viewport width */
-            margin: 0 auto;
-            padding: 15px;
-            box-sizing: border-box;
-            border-radius: var(--border-radius);
-        }
-
-        #quiz-blogger-wrapper * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            transition: all 0.2s ease;
-        }
-
-        /* Utility Styles */
-        .qb-card {
-            background: #ffffff;
-            border-radius: var(--border-radius);
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #e2e8f0;
-            box-shadow: var(--card-shadow);
-        }
-
-        .qb-title-gradient {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 800;
-        }
-
-        /* Start Screen */
-        #qb-start-screen {
-            text-align: center;
-            padding: 30px 20px;
-        }
-
-        #qb-start-screen .logo-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
-            color: var(--primary);
-            font-size: 30px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.1);
-        }
-
-        #qb-start-screen h1 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-
-        #qb-start-screen p.subtitle {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 25px;
-        }
-
-        .qb-input-group {
-            text-align: left;
-            margin-bottom: 15px;
-            position: relative;
-        }
-
-        .qb-input-group label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .qb-input-group i {
-            position: absolute;
-            left: 15px;
-            top: 36px;
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        .qb-input-field {
-            width: 100%;
-            padding: 12px 16px 12px 40px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            outline: none;
-            color: var(--text-main);
-            background-color: #f8fafc;
-        }
-
-        .qb-input-field:focus {
-            border-color: var(--primary-light);
-            background-color: #ffffff;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-        }
-
-        /* Buttons */
-        .qb-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            padding: 14px 24px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            color: #ffffff;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
-            font-family: 'Montserrat', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .qb-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
-        }
-
-        .qb-btn:active {
-            transform: translateY(0);
-        }
-
-        /* Sticky Progress Bar */
-        .qb-progress-sticky {
-            position: sticky;
-            top: 0;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(8px);
-            z-index: 100;
-            border-bottom: 1px solid #e2e8f0;
-            margin: -15px -15px 20px -15px;
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-        }
-
-        .qb-student-badge {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 50%;
-        }
-
-        .qb-student-badge strong {
-            color: var(--primary);
-        }
-
-        .qb-timer {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--text-main);
-            background: #f1f5f9;
-            padding: 4px 10px;
-            border-radius: 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .qb-progress-wrapper {
-            flex-grow: 1;
-            max-width: 40%;
-        }
-
-        .qb-progress-track {
-            height: 6px;
-            background: #e2e8f0;
-            border-radius: 3px;
-            overflow: hidden;
-            width: 100%;
-        }
-
-        .qb-progress-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-        }
-
-        /* Section Headings */
-        .qb-section-header {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin: 15px 0 10px 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 8px;
-        }
-
-        .qb-section-desc {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 15px;
-            font-style: italic;
-        }
-
-        /* Competency Tags */
-        .qb-tag {
-            display: inline-block;
-            font-size: 0.65rem;
-            font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-right: 6px;
-            text-transform: uppercase;
-        }
-        .tag-ntvl { background: rgba(99, 102, 241, 0.1); color: var(--primary-dark); border: 1px solid rgba(99, 102, 241, 0.2); }
-        .tag-vdkt { background: rgba(16, 185, 129, 0.1); color: #047857; border: 1px solid rgba(16, 185, 129, 0.2); }
-
-        /* Question Cards */
-        .qb-q-card {
-            border-left: 4px solid #cbd5e1;
-        }
-
-        .qb-q-card.active-input {
-            border-left-color: var(--primary-light);
-        }
-
-        .qb-q-header {
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-
-        .qb-q-num {
-            color: var(--primary);
-            font-weight: 700;
-            margin-right: 4px;
-        }
-
-        /* Part I: Option Cards */
-        .qb-options-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .qb-option-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 12px 14px;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            cursor: pointer;
-            background: #ffffff;
-            text-align: left;
-        }
-
-        .qb-option-item:hover {
-            border-color: var(--primary-light);
-            background: #f8fafc;
-        }
-
-        .qb-option-item.selected {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.04);
-        }
-
-        .qb-opt-letter {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            border: 1.5px solid #cbd5e1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            flex-shrink: 0;
-        }
-
-        .qb-option-item.selected .qb-opt-letter {
-            background: var(--primary);
-            color: #ffffff;
-            border-color: var(--primary);
-        }
-
-        .qb-opt-text {
-            font-size: 0.9rem;
-            padding-top: 2px;
-        }
-
-        /* Part II: True/False rows */
-        .qb-tf-table {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .qb-tf-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 15px;
-            padding: 12px;
-            background: #f8fafc;
-            border-radius: 10px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .qb-tf-text {
-            font-size: 0.9rem;
-            flex-grow: 1;
-        }
-
-        .qb-tf-actions {
-            display: flex;
-            gap: 6px;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .qb-tf-btn {
-            border: 1px solid #cbd5e1;
-            background: #ffffff;
-            padding: 6px 14px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            border-radius: 6px;
-            cursor: pointer;
-            color: var(--text-muted);
-        }
-
-        .qb-tf-btn:hover {
-            border-color: var(--text-muted);
-        }
-
-        .qb-tf-btn.selected-t {
-            background: var(--success);
-            color: white;
-            border-color: var(--success);
-            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
-        }
-
-        .qb-tf-btn.selected-f {
-            background: var(--error);
-            color: white;
-            border-color: var(--error);
-            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.2);
-        }
-
-        /* Part III: Short Answer */
-        .qb-short-answer-container {
-            position: relative;
-            max-width: 250px;
-        }
-
-        .qb-short-input {
-            width: 100%;
-            padding: 10px 14px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            outline: none;
-            text-align: center;
-            font-weight: 700;
-        }
-
-        .qb-short-input:focus {
-            border-color: var(--primary);
-        }
-
-        /* Feedback UI after grading */
-        .qb-explanation {
-            margin-top: 15px;
-            padding: 12px 15px;
-            background: rgba(99, 102, 241, 0.05);
-            border-left: 3px solid var(--primary);
-            border-radius: 0 8px 8px 0;
-            font-size: 0.85rem;
-            color: #334155;
-            display: none;
-        }
-
-        .qb-explanation strong {
-            color: var(--primary-dark);
-        }
-
-        .qb-option-item.correct {
-            border-color: var(--success) !important;
-            background: rgba(16, 185, 129, 0.06) !important;
-        }
-
-        .qb-option-item.correct .qb-opt-letter {
-            background: var(--success) !important;
-            color: white !important;
-            border-color: var(--success) !important;
-        }
-
-        .qb-option-item.incorrect {
-            border-color: var(--error) !important;
-            background: rgba(239, 68, 68, 0.06) !important;
-        }
-
-        .qb-option-item.incorrect .qb-opt-letter {
-            background: var(--error) !important;
-            color: white !important;
-            border-color: var(--error) !important;
-        }
-
-        .qb-tf-row.correct-row {
-            border-color: var(--success) !important;
-            background: rgba(16, 185, 129, 0.03) !important;
-        }
-
-        .qb-tf-row.incorrect-row {
-            border-color: var(--error) !important;
-            background: rgba(239, 68, 68, 0.03) !important;
-        }
-
-        .qb-short-input.correct {
-            border-color: var(--success) !important;
-            background: rgba(16, 185, 129, 0.06) !important;
-            color: var(--success) !important;
-        }
-
-        .qb-short-input.incorrect {
-            border-color: var(--error) !important;
-            background: rgba(239, 68, 68, 0.06) !important;
-            color: var(--error) !important;
-        }
-
-        .qb-correct-ans-show {
-            margin-top: 6px;
-            font-size: 0.8rem;
-            color: var(--success);
-            font-weight: 700;
-            display: none;
-        }
-
-        /* Results Panel */
-        #qb-results-screen {
-            display: none;
-            text-align: center;
-        }
-
-        .qb-result-header {
-            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
-            color: white;
-            border-radius: var(--border-radius);
-            padding: 30px 20px;
-            margin-bottom: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .qb-result-header::before {
-            content: '';
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            background: rgba(99, 102, 241, 0.1);
-            border-radius: 50%;
-            top: -50px;
-            right: -50px;
-        }
-
-        .qb-score-circle {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, rgba(99, 102, 241, 0.1) 100%);
-            border: 4px solid var(--primary-light);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.2rem;
-            font-weight: 800;
-            font-family: 'Montserrat', sans-serif;
-            margin-bottom: 15px;
-            color: #ffffff;
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
-        }
-
-        .qb-result-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.3rem;
-            margin-bottom: 6px;
-        }
-
-        .qb-result-desc {
-            font-size: 0.85rem;
-            color: #94a3b8;
-            max-width: 90%;
-            margin: 0 auto 20px auto;
-        }
-
-        .qb-grid-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-
-        .qb-stat-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            padding: 10px;
-        }
-
-        .qb-stat-num {
-            font-size: 1.15rem;
-            font-weight: 800;
-            margin-bottom: 2px;
-        }
-
-        .qb-stat-label {
-            font-size: 0.7rem;
-            color: #94a3b8;
-            text-transform: uppercase;
-        }
-
-        /* Student Record Sheet */
-        .qb-record-sheet {
-            background: #f8fafc;
-            border: 1px dashed #cbd5e1;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .qb-record-item {
-            font-size: 0.85rem;
-            margin-bottom: 6px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .qb-record-item span.lbl {
-            color: var(--text-muted);
-        }
-
-        .qb-record-item span.val {
-            font-weight: 600;
-            color: var(--text-main);
-        }
-
-        /* Clipboard Success Toast */
-        .qb-toast {
-            background: #1e293b;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            opacity: 0;
-            z-index: 1000;
-        }
-
-        .qb-toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
-
-        /* Action Buttons footer */
-        .qb-footer-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 25px;
-        }
-
-        .qb-btn-secondary {
-            background: #ffffff;
-            color: var(--text-main);
-            border: 1px solid #cbd5e1;
-            box-shadow: none;
-        }
-
-        .qb-btn-secondary:hover {
-            background: #f1f5f9;
-            box-shadow: none;
-        }
-
-        /* Responsive adaptations for Mobile Devices */
-        @media (max-width: 480px) {
-            #quiz-blogger-wrapper {
-                padding: 5px;
-            }
-            .qb-card {
-                padding: 15px;
-                border-radius: 12px;
-            }
-            .qb-tf-row {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 10px;
-            }
-            .qb-tf-actions {
-                align-self: flex-end;
-            }
-            .qb-footer-actions {
-                flex-direction: column;
-            }
-            .qb-btn {
-                padding: 12px 16px;
-                font-size: 0.9rem;
-            }
-            .qb-timer {
-                font-size: 0.75rem;
-                padding: 3px 8px;
-            }
-            .qb-student-badge {
-                max-width: 35%;
-            }
-        }
-    </style>
-</head>
+﻿<!DOCTYPE html>
+
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Trắc nghiệm Tương tác: Bài 2 - Vật lí 12</title>
+
+    <!-- Google Fonts: Inter & Montserrat -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome for Premium Icons -->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- MathJax for LaTeX Equations -->
+
+    <script>
+
+    const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
+
+
+
+        window.MathJax = {
+
+            tex: {
+
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+                processEscapes: true
+
+            },
+
+            options: {
+
+                ignoreHtmlClass: 'tex2jax_ignore',
+
+                processHtmlClass: 'tex2jax_process'
+
+            }
+
+        };
+
+    </script>
+
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Canvas Confetti for Celebration -->
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+
+
+    <style>
+
+        /* Container namespace to prevent Blogger CSS conflicts */
+
+        #quiz-blogger-wrapper {
+
+            --primary: #6366f1;
+
+            --primary-light: #818cf8;
+
+            --primary-dark: #4f46e5;
+
+            --secondary: #06b6d4;
+
+            --success: #10b981;
+
+            --success-light: #d1fae5;
+
+            --error: #ef4444;
+
+            --error-light: #fee2e2;
+
+            --warning: #f59e0b;
+
+            --text-main: #1e293b;
+
+            --text-muted: #64748b;
+
+            --bg-light: #f8fafc;
+
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+
+            --border-radius: 16px;
+
+            
+
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+            color: var(--text-main);
+
+            background-color: var(--bg-light);
+
+            line-height: 1.6;
+
+            width: 100%;
+
+            max-width: 680px; /* Standard phone-first/tablet viewport width */
+
+            margin: 0 auto;
+
+            padding: 15px;
+
+            box-sizing: border-box;
+
+            border-radius: var(--border-radius);
+
+        }
+
+
+
+        #quiz-blogger-wrapper * {
+
+            box-sizing: border-box;
+
+            margin: 0;
+
+            padding: 0;
+
+            transition: all 0.2s ease;
+
+        }
+
+
+
+        /* Utility Styles */
+
+        .qb-card {
+
+            background: #ffffff;
+
+            border-radius: var(--border-radius);
+
+            padding: 20px;
+
+            margin-bottom: 20px;
+
+            border: 1px solid #e2e8f0;
+
+            box-shadow: var(--card-shadow);
+
+        }
+
+
+
+        .qb-title-gradient {
+
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+
+            font-family: 'Montserrat', sans-serif;
+
+            font-weight: 800;
+
+        }
+
+
+
+        /* Start Screen */
+
+        #qb-start-screen {
+
+            text-align: center;
+
+            padding: 30px 20px;
+
+        }
+
+
+
+        #qb-start-screen .logo-icon {
+
+            width: 70px;
+
+            height: 70px;
+
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+
+            color: var(--primary);
+
+            font-size: 30px;
+
+            border-radius: 50%;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin-bottom: 20px;
+
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.1);
+
+        }
+
+
+
+        #qb-start-screen h1 {
+
+            font-size: 1.5rem;
+
+            margin-bottom: 10px;
+
+            line-height: 1.3;
+
+        }
+
+
+
+        #qb-start-screen p.subtitle {
+
+            color: var(--text-muted);
+
+            font-size: 0.9rem;
+
+            margin-bottom: 25px;
+
+        }
+
+
+
+        .qb-input-group {
+
+            text-align: left;
+
+            margin-bottom: 15px;
+
+            position: relative;
+
+        }
+
+
+
+        .qb-input-group label {
+
+            display: block;
+
+            font-size: 0.85rem;
+
+            font-weight: 600;
+
+            color: var(--text-muted);
+
+            margin-bottom: 6px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+
+        }
+
+
+
+        .qb-input-group i {
+
+            position: absolute;
+
+            left: 15px;
+
+            top: 36px;
+
+            color: var(--text-muted);
+
+            font-size: 0.95rem;
+
+        }
+
+
+
+        .qb-input-field {
+
+            width: 100%;
+
+            padding: 12px 16px 12px 40px;
+
+            border: 2px solid #e2e8f0;
+
+            border-radius: 10px;
+
+            font-size: 0.95rem;
+
+            outline: none;
+
+            color: var(--text-main);
+
+            background-color: #f8fafc;
+
+        }
+
+
+
+        .qb-input-field:focus {
+
+            border-color: var(--primary-light);
+
+            background-color: #ffffff;
+
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+
+        }
+
+
+
+        /* Buttons */
+
+        .qb-btn {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            width: 100%;
+
+            padding: 14px 24px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            font-size: 1rem;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            color: #ffffff;
+
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+
+            font-family: 'Montserrat', sans-serif;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+
+        }
+
+
+
+        .qb-btn:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
+
+        }
+
+
+
+        .qb-btn:active {
+
+            transform: translateY(0);
+
+        }
+
+
+
+        /* Sticky Progress Bar */
+
+        .qb-progress-sticky {
+
+            position: sticky;
+
+            top: 0;
+
+            background: rgba(255, 255, 255, 0.9);
+
+            backdrop-filter: blur(8px);
+
+            z-index: 100;
+
+            border-bottom: 1px solid #e2e8f0;
+
+            margin: -15px -15px 20px -15px;
+
+            padding: 12px 20px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+        }
+
+
+
+        .qb-student-badge {
+
+            font-size: 0.8rem;
+
+            color: var(--text-muted);
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            max-width: 50%;
+
+        }
+
+
+
+        .qb-student-badge strong {
+
+            color: var(--primary);
+
+        }
+
+
+
+        .qb-timer {
+
+            font-size: 0.85rem;
+
+            font-weight: 700;
+
+            color: var(--text-main);
+
+            background: #f1f5f9;
+
+            padding: 4px 10px;
+
+            border-radius: 20px;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+        }
+
+
+
+        .qb-progress-wrapper {
+
+            flex-grow: 1;
+
+            max-width: 40%;
+
+        }
+
+
+
+        .qb-progress-track {
+
+            height: 6px;
+
+            background: #e2e8f0;
+
+            border-radius: 3px;
+
+            overflow: hidden;
+
+            width: 100%;
+
+        }
+
+
+
+        .qb-progress-fill {
+
+            height: 100%;
+
+            width: 0%;
+
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+
+        }
+
+
+
+        /* Section Headings */
+
+        .qb-section-header {
+
+            font-family: 'Montserrat', sans-serif;
+
+            font-size: 1.05rem;
+
+            font-weight: 700;
+
+            color: var(--primary-dark);
+
+            margin: 15px 0 10px 0;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            border-bottom: 2px solid #f1f5f9;
+
+            padding-bottom: 8px;
+
+        }
+
+
+
+        .qb-section-desc {
+
+            font-size: 0.85rem;
+
+            color: var(--text-muted);
+
+            margin-bottom: 15px;
+
+            font-style: italic;
+
+        }
+
+
+
+        /* Competency Tags */
+
+        .qb-tag {
+
+            display: inline-block;
+
+            font-size: 0.65rem;
+
+            font-weight: 700;
+
+            padding: 2px 6px;
+
+            border-radius: 4px;
+
+            margin-right: 6px;
+
+            text-transform: uppercase;
+
+        }
+
+        .tag-ntvl { background: rgba(99, 102, 241, 0.1); color: var(--primary-dark); border: 1px solid rgba(99, 102, 241, 0.2); }
+
+        .tag-vdkt { background: rgba(16, 185, 129, 0.1); color: #047857; border: 1px solid rgba(16, 185, 129, 0.2); }
+
+
+
+        /* Question Cards */
+
+        .qb-q-card {
+
+            border-left: 4px solid #cbd5e1;
+
+        }
+
+
+
+        .qb-q-card.active-input {
+
+            border-left-color: var(--primary-light);
+
+        }
+
+
+
+        .qb-q-header {
+
+            font-size: 0.95rem;
+
+            font-weight: 600;
+
+            margin-bottom: 15px;
+
+            line-height: 1.5;
+
+        }
+
+
+
+        .qb-q-num {
+
+            color: var(--primary);
+
+            font-weight: 700;
+
+            margin-right: 4px;
+
+        }
+
+
+
+        /* Part I: Option Cards */
+
+        .qb-options-list {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 10px;
+
+        }
+
+
+
+        .qb-option-item {
+
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 12px;
+
+            padding: 12px 14px;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            background: #ffffff;
+
+            text-align: left;
+
+        }
+
+
+
+        .qb-option-item:hover {
+
+            border-color: var(--primary-light);
+
+            background: #f8fafc;
+
+        }
+
+
+
+        .qb-option-item.selected {
+
+            border-color: var(--primary);
+
+            background: rgba(99, 102, 241, 0.04);
+
+        }
+
+
+
+        .qb-opt-letter {
+
+            width: 26px;
+
+            height: 26px;
+
+            border-radius: 50%;
+
+            border: 1.5px solid #cbd5e1;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-weight: 700;
+
+            font-size: 0.85rem;
+
+            color: var(--text-muted);
+
+            flex-shrink: 0;
+
+        }
+
+
+
+        .qb-option-item.selected .qb-opt-letter {
+
+            background: var(--primary);
+
+            color: #ffffff;
+
+            border-color: var(--primary);
+
+        }
+
+
+
+        .qb-opt-text {
+
+            font-size: 0.9rem;
+
+            padding-top: 2px;
+
+        }
+
+
+
+        /* Part II: True/False rows */
+
+        .qb-tf-table {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 12px;
+
+        }
+
+
+
+        .qb-tf-row {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: flex-start;
+
+            gap: 15px;
+
+            padding: 12px;
+
+            background: #f8fafc;
+
+            border-radius: 10px;
+
+            border: 1px solid #e2e8f0;
+
+        }
+
+
+
+        .qb-tf-text {
+
+            font-size: 0.9rem;
+
+            flex-grow: 1;
+
+        }
+
+
+
+        .qb-tf-actions {
+
+            display: flex;
+
+            gap: 6px;
+
+            flex-shrink: 0;
+
+            margin-top: 2px;
+
+        }
+
+
+
+        .qb-tf-btn {
+
+            border: 1px solid #cbd5e1;
+
+            background: #ffffff;
+
+            padding: 6px 14px;
+
+            font-size: 0.8rem;
+
+            font-weight: 700;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            color: var(--text-muted);
+
+        }
+
+
+
+        .qb-tf-btn:hover {
+
+            border-color: var(--text-muted);
+
+        }
+
+
+
+        .qb-tf-btn.selected-t {
+
+            background: var(--success);
+
+            color: white;
+
+            border-color: var(--success);
+
+            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
+
+        }
+
+
+
+        .qb-tf-btn.selected-f {
+
+            background: var(--error);
+
+            color: white;
+
+            border-color: var(--error);
+
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.2);
+
+        }
+
+
+
+        /* Part III: Short Answer */
+
+        .qb-short-answer-container {
+
+            position: relative;
+
+            max-width: 250px;
+
+        }
+
+
+
+        .qb-short-input {
+
+            width: 100%;
+
+            padding: 10px 14px;
+
+            border: 2px solid #e2e8f0;
+
+            border-radius: 8px;
+
+            font-size: 0.95rem;
+
+            outline: none;
+
+            text-align: center;
+
+            font-weight: 700;
+
+        }
+
+
+
+        .qb-short-input:focus {
+
+            border-color: var(--primary);
+
+        }
+
+
+
+        /* Feedback UI after grading */
+
+        .qb-explanation {
+
+            margin-top: 15px;
+
+            padding: 12px 15px;
+
+            background: rgba(99, 102, 241, 0.05);
+
+            border-left: 3px solid var(--primary);
+
+            border-radius: 0 8px 8px 0;
+
+            font-size: 0.85rem;
+
+            color: #334155;
+
+            display: none;
+
+        }
+
+
+
+        .qb-explanation strong {
+
+            color: var(--primary-dark);
+
+        }
+
+
+
+        .qb-option-item.correct {
+
+            border-color: var(--success) !important;
+
+            background: rgba(16, 185, 129, 0.06) !important;
+
+        }
+
+
+
+        .qb-option-item.correct .qb-opt-letter {
+
+            background: var(--success) !important;
+
+            color: white !important;
+
+            border-color: var(--success) !important;
+
+        }
+
+
+
+        .qb-option-item.incorrect {
+
+            border-color: var(--error) !important;
+
+            background: rgba(239, 68, 68, 0.06) !important;
+
+        }
+
+
+
+        .qb-option-item.incorrect .qb-opt-letter {
+
+            background: var(--error) !important;
+
+            color: white !important;
+
+            border-color: var(--error) !important;
+
+        }
+
+
+
+        .qb-tf-row.correct-row {
+
+            border-color: var(--success) !important;
+
+            background: rgba(16, 185, 129, 0.03) !important;
+
+        }
+
+
+
+        .qb-tf-row.incorrect-row {
+
+            border-color: var(--error) !important;
+
+            background: rgba(239, 68, 68, 0.03) !important;
+
+        }
+
+
+
+        .qb-short-input.correct {
+
+            border-color: var(--success) !important;
+
+            background: rgba(16, 185, 129, 0.06) !important;
+
+            color: var(--success) !important;
+
+        }
+
+
+
+        .qb-short-input.incorrect {
+
+            border-color: var(--error) !important;
+
+            background: rgba(239, 68, 68, 0.06) !important;
+
+            color: var(--error) !important;
+
+        }
+
+
+
+        .qb-correct-ans-show {
+
+            margin-top: 6px;
+
+            font-size: 0.8rem;
+
+            color: var(--success);
+
+            font-weight: 700;
+
+            display: none;
+
+        }
+
+
+
+        /* Results Panel */
+
+        #qb-results-screen {
+
+            display: none;
+
+            text-align: center;
+
+        }
+
+
+
+        .qb-result-header {
+
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+
+            color: white;
+
+            border-radius: var(--border-radius);
+
+            padding: 30px 20px;
+
+            margin-bottom: 20px;
+
+            position: relative;
+
+            overflow: hidden;
+
+        }
+
+
+
+        .qb-result-header::before {
+
+            content: '';
+
+            position: absolute;
+
+            width: 150px;
+
+            height: 150px;
+
+            background: rgba(99, 102, 241, 0.1);
+
+            border-radius: 50%;
+
+            top: -50px;
+
+            right: -50px;
+
+        }
+
+
+
+        .qb-score-circle {
+
+            width: 100px;
+
+            height: 100px;
+
+            border-radius: 50%;
+
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, rgba(99, 102, 241, 0.1) 100%);
+
+            border: 4px solid var(--primary-light);
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 2.2rem;
+
+            font-weight: 800;
+
+            font-family: 'Montserrat', sans-serif;
+
+            margin-bottom: 15px;
+
+            color: #ffffff;
+
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+
+        }
+
+
+
+        .qb-result-title {
+
+            font-family: 'Montserrat', sans-serif;
+
+            font-size: 1.3rem;
+
+            margin-bottom: 6px;
+
+        }
+
+
+
+        .qb-result-desc {
+
+            font-size: 0.85rem;
+
+            color: #94a3b8;
+
+            max-width: 90%;
+
+            margin: 0 auto 20px auto;
+
+        }
+
+
+
+        .qb-grid-stats {
+
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 10px;
+
+        }
+
+
+
+        .qb-stat-card {
+
+            background: rgba(255, 255, 255, 0.05);
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            border-radius: 10px;
+
+            padding: 10px;
+
+        }
+
+
+
+        .qb-stat-num {
+
+            font-size: 1.15rem;
+
+            font-weight: 800;
+
+            margin-bottom: 2px;
+
+        }
+
+
+
+        .qb-stat-label {
+
+            font-size: 0.7rem;
+
+            color: #94a3b8;
+
+            text-transform: uppercase;
+
+        }
+
+
+
+        /* Student Record Sheet */
+
+        .qb-record-sheet {
+
+            background: #f8fafc;
+
+            border: 1px dashed #cbd5e1;
+
+            border-radius: 10px;
+
+            padding: 15px;
+
+            margin-bottom: 20px;
+
+            text-align: left;
+
+        }
+
+
+
+        .qb-record-item {
+
+            font-size: 0.85rem;
+
+            margin-bottom: 6px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+        }
+
+
+
+        .qb-record-item span.lbl {
+
+            color: var(--text-muted);
+
+        }
+
+
+
+        .qb-record-item span.val {
+
+            font-weight: 600;
+
+            color: var(--text-main);
+
+        }
+
+
+
+        /* Clipboard Success Toast */
+
+        .qb-toast {
+
+            background: #1e293b;
+
+            color: white;
+
+            padding: 8px 16px;
+
+            border-radius: 20px;
+
+            font-size: 0.8rem;
+
+            font-weight: 600;
+
+            position: fixed;
+
+            bottom: 20px;
+
+            left: 50%;
+
+            transform: translateX(-50%) translateY(100px);
+
+            opacity: 0;
+
+            z-index: 1000;
+
+        }
+
+
+
+        .qb-toast.show {
+
+            transform: translateX(-50%) translateY(0);
+
+            opacity: 1;
+
+        }
+
+
+
+        /* Action Buttons footer */
+
+        .qb-footer-actions {
+
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 25px;
+
+        }
+
+
+
+        .qb-btn-secondary {
+
+            background: #ffffff;
+
+            color: var(--text-main);
+
+            border: 1px solid #cbd5e1;
+
+            box-shadow: none;
+
+        }
+
+
+
+        .qb-btn-secondary:hover {
+
+            background: #f1f5f9;
+
+            box-shadow: none;
+
+        }
+
+
+
+        /* Responsive adaptations for Mobile Devices */
+
+        @media (max-width: 480px) {
+
+            #quiz-blogger-wrapper {
+
+                padding: 5px;
+
+            }
+
+            .qb-card {
+
+                padding: 15px;
+
+                border-radius: 12px;
+
+            }
+
+            .qb-tf-row {
+
+                flex-direction: column;
+
+                align-items: stretch;
+
+                gap: 10px;
+
+            }
+
+            .qb-tf-actions {
+
+                align-self: flex-end;
+
+            }
+
+            .qb-footer-actions {
+
+                flex-direction: column;
+
+            }
+
+            .qb-btn {
+
+                padding: 12px 16px;
+
+                font-size: 0.9rem;
+
+            }
+
+            .qb-timer {
+
+                font-size: 0.75rem;
+
+                padding: 3px 8px;
+
+            }
+
+            .qb-student-badge {
+
+                max-width: 35%;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
 <body>
 <!-- Dynamic Floating Capsule Navigation Bar (Unified for All Grades 10-11-12) -->
 <style>
@@ -743,6 +1431,7 @@
                 <option value="../../Lop12/Bai5">Bài 5: Nhiệt nóng chảy riêng</option>
                 <option value="../../Lop12/de1-chuong1">Ôn tập C1 - Đề 1</option>
                 <option value="../../Lop12/de2-chuong1">Ôn tập C1 - Đề 2</option>
+                <option value="../../Lop12/de3-chuong1">Ôn tập C1 - Đề 3</option>
             </optgroup>
             <optgroup label="--- VẬT LÍ 11 ---">
                 <option value="../../Lop11/Bai1">Bài 1: Dao động điều hòa</option>
@@ -755,7 +1444,60 @@
         </select>
     </div>
 </div>
+
+<!-- Modal Popup Đăng ký Theo dõi -->
+<div id="navSubModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 10000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: all 0.25s ease;">
+    <div style="background: white; width: 90%; max-width: 420px; border-radius: 16px; padding: 1.8rem; position: relative; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); font-family: 'Inter', sans-serif;">
+        <button type="button" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b;" onclick="closeNavSubModal()">✕</button>
+        <div style="text-align: center; margin-bottom: 1.2rem;">
+            <div style="width: 48px; height: 48px; background: #e0e7ff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin: 0 auto 0.8rem auto;">🔔</div>
+            <h3 style="font-size: 1.2rem; font-weight: 700; color: #0f172a; margin: 0;">Đăng Ký Theo Dõi Bài Học</h3>
+            <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.4rem;">Nhận thông báo bài tập mới & cập nhật từ Thầy Cô!</p>
+        </div>
+        <form onsubmit="saveNavSub(event)">
+            <div style="margin-bottom: 0.8rem; text-align: left;">
+                <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.3rem; color: #334155;">Họ và tên học sinh <span style="color:red;">*</span></label>
+                <input type="text" id="navSubName" required placeholder="Ví dụ: Nguyễn Văn A" style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; outline: none; box-sizing: border-box;">
+            </div>
+            <div style="margin-bottom: 1rem; text-align: left;">
+                <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.3rem; color: #334155;">Số điện thoại / Zalo hoặc Email <span style="color:red;">*</span></label>
+                <input type="text" id="navSubContact" required placeholder="Nhập Zalo hoặc Email" style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; outline: none; box-sizing: border-box;">
+            </div>
+            <button type="submit" style="width: 100%; padding: 0.75rem; background: #4f46e5; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer;">🔔 Đăng Ký Nhận Bài Học</button>
+        </form>
+        <div id="navSubMsg" style="display: none; text-align: center; color: #059669; font-weight: 600; margin-top: 0.8rem; font-size: 0.9rem;">
+            ✓ Đăng ký theo dõi thành công! Cảm ơn bạn.
+        </div>
+    </div>
+</div>
+
+<script>
+function openNavSubModal() { var m = document.getElementById('navSubModal'); if(m) { m.style.opacity = '1'; m.style.pointerEvents = 'auto'; } }
+function closeNavSubModal() { var m = document.getElementById('navSubModal'); if(m) { m.style.opacity = '0'; m.style.pointerEvents = 'none'; } }
+function saveNavSub(e) {
+    e.preventDefault();
+    var name = document.getElementById('navSubName').value;
+    var contact = document.getElementById('navSubContact').value;
+    var subs = JSON.parse(localStorage.getItem('user_subscriptions') || '[]');
+    subs.push({ name: name, contact: contact, date: new Date().toISOString() });
+    localStorage.setItem('user_subscriptions', JSON.stringify(subs));
+    if (typeof GOOGLE_SHEETS_URL !== 'undefined' && GOOGLE_SHEETS_URL) {
+        try {
+            fetch(GOOGLE_SHEETS_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({ name: name, className: "ĐĂNG KÝ THEO DÕI", lesson: "Đăng ký nhận bài mới", correct: contact, score: "Đăng ký" }),
+                redirect: "follow"
+            }).catch(function(err){});
+        } catch(err){}
+    }
+    document.getElementById('navSubMsg').style.display = 'block';
+    setTimeout(function() { closeNavSubModal(); }, 1500);
+}
+</script>
 <div style="height: 48px;"></div>
+
+
 
 
 <!-- Modal Popup Đăng ký -->
@@ -825,868 +1567,1730 @@ function saveNavSub(e) {
     document.getElementById('navSubMsg').style.display = 'block';
     setTimeout(function() { closeNavSubModal(); }, 1500);
 }
-</script>
-
-<div id="quiz-blogger-wrapper">
-    <!-- toast notification -->
-    <div class="qb-toast" id="qbToast">Đã sao chép kết quả báo cáo!</div>
-
-    <!-- MÀN HÌNH BẮT ĐẦU -->
-    <div class="qb-card" id="qb-start-screen">
-        <div class="logo-icon">
-            <i class="fa-solid fa-atom"></i>
-        </div>
-        <h1 class="qb-title-gradient">VẬT LÍ 12 - BÀI 2</h1>
-        <h2 style="font-size: 1.15rem; font-family: 'Montserrat', sans-serif; margin-bottom: 6px;">NỘI NĂNG. ĐỊNH LUẬT I NHIỆT ĐỘNG LỰC HỌC</h2>
-        <p class="subtitle">Vui lòng điền đầy đủ thông tin bên dưới để bắt đầu làm bài trắc nghiệm tương tác.</p>
-        
-        <form id="qbLoginForm" onsubmit="event.preventDefault(); startQuiz();">
-            <div class="qb-input-group">
-                <label for="qb-name">Họ và tên học sinh</label>
-                <i class="fa-solid fa-user"></i>
-                <input type="text" id="qb-name" class="qb-input-field" placeholder="Ví dụ: Nguyễn Văn A" required>
-            </div>
-            <div class="qb-input-group">
-                <label for="qb-class">Lớp</label>
-                <i class="fa-solid fa-graduation-cap"></i>
-                <input type="text" id="qb-class" class="qb-input-field" placeholder="Ví dụ: 12A1" required>
-            </div>
-            <div class="qb-input-group">
-                <label for="qb-school">Trường THPT</label>
-                <i class="fa-solid fa-school"></i>
-                <input type="text" id="qb-school" class="qb-input-field" placeholder="Ví dụ: THPT Chu Văn An" required>
-            </div>
-            
-            <button type="submit" class="qb-btn" style="margin-top: 15px;">
-                Bắt đầu làm bài <i class="fa-solid fa-circle-play"></i>
-            </button>
-        </form>
-    </div>
-
-    <!-- MÀN HÌNH BÀI LÀM (Mặc định ẩn) -->
-    <div id="qb-quiz-area" style="display: none;">
-        <!-- Header thông tin đính kèm & tiến độ -->
-        <div class="qb-progress-sticky">
-            <div class="qb-student-badge">
-                <i class="fa-solid fa-user-circle"></i> <span id="qbBadgeName">Học sinh</span> - Lớp <strong id="qbBadgeClass">12</strong>
-            </div>
-            <div class="qb-progress-wrapper">
-                <div class="qb-progress-track">
-                    <div class="qb-progress-fill" id="qbProgressFill"></div>
-                </div>
-                <div style="font-size: 0.65rem; text-align: right; margin-top: 4px; color: var(--text-muted);" id="qbProgressText">
-                    0/17 ý hoàn thành
-                </div>
-            </div>
-            <div class="qb-timer" id="qbTimer">
-                <i class="fa-solid fa-clock"></i> <span>00:00</span>
-            </div>
-        </div>
-
-        <!-- Tiêu đề bài chính -->
-        <div class="qb-card" style="padding: 15px 20px; background: linear-gradient(135deg, #eff6ff 0%, #faf5ff 100%); border-color: rgba(99, 102, 241, 0.15);">
-            <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--primary); letter-spacing: 0.5px;">BÀI TẬP TRỰC TUYẾN</div>
-            <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.1rem; color: #1e1b4b;">Bài 2. Nội năng. Định luật I nhiệt động lực học</h3>
-        </div>
-
-        <!-- Khu vực chứa các câu hỏi được JS render -->
-        <div id="qbQuizQuestions" class="tex2jax_process"></div>
-
-        <!-- Nộp bài & Thử lại -->
-        <div class="qb-footer-actions" id="qbActionsArea">
-            <button type="button" class="qb-btn" onclick="submitAndGrade();" id="qbBtnSubmit">
-                Nộp bài & Xem giải thích <i class="fa-solid fa-paper-plane"></i>
-            </button>
-        </div>
-    </div>
-
-    <!-- MÀN HÌNH KẾT QUẢ (Mặc định ẩn) -->
-    <div class="qb-card" id="qb-results-screen">
-        <div class="qb-result-header">
-            <div class="qb-score-circle" id="qbScoreVal">0.0</div>
-            <h2 class="qb-result-title" id="qbResultTitle">Hoàn thành!</h2>
-            <p class="qb-result-desc" id="qbResultDesc">Bạn hãy kéo xuống dưới để xem chi tiết đáp án và lời giải thích chi tiết cho từng câu hỏi.</p>
-            
-            <div class="qb-grid-stats">
-                <div class="qb-stat-card">
-                    <div class="qb-stat-num" id="qbStatCorrect">0</div>
-                    <div class="qb-stat-label">Ý Đúng</div>
-                </div>
-                <div class="qb-stat-card">
-                    <div class="qb-stat-num" id="qbStatEarned">0/17</div>
-                    <div class="qb-stat-label">Điểm Số</div>
-                </div>
-                <div class="qb-stat-card">
-                    <div class="qb-stat-num" id="qbStatTime">00:00</div>
-                    <div class="qb-stat-label">Thời Gian</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="qb-record-sheet">
-            <div style="font-weight: 700; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; margin-bottom: 10px; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px;">
-                <i class="fa-solid fa-file-invoice"></i> PHIẾU GHI NHẬN KẾT QUẢ
-            </div>
-            <div class="qb-record-item">
-                <span class="lbl">Họ và tên:</span>
-                <span class="val" id="qbRecName">Nguyễn Văn A</span>
-            </div>
-            <div class="qb-record-item">
-                <span class="lbl">Lớp:</span>
-                <span class="val" id="qbRecClass">12A1</span>
-            </div>
-            <div class="qb-record-item">
-                <span class="lbl">Trường:</span>
-                <span class="val" id="qbRecSchool">THPT Chu Văn An</span>
-            </div>
-            <div class="qb-record-item">
-                <span class="lbl">Điểm quy đổi (thang 10):</span>
-                <span class="val" id="qbRecGrade" style="color: var(--primary-dark); font-weight: 700;">8.5/10.0</span>
-            </div>
-        </div>
-
-        <div class="qb-footer-actions">
-            <button type="button" class="qb-btn" onclick="copyReportText();">
-                <i class="fa-solid fa-copy"></i> Copy Kết Quả Gửi Thầy Cô
-            </button>
-            <button type="button" class="qb-btn qb-btn-secondary" onclick="restartQuiz();">
-                <i class="fa-solid fa-rotate-left"></i> Làm Lại
-            </button>
-        </div>
-    </div>
-</div>
-
-<script>
-    // Dữ liệu câu hỏi được lấy từ file TracNghiem_Online.html gốc
-    const quizData = {
-        title: "BÀI 2: NỘI NĂNG. ĐỊNH LUẬT I NHIỆT ĐỘNG LỰC HỌC",
-        part1: [
-            {
-                id: 1,
-                competency: "NTVL",
-                question: "Nội năng của một vật là",
-                options: {
-                    A: "tổng động năng và thế năng của các phân tử cấu tạo nên vật.",
-                    B: "động năng của khối tâm của vật đang chuyển động.",
-                    C: "tổng nhiệt năng mà vật nhận được từ môi trường xung quanh.",
-                    D: "thế năng đàn hồi của vật khi bị biến dạng cơ học."
-                },
-                answer: "A",
-                explanation: "Định nghĩa nội năng: là tổng động năng chuyển động nhiệt và thế năng tương tác của các phân tử cấu tạo nên hệ."
-            },
-            {
-                id: 2,
-                competency: "NTVL",
-                question: "Khi nói về nội năng của khí lí tưởng, phát biểu nào sau đây là đúng?",
-                options: {
-                    A: "Nội năng của khí lí tưởng phụ thuộc vào cả thể tích và nhiệt độ.",
-                    B: "Nội năng của khí lí tưởng chỉ phụ thuộc vào nhiệt độ tuyệt đối.",
-                    C: "Nội năng của khí lí tưởng chỉ phụ thuộc vào thể tích của bình chứa.",
-                    D: "Thế năng tương tác giữa các phân tử khí lí tưởng đóng vai trò quyết định nội năng."
-                },
-                answer: "B",
-                explanation: "Khí lí tưởng bỏ qua lực tương tác phân tử khi không va chạm (thế năng phân tử bằng không), do đó nội năng chỉ là động năng nhiệt của các phân tử, chỉ phụ thuộc nhiệt độ tuyệt đối $T$."
-            },
-            {
-                id: 3,
-                competency: "NTVL",
-                question: "Cách nào sau đây làm thay đổi nội năng của một vật mà không cần thực hiện công cơ học?",
-                options: {
-                    A: "Cọ xát vật lên một bề mặt nhám.",
-                    B: "Cho vật tiếp xúc với một vật khác có nhiệt độ cao hơn.",
-                    C: "Dùng búa gõ mạnh nhiều lần lên vật kim loại.",
-                    D: "Nén nhanh khối khí chứa trong xilanh."
-                },
-                answer: "B",
-                explanation: "Cho hai vật tiếp xúc nhiệt có nhiệt độ khác nhau là quá trình truyền nhiệt (không thực hiện công cơ học)."
-            },
-            {
-                id: 4,
-                competency: "NTVL",
-                question: "Hệ thức của định luật I nhiệt động lực học là $\\Delta U = A + Q$. Theo quy ước dấu, nếu hệ nhận nhiệt lượng và sinh công thì",
-                options: {
-                    A: "$Q > 0$ và $A > 0$.",
-                    B: "$Q < 0$ và $A > 0$.",
-                    C: "$Q > 0$ và $A < 0$.",
-                    D: "$Q < 0$ và $A < 0$."
-                },
-                answer: "C",
-                explanation: "Hệ nhận nhiệt lượng: $Q > 0$; hệ sinh công (thực hiện công): $A < 0$."
-            },
-            {
-                id: 5,
-                competency: "NTVL",
-                question: "Truyền một nhiệt lượng $Q$ cho một khối khí đựng trong một xilanh làm bằng vật liệu cách nhiệt, có pít-tông di chuyển tự do. Quá trình này thuộc loại biến đổi nào của định luật I?",
-                options: {
-                    A: "Khí nhận nhiệt lượng và thực hiện công ($Q > 0$, $A < 0$).",
-                    B: "Khí tỏa nhiệt lượng và nhận công ($Q < 0$, $A > 0$).",
-                    C: "Khí nhận nhiệt lượng và nhận công ($Q > 0$, $A > 0$).",
-                    D: "Khí tỏa nhiệt lượng và thực hiện công ($Q < 0$, $A < 0$)."
-                },
-                answer: "A",
-                explanation: "Bình cách nhiệt nhưng pít-tông giãn nở tự do: nhận nhiệt lượng ($Q > 0$) từ nguồn cấp, giãn nở sinh công đẩy pít-tông ($A < 0$)."
-            },
-            {
-                id: 6,
-                competency: "VDKT",
-                question: "Một hệ cô lập về nhiệt và công thì nội năng của hệ sẽ",
-                options: {
-                    A: "liên tục tăng lên.",
-                    B: "giảm dần về không.",
-                    C: "không thay đổi theo thời gian.",
-                    D: "biến thiên tuần hoàn."
-                },
-                answer: "C",
-                explanation: "Hệ cô lập không trao đổi công ($A=0$) và nhiệt ($Q=0$) với bên ngoài, theo định luật I thì $\\Delta U = 0$, nội năng bảo toàn."
-            }
-        ],
-        part2: [
-            {
-                id: 1,
-                context: "Một khối khí lí tưởng được chứa trong một xilanh kín có pít-tông di chuyển được không ma sát. Người ta thực hiện biến đổi trạng thái của khối khí bằng hai cách khác nhau.",
-                subQuestions: [
-                    {
-                        key: "a",
-                        competency: "NTVL",
-                        text: "Cách 1: Nén nhanh pít-tông đồng thời bọc cách nhiệt xilanh. Trong quá trình này, nội năng của khí tăng do khối khí nhận công.",
-                        answer: "Đ",
-                        explanation: "Xilanh cách nhiệt ($Q=0$), nén pít-tông khí nhận công ($A > 0$) $\\rightarrow \\Delta U = A > 0$, nội năng tăng làm nhiệt độ tăng."
-                    },
-                    {
-                        key: "b",
-                        competency: "NTVL",
-                        text: "Cách 2: Giữ cố định pít-tông và đun nóng xilanh bằng ngọn lửa đèn cồn. Trong quá trình này, công hệ thực hiện bằng không ($A = 0$) và nội năng tăng bằng nhiệt lượng nhận vào.",
-                        answer: "Đ",
-                        explanation: "Giữ cố định pít-tông thì thể tích không đổi, khí không thực hiện công ($A=0$) $\\rightarrow \\Delta U = Q > 0$, toàn bộ nhiệt lượng dùng làm tăng nội năng."
-                    },
-                    {
-                        key: "c",
-                        competency: "NTVL",
-                        text: "Nếu khối khí giãn nở đẩy pít-tông đi lên trong một xilanh không cách nhiệt, khối khí chắc chắn nhận thêm công từ ngoại lực bên ngoài.",
-                        answer: "S",
-                        explanation: "Khi khí giãn nở đẩy pít-tông, nó thực hiện công ($A < 0$). Đồng thời, do lực tác dụng đẩy pít-tông đi lên là do khí sinh ra, nên khí sinh công chứ không nhận công."
-                    },
-                    {
-                        key: "d",
-                        competency: "VDKT",
-                        text: "Trong một chu trình khép kín (khí biến đổi rồi quay lại trạng thái ban đầu), độ biến thiên nội năng của khí bằng không ($\\Delta U = 0$).",
-                        answer: "Đ",
-                        explanation: "Khí quay lại trạng thái ban đầu thì nội năng ban đầu và cuối bằng nhau $\\rightarrow \\Delta U = 0 \\rightarrow 0 = A + Q \\rightarrow -A = Q$ (nhiệt lượng nhận vào bằng công sinh ra)."
-                    }
-                ]
-            },
-            {
-                id: 2,
-                context: "Xét sự thay đổi nội năng của một đồng xu bằng kim loại (đồng) đặt trên bàn.",
-                subQuestions: [
-                    {
-                        key: "a",
-                        competency: "NTVL",
-                        text: "Cọ xát mạnh đồng xu trên mặt bàn là hình thức thay đổi nội năng bằng truyền nhiệt vì thấy đồng xu nóng lên.",
-                        answer: "S",
-                        explanation: "Cọ xát đồng xu là thực hiện công cơ học chuyển hóa thành nội năng, không phải truyền nhiệt trực tiếp."
-                    },
-                    {
-                        key: "b",
-                        competency: "NTVL",
-                        text: "Thả đồng xu vào cốc nước sôi là hình thức truyền nhiệt, nội năng đồng xu tăng do nhận năng lượng nhiệt từ nước.",
-                        answer: "Đ",
-                        explanation: "Đây là quá trình truyền nhiệt từ cốc nước nóng có nhiệt độ cao sang đồng xu có nhiệt độ thấp."
-                    },
-                    {
-                        key: "c",
-                        competency: "NTVL",
-                        text: "Khi nội năng của đồng xu tăng lên, động năng của các electron tự do và dao động của các ion đồng tại các nút mạng tinh thể tăng lên.",
-                        answer: "Đ",
-                        explanation: "Nội năng tăng $\\rightarrow$ nhiệt độ tăng $\\rightarrow$ làm tăng tốc độ chuyển động nhiệt của electron và biên độ dao động của các ion đồng tại nút mạng."
-                    },
-                    {
-                        key: "d",
-                        competency: "VDKT",
-                        text: "Nếu cọ xát đồng xu làm nhiệt độ của nó tăng thêm, ta có thể đảo ngược quá trình bằng cách để yên đồng xu tự nguội đi và chuyển hóa hoàn toàn nhiệt lượng tỏa ra thành công cơ học đẩy đồng xu tự chuyển động trên bàn.",
-                        answer: "S",
-                        explanation: "Theo định luật II nhiệt động lực học, nhiệt lượng không thể tự chuyển hóa hoàn toàn thành công mà không làm thay đổi trạng thái của các vật khác (tính bất khả nghịch của quá trình nhiệt)."
-                    }
-                ]
-            }
-        ],
-        part3: [
-            {
-                id: 1,
-                competency: "VDKT",
-                question: "Người ta truyền cho khối khí trong xilanh một nhiệt lượng $150\\text{ J}$. Khối khí nở ra và thực hiện một công $90\\text{ J}$ đẩy pít-tông lên. Độ biến thiên nội năng ($\\Delta U$) của khối khí trong quá trình này là bao nhiêu jun?",
-                answer: "60",
-                explanation: "Khí nhận nhiệt lượng $Q = +150\\text{ J}$; thực hiện công $A = -90\\text{ J}$. Độ biến thiên nội năng: $\\Delta U = A + Q = -90 + 150 = 60\\text{ J}$."
-            },
-            {
-                id: 2,
-                competency: "VDKT",
-                question: "Khi nén một khối khí trong xilanh bằng một công $120\\text{ J}$, nội năng của khối khí tăng thêm $85\\text{ J}$. Tính nhiệt lượng mà khối khí đã truyền ra (tỏa ra) môi trường xung quanh (theo đơn vị $\\text{J}$).",
-                answer: "35",
-                explanation: "Khí nhận công $A = +120\\text{ J}$; độ biến thiên nội năng $\\Delta U = +85\\text{ J}$. Áp dụng định luật I: $\\Delta U = A + Q \\rightarrow 85 = 120 + Q \\rightarrow Q = -35\\text{ J}$ (tỏa nhiệt $35\\text{ J}$)."
-            },
-            {
-                id: 3,
-                competency: "VDKT",
-                question: "Để xác định nhiệt lượng thỏi sắt tỏa ra khi nguội đi, một học sinh thả một thỏi sắt khối lượng $0,4\\text{ kg}$ có nhiệt độ ban đầu $100^\\circ\\text{C}$ vào một bình nhiệt lượng kế chứa nước ở $20^\\circ\\text{C}$. Nhiệt độ của hệ khi cân bằng nhiệt là $28^\\circ\\text{C}$. Tính nhiệt lượng thỏi sắt tỏa ra trong quá trình truyền nhiệt này (theo đơn vị $\\text{kJ}$, làm tròn đến chữ số hàng phần mười). Biết nhiệt dung riêng của sắt là $460\\text{ J/(kg.K)}$.",
-                answer: "13.2",
-                explanation: "Nhiệt lượng thỏi sắt tỏa ra: $Q_{\\text{tỏa}} = m \\cdot c \\cdot (t_1 - t_2) = 0,4 \\cdot 460 \\cdot (100 - 28) = 13248\\text{ J} = 13,248\\text{ kJ} \\approx 13,2\\text{ kJ}$."
-            }
-        ]
-    };
-
-    // State Variables
-    let studentInfo = { name: "", class: "", school: "" };
-    let userAnswers = { part1: {}, part2: {}, part3: {} };
-    let isGraded = false;
-    let timerInterval = null;
-    let secondsElapsed = 0;
-
-    // Load saved info from LocalStorage if available
-    window.addEventListener('DOMContentLoaded', () => {
-        const savedName = localStorage.getItem('qb_student_name');
-        const savedClass = localStorage.getItem('qb_student_class');
-        const savedSchool = localStorage.getItem('qb_student_school');
-        
-        if (savedName) document.getElementById('qb-name').value = savedName;
-        if (savedClass) document.getElementById('qb-class').value = savedClass;
-        if (savedSchool) document.getElementById('qb-school').value = savedSchool;
-        
-        renderQuestions();
-    });
-
-    // Competency tag generator
-    function getCompTag(comp) {
-        if (comp === "NTVL") return `<span class="qb-tag tag-ntvl">Nhận thức Vật lí</span>`;
-        if (comp === "VDKT") return `<span class="qb-tag tag-vdkt">Vận dụng kiến thức</span>`;
-        return '';
-    }
-
-    // Render questions markup
-    function renderQuestions() {
-        const qContainer = document.getElementById('qbQuizQuestions');
-        let html = '';
-
-        // --- PART I ---
-        html += `<div class="qb-section-header"><i class="fa-solid fa-list-check"></i> PHẦN I. Trắc nghiệm nhiều lựa chọn</div>`;
-        html += `<div class="qb-section-desc">Mỗi câu hỏi chỉ có một phương án trả lời đúng nhất. (6 câu - mỗi câu đúng 1 điểm)</div>`;
-        
-        quizData.part1.forEach((q, idx) => {
-            html += `
-                <div class="qb-card qb-q-card" id="card-part1-${q.id}">
-                    <div class="qb-q-header">
-                        <span class="qb-q-num">Câu ${idx + 1}.</span>
-                        ${getCompTag(q.competency)}
-                        <span>${q.question}</span>
-                    </div>
-                    <div class="qb-options-list">
-            `;
-            for (let opt in q.options) {
-                html += `
-                    <div class="qb-option-item" id="opt-part1-${q.id}-${opt}" onclick="choosePart1(${q.id}, '${opt}')">
-                        <div class="qb-opt-letter">${opt}</div>
-                        <div class="qb-opt-text">${q.options[opt]}</div>
-                    </div>
-                `;
-            }
-            html += `
-                    </div>
-                    <div class="qb-explanation" id="exp-part1-${q.id}">
-                        <strong>Giải thích:</strong> ${q.explanation}
-                    </div>
-                </div>
-            `;
-        });
-
-        // --- PART II ---
-        html += `<div class="qb-section-header" style="margin-top: 30px;"><i class="fa-solid fa-circle-question"></i> PHẦN II. Trắc nghiệm Đúng / Sai</div>`;
-        html += `<div class="qb-section-desc">Trong mỗi ý a), b), c), d), chọn Đúng hoặc Sai. (2 câu - tối đa 2 điểm)</div>`;
-        
-        quizData.part2.forEach((q, idx) => {
-            html += `
-                <div class="qb-card qb-q-card" id="card-part2-${q.id}">
-                    <div class="qb-q-header" style="margin-bottom: 12px;">
-                        <span class="qb-q-num">Câu ${idx + 1}.</span>
-                        <span>${q.context}</span>
-                    </div>
-                    <div class="qb-tf-table">
-            `;
-            q.subQuestions.forEach(sub => {
-                html += `
-                    <div class="qb-tf-row" id="row-part2-${q.id}-${sub.key}">
-                        <div class="qb-tf-text">
-                            ${getCompTag(sub.competency)}
-                            <strong>${sub.key})</strong> ${sub.text}
-                        </div>
-                        <div class="qb-tf-actions">
-                            <button type="button" class="qb-tf-btn" id="btn-part2-${q.id}-${sub.key}-T" onclick="choosePart2(${q.id}, '${sub.key}', 'Đ')">Đúng</button>
-                            <button type="button" class="qb-tf-btn" id="btn-part2-${q.id}-${sub.key}-F" onclick="choosePart2(${q.id}, '${sub.key}', 'S')">Sai</button>
-                        </div>
-                    </div>
-                `;
-            });
-            html += `
-                    </div>
-                    <div class="qb-explanation" id="exp-part2-${q.id}">
-                        <strong>Hướng dẫn giải quyết:</strong><br>
-                        ${q.subQuestions.map(sub => `• <strong>${sub.key}) [${sub.answer}]:</strong> ${sub.explanation}`).join('<br>')}
-                    </div>
-                </div>
-            `;
-        });
-
-        // --- PART III ---
-        html += `<div class="qb-section-header" style="margin-top: 30px;"><i class="fa-solid fa-pen-clip"></i> PHẦN III. Trắc nghiệm trả lời ngắn</div>`;
-        html += `<div class="qb-section-desc">Điền kết quả dạng số trực tiếp vào ô trống. (3 câu - mỗi câu đúng 1 điểm)</div>`;
-        
-        quizData.part3.forEach((q, idx) => {
-            html += `
-                <div class="qb-card qb-q-card" id="card-part3-${q.id}">
-                    <div class="qb-q-header">
-                        <span class="qb-q-num">Câu ${idx + 1}.</span>
-                        ${getCompTag(q.competency)}
-                        <span>${q.question}</span>
-                    </div>
-                    <div class="qb-short-answer-container">
-                        <input type="text" 
-                               inputmode="decimal" 
-                               class="qb-short-input" 
-                               id="input-part3-${q.id}" 
-                               placeholder="Đáp số..." 
-                               oninput="changePart3(${q.id}, this)">
-                        <div class="qb-correct-ans-show" id="ans-part3-${q.id}"></div>
-                    </div>
-                    <div class="qb-explanation" id="exp-part3-${q.id}">
-                        <strong>Giải thích chi tiết:</strong> ${q.explanation}
-                    </div>
-                </div>
-            `;
-        });
-
-        qContainer.innerHTML = html;
-    }
-
-    // Start Quiz logic
-    window.startQuiz = function() {
-        studentInfo.name = document.getElementById('qb-name').value.trim();
-        studentInfo.class = document.getElementById('qb-class').value.trim();
-        studentInfo.school = document.getElementById('qb-school').value.trim();
-
-        if (!studentInfo.name || !studentInfo.class || !studentInfo.school) {
-            alert("Vui lòng nhập đầy đủ thông tin!");
-            return;
-        }
-
-        // Save to local storage for convenience
-        localStorage.setItem('qb_student_name', studentInfo.name);
-        localStorage.setItem('qb_student_class', studentInfo.class);
-        localStorage.setItem('qb_student_school', studentInfo.school);
-
-        // Update UI info
-        document.getElementById('qbBadgeName').textContent = studentInfo.name;
-        document.getElementById('qbBadgeClass').textContent = studentInfo.class;
-        
-        // Hide start screen & show quiz
-        document.getElementById('qb-start-screen').style.display = "none";
-        document.getElementById('qb-quiz-area').style.display = "block";
-
-        // Start timer
-        secondsElapsed = 0;
-        document.getElementById('qbTimer').querySelector('span').textContent = "00:00";
-        clearInterval(timerInterval);
-        timerInterval = setInterval(() => {
-            secondsElapsed++;
-            const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
-            const secs = (secondsElapsed % 60).toString().padStart(2, '0');
-            document.getElementById('qbTimer').querySelector('span').textContent = `${mins}:${secs}`;
-        }, 1000);
-
-        updateProgress();
-    };
-
-    // User interactions
-    window.choosePart1 = function(qId, option) {
-        if (isGraded) return;
-        userAnswers.part1[qId] = option;
-        
-        // Visual toggle
-        const options = ['A', 'B', 'C', 'D'];
-        options.forEach(o => {
-            const card = document.getElementById(`opt-part1-${qId}-${o}`);
-            if (o === option) {
-                card.classList.add('selected');
-            } else {
-                card.classList.remove('selected');
-            }
-        });
-
-        document.getElementById(`card-part1-${qId}`).classList.add('active-input');
-        updateProgress();
-    };
-
-    window.choosePart2 = function(qId, key, choice) {
-        if (isGraded) return;
-        if (!userAnswers.part2[qId]) userAnswers.part2[qId] = {};
-        userAnswers.part2[qId][key] = choice;
-
-        const btnT = document.getElementById(`btn-part2-${qId}-${key}-T`);
-        const btnF = document.getElementById(`btn-part2-${qId}-${key}-F`);
-
-        if (choice === 'Đ') {
-            btnT.classList.add('selected-t');
-            btnF.classList.remove('selected-f');
-        } else {
-            btnF.classList.add('selected-f');
-            btnT.classList.remove('selected-t');
-        }
-
-        document.getElementById(`card-part2-${qId}`).classList.add('active-input');
-        updateProgress();
-    };
-
-    window.changePart3 = function(qId, inputEl) {
-        if (isGraded) return;
-        
-        // Clean input value (allow digits, minus, dot, comma)
-        let cleaned = inputEl.value.replace(/[^0-9.,-]/g, '');
-        inputEl.value = cleaned;
-
-        userAnswers.part3[qId] = cleaned.trim();
-        
-        const card = document.getElementById(`card-part3-${qId}`);
-        if (cleaned.trim() !== "") {
-            card.classList.add('active-input');
-        } else {
-            card.classList.remove('active-input');
-        }
-        updateProgress();
-    };
-
-    // Calculate completed answers count
-    function getCompletedStats() {
-        let completed = 0;
-        
-        // Part 1 count
-        completed += Object.keys(userAnswers.part1).length;
-        
-        // Part 2 count (counts each sub-question individually)
-        for (let qId in userAnswers.part2) {
-            completed += Object.keys(userAnswers.part2[qId]).length;
-        }
-
-        // Part 3 count
-        for (let qId in userAnswers.part3) {
-            if (userAnswers.part3[qId] !== "") completed++;
-        }
-
-        // Total sub-questions count: Part 1 (6) + Part 2 (8) + Part 3 (3) = 17
-        const totalPossible = 17;
-        return { completed, totalPossible };
-    }
-
-    function updateProgress() {
-        const stats = getCompletedStats();
-        const fill = document.getElementById('qbProgressFill');
-        const text = document.getElementById('qbProgressText');
-        
-        const percentage = Math.min((stats.completed / stats.totalPossible) * 100, 100);
-        fill.style.width = `${percentage}%`;
-        text.textContent = `${stats.completed}/${stats.totalPossible} ý hoàn thành`;
-    }
-
-    // Submit and Grade
-    window.submitAndGrade = function() {
-        if (isGraded) return;
-
-        // Check if there are unanswered questions
-        const stats = getCompletedStats();
-        if (stats.completed < stats.totalPossible) {
-            const proceed = confirm("Bạn vẫn chưa trả lời hết các câu hỏi. Bạn có chắc chắn muốn nộp bài ngay không?");
-            if (!proceed) return;
-        }
-
-        isGraded = true;
-        clearInterval(timerInterval);
-
-        let correctCount = 0;
-        let scoreEarned = 0; // Out of total questions
-
-        // 1. Grade Part I (6 questions, 1 point each)
-        quizData.part1.forEach(q => {
-            const userAns = userAnswers.part1[q.id];
-            const correctAns = q.answer;
-            
-            document.getElementById(`exp-part1-${q.id}`).style.display = 'block';
-            
-            const options = ['A', 'B', 'C', 'D'];
-            options.forEach(o => {
-                const item = document.getElementById(`opt-part1-${q.id}-${o}`);
-                if (o === correctAns) {
-                    item.classList.add('correct');
-                } else if (userAns === o && userAns !== correctAns) {
-                    item.classList.add('incorrect');
-                }
-            });
-
-            if (userAns === correctAns) {
-                correctCount++;
-                scoreEarned += 1.0;
-            }
-        });
-
-        // 2. Grade Part II (2 questions, maximum 2 points total)
-        // Grading policy (Ministry of Education, Vietnam):
-        // 1 correct sub = 0.1 | 2 correct subs = 0.25 | 3 correct subs = 0.5 | 4 correct subs = 1.0
-        quizData.part2.forEach(q => {
-            let correctSubCount = 0;
-            document.getElementById(`exp-part2-${q.id}`).style.display = 'block';
-
-            q.subQuestions.forEach(sub => {
-                const userAns = userAnswers.part2[q.id] ? userAnswers.part2[q.id][sub.key] : null;
-                const correctAns = sub.answer;
-                const row = document.getElementById(`row-part2-${q.id}-${sub.key}`);
-
-                const btnT = document.getElementById(`btn-part2-${q.id}-${sub.key}-T`);
-                const btnF = document.getElementById(`btn-part2-${q.id}-${sub.key}-F`);
-
-                if (userAns === correctAns) {
-                    correctSubCount++;
-                    correctCount++;
-                    row.classList.add('correct-row');
-                } else {
-                    row.classList.add('incorrect-row');
-                }
-
-                // Show correct options with border
-                if (correctAns === 'Đ') {
-                    btnT.style.borderColor = 'var(--success)';
-                    btnT.style.borderWidth = '2px';
-                } else {
-                    btnF.style.borderColor = 'var(--success)';
-                    btnF.style.borderWidth = '2px';
-                }
-            });
-
-            // Calculate score for this question card
-            if (correctSubCount === 1) scoreEarned += 0.1;
-            else if (correctSubCount === 2) scoreEarned += 0.25;
-            else if (correctSubCount === 3) scoreEarned += 0.5;
-            else if (correctSubCount === 4) scoreEarned += 1.0;
-        });
-
-        // 3. Grade Part III (3 questions, 1 point each)
-        quizData.part3.forEach(q => {
-            const userAnsRaw = userAnswers.part3[q.id] || "";
-            const correctAns = q.answer;
-            const inputEl = document.getElementById(`input-part3-${q.id}`);
-            const correctTextEl = document.getElementById(`ans-part3-${q.id}`);
-
-            document.getElementById(`exp-part3-${q.id}`).style.display = 'block';
-            inputEl.disabled = true;
-
-            const cleanUser = userAnsRaw.replace(',', '.').trim();
-            const cleanCorrect = correctAns.replace(',', '.').trim();
-
-            if (cleanUser && parseFloat(cleanUser) === parseFloat(cleanCorrect)) {
-                correctCount++;
-                scoreEarned += 1.0;
-                inputEl.classList.add('qb-short-input', 'correct');
-            } else {
-                inputEl.classList.add('qb-short-input', 'incorrect');
-                correctTextEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> Đáp án đúng: <strong>${correctAns}</strong>`;
-                correctTextEl.style.display = 'block';
-            }
-        });
-
-        // Calculate final grade (out of 10)
-        // Max raw points = 6 (part 1) + 2 (part 2) + 3 (part 3) = 11 points total
-        // Scale to 10.0 scale
-        const maxRawPoints = 11;
-        const finalGrade = ((scoreEarned / maxRawPoints) * 10).toFixed(1);
-
-        // Display results
-        document.getElementById('qbScoreVal').textContent = finalGrade;
-        document.getElementById('qbStatCorrect').textContent = `${correctCount}/17`;
-        document.getElementById('qbStatEarned').textContent = `${scoreEarned.toFixed(2)}/11`;
-        
-        // Format stopwatch time
-        const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
-        const secs = (secondsElapsed % 60).toString().padStart(2, '0');
-        document.getElementById('qbStatTime').textContent = `${mins}:${secs}`;
-
-        // Student records
-        document.getElementById('qbRecName').textContent = studentInfo.name;
-        document.getElementById('qbRecClass').textContent = studentInfo.class;
-        document.getElementById('qbRecSchool').textContent = studentInfo.school;
-        document.getElementById('qbRecGrade').textContent = `${finalGrade}/10.0 (${scoreEarned.toFixed(2)}/${maxRawPoints} điểm trắc nghiệm)`;
-
-        // Adjust texts
-        let feedbackTitle = "Cố gắng hơn nữa!";
-        let feedbackDesc = "Hãy xem kỹ đáp án và phần giải thích chi tiết bên dưới để ôn tập lại kiến thức nhé!";
-        
-        if (parseFloat(finalGrade) >= 8.0) {
-            feedbackTitle = "Xuất sắc! 🎉";
-            feedbackDesc = "Chúc mừng bạn đã đạt kết quả xuất sắc! Bạn nắm rất vững kiến thức về Nội năng và Định luật I.";
-            triggerConfetti();
-        } else if (parseFloat(finalGrade) >= 6.5) {
-            feedbackTitle = "Khá tốt!";
-            feedbackDesc = "Bạn hiểu bài tốt rồi, ôn luyện kỹ hơn để đạt kết quả tối đa nhé.";
-        }
-
-        document.getElementById('qbResultTitle').textContent = feedbackTitle;
-        document.getElementById('qbResultDesc').textContent = feedbackDesc;
-
-        // Hide quiz interactions footer, show results panel
-        document.getElementById('qbActionsArea').style.display = "none";
-        document.getElementById('qb-results-screen').style.display = "block";
-        // Báo cáo tự động về Google Sheets
-        // Gửi kết quả tự động lên Google Sheet (Bảo vệ an toàn bằng try-catch để tránh crash luồng chấm điểm chính)
-        if (typeof GOOGLE_SHEETS_URL !== 'undefined' && GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== "YOUR_GOOGLE_SHEET_WEBAPP_URL" && GOOGLE_SHEETS_URL !== "") {
-            try {
-                const name = document.getElementById('studentName').value.trim();
-                const className = document.getElementById('studentClass').value.trim();
-                const school = ""; // Bỏ thông tin trường theo yêu cầu
-                
-                // Tự động phát hiện biến số câu đúng phù hợp với mọi phiên bản file HTML bài tập
-                let correctCountVal = 0;
-                if (typeof totalCorrectValText !== 'undefined') correctCountVal = totalCorrectValText;
-                else if (typeof totalCorrect !== 'undefined') correctCountVal = totalCorrect;
-                else if (typeof correctCount !== 'undefined') correctCountVal = correctCount;
-                
-                // Tự động phát hiện biến tổng số câu
-                let totalItemsVal = 10;
-                if (typeof maxPossibleScore !== 'undefined') totalItemsVal = maxPossibleScore;
-                else if (typeof totalItems !== 'undefined') totalItemsVal = totalItems;
-                
-                const finalScore = typeof finalGrade !== 'undefined' ? finalGrade : (typeof score !== 'undefined' ? score : 0);
-                
-                const reportData = {
-                    name: name,
-                    className: className,
-                    school: school,
-                    score: finalScore,
-                    correct: `${correctCountVal}/${totalItemsVal}`,
-                    time: "00:00",
-                    lesson: quizData.title
-                };
-                fetch(GOOGLE_SHEETS_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "text/plain;charset=utf-8" },
-                    body: JSON.stringify(reportData),
-                    redirect: "follow"
-                }).catch(err => console.error("Lỗi gửi báo cáo Google Sheets:", err));
-            } catch (sheetErr) {
-                console.error("Lỗi xử lý gửi Google Sheet:", sheetErr);
-            }
-        }
-                
-
-        // Scroll to results
-        document.getElementById('qb-results-screen').scrollIntoView({ behavior: 'smooth' });
-
-        // Typeset MathJax
-        if (window.MathJax) {
-            MathJax.typesetPromise();
-        }
-    };
-
-    // Confetti effect
-    function triggerConfetti() {
-        const duration = 2.5 * 1000;
-        const end = Date.now() + duration;
-
-        (function frame() {
-            confetti({
-                particleCount: 4,
-                angle: 60,
-                spread: 60,
-                origin: { x: 0, y: 0.8 }
-            });
-            confetti({
-                particleCount: 4,
-                angle: 120,
-                spread: 60,
-                origin: { x: 1, y: 0.8 }
-            });
-
-            if (Date.now() < end) {
-                requestAnimationFrame(frame);
-            }
-        }());
-    }
-
-    // Export report text to clipboard
-    window.copyReportText = function() {
-        const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
-        const secs = (secondsElapsed % 60).toString().padStart(2, '0');
-        const maxRawPoints = 11;
-        
-        let scoreEarned = 0;
-        // recalculate scoreEarned
-        quizData.part1.forEach(q => {
-            if (userAnswers.part1[q.id] === q.answer) scoreEarned += 1.0;
-        });
-        quizData.part2.forEach(q => {
-            let correct = 0;
-            q.subQuestions.forEach(sub => {
-                if (userAnswers.part2[q.id] && userAnswers.part2[q.id][sub.key] === sub.answer) correct++;
-            });
-            if (correct === 1) scoreEarned += 0.1;
-            else if (correct === 2) scoreEarned += 0.25;
-            else if (correct === 3) scoreEarned += 0.5;
-            else if (correct === 4) scoreEarned += 1.0;
-        });
-        quizData.part3.forEach(q => {
-            const cleanUser = (userAnswers.part3[q.id] || "").replace(',', '.').trim();
-            const cleanCorrect = q.answer.replace(',', '.').trim();
-            if (cleanUser && parseFloat(cleanUser) === parseFloat(cleanCorrect)) scoreEarned += 1.0;
-        });
-        const finalGrade = ((scoreEarned / maxRawPoints) * 10).toFixed(1);
-
-        const reportText = `[BÁO CÁO KẾT QUẢ BÀI TẬP VẬT LÍ 12]\n` +
-                           `• Họ và tên: ${studentInfo.name}\n` +
-                           `• Lớp: ${studentInfo.class}\n` +
-                           `• Trường: ${studentInfo.school}\n` +
-                           `• Bài làm: Bài 2 - Nội năng. Định luật I nhiệt động lực học\n` +
-                           `• Điểm số: ${finalGrade}/10.0 (${scoreEarned.toFixed(2)}/11 điểm trắc nghiệm)\n` +
-                           `• Thời gian hoàn thành: ${mins}:${secs}\n` +
-                           `• Trạng thái: Đã hoàn thành hệ thống trắc nghiệm Blogger.`;
-
-        navigator.clipboard.writeText(reportText).then(() => {
-            const toast = document.getElementById('qbToast');
-            toast.classList.add('qb-toast', 'show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }).catch(err => {
-            alert("Có lỗi xảy ra khi sao chép: " + err);
-        });
-    };
-
-    // Restart Quiz
-    window.restartQuiz = function() {
-        if (!confirm("Bạn có chắc chắn muốn làm lại từ đầu không? Mọi đáp án đã chọn sẽ bị xóa.")) return;
-        
-        isGraded = false;
-        userAnswers = { part1: {}, part2: {}, part3: {} };
-
-        // Reset fields UI
-        renderQuestions();
-        
-        // Show start screen, hide results and quiz
-        document.getElementById('qb-results-screen').style.display = "none";
-        document.getElementById('qb-quiz-area').style.display = "none";
-        document.getElementById('qb-start-screen').style.display = "block";
-        
-        // Restore buttons footer
-        document.getElementById('qbActionsArea').style.display = "flex";
-
-        // Scroll top
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-</script>
-</body>
-</html>
+</script>
+
+
+
+<div id="quiz-blogger-wrapper">
+
+    <!-- toast notification -->
+
+    <div class="qb-toast" id="qbToast">Đã sao chép kết quả báo cáo!</div>
+
+
+
+    <!-- MÀN HÌNH BẮT ĐẦU -->
+
+    <div class="qb-card" id="qb-start-screen">
+
+        <div class="logo-icon">
+
+            <i class="fa-solid fa-atom"></i>
+
+        </div>
+
+        <h1 class="qb-title-gradient">VẬT LÍ 12 - BÀI 2</h1>
+
+        <h2 style="font-size: 1.15rem; font-family: 'Montserrat', sans-serif; margin-bottom: 6px;">NỘI NĂNG. ĐỊNH LUẬT I NHIỆT ĐỘNG LỰC HỌC</h2>
+
+        <p class="subtitle">Vui lòng điền đầy đủ thông tin bên dưới để bắt đầu làm bài trắc nghiệm tương tác.</p>
+
+        
+
+        <form id="qbLoginForm" onsubmit="event.preventDefault(); startQuiz();">
+
+            <div class="qb-input-group">
+
+                <label for="qb-name">Họ và tên học sinh</label>
+
+                <i class="fa-solid fa-user"></i>
+
+                <input type="text" id="qb-name" class="qb-input-field" placeholder="Ví dụ: Nguyễn Văn A" required>
+
+            </div>
+
+            <div class="qb-input-group">
+
+                <label for="qb-class">Lớp</label>
+
+                <i class="fa-solid fa-graduation-cap"></i>
+
+                <input type="text" id="qb-class" class="qb-input-field" placeholder="Ví dụ: 12A1" required>
+
+            </div>
+
+            <div class="qb-input-group">
+
+                <label for="qb-school">Trường THPT</label>
+
+                <i class="fa-solid fa-school"></i>
+
+                <input type="text" id="qb-school" class="qb-input-field" placeholder="Ví dụ: THPT Chu Văn An" required>
+
+            </div>
+
+            
+
+            <button type="submit" class="qb-btn" style="margin-top: 15px;">
+
+                Bắt đầu làm bài <i class="fa-solid fa-circle-play"></i>
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+
+    <!-- MÀN HÌNH BÀI LÀM (Mặc định ẩn) -->
+
+    <div id="qb-quiz-area" style="display: none;">
+
+        <!-- Header thông tin đính kèm & tiến độ -->
+
+        <div class="qb-progress-sticky">
+
+            <div class="qb-student-badge">
+
+                <i class="fa-solid fa-user-circle"></i> <span id="qbBadgeName">Học sinh</span> - Lớp <strong id="qbBadgeClass">12</strong>
+
+            </div>
+
+            <div class="qb-progress-wrapper">
+
+                <div class="qb-progress-track">
+
+                    <div class="qb-progress-fill" id="qbProgressFill"></div>
+
+                </div>
+
+                <div style="font-size: 0.65rem; text-align: right; margin-top: 4px; color: var(--text-muted);" id="qbProgressText">
+
+                    0/17 ý hoàn thành
+
+                </div>
+
+            </div>
+
+            <div class="qb-timer" id="qbTimer">
+
+                <i class="fa-solid fa-clock"></i> <span>00:00</span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Tiêu đề bài chính -->
+
+        <div class="qb-card" style="padding: 15px 20px; background: linear-gradient(135deg, #eff6ff 0%, #faf5ff 100%); border-color: rgba(99, 102, 241, 0.15);">
+
+            <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--primary); letter-spacing: 0.5px;">BÀI TẬP TRỰC TUYẾN</div>
+
+            <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.1rem; color: #1e1b4b;">Bài 2. Nội năng. Định luật I nhiệt động lực học</h3>
+
+        </div>
+
+
+
+        <!-- Khu vực chứa các câu hỏi được JS render -->
+
+        <div id="qbQuizQuestions" class="tex2jax_process"></div>
+
+
+
+        <!-- Nộp bài & Thử lại -->
+
+        <div class="qb-footer-actions" id="qbActionsArea">
+
+            <button type="button" class="qb-btn" onclick="submitAndGrade();" id="qbBtnSubmit">
+
+                Nộp bài & Xem giải thích <i class="fa-solid fa-paper-plane"></i>
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- MÀN HÌNH KẾT QUẢ (Mặc định ẩn) -->
+
+    <div class="qb-card" id="qb-results-screen">
+
+        <div class="qb-result-header">
+
+            <div class="qb-score-circle" id="qbScoreVal">0.0</div>
+
+            <h2 class="qb-result-title" id="qbResultTitle">Hoàn thành!</h2>
+
+            <p class="qb-result-desc" id="qbResultDesc">Bạn hãy kéo xuống dưới để xem chi tiết đáp án và lời giải thích chi tiết cho từng câu hỏi.</p>
+
+            
+
+            <div class="qb-grid-stats">
+
+                <div class="qb-stat-card">
+
+                    <div class="qb-stat-num" id="qbStatCorrect">0</div>
+
+                    <div class="qb-stat-label">Ý Đúng</div>
+
+                </div>
+
+                <div class="qb-stat-card">
+
+                    <div class="qb-stat-num" id="qbStatEarned">0/17</div>
+
+                    <div class="qb-stat-label">Điểm Số</div>
+
+                </div>
+
+                <div class="qb-stat-card">
+
+                    <div class="qb-stat-num" id="qbStatTime">00:00</div>
+
+                    <div class="qb-stat-label">Thời Gian</div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="qb-record-sheet">
+
+            <div style="font-weight: 700; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; margin-bottom: 10px; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px;">
+
+                <i class="fa-solid fa-file-invoice"></i> PHIẾU GHI NHẬN KẾT QUẢ
+
+            </div>
+
+            <div class="qb-record-item">
+
+                <span class="lbl">Họ và tên:</span>
+
+                <span class="val" id="qbRecName">Nguyễn Văn A</span>
+
+            </div>
+
+            <div class="qb-record-item">
+
+                <span class="lbl">Lớp:</span>
+
+                <span class="val" id="qbRecClass">12A1</span>
+
+            </div>
+
+            <div class="qb-record-item">
+
+                <span class="lbl">Trường:</span>
+
+                <span class="val" id="qbRecSchool">THPT Chu Văn An</span>
+
+            </div>
+
+            <div class="qb-record-item">
+
+                <span class="lbl">Điểm quy đổi (thang 10):</span>
+
+                <span class="val" id="qbRecGrade" style="color: var(--primary-dark); font-weight: 700;">8.5/10.0</span>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="qb-footer-actions">
+
+            <button type="button" class="qb-btn" onclick="copyReportText();">
+
+                <i class="fa-solid fa-copy"></i> Copy Kết Quả Gửi Thầy Cô
+
+            </button>
+
+            <button type="button" class="qb-btn qb-btn-secondary" onclick="restartQuiz();">
+
+                <i class="fa-solid fa-rotate-left"></i> Làm Lại
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+    // Dữ liệu câu hỏi được lấy từ file TracNghiem_Online.html gốc
+
+    const quizData = {
+
+        title: "BÀI 2: NỘI NĂNG. ĐỊNH LUẬT I NHIỆT ĐỘNG LỰC HỌC",
+
+        part1: [
+
+            {
+
+                id: 1,
+
+                competency: "NTVL",
+
+                question: "Nội năng của một vật là",
+
+                options: {
+
+                    A: "tổng động năng và thế năng của các phân tử cấu tạo nên vật.",
+
+                    B: "động năng của khối tâm của vật đang chuyển động.",
+
+                    C: "tổng nhiệt năng mà vật nhận được từ môi trường xung quanh.",
+
+                    D: "thế năng đàn hồi của vật khi bị biến dạng cơ học."
+
+                },
+
+                answer: "A",
+
+                explanation: "Định nghĩa nội năng: là tổng động năng chuyển động nhiệt và thế năng tương tác của các phân tử cấu tạo nên hệ."
+
+            },
+
+            {
+
+                id: 2,
+
+                competency: "NTVL",
+
+                question: "Khi nói về nội năng của khí lí tưởng, phát biểu nào sau đây là đúng?",
+
+                options: {
+
+                    A: "Nội năng của khí lí tưởng phụ thuộc vào cả thể tích và nhiệt độ.",
+
+                    B: "Nội năng của khí lí tưởng chỉ phụ thuộc vào nhiệt độ tuyệt đối.",
+
+                    C: "Nội năng của khí lí tưởng chỉ phụ thuộc vào thể tích của bình chứa.",
+
+                    D: "Thế năng tương tác giữa các phân tử khí lí tưởng đóng vai trò quyết định nội năng."
+
+                },
+
+                answer: "B",
+
+                explanation: "Khí lí tưởng bỏ qua lực tương tác phân tử khi không va chạm (thế năng phân tử bằng không), do đó nội năng chỉ là động năng nhiệt của các phân tử, chỉ phụ thuộc nhiệt độ tuyệt đối $T$."
+
+            },
+
+            {
+
+                id: 3,
+
+                competency: "NTVL",
+
+                question: "Cách nào sau đây làm thay đổi nội năng của một vật mà không cần thực hiện công cơ học?",
+
+                options: {
+
+                    A: "Cọ xát vật lên một bề mặt nhám.",
+
+                    B: "Cho vật tiếp xúc với một vật khác có nhiệt độ cao hơn.",
+
+                    C: "Dùng búa gõ mạnh nhiều lần lên vật kim loại.",
+
+                    D: "Nén nhanh khối khí chứa trong xilanh."
+
+                },
+
+                answer: "B",
+
+                explanation: "Cho hai vật tiếp xúc nhiệt có nhiệt độ khác nhau là quá trình truyền nhiệt (không thực hiện công cơ học)."
+
+            },
+
+            {
+
+                id: 4,
+
+                competency: "NTVL",
+
+                question: "Hệ thức của định luật I nhiệt động lực học là $\\Delta U = A + Q$. Theo quy ước dấu, nếu hệ nhận nhiệt lượng và sinh công thì",
+
+                options: {
+
+                    A: "$Q > 0$ và $A > 0$.",
+
+                    B: "$Q < 0$ và $A > 0$.",
+
+                    C: "$Q > 0$ và $A < 0$.",
+
+                    D: "$Q < 0$ và $A < 0$."
+
+                },
+
+                answer: "C",
+
+                explanation: "Hệ nhận nhiệt lượng: $Q > 0$; hệ sinh công (thực hiện công): $A < 0$."
+
+            },
+
+            {
+
+                id: 5,
+
+                competency: "NTVL",
+
+                question: "Truyền một nhiệt lượng $Q$ cho một khối khí đựng trong một xilanh làm bằng vật liệu cách nhiệt, có pít-tông di chuyển tự do. Quá trình này thuộc loại biến đổi nào của định luật I?",
+
+                options: {
+
+                    A: "Khí nhận nhiệt lượng và thực hiện công ($Q > 0$, $A < 0$).",
+
+                    B: "Khí tỏa nhiệt lượng và nhận công ($Q < 0$, $A > 0$).",
+
+                    C: "Khí nhận nhiệt lượng và nhận công ($Q > 0$, $A > 0$).",
+
+                    D: "Khí tỏa nhiệt lượng và thực hiện công ($Q < 0$, $A < 0$)."
+
+                },
+
+                answer: "A",
+
+                explanation: "Bình cách nhiệt nhưng pít-tông giãn nở tự do: nhận nhiệt lượng ($Q > 0$) từ nguồn cấp, giãn nở sinh công đẩy pít-tông ($A < 0$)."
+
+            },
+
+            {
+
+                id: 6,
+
+                competency: "VDKT",
+
+                question: "Một hệ cô lập về nhiệt và công thì nội năng của hệ sẽ",
+
+                options: {
+
+                    A: "liên tục tăng lên.",
+
+                    B: "giảm dần về không.",
+
+                    C: "không thay đổi theo thời gian.",
+
+                    D: "biến thiên tuần hoàn."
+
+                },
+
+                answer: "C",
+
+                explanation: "Hệ cô lập không trao đổi công ($A=0$) và nhiệt ($Q=0$) với bên ngoài, theo định luật I thì $\\Delta U = 0$, nội năng bảo toàn."
+
+            }
+
+        ],
+
+        part2: [
+
+            {
+
+                id: 1,
+
+                context: "Một khối khí lí tưởng được chứa trong một xilanh kín có pít-tông di chuyển được không ma sát. Người ta thực hiện biến đổi trạng thái của khối khí bằng hai cách khác nhau.",
+
+                subQuestions: [
+
+                    {
+
+                        key: "a",
+
+                        competency: "NTVL",
+
+                        text: "Cách 1: Nén nhanh pít-tông đồng thời bọc cách nhiệt xilanh. Trong quá trình này, nội năng của khí tăng do khối khí nhận công.",
+
+                        answer: "Đ",
+
+                        explanation: "Xilanh cách nhiệt ($Q=0$), nén pít-tông khí nhận công ($A > 0$) $\\rightarrow \\Delta U = A > 0$, nội năng tăng làm nhiệt độ tăng."
+
+                    },
+
+                    {
+
+                        key: "b",
+
+                        competency: "NTVL",
+
+                        text: "Cách 2: Giữ cố định pít-tông và đun nóng xilanh bằng ngọn lửa đèn cồn. Trong quá trình này, công hệ thực hiện bằng không ($A = 0$) và nội năng tăng bằng nhiệt lượng nhận vào.",
+
+                        answer: "Đ",
+
+                        explanation: "Giữ cố định pít-tông thì thể tích không đổi, khí không thực hiện công ($A=0$) $\\rightarrow \\Delta U = Q > 0$, toàn bộ nhiệt lượng dùng làm tăng nội năng."
+
+                    },
+
+                    {
+
+                        key: "c",
+
+                        competency: "NTVL",
+
+                        text: "Nếu khối khí giãn nở đẩy pít-tông đi lên trong một xilanh không cách nhiệt, khối khí chắc chắn nhận thêm công từ ngoại lực bên ngoài.",
+
+                        answer: "S",
+
+                        explanation: "Khi khí giãn nở đẩy pít-tông, nó thực hiện công ($A < 0$). Đồng thời, do lực tác dụng đẩy pít-tông đi lên là do khí sinh ra, nên khí sinh công chứ không nhận công."
+
+                    },
+
+                    {
+
+                        key: "d",
+
+                        competency: "VDKT",
+
+                        text: "Trong một chu trình khép kín (khí biến đổi rồi quay lại trạng thái ban đầu), độ biến thiên nội năng của khí bằng không ($\\Delta U = 0$).",
+
+                        answer: "Đ",
+
+                        explanation: "Khí quay lại trạng thái ban đầu thì nội năng ban đầu và cuối bằng nhau $\\rightarrow \\Delta U = 0 \\rightarrow 0 = A + Q \\rightarrow -A = Q$ (nhiệt lượng nhận vào bằng công sinh ra)."
+
+                    }
+
+                ]
+
+            },
+
+            {
+
+                id: 2,
+
+                context: "Xét sự thay đổi nội năng của một đồng xu bằng kim loại (đồng) đặt trên bàn.",
+
+                subQuestions: [
+
+                    {
+
+                        key: "a",
+
+                        competency: "NTVL",
+
+                        text: "Cọ xát mạnh đồng xu trên mặt bàn là hình thức thay đổi nội năng bằng truyền nhiệt vì thấy đồng xu nóng lên.",
+
+                        answer: "S",
+
+                        explanation: "Cọ xát đồng xu là thực hiện công cơ học chuyển hóa thành nội năng, không phải truyền nhiệt trực tiếp."
+
+                    },
+
+                    {
+
+                        key: "b",
+
+                        competency: "NTVL",
+
+                        text: "Thả đồng xu vào cốc nước sôi là hình thức truyền nhiệt, nội năng đồng xu tăng do nhận năng lượng nhiệt từ nước.",
+
+                        answer: "Đ",
+
+                        explanation: "Đây là quá trình truyền nhiệt từ cốc nước nóng có nhiệt độ cao sang đồng xu có nhiệt độ thấp."
+
+                    },
+
+                    {
+
+                        key: "c",
+
+                        competency: "NTVL",
+
+                        text: "Khi nội năng của đồng xu tăng lên, động năng của các electron tự do và dao động của các ion đồng tại các nút mạng tinh thể tăng lên.",
+
+                        answer: "Đ",
+
+                        explanation: "Nội năng tăng $\\rightarrow$ nhiệt độ tăng $\\rightarrow$ làm tăng tốc độ chuyển động nhiệt của electron và biên độ dao động của các ion đồng tại nút mạng."
+
+                    },
+
+                    {
+
+                        key: "d",
+
+                        competency: "VDKT",
+
+                        text: "Nếu cọ xát đồng xu làm nhiệt độ của nó tăng thêm, ta có thể đảo ngược quá trình bằng cách để yên đồng xu tự nguội đi và chuyển hóa hoàn toàn nhiệt lượng tỏa ra thành công cơ học đẩy đồng xu tự chuyển động trên bàn.",
+
+                        answer: "S",
+
+                        explanation: "Theo định luật II nhiệt động lực học, nhiệt lượng không thể tự chuyển hóa hoàn toàn thành công mà không làm thay đổi trạng thái của các vật khác (tính bất khả nghịch của quá trình nhiệt)."
+
+                    }
+
+                ]
+
+            }
+
+        ],
+
+        part3: [
+
+            {
+
+                id: 1,
+
+                competency: "VDKT",
+
+                question: "Người ta truyền cho khối khí trong xilanh một nhiệt lượng $150\\text{ J}$. Khối khí nở ra và thực hiện một công $90\\text{ J}$ đẩy pít-tông lên. Độ biến thiên nội năng ($\\Delta U$) của khối khí trong quá trình này là bao nhiêu jun?",
+
+                answer: "60",
+
+                explanation: "Khí nhận nhiệt lượng $Q = +150\\text{ J}$; thực hiện công $A = -90\\text{ J}$. Độ biến thiên nội năng: $\\Delta U = A + Q = -90 + 150 = 60\\text{ J}$."
+
+            },
+
+            {
+
+                id: 2,
+
+                competency: "VDKT",
+
+                question: "Khi nén một khối khí trong xilanh bằng một công $120\\text{ J}$, nội năng của khối khí tăng thêm $85\\text{ J}$. Tính nhiệt lượng mà khối khí đã truyền ra (tỏa ra) môi trường xung quanh (theo đơn vị $\\text{J}$).",
+
+                answer: "35",
+
+                explanation: "Khí nhận công $A = +120\\text{ J}$; độ biến thiên nội năng $\\Delta U = +85\\text{ J}$. Áp dụng định luật I: $\\Delta U = A + Q \\rightarrow 85 = 120 + Q \\rightarrow Q = -35\\text{ J}$ (tỏa nhiệt $35\\text{ J}$)."
+
+            },
+
+            {
+
+                id: 3,
+
+                competency: "VDKT",
+
+                question: "Để xác định nhiệt lượng thỏi sắt tỏa ra khi nguội đi, một học sinh thả một thỏi sắt khối lượng $0,4\\text{ kg}$ có nhiệt độ ban đầu $100^\\circ\\text{C}$ vào một bình nhiệt lượng kế chứa nước ở $20^\\circ\\text{C}$. Nhiệt độ của hệ khi cân bằng nhiệt là $28^\\circ\\text{C}$. Tính nhiệt lượng thỏi sắt tỏa ra trong quá trình truyền nhiệt này (theo đơn vị $\\text{kJ}$, làm tròn đến chữ số hàng phần mười). Biết nhiệt dung riêng của sắt là $460\\text{ J/(kg.K)}$.",
+
+                answer: "13.2",
+
+                explanation: "Nhiệt lượng thỏi sắt tỏa ra: $Q_{\\text{tỏa}} = m \\cdot c \\cdot (t_1 - t_2) = 0,4 \\cdot 460 \\cdot (100 - 28) = 13248\\text{ J} = 13,248\\text{ kJ} \\approx 13,2\\text{ kJ}$."
+
+            }
+
+        ]
+
+    };
+
+
+
+    // State Variables
+
+    let studentInfo = { name: "", class: "", school: "" };
+
+    let userAnswers = { part1: {}, part2: {}, part3: {} };
+
+    let isGraded = false;
+
+    let timerInterval = null;
+
+    let secondsElapsed = 0;
+
+
+
+    // Load saved info from LocalStorage if available
+
+    window.addEventListener('DOMContentLoaded', () => {
+
+        const savedName = localStorage.getItem('qb_student_name');
+
+        const savedClass = localStorage.getItem('qb_student_class');
+
+        const savedSchool = localStorage.getItem('qb_student_school');
+
+        
+
+        if (savedName) document.getElementById('qb-name').value = savedName;
+
+        if (savedClass) document.getElementById('qb-class').value = savedClass;
+
+        if (savedSchool) document.getElementById('qb-school').value = savedSchool;
+
+        
+
+        renderQuestions();
+
+    });
+
+
+
+    // Competency tag generator
+
+    function getCompTag(comp) {
+
+        if (comp === "NTVL") return `<span class="qb-tag tag-ntvl">Nhận thức Vật lí</span>`;
+
+        if (comp === "VDKT") return `<span class="qb-tag tag-vdkt">Vận dụng kiến thức</span>`;
+
+        return '';
+
+    }
+
+
+
+    // Render questions markup
+
+    function renderQuestions() {
+
+        const qContainer = document.getElementById('qbQuizQuestions');
+
+        let html = '';
+
+
+
+        // --- PART I ---
+
+        html += `<div class="qb-section-header"><i class="fa-solid fa-list-check"></i> PHẦN I. Trắc nghiệm nhiều lựa chọn</div>`;
+
+        html += `<div class="qb-section-desc">Mỗi câu hỏi chỉ có một phương án trả lời đúng nhất. (6 câu - mỗi câu đúng 1 điểm)</div>`;
+
+        
+
+        quizData.part1.forEach((q, idx) => {
+
+            html += `
+
+                <div class="qb-card qb-q-card" id="card-part1-${q.id}">
+
+                    <div class="qb-q-header">
+
+                        <span class="qb-q-num">Câu ${idx + 1}.</span>
+
+                        ${getCompTag(q.competency)}
+
+                        <span>${q.question}</span>
+
+                    </div>
+
+                    <div class="qb-options-list">
+
+            `;
+
+            for (let opt in q.options) {
+
+                html += `
+
+                    <div class="qb-option-item" id="opt-part1-${q.id}-${opt}" onclick="choosePart1(${q.id}, '${opt}')">
+
+                        <div class="qb-opt-letter">${opt}</div>
+
+                        <div class="qb-opt-text">${q.options[opt]}</div>
+
+                    </div>
+
+                `;
+
+            }
+
+            html += `
+
+                    </div>
+
+                    <div class="qb-explanation" id="exp-part1-${q.id}">
+
+                        <strong>Giải thích:</strong> ${q.explanation}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+
+
+        // --- PART II ---
+
+        html += `<div class="qb-section-header" style="margin-top: 30px;"><i class="fa-solid fa-circle-question"></i> PHẦN II. Trắc nghiệm Đúng / Sai</div>`;
+
+        html += `<div class="qb-section-desc">Trong mỗi ý a), b), c), d), chọn Đúng hoặc Sai. (2 câu - tối đa 2 điểm)</div>`;
+
+        
+
+        quizData.part2.forEach((q, idx) => {
+
+            html += `
+
+                <div class="qb-card qb-q-card" id="card-part2-${q.id}">
+
+                    <div class="qb-q-header" style="margin-bottom: 12px;">
+
+                        <span class="qb-q-num">Câu ${idx + 1}.</span>
+
+                        <span>${q.context}</span>
+
+                    </div>
+
+                    <div class="qb-tf-table">
+
+            `;
+
+            q.subQuestions.forEach(sub => {
+
+                html += `
+
+                    <div class="qb-tf-row" id="row-part2-${q.id}-${sub.key}">
+
+                        <div class="qb-tf-text">
+
+                            ${getCompTag(sub.competency)}
+
+                            <strong>${sub.key})</strong> ${sub.text}
+
+                        </div>
+
+                        <div class="qb-tf-actions">
+
+                            <button type="button" class="qb-tf-btn" id="btn-part2-${q.id}-${sub.key}-T" onclick="choosePart2(${q.id}, '${sub.key}', 'Đ')">Đúng</button>
+
+                            <button type="button" class="qb-tf-btn" id="btn-part2-${q.id}-${sub.key}-F" onclick="choosePart2(${q.id}, '${sub.key}', 'S')">Sai</button>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            });
+
+            html += `
+
+                    </div>
+
+                    <div class="qb-explanation" id="exp-part2-${q.id}">
+
+                        <strong>Hướng dẫn giải quyết:</strong><br>
+
+                        ${q.subQuestions.map(sub => `• <strong>${sub.key}) [${sub.answer}]:</strong> ${sub.explanation}`).join('<br>')}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+
+
+        // --- PART III ---
+
+        html += `<div class="qb-section-header" style="margin-top: 30px;"><i class="fa-solid fa-pen-clip"></i> PHẦN III. Trắc nghiệm trả lời ngắn</div>`;
+
+        html += `<div class="qb-section-desc">Điền kết quả dạng số trực tiếp vào ô trống. (3 câu - mỗi câu đúng 1 điểm)</div>`;
+
+        
+
+        quizData.part3.forEach((q, idx) => {
+
+            html += `
+
+                <div class="qb-card qb-q-card" id="card-part3-${q.id}">
+
+                    <div class="qb-q-header">
+
+                        <span class="qb-q-num">Câu ${idx + 1}.</span>
+
+                        ${getCompTag(q.competency)}
+
+                        <span>${q.question}</span>
+
+                    </div>
+
+                    <div class="qb-short-answer-container">
+
+                        <input type="text" 
+
+                               inputmode="decimal" 
+
+                               class="qb-short-input" 
+
+                               id="input-part3-${q.id}" 
+
+                               placeholder="Đáp số..." 
+
+                               oninput="changePart3(${q.id}, this)">
+
+                        <div class="qb-correct-ans-show" id="ans-part3-${q.id}"></div>
+
+                    </div>
+
+                    <div class="qb-explanation" id="exp-part3-${q.id}">
+
+                        <strong>Giải thích chi tiết:</strong> ${q.explanation}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+
+
+        qContainer.innerHTML = html;
+
+    }
+
+
+
+    // Start Quiz logic
+
+    window.startQuiz = function() {
+
+        studentInfo.name = document.getElementById('qb-name').value.trim();
+
+        studentInfo.class = document.getElementById('qb-class').value.trim();
+
+        studentInfo.school = document.getElementById('qb-school').value.trim();
+
+
+
+        if (!studentInfo.name || !studentInfo.class || !studentInfo.school) {
+
+            alert("Vui lòng nhập đầy đủ thông tin!");
+
+            return;
+
+        }
+
+
+
+        // Save to local storage for convenience
+
+        localStorage.setItem('qb_student_name', studentInfo.name);
+
+        localStorage.setItem('qb_student_class', studentInfo.class);
+
+        localStorage.setItem('qb_student_school', studentInfo.school);
+
+
+
+        // Update UI info
+
+        document.getElementById('qbBadgeName').textContent = studentInfo.name;
+
+        document.getElementById('qbBadgeClass').textContent = studentInfo.class;
+
+        
+
+        // Hide start screen & show quiz
+
+        document.getElementById('qb-start-screen').style.display = "none";
+
+        document.getElementById('qb-quiz-area').style.display = "block";
+
+
+
+        // Start timer
+
+        secondsElapsed = 0;
+
+        document.getElementById('qbTimer').querySelector('span').textContent = "00:00";
+
+        clearInterval(timerInterval);
+
+        timerInterval = setInterval(() => {
+
+            secondsElapsed++;
+
+            const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+
+            const secs = (secondsElapsed % 60).toString().padStart(2, '0');
+
+            document.getElementById('qbTimer').querySelector('span').textContent = `${mins}:${secs}`;
+
+        }, 1000);
+
+
+
+        updateProgress();
+
+    };
+
+
+
+    // User interactions
+
+    window.choosePart1 = function(qId, option) {
+
+        if (isGraded) return;
+
+        userAnswers.part1[qId] = option;
+
+        
+
+        // Visual toggle
+
+        const options = ['A', 'B', 'C', 'D'];
+
+        options.forEach(o => {
+
+            const card = document.getElementById(`opt-part1-${qId}-${o}`);
+
+            if (o === option) {
+
+                card.classList.add('selected');
+
+            } else {
+
+                card.classList.remove('selected');
+
+            }
+
+        });
+
+
+
+        document.getElementById(`card-part1-${qId}`).classList.add('active-input');
+
+        updateProgress();
+
+    };
+
+
+
+    window.choosePart2 = function(qId, key, choice) {
+
+        if (isGraded) return;
+
+        if (!userAnswers.part2[qId]) userAnswers.part2[qId] = {};
+
+        userAnswers.part2[qId][key] = choice;
+
+
+
+        const btnT = document.getElementById(`btn-part2-${qId}-${key}-T`);
+
+        const btnF = document.getElementById(`btn-part2-${qId}-${key}-F`);
+
+
+
+        if (choice === 'Đ') {
+
+            btnT.classList.add('selected-t');
+
+            btnF.classList.remove('selected-f');
+
+        } else {
+
+            btnF.classList.add('selected-f');
+
+            btnT.classList.remove('selected-t');
+
+        }
+
+
+
+        document.getElementById(`card-part2-${qId}`).classList.add('active-input');
+
+        updateProgress();
+
+    };
+
+
+
+    window.changePart3 = function(qId, inputEl) {
+
+        if (isGraded) return;
+
+        
+
+        // Clean input value (allow digits, minus, dot, comma)
+
+        let cleaned = inputEl.value.replace(/[^0-9.,-]/g, '');
+
+        inputEl.value = cleaned;
+
+
+
+        userAnswers.part3[qId] = cleaned.trim();
+
+        
+
+        const card = document.getElementById(`card-part3-${qId}`);
+
+        if (cleaned.trim() !== "") {
+
+            card.classList.add('active-input');
+
+        } else {
+
+            card.classList.remove('active-input');
+
+        }
+
+        updateProgress();
+
+    };
+
+
+
+    // Calculate completed answers count
+
+    function getCompletedStats() {
+
+        let completed = 0;
+
+        
+
+        // Part 1 count
+
+        completed += Object.keys(userAnswers.part1).length;
+
+        
+
+        // Part 2 count (counts each sub-question individually)
+
+        for (let qId in userAnswers.part2) {
+
+            completed += Object.keys(userAnswers.part2[qId]).length;
+
+        }
+
+
+
+        // Part 3 count
+
+        for (let qId in userAnswers.part3) {
+
+            if (userAnswers.part3[qId] !== "") completed++;
+
+        }
+
+
+
+        // Total sub-questions count: Part 1 (6) + Part 2 (8) + Part 3 (3) = 17
+
+        const totalPossible = 17;
+
+        return { completed, totalPossible };
+
+    }
+
+
+
+    function updateProgress() {
+
+        const stats = getCompletedStats();
+
+        const fill = document.getElementById('qbProgressFill');
+
+        const text = document.getElementById('qbProgressText');
+
+        
+
+        const percentage = Math.min((stats.completed / stats.totalPossible) * 100, 100);
+
+        fill.style.width = `${percentage}%`;
+
+        text.textContent = `${stats.completed}/${stats.totalPossible} ý hoàn thành`;
+
+    }
+
+
+
+    // Submit and Grade
+
+    window.submitAndGrade = function() {
+
+        if (isGraded) return;
+
+
+
+        // Check if there are unanswered questions
+
+        const stats = getCompletedStats();
+
+        if (stats.completed < stats.totalPossible) {
+
+            const proceed = confirm("Bạn vẫn chưa trả lời hết các câu hỏi. Bạn có chắc chắn muốn nộp bài ngay không?");
+
+            if (!proceed) return;
+
+        }
+
+
+
+        isGraded = true;
+
+        clearInterval(timerInterval);
+
+
+
+        let correctCount = 0;
+
+        let scoreEarned = 0; // Out of total questions
+
+
+
+        // 1. Grade Part I (6 questions, 1 point each)
+
+        quizData.part1.forEach(q => {
+
+            const userAns = userAnswers.part1[q.id];
+
+            const correctAns = q.answer;
+
+            
+
+            document.getElementById(`exp-part1-${q.id}`).style.display = 'block';
+
+            
+
+            const options = ['A', 'B', 'C', 'D'];
+
+            options.forEach(o => {
+
+                const item = document.getElementById(`opt-part1-${q.id}-${o}`);
+
+                if (o === correctAns) {
+
+                    item.classList.add('correct');
+
+                } else if (userAns === o && userAns !== correctAns) {
+
+                    item.classList.add('incorrect');
+
+                }
+
+            });
+
+
+
+            if (userAns === correctAns) {
+
+                correctCount++;
+
+                scoreEarned += 1.0;
+
+            }
+
+        });
+
+
+
+        // 2. Grade Part II (2 questions, maximum 2 points total)
+
+        // Grading policy (Ministry of Education, Vietnam):
+
+        // 1 correct sub = 0.1 | 2 correct subs = 0.25 | 3 correct subs = 0.5 | 4 correct subs = 1.0
+
+        quizData.part2.forEach(q => {
+
+            let correctSubCount = 0;
+
+            document.getElementById(`exp-part2-${q.id}`).style.display = 'block';
+
+
+
+            q.subQuestions.forEach(sub => {
+
+                const userAns = userAnswers.part2[q.id] ? userAnswers.part2[q.id][sub.key] : null;
+
+                const correctAns = sub.answer;
+
+                const row = document.getElementById(`row-part2-${q.id}-${sub.key}`);
+
+
+
+                const btnT = document.getElementById(`btn-part2-${q.id}-${sub.key}-T`);
+
+                const btnF = document.getElementById(`btn-part2-${q.id}-${sub.key}-F`);
+
+
+
+                if (userAns === correctAns) {
+
+                    correctSubCount++;
+
+                    correctCount++;
+
+                    row.classList.add('correct-row');
+
+                } else {
+
+                    row.classList.add('incorrect-row');
+
+                }
+
+
+
+                // Show correct options with border
+
+                if (correctAns === 'Đ') {
+
+                    btnT.style.borderColor = 'var(--success)';
+
+                    btnT.style.borderWidth = '2px';
+
+                } else {
+
+                    btnF.style.borderColor = 'var(--success)';
+
+                    btnF.style.borderWidth = '2px';
+
+                }
+
+            });
+
+
+
+            // Calculate score for this question card
+
+            if (correctSubCount === 1) scoreEarned += 0.1;
+
+            else if (correctSubCount === 2) scoreEarned += 0.25;
+
+            else if (correctSubCount === 3) scoreEarned += 0.5;
+
+            else if (correctSubCount === 4) scoreEarned += 1.0;
+
+        });
+
+
+
+        // 3. Grade Part III (3 questions, 1 point each)
+
+        quizData.part3.forEach(q => {
+
+            const userAnsRaw = userAnswers.part3[q.id] || "";
+
+            const correctAns = q.answer;
+
+            const inputEl = document.getElementById(`input-part3-${q.id}`);
+
+            const correctTextEl = document.getElementById(`ans-part3-${q.id}`);
+
+
+
+            document.getElementById(`exp-part3-${q.id}`).style.display = 'block';
+
+            inputEl.disabled = true;
+
+
+
+            const cleanUser = userAnsRaw.replace(',', '.').trim();
+
+            const cleanCorrect = correctAns.replace(',', '.').trim();
+
+
+
+            if (cleanUser && parseFloat(cleanUser) === parseFloat(cleanCorrect)) {
+
+                correctCount++;
+
+                scoreEarned += 1.0;
+
+                inputEl.classList.add('qb-short-input', 'correct');
+
+            } else {
+
+                inputEl.classList.add('qb-short-input', 'incorrect');
+
+                correctTextEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> Đáp án đúng: <strong>${correctAns}</strong>`;
+
+                correctTextEl.style.display = 'block';
+
+            }
+
+        });
+
+
+
+        // Calculate final grade (out of 10)
+
+        // Max raw points = 6 (part 1) + 2 (part 2) + 3 (part 3) = 11 points total
+
+        // Scale to 10.0 scale
+
+        const maxRawPoints = 11;
+
+        const finalGrade = ((scoreEarned / maxRawPoints) * 10).toFixed(1);
+
+
+
+        // Display results
+
+        document.getElementById('qbScoreVal').textContent = finalGrade;
+
+        document.getElementById('qbStatCorrect').textContent = `${correctCount}/17`;
+
+        document.getElementById('qbStatEarned').textContent = `${scoreEarned.toFixed(2)}/11`;
+
+        
+
+        // Format stopwatch time
+
+        const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+
+        const secs = (secondsElapsed % 60).toString().padStart(2, '0');
+
+        document.getElementById('qbStatTime').textContent = `${mins}:${secs}`;
+
+
+
+        // Student records
+
+        document.getElementById('qbRecName').textContent = studentInfo.name;
+
+        document.getElementById('qbRecClass').textContent = studentInfo.class;
+
+        document.getElementById('qbRecSchool').textContent = studentInfo.school;
+
+        document.getElementById('qbRecGrade').textContent = `${finalGrade}/10.0 (${scoreEarned.toFixed(2)}/${maxRawPoints} điểm trắc nghiệm)`;
+
+
+
+        // Adjust texts
+
+        let feedbackTitle = "Cố gắng hơn nữa!";
+
+        let feedbackDesc = "Hãy xem kỹ đáp án và phần giải thích chi tiết bên dưới để ôn tập lại kiến thức nhé!";
+
+        
+
+        if (parseFloat(finalGrade) >= 8.0) {
+
+            feedbackTitle = "Xuất sắc! 🎉";
+
+            feedbackDesc = "Chúc mừng bạn đã đạt kết quả xuất sắc! Bạn nắm rất vững kiến thức về Nội năng và Định luật I.";
+
+            triggerConfetti();
+
+        } else if (parseFloat(finalGrade) >= 6.5) {
+
+            feedbackTitle = "Khá tốt!";
+
+            feedbackDesc = "Bạn hiểu bài tốt rồi, ôn luyện kỹ hơn để đạt kết quả tối đa nhé.";
+
+        }
+
+
+
+        document.getElementById('qbResultTitle').textContent = feedbackTitle;
+
+        document.getElementById('qbResultDesc').textContent = feedbackDesc;
+
+
+
+        // Hide quiz interactions footer, show results panel
+
+        document.getElementById('qbActionsArea').style.display = "none";
+
+        document.getElementById('qb-results-screen').style.display = "block";
+
+        // Báo cáo tự động về Google Sheets
+
+        // Gửi kết quả tự động lên Google Sheet (Bảo vệ an toàn bằng try-catch để tránh crash luồng chấm điểm chính)
+
+        if (typeof GOOGLE_SHEETS_URL !== 'undefined' && GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== "YOUR_GOOGLE_SHEET_WEBAPP_URL" && GOOGLE_SHEETS_URL !== "") {
+
+            try {
+
+                const name = document.getElementById('studentName').value.trim();
+
+                const className = document.getElementById('studentClass').value.trim();
+
+                const school = ""; // Bỏ thông tin trường theo yêu cầu
+
+                
+
+                // Tự động phát hiện biến số câu đúng phù hợp với mọi phiên bản file HTML bài tập
+
+                let correctCountVal = 0;
+
+                if (typeof totalCorrectValText !== 'undefined') correctCountVal = totalCorrectValText;
+
+                else if (typeof totalCorrect !== 'undefined') correctCountVal = totalCorrect;
+
+                else if (typeof correctCount !== 'undefined') correctCountVal = correctCount;
+
+                
+
+                // Tự động phát hiện biến tổng số câu
+
+                let totalItemsVal = 10;
+
+                if (typeof maxPossibleScore !== 'undefined') totalItemsVal = maxPossibleScore;
+
+                else if (typeof totalItems !== 'undefined') totalItemsVal = totalItems;
+
+                
+
+                const finalScore = typeof finalGrade !== 'undefined' ? finalGrade : (typeof score !== 'undefined' ? score : 0);
+
+                
+
+                const reportData = {
+
+                    name: name,
+
+                    className: className,
+
+                    school: school,
+
+                    score: finalScore,
+
+                    correct: `${correctCountVal}/${totalItemsVal}`,
+
+                    time: "00:00",
+
+                    lesson: quizData.title
+
+                };
+
+                fetch(GOOGLE_SHEETS_URL, {
+
+                    method: "POST",
+
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+
+                    body: JSON.stringify(reportData),
+
+                    redirect: "follow"
+
+                }).catch(err => console.error("Lỗi gửi báo cáo Google Sheets:", err));
+
+            } catch (sheetErr) {
+
+                console.error("Lỗi xử lý gửi Google Sheet:", sheetErr);
+
+            }
+
+        }
+
+                
+
+
+
+        // Scroll to results
+
+        document.getElementById('qb-results-screen').scrollIntoView({ behavior: 'smooth' });
+
+
+
+        // Typeset MathJax
+
+        if (window.MathJax) {
+
+            MathJax.typesetPromise();
+
+        }
+
+    };
+
+
+
+    // Confetti effect
+
+    function triggerConfetti() {
+
+        const duration = 2.5 * 1000;
+
+        const end = Date.now() + duration;
+
+
+
+        (function frame() {
+
+            confetti({
+
+                particleCount: 4,
+
+                angle: 60,
+
+                spread: 60,
+
+                origin: { x: 0, y: 0.8 }
+
+            });
+
+            confetti({
+
+                particleCount: 4,
+
+                angle: 120,
+
+                spread: 60,
+
+                origin: { x: 1, y: 0.8 }
+
+            });
+
+
+
+            if (Date.now() < end) {
+
+                requestAnimationFrame(frame);
+
+            }
+
+        }());
+
+    }
+
+
+
+    // Export report text to clipboard
+
+    window.copyReportText = function() {
+
+        const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+
+        const secs = (secondsElapsed % 60).toString().padStart(2, '0');
+
+        const maxRawPoints = 11;
+
+        
+
+        let scoreEarned = 0;
+
+        // recalculate scoreEarned
+
+        quizData.part1.forEach(q => {
+
+            if (userAnswers.part1[q.id] === q.answer) scoreEarned += 1.0;
+
+        });
+
+        quizData.part2.forEach(q => {
+
+            let correct = 0;
+
+            q.subQuestions.forEach(sub => {
+
+                if (userAnswers.part2[q.id] && userAnswers.part2[q.id][sub.key] === sub.answer) correct++;
+
+            });
+
+            if (correct === 1) scoreEarned += 0.1;
+
+            else if (correct === 2) scoreEarned += 0.25;
+
+            else if (correct === 3) scoreEarned += 0.5;
+
+            else if (correct === 4) scoreEarned += 1.0;
+
+        });
+
+        quizData.part3.forEach(q => {
+
+            const cleanUser = (userAnswers.part3[q.id] || "").replace(',', '.').trim();
+
+            const cleanCorrect = q.answer.replace(',', '.').trim();
+
+            if (cleanUser && parseFloat(cleanUser) === parseFloat(cleanCorrect)) scoreEarned += 1.0;
+
+        });
+
+        const finalGrade = ((scoreEarned / maxRawPoints) * 10).toFixed(1);
+
+
+
+        const reportText = `[BÁO CÁO KẾT QUẢ BÀI TẬP VẬT LÍ 12]\n` +
+
+                           `• Họ và tên: ${studentInfo.name}\n` +
+
+                           `• Lớp: ${studentInfo.class}\n` +
+
+                           `• Trường: ${studentInfo.school}\n` +
+
+                           `• Bài làm: Bài 2 - Nội năng. Định luật I nhiệt động lực học\n` +
+
+                           `• Điểm số: ${finalGrade}/10.0 (${scoreEarned.toFixed(2)}/11 điểm trắc nghiệm)\n` +
+
+                           `• Thời gian hoàn thành: ${mins}:${secs}\n` +
+
+                           `• Trạng thái: Đã hoàn thành hệ thống trắc nghiệm Blogger.`;
+
+
+
+        navigator.clipboard.writeText(reportText).then(() => {
+
+            const toast = document.getElementById('qbToast');
+
+            toast.classList.add('qb-toast', 'show');
+
+            setTimeout(() => {
+
+                toast.classList.remove('show');
+
+            }, 3000);
+
+        }).catch(err => {
+
+            alert("Có lỗi xảy ra khi sao chép: " + err);
+
+        });
+
+    };
+
+
+
+    // Restart Quiz
+
+    window.restartQuiz = function() {
+
+        if (!confirm("Bạn có chắc chắn muốn làm lại từ đầu không? Mọi đáp án đã chọn sẽ bị xóa.")) return;
+
+        
+
+        isGraded = false;
+
+        userAnswers = { part1: {}, part2: {}, part3: {} };
+
+
+
+        // Reset fields UI
+
+        renderQuestions();
+
+        
+
+        // Show start screen, hide results and quiz
+
+        document.getElementById('qb-results-screen').style.display = "none";
+
+        document.getElementById('qb-quiz-area').style.display = "none";
+
+        document.getElementById('qb-start-screen').style.display = "block";
+
+        
+
+        // Restore buttons footer
+
+        document.getElementById('qbActionsArea').style.display = "flex";
+
+
+
+        // Scroll top
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    };
+
+</script>
+
+</body>
+
+</html>
+
 
 
 
