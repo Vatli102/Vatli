@@ -98,10 +98,10 @@ d) **[VDKT]** Công nghệ xe điện hiện đại (EV) sử dụng pin Lithium
 **Câu 1 [NTVL]:** Quy trình nghiên cứu Vật lí theo phương pháp thực nghiệm gồm có bao nhiêu bước cơ bản?  
 *Đáp số:* ....................
 
-**Câu 2 [THTN]:** Phát minh ra máy hơi nước của James Watt (khi nghiên cứu về Nhiệt học) là động lực khởi đầu cho cuộc cách mạng công nghiệp lần thứ mấy của nhân loại?  
+**Câu 2 [THTN]:** Sự ra đời của công nghệ vi mạch bán dẫn, máy tính và tự động hóa là nền tảng khởi đầu cho cuộc cách mạng công nghiệp lần thứ mấy của nhân loại?  
 *Đáp số:* ....................
 
-**Câu 3 [NTVL]:** Có bao nhiêu phương pháp nghiên cứu cơ bản được sử dụng chủ yếu trong Vật lí học (gồm phương pháp thực nghiệm và phương pháp lý thuyết)?  
+**Câu 3 [NTVL]:** Có bao nhiêu phương pháp nghiên cứu cơ bản được sử dụng chủ yếu trong Vật lí học?  
 *Đáp số:* ....................
 
 **Câu 4 [VDKT]:** Cho các phát biểu sau đây về vai trò và đối tượng nghiên cứu của Vật lí học:
@@ -169,7 +169,7 @@ Hỏi có bao nhiêu phát biểu **đúng** trong các phát biểu trên?
 | Câu | Đáp án | Giải thích chi tiết |
 | :--- | :---: | :--- |
 | **Câu 1** | **5** | Quy trình thực nghiệm gồm 5 bước: Quan sát $\to$ Giả thuyết $\to$ Dự đoán $\to$ Thí nghiệm $\to$ Kết luận. |
-| **Câu 2** | **1** | Máy hơi nước của James Watt khởi đầu cho Cuộc cách mạng công nghiệp lần thứ nhất (1.0). |
+| **Câu 2** | **3** | Công nghệ vi mạch bán dẫn và máy tính khởi đầu cho Cuộc cách mạng công nghiệp lần thứ ba (3.0). |
 | **Câu 3** | **2** | Hai phương pháp nghiên cứu cơ bản trong Vật lí là phương pháp thực nghiệm và phương pháp lý thuyết. |
 | **Câu 4** | **3** | Có 3 phát biểu đúng là (1), (3), (4). Phát biểu (2) sai vì công nghệ vi mạch bán dẫn thuộc Cuộc cách mạng công nghiệp lần thứ ba (3.0). |
 
