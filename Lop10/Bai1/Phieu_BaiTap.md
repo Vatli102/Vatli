@@ -95,16 +95,21 @@ d) **[VDKT]** Công nghệ xe điện hiện đại (EV) sử dụng pin Lithium
 ### PHẦN III. Câu trắc nghiệm trả lời ngắn
 *Thí sinh trả lời từ Câu 1 đến Câu 4. Viết đáp án số tương ứng.*
 
-**Câu 1 [THTN]:** Một pin năng lượng mặt trời có hiệu suất chuyển đổi quang năng thành điện năng là $20\%$. Khi pin nhận được năng lượng ánh sáng mặt trời là $500\text{ J}$ trong 1 giây, tính lượng điện năng thu được (theo đơn vị Joules - J).  
+**Câu 1 [NTVL]:** Quy trình nghiên cứu Vật lí theo phương pháp thực nghiệm gồm có bao nhiêu bước cơ bản?  
 *Đáp số:* ....................
 
-**Câu 2 [THTN]:** Một kính thiên văn quan sát một ngôi sao cách Trái Đất $4$ năm ánh sáng. Biết tốc độ ánh sáng truyền trong chân không là $300.000\text{ km/s}$. Tính khoảng thời gian (theo đơn vị năm) để ánh sáng phát ra từ ngôi sao đó truyền tới mắt người quan sát trên Trái Đất.  
+**Câu 2 [THTN]:** Phát minh ra máy hơi nước của James Watt (khi nghiên cứu về Nhiệt học) là động lực khởi đầu cho cuộc cách mạng công nghiệp lần thứ mấy của nhân loại?  
 *Đáp số:* ....................
 
-**Câu 3 [VDKT]:** Trong y học, một liều chiếu xạ tia X truyền cho vùng cơ thể bị bệnh một năng lượng $0,4\text{ J}$. Nếu khối lượng vùng cơ thể nhận liều chiếu xạ là $2\text{ kg}$, tính liều hấp thụ năng lượng trung bình trên mỗi kilôgam cơ thể (theo đơn vị $\text{J/kg}$).  
+**Câu 3 [NTVL]:** Có bao nhiêu phương pháp nghiên cứu cơ bản được sử dụng chủ yếu trong Vật lí học (gồm phương pháp thực nghiệm và phương pháp lý thuyết)?  
 *Đáp số:* ....................
 
-**Câu 4 [VDKT]:** Một trạm phát sóng radio phát ra sóng vô tuyến có bước sóng $\lambda = 100\text{ m}$. Biết tốc độ truyền sóng điện từ trong không khí là $c = 3 \cdot 10^8\text{ m/s}$. Tính tần số của sóng radio đó theo đơn vị Megahertz ($\text{MHz}$). ($1\text{ MHz} = 10^6\text{ Hz}$).  
+**Câu 4 [VDKT]:** Cho các phát biểu sau đây về vai trò và đối tượng nghiên cứu của Vật lí học:
+(1) Vật lí học nghiên cứu các dạng vận động của vật chất và năng lượng.
+(2) Công nghệ vi mạch bán dẫn là nền tảng khởi đầu cho cuộc cách mạng công nghiệp lần thứ nhất.
+(3) Thí nghiệm kiểm tra là bước quyết định để đánh giá tính đúng đắn của giả thuyết trong phương pháp thực nghiệm.
+(4) Ngành Vật lí y khoa ứng dụng các công nghệ như chụp X-quang, chụp cộng hưởng từ MRI để chẩn đoán bệnh.
+Hỏi có bao nhiêu phát biểu **đúng** trong các phát biểu trên?  
 *Đáp số:* ....................
 
 ---
@@ -163,10 +168,10 @@ d) **[VDKT]** Công nghệ xe điện hiện đại (EV) sử dụng pin Lithium
 
 | Câu | Đáp án | Giải thích chi tiết |
 | :--- | :---: | :--- |
-| **Câu 1** | **100** | Điện năng thu được: $E = 500 \times 20\% = 100\text{ J}$. |
-| **Câu 2** | **4** | Thời gian ánh sáng truyền từ ngôi sao cách 4 năm ánh sáng đến Trái Đất đúng bằng $4\text{ năm}$. |
-| **Câu 3** | **0,2** | Liều hấp thụ năng lượng trung bình: $D = \frac{E}{m} = \frac{0,4}{2} = 0,2\text{ J/kg}$. |
-| **Câu 4** | **3** | Tần số $f = \frac{c}{\lambda} = \frac{3 \cdot 10^8}{100} = 3 \cdot 10^6\text{ Hz} = 3\text{ MHz}$. |
+| **Câu 1** | **5** | Quy trình thực nghiệm gồm 5 bước: Quan sát $\to$ Giả thuyết $\to$ Dự đoán $\to$ Thí nghiệm $\to$ Kết luận. |
+| **Câu 2** | **1** | Máy hơi nước của James Watt khởi đầu cho Cuộc cách mạng công nghiệp lần thứ nhất (1.0). |
+| **Câu 3** | **2** | Hai phương pháp nghiên cứu cơ bản trong Vật lí là phương pháp thực nghiệm và phương pháp lý thuyết. |
+| **Câu 4** | **3** | Có 3 phát biểu đúng là (1), (3), (4). Phát biểu (2) sai vì công nghệ vi mạch bán dẫn thuộc Cuộc cách mạng công nghiệp lần thứ ba (3.0). |
 
 ---
 
