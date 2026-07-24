@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 1: Cấu Trúc Của Chất. Sự Chuyển Thể | Vatli102</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --accent: #06b6d4;
+            --bg-body: #f8fafc;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-body); color: var(--text-dark); line-height: 1.8; }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+            padding: 0.8rem 2rem; display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .logo { display: flex; align-items: center; gap: 0.75rem; font-weight: 800; font-size: 1.2rem; color: var(--primary); text-decoration: none; }
+        .logo-icon { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+
+        .nav-links { display: flex; gap: 1.2rem; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 0.92rem; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--primary); }
+
+        .blog-post-content {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            border: 1px solid #e2e8f0;
+            max-width: 880px;
+            margin: 2.5rem auto;
+            padding: 35px 30px;
+        }
+
+        .blog-post-content h1 {
+            color: #0f172a;
+            font-size: 2.1rem;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #2563eb, #0891b2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .blog-post-content h2 {
+            color: #1e3a8a;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-top: 35px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .blog-post-content h2 i { color: #2563eb; }
+
+        .blog-post-content h3 { color: #0369a1; font-size: 1.15rem; font-weight: 600; margin-top: 20px; margin-bottom: 10px; }
+
+        .intro-lead {
+            font-size: 1.1rem; color: #475569; background-color: #f8fafc;
+            border-left: 4px solid #3b82f6; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-bottom: 25px;
+        }
+
+        .highlight-card {
+            background: linear-gradient(135deg, #eff6ff, #f0f9ff); border: 1px solid #bfdbfe;
+            border-radius: 14px; padding: 20px; margin: 20px 0; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.05);
+        }
+
+        .highlight-card-title { font-weight: 700; color: #1d4ed8; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+
+        /* Bảng so sánh 3 thể */
+        .comparison-table-wrapper { overflow-x: auto; margin: 25px 0; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .comparison-table { width: 100%; border-collapse: collapse; background-color: #ffffff; font-size: 0.98rem; }
+        .comparison-table th { background-color: #1e40af; color: #ffffff; font-weight: 700; text-align: left; padding: 14px 16px; }
+        .comparison-table td { padding: 14px 16px; border-bottom: 1px solid #e2e8f0; }
+        .comparison-table tr:nth-child(even) { background-color: #f8fafc; }
+        .comparison-table tr:hover { background-color: #f1f5f9; }
+
+        /* Khung sơ đồ chuyển thể 3D cực đẹp & rõ ràng */
+        .diagram-box-clean {
+            background: linear-gradient(145deg, #0f172a, #1e293b); border-radius: 20px; padding: 30px 15px; margin: 35px 0; text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.35); border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .diagram-title-clean { color: #38bdf8; font-weight: 800; font-size: 1.3rem; margin-bottom: 25px; letter-spacing: 0.5px; }
+
+        /* Quy trình chuyển thể */
+        .phase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 20px 0; }
+        .phase-box { background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 16px; transition: transform 0.2s, border-color 0.2s; }
+        .phase-box:hover { transform: translateY(-3px); border-color: #3b82f6; }
+        .phase-name { font-weight: 700; color: #0f172a; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+
+        .key-point { position: relative; padding-left: 24px; margin-bottom: 10px; }
+        .key-point::before { content: "\f058"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; left: 0; top: 2px; color: #2563eb; font-size: 0.9rem; }
+        .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; background-color: #dbeafe; color: #1e40af; }
+
+        /* KHUNG HỌC LIỆU TƯƠNG TÁC (CTA BLOCK) */
+        .interactive-cta-card {
+            background: linear-gradient(135deg, #0f172a, #1e293b); border-radius: 16px; padding: 28px; margin-top: 40px; border: 1px solid #38bdf8; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.4); color: #f8fafc;
+        }
+
+        .cta-subtext { font-size: 1.05rem; color: #f8fafc; line-height: 1.6; margin-bottom: 20px; font-weight: 500; }
+        .cta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 15px; }
+        .cta-item { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s ease; }
+        .cta-item:hover { border-color: #38bdf8; background: rgba(56, 189, 248, 0.1); transform: translateY(-3px); }
+        .cta-icon { font-size: 1.8rem; margin-bottom: 8px; }
+        .cta-item-title { font-size: 1.05rem; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
+        .cta-item-desc { font-size: 0.85rem; color: #94a3b8; margin-bottom: 14px; }
+        .cta-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 18px; border-radius: 8px; font-weight: 700; font-size: 0.92rem; text-decoration: none; transition: all 0.2s ease; }
+        .btn-video { background: linear-gradient(90deg, #ef4444, #dc2626); color: #ffffff; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
+        .btn-video:hover { background: linear-gradient(90deg, #dc2626, #b91c1c); box-shadow: 0 6px 20px rgba(239, 68, 68, 0.6); }
+        .btn-quiz { background: linear-gradient(90deg, #0284c7, #2563eb); color: #ffffff; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4); }
+        .btn-quiz:hover { background: linear-gradient(90deg, #0369a1, #1d4ed8); box-shadow: 0 6px 20px rgba(2, 132, 199, 0.6); }
+        .btn-next { background: linear-gradient(90deg, #10b981, #059669); color: #ffffff; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+        .btn-next:hover { background: linear-gradient(90deg, #059669, #047857); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6); }
+
+        footer { text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.88rem; border-top: 1px solid var(--border); margin-top: 3rem; }
+        footer a { color: var(--primary); text-decoration: none; margin: 0 8px; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="../../index.html" class="logo">
+            <div class="logo-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+            <span>Vatli102 - CỔNG HỌC LIỆU SỐ TOÀN DIỆN</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="../../index.html"><i class="fa-solid fa-house"></i> Trang Chủ</a></li>
+            <li><a href="../../gioi-thieu.html"><i class="fa-solid fa-circle-info"></i> Giới Thiệu</a></li>
+            <li><a href="../../lien-he.html"><i class="fa-solid fa-envelope"></i> Liên Hệ</a></li>
+            <li><a href="../../chinh-sach-bao-mat.html"><i class="fa-solid fa-shield-halved"></i> Bảo Mật</a></li>
+            <li><a href="../../dieu-khoan.html"><i class="fa-solid fa-scale-balanced"></i> Điều Khoản</a></li>
+        </ul>
+    </nav>
+
+    <article class="blog-post-content">
+        
+        <!-- TIÊU ĐỀ BÀI ĐĂNG -->
+        <h1>BÀI 1: CẤU TRÚC CỦA CHẤT. SỰ CHUYỂN THỂ (VẬT LÍ 12)</h1>
+        
+        <div class="intro-lead">
+            📌 <strong>Tóm tắt trọng tâm bài học:</strong> Bài mở đầu Chương 1 Vật lí 12 (Bộ sách GDPT 2018) giúp học sinh nắm vững mô hình động học phân tử, bản chất cấu trúc 3 thể của chất (Rắn, Lỏng, Khí) và cơ chế lý giải các hiện tượng chuyển thể trong đời sống thực tế.
+        </div>
+
+        <!-- PHẦN I -->
+        <h2><i class="fa-solid fa-cubes"></i> I. MÔ HÌNH ĐỘNG HỌC PHÂN TỬ VỀ CẤU TRÚC CHẤT</h2>
+
+        <div class="highlight-card">
+            <div class="highlight-card-title"><i class="fa-solid fa-star"></i> 3 Nội dung cốt lõi của Mô hình động học phân tử</div>
+            <div class="key-point">
+                <strong>1. Cấu tạo phân tử:</strong> Các chất được cấu tạo từ các hạt riêng biệt gọi là phân tử (hoặc nguyên tử, ion).
+            </div>
+            <div class="key-point">
+                <strong>2. Chuyển động nhiệt:</strong> Các phân tử chuyển động không ngừng về mọi phía. Nhiệt độ của chất càng cao thì các phân tử chuyển động càng nhanh.
+            </div>
+            <div class="key-point">
+                <strong>3. Lực tương tác phân tử:</strong> Giữa các phân tử có lực hút và lực đẩy phân tử. Khoảng cách giữa các phân tử càng nhỏ thì lực tương tác càng mạnh.
+            </div>
+        </div>
+
+        <!-- PHẦN II -->
+        <h2><i class="fa-solid fa-layer-group"></i> II. CẤU TRÚC CỦA CHẤT Ở CÁC THỂ KHÁC NHAU</h2>
+
+        <p>Dựa vào khoảng cách và lực tương tác giữa các phân tử, vật chất xung quanh ta thường tồn tại ở 3 thể cơ bản: <strong>Rắn, Lỏng, Khí</strong>.</p>
+
+        <!-- BẢNG SO SÁNH 3 THỂ -->
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Đặc điểm so sánh</th>
+                        <th>Thể Rắn <span class="badge">Solid</span></th>
+                        <th>Thể Lỏng <span class="badge">Liquid</span></th>
+                        <th>Thể Khí <span class="badge">Gas</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Khoảng cách phân tử</strong></td>
+                        <td>Rất nhỏ (gần nhau)</td>
+                        <td>Lớn hơn thể rắn</td>
+                        <td>Rất lớn (xa nhau)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lực tương tác</strong></td>
+                        <td>Rất mạnh</td>
+                        <td>Yếu hơn thể rắn</td>
+                        <td>Rất yếu (coi như bằng 0)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Chuyển động phân tử</strong></td>
+                        <td>Chỉ dao động quanh vị trí cân bằng cố định</td>
+                        <td>Dao động quanh vị trí cân bằng luôn di chuyển</td>
+                        <td>Chuyển động hỗn loạn không ngừng</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hình dạng & Thể tích</strong></td>
+                        <td>Hình dạng & thể tích xác định</td>
+                        <td>Thể tích xác định, hình dạng phụ thuộc bình chứa</td>
+                        <td>Không có hình dạng và thể tích xác định</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>🔹 Phân loại Chất Rắn:</h3>
+        <ul>
+            <li><strong>Rắn kết tinh:</strong> Có cấu trúc mạng tinh thể tuần hoàn (ví dụ: muối ăn, thạch anh, kim loại). Có nhiệt độ nóng chảy xác định.</li>
+            <li><strong>Rắn vô định hình:</strong> Không có cấu trúc tinh thể (ví dụ: thủy tinh, cao su, nhựa đường). Không có nhiệt độ nóng chảy xác định.</li>
+        </ul>
+
+        <!-- PHẦN III -->
+        <h2><i class="fa-solid fa-arrows-rotate"></i> III. SỰ CHUYỂN THỂ CỦA CÁC CHẤT</h2>
+
+        <p>Khi thay đổi nhiệt độ hoặc áp suất, chất có thể chuyển từ thể này sang thể khác. Các quá trình chuyển thể bao gồm:</p>
+
+        <div class="phase-grid">
+            <div class="phase-box">
+                <div class="phase-name"><i class="fa-solid fa-temperature-arrow-up" style="color: #ef4444;"></i> 1. Sự Nóng Chảy</div>
+                <p>Quá trình chuyển từ <strong>thể rắn ➔ thể lỏng</strong>. Ngược lại là sự <em>Đông đặc (Kết tinh)</em>.</p>
+            </div>
+            <div class="phase-box">
+                <div class="phase-name"><i class="fa-solid fa-wind" style="color: #0ea5e9;"></i> 2. Sự Hóa Hơi</div>
+                <p>Quá trình chuyển từ <strong>thể lỏng ➔ thể khí/hơi</strong>. Gồm hai hình thức: <em>Sự bay hơi</em> (ở bề mặt) và <em>Sự sôi</em> (ở cả lòng chất lỏng).</p>
+            </div>
+            <div class="phase-box">
+                <div class="phase-name"><i class="fa-solid fa-droplet" style="color: #2563eb;"></i> 3. Sự Ngưng Tụ</div>
+                <p>Quá trình chuyển từ <strong>thể khí/hơi ➔ thể lỏng</strong> (ví dụ: giọt đọng sương trên lá cây vào buổi sáng).</p>
+            </div>
+            <div class="phase-box">
+                <div class="phase-name"><i class="fa-solid fa-snowflake" style="color: #06b6d4;"></i> 4. Sự Thăng Hoa</div>
+                <p>Quá trình chuyển trực tiếp từ <strong>thể rắn ➔ thể khí</strong> không qua thể lỏng (ví dụ: băng khô $CO_2$, viên băng phiến).</p>
+            </div>
+        </div>
+
+        <!-- SƠ ĐỒ CÁC QUÁ TRÌNH CHUYỂN THỂ CỦA CHẤT -->
+        <div class="diagram-box-clean">
+            <div class="diagram-title-clean"><i class="fa-solid fa-diagram-project"></i> SƠ ĐỒ CÁC QUÁ TRÌNH CHUYỂN THỂ CỦA CHẤT</div>
+            
+            <svg viewBox="0 0 780 540" style="width:100%; max-width:720px; height:auto;">
+                <defs>
+                    <radialGradient id="gradGas" cx="35%" cy="35%" r="65%">
+                        <stop offset="0%" stop-color="#fef08a"/>
+                        <stop offset="60%" stop-color="#eab308"/>
+                        <stop offset="100%" stop-color="#854d0e"/>
+                    </radialGradient>
+
+                    <radialGradient id="gradSolid" cx="35%" cy="35%" r="65%">
+                        <stop offset="0%" stop-color="#bae6fd"/>
+                        <stop offset="60%" stop-color="#0284c7"/>
+                        <stop offset="100%" stop-color="#075985"/>
+                    </radialGradient>
+
+                    <radialGradient id="gradLiquid" cx="35%" cy="35%" r="65%">
+                        <stop offset="0%" stop-color="#93c5fd"/>
+                        <stop offset="60%" stop-color="#2563eb"/>
+                        <stop offset="100%" stop-color="#1e3a8a"/>
+                    </radialGradient>
+
+                    <radialGradient id="shadowBottom" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="rgba(0,0,0,0.6)"/>
+                        <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+                    </radialGradient>
+
+                    <marker id="mRed" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#ef4444"/>
+                    </marker>
+                    <marker id="mBlue" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#38bdf8"/>
+                    </marker>
+                    <marker id="mGold" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b"/>
+                    </marker>
+                    <marker id="mPurple" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#c084fc"/>
+                    </marker>
+                </defs>
+
+                <!-- 1. ĐỈNH TRÊN: THỂ KHÍ -->
+                <ellipse cx="390" cy="115" rx="60" ry="15" fill="url(#shadowBottom)"/>
+                <circle cx="390" cy="75" r="50" fill="url(#gradGas)"/>
+                <circle cx="390" cy="75" r="50" fill="none" stroke="#fef08a" stroke-width="1.5" opacity="0.6"/>
+                <text x="390" y="72" fill="#ffffff" font-size="18" font-weight="800" text-anchor="middle" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));">THỂ KHÍ</text>
+                <text x="390" y="90" fill="#fef08a" font-size="12" font-weight="600" text-anchor="middle">(Gas)</text>
+
+                <!-- 2. GÓC DƯỚI TRÁI: THỂ RẮN -->
+                <ellipse cx="130" cy="465" rx="60" ry="15" fill="url(#shadowBottom)"/>
+                <circle cx="130" cy="425" r="50" fill="url(#gradSolid)"/>
+                <circle cx="130" cy="425" r="50" fill="none" stroke="#7dd3fc" stroke-width="1.5" opacity="0.6"/>
+                <text x="130" y="422" fill="#ffffff" font-size="18" font-weight="800" text-anchor="middle" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));">THỂ RẮN</text>
+                <text x="130" y="440" fill="#bae6fd" font-size="12" font-weight="600" text-anchor="middle">(Solid)</text>
+
+                <!-- 3. GÓC DƯỚI PHẢI: THỂ LỎNG -->
+                <ellipse cx="650" cy="465" rx="60" ry="15" fill="url(#shadowBottom)"/>
+                <circle cx="650" cy="425" r="50" fill="url(#gradLiquid)"/>
+                <circle cx="650" cy="425" r="50" fill="none" stroke="#93c5fd" stroke-width="1.5" opacity="0.6"/>
+                <text x="650" y="422" fill="#ffffff" font-size="18" font-weight="800" text-anchor="middle" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));">THỂ LỎNG</text>
+                <text x="650" y="440" fill="#bfdbfe" font-size="12" font-weight="600" text-anchor="middle">(Liquid)</text>
+
+                <!-- CẠNH ĐÁY: RẮN <--> LỎNG -->
+                <path d="M 195 400 L 585 400" stroke="#ef4444" stroke-width="3" marker-end="url(#mRed)"/>
+                <text x="390" y="392" fill="#f87171" font-size="14" font-weight="bold" text-anchor="middle" style="filter: drop-shadow(0 1px 3px rgba(0,0,0,0.9));">🔥 Nóng chảy ➔</text>
+
+                <path d="M 585 450 L 195 450" stroke="#38bdf8" stroke-width="3" marker-end="url(#mBlue)"/>
+                <text x="390" y="468" fill="#38bdf8" font-size="14" font-weight="bold" text-anchor="middle" style="filter: drop-shadow(0 1px 3px rgba(0,0,0,0.9));">❄️ Đông đặc ➔</text>
+
+                <!-- CẠNH TRÁI: RẮN <--> KHÍ -->
+                <path d="M 140 365 L 320 125" stroke="#f59e0b" stroke-width="3.5" marker-end="url(#mGold)"/>
+                <g transform="translate(205, 230) rotate(-53.4)">
+                    <text x="0" y="-10" fill="#fbbf24" font-size="14" font-weight="bold" text-anchor="middle" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">✨ Thăng hoa ➔</text>
+                </g>
+
+                <path d="M 370 145 L 190 385" stroke="#c084fc" stroke-width="3.5" marker-end="url(#mPurple)"/>
+                <g transform="translate(305, 280) rotate(-53.4)">
+                    <text x="0" y="20" fill="#c084fc" font-size="14" font-weight="bold" text-anchor="middle" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">❄️ Ngưng kết ➔</text>
+                </g>
+
+                <!-- CẠNH PHẢI: LỎNG <--> KHÍ -->
+                <path d="M 640 365 L 460 125" stroke="#ef4444" stroke-width="3.5" marker-end="url(#mRed)"/>
+                <g transform="translate(575, 230) rotate(53.4)">
+                    <text x="0" y="-10" fill="#f87171" font-size="14" font-weight="bold" text-anchor="middle" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">♨️ Hóa hơi ➔</text>
+                </g>
+
+                <path d="M 410 145 L 590 385" stroke="#38bdf8" stroke-width="3.5" marker-end="url(#mBlue)"/>
+                <g transform="translate(475, 280) rotate(53.4)">
+                    <text x="0" y="20" fill="#38bdf8" font-size="14" font-weight="bold" text-anchor="middle" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">💧 Ngưng tụ ➔</text>
+                </g>
+            </svg>
+        </div>
+
+        <!-- TÓM TẮT DẠNG THẺ GHI NHỚ -->
+        <div class="highlight-card" style="background: linear-gradient(135deg, #fef3c7, #fffbebe); border-color: #fde68a;">
+            <div class="highlight-card-title" style="color: #b45309;"><i class="fa-solid fa-lightbulb"></i> GHI NHỚ NHANH ĐỂ LÀM BÀI TẬP TRẮC NGHIỆM</div>
+            <div class="key-point" style="color: #78350f;">
+                Nhiệt độ càng cao $\rightarrow$ Phân tử chuyển động càng nhanh $\rightarrow$ Động năng phân tử càng lớn.
+            </div>
+            <div class="key-point" style="color: #78350f;">
+                Chất rắn kết tinh có nhiệt độ nóng chảy xác định; Chất rắn vô định hình không có nhiệt độ nóng chảy xác định.
+            </div>
+            <div class="key-point" style="color: #78350f;">
+                Sự bay hơi xảy ra ở mọi nhiệt độ trên bề mặt chất lỏng; Sự sôi chỉ xảy ra ở nhiệt độ sôi xác định trong lòng và trên bề mặt chất lỏng.
+            </div>
+        </div>
+
+        <!-- KHUNG HỌC LIỆU TƯƠNG TÁC (CTA BLOCK) -->
+        <div class="interactive-cta-card">
+            <p class="cta-subtext">Sau khi đọc xong bài tóm tắt lý thuyết, hãy xem video bài giảng và thử sức làm bài tập tự luyện để củng cố ngay kiến thức nhé!</p>
+            
+            <div class="cta-grid">
+                <!-- ITEM 1: VIDEO BÀI GIẢNG -->
+                <div class="cta-item">
+                    <div>
+                        <div class="cta-icon" style="color: #ef4444;"><i class="fa-solid fa-circle-play"></i></div>
+                        <div class="cta-item-title">Video Bài Giảng Sinh Động</div>
+                        <div class="cta-item-desc">Mô phỏng sinh động chuyển động nhiệt phân tử và các trạng thái thể chất trong đời sống.</div>
+                    </div>
+                    <a href="https://www.youtube.com/@vatli102" class="cta-button btn-video" target="_blank">
+                        <i class="fa-solid fa-play"></i> Xem Video Bài Giảng
+                    </a>
+                </div>
+
+                <!-- ITEM 2: BÀI TẬP ONLINE -->
+                <div class="cta-item">
+                    <div>
+                        <div class="cta-icon" style="color: #38bdf8;"><i class="fa-solid fa-laptop-code"></i></div>
+                        <div class="cta-item-title">Bài Tập Trắc Nghiệm Online</div>
+                        <div class="cta-item-desc">Hệ thống trắc nghiệm tự luyện 17 câu (Chuẩn GDPT 2018) có chấm điểm & giải chi tiết.</div>
+                    </div>
+                    <a href="./TracNghiem_Online.html" class="cta-button btn-quiz">
+                        <i class="fa-solid fa-pen-to-square"></i> Làm Bài Tập Tự Luyện
+                    </a>
+                </div>
+
+                <!-- ITEM 3: BÀI ĐỌC TIẾP THEO -->
+                <div class="cta-item">
+                    <div>
+                        <div class="cta-icon" style="color: #10b981;"><i class="fa-solid fa-circle-arrow-right"></i></div>
+                        <div class="cta-item-title">Bài Học Tiếp Theo</div>
+                        <div class="cta-item-desc">Bài 2: Nội năng và Định luật I của Nhiệt động lực học (Vật lí 12).</div>
+                    </div>
+                    <a href="../Bai2/" class="cta-button btn-next">
+                        <i class="fa-solid fa-book-open"></i> Đọc Bài 2 Tiếp Theo
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </article>
+
+    <footer>
+        <p>&copy; 2026 Vatli102 (vatli102.com). Bản quyền thuộc về ban quản trị.</p>
+        <p style="margin-top: 6px;">
+            <a href="../../gioi-thieu.html">Giới thiệu</a> |
+            <a href="../../lien-he.html">Liên hệ</a> |
+            <a href="../../chinh-sach-bao-mat.html">Chính sách bảo mật</a> |
+            <a href="../../dieu-khoan.html">Điều khoản sử dụng</a>
+        </p>
+    </footer>
+
+</body>
+</html>
