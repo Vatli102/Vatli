@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thí Nghiệm Ảo: Đo Nhiệt Dung Riêng Của Nước - Vật Lí 12</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" type="image/png">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- MathJax -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; color: #f8fafc; text-align: justify; }
+        p { text-align: justify; }
+        .glass-card { background: rgba(30, 41, 59, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .step-active { background-color: #2563eb !important; color: #ffffff !important; border-color: #60a5fa !important; }
+        .step-done { background-color: #059669 !important; color: #ffffff !important; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #1e293b; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col p-3 sm:p-6">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="max-w-7xl mx-auto w-full mb-6">
+        <div class="glass-card rounded-3xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-2xl">
+            <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center text-white text-2xl shadow-lg shadow-blue-500/30">
+                    <i class="fa-solid fa-flask-vial"></i>
+                </div>
+                <div>
+                    <span class="text-[11px] font-extrabold tracking-wider uppercase text-cyan-400">Vật Lí 12 — Chương I: Vật Lí Nhiệt</span>
+                    <h1 class="text-xl sm:text-2xl font-extrabold text-white">THÍ NGHIỆM ẢO: ĐO NHIỆT DUNG RIÊNG CỦA NƯỚC</h1>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <a href="ly-thuyet.html" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs rounded-xl border border-slate-700 transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-book-open"></i> Xem Bài viết bài giảng
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN DASHBOARD -->
+    <main class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
+        
+        <!-- THÍ NGHIỆM & MÔ PHỎNG (COL-8) -->
+        <div class="lg:col-span-8 space-y-6 flex flex-col">
+            
+            <!-- THANH TIẾN TRÌNH THÍ NGHIỆM 4 BƯỚC -->
+            <div class="glass-card rounded-2xl p-3.5 flex items-center justify-between text-xs font-bold gap-2 overflow-x-auto custom-scrollbar">
+                <div id="stepBtn1" class="step-btn step-active px-3 py-2 rounded-xl border border-slate-700 flex items-center gap-2 shrink-0">
+                    <span class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[11px]">1</span>
+                    <span>⚖️ Chuẩn bị & Cân nước</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-slate-600 text-xs"></i>
+                <div id="stepBtn2" class="step-btn px-3 py-2 rounded-xl border border-slate-800 text-slate-400 flex items-center gap-2 shrink-0">
+                    <span class="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-[11px]">2</span>
+                    <span>⚡ Cấu hình P & $\tau$</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-slate-600 text-xs"></i>
+                <div id="stepBtn3" class="step-btn px-3 py-2 rounded-xl border border-slate-800 text-slate-400 flex items-center gap-2 shrink-0">
+                    <span class="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-[11px]">3</span>
+                    <span>🔥 Tiến hành đun nóng</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-slate-600 text-xs"></i>
+                <div id="stepBtn4" class="step-btn px-3 py-2 rounded-xl border border-slate-800 text-slate-400 flex items-center gap-2 shrink-0">
+                    <span class="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-[11px]">4</span>
+                    <span>📊 Kết quả & Tính $c$</span>
+                </div>
+            </div>
+
+            <!-- ANIMAION CANVAS & BÌNH NHIỆT LƯỢNG KẾ -->
+            <div class="glass-card rounded-3xl p-4 flex flex-col items-center justify-center relative min-h-[380px] overflow-hidden">
+                <div class="absolute top-4 left-4 z-10 flex items-center gap-2">
+                    <span class="px-3 py-1 rounded-full bg-slate-900/80 text-cyan-400 text-xs font-bold border border-cyan-500/30 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span> Mô Phỏng Trực Quan Canvas 2D/3D
+                    </span>
+                </div>
+
+                <!-- CANVAS CHÍNH -->
+                <canvas id="simCanvas" width="680" height="340" class="w-full max-w-[680px] h-[340px] rounded-2xl bg-slate-900/90 shadow-inner border border-slate-800/80"></canvas>
+            </div>
+
+            <!-- BẢNG ĐIỀU KHIỂN & ĐỒNG HỒ ĐIỆN TỬ -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div class="glass-card p-3 rounded-2xl text-center space-y-1">
+                    <span class="text-[11px] text-slate-400 font-medium block">⚖️ Khối Lượng Nước ($m$)</span>
+                    <span id="dispMass" class="text-lg font-extrabold text-cyan-400 font-mono">0.20 kg</span>
+                </div>
+                <div class="glass-card p-3 rounded-2xl text-center space-y-1">
+                    <span class="text-[11px] text-slate-400 font-medium block">⚡ Công Suất Đun ($P$)</span>
+                    <span id="dispPower" class="text-lg font-extrabold text-amber-400 font-mono">50 W</span>
+                </div>
+                <div class="glass-card p-3 rounded-2xl text-center space-y-1">
+                    <span class="text-[11px] text-slate-400 font-medium block">⏱️ Thời Gian ($\tau$)</span>
+                    <span id="dispTimer" class="text-lg font-extrabold text-emerald-400 font-mono">0 s</span>
+                </div>
+                <div class="glass-card p-3 rounded-2xl text-center space-y-1">
+                    <span class="text-[11px] text-slate-400 font-medium block">🌡️ Nhiệt Độ Nước ($T$)</span>
+                    <span id="dispTemp" class="text-lg font-extrabold text-rose-400 font-mono">25.0 °C</span>
+                </div>
+            </div>
+
+            <!-- NÚT ĐIỀU KHIỂN THÍ NGHIỆM -->
+            <div class="glass-card p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <button id="btnStart" onclick="startHeating()" class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-blue-500/25 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-play"></i> Bắt Đầu Đun Nóng
+                    </button>
+                    <button id="btnPause" onclick="pauseHeating()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl border border-slate-700 transition-all flex items-center gap-1.5" disabled>
+                        <i class="fa-solid fa-pause"></i> Tạm Dừng
+                    </button>
+                    <button onclick="resetExperiment()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl border border-slate-700 transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-rotate-left"></i> Làm Lại
+                    </button>
+                </div>
+
+                <div class="flex items-center gap-3 text-xs">
+                    <label class="text-slate-400 font-medium">Tốc độ mô phỏng:</label>
+                    <select id="simSpeed" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-slate-200 focus:outline-none">
+                        <option value="1">1x (Thời gian thật)</option>
+                        <option value="5" selected>5x (Nhanh vừa)</option>
+                        <option value="15">15x (Siêu nhanh)</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- BÁO CÁO & BIỂU ĐỒ (COL-4) -->
+        <div class="lg:col-span-4 space-y-6 flex flex-col">
+            
+            <!-- SLIDERS CẤU HÌNH -->
+            <div class="glass-card rounded-3xl p-5 space-y-4">
+                <h3 class="font-extrabold text-sm text-cyan-400 flex items-center gap-2">
+                    <i class="fa-solid fa-sliders"></i> THAM SỐ THÍ NGHIỆM
+                </h3>
+
+                <!-- Slider Khối Lượng -->
+                <div class="space-y-1.5">
+                    <div class="flex justify-between text-xs font-semibold">
+                        <span class="text-slate-300">Khối lượng nước ($m$):</span>
+                        <span id="sliderMassVal" class="text-cyan-400 font-mono">0.20 kg</span>
+                    </div>
+                    <input type="range" id="inputMass" min="0.1" max="0.5" step="0.05" value="0.20" oninput="updateSliders()" class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500">
+                </div>
+
+                <!-- Slider Công Suất -->
+                <div class="space-y-1.5">
+                    <div class="flex justify-between text-xs font-semibold">
+                        <span class="text-slate-300">Công suất đun ($P$):</span>
+                        <span id="sliderPowerVal" class="text-amber-400 font-mono">50 W</span>
+                    </div>
+                    <input type="range" id="inputPower" min="20" max="100" step="5" value="50" oninput="updateSliders()" class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-500">
+                </div>
+
+                <!-- Slider Thời Gian Đun -->
+                <div class="space-y-1.5">
+                    <div class="flex justify-between text-xs font-semibold">
+                        <span class="text-slate-300">Thời gian đun mục tiêu ($\tau$):</span>
+                        <span id="sliderTimeVal" class="text-emerald-400 font-mono">300 s (5 phút)</span>
+                    </div>
+                    <input type="range" id="inputTargetTime" min="60" max="600" step="30" value="300" oninput="updateSliders()" class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                </div>
+            </div>
+
+            <!-- BIỂU ĐỒ ĐỒ THỊ NHIỆT ĐỘ -->
+            <div class="glass-card rounded-3xl p-4 space-y-2">
+                <h3 class="font-extrabold text-xs text-slate-300 flex items-center gap-1.5">
+                    <i class="fa-solid fa-chart-line text-rose-400"></i> Đồ Thị Nhiệt Độ $T$ theo Thời Gian $\tau$
+                </h3>
+                <div class="h-[180px] w-full">
+                    <canvas id="tempChart"></canvas>
+                </div>
+            </div>
+
+            <!-- KHUNG TÍNH TOÁN BÁO CÁO KẾT QUẢ -->
+            <div class="glass-card rounded-3xl p-5 space-y-3 flex-1 flex flex-col justify-between">
+                <div>
+                    <h3 class="font-extrabold text-sm text-emerald-400 flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-calculator"></i> BÁO CÁO TÍNH TOÁN $c$
+                    </h3>
+
+                    <div class="space-y-2 text-xs">
+                        <div class="p-2.5 bg-slate-900/80 rounded-xl border border-slate-800 space-y-1">
+                            <span class="text-slate-400 block font-medium">1. Nhiệt lượng tỏa ra từ dây nung:</span>
+                            <span id="calcQ" class="font-bold text-amber-400 font-mono">$Q = P \cdot \tau = 50 \times 0 = 0\text{ J}$</span>
+                        </div>
+
+                        <div class="p-2.5 bg-slate-900/80 rounded-xl border border-slate-800 space-y-1">
+                            <span class="text-slate-400 block font-medium">2. Độ tăng nhiệt độ nước ($\Delta T$):</span>
+                            <span id="calcDeltaT" class="font-bold text-rose-400 font-mono">$\Delta T = t_2 - t_1 = 25.0 - 25.0 = 0.0^\circ\text{C}$</span>
+                        </div>
+
+                        <div class="p-3 bg-gradient-to-r from-blue-950 to-indigo-950 rounded-xl border border-blue-800/60 space-y-1">
+                            <span class="text-blue-300 block font-extrabold">3. Kết quả Nhiệt dung riêng ($c$):</span>
+                            <span id="calcResultC" class="font-extrabold text-base text-cyan-300 font-mono">$c = \frac{Q}{m \cdot \Delta T} = \text{--- J/kg.K}$</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sai số so với trị lý thuyết -->
+                <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+                    <span class="text-slate-400 font-medium">Trị số chuẩn ($c_{\text{nước}}$):</span>
+                    <span class="font-bold text-slate-200 font-mono">4180 J/kg.K</span>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="max-w-7xl mx-auto w-full text-center text-xs text-slate-500 py-4 mt-6">
+        <p>Vatli102.com — Thí nghiệm ảo đo Nhiệt dung riêng của nước chuẩn GDPT 2018</p>
+    </footer>
+
+    <!-- SIMULATION JAVASCRIPT CODE -->
+    <script>
+        // State variables
+        let isRunning = false;
+        let animId = null;
+        let mass = 0.20; // kg
+        let power = 50; // W
+        let targetTime = 300; // s
+        let currentTime = 0; // s
+        let tempInitial = 25.0; // deg C
+        let currentTemp = 25.0; // deg C
+        const C_THEORETICAL = 4180; // J/kg.K
+
+        // Canvas & Context
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Chart.js instance
+        let chartInstance = null;
+
+        // Initialize Chart
+        function initChart() {
+            const chartCtx = document.getElementById('tempChart').getContext('2d');
+            chartInstance = new Chart(chartCtx, {
+                type: 'line',
+                data: {
+                    labels: [0],
+                    datasets: [{
+                        label: 'Nhiệt độ T (°C)',
+                        data: [25.0],
+                        borderColor: '#f43f5e',
+                        backgroundColor: 'rgba(244, 63, 94, 0.15)',
+                        borderWidth: 2.5,
+                        fill: true,
+                        tension: 0.2,
+                        pointRadius: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#94a3b8', font: { size: 10 } },
+                            title: { display: true, text: 'Thời gian τ (s)', color: '#64748b', font: { size: 10 } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#94a3b8', font: { size: 10 } },
+                            title: { display: true, text: 'Nhiệt độ T (°C)', color: '#64748b', font: { size: 10 } }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // Update Sliders Display
+        function updateSliders() {
+            if (isRunning) return;
+            mass = parseFloat(document.getElementById('inputMass').value);
+            power = parseFloat(document.getElementById('inputPower').value);
+            targetTime = parseInt(document.getElementById('inputTargetTime').value);
+
+            document.getElementById('sliderMassVal').innerText = mass.toFixed(2) + ' kg';
+            document.getElementById('sliderPowerVal').innerText = power + ' W';
+            document.getElementById('sliderTimeVal').innerText = targetTime + ' s (' + (targetTime/60).toFixed(1) + ' phút)';
+
+            document.getElementById('dispMass').innerText = mass.toFixed(2) + ' kg';
+            document.getElementById('dispPower').innerText = power + ' W';
+            
+            resetExperiment();
+        }
+
+        // Particles for Water animation
+        let waterBubbles = [];
+        function initBubbles() {
+            waterBubbles = [];
+            for (let i = 0; i < 25; i++) {
+                waterBubbles.push({
+                    x: 240 + Math.random() * 200,
+                    y: 160 + Math.random() * 100,
+                    r: 1.5 + Math.random() * 3,
+                    speed: 0.5 + Math.random() * 1.5,
+                    alpha: 0.2 + Math.random() * 0.5
+                });
+            }
+        }
+
+        // Draw Simulation on Canvas
+        function drawSimulation() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 1. Draw Stand & Table
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(150, 290, 380, 16); // Table top
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(180, 306, 20, 34); // Table leg L
+            ctx.fillRect(480, 306, 20, 34); // Table leg R
+
+            // 2. Draw Digital Balance under Calorimeter
+            ctx.fillStyle = '#475569';
+            ctx.beginPath();
+            ctx.roundRect(220, 275, 240, 15, 4);
+            ctx.fill();
+
+            // Balance Screen
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(300, 278, 80, 10);
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = '10px monospace';
+            ctx.fillText((mass * 1000).toFixed(0) + ' g', 325, 286);
+
+            // 3. Draw Calorimeter (Outer Insulated Vessel)
+            ctx.fillStyle = '#64748b';
+            ctx.beginPath();
+            ctx.roundRect(230, 110, 220, 165, 16);
+            ctx.fill();
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Inner Vessel
+            ctx.fillStyle = '#1e293b';
+            ctx.beginPath();
+            ctx.roundRect(240, 120, 200, 145, 12);
+            ctx.fill();
+
+            // Water Level inside (Height based on mass)
+            const waterHeight = Math.min(130, 60 + mass * 150);
+            const waterTopY = 260 - waterHeight;
+
+            // Water Gradient
+            const waterGrad = ctx.createLinearGradient(0, waterTopY, 0, 260);
+            if (isRunning) {
+                waterGrad.addColorStop(0, 'rgba(56, 189, 248, 0.6)');
+                waterGrad.addColorStop(1, 'rgba(239, 68, 68, 0.4)');
+            } else {
+                waterGrad.addColorStop(0, 'rgba(56, 189, 248, 0.5)');
+                waterGrad.addColorStop(1, 'rgba(3, 105, 161, 0.7)');
+            }
+            ctx.fillStyle = waterGrad;
+            ctx.beginPath();
+            ctx.roundRect(244, waterTopY, 192, waterHeight, [0, 0, 8, 8]);
+            ctx.fill();
+
+            // Water surface line
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(244, waterTopY);
+            ctx.lineTo(436, waterTopY);
+            ctx.stroke();
+
+            // 4. Draw Animated Bubbles (if heating)
+            if (isRunning) {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                waterBubbles.forEach(b => {
+                    b.y -= b.speed * (1 + (currentTemp - 25) / 50);
+                    if (b.y < waterTopY + 5) {
+                        b.y = 250;
+                        b.x = 250 + Math.random() * 180;
+                    }
+                    ctx.beginPath();
+                    ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            }
+
+            // 5. Draw Heating Element (Dây Nung Điện Trở)
+            ctx.strokeStyle = isRunning ? '#f97316' : '#94a3b8';
+            ctx.lineWidth = isRunning ? 4 : 3;
+            if (isRunning) {
+                ctx.shadowColor = '#f97316';
+                ctx.shadowBlur = 12;
+            }
+            ctx.beginPath();
+            ctx.moveTo(310, 80);
+            ctx.lineTo(310, 180);
+            // Coil loops
+            for (let y = 180; y <= 240; y += 12) {
+                ctx.arc(320, y, 10, 0, Math.PI * 2);
+            }
+            ctx.lineTo(330, 80);
+            ctx.stroke();
+            ctx.shadowBlur = 0; // reset glow
+
+            // 6. Draw Stirrer (Cần Khuấy Nước)
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.moveTo(370, 75);
+            ctx.lineTo(370, 245);
+            ctx.lineTo(390, 245);
+            ctx.lineTo(350, 245);
+            ctx.stroke();
+
+            // 7. Draw Thermometer (Nhiệt Kế Điện Tử)
+            // Glass tube
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.fillRect(270, 60, 12, 180);
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(270, 60, 12, 180);
+
+            // Red Mercury column
+            const tempRatio = Math.min(1, (currentTemp - 20) / 80);
+            const mercuryHeight = tempRatio * 150;
+            ctx.fillStyle = '#f43f5e';
+            ctx.fillRect(273, 235 - mercuryHeight, 6, mercuryHeight + 5);
+
+            // Thermometer Bulb
+            ctx.beginPath();
+            ctx.arc(276, 240, 9, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Digital HUD display for temperature on top of thermometer
+            ctx.fillStyle = '#0f172a';
+            ctx.beginPath();
+            ctx.roundRect(250, 25, 52, 26, 6);
+            ctx.fill();
+            ctx.strokeStyle = '#f43f5e';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            ctx.fillStyle = '#fb7185';
+            ctx.font = 'bold 11px monospace';
+            ctx.fillText(currentTemp.toFixed(1) + '°C', 255, 42);
+
+            // 8. Draw Wattmeter (Oát Kế) & Wires
+            ctx.fillStyle = '#1e293b';
+            ctx.beginPath();
+            ctx.roundRect(50, 140, 110, 90, 10);
+            ctx.fill();
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.fillStyle = '#f59e0b';
+            ctx.font = 'bold 12px Plus Jakarta Sans';
+            ctx.fillText('OÁT KẾ (W)', 65, 160);
+
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(65, 170, 80, 28);
+            ctx.fillStyle = '#fbbf24';
+            ctx.font = 'bold 15px monospace';
+            ctx.fillText(power + ' W', 82, 190);
+
+            // Connecting Wires from Wattmeter to Heating Coil
+            ctx.strokeStyle = isRunning ? '#f59e0b' : '#64748b';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.moveTo(160, 175);
+            ctx.bezierCurveTo(200, 175, 220, 80, 310, 80);
+            ctx.stroke();
+        }
+
+        // Start Heating Simulation Loop
+        function startHeating() {
+            if (isRunning) return;
+            isRunning = true;
+            document.getElementById('btnStart').disabled = true;
+            document.getElementById('btnPause').disabled = false;
+            document.getElementById('btnStart').classList.add('opacity-50');
+            document.getElementById('btnPause').classList.remove('opacity-50');
+
+            // Update Steps UI
+            setStepActive(3);
+
+            let lastTime = performance.now();
+            function loop(now) {
+                if (!isRunning) return;
+                const dt = (now - lastTime) / 1000;
+                lastTime = now;
+
+                const speedMultiplier = parseFloat(document.getElementById('simSpeed').value);
+                currentTime += dt * speedMultiplier;
+
+                if (currentTime >= targetTime) {
+                    currentTime = targetTime;
+                    isRunning = false;
+                    setStepActive(4);
+                    document.getElementById('btnStart').disabled = false;
+                    document.getElementById('btnPause').disabled = true;
+                }
+
+                // Physics calculation: Q = P * tau = m * c * deltaT => deltaT = (P * tau) / (m * c)
+                // c_water = 4180
+                const deltaT = (power * currentTime) / (mass * C_THEORETICAL);
+                currentTemp = tempInitial + deltaT;
+
+                // Update UI Display Elements
+                document.getElementById('dispTimer').innerText = currentTime.toFixed(0) + ' s';
+                document.getElementById('dispTemp').innerText = currentTemp.toFixed(1) + ' °C';
+
+                // Calculate Results
+                const totalQ = power * currentTime;
+                const deltaTVal = currentTemp - tempInitial;
+                document.getElementById('calcQ').innerHTML = `$Q = P \\cdot \\tau = ${power} \\times ${currentTime.toFixed(0)} = ${totalQ.toFixed(0)}\\text{ J}$`;
+                document.getElementById('calcDeltaT').innerHTML = `$\\Delta T = t_2 - t_1 = ${currentTemp.toFixed(1)} - ${tempInitial.toFixed(1)} = ${deltaTVal.toFixed(1)}^\\circ\\text{C}$`;
+
+                if (deltaTVal > 0) {
+                    const calculatedC = totalQ / (mass * deltaTVal);
+                    document.getElementById('calcResultC').innerHTML = `$c = \\frac{Q}{m \\cdot \\Delta T} = \\mathbf{${calculatedC.toFixed(0)}\\text{ J/kg.K}}$`;
+                }
+
+                if (window.MathJax && window.MathJax.typesetPromise) {
+                    window.MathJax.typesetPromise();
+                }
+
+                // Update Chart
+                if (Math.floor(currentTime) % 5 === 0) {
+                    chartInstance.data.labels.push(currentTime.toFixed(0));
+                    chartInstance.data.datasets[0].data.push(currentTemp.toFixed(1));
+                    chartInstance.update('none');
+                }
+
+                drawSimulation();
+
+                if (isRunning) {
+                    animId = requestAnimationFrame(loop);
+                }
+            }
+            animId = requestAnimationFrame(loop);
+        }
+
+        function pauseHeating() {
+            isRunning = false;
+            document.getElementById('btnStart').disabled = false;
+            document.getElementById('btnPause').disabled = true;
+            document.getElementById('btnStart').classList.remove('opacity-50');
+            document.getElementById('btnPause').classList.add('opacity-50');
+            if (animId) cancelAnimationFrame(animId);
+            drawSimulation();
+        }
+
+        function resetExperiment() {
+            pauseHeating();
+            currentTime = 0;
+            currentTemp = tempInitial;
+            setStepActive(1);
+
+            document.getElementById('dispTimer').innerText = '0 s';
+            document.getElementById('dispTemp').innerText = '25.0 °C';
+
+            document.getElementById('calcQ').innerHTML = '$Q = P \\cdot \\tau = 0\\text{ J}$';
+            document.getElementById('calcDeltaT').innerHTML = '$\\Delta T = 0.0^\\circ\\text{C}$';
+            document.getElementById('calcResultC').innerHTML = '$c = \\text{--- J/kg.K}$';
+
+            chartInstance.data.labels = [0];
+            chartInstance.data.datasets[0].data = [25.0];
+            chartInstance.update();
+
+            initBubbles();
+            drawSimulation();
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        function setStepActive(stepNum) {
+            for (let i = 1; i <= 4; i++) {
+                const btn = document.getElementById('stepBtn' + i);
+                btn.className = 'step-btn px-3 py-2 rounded-xl border flex items-center gap-2 shrink-0 ';
+                if (i < stepNum) {
+                    btn.className += 'step-done border-emerald-600';
+                } else if (i === stepNum) {
+                    btn.className += 'step-active border-blue-500';
+                } else {
+                    btn.className += 'border-slate-800 text-slate-400';
+                }
+            }
+        }
+
+        // Init on page load
+        window.addEventListener('load', () => {
+            initChart();
+            initBubbles();
+            drawSimulation();
+        });
+    </script>
+</body>
+</html>
