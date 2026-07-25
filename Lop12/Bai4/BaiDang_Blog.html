@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tóm Tắt Lý Thuyết Vật Lí 12 - Bài 4: Nhiệt Dung Riêng</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .blog-post-content {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #1e293b;
+            line-height: 1.8;
+            font-size: 1.05rem;
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        .blog-post-content p {
+            text-align: justify;
+            margin-bottom: 14px;
+        }
+
+        .blog-post-content h1 {
+            color: #0f172a;
+            font-size: 2.1rem;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 16px;
+            text-align: center;
+            background: linear-gradient(135deg, #1e3a8a, #0284c7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .blog-post-content h2 {
+            color: #1e3a8a;
+            font-size: 1.45rem;
+            font-weight: 800;
+            margin-top: 28px;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 2.5px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .blog-post-content h3 {
+            color: #0369a1;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .highlight-card {
+            background: #f0f9ff;
+            border-left: 4px solid #0284c7;
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin: 18px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .highlight-card-title {
+            font-weight: 800;
+            color: #0369a1;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 14px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
+        }
+
+        .formula-box .formula-title {
+            color: #38bdf8;
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .table-custom th {
+            background-color: #1e3a8a;
+            color: #ffffff;
+            font-weight: 700;
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .table-custom td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            background-color: #ffffff;
+        }
+
+        .table-custom tr:nth-child(even) td {
+            background-color: #f8fafc;
+        }
+
+        .key-point {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 8px;
+        }
+
+        .key-point::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #0284c7;
+            font-weight: 800;
+        }
+
+        .example-box {
+            background-color: #fffbebf5;
+            border: 1px solid #fde68a;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 20px 0;
+        }
+
+        .example-title {
+            color: #b45309;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+    </style>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+
+    <!-- ==================== HEADER NAVBAR CHI TIẾT BÀI VIẾT ==================== -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm mb-6">
+        <div class="max-w-4xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
+            <a href="/" class="flex items-center gap-2 group text-decoration-none">
+                <img src="/favicon.svg" alt="Vatli102.com" class="w-8 h-8 rounded-lg shadow-sm">
+                <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-600 bg-clip-text text-transparent">Vatli102.com</span>
+            </a>
+            <ul class="flex items-center gap-4 text-xs sm:text-sm font-semibold text-slate-600 list-none m-0 p-0">
+                <li><a href="/" class="hover:text-blue-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
+                <li><a href="/gioi-thieu.html" class="hover:text-blue-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a></li>
+                <li><a href="/lien-he.html" class="hover:text-blue-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-envelope"></i> Liên hệ</a></li>
+            </ul>
+        </div>
+    </header>
+
+<div class="blog-post-content">
+        
+        <!-- TIÊU ĐỀ BÀI VIẾT -->
+        <h1>BÀI 4: NHIỆT DUNG RIÊNG (VẬT LÍ 12)</h1>
+
+        <div class="highlight-card">
+            <div class="highlight-card-title"><i class="fa-solid fa-bookmark"></i> Tóm Tắt Trọng Tâm Bài Học</div>
+            <p style="margin-bottom: 0;">Bài học thuộc <strong>Chương I: Vật Lí Nhiệt (GDPT 2018)</strong> giúp học sinh hiểu rõ khái niệm nhiệt dung riêng, công thức tính nhiệt lượng $Q = mc\Delta T$, phương pháp đo nhiệt dung riêng trong phòng thí nghiệm và ứng dụng điều hòa khí hậu thực tế của nước.</p>
+        </div>
+
+        <!-- PHẦN I: KHÁI NIỆM NHIỆT DUNG RIÊNG -->
+        <h2><i class="fa-solid fa-fire-flame-curved"></i> I. KHÁI NIỆM NHIỆT DUNG RIÊNG</h2>
+        
+        <h3>1. Hiện tượng thực tế</h3>
+        <p>Vào buổi trưa hè nắng gắt, khi đi dạo trên bãi biển, ta cảm thấy cát ở bờ biển <strong>rất nóng</strong> ($45^\circ\text{C}$), trong khi nước biển lại <strong>khá mát</strong> ($25^\circ\text{C}$), mặc dù cả cát và nước biển đều nhận cùng một lượng bức xạ mặt trời như nhau. Sự khác biệt này là do tính chất hấp thụ nhiệt của hai chất hoàn toàn khác nhau.</p>
+
+        <h3>2. Định nghĩa Nhiệt dung riêng</h3>
+        <div class="key-point"><strong>Nhiệt dung riêng ($c$)</strong> của một chất là nhiệt lượng cần thiết truyền cho 1 kg chất đó để làm cho nhiệt độ của nó tăng thêm $1^\circ\text{C}$ (hoặc $1\text{ K}$).</div>
+        <div class="key-point">Đơn vị đo của nhiệt dung riêng trong hệ SI là <strong>J/kg.K</strong> (Joules trên kilogram Kelvin) hoặc $\text{J/kg.}^\circ\text{C}$.</div>
+
+        <!-- CÔNG THỨC NHIỆT DUNG RIÊNG -->
+        <div class="formula-box">
+            <div class="formula-title"><i class="fa-solid fa-calculator"></i> CÔNG THỨC TÍNH NHIỆT LƯỢNG VÀ NHIỆT DUNG RIÊNG</div>
+            <div style="font-size: 1.3rem; margin: 12px 0;">
+                $$Q = m \cdot c \cdot \Delta T = m \cdot c \cdot (t_2 - t_1)$$
+            </div>
+            <div style="font-size: 1.3rem; margin: 12px 0;">
+                $$c = \frac{Q}{m \cdot \Delta T}$$
+            </div>
+            <p style="font-size: 0.9rem; opacity: 0.85; margin-bottom: 0;">Trong đó: $Q$ là nhiệt lượng thu/tỏa ($\text{J}$), $m$ là khối lượng ($\text{kg}$), $c$ là nhiệt dung riêng ($\text{J/kg.K}$), $\Delta T = t_2 - t_1$ là độ biến thiên nhiệt độ ($^\circ\text{C}$ hoặc $\text{K}$).</p>
+        </div>
+
+        <!-- PHẦN II: Ý NGHĨA VẬT LÝ VÀ BẢNG SO SÁNH -->
+        <h2><i class="fa-solid fa-scale-balanced"></i> II. Ý NGHĨA VẬT LÝ & SO SÁNH NHIỆT DUNG RIÊNG</h2>
+        <p>Chất có nhiệt dung riêng <strong>lớn hơn</strong> thì cần truyền nhiều nhiệt lượng hơn để tăng cùng một độ chia nhiệt độ, đồng thời nó cũng giữ nhiệt tốt hơn (nguội đi chậm hơn).</p>
+
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th>Chất</th>
+                    <th>Nhiệt Dung Riêng $c$ ($\text{J/kg.K}$)</th>
+                    <th>Ý Nghĩa Thực Tế</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Nước tinh khiết</strong></td>
+                    <td>$4180$</td>
+                    <td>Rất lớn! Nước hấp thụ và tích trữ nhiệt lượng rất cao, nóng lên chậm và nguội đi cũng chậm.</td>
+                </tr>
+                <tr>
+                    <td><strong>Rượu (Ethanol)</strong></td>
+                    <td>$2500$</td>
+                    <td>Nóng lên nhanh hơn nước khi nhận cùng nhiệt lượng.</td>
+                </tr>
+                <tr>
+                    <td><strong>Dầu ăn</strong></td>
+                    <td>$2000$</td>
+                    <td>Nóng lên nhanh gấp khoảng 2 lần nước khi nhận cùng nhiệt lượng.</td>
+                </tr>
+                <tr>
+                    <td><strong>Đất, Cát</strong></td>
+                    <td>$800$</td>
+                    <td>Nhỏ! Cát nóng lên rất nhanh dưới ánh nắng và nguội đi rất nhanh về đêm.</td>
+                </tr>
+                <tr>
+                    <td><strong>Đồng (Cu)</strong></td>
+                    <td>$380$</td>
+                    <td>Dẫn nhiệt tốt, nóng lên rất nhanh.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- PHẦN III: THÍ NGHIỆM ĐO NHIỆT DUNG RIÊNG CỦA NƯỚC -->
+        <h2><i class="fa-solid fa-flask-vial"></i> III. THÍ NGHIỆM ĐO NHIỆT DUNG RIÊNG CỦA NƯỚC</h2>
+        <p>Bố trí thí nghiệm gồm: Bình nhiệt lượng kế chứa khối lượng nước $m$, dây nung điện trở đun nước với công suất $P$ ổn định đo bằng oát kế, nhiệt kế và đồng hồ bấm giây $\tau$.</p>
+        
+        <div class="highlight-card">
+            <div class="highlight-card-title"><i class="fa-solid fa-gears"></i> Các bước tính toán thí nghiệm:</div>
+            <p>1. Điện năng tỏa ra từ dây nung trong thời gian $\tau$: $Q = P \cdot \tau$.<br>
+            2. Nhiệt lượng nước thu vào để tăng từ nhiệt độ $t_1$ lên $t_2$: $Q = m \cdot c \cdot (t_2 - t_1)$.<br>
+            3. Bỏ qua hao phí nhiệt ra môi trường, áp dụng định luật bảo toàn năng lượng:<br>
+            $$P \cdot \tau = m \cdot c \cdot (t_2 - t_1) \Rightarrow c = \frac{P \cdot \tau}{m \cdot (t_2 - t_1)}$$</p>
+        </div>
+
+        <!-- THÍ NGHIỆM ẢO EMBEDDED CTA -->
+        <div class="highlight-card" style="background: linear-gradient(135deg, #0f172a, #1e293b); border-left-color: #38bdf8; color: #ffffff; padding: 20px; border-radius: 16px; margin: 20px 0; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);">
+            <div class="highlight-card-title" style="color: #38bdf8; font-size: 1.15rem;"><i class="fa-solid fa-flask-vial animate-bounce"></i> TRẢI NGHIỆM THÍ NGHIỆM ẢO BÀI 4</div>
+            <p style="color: #cbd5e1; text-align: justify; margin-bottom: 14px;">Học sinh có thể tự tay thực hiện thí nghiệm ảo đo Nhiệt dung riêng của nước từng bước chuẩn SGK Vật lí 12: Điều chỉnh khối lượng nước $m$, chọn công suất đun $P$, quan sát dây nung phát sáng, đo nhiệt độ dâng lên và tính toán % sai số thực nghiệm.</p>
+            <div style="text-align: center; margin-top: 15px;">
+                <a href="ThiNghiemAo_NhietDungRieng.html" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #2563eb, #0284c7); color: #ffffff; padding: 12px 24px; border-radius: 12px; font-weight: 800; text-decoration: none; font-size: 0.95rem; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4); transition: transform 0.2s;">
+                    🧪 MỞ THÍ NGHIỆM ẢO ĐO NHIỆT DUNG RIÊNG CỦA NƯỚC <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
+        </div>
+
+<!-- PHẦN IV: BÀI TẬP VẬN DỤNG VÀ VÍ DỤ MINH HỌA -->
+        <h2><i class="fa-solid fa-pen-to-square"></i> IV. BÀI TẬP VẬN DỤNG VÀ VÍ DỤ MINH HỌA</h2>
+        
+        <div class="example-box">
+            <div class="example-title">Ví dụ 1 (Tính nhiệt lượng cần cung cấp):</div>
+            <p>Tính nhiệt lượng cần thiết để đun nóng $2\text{ kg}$ nước từ nhiệt độ $25^\circ\text{C}$ đến $100^\circ\text{C}$ (biết nhiệt dung riêng của nước là $c = 4200\text{ J/kg.K}$).</p>
+            <hr style="border: 0; border-top: 1px dashed #fcd34d; margin: 10px 0;">
+            <p><strong>Lời giải:</strong><br>
+            Độ biến thiên nhiệt độ: $\Delta t = 100 - 25 = 75^\circ\text{C}$.<br>
+            Áp dụng công thức tính nhiệt lượng:<br>
+            $$Q = m \cdot c \cdot \Delta t = 2 \times 4200 \times 75 = 630.000\text{ J} = 630\text{ kJ}$$<br>
+            👉 <strong>Đáp số:</strong> $630\text{ kJ}$.</p>
+        </div>
+
+        <div class="example-box">
+            <div class="example-title">Ví dụ 2 (Giải thích hiện tượng thực tế):</div>
+            <p><strong>Câu hỏi:</strong> Tại sao các động cơ ô tô, xe máy thường sử dụng hệ thống tuần hoàn nước để làm mát động cơ thay vì dùng các chất lỏng khác?</p>
+            <hr style="border: 0; border-top: 1px dashed #fcd34d; margin: 10px 0;">
+            <p><strong>Lời giải:</strong><br>
+            Vì nước có <strong>nhiệt dung riêng rất lớn</strong> ($c \approx 4180\text{ J/kg.K}$), nên cùng một khối lượng nước chảy qua động cơ có khả năng hấp thụ một lượng nhiệt rất lớn mà nhiệt độ của nước tăng lên không quá nhiều, giúp hạ nhiệt động cơ an toàn và hiệu quả.</p>
+        </div>
+
+        <!-- TÓM TẮT GHI NHỚ GÓC HỌC TẬP -->
+        <div class="highlight-card" style="background: linear-gradient(135deg, #eff6ff, #dbeafe); border-left-color: #1d4ed8;">
+            <div class="highlight-card-title" style="color: #1e3a8a;"><i class="fa-solid fa-lightbulb"></i> GHI NHỚ NHANH BÀI 4 VẬT LÍ 12</div>
+            <div class="key-point">Nhiệt dung riêng $c$: Nhiệt lượng làm $1\text{ kg}$ chất tăng thêm $1^\circ\text{C}$ (hoặc $1\text{ K}$). Đơn vị $\text{J/kg.K}$.</div>
+            <div class="key-point">Công thức nhiệt lượng: $Q = m \cdot c \cdot \Delta T \Rightarrow c = \frac{Q}{m \cdot \Delta T}$.</div>
+            <div class="key-point">Nhiệt dung riêng của nước lớn ($4180\text{ J/kg.K}$), giúp điều hòa khí hậu đại dương và làm mát động cơ.</div>
+<!-- 4 NÚT BẤM HÀI HÒA NGAY DƯỚI DÒNG CUỐI CÙNG CỦA KHUNG GHI NHỚ NHANH -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-5 pt-4 border-t border-amber-300/60">
+                <a href="../Bài 3 Thang nhiệt độ nhiệt kế/BaiDang_Blog.html" class="p-3 bg-slate-800 hover:bg-slate-900 text-white font-extrabold text-xs sm:text-sm rounded-xl text-center shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-arrow-left text-base"></i> Bài trước
+                </a>
+                <a href="https://www.youtube.com/@vatli102" target="_blank" class="p-3 bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs sm:text-sm rounded-xl text-center shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-youtube text-lg"></i> Xem bài giảng
+                </a>
+                <a href="TracNghiem_Online.html" class="p-3 bg-cyan-600 hover:bg-cyan-700 text-white font-extrabold text-xs sm:text-sm rounded-xl text-center shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-base"></i> Bài tập củng cố
+                </a>
+                <a href="../Bài 5 Nhiệt nóng chảy riêng/BaiDang_Blog.html" class="p-3 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs sm:text-sm rounded-xl text-center shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-arrow-right text-base"></i> Bài tiếp theo
+                </a>
+            </div>
+        </div>
+
+
+</div>
+
+<!-- ==================== CHÂN TRANG FOOTER ==================== -->
+    <footer class="text-center py-8 px-4 text-slate-500 text-sm border-t border-slate-200 mt-12">
+        <p>&copy; 2026 Vatli102 (vatli102.com). Bản quyền thuộc về ban quản trị.</p>
+        <p class="mt-2 space-x-3 text-xs">
+            <a href="/gioi-thieu.html" class="text-blue-600 hover:underline">Giới thiệu</a> |
+            <a href="/lien-he.html" class="text-blue-600 hover:underline">Liên hệ</a> |
+            <a href="/chinh-sach-bao-mat.html" class="text-blue-600 hover:underline">Chính sách bảo mật</a> |
+            <a href="/dieu-khoan.html" class="text-blue-600 hover:underline">Điều khoản sử dụng</a>
+        </p>
+    </footer>
+
+<!-- MODAL ĐĂNG KÝ NHẬN BÀI -->
+    <script>
+        function openSubscribeModal() {
+            if (typeof parent !== 'undefined' && parent.openSubscribeModal) {
+                parent.openSubscribeModal();
+            } else if (window.opener && window.opener.openSubscribeModal) {
+                window.opener.openSubscribeModal();
+            } else {
+                window.location.href = '/index.html#subscribeForm';
+            }
+        }
+    </script>
+
+</body>
+</html>
