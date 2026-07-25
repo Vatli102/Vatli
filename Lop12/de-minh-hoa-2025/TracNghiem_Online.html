@@ -321,9 +321,401 @@
 <script>
 const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
 
-const part1Data = [];
-const part2Data = [];
-const part3Data = [];
+const part1Data = [
+    {
+        "id": 1,
+        "competency": "NTVL",
+        "question": "Quá trình một chất chuyển từ thể lỏng sang thể khí được gọi là quá trình",
+        "options": {
+            "A": "Nóng chảy.",
+            "B": "Hóa hơi.",
+            "C": "Hóa lỏng.",
+            "D": "Đông đặc."
+        },
+        "answer": "B",
+        "explanation": "Quá trình chuyển từ thể lỏng sang thể khí (hơi) được gọi là sự hóa hơi."
+    },
+    {
+        "id": 2,
+        "competency": "NTVL",
+        "question": "Biển báo nào dưới đây cảnh báo khu vực có chất phóng xạ?",
+        "image": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' width='120' height='120'><circle cx='50' cy='50' r='45' fill='%23facc15'/><circle cx='50' cy='50' r='10' fill='black'/><path d='M50 50 L30 15 A40 40 0 0 1 70 15 Z' fill='black'/><path d='M50 50 L85 60 A40 40 0 0 1 65 90 Z' fill='black'/><path d='M50 50 L15 60 A40 40 0 0 1 35 90 Z' fill='black'/></svg>",
+        "options": {
+            "A": "Hình 1 (Nhiệt độ cao)",
+            "B": "Hình 2 (Chất phóng xạ)",
+            "C": "Hình 3 (Điện áp cao)",
+            "D": "Hình 4 (Chất dễ cháy)"
+        },
+        "answer": "B",
+        "explanation": "Biển báo khu vực có chất phóng xạ là biểu tượng cánh quạt 3 lá màu đen trên nền vàng (Hình 2)."
+    },
+    {
+        "id": 3,
+        "competency": "THTN",
+        "question": "Hình bên là sơ đồ nguyên lí hoạt động của một máy sưởi dùng nước nóng. Mỗi giờ có 575 kg nước nóng được bơm qua máy. Nhiệt độ của nước giảm 5,0°C khi đi qua máy. Nhiệt độ của nước giảm bao nhiêu kelvin khi đi qua máy sưởi?",
+        "options": {
+            "A": "5,0 K.",
+            "B": "278 K.",
+            "C": "268 K.",
+            "D": "300 K."
+        },
+        "answer": "A",
+        "explanation": "Độ biến thiên nhiệt độ trong thang Kelvin bằng đúng độ biến thiên nhiệt độ trong thang Celsius: Delta T = Delta t = 5,0 K."
+    },
+    {
+        "id": 4,
+        "competency": "VDKT",
+        "question": "Biết nhiệt dung riêng của nước là c = 4180 J/(kg.K). Nhiệt lượng tỏa ra từ nước trong mỗi giờ là",
+        "options": {
+            "A": "12,0 x 10^6 J.",
+            "B": "24,0 x 10^6 J.",
+            "C": "1,20 x 10^6 J.",
+            "D": "6,0 x 10^6 J."
+        },
+        "answer": "A",
+        "explanation": "Áp dụng công thức Q = m . c . Delta T = 575 . 4180 . 5,0 = 12 017 500 J xấp xỉ 12,0 x 10^6 J."
+    },
+    {
+        "id": 5,
+        "competency": "NTVL",
+        "question": "Một vật đang được làm lạnh sao cho thể tích của vật không thay đổi. Nội năng của vật",
+        "options": {
+            "A": "tăng lên.",
+            "B": "giảm đi.",
+            "C": "không đổi.",
+            "D": "bằng 0."
+        },
+        "answer": "B",
+        "explanation": "Khi làm lạnh (nhiệt độ T giảm), động năng trung bình của phân tử giảm, do đó nội năng U giảm đi."
+    },
+    {
+        "id": 6,
+        "competency": "VDKT",
+        "question": "Một khối khí lý tưởng giữ nhiệt độ không đổi, nếu làm cho áp suất giảm còn một nửa áp suất ban đầu thì thể tích của khối khí",
+        "options": {
+            "A": "tăng gấp đôi.",
+            "B": "giảm một nửa.",
+            "C": "không đổi.",
+            "D": "tăng 4 lần."
+        },
+        "answer": "A",
+        "explanation": "Theo định luật Boyle (T = const): p1 V1 = p2 V2. Nếu p2 = 0,5 p1 thì V2 = 2 V1 (thể tích tăng gấp đôi)."
+    },
+    {
+        "id": 7,
+        "competency": "NTVL",
+        "question": "Công thức nào sau đây mô tả đúng định luật Charles đối với khối khí lý tưởng xác định?",
+        "options": {
+            "A": "V / T = hằng số.",
+            "B": "p . V = hằng số.",
+            "C": "p / V = hằng số.",
+            "D": "p . T = hằng số."
+        },
+        "answer": "A",
+        "explanation": "Định luật Charles cho quá trình đẳng áp: V / T = hằng số."
+    },
+    {
+        "id": 8,
+        "competency": "VDKT",
+        "question": "Trong ô tô đỗ dưới trời nắng, nhiệt độ tăng từ 25°C lên 55°C. Phần trăm số mol khí đã thoát ra ngoài là",
+        "options": {
+            "A": "9,15%.",
+            "B": "10,1%.",
+            "C": "9,09%.",
+            "D": "8,5%."
+        },
+        "answer": "A",
+        "explanation": "Ta có n1 T1 = n2 T2 => n2/n1 = T1/T2 = 298 / 328 xấp xỉ 0,9085. Phần trăm thoát ra: (1 - 0,9085) x 100% xấp xỉ 9,15%."
+    },
+    {
+        "id": 9,
+        "competency": "NTVL",
+        "question": "Trong sóng điện từ, cường độ điện trường E và cảm ứng từ B tại một điểm luôn",
+        "options": {
+            "A": "biến thiên cùng tần số và cùng pha.",
+            "B": "biến thiên vuông pha.",
+            "C": "ngược pha nhau.",
+            "D": "lệch pha pi/4."
+        },
+        "answer": "A",
+        "explanation": "Vectơ E và B trong sóng điện từ luôn dao động cùng tần số và cùng pha với nhau."
+    },
+    {
+        "id": 10,
+        "competency": "NTVL",
+        "question": "Nối hai đầu khung dây quay trong từ trường với điện trở R thành mạch kín, trong mạch sẽ",
+        "options": {
+            "A": "xuất hiện dòng điện xoay chiều.",
+            "B": "xuất hiện dòng điện một chiều không đổi.",
+            "C": "không có dòng điện.",
+            "D": "dòng điện giảm về 0."
+        },
+        "answer": "A",
+        "explanation": "Khung dây quay đều trong từ trường sinh ra suất điện động cảm ứng xoay chiều, tạo ra dòng điện xoay chiều."
+    },
+    {
+        "id": 11,
+        "competency": "VDKT",
+        "question": "Suất điện động cực đại xuất hiện trong khung dây phẳng N vòng, diện tích S quay tốc độ góc w trong từ trường B là",
+        "options": {
+            "A": "E0 = N.B.S.w.",
+            "B": "E0 = B.S.w.",
+            "C": "E0 = N.B.S.",
+            "D": "E0 = N.B / w."
+        },
+        "answer": "A",
+        "explanation": "Biểu thức suất điện động cực đại là E0 = N.B.S.w."
+    },
+    {
+        "id": 12,
+        "competency": "NTVL",
+        "question": "Đoạn dây dẫn mang dòng điện I đặt trong từ trường đều B. Lực từ tác dụng lên dây dẫn đạt giá trị lớn nhất khi góc giữa dây dẫn và đường sức từ bằng",
+        "options": {
+            "A": "90°.",
+            "B": "0°.",
+            "C": "45°.",
+            "D": "180°."
+        },
+        "answer": "A",
+        "explanation": "Công thức lực từ F = I.L.B.sin(alpha). Lực từ cực đại khi sin(alpha) = 1 => alpha = 90°."
+    },
+    {
+        "id": 13,
+        "competency": "NTVL",
+        "question": "Hạt nhân nguyên tử Helium 4 2 He có cấu tạo gồm",
+        "options": {
+            "A": "2 proton và 2 neutron.",
+            "B": "4 proton và 2 electron.",
+            "C": "2 proton và 4 neutron.",
+            "D": "4 neutron và 2 electron."
+        },
+        "answer": "A",
+        "explanation": "Hạt nhân Helium 4 2 He có Z = 2 proton và N = A - Z = 4 - 2 = 2 neutron."
+    },
+    {
+        "id": 14,
+        "competency": "NTVL",
+        "question": "Phản ứng hạt nhân tỏa năng lượng là phản ứng trong đó",
+        "options": {
+            "A": "tổng khối lượng nghỉ các hạt trước phản ứng lớn hơn tổng khối lượng nghỉ các hạt sau phản ứng.",
+            "B": "tổng khối lượng các hạt sau lớn hơn trước.",
+            "C": "không thay đổi khối lượng.",
+            "D": "năng lượng liên kết giảm."
+        },
+        "answer": "A",
+        "explanation": "Phản ứng tỏa năng lượng có m_trước lớn hơn m_sau."
+    },
+    {
+        "id": 15,
+        "competency": "NTVL",
+        "question": "Tia phóng xạ nào sau đây có bản chất là sóng điện từ?",
+        "options": {
+            "A": "Tia gamma (g).",
+            "B": "Tia alpha (a).",
+            "C": "Tia beta trừ.",
+            "D": "Tia beta cộng."
+        },
+        "answer": "A",
+        "explanation": "Tia gamma là sóng điện từ có bước sóng cực ngắn."
+    },
+    {
+        "id": 16,
+        "competency": "NTVL",
+        "question": "Trong nhà máy điện hạt nhân, năng lượng tỏa ra từ phản ứng phân hạch được chuyển hóa thành",
+        "options": {
+            "A": "nhiệt năng rồi thành điện năng.",
+            "B": "quang năng.",
+            "C": "hóa năng.",
+            "D": "cơ năng trực tiếp."
+        },
+        "answer": "A",
+        "explanation": "Năng lượng phân hạch làm nóng nước tạo hơi quay tuabin phát điện."
+    },
+    {
+        "id": 17,
+        "competency": "VDKT",
+        "question": "Cho khối lượng hạt nhân 4 2 He là 4,0015u; proton là 1,0073u; neutron là 1,0087u. Độ hụt khối của hạt nhân 4 2 He là",
+        "options": {
+            "A": "0,0305 u.",
+            "B": "0,0146 u.",
+            "C": "0,0200 u.",
+            "D": "0,0400 u."
+        },
+        "answer": "A",
+        "explanation": "Delta m = 2.m_p + 2.m_n - m_He = 2(1,0073) + 2(1,0087) - 4,0015 = 0,0305 u."
+    },
+    {
+        "id": 18,
+        "competency": "VDKT",
+        "question": "Hằng số phóng xạ k của một chất phóng xạ có chu kỳ bán rã T = 138 ngày là",
+        "options": {
+            "A": "5,82 x 10^-8 s^-1.",
+            "B": "5,82 x 10^-6 s^-1.",
+            "C": "1,25 x 10^-5 s^-1.",
+            "D": "2,50 x 10^-7 s^-1."
+        },
+        "answer": "A",
+        "explanation": "k = ln2 / T = 0,693 / (138 x 86400) xấp xỉ 5,82 x 10^-8 s^-1."
+    }
+];
+const part2Data = [
+    {
+        "id": 1,
+        "competency": "THTN",
+        "question": "Một nhóm học sinh làm thí nghiệm xác định nhiệt dung riêng của nước. Xét tính Đúng/Sai của các phát biểu sau:",
+        "subQuestions": [
+            {
+                "key": "a",
+                "text": "Nhiệt lượng tỏa ra từ dây điện trở phụ thuộc vào cường độ dòng điện và thời gian đun.",
+                "answer": "Đ"
+            },
+            {
+                "key": "b",
+                "text": "Đơn vị nhiệt dung riêng trong hệ SI là J/(kg.K).",
+                "answer": "Đ"
+            },
+            {
+                "key": "c",
+                "text": "Nhiệt lượng tự truyền từ vật lạnh sang vật nóng mà không cần cung cấp công.",
+                "answer": "S"
+            },
+            {
+                "key": "d",
+                "text": "Nếu bỏ qua thất thoát nhiệt thì nhiệt dung riêng c = (U.I.t) / (m.Delta T).",
+                "answer": "Đ"
+            }
+        ],
+        "explanation": "Nhiệt tự phát chỉ truyền từ nơi có nhiệt độ cao sang nơi có nhiệt độ thấp hơn."
+    },
+    {
+        "id": 2,
+        "competency": "THTN",
+        "question": "Cho một khối khí lý tưởng dãn nở đẳng nhiệt từ thể tích V1 sang V2. Xét tính Đúng/Sai:",
+        "subQuestions": [
+            {
+                "key": "a",
+                "text": "Nhiệt độ của khối khí không đổi trong suốt quá trình.",
+                "answer": "Đ"
+            },
+            {
+                "key": "b",
+                "text": "Động năng trung bình của các phân tử khí tăng lên.",
+                "answer": "S"
+            },
+            {
+                "key": "c",
+                "text": "Áp suất khối khí giảm tỉ lệ nghịch với thể tích.",
+                "answer": "Đ"
+            },
+            {
+                "key": "d",
+                "text": "Nội năng của khối khí không thay đổi.",
+                "answer": "Đ"
+            }
+        ],
+        "explanation": "Vì T không đổi nên động năng phân tử và nội năng U không đổi."
+    },
+    {
+        "id": 3,
+        "competency": "THTN",
+        "question": "Xét khung dây dẫn kín quay đều trong từ trường đều. Đánh giá tính Đúng/Sai:",
+        "subQuestions": [
+            {
+                "key": "a",
+                "text": "Từ thông qua khung dây biến thiên điều hòa theo thời gian.",
+                "answer": "Đ"
+            },
+            {
+                "key": "b",
+                "text": "Suất điện động cảm ứng trong khung dây lệch pha pi/2 so với từ thông.",
+                "answer": "Đ"
+            },
+            {
+                "key": "c",
+                "text": "Cường độ dòng điện trong mạch đạt cực đại khi từ thông đạt cực đại.",
+                "answer": "S"
+            },
+            {
+                "key": "d",
+                "text": "Tần số của dòng điện xoay chiều bằng tần số quay của khung dây.",
+                "answer": "Đ"
+            }
+        ],
+        "explanation": "Dòng điện đạt cực đại khi suất điện động cực đại (lúc từ thông bằng 0)."
+    },
+    {
+        "id": 4,
+        "competency": "THTN",
+        "question": "Xét hiện tượng phóng xạ hạt nhân. Đánh giá tính Đúng/Sai:",
+        "subQuestions": [
+            {
+                "key": "a",
+                "text": "Hiện tượng phóng xạ là quá trình tự phát không phụ thuộc tác động bên ngoài.",
+                "answer": "Đ"
+            },
+            {
+                "key": "b",
+                "text": "Số hạt nhân chưa bị phân rã giảm theo hàm số mũ của thời gian.",
+                "answer": "Đ"
+            },
+            {
+                "key": "c",
+                "text": "Chu kỳ bán rã giảm đi một nửa sau mỗi khoảng thời gian T.",
+                "answer": "S"
+            },
+            {
+                "key": "d",
+                "text": "Độ phóng xạ đặc trưng cho số phân rã trong 1 giây.",
+                "answer": "Đ"
+            }
+        ],
+        "explanation": "Chu kỳ bán rã T là một hằng số không thay đổi theo thời gian."
+    }
+];
+const part3Data = [
+    {
+        "id": 1,
+        "competency": "VDKT",
+        "question": "Khung dây dẫn gồm N = 100 vòng, S = 200 cm2 quay đều trong từ trường B = 0,05 T với tốc độ 50 vòng/s. Tính độ lớn suất điện động hiệu dụng (V, làm tròn đến chữ số hàng phần mười).",
+        "answer": "22.2",
+        "explanation": "E0 = N.B.S.w = 100 . 0,05 . 0,02 . (2pi.50) = 31,416 V => E = E0 / sqrt(2) xấp xỉ 22,2 V."
+    },
+    {
+        "id": 2,
+        "competency": "VDKT",
+        "question": "Tính nhiệt lượng tỏa ra trên khung dây điện trở R = 0,27 ohm trong 1 phút làm việc (J, làm tròn đến hàng đơn vị).",
+        "answer": "1465",
+        "explanation": "Q = (E^2 / R) . t = (22,2^2 / 0,27) . 60 xấp xỉ 1465 J."
+    },
+    {
+        "id": 3,
+        "competency": "VDKT",
+        "question": "Bình khí ôxy V = 129 lít ở 27°C có áp suất p = 1,5 x 10^7 Pa. Khối lượng ôxy trong bình là bao nhiêu kg? (M = 32 g/mol, R = 8,31 J/mol.K, làm tròn đến hàng phần mười).",
+        "answer": "24.8",
+        "explanation": "m = (p.V.M) / (R.T) = (1,5x10^7 . 0,129 . 0,032) / (8,31 . 300) xấp xỉ 24,8 kg."
+    },
+    {
+        "id": 4,
+        "competency": "VDKT",
+        "question": "Rút một lượng khí ra khỏi bình khiến áp suất giảm còn 69% áp suất ban đầu (nhiệt độ không đổi). Khối lượng khí còn lại là bao nhiêu kg? (làm tròn đến hàng phần mười).",
+        "answer": "17.1",
+        "explanation": "m2 = 0,69 . m1 = 0,69 . 24,84 xấp xỉ 17,1 kg."
+    },
+    {
+        "id": 5,
+        "competency": "VDKT",
+        "question": "Biết m = 2,0 mg Ra-226 có T = 1600 năm. Độ phóng xạ ban đầu của mẫu chất là bao nhiêu MBq? (làm tròn đến hàng đơn vị).",
+        "answer": "74",
+        "explanation": "H0 = k.N0 = (ln2 / T) . (m / M) . N_A xấp xỉ 7,4 x 10^7 Bq = 74 MBq."
+    },
+    {
+        "id": 6,
+        "competency": "VDKT",
+        "question": "Sau bao nhiêu năm thì độ phóng xạ của mẫu Ra-226 còn lại bằng 25% so với độ phóng xạ ban đầu?",
+        "answer": "3200",
+        "explanation": "H / H0 = 2^(-t/T) = 0,25 = 2^-2 => t = 2T = 2 x 1600 = 3200 năm."
+    }
+];
 
 const quizData = {
     title: "Đề Minh Họa Tốt Nghiệp THPT 2025 Môn Vật Lí (Bộ GD&ĐT)",
