@@ -1498,79 +1498,7 @@ function saveNavSub(e) {
 
 
 
-    <div class="results-panel" id="resultsPanel">
-
-
-
-
-
-
-
-        <div class="score-circle" id="scoreCircle">0.0</div>
-
-
-
-
-
-
-
-        <div class="score-title" id="scoreTitle">Kết Quả Bài Làm</div>
-
-
-
-
-
-
-
-        <div class="score-desc" id="scoreDesc">Chúc mừng bạn đã hoàn thành bài tập trắc nghiệm!</div>
-
-
-
-
-
-
-
-        
-
-
-
-
-
-
-
-        <div class="details-summary">
-
-
-
-
-
-
-
-            <div class="summary-card">
-
-
-
-
-
-
-
-                <div class="summary-num" id="correctCountText" style="color: var(--success-color);">0</div>
-
-
-
-
-
-
-
-                <div class="summary-label">Ý Đúng</div>
-
-
-
-
-
-
-
-            </div></div>
+    
 
 
 
@@ -1625,6 +1553,26 @@ function saveNavSub(e) {
 
 
 
+
+            <div class="results-panel" id="resultsPanel" style="display: none; margin-top: 25px; margin-bottom: 25px;">
+        <div class="score-circle" id="scoreCircle">0.0</div>
+        <div class="score-title" id="scoreTitle">Kết Quả Bài Làm</div>
+        <div class="score-desc" id="scoreDesc">Chúc mừng bạn đã hoàn thành bài tập trắc nghiệm!</div>
+        <div class="details-summary">
+            <div class="summary-card">
+                <div class="summary-num" id="correctCountText" style="color: var(--success-color);">0</div>
+                <div class="summary-label">Ý Đúng</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-num" id="incorrectCountText" style="color: var(--error-color);">0</div>
+                <div class="summary-label">Ý Sai</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-num" id="gradeText" style="color: var(--primary-color);">0.0/10</div>
+                <div class="summary-label">Điểm Số</div>
+            </div>
+        </div>
+    </div>
 
         <div class="actions">
 
@@ -5573,10 +5521,13 @@ function renderQuiz() {
         var rp = document.getElementById('resultsPanel');
         if (rp) {
             rp.style.display = 'block';
-            var topPos = rp.getBoundingClientRect().top + window.pageYOffset - 80;
-            window.scrollTo({ top: Math.max(0, topPos), behavior: 'smooth' });
+            setTimeout(function() {
+                var topPos = rp.getBoundingClientRect().top + window.pageYOffset - 90;
+                window.scrollTo({ top: Math.max(0, topPos), behavior: 'smooth' });
+            }, 50);
         }
-        triggerConfetti();
+        if (typeof triggerConfetti === 'function') triggerConfetti();
+        if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
 
 
 
