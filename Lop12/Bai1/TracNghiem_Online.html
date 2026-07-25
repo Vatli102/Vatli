@@ -216,7 +216,7 @@
         const className = classInput ? classInput.value.trim() : "";
 
         if (!name || !className) {
-            alert("Vui lòng điền đầy đủ thông tin Họ tên và Lớp để bắt đầu làm bài!");
+            alert("Vui lòng điền đầy đủ Họ và tên và Lớp để bắt đầu làm bài!");
             return;
         }
 
@@ -225,14 +225,22 @@
 
         const loginCard = document.getElementById('studentLoginCard');
         if (loginCard) {
-            loginCard.style.setProperty('display', 'none', 'important');
-            loginCard.classList.add('hidden');
+            loginCard.style.display = 'none';
         }
 
-        const quizContent = document.getElementById('quizRealContent');
-        if (quizContent) {
-            quizContent.style.setProperty('display', 'block', 'important');
-            quizContent.classList.remove('hidden');
+        const realContent = document.getElementById('quizRealContent');
+        if (realContent) {
+            realContent.style.display = 'block';
+            realContent.classList.remove('hidden');
+        }
+
+        if (typeof renderQuiz === 'function') {
+            renderQuiz();
+            updateProgress();
+        }
+        
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            window.MathJax.typesetPromise();
         }
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1168,7 +1176,7 @@ function saveNavSub(e) {
 
 
 
-    <div id="quizRealContent" class="hidden" style="display: none !important;">
+    <div id="quizRealContent" style="display: none;">
 
 
 
@@ -2826,31 +2834,7 @@ function saveNavSub(e) {
 
 
 
-    window.addEventListener('DOMContentLoaded', () => {
-
-
-
-
-
-
-
-        renderQuiz();
-
-
-
-
-
-
-
-        updateProgress();
-
-
-
-
-
-
-
-    });
+    // Quiz questions rendered only after student enters info
 
 
 
@@ -5670,7 +5654,7 @@ function renderQuiz() {
         const className = classInput ? classInput.value.trim() : "";
 
         if (!name || !className) {
-            alert("Vui lòng điền đầy đủ thông tin Họ tên và Lớp để bắt đầu làm bài!");
+            alert("Vui lòng điền đầy đủ Họ và tên và Lớp để bắt đầu làm bài!");
             return;
         }
 
@@ -5679,14 +5663,22 @@ function renderQuiz() {
 
         const loginCard = document.getElementById('studentLoginCard');
         if (loginCard) {
-            loginCard.style.setProperty('display', 'none', 'important');
-            loginCard.classList.add('hidden');
+            loginCard.style.display = 'none';
         }
 
-        const quizContent = document.getElementById('quizRealContent');
-        if (quizContent) {
-            quizContent.style.setProperty('display', 'block', 'important');
-            quizContent.classList.remove('hidden');
+        const realContent = document.getElementById('quizRealContent');
+        if (realContent) {
+            realContent.style.display = 'block';
+            realContent.classList.remove('hidden');
+        }
+
+        if (typeof renderQuiz === 'function') {
+            renderQuiz();
+            updateProgress();
+        }
+        
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            window.MathJax.typesetPromise();
         }
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
