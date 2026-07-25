@@ -4,7 +4,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bài 1: Cấu Trúc Của Chất. Sự Chuyển Thể - Trắc Nghiệm Vật Lí 12 | Vatli102.com</title>
+    <title>📖 Bài 1 Cấu trúc của chất sự chuyển thể (Vật lí 12) - Trắc Nghiệm Online | Vatli102.com</title>
     <script>
         if (!window.location.pathname.endsWith('/') && !window.location.pathname.endsWith('.html')) {
             window.history.replaceState(null, '', window.location.pathname + '/' + window.location.search);
@@ -203,8 +203,8 @@
 
 <div class="quiz-container">
     <div class="exam-banner">
-        <h1>📖 Bài 1: Cấu Trúc Của Chất. Sự Chuyển Thể</h1>
-        <p>Phiếu Bài Tập Trắc Nghiệm Vật Lí 12 Tương Tác Chuẩn Bộ GD&ĐT</p>
+        <h1>📖 Bài 1 Cấu trúc của chất sự chuyển thể (Vật lí 12)</h1>
+        <p>Phiếu Bài Tập Trắc Nghiệm Vật Lí Tương Tác Chuẩn Bộ GD&ĐT</p>
         <span class="badge-exam">⏱ Thời gian làm bài: 15 Phút | Trắc Nghiệm Online 3 Phần</span>
     </div>
 
@@ -220,7 +220,7 @@
         </div>
         <div class="form-group">
             <label>Lớp <span style="color:red;">*</span></label>
-            <input type="text" id="studentClass" class="form-control" placeholder="Ví dụ: 12A1" required>
+            <input type="text" id="studentClass" class="form-control" placeholder="Ví dụ: 10A1" required>
         </div>
         <button type="button" class="btn-start" id="btnStartQuiz" onclick="startQuizExam()">🚀 BẮT ĐẦU LÀM BÀI THI</button>
     </div>
@@ -1597,7 +1597,7 @@ function renderQuiz() {
                     ${['A','B','C','D'].map(opt => `
                         <div class="option-card" id="part1-q${q.id}-opt${opt}" onclick="selectPart1(${q.id}, '${opt}')">
                             <div class="option-letter">${opt}</div>
-                            <div>${q.options[opt]}</div>
+                            <div>${q.options ? (q.options[opt] || (Array.isArray(q.options) ? q.options[opt.charCodeAt(0)-65] : '')) : ''}</div>
                         </div>
                     `).join('')}
                 </div>
@@ -1708,84 +1708,90 @@ function gradeQuiz() {
     if (isSubmitted) return;
     isSubmitted = true;
 
-    let maxPossibleScore = quizData.part1.length + quizData.part2.length + quizData.part3.length;
+    let maxPossibleScore = (quizData.part1 ? quizData.part1.length : 0) + (quizData.part2 ? quizData.part2.length : 0) + (quizData.part3 ? quizData.part3.length : 0);
     let earnedPoints = 0;
     let totalCorrectCount = 0;
 
     // Grade Part 1
-    quizData.part1.forEach(q => {
-        const userChoice = userAnswers.part1[q.id];
-        const correctOpt = q.answer;
-        const exp = document.getElementById(`part1-q${q.id}-explanation`);
-        if (exp) exp.style.display = 'block';
+    if (quizData.part1) {
+        quizData.part1.forEach(q => {
+            const userChoice = userAnswers.part1[q.id];
+            const correctOpt = typeof q.answer === 'number' ? ['A','B','C','D'][q.answer] : q.answer;
+            const exp = document.getElementById(`part1-q${q.id}-explanation`);
+            if (exp) exp.style.display = 'block';
 
-        ['A','B','C','D'].forEach(o => {
-            const el = document.getElementById(`part1-q${q.id}-opt${o}`);
-            if (el) {
-                if (o === correctOpt) el.classList.add('correct');
-                else if (userChoice === o && userChoice !== correctOpt) el.classList.add('incorrect');
-            }
-        });
-        if (userChoice === correctOpt) {
-            earnedPoints += 1.0;
-            totalCorrectCount++;
-        }
-    });
-
-    // Grade Part 2
-    quizData.part2.forEach(q => {
-        let correctSubCount = 0;
-        const exp = document.getElementById(`part2-q${q.id}-explanation`);
-        if (exp) exp.style.display = 'block';
-
-        q.subQuestions.forEach(sub => {
-            const userChoice = userAnswers.part2[q.id] ? userAnswers.part2[q.id][sub.key] : null;
-            const correctChoice = sub.answer;
-            const btnT = document.getElementById(`part2-q${q.id}-tf-${sub.key}-T`);
-            const btnF = document.getElementById(`part2-q${q.id}-tf-${sub.key}-F`);
-
-            if (userChoice === correctChoice) {
-                correctSubCount++;
+            ['A','B','C','D'].forEach(o => {
+                const el = document.getElementById(`part1-q${q.id}-opt${o}`);
+                if (el) {
+                    if (o === correctOpt) el.classList.add('correct');
+                    else if (userChoice === o && userChoice !== correctOpt) el.classList.add('incorrect');
+                }
+            });
+            if (userChoice === correctOpt) {
+                earnedPoints += 1.0;
                 totalCorrectCount++;
             }
-            if (correctChoice === 'Đ' && btnT) btnT.style.border = '2px solid #22c55e';
-            if (correctChoice === 'S' && btnF) btnF.style.border = '2px solid #22c55e';
         });
+    }
 
-        if (correctSubCount === 1) earnedPoints += 0.1;
-        else if (correctSubCount === 2) earnedPoints += 0.25;
-        else if (correctSubCount === 3) earnedPoints += 0.5;
-        else if (correctSubCount === 4) earnedPoints += 1.0;
-    });
+    // Grade Part 2
+    if (quizData.part2) {
+        quizData.part2.forEach(q => {
+            let correctSubCount = 0;
+            const exp = document.getElementById(`part2-q${q.id}-explanation`);
+            if (exp) exp.style.display = 'block';
+
+            q.subQuestions.forEach(sub => {
+                const userChoice = userAnswers.part2[q.id] ? userAnswers.part2[q.id][sub.key] : null;
+                const correctChoice = typeof sub.answer === 'boolean' ? (sub.answer ? 'Đ' : 'S') : sub.answer;
+                const btnT = document.getElementById(`part2-q${q.id}-tf-${sub.key}-T`);
+                const btnF = document.getElementById(`part2-q${q.id}-tf-${sub.key}-F`);
+
+                if (userChoice === correctChoice) {
+                    correctSubCount++;
+                    totalCorrectCount++;
+                }
+                if (correctChoice === 'Đ' && btnT) btnT.style.border = '2px solid #22c55e';
+                if (correctChoice === 'S' && btnF) btnF.style.border = '2px solid #22c55e';
+            });
+
+            if (correctSubCount === 1) earnedPoints += 0.1;
+            else if (correctSubCount === 2) earnedPoints += 0.25;
+            else if (correctSubCount === 3) earnedPoints += 0.5;
+            else if (correctSubCount === 4) earnedPoints += 1.0;
+        });
+    }
 
     // Grade Part 3
-    quizData.part3.forEach(q => {
-        const userChoice = userAnswers.part3[q.id] || "";
-        const correctAns = q.answer.trim();
-        const inputEl = document.getElementById(`part3-q${q.id}-input`);
-        const correctTextEl = document.getElementById(`part3-q${q.id}-correct`);
-        const exp = document.getElementById(`part3-q${q.id}-explanation`);
-        if (exp) exp.style.display = 'block';
-        if (inputEl) inputEl.disabled = true;
+    if (quizData.part3) {
+        quizData.part3.forEach(q => {
+            const userChoice = userAnswers.part3[q.id] || "";
+            const correctAns = String(q.answer).trim();
+            const inputEl = document.getElementById(`part3-q${q.id}-input`);
+            const correctTextEl = document.getElementById(`part3-q${q.id}-correct`);
+            const exp = document.getElementById(`part3-q${q.id}-explanation`);
+            if (exp) exp.style.display = 'block';
+            if (inputEl) inputEl.disabled = true;
 
-        const cleanUser = userChoice.replace(',', '.');
-        const cleanCorrect = correctAns.replace(',', '.');
+            const cleanUser = userChoice.replace(',', '.');
+            const cleanCorrect = correctAns.replace(',', '.');
 
-        if (cleanUser && parseFloat(cleanUser) === parseFloat(cleanCorrect)) {
-            earnedPoints += 1.0;
-            totalCorrectCount++;
-            if (inputEl) inputEl.classList.add('input-correct');
-        } else {
-            if (inputEl) inputEl.classList.add('input-incorrect');
-            if (correctTextEl) {
-                correctTextEl.innerHTML = `💡 Đáp án đúng: <strong>${correctAns}</strong>`;
-                correctTextEl.style.display = 'block';
+            if (cleanUser && parseFloat(cleanUser) === parseFloat(cleanCorrect)) {
+                earnedPoints += 1.0;
+                totalCorrectCount++;
+                if (inputEl) inputEl.classList.add('input-correct');
+            } else {
+                if (inputEl) inputEl.classList.add('input-incorrect');
+                if (correctTextEl) {
+                    correctTextEl.innerHTML = `💡 Đáp án đúng: <strong>${correctAns}</strong>`;
+                    correctTextEl.style.display = 'block';
+                }
             }
-        }
-    });
+        });
+    }
 
     const finalGrade = maxPossibleScore > 0 ? ((earnedPoints / maxPossibleScore) * 10).toFixed(1) : "0.0";
-    const totalItems = quizData.part1.length + (quizData.part2.reduce((acc, q) => acc + q.subQuestions.length, 0)) + quizData.part3.length;
+    const totalItems = (quizData.part1 ? quizData.part1.length : 0) + (quizData.part2 ? quizData.part2.reduce((acc, q) => acc + q.subQuestions.length, 0) : 0) + (quizData.part3 ? quizData.part3.length : 0);
 
     const scoreCircle = document.getElementById('scoreCircle');
     if (scoreCircle) scoreCircle.textContent = finalGrade;
@@ -1831,7 +1837,7 @@ function gradeQuiz() {
     }
 
     const name = localStorage.getItem('saved_student_name') || 'Học sinh';
-    const className = localStorage.getItem('saved_student_class') || '12';
+    const className = localStorage.getItem('saved_student_class') || 'Lớp';
     if (typeof GOOGLE_SHEETS_URL !== 'undefined' && GOOGLE_SHEETS_URL) {
         try {
             fetch(GOOGLE_SHEETS_URL, {
@@ -1840,7 +1846,7 @@ function gradeQuiz() {
                 body: JSON.stringify({
                     name: name,
                     className: className,
-                    lesson: quizData.title,
+                    lesson: quizData.title || "📖 Bài 1 Cấu trúc của chất sự chuyển thể (Vật lí 12)",
                     correct: `${totalCorrectCount}/${totalItems}`,
                     score: finalGrade
                 }),
