@@ -274,71 +274,84 @@
         </div>
 
 
-        <!-- 🔬 MÔ PHỎNG TƯƠNG TÁC: THỰC HÀNH ĐO NHIỆT DUNG RIÊNG CỦA NƯỚC (SGK KẾT NỐI TRI THỨC) -->
+        <!-- 🔬 MÔ PHỎNG TƯƠNG TÁC THỰC HÀNH 5 BƯỚC CHUẨN SGK & VIDEO X6KVT RSFLE -->
         <div class="diagram-box-clean" style="text-align: left; padding: 25px; margin: 35px 0;">
             <div class="diagram-title-clean" style="margin-bottom: 15px; text-align: center;">
-                🔬 MÔ PHỎNG TƯƠNG TÁC: THỰC HÀNH ĐO NHIỆT DUNG RIÊNG CỦA NƯỚC
+                🔬 MÔ PHỎNG TƯƠNG TÁC: THỰC HÀNH ĐO NHIỆT DUNG RIÊNG CỦA NƯỚC (CHUẨN SGK & VIDEO)
             </div>
             <p style="color: #94a3b8; font-size: 0.9rem; text-align: center; margin-bottom: 20px;">
-                Mô phỏng bộ thí nghiệm thực hành Nhiệt lượng kế bóc tách theo chuẩn SGK & SGV Vật lí 12 Kết nối tri thức. Điều chỉnh công suất $P$ và khối lượng nước $m$ để đo nhiệt dung riêng $c$!
+                Bộ dụng cụ chuẩn SGK Vật lí 12: Biến thế nguồn, Oát kế, Cân điện tử, Nhiệt lượng kế 3D, Nhiệt kế điện tử & Cần khuấy. Hãy làm theo 5 bước hướng dẫn thực hành!
             </p>
 
-            <div style="display: grid; grid-template-columns: 1fr 300px; gap: 20px; align-items: start;">
-                <!-- Khung Canvas Đồ Họa 3D Real -->
+            <!-- THANH ĐIỀU HƯỚNG 5 BƯỚC THỰC HÀNH -->
+            <div style="display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px;">
+                <button onclick="setExpStep(1)" id="stepBtn1" style="flex: 1; min-width: 100px; padding: 10px 8px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; text-align: center;">
+                    1. Cân nước ($m$)
+                </button>
+                <button onclick="setExpStep(2)" id="stepBtn2" style="flex: 1; min-width: 100px; padding: 10px 8px; background: #334155; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; text-align: center;">
+                    2. Đọc $T_1$ ban đầu
+                </button>
+                <button onclick="setExpStep(3)" id="stepBtn3" style="flex: 1; min-width: 100px; padding: 10px 8px; background: #334155; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; text-align: center;">
+                    3. Đun & Đọc $P, \tau$
+                </button>
+                <button onclick="setExpStep(4)" id="stepBtn4" style="flex: 1; min-width: 100px; padding: 10px 8px; background: #334155; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; text-align: center;">
+                    4. Đọc $T_2$ & Khuấy
+                </button>
+                <button onclick="setExpStep(5)" id="stepBtn5" style="flex: 1; min-width: 100px; padding: 10px 8px; background: #334155; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; text-align: center;">
+                    5. Báo cáo SGK
+                </button>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 310px; gap: 20px; align-items: start;">
+                <!-- Khung Canvas Bàn Thí Nghiệm 3D Real -->
                 <div style="position: relative; background: #090d16; border-radius: 14px; border: 1px solid #334155; overflow: hidden; height: 420px;">
                     <canvas id="calorimeterCanvas" width="520" height="420" style="width: 100%; height: 100%; display: block;"></canvas>
+                    
                     <div style="position: absolute; top: 12px; left: 12px; background: rgba(15, 23, 42, 0.88); color: #38bdf8; border: 1px solid #0284c7; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; backdrop-filter: blur(4px);">
                         ⏱️ $\tau = $ <span id="simTimeText">0</span> s | 🌡️ $T = $ <span id="simTempText">25.0</span> °C
                     </div>
-                    <div id="heaterStatusTag" style="position: absolute; top: 12px; right: 12px; background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; display: none;">
-                        🔥 Dây đun đang tỏa nhiệt
+
+                    <div id="stepInstructionBox" style="position: absolute; bottom: 12px; left: 12px; right: 12px; background: rgba(15, 23, 42, 0.9); color: #f8fafc; border: 1px solid #38bdf8; padding: 10px 14px; border-radius: 10px; font-size: 0.82rem; backdrop-filter: blur(4px);">
+                        <strong>BƯỚC 1:</strong> Đặt cốc nhôm lên cân điện tử, rót nước vào cốc và ghi nhận khối lượng $m = 150\text{ g} = 0.15\text{ kg}$.
                     </div>
                 </div>
 
-                <!-- Bảng Điều Khiển Thí Nghiệm -->
+                <!-- Bảng Điều Khiển & Báo Cáo Thực Hành -->
                 <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 18px; color: #f8fafc;">
                     <div style="font-weight: 700; font-size: 1rem; color: #fbbf24; margin-bottom: 14px; display: flex; align-items: center; gap: 6px;">
-                        <i class="fa-solid fa-sliders"></i> Cấu hình Thí nghiệm
+                        <i class="fa-solid fa-clipboard-list"></i> Bảng Báo Cáo Thực Hành SGK
                     </div>
 
-                    <!-- Slider Khối lượng nước m -->
-                    <div style="margin-bottom: 14px;">
-                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 4px;">
-                            <span>Khối lượng nước ($m$):</span>
-                            <strong style="color: #38bdf8;"><span id="valMass">150</span> g</strong>
+                    <!-- Bảng số liệu SGK -->
+                    <div style="font-size: 0.82rem; color: #cbd5e1; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; line-height: 1.8; margin-bottom: 15px;">
+                        <div>• Khối lượng nước $m$: <strong style="color:#38bdf8;"><span id="rptM">0.150</span> kg</strong></div>
+                        <div>• Nhiệt độ ban đầu $T_1$: <strong style="color:#34d399;"><span id="rptT1">25.0</span> °C</strong></div>
+                        <div>• Công suất đun $P$: <strong style="color:#fbbf24;"><span id="rptP">40</span> W</strong></div>
+                        <div>• Thời gian đun $\tau$: <strong style="color:#fbbf24;"><span id="rptTau">0</span> s</strong></div>
+                        <div>• Nhiệt độ sau đun $T_2$: <strong style="color:#f87171;"><span id="rptT2">--</span> °C</strong></div>
+                        <div style="border-top: 1px dashed #475569; margin-top: 6px; padding-top: 6px;">
+                            • Nhiệt dung riêng $c$: <strong style="color:#34d399; font-size: 0.95rem;"><span id="rptC">--</span> J/(kg.K)</strong>
                         </div>
-                        <input type="range" id="sliderMass" min="100" max="300" step="10" value="150" oninput="updateCaloParams()" style="width: 100%; accent-color: #38bdf8; cursor: pointer;">
+                        <div>• Sai số %: <strong style="color:#f87171;"><span id="rptErr">--</span>%</strong></div>
                     </div>
 
-                    <!-- Slider Công suất P -->
-                    <div style="margin-bottom: 14px;">
-                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 4px;">
-                            <span>Công suất đun ($P$):</span>
-                            <strong style="color: #fbbf24;"><span id="valPower">40</span> W</strong>
-                        </div>
-                        <input type="range" id="sliderPower" min="20" max="80" step="5" value="40" oninput="updateCaloParams()" style="width: 100%; accent-color: #fbbf24; cursor: pointer;">
+                    <!-- Tùy chọn tham số -->
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size: 0.8rem; color: #94a3b8; display: block; margin-bottom: 4px;">Chọn lượng nước $m$ (g):</label>
+                        <select id="selWaterM" onchange="resetExpStep()" style="width: 100%; padding: 6px 10px; background: #0f172a; border: 1px solid #475569; border-radius: 6px; color: white; font-weight: 600;">
+                            <option value="150">150 g (0.150 kg)</option>
+                            <option value="200">200 g (0.200 kg)</option>
+                            <option value="250">250 g (0.250 kg)</option>
+                        </select>
                     </div>
 
-                    <!-- Đọc Tính toán thực nghiệm -->
-                    <div style="margin-bottom: 14px; font-size: 0.82rem; color: #94a3b8; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; line-height: 1.6;">
-                        <div>⚡ Nhiệt lượng $Q = P \cdot \tau$: <strong style="color: #fbbf24;"><span id="valQ">0</span> J</strong></div>
-                        <div>📈 Độ tăng nhiệt $\Delta T$: <strong style="color: #ef4444;"><span id="valDeltaT">0.0</span> °C</strong></div>
-                        <div style="margin-top: 4px; padding-top: 4px; border-top: 1px dashed #475569;">🧮 Nhiệt dung riêng $c$: <strong style="color: #34d399; font-size: 0.95rem;"><span id="valC">--</span> J/(kg.K)</strong></div>
-                        <div>⚠️ Sai số so với chuẩn 4180: <strong style="color: #f87171;"><span id="valError">--</span>%</strong></div>
-                    </div>
-
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <button onclick="toggleCaloHeater()" id="btnToggleHeater" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
-                            🔥 Bật nguồn đun điện
+                    <div style="display: flex; gap: 8px;">
+                        <button onclick="nextExpStep()" id="btnNextStep" style="flex: 1; padding: 10px; background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">
+                            ▶ Bước tiếp theo
                         </button>
-                        <div style="display: flex; gap: 8px;">
-                            <button onclick="stirWater()" style="flex: 1; padding: 8px; background: #0284c7; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">
-                                🧪 Khuấy nước
-                            </button>
-                            <button onclick="resetCaloSim()" style="padding: 8px 12px; background: #334155; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">
-                                🔄 Đặt lại
-                            </button>
-                        </div>
+                        <button onclick="resetExpStep()" style="padding: 10px 14px; background: #334155; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">
+                            🔄 Đặt lại
+                        </button>
                     </div>
                 </div>
             </div>
@@ -350,239 +363,254 @@
             if(!canvas) return;
             const ctx = canvas.getContext('2d');
 
+            let currentStep = 1;
             let animId = null;
             let heating = false;
             let t_sec = 0;
-            let temp = 25.0;
-            const T1 = 25.0;
+            let temp1 = 25.0;
+            let temp2 = 25.0;
             let stirrerY = 0;
             let bubbles = [];
 
-            const c_water = 4180;
+            const c_water_std = 4180;
+            const P_watt = 40;
 
-            window.updateCaloParams = function() {
-                const m_g = parseFloat(document.getElementById('sliderMass').value);
-                const p_w = parseFloat(document.getElementById('sliderPower').value);
-
-                document.getElementById('valMass').innerText = m_g;
-                document.getElementById('valPower').innerText = p_w;
-
-                if(!heating && t_sec === 0) drawCaloFrame();
+            const stepInstructions = {
+                1: "<strong>BƯỚC 1 - CÂN NƯỚC:</strong> Đặt cốc nhôm lên cân điện tử, rót nước vào cốc và ghi nhận khối lượng $m$. Sau đó đặt cốc nhôm vào vỏ cách nhiệt của Nhiệt lượng kế.",
+                2: "<strong>BƯỚC 2 - ĐỌC NHIỆT ĐỘ BAN ĐẦU ($T_1$):</strong> Cắm Nhiệt kế điện tử vào nắp nhiệt lượng kế. Đọc và ghi nhận nhiệt độ ban đầu $T_1 = 25.0^\\circ\\text{C}$.",
+                3: "<strong>BƯỚC 3 - BẬT ĐUN & ĐỌC $P, \\tau$:</strong> Bật biến thế nguồn. Oát kế hiển thị công suất đun $P = 40\\text{W}$ và đồng hồ đếm thời gian đun $\\tau$. Dây đun phát sáng tỏa nhiệt.",
+                4: "<strong>BƯỚC 4 - ĐỌC NHIỆT ĐỘ CUỐI ($T_2$):</strong> Tắt nguồn điện đun. Dùng cần khuấy khuấy đều nước để nhiệt độ lan tỏa đồng nhất và đọc $T_2$.",
+                5: "<strong>BƯỚC 5 - BÁO CÁO THỰC HÀNH SGK:</strong> Áp dụng công thức $c = \\frac{P \\cdot \\tau}{m \\cdot (T_2 - T_1)}$ để tính Nhiệt dung riêng $c$ và so sánh với giá trị chuẩn $4180\\text{ J/(kg.K)}$."
             };
 
-            function drawCaloFrame() {
-                const m_kg = parseFloat(document.getElementById('sliderMass').value) / 1000.0;
-                const p_w = parseFloat(document.getElementById('sliderPower').value);
+            window.setExpStep = function(step) {
+                currentStep = step;
+                for(let i=1; i<=5; i++) {
+                    let btn = document.getElementById('stepBtn' + i);
+                    if(i === currentStep) {
+                        btn.style.background = '#2563eb';
+                    } else {
+                        btn.style.background = '#334155';
+                    }
+                }
+                document.getElementById('stepInstructionBox').innerHTML = stepInstructions[currentStep];
 
-                const Q = p_w * t_sec;
-                const deltaT = temp - T1;
-                document.getElementById('simTimeText').innerText = t_sec;
-                document.getElementById('simTempText').innerText = temp.toFixed(1);
-                document.getElementById('valQ').innerText = Math.round(Q);
-                document.getElementById('valDeltaT').innerText = deltaT.toFixed(1);
+                if(currentStep === 3 && !heating) {
+                    startHeating();
+                } else if(currentStep !== 3 && heating) {
+                    stopHeating();
+                }
 
-                if(t_sec > 5 && deltaT > 0.5) {
-                    const c_calc = Q / (m_kg * deltaT);
-                    const error = Math.abs((c_calc - c_water) / c_water) * 100;
-                    document.getElementById('valC').innerText = Math.round(c_calc);
-                    document.getElementById('valError').innerText = error.toFixed(1);
+                if(currentStep === 4) {
+                    stirrerY = -12;
+                    setTimeout(() => { stirrerY = 0; drawBench(); }, 400);
+                }
+
+                drawBench();
+            };
+
+            window.nextExpStep = function() {
+                if(currentStep < 5) {
+                    setExpStep(currentStep + 1);
                 } else {
-                    document.getElementById('valC').innerText = "--";
-                    document.getElementById('valError').innerText = "--";
+                    resetExpStep();
+                }
+            };
+
+            function startHeating() {
+                heating = true;
+                let lastNow = performance.now();
+                function loop(now) {
+                    if(!heating) return;
+                    let dt = (now - lastNow) / 1000;
+                    if(dt >= 0.5) {
+                        t_sec += 1;
+                        const m_g = parseFloat(document.getElementById('selWaterM').value);
+                        const m_kg = m_g / 1000.0;
+                        temp2 += (P_watt * 1.0) / (m_kg * c_water_std);
+                        lastNow = now;
+                    }
+                    drawBench();
+                    animId = requestAnimationFrame(loop);
+                }
+                animId = requestAnimationFrame(loop);
+            }
+
+            function stopHeating() {
+                heating = false;
+                if(animId) cancelAnimationFrame(animId);
+            }
+
+            window.resetExpStep = function() {
+                stopHeating();
+                t_sec = 0;
+                temp1 = 25.0;
+                temp2 = 25.0;
+                bubbles = [];
+                setExpStep(1);
+            };
+
+            function drawBench() {
+                const m_g = parseFloat(document.getElementById('selWaterM').value);
+                const m_kg = m_g / 1000.0;
+
+                // Cập nhật số liệu Báo cáo SGK
+                document.getElementById('simTimeText').innerText = t_sec;
+                document.getElementById('simTempText').innerText = temp2.toFixed(1);
+                document.getElementById('rptM').innerText = m_kg.toFixed(3);
+                document.getElementById('rptT1').innerText = temp1.toFixed(1);
+                document.getElementById('rptP').innerText = P_watt;
+                document.getElementById('rptTau').innerText = t_sec;
+
+                if(t_sec >= 10 && (temp2 - temp1) > 0.5) {
+                    document.getElementById('rptT2').innerText = temp2.toFixed(1);
+                    const c_calc = (P_watt * t_sec) / (m_kg * (temp2 - temp1));
+                    const err = Math.abs((c_calc - c_water_std) / c_water_std) * 100;
+                    document.getElementById('rptC').innerText = Math.round(c_calc);
+                    document.getElementById('rptErr').innerText = err.toFixed(1);
+                } else {
+                    document.getElementById('rptT2').innerText = "--";
+                    document.getElementById('rptC').innerText = "--";
+                    document.getElementById('rptErr').innerText = "--";
                 }
 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                // Bầu trời đên phòng thí nghiệm
+                // Bầu trời đêm phòng Lab
                 ctx.fillStyle = '#090d16';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // 1. VỞ NGOÀI CÁCH NHIỆT (NHIỆT LƯỢNG KẾ 3D)
-                const cx = 170;
-                const cy = 250;
-                const outerW = 190;
-                const outerH = 220;
+                // Mặt bàn thí nghiệm gỗ nâu 3D
+                let tableGrad = ctx.createLinearGradient(0, 260, 0, 420);
+                tableGrad.addColorStop(0, '#334155');
+                tableGrad.addColorStop(1, '#0f172a');
+                ctx.fillStyle = tableGrad;
+                ctx.fillRect(0, 260, canvas.width, 160);
+                ctx.strokeStyle = '#475569'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(0, 260); ctx.lineTo(canvas.width, 260); ctx.stroke();
 
-                let outerGrad = ctx.createLinearGradient(cx - outerW/2, 0, cx + outerW/2, 0);
-                outerGrad.addColorStop(0, '#1e293b');
-                outerGrad.addColorStop(0.5, '#475569');
-                outerGrad.addColorStop(1, '#0f172a');
+                // 1. BIẾN THẾ NGUỒN 12V DC BÊN TRÁI
+                const psX = 50, psY = 200, psW = 90, psH = 80;
+                ctx.fillStyle = '#1e293b'; ctx.fillRect(psX, psY, psW, psH);
+                ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 1.5; ctx.strokeRect(psX, psY, psW, psH);
+                ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 10px sans-serif';
+                ctx.fillText("BIẾN THẾ NGUỒN", psX + 5, psY + 16);
+                ctx.fillText("12V DC", psX + 25, psY + 32);
+                // Núm xoay & Đèn báo
+                ctx.beginPath(); ctx.arc(psX + 45, psY + 55, 12, 0, Math.PI * 2);
+                ctx.fillStyle = '#475569'; ctx.fill(); ctx.stroke();
+                ctx.beginPath(); ctx.arc(psX + 75, psY + 25, 4, 0, Math.PI * 2);
+                ctx.fillStyle = heating ? '#10b981' : '#ef4444'; ctx.fill();
 
-                ctx.fillStyle = outerGrad;
+                // 2. OÁT KẾ (WATTMETER) HIỂN THỊ P & TAU
+                const wmX = 160, wmY = 190, wmW = 100, wmH = 90;
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(wmX, wmY, wmW, wmH);
+                ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 1.5; ctx.strokeRect(wmX, wmY, wmW, wmH);
+                ctx.fillStyle = '#fbbf24'; ctx.font = 'bold 10px sans-serif';
+                ctx.fillText("OÁT KẾ (WATTMETER)", wmX + 5, wmY + 16);
+                // Màn hình LED
+                ctx.fillStyle = '#1e293b'; ctx.fillRect(wmX + 10, wmY + 25, 80, 30);
+                ctx.fillStyle = '#34d399'; ctx.font = 'bold 12px monospace';
+                ctx.fillText(P_watt + " W", wmX + 18, wmY + 44);
+                ctx.fillStyle = '#cbd5e1'; ctx.font = '10px sans-serif';
+                ctx.fillText("Thời gian: " + t_sec + " s", wmX + 10, wmY + 75);
+
+                // Dây điện nối từ Nguồn -> Oát kế -> Dây đun
+                ctx.strokeStyle = heating ? '#ef4444' : '#64748b'; ctx.lineWidth = 2.5;
+                ctx.beginPath(); ctx.moveTo(psX + psW, psY + 40); ctx.lineTo(wmX, wmY + 40); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(wmX + wmW, wmY + 40); ctx.lineTo(310, 160); ctx.stroke();
+
+                // 3. CÂN ĐIỆN TỬ (Ở Bước 1)
+                const scaleX = 400, scaleY = 240;
+                ctx.fillStyle = '#334155'; ctx.fillRect(scaleX - 45, scaleY, 90, 25);
+                ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1.5; ctx.strokeRect(scaleX - 45, scaleY, 90, 25);
+                ctx.fillStyle = '#34d399'; ctx.font = 'bold 11px monospace';
+                ctx.fillText(m_g + " g", scaleX - 20, scaleY + 16);
+
+                // 4. NHIỆT LƯỢNG KẾ BÓC TÁCH 3D (Ở TRUNG TÂM BÀN)
+                const cx = 330, cy = 230;
+                const outerW = 110, outerH = 130;
+
+                // Vỏ xốp cách nhiệt
+                let caloGrad = ctx.createLinearGradient(cx - outerW/2, 0, cx + outerW/2, 0);
+                caloGrad.addColorStop(0, '#1e293b');
+                caloGrad.addColorStop(0.5, '#475569');
+                caloGrad.addColorStop(1, '#0f172a');
+                ctx.fillStyle = caloGrad;
                 ctx.fillRect(cx - outerW/2, cy - outerH/2, outerW, outerH);
                 ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2;
                 ctx.strokeRect(cx - outerW/2, cy - outerH/2, outerW, outerH);
 
-                // Nắp nhiệt lượng kế cách nhiệt
+                // Nắp đậy cách nhiệt
                 ctx.fillStyle = '#334155';
-                ctx.fillRect(cx - outerW/2 - 10, cy - outerH/2 - 15, outerW + 20, 18);
-                ctx.strokeRect(cx - outerW/2 - 10, cy - outerH/2 - 15, outerW + 20, 18);
+                ctx.fillRect(cx - outerW/2 - 5, cy - outerH/2 - 10, outerW + 10, 12);
 
-                // 2. CỐC NHÔM BÊN TRONG CHỨA NƯỚC
-                const innerW = 140;
-                const innerH = 170;
+                // Cốc nhôm bên trong & Nước
+                const innerW = 80, innerH = 100;
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillRect(cx - innerW/2, cy - innerH/2 + 5, innerW, innerH);
+                
+                // Nước xanh trong cốc
+                const waterH = 40 + (m_kg / 0.3) * 50;
+                const waterY = (cy + innerH/2 + 5) - waterH;
+                ctx.fillStyle = 'rgba(56, 189, 248, 0.75)';
+                ctx.fillRect(cx - innerW/2 + 3, waterY, innerW - 6, waterH - 3);
 
-                let innerGrad = ctx.createLinearGradient(cx - innerW/2, 0, cx + innerW/2, 0);
-                innerGrad.addColorStop(0, '#94a3b8');
-                innerGrad.addColorStop(0.5, '#cbd5e1');
-                innerGrad.addColorStop(1, '#64748b');
-
-                ctx.fillStyle = innerGrad;
-                ctx.fillRect(cx - innerW/2, cy - innerH/2 + 10, innerW, innerH);
-
-                // 3. NƯỚC CHỨA TRONG CỐC (Mức nước phụ thuộc m)
-                const waterH = 60 + (m_kg / 0.3) * 80;
-                const waterY = (cy + innerH/2 + 10) - waterH;
-
-                let waterGrad = ctx.createLinearGradient(0, waterY, 0, cy + innerH/2 + 10);
-                waterGrad.addColorStop(0, 'rgba(56, 189, 248, 0.7)');
-                waterGrad.addColorStop(1, 'rgba(2, 132, 199, 0.9)');
-
-                ctx.fillStyle = waterGrad;
-                ctx.fillRect(cx - innerW/2 + 5, waterY, innerW - 10, waterH - 5);
-
-                // Bọt khí đun sôi nổi lên
+                // Bọt khí nổi khi đun
                 if(heating) {
                     if(Math.random() < 0.4) {
-                        bubbles.push({ x: cx + (Math.random() - 0.5) * (innerW - 30), y: cy + innerH/2 - 20, r: Math.random() * 3 + 1.5 });
+                        bubbles.push({ x: cx + (Math.random() - 0.5) * 50, y: cy + innerH/2 - 10, r: Math.random() * 2.5 + 1 });
                     }
                     ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
                     for(let i = bubbles.length - 1; i >= 0; i--) {
                         let b = bubbles[i];
-                        b.y -= 1.5;
+                        b.y -= 1.2;
                         ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fill();
                         if(b.y < waterY) bubbles.splice(i, 1);
                     }
                 }
 
-                // 4. DÂY ĐUN ĐIỆN TRỞ LÒ XO 3D
-                const coilX = cx - 30;
+                // Dây đun xoắn 3D
+                const coilX = cx - 18;
                 ctx.strokeStyle = heating ? '#ef4444' : '#64748b';
-                ctx.lineWidth = heating ? 4 : 3;
-                if(heating) { ctx.shadowColor = '#ef4444'; ctx.shadowBlur = 10; }
-
+                ctx.lineWidth = heating ? 3.5 : 2.5;
+                if(heating) { ctx.shadowColor = '#ef4444'; ctx.shadowBlur = 8; }
                 ctx.beginPath();
-                ctx.moveTo(coilX, cy - outerH/2 - 15);
-                ctx.lineTo(coilX, cy + 20);
-                for(let i=0; i<5; i++) {
-                    ctx.arc(coilX, cy + 20 + i*10, 10, -Math.PI/2, Math.PI/2);
+                ctx.moveTo(coilX, cy - outerH/2 - 10);
+                ctx.lineTo(coilX, cy + 10);
+                for(let i=0; i<4; i++) {
+                    ctx.arc(coilX, cy + 10 + i*8, 7, -Math.PI/2, Math.PI/2);
                 }
                 ctx.stroke();
                 ctx.shadowBlur = 0;
 
-                // 5. NHIỆT KẾ ĐIỆN TỬ
-                const thermX = cx + 35;
-                ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 3;
-                ctx.beginPath(); ctx.moveTo(thermX, cy - outerH/2 - 50); ctx.lineTo(thermX, cy + 40); ctx.stroke();
+                // Nhiệt kế điện tử
+                const thermX = cx + 20;
+                ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 2.5;
+                ctx.beginPath(); ctx.moveTo(thermX, cy - outerH/2 - 35); ctx.lineTo(thermX, cy + 20); ctx.stroke();
                 ctx.fillStyle = '#ef4444';
-                ctx.beginPath(); ctx.arc(thermX, cy + 40, 5, 0, Math.PI * 2); ctx.fill();
-
+                ctx.beginPath(); ctx.arc(thermX, cy + 20, 4, 0, Math.PI * 2); ctx.fill();
                 // Màn hình LED nhiệt kế
-                ctx.fillStyle = '#0f172a';
-                ctx.fillRect(thermX - 35, cy - outerH/2 - 75, 70, 25);
-                ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 1.5;
-                ctx.strokeRect(thermX - 35, cy - outerH/2 - 75, 70, 25);
-                ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 12px monospace';
-                ctx.fillText(temp.toFixed(1) + "°C", thermX - 25, cy - outerH/2 - 58);
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(thermX - 25, cy - outerH/2 - 52, 50, 18);
+                ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 1; ctx.strokeRect(thermX - 25, cy - outerH/2 - 52, 50, 18);
+                ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 10px monospace';
+                ctx.fillText(temp2.toFixed(1) + "°C", thermX - 18, cy - outerH/2 - 39);
 
-                // 6. CẦN KHUẤY KIM LOẠI
-                const stirX = cx;
-                ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 2;
+                // Cần khuấy kim loại
+                ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1.8;
                 ctx.beginPath();
-                ctx.moveTo(stirX, cy - outerH/2 - 40 + stirrerY);
-                ctx.lineTo(stirX, cy + 30 + stirrerY);
+                ctx.moveTo(cx, cy - outerH/2 - 25 + stirrerY);
+                ctx.lineTo(cx, cy + 15 + stirrerY);
                 ctx.stroke();
-                ctx.beginPath();
-                ctx.arc(stirX, cy + 30 + stirrerY, 12, 0, Math.PI);
-                ctx.stroke();
+                ctx.beginPath(); ctx.arc(cx, cy + 15 + stirrerY, 8, 0, Math.PI); ctx.stroke();
 
-                // 7. ĐỒ THỊ THỜI GIAN THỰC T - t BÊN PHẢI CANVAS
-                const gx = 320;
-                const gy = 330;
-                const gW = 170;
-                const gH = 260;
-
-                ctx.fillStyle = '#0f172a';
-                ctx.fillRect(gx, gy - gH, gW, gH);
-                ctx.strokeStyle = '#334155'; ctx.lineWidth = 1.5;
-                ctx.strokeRect(gx, gy - gH, gW, gH);
-
-                ctx.strokeStyle = '#64748b'; ctx.lineWidth = 1.5;
-                ctx.beginPath(); ctx.moveTo(gx + 25, gy - 15); ctx.lineTo(gx + gW - 10, gy - 15); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(gx + 25, gy - 15); ctx.lineTo(gx + 25, gy - gH + 15); ctx.stroke();
-                ctx.fillStyle = '#94a3b8'; ctx.font = 'bold 10px sans-serif';
-                ctx.fillText("T (°C)", gx + 5, gy - gH + 12);
-                ctx.fillText("t (s)", gx + gW - 20, gy - 3);
-
-                if(t_sec > 0) {
-                    ctx.beginPath();
-                    ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 2.5;
-                    ctx.moveTo(gx + 25, gy - 15 - (T1 - 20)*3);
-                    let endGx = gx + 25 + (t_sec / 120) * (gW - 40);
-                    let endGy = gy - 15 - (temp - 20)*3;
-                    ctx.lineTo(endGx, endGy);
-                    ctx.stroke();
-                    ctx.beginPath(); ctx.arc(endGx, endGy, 4, 0, Math.PI * 2); ctx.fillStyle = '#fbbf24'; ctx.fill();
-                }
-
-                // 💧 WATERMARK VATLI102.COM TRÊN KHUNG CANVAS MÔ PHỎNG
+                // 💧 WATERMARK VATLI102.COM TRÊN CAN VẬT THÍ NGHIỆM
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
                 ctx.font = 'bold 13px sans-serif';
                 ctx.fillText("Vatli102.com", canvas.width - 95, canvas.height - 12);
             }
 
-            window.toggleCaloHeater = function() {
-                heating = !heating;
-                const btn = document.getElementById('btnToggleHeater');
-                const tag = document.getElementById('heaterStatusTag');
-
-                if(heating) {
-                    btn.innerText = "⏸ Tắt đun điện";
-                    btn.style.background = 'linear-gradient(135deg, #475569, #334155)';
-                    tag.style.display = 'block';
-
-                    let lastNow = performance.now();
-                    function loop(now) {
-                        if(!heating) return;
-                        let dt = (now - lastNow) / 1000;
-                        if(dt >= 0.5) {
-                            t_sec += 1;
-                            const m_kg = parseFloat(document.getElementById('sliderMass').value) / 1000.0;
-                            const p_w = parseFloat(document.getElementById('sliderPower').value);
-                            temp += (p_w * 1.0) / (m_kg * c_water);
-                            lastNow = now;
-                        }
-                        drawCaloFrame();
-                        animId = requestAnimationFrame(loop);
-                    }
-                    animId = requestAnimationFrame(loop);
-                } else {
-                    btn.innerText = "🔥 Bật nguồn đun điện";
-                    btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
-                    tag.style.display = 'none';
-                    if(animId) cancelAnimationFrame(animId);
-                }
-            };
-
-            window.stirWater = function() {
-                stirrerY = (stirrerY === 0) ? -15 : 0;
-                drawCaloFrame();
-                setTimeout(() => { stirrerY = 0; drawCaloFrame(); }, 300);
-            };
-
-            window.resetCaloSim = function() {
-                heating = false;
-                if(animId) cancelAnimationFrame(animId);
-                t_sec = 0;
-                temp = T1;
-                bubbles = [];
-                document.getElementById('btnToggleHeater').innerText = "🔥 Bật nguồn đun điện";
-                document.getElementById('btnToggleHeater').style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
-                document.getElementById('heaterStatusTag').style.display = 'none';
-                drawCaloFrame();
-            };
-
-            updateCaloParams();
+            drawBench();
         })();
         </script>
 
