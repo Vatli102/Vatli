@@ -1,676 +1,312 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thí Nghiệm Ảo: Đo Nhiệt Dung Riêng Của Nước - Vật Lí 12</title>
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- MathJax -->
-    <script>
-        window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b1329; color: #f8fafc; text-align: justify; }
-        p { text-align: justify; }
-        .glass-card { background: rgba(23, 37, 84, 0.65); backdrop-filter: blur(14px); border: 1px solid rgba(255, 255, 255, 0.12); }
-        .step-active { background-color: #2563eb !important; color: #ffffff !important; border-color: #60a5fa !important; }
-        .step-done { background-color: #059669 !important; color: #ffffff !important; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #1e293b; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
-    </style>
-</head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col p-3 sm:p-6">
-
-    <!-- ==================== HEADER ==================== -->
-    <header class="max-w-7xl mx-auto w-full mb-6">
-        <div class="glass-card rounded-3xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-2xl">
-            <div class="flex items-center gap-3.5">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center text-white text-2xl shadow-lg shadow-blue-500/30">
-                    <i class="fa-solid fa-flask-vial"></i>
-                </div>
-                <div>
-                    <span class="text-[11px] font-extrabold tracking-wider uppercase text-cyan-400">Vật Lí 12 — Chương I: Vật Lí Nhiệt (Phần Thí Nghiệm Thực Hành)</span>
-                    <h1 class="text-xl sm:text-2xl font-extrabold text-white">THÍ NGHIỆM ẢO: ĐO NHIỆT DUNG RIÊNG CỦA NƯỚC</h1>
-                </div>
+        <!-- 🔬 MÔ PHỎNG TƯƠNG TÁC: THỰC HÀNH ĐO NHIỆT DUNG RIÊNG CỦA NƯỚC (SGK KẾT NỐI TRI THỨC) -->
+        <div class="diagram-box-clean" style="text-align: left; padding: 25px; margin: 35px 0;">
+            <div class="diagram-title-clean" style="margin-bottom: 15px; text-align: center;">
+                🔬 MÔ PHỎNG TƯƠNG TÁC: THỰC HÀNH ĐO NHIỆT DUNG RIÊNG CỦA NƯỚC
             </div>
-            <div class="flex items-center gap-2">
-                <a href="ly-thuyet.html" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-blue-500/20 transition-all flex items-center gap-2">
-                    <i class="fa-solid fa-book-open"></i> Đọc bài giảng
-                </a>
-            </div>
-        </div>
-    </header>
+            <p style="color: #94a3b8; font-size: 0.9rem; text-align: center; margin-bottom: 20px;">
+                Mô phỏng bộ thí nghiệm thực hành Nhiệt lượng kế bóc tách theo chuẩn SGK & SGV Vật lí 12 Kết nối tri thức. Điều chỉnh công suất $P$ và khối lượng nước $m$ để đo nhiệt dung riêng $c$!
+            </p>
 
-    <!-- MAIN DASHBOARD -->
-    <main class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
-        
-        <!-- THÍ NGHIỆM & MÔ PHỎNG (COL-8) -->
-        <div class="lg:col-span-8 space-y-6 flex flex-col">
-            
-            <!-- THANH TIẾN TRÌNH THÍ NGHIỆM 4 BƯỚC -->
-            <div class="glass-card rounded-2xl p-3.5 flex items-center justify-between text-xs font-bold gap-2 overflow-x-auto custom-scrollbar">
-                <div id="stepBtn1" class="step-btn step-active px-3 py-2 rounded-xl border border-slate-700 flex items-center gap-2 shrink-0">
-                    <span class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[11px]">1</span>
-                    <span>⚖️ Chuẩn bị & Cân nước</span>
-                </div>
-                <i class="fa-solid fa-chevron-right text-slate-600 text-xs"></i>
-                <div id="stepBtn2" class="step-btn px-3 py-2 rounded-xl border border-slate-800 text-slate-400 flex items-center gap-2 shrink-0">
-                    <span class="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-[11px]">2</span>
-                    <span>⚡ Cấu hình $P$ & $\tau$</span>
-                </div>
-                <i class="fa-solid fa-chevron-right text-slate-600 text-xs"></i>
-                <div id="stepBtn3" class="step-btn px-3 py-2 rounded-xl border border-slate-800 text-slate-400 flex items-center gap-2 shrink-0">
-                    <span class="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-[11px]">3</span>
-                    <span>🔥 Tiến hành đun nóng</span>
-                </div>
-                <i class="fa-solid fa-chevron-right text-slate-600 text-xs"></i>
-                <div id="stepBtn4" class="step-btn px-3 py-2 rounded-xl border border-slate-800 text-slate-400 flex items-center gap-2 shrink-0">
-                    <span class="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-[11px]">4</span>
-                    <span>📊 Kết quả & Tính $c$</span>
-                </div>
-            </div>
-
-            <!-- ANIMATION CANVAS & BÌNH NHIỆT LƯỢNG KẾ (VATLI102 STYLE) -->
-            <div class="glass-card rounded-3xl p-4 flex flex-col items-center justify-center relative min-h-[400px] overflow-hidden">
-                <div class="absolute top-4 left-4 z-10 flex items-center gap-2">
-                    <span class="px-3.5 py-1 rounded-full bg-slate-900/90 text-cyan-300 text-xs font-bold border border-cyan-500/40 shadow-md flex items-center gap-1.5">
-                        <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span> Mô Phỏng Trực Quan Vatli102
-                    </span>
-                </div>
-
-                <!-- CANVAS CHÍNH MO PHONG PHET -->
-                <canvas id="simCanvas" width="700" height="360" class="w-full max-w-[700px] h-[360px] rounded-2xl bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 shadow-2xl border border-slate-800"></canvas>
-            </div>
-
-            <!-- BẢNG ĐIỀU KHIỂN & ĐỒNG HỒ ĐIỆN TỬ -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div class="glass-card p-3 rounded-2xl text-center space-y-1">
-                    <span class="text-[11px] text-slate-400 font-medium block">⚖️ Khối Lượng Nước ($m$)</span>
-                    <span id="dispMass" class="text-lg font-extrabold text-cyan-400 font-mono">0.20 kg</span>
-                </div>
-                <div class="glass-card p-3 rounded-2xl text-center space-y-1">
-                    <span class="text-[11px] text-slate-400 font-medium block">⚡ Công Suất Đun ($P$)</span>
-                    <span id="dispPower" class="text-lg font-extrabold text-amber-400 font-mono">50 W</span>
-                </div>
-                <div class="glass-card p-3 rounded-2xl text-center space-y-1">
-                    <span class="text-[11px] text-slate-400 font-medium block">⏱️ Thời Gian ($\tau$)</span>
-                    <span id="dispTimer" class="text-lg font-extrabold text-emerald-400 font-mono">0 s</span>
-                </div>
-                <div class="glass-card p-3 rounded-2xl text-center space-y-1">
-                    <span class="text-[11px] text-slate-400 font-medium block">🌡️ Nhiệt Độ Nước ($T$)</span>
-                    <span id="dispTemp" class="text-lg font-extrabold text-rose-400 font-mono">25.0 °C</span>
-                </div>
-            </div>
-
-            <!-- NÚT ĐIỀU KHIỂN THÍ NGHIỆM -->
-            <div class="glass-card p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3">
-                <div class="flex items-center gap-2">
-                    <button id="btnStart" onclick="startHeating()" class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-blue-500/25 transition-all flex items-center gap-2">
-                        <i class="fa-solid fa-play"></i> Bắt Đầu Đun Nóng
-                    </button>
-                    <button id="btnPause" onclick="pauseHeating()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl border border-slate-700 transition-all flex items-center gap-1.5" disabled>
-                        <i class="fa-solid fa-pause"></i> Tạm Dừng
-                    </button>
-                    <button onclick="resetExperiment()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl border border-slate-700 transition-all flex items-center gap-1.5">
-                        <i class="fa-solid fa-rotate-left"></i> Làm Lại
-                    </button>
-                </div>
-
-                <div class="flex items-center gap-3 text-xs">
-                    <label class="text-slate-400 font-medium">Tốc độ mô phỏng:</label>
-                    <select id="simSpeed" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-slate-200 focus:outline-none">
-                        <option value="1">1x (Thời gian thật)</option>
-                        <option value="5" selected>5x (Nhanh vừa)</option>
-                        <option value="15">15x (Siêu nhanh)</option>
-                    </select>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- BÁO CÁO & BIỂU ĐỒ (COL-4) -->
-        <div class="lg:col-span-4 space-y-6 flex flex-col">
-            
-            <!-- SLIDERS CẤU HÌNH -->
-            <div class="glass-card rounded-3xl p-5 space-y-4">
-                <h3 class="font-extrabold text-sm text-cyan-400 flex items-center gap-2">
-                    <i class="fa-solid fa-sliders"></i> THAM SỐ THÍ NGHIỆM
-                </h3>
-
-                <!-- Slider Khối Lượng -->
-                <div class="space-y-1.5">
-                    <div class="flex justify-between text-xs font-semibold">
-                        <span class="text-slate-300">Khối lượng nước ($m$):</span>
-                        <span id="sliderMassVal" class="text-cyan-400 font-mono">0.20 kg</span>
+            <div style="display: grid; grid-template-columns: 1fr 300px; gap: 20px; align-items: start;">
+                <!-- Khung Canvas Đồ Họa 3D Real -->
+                <div style="position: relative; background: #090d16; border-radius: 14px; border: 1px solid #334155; overflow: hidden; height: 420px;">
+                    <canvas id="calorimeterCanvas" width="520" height="420" style="width: 100%; height: 100%; display: block;"></canvas>
+                    <div style="position: absolute; top: 12px; left: 12px; background: rgba(15, 23, 42, 0.88); color: #38bdf8; border: 1px solid #0284c7; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; backdrop-filter: blur(4px);">
+                        ⏱️ $\tau = $ <span id="simTimeText">0</span> s | 🌡️ $T = $ <span id="simTempText">25.0</span> °C
                     </div>
-                    <input type="range" id="inputMass" min="0.1" max="0.5" step="0.05" value="0.20" oninput="updateSliders()" class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500">
-                </div>
-
-                <!-- Slider Công Suất -->
-                <div class="space-y-1.5">
-                    <div class="flex justify-between text-xs font-semibold">
-                        <span class="text-slate-300">Công suất đun ($P$):</span>
-                        <span id="sliderPowerVal" class="text-amber-400 font-mono">50 W</span>
+                    <div id="heaterStatusTag" style="position: absolute; top: 12px; right: 12px; background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; display: none;">
+                        🔥 Dây đun đang tỏa nhiệt
                     </div>
-                    <input type="range" id="inputPower" min="20" max="100" step="5" value="50" oninput="updateSliders()" class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-500">
                 </div>
 
-                <!-- Slider Thời Gian Đun -->
-                <div class="space-y-1.5">
-                    <div class="flex justify-between text-xs font-semibold">
-                        <span class="text-slate-300">Thời gian đun mục tiêu ($\tau$):</span>
-                        <span id="sliderTimeVal" class="text-emerald-400 font-mono">300 s (5 phút)</span>
+                <!-- Bảng Điều Khiển Thí Nghiệm -->
+                <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 18px; color: #f8fafc;">
+                    <div style="font-weight: 700; font-size: 1rem; color: #fbbf24; margin-bottom: 14px; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-sliders"></i> Cấu hình Thí nghiệm
                     </div>
-                    <input type="range" id="inputTargetTime" min="60" max="600" step="30" value="300" oninput="updateSliders()" class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500">
-                </div>
-            </div>
 
-            <!-- BIỂU ĐỒ ĐỒ THỊ NHIỆT ĐỘ (STRICTLY LINEAR TENSION 0) -->
-            <div class="glass-card rounded-3xl p-4 space-y-2">
-                <h3 class="font-extrabold text-xs text-slate-300 flex items-center gap-1.5">
-                    <i class="fa-solid fa-chart-line text-rose-400"></i> Đồ Thị Tuyến Tính $T$ theo Thời Gian $\tau$ ($T = T_0 + k\tau$)
-                </h3>
-                <div class="h-[185px] w-full">
-                    <canvas id="tempChart"></canvas>
-                </div>
-            </div>
-
-            <!-- KHUNG TÍNH TOÁN BÁO CÁO KẾT QUẢ -->
-            <div class="glass-card rounded-3xl p-5 space-y-3 flex-1 flex flex-col justify-between">
-                <div>
-                    <h3 class="font-extrabold text-sm text-emerald-400 flex items-center gap-2 mb-3">
-                        <i class="fa-solid fa-calculator"></i> BÁO CÁO TÍNH TOÁN $c$
-                    </h3>
-
-                    <div class="space-y-2 text-xs">
-                        <div class="p-2.5 bg-slate-900/90 rounded-xl border border-slate-800 space-y-1">
-                            <span class="text-slate-400 block font-medium">1. Nhiệt lượng tỏa ra từ dây nung:</span>
-                            <span id="calcQ" class="font-bold text-amber-400 font-mono">$Q = P \cdot \tau = 50 \times 0 = 0\text{ J}$</span>
+                    <!-- Slider Khối lượng nước m -->
+                    <div style="margin-bottom: 14px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 4px;">
+                            <span>Khối lượng nước ($m$):</span>
+                            <strong style="color: #38bdf8;"><span id="valMass">150</span> g</strong>
                         </div>
+                        <input type="range" id="sliderMass" min="100" max="300" step="10" value="150" oninput="updateCaloParams()" style="width: 100%; accent-color: #38bdf8; cursor: pointer;">
+                    </div>
 
-                        <div class="p-2.5 bg-slate-900/90 rounded-xl border border-slate-800 space-y-1">
-                            <span class="text-slate-400 block font-medium">2. Độ tăng nhiệt độ nước ($\Delta T$):</span>
-                            <span id="calcDeltaT" class="font-bold text-rose-400 font-mono">$\Delta T = t_2 - t_1 = 25.0 - 25.0 = 0.0^\circ\text{C}$</span>
+                    <!-- Slider Công suất P -->
+                    <div style="margin-bottom: 14px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 4px;">
+                            <span>Công suất đun ($P$):</span>
+                            <strong style="color: #fbbf24;"><span id="valPower">40</span> W</strong>
                         </div>
+                        <input type="range" id="sliderPower" min="20" max="80" step="5" value="40" oninput="updateCaloParams()" style="width: 100%; accent-color: #fbbf24; cursor: pointer;">
+                    </div>
 
-                        <div class="p-3 bg-gradient-to-r from-blue-950 to-indigo-950 rounded-xl border border-blue-800/60 space-y-1">
-                            <span class="text-blue-300 block font-extrabold">3. Kết quả Nhiệt dung riêng ($c$):</span>
-                            <span id="calcResultC" class="font-extrabold text-base text-cyan-300 font-mono">$c = \frac{Q}{m \cdot \Delta T} = \text{--- J/kg.K}$</span>
+                    <!-- Đọc Tính toán thực nghiệm -->
+                    <div style="margin-bottom: 14px; font-size: 0.82rem; color: #94a3b8; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; line-height: 1.6;">
+                        <div>⚡ Nhiệt lượng $Q = P \cdot \tau$: <strong style="color: #fbbf24;"><span id="valQ">0</span> J</strong></div>
+                        <div>📈 Độ tăng nhiệt $\Delta T$: <strong style="color: #ef4444;"><span id="valDeltaT">0.0</span> °C</strong></div>
+                        <div style="margin-top: 4px; padding-top: 4px; border-top: 1px dashed #475569;">🧮 Nhiệt dung riêng $c$: <strong style="color: #34d399; font-size: 0.95rem;"><span id="valC">--</span> J/(kg.K)</strong></div>
+                        <div>⚠️ Sai số so với chuẩn 4180: <strong style="color: #f87171;"><span id="valError">--</span>%</strong></div>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <button onclick="toggleCaloHeater()" id="btnToggleHeater" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+                            🔥 Bật nguồn đun điện
+                        </button>
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="stirWater()" style="flex: 1; padding: 8px; background: #0284c7; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">
+                                🧪 Khuấy nước
+                            </button>
+                            <button onclick="resetCaloSim()" style="padding: 8px 12px; background: #334155; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">
+                                🔄 Đặt lại
+                            </button>
                         </div>
                     </div>
                 </div>
-
-                <!-- Sai số so với trị lý thuyết -->
-                <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-                    <span class="text-slate-400 font-medium">Trị số chuẩn ($c_{\text{nước}}$):</span>
-                    <span class="font-bold text-slate-200 font-mono">4180 J/kg.K</span>
-                </div>
             </div>
-
         </div>
-    </main>
 
-    <!-- FOOTER -->
-    <footer class="max-w-7xl mx-auto w-full text-center text-xs text-slate-500 py-4 mt-6">
-        <p>Vatli102.com — Thí nghiệm ảo đo Nhiệt dung riêng của nước chuẩn GDPT 2018 — Vatli102.com</p>
-    </footer>
+        <script>
+        (function() {
+            const canvas = document.getElementById('calorimeterCanvas');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
 
-    <!-- SIMULATION JAVASCRIPT CODE -->
-    <script>
-        // State variables
-        let isRunning = false;
-        let animId = null;
-        let mass = 0.20; // kg
-        let power = 50; // W
-        let targetTime = 300; // s
-        let currentTime = 0; // s
-        let tempInitial = 25.0; // deg C
-        let currentTemp = 25.0; // deg C
-        const C_THEORETICAL = 4180; // J/kg.K
+            let animId = null;
+            let heating = false;
+            let t_sec = 0;
+            let temp = 25.0;
+            const T1 = 25.0;
+            let stirrerY = 0;
+            let bubbles = [];
 
-        // Canvas & Context
-        const canvas = document.getElementById('simCanvas');
-        const ctx = canvas.getContext('2d');
+            const c_water = 4180;
 
-        // Chart.js instance (TENSION 0 FOR STRICTLY LINEAR GRAPH)
-        let chartInstance = null;
+            window.updateCaloParams = function() {
+                const m_g = parseFloat(document.getElementById('sliderMass').value);
+                const p_w = parseFloat(document.getElementById('sliderPower').value);
 
-        function initChart() {
-            const chartCtx = document.getElementById('tempChart').getContext('2d');
-            chartInstance = new Chart(chartCtx, {
-                type: 'line',
-                data: {
-                    labels: [0],
-                    datasets: [{
-                        label: 'Nhiệt độ T (°C)',
-                        data: [25.0],
-                        borderColor: '#f43f5e',
-                        backgroundColor: 'rgba(244, 63, 94, 0.12)',
-                        borderWidth: 2.5,
-                        fill: true,
-                        tension: 0, // STRICTLY LINEAR STRAIGHT LINE (NO CURVES!)
-                        pointRadius: 1.5,
-                        pointHoverRadius: 5
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: false, // Instant linear render
-                    scales: {
-                        x: {
-                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                            ticks: { color: '#94a3b8', font: { size: 10 } },
-                            title: { display: true, text: 'Thời gian τ (s)', color: '#64748b', font: { size: 10 } }
-                        },
-                        y: {
-                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                            ticks: { color: '#94a3b8', font: { size: 10 } },
-                            title: { display: true, text: 'Nhiệt độ T (°C)', color: '#64748b', font: { size: 10 } }
-                        }
-                    },
-                    plugins: { legend: { display: false } }
-                }
-            });
-        }
+                document.getElementById('valMass').innerText = m_g;
+                document.getElementById('valPower').innerText = p_w;
 
-        function updateSliders() {
-            if (isRunning) return;
-            mass = parseFloat(document.getElementById('inputMass').value);
-            power = parseFloat(document.getElementById('inputPower').value);
-            targetTime = parseInt(document.getElementById('inputTargetTime').value);
+                if(!heating && t_sec === 0) drawCaloFrame();
+            };
 
-            document.getElementById('sliderMassVal').innerText = mass.toFixed(2) + ' kg';
-            document.getElementById('sliderPowerVal').innerText = power + ' W';
-            document.getElementById('sliderTimeVal').innerText = targetTime + ' s (' + (targetTime/60).toFixed(1) + ' phút)';
+            function drawCaloFrame() {
+                const m_kg = parseFloat(document.getElementById('sliderMass').value) / 1000.0;
+                const p_w = parseFloat(document.getElementById('sliderPower').value);
 
-            document.getElementById('dispMass').innerText = mass.toFixed(2) + ' kg';
-            document.getElementById('dispPower').innerText = power + ' W';
-            
-            resetExperiment();
-        }
+                const Q = p_w * t_sec;
+                const deltaT = temp - T1;
+                document.getElementById('simTimeText').innerText = t_sec;
+                document.getElementById('simTempText').innerText = temp.toFixed(1);
+                document.getElementById('valQ').innerText = Math.round(Q);
+                document.getElementById('valDeltaT').innerText = deltaT.toFixed(1);
 
-        // Animated particles & heat waves
-        let waterBubbles = [];
-        let heatWaves = [];
-        let stirrerPhase = 0;
-
-        function initBubbles() {
-            waterBubbles = [];
-            for (let i = 0; i < 30; i++) {
-                waterBubbles.push({
-                    x: 250 + Math.random() * 180,
-                    y: 170 + Math.random() * 80,
-                    r: 1.5 + Math.random() * 3.5,
-                    speed: 0.8 + Math.random() * 1.5
-                });
-            }
-            heatWaves = [];
-            for (let i = 0; i < 5; i++) {
-                heatWaves.push({
-                    x: 260 + i * 40,
-                    y: 105,
-                    alpha: 0.2 + Math.random() * 0.5,
-                    speed: 0.6 + Math.random() * 0.8
-                });
-            }
-        }
-
-        // Draw Realism PhET Simulation on Canvas
-        function drawSimulation() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // 1. Draw Stand & Table Surface
-            const tableGrad = ctx.createLinearGradient(0, 310, 0, 360);
-            tableGrad.addColorStop(0, '#334155');
-            tableGrad.addColorStop(1, '#1e293b');
-            ctx.fillStyle = tableGrad;
-            ctx.fillRect(120, 310, 460, 20); // Table top
-            ctx.fillStyle = '#0f172a';
-            ctx.fillRect(150, 330, 24, 30); // Leg L
-            ctx.fillRect(506, 330, 24, 30); // Leg R
-
-            // 2. Draw Digital Balance (Vatli102 Style)
-            ctx.fillStyle = '#475569';
-            ctx.beginPath();
-            ctx.roundRect(220, 290, 260, 20, 6);
-            ctx.fill();
-            ctx.strokeStyle = '#64748b';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            // Balance Screen
-            ctx.fillStyle = '#090d16';
-            ctx.beginPath();
-            ctx.roundRect(300, 294, 100, 13, 3);
-            ctx.fill();
-            ctx.fillStyle = '#38bdf8';
-            ctx.font = 'bold 11px monospace';
-            ctx.fillText((mass * 1000).toFixed(0) + ' . 00 g', 320, 304);
-
-            // 3. Draw Calorimeter (Outer Insulated Vessel - Brushed Metallic Aluminum)
-            const outerGrad = ctx.createLinearGradient(230, 0, 470, 0);
-            outerGrad.addColorStop(0, '#64748b');
-            outerGrad.addColorStop(0.2, '#cbd5e1');
-            outerGrad.addColorStop(0.5, '#94a3b8');
-            outerGrad.addColorStop(0.8, '#475569');
-            outerGrad.addColorStop(1, '#334155');
-
-            ctx.fillStyle = outerGrad;
-            ctx.beginPath();
-            ctx.roundRect(230, 115, 240, 175, 20);
-            ctx.fill();
-            ctx.strokeStyle = '#94a3b8';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            // Label for Outer Vessel
-            ctx.fillStyle = '#e2e8f0';
-            ctx.font = '10px Plus Jakarta Sans';
-            ctx.fillText('Vách cách nhiệt 2 lớp', 300, 280);
-
-            // Inner Glass Vessel
-            ctx.fillStyle = '#0f172a';
-            ctx.beginPath();
-            ctx.roundRect(244, 125, 212, 150, 14);
-            ctx.fill();
-
-            // Water Level (Dynamic height based on mass)
-            const waterHeight = Math.min(130, 65 + mass * 140);
-            const waterTopY = 270 - waterHeight;
-
-            // Water Gradient
-            const waterGrad = ctx.createLinearGradient(0, waterTopY, 0, 270);
-            if (isRunning) {
-                waterGrad.addColorStop(0, 'rgba(56, 189, 248, 0.65)');
-                waterGrad.addColorStop(1, 'rgba(244, 63, 94, 0.45)');
-            } else {
-                waterGrad.addColorStop(0, 'rgba(56, 189, 248, 0.55)');
-                waterGrad.addColorStop(1, 'rgba(3, 105, 161, 0.75)');
-            }
-            ctx.fillStyle = waterGrad;
-            ctx.beginPath();
-            ctx.roundRect(248, waterTopY, 204, waterHeight, [0, 0, 10, 10]);
-            ctx.fill();
-
-            // Water Surface Meniscus Waves
-            ctx.strokeStyle = '#38bdf8';
-            ctx.lineWidth = 2.5;
-            ctx.beginPath();
-            ctx.moveTo(248, waterTopY);
-            for (let x = 248; x <= 452; x += 10) {
-                const dy = isRunning ? Math.sin((x + currentTime * 20) / 8) * 1.5 : 0;
-                ctx.lineTo(x, waterTopY + dy);
-            }
-            ctx.stroke();
-
-            // 4. Draw Rising Steam / Heat Waves (when heating)
-            if (isRunning) {
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-                ctx.lineWidth = 2;
-                heatWaves.forEach(w => {
-                    w.y -= w.speed;
-                    if (w.y < 65) w.y = 105;
-                    ctx.beginPath();
-                    ctx.moveTo(w.x, w.y);
-                    ctx.bezierCurveTo(w.x - 6, w.y - 12, w.x + 6, w.y - 24, w.x, w.y - 36);
-                    ctx.stroke();
-                });
-
-                // Bubbles
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
-                waterBubbles.forEach(b => {
-                    b.y -= b.speed * (1 + (currentTemp - 25) / 40);
-                    if (b.y < waterTopY + 4) {
-                        b.y = 260;
-                        b.x = 255 + Math.random() * 190;
-                    }
-                    ctx.beginPath();
-                    ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-            }
-
-            // 5. Draw Heating Coil (Dây Nung Điện Trở Incandescent Glow)
-            if (isRunning) {
-                ctx.shadowColor = '#f97316';
-                ctx.shadowBlur = 18;
-                ctx.strokeStyle = '#ff4500';
-                ctx.lineWidth = 4.5;
-            } else {
-                ctx.strokeStyle = '#64748b';
-                ctx.lineWidth = 3.5;
-            }
-
-            ctx.beginPath();
-            ctx.moveTo(315, 80);
-            ctx.lineTo(315, 180);
-            // Coil loops
-            for (let y = 180; y <= 245; y += 12) {
-                ctx.arc(325, y, 10, 0, Math.PI * 2);
-            }
-            ctx.lineTo(335, 80);
-            ctx.stroke();
-            ctx.shadowBlur = 0; // Reset glow
-
-            // 6. Draw Stirrer (Cần Khuấy Inox - Bobs up & down)
-            const stirrerYOffset = isRunning ? Math.sin(currentTime * 8) * 3 : 0;
-            ctx.strokeStyle = '#e2e8f0';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(380, 70 + stirrerYOffset);
-            ctx.lineTo(380, 250 + stirrerYOffset);
-            ctx.lineTo(405, 250 + stirrerYOffset);
-            ctx.lineTo(355, 250 + stirrerYOffset);
-            ctx.stroke();
-            // Stirrer label
-            ctx.fillStyle = '#94a3b8';
-            ctx.font = '9px Plus Jakarta Sans';
-            ctx.fillText('Cần khuấy', 390, 75);
-
-            // 7. Draw Thermometer (Nhiệt Kế Thủy Ngân Vatli102 Style)
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
-            ctx.fillRect(270, 50, 14, 200);
-            ctx.strokeStyle = '#cbd5e1';
-            ctx.lineWidth = 1.5;
-            ctx.strokeRect(270, 50, 14, 200);
-
-            // Mercury level
-            const tempRatio = Math.min(1, (currentTemp - 20) / 80);
-            const mercuryHeight = tempRatio * 170;
-            ctx.fillStyle = '#f43f5e';
-            ctx.fillRect(273, 245 - mercuryHeight, 8, mercuryHeight + 5);
-
-            // Bulb
-            ctx.beginPath();
-            ctx.arc(277, 250, 10, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Thermometer Digital Readout Box
-            ctx.fillStyle = '#0f172a';
-            ctx.beginPath();
-            ctx.roundRect(248, 15, 60, 26, 6);
-            ctx.fill();
-            ctx.strokeStyle = '#f43f5e';
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
-            ctx.fillStyle = '#fb7185';
-            ctx.font = 'bold 12px monospace';
-            ctx.fillText(currentTemp.toFixed(1) + '°C', 254, 32);
-
-            // 8. Draw Wattmeter (Oát Kế Công Nghiệp)
-            const wattGrad = ctx.createLinearGradient(40, 140, 150, 230);
-            wattGrad.addColorStop(0, '#1e293b');
-            wattGrad.addColorStop(1, '#0f172a');
-            ctx.fillStyle = wattGrad;
-            ctx.beginPath();
-            ctx.roundRect(40, 135, 120, 95, 12);
-            ctx.fill();
-            ctx.strokeStyle = '#f59e0b';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            ctx.fillStyle = '#f59e0b';
-            ctx.font = 'bold 11px Plus Jakarta Sans';
-            ctx.fillText('OÁT KẾ BỘ ĐUN', 52, 155);
-
-            ctx.fillStyle = '#090d16';
-            ctx.fillRect(55, 165, 90, 30);
-            ctx.fillStyle = '#fbbf24';
-            ctx.font = 'bold 16px monospace';
-            ctx.fillText(power + ' W', 75, 186);
-
-            // Connecting Wires to Coil
-            ctx.strokeStyle = isRunning ? '#f59e0b' : '#475569';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(160, 180);
-            ctx.bezierCurveTo(200, 180, 220, 80, 315, 80);
-            ctx.stroke();
-        }
-
-        // Start Heating Simulation Loop (Strictly Linear Physics: T = T0 + (P * tau) / (m * c))
-        function startHeating() {
-            if (isRunning) return;
-            isRunning = true;
-            document.getElementById('btnStart').disabled = true;
-            document.getElementById('btnPause').disabled = false;
-            document.getElementById('btnStart').classList.add('opacity-50');
-            document.getElementById('btnPause').classList.remove('opacity-50');
-
-            setStepActive(3);
-
-            let lastTime = performance.now();
-            function loop(now) {
-                if (!isRunning) return;
-                const dt = (now - lastTime) / 1000;
-                lastTime = now;
-
-                const speedMultiplier = parseFloat(document.getElementById('simSpeed').value);
-                currentTime += dt * speedMultiplier;
-
-                if (currentTime >= targetTime) {
-                    currentTime = targetTime;
-                    isRunning = false;
-                    setStepActive(4);
-                    document.getElementById('btnStart').disabled = false;
-                    document.getElementById('btnPause').disabled = true;
-                }
-
-                // STRICTLY LINEAR PHYSICS FORMULA: Q = P * tau = m * c * deltaT => deltaT = (P * tau) / (m * c)
-                const deltaT = (power * currentTime) / (mass * C_THEORETICAL);
-                currentTemp = tempInitial + deltaT;
-
-                // Update UI Display Elements
-                document.getElementById('dispTimer').innerText = currentTime.toFixed(0) + ' s';
-                document.getElementById('dispTemp').innerText = currentTemp.toFixed(1) + ' °C';
-
-                // Calculate Results
-                const totalQ = power * currentTime;
-                const deltaTVal = currentTemp - tempInitial;
-                document.getElementById('calcQ').innerHTML = `$Q = P \\cdot \\tau = ${power} \\times ${currentTime.toFixed(0)} = ${totalQ.toFixed(0)}\\text{ J}$`;
-                document.getElementById('calcDeltaT').innerHTML = `$\\Delta T = t_2 - t_1 = ${currentTemp.toFixed(1)} - ${tempInitial.toFixed(1)} = ${deltaTVal.toFixed(1)}^\\circ\\text{C}$`;
-
-                if (deltaTVal > 0) {
-                    const calculatedC = totalQ / (mass * deltaTVal);
-                    document.getElementById('calcResultC').innerHTML = `$c = \\frac{Q}{m \\cdot \\Delta T} = \\mathbf{${calculatedC.toFixed(0)}\\text{ J/kg.K}}$`;
-                }
-
-                if (window.MathJax && window.MathJax.typesetPromise) {
-                    window.MathJax.typesetPromise();
-                }
-
-                // Update Chart (STRICTLY LINEAR STEP)
-                if (Math.floor(currentTime) % 4 === 0) {
-                    chartInstance.data.labels.push(currentTime.toFixed(0));
-                    chartInstance.data.datasets[0].data.push(currentTemp.toFixed(1));
-                    chartInstance.update('none');
-                }
-
-                drawSimulation();
-
-                if (isRunning) {
-                    animId = requestAnimationFrame(loop);
-                }
-            }
-            animId = requestAnimationFrame(loop);
-        }
-
-        function pauseHeating() {
-            isRunning = false;
-            document.getElementById('btnStart').disabled = false;
-            document.getElementById('btnPause').disabled = true;
-            document.getElementById('btnStart').classList.remove('opacity-50');
-            document.getElementById('btnPause').classList.add('opacity-50');
-            if (animId) cancelAnimationFrame(animId);
-            drawSimulation();
-        }
-
-        function resetExperiment() {
-            pauseHeating();
-            currentTime = 0;
-            currentTemp = tempInitial;
-            setStepActive(1);
-
-            document.getElementById('dispTimer').innerText = '0 s';
-            document.getElementById('dispTemp').innerText = '25.0 °C';
-
-            document.getElementById('calcQ').innerHTML = '$Q = P \\cdot \\tau = 0\\text{ J}$';
-            document.getElementById('calcDeltaT').innerHTML = '$\\Delta T = 0.0^\\circ\\text{C}$';
-            document.getElementById('calcResultC').innerHTML = '$c = \\text{--- J/kg.K}$';
-
-            chartInstance.data.labels = [0];
-            chartInstance.data.datasets[0].data = [25.0];
-            chartInstance.update();
-
-            initBubbles();
-            drawSimulation();
-
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise();
-            }
-        }
-
-        function setStepActive(stepNum) {
-            for (let i = 1; i <= 4; i++) {
-                const btn = document.getElementById('stepBtn' + i);
-                btn.className = 'step-btn px-3 py-2 rounded-xl border flex items-center gap-2 shrink-0 ';
-                if (i < stepNum) {
-                    btn.className += 'step-done border-emerald-600';
-                } else if (i === stepNum) {
-                    btn.className += 'step-active border-blue-500';
+                if(t_sec > 5 && deltaT > 0.5) {
+                    const c_calc = Q / (m_kg * deltaT);
+                    const error = Math.abs((c_calc - c_water) / c_water) * 100;
+                    document.getElementById('valC').innerText = Math.round(c_calc);
+                    document.getElementById('valError').innerText = error.toFixed(1);
                 } else {
-                    btn.className += 'border-slate-800 text-slate-400';
+                    document.getElementById('valC').innerText = "--";
+                    document.getElementById('valError').innerText = "--";
                 }
-            }
-        }
 
-        // Init on page load
-        window.addEventListener('load', () => {
-            initChart();
-            initBubbles();
-            drawSimulation();
-        });
-    </script>
-</body>
-</html>
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Bầu trời đên phòng thí nghiệm
+                ctx.fillStyle = '#090d16';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // 1. VỞ NGOÀI CÁCH NHIỆT (NHIỆT LƯỢNG KẾ 3D)
+                const cx = 170;
+                const cy = 250;
+                const outerW = 190;
+                const outerH = 220;
+
+                let outerGrad = ctx.createLinearGradient(cx - outerW/2, 0, cx + outerW/2, 0);
+                outerGrad.addColorStop(0, '#1e293b');
+                outerGrad.addColorStop(0.5, '#475569');
+                outerGrad.addColorStop(1, '#0f172a');
+
+                ctx.fillStyle = outerGrad;
+                ctx.fillRect(cx - outerW/2, cy - outerH/2, outerW, outerH);
+                ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2;
+                ctx.strokeRect(cx - outerW/2, cy - outerH/2, outerW, outerH);
+
+                // Nắp nhiệt lượng kế cách nhiệt
+                ctx.fillStyle = '#334155';
+                ctx.fillRect(cx - outerW/2 - 10, cy - outerH/2 - 15, outerW + 20, 18);
+                ctx.strokeRect(cx - outerW/2 - 10, cy - outerH/2 - 15, outerW + 20, 18);
+
+                // 2. CỐC NHÔM BÊN TRONG CHỨA NƯỚC
+                const innerW = 140;
+                const innerH = 170;
+
+                let innerGrad = ctx.createLinearGradient(cx - innerW/2, 0, cx + innerW/2, 0);
+                innerGrad.addColorStop(0, '#94a3b8');
+                innerGrad.addColorStop(0.5, '#cbd5e1');
+                innerGrad.addColorStop(1, '#64748b');
+
+                ctx.fillStyle = innerGrad;
+                ctx.fillRect(cx - innerW/2, cy - innerH/2 + 10, innerW, innerH);
+
+                // 3. NƯỚC CHỨA TRONG CỐC (Mức nước phụ thuộc m)
+                const waterH = 60 + (m_kg / 0.3) * 80;
+                const waterY = (cy + innerH/2 + 10) - waterH;
+
+                let waterGrad = ctx.createLinearGradient(0, waterY, 0, cy + innerH/2 + 10);
+                waterGrad.addColorStop(0, 'rgba(56, 189, 248, 0.7)');
+                waterGrad.addColorStop(1, 'rgba(2, 132, 199, 0.9)');
+
+                ctx.fillStyle = waterGrad;
+                ctx.fillRect(cx - innerW/2 + 5, waterY, innerW - 10, waterH - 5);
+
+                // Bọt khí đun sôi nổi lên
+                if(heating) {
+                    if(Math.random() < 0.4) {
+                        bubbles.push({ x: cx + (Math.random() - 0.5) * (innerW - 30), y: cy + innerH/2 - 20, r: Math.random() * 3 + 1.5 });
+                    }
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                    for(let i = bubbles.length - 1; i >= 0; i--) {
+                        let b = bubbles[i];
+                        b.y -= 1.5;
+                        ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fill();
+                        if(b.y < waterY) bubbles.splice(i, 1);
+                    }
+                }
+
+                // 4. DÂY ĐUN ĐIỆN TRỞ LÒ XO 3D
+                const coilX = cx - 30;
+                ctx.strokeStyle = heating ? '#ef4444' : '#64748b';
+                ctx.lineWidth = heating ? 4 : 3;
+                if(heating) { ctx.shadowColor = '#ef4444'; ctx.shadowBlur = 10; }
+
+                ctx.beginPath();
+                ctx.moveTo(coilX, cy - outerH/2 - 15);
+                ctx.lineTo(coilX, cy + 20);
+                for(let i=0; i<5; i++) {
+                    ctx.arc(coilX, cy + 20 + i*10, 10, -Math.PI/2, Math.PI/2);
+                }
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+
+                // 5. NHIỆT KẾ ĐIỆN TỬ
+                const thermX = cx + 35;
+                ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(thermX, cy - outerH/2 - 50); ctx.lineTo(thermX, cy + 40); ctx.stroke();
+                ctx.fillStyle = '#ef4444';
+                ctx.beginPath(); ctx.arc(thermX, cy + 40, 5, 0, Math.PI * 2); ctx.fill();
+
+                // Màn hình LED nhiệt kế
+                ctx.fillStyle = '#0f172a';
+                ctx.fillRect(thermX - 35, cy - outerH/2 - 75, 70, 25);
+                ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 1.5;
+                ctx.strokeRect(thermX - 35, cy - outerH/2 - 75, 70, 25);
+                ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 12px monospace';
+                ctx.fillText(temp.toFixed(1) + "°C", thermX - 25, cy - outerH/2 - 58);
+
+                // 6. CẦN KHUẤY KIM LOẠI
+                const stirX = cx;
+                ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(stirX, cy - outerH/2 - 40 + stirrerY);
+                ctx.lineTo(stirX, cy + 30 + stirrerY);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(stirX, cy + 30 + stirrerY, 12, 0, Math.PI);
+                ctx.stroke();
+
+                // 7. ĐỒ THỊ THỜI GIAN THỰC T - t BÊN PHẢI CANVAS
+                const gx = 320;
+                const gy = 330;
+                const gW = 170;
+                const gH = 260;
+
+                ctx.fillStyle = '#0f172a';
+                ctx.fillRect(gx, gy - gH, gW, gH);
+                ctx.strokeStyle = '#334155'; ctx.lineWidth = 1.5;
+                ctx.strokeRect(gx, gy - gH, gW, gH);
+
+                ctx.strokeStyle = '#64748b'; ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.moveTo(gx + 25, gy - 15); ctx.lineTo(gx + gW - 10, gy - 15); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(gx + 25, gy - 15); ctx.lineTo(gx + 25, gy - gH + 15); ctx.stroke();
+                ctx.fillStyle = '#94a3b8'; ctx.font = 'bold 10px sans-serif';
+                ctx.fillText("T (°C)", gx + 5, gy - gH + 12);
+                ctx.fillText("t (s)", gx + gW - 20, gy - 3);
+
+                if(t_sec > 0) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 2.5;
+                    ctx.moveTo(gx + 25, gy - 15 - (T1 - 20)*3);
+                    let endGx = gx + 25 + (t_sec / 120) * (gW - 40);
+                    let endGy = gy - 15 - (temp - 20)*3;
+                    ctx.lineTo(endGx, endGy);
+                    ctx.stroke();
+                    ctx.beginPath(); ctx.arc(endGx, endGy, 4, 0, Math.PI * 2); ctx.fillStyle = '#fbbf24'; ctx.fill();
+                }
+
+                // 💧 WATERMARK VATLI102.COM TRÊN KHUNG CANVAS MÔ PHỎNG
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+                ctx.font = 'bold 13px sans-serif';
+                ctx.fillText("Vatli102.com", canvas.width - 95, canvas.height - 12);
+            }
+
+            window.toggleCaloHeater = function() {
+                heating = !heating;
+                const btn = document.getElementById('btnToggleHeater');
+                const tag = document.getElementById('heaterStatusTag');
+
+                if(heating) {
+                    btn.innerText = "⏸ Tắt đun điện";
+                    btn.style.background = 'linear-gradient(135deg, #475569, #334155)';
+                    tag.style.display = 'block';
+
+                    let lastNow = performance.now();
+                    function loop(now) {
+                        if(!heating) return;
+                        let dt = (now - lastNow) / 1000;
+                        if(dt >= 0.5) {
+                            t_sec += 1;
+                            const m_kg = parseFloat(document.getElementById('sliderMass').value) / 1000.0;
+                            const p_w = parseFloat(document.getElementById('sliderPower').value);
+                            temp += (p_w * 1.0) / (m_kg * c_water);
+                            lastNow = now;
+                        }
+                        drawCaloFrame();
+                        animId = requestAnimationFrame(loop);
+                    }
+                    animId = requestAnimationFrame(loop);
+                } else {
+                    btn.innerText = "🔥 Bật nguồn đun điện";
+                    btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+                    tag.style.display = 'none';
+                    if(animId) cancelAnimationFrame(animId);
+                }
+            };
+
+            window.stirWater = function() {
+                stirrerY = (stirrerY === 0) ? -15 : 0;
+                drawCaloFrame();
+                setTimeout(() => { stirrerY = 0; drawCaloFrame(); }, 300);
+            };
+
+            window.resetCaloSim = function() {
+                heating = false;
+                if(animId) cancelAnimationFrame(animId);
+                t_sec = 0;
+                temp = T1;
+                bubbles = [];
+                document.getElementById('btnToggleHeater').innerText = "🔥 Bật nguồn đun điện";
+                document.getElementById('btnToggleHeater').style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+                document.getElementById('heaterStatusTag').style.display = 'none';
+                drawCaloFrame();
+            };
+
+            updateCaloParams();
+        })();
+        </script>
