@@ -4,567 +4,911 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bài 1: Làm quen với Vật lí - Vật lí 10 | vatli102.com</title>
-    
-    <link rel="apple-touch-icon" href="/favicon.svg">
-
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
+    <title>📖 Bài 1 Làm quen với Vật lí (Vật lí 10) - Trắc Nghiệm Online | Vatli102.com</title>
+    <script>
+        if (!window.location.pathname.endsWith('/') && !window.location.pathname.endsWith('.html')) {
+            window.history.replaceState(null, '', window.location.pathname + '/' + window.location.search);
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- MathJax Configuration -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
         window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                processEscapes: true
-            }
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+            options: { ignoreHtmlClass: 'tex2jax_ignore', processHtmlClass: 'tex2jax_process' }
         };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
+        p { text-align: justify; }
         :root {
             --primary: #4f46e5;
-            --accent: #06b6d4;
+            --primary-hover: #4338ca;
+            --secondary: #06b6d4;
             --bg-body: #f8fafc;
+            --card-bg: #ffffff;
             --text-dark: #0f172a;
-            --text-muted: #475569;
+            --text-muted: #64748b;
             --border: #e2e8f0;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-body); color: var(--text-dark); line-height: 1.8; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-dark); line-height: 1.6; padding-bottom: 0; }
 
-        .navbar {
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
-            padding: 0.8rem 2rem; display: flex; justify-content: space-between; align-items: center;
+        /* Sticky Header Navigation Bar */
+        .sticky-header {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        }
+        .header-container {
+            max-width: 920px; margin: 0 auto; padding: 10px 15px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .site-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .logo-img { width: 32px; height: 32px; border-radius: 8px; object-fit: contain; }
+        .logo-text {
+            font-size: 1.25rem; font-weight: 800;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .nav-links { display: flex; gap: 18px; align-items: center; }
+        .nav-item {
+            text-decoration: none; color: #475569; font-weight: 600; font-size: 0.9rem;
+            display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s;
+        }
+        .nav-item:hover { color: #4f46e5; }
+        @media (max-width: 480px) {
+            .header-container { padding: 8px 12px; }
+            .logo-text { font-size: 1.1rem; }
+            .nav-links { gap: 10px; }
+            .nav-item { font-size: 0.8rem; }
         }
 
-        .logo { display: flex; align-items: center; gap: 0.75rem; font-weight: 800; font-size: 1.2rem; color: var(--primary); text-decoration: none; }
-        .logo-icon { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .quiz-container { max-width: 920px; margin: 20px auto; padding: 0 15px; min-height: 80vh; }
 
-        .nav-links { display: flex; gap: 1.2rem; list-style: none; }
-        .nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 0.92rem; transition: color 0.2s; }
-        .nav-links a:hover { color: var(--primary); }
+        .exam-banner {
+            background: linear-gradient(135deg, #1e1b4b, #3730a3); color: white;
+            padding: 2.2rem 1.5rem; border-radius: 20px; text-align: center; margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(55,48,163,0.25);
+        }
+        .exam-banner h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; }
+        .exam-banner p { font-size: 0.95rem; color: #c7d2fe; }
+        .badge-exam { display: inline-block; background: rgba(255,255,255,0.2); padding: 4px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; margin-top: 10px; }
 
-        .blog-post-content {
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-            border: 1px solid #e2e8f0;
-            max-width: 880px;
-            margin: 2.5rem auto;
-            padding: 35px 30px;
+        .login-card {
+            background: white; border-radius: 16px; padding: 30px 20px; text-align: center;
+            border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 30px;
+        }
+        .form-group { margin-bottom: 15px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
+        .form-group label { display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 5px; color: #334155; }
+        .form-control { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; outline: none; box-sizing: border-box; }
+        .btn-start {
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; border: none;
+            padding: 12px 30px; border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer;
+            box-shadow: 0 4px 14px rgba(79,70,229,0.3); transition: all 0.2s; width: 100%; max-width: 400px; margin-top: 10px;
+        }
+        .btn-start:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(79,70,229,0.4); }
+
+        .section-header {
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe); color: #3730a3; padding: 12px 18px;
+            border-radius: 12px; font-weight: 800; font-size: 1.1rem; margin: 30px 0 15px 0; border-left: 5px solid var(--primary);
         }
 
-        .blog-post-content h1 {
-            color: #0f172a;
-            font-size: 2.1rem;
-            font-weight: 800;
-            line-height: 1.3;
-            margin-bottom: 15px;
-            background: linear-gradient(135deg, #2563eb, #0891b2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .question-card {
+            background: white; border-radius: 14px; padding: 20px; margin-bottom: 20px;
+            border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+        .question-title { font-weight: 700; font-size: 1.02rem; color: var(--text-dark); margin-bottom: 14px; line-height: 1.65; }
+        .question-img { max-width: 100%; max-height: 380px; border-radius: 10px; margin: 14px auto; display: block; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #cbd5e1; }
+
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media (min-width: 600px) { .options-grid { grid-template-columns: 1fr 1fr; } }
+        
+        .option-card {
+            background: #f8fafc; border: 1.5px solid var(--border); padding: 12px 15px; border-radius: 10px;
+            cursor: pointer; font-size: 0.95rem; text-align: left; transition: all 0.15s; display: flex; align-items: center; gap: 10px;
+            color: var(--text-dark);
+        }
+        .option-card:hover { background: #f1f5f9; border-color: rgba(79, 70, 229, 0.4); }
+        .option-card.selected { background: #e0e7ff; border-color: var(--primary); font-weight: 700; color: #3730a3; }
+        .option-card.correct { border-color: #22c55e !important; background: #dcfce7 !important; color: #15803d !important; }
+        .option-card.incorrect { border-color: #ef4444 !important; background: #fee2e2 !important; color: #b91c1c !important; }
+
+        .option-letter {
+            background: white; border: 1px solid #cbd5e1; width: 28px; height: 28px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.82rem; flex-shrink: 0;
+        }
+        .option-card.selected .option-letter { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .tf-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 8px; border-bottom: 1px solid var(--border); gap: 10px; line-height: 1.5; }
+        @media (max-width: 600px) {
+            .tf-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .tf-buttons { align-self: flex-end; }
+        }
+        .tf-buttons { display: flex; gap: 8px; flex-shrink: 0; }
+        .tf-btn { padding: 6px 16px; border-radius: 8px; border: 1.5px solid var(--border); background: white; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.15s; }
+        .tf-btn.selected-true { background: #dcfce7; border-color: #22c55e; color: #15803d; }
+        .tf-btn.selected-false { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
+
+        .short-answer-input {
+            width: 100%; max-width: 250px; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.95rem; outline: none;
+        }
+        .short-answer-input.input-correct { border-color: #22c55e !important; background: #f0fdf4 !important; }
+        .short-answer-input.input-incorrect { border-color: #ef4444 !important; background: #fef2f2 !important; }
+
+        .explanation-box {
+            background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 14px 16px;
+            margin-top: 15px; font-size: 0.9rem; color: #0369a1; display: none; line-height: 1.6;
         }
 
-        .blog-post-content h2 {
-            color: #1e3a8a;
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-top: 35px;
-            margin-bottom: 16px;
-            padding-bottom: 8px;
-            border-bottom: 3px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .results-panel {
+            background: white; border-radius: 20px; padding: 30px; text-align: center;
+            border: 2px solid var(--primary); box-shadow: 0 15px 35px rgba(79,70,229,0.15); margin-top: 30px; display: none;
         }
-
-        .blog-post-content h2 i { color: #2563eb; }
-
-        .blog-post-content h3 { color: #0369a1; font-size: 1.15rem; font-weight: 600; margin-top: 20px; margin-bottom: 10px; }
-
-        .blog-post-content p, .blog-post-content li {
-            text-align: justify;
-            margin-bottom: 12px;
+        .score-circle {
+            width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            margin: 0 auto 15px auto; box-shadow: 0 8px 20px rgba(79,70,229,0.3);
+            font-size: 2.2rem; font-weight: 800; line-height: 1;
         }
+        .score-title { font-size: 1.4rem; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
+        .score-desc { font-size: 0.95rem; color: #64748b; margin-bottom: 20px; }
 
-        .intro-lead {
-            font-size: 1.1rem; color: #475569; background-color: #f8fafc;
-            border-left: 4px solid #3b82f6; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-bottom: 25px;
-            text-align: justify;
+        .details-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 15px; margin-bottom: 20px; }
+        @media (max-width: 480px) { .details-summary { grid-template-columns: 1fr; } }
+        .summary-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+        .summary-num { font-size: 1.4rem; font-weight: 800; margin-bottom: 2px; }
+        .summary-label { font-size: 0.8rem; color: #64748b; }
+
+        .competency-tag { font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; margin-right: 0.5rem; vertical-align: middle; }
+        .tag-ntvl { background: #e0e7ff; color: #4338ca; border: 1px solid #c7d2fe; }
+        .tag-thtn { background: #ecfeff; color: #0e7490; border: 1px solid #c5f2f7; }
+        .tag-vdkt { background: #d1fae5; color: #047857; border: 1px solid #a7f3d0; }
+
+        .progress-container { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; }
+        .progress-bar-bg { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #4f46e5, #06b6d4); transition: width 0.3s ease; }
+        .progress-text { display: flex; justify-content: space-between; font-size: 0.85rem; color: #64748b; margin-top: 6px; font-weight: 600; }
+
+        /* Site Footer */
+        .site-footer {
+            width: 100%; text-align: center; padding: 25px 15px; background: #ffffff;
+            border-top: 1px solid var(--border); margin-top: 40px; color: #64748b; font-size: 0.88rem;
         }
-
-        .highlight-card {
-            background: linear-gradient(135deg, #eff6ff, #f0f9ff); border: 1px solid #bfdbfe;
-            border-radius: 14px; padding: 20px; margin: 20px 0; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.05);
-        }
-
-        .highlight-card-title { font-weight: 700; color: #1d4ed8; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-
-        .comparison-table-wrapper { overflow-x: auto; margin: 25px 0; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .comparison-table { width: 100%; border-collapse: collapse; background-color: #ffffff; font-size: 0.98rem; }
-        .comparison-table th { background-color: #1e40af; color: #ffffff; font-weight: 700; text-align: left; padding: 14px 16px; }
-        .comparison-table td { padding: 14px 16px; border-bottom: 1px solid #e2e8f0; }
-
-        .diagram-box-clean {
-            background: linear-gradient(145deg, #0f172a, #1e293b); border-radius: 20px; padding: 30px 15px; margin: 35px 0; text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.35); border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .diagram-title-clean { color: #38bdf8; font-weight: 800; font-size: 1.3rem; margin-bottom: 25px; letter-spacing: 0.5px; }
-
-        .phase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 20px 0; }
-        .phase-box { background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 16px; transition: transform 0.2s, border-color 0.2s; }
-        .phase-box:hover { transform: translateY(-3px); border-color: #3b82f6; }
-        .phase-name { font-weight: 700; color: #0f172a; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-
-        .key-point { position: relative; padding-left: 24px; margin-bottom: 10px; }
-        .key-point::before { content: "\f058"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; left: 0; top: 2px; color: #2563eb; font-size: 0.9rem; }
-        .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; background-color: #dbeafe; color: #1e40af; }
-
-        .example-box { background-color: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 20px; margin: 25px 0; }
-        .example-header { font-weight: 800; color: #0369a1; font-size: 1.05rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-        .solution-box { background-color: #ffffff; border-left: 4px solid #10b981; padding: 14px 18px; margin-top: 14px; border-radius: 0 10px 10px 0; }
-
-        .img-banner-box {
-            border-radius: 16px; overflow: hidden; margin: 25px 0; box-shadow: 0 8px 25px rgba(0,0,0,0.12); border: 1px solid #cbd5e1;
-        }
-        .img-banner-box img { width: 100%; height: auto; display: block; object-fit: cover; }
-        .img-caption { text-align: center; font-size: 0.88rem; color: #64748b; font-style: italic; margin-top: 8px; }
-
-        .site-footer { text-align: center; padding: 25px 15px; background: #ffffff; border-top: 1px solid var(--border); margin-top: 40px; color: var(--text-muted); font-size: 0.88rem; }
+        .footer-container { max-width: 920px; margin: 0 auto; }
+        .footer-links { margin-top: 8px; font-size: 0.82rem; }
+        .footer-links a { color: #4f46e5; text-decoration: none; margin: 0 4px; transition: color 0.2s; }
+        .footer-links a:hover { text-decoration: underline; color: #3730a3; }
     </style>
 </head>
-<body>
+<body class="tex2jax_ignore">
 
-    <!-- 🌐 Header Navigation Bar -->
-    <nav class="navbar">
-        <a href="/" class="logo">
-            <div class="logo-icon"><i class="fa-solid fa-atom"></i></div>
-            <span>Vatli102.com</span>
+<!-- 🌐 Sticky Header Navigation Bar -->
+<header class="sticky-header">
+    <div class="header-container">
+        <a href="/" class="site-logo">
+            <img src="/favicon.svg" alt="Logo" class="logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%234f46e5\'/><text x=\'50\' y=\'65\' font-size=\'45\' text-anchor=\'middle\' fill=\'white\' font-family=\'sans-serif\' font-weight=\'bold\'>V</text></svg>';">
+            <span class="logo-text">Vatli102.com</span>
         </a>
-        <ul class="nav-links">
-            <li><a href="/"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
-            <li><a href="/gioi-thieu.html"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a></li>
-            <li><a href="/lien-he.html"><i class="fa-solid fa-envelope"></i> Liên hệ</a></li>
-        </ul>
-    </nav>
+        <nav class="nav-links">
+            <a href="/" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
+            <a href="/gioi-thieu.html" class="nav-item"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a>
+            <a href="/lien-he.html" class="nav-item"><i class="fa-solid fa-envelope"></i> Liên hệ</a>
+        </nav>
+    </div>
+</header>
 
-    <!-- 📖 MAIN BLOG CONTENT -->
-    <main class="blog-post-content">
-        <span class="badge">Vật lí 10 • Chương I: Mở đầu</span>
-        <h1>Bài 1: Làm quen với Vật lí</h1>
+<div class="quiz-container">
+    <div class="exam-banner">
+        <h1>📖 Bài 1 Làm quen với Vật lí (Vật lí 10)</h1>
+        <p>Phiếu Bài Tập Trắc Nghiệm Vật Lí Tương Tác Chuẩn Bộ GD&ĐT</p>
+        <span class="badge-exam">⏱ Thời gian làm bài: 15 Phút | Trắc Nghiệm Online 3 Phần</span>
+    </div>
 
-        <div class="intro-lead">
-            <strong>Tóm tắt bài học:</strong> Vật lí học là ngành khoa học tự nhiên nghiên cứu các dạng vận động cơ bản nhất của vật chất và năng lượng trong tự nhiên. Bài học này sẽ giúp học sinh nắm vững đối tượng nghiên cứu, thang đo vi mô - vĩ mô, các mục tiêu cốt lõi, 2 phương pháp nghiên cứu chính (thực nghiệm & mô hình) cũng như vai trò quyết định của Vật lí đối với các cuộc cách mạng công nghiệp và sự phát triển của công nghệ hiện đại.
+    <!-- KHUNG NHẬP THÔNG TIN HỌC SINH -->
+    <div id="studentLoginCard" class="login-card">
+        <div style="width: 50px; height: 50px; background: #e0e7ff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 12px auto;">📝</div>
+        <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; color: #0f172a;">THÔNG TIN HỌC SINH LÀM BÀI</h2>
+        <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 20px;">Điền Họ tên và Lớp để bắt đầu làm bài thi & tự động lưu điểm số.</p>
+        
+        <div class="form-group">
+            <label>Họ và tên học sinh <span style="color:red;">*</span></label>
+            <input type="text" id="studentName" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
         </div>
-
-        <!-- HÌNH 1.1: BANNER 3D REAL THÁP PISA VẬT LÍ -->
-        <div class="img-banner-box">
-            <img src="./pisa_tower_3d.jpg" alt="Thí nghiệm Tháp nghiêng Pisa 3D Real">
-            <div class="img-caption">Hình 1.1: Bức tranh toàn cảnh thí nghiệm thả rơi quả cầu tại Tháp nghiêng Pisa</div>
+        <div class="form-group">
+            <label>Lớp <span style="color:red;">*</span></label>
+            <input type="text" id="studentClass" class="form-control" placeholder="Ví dụ: 10A1" required>
         </div>
+        <button type="button" class="btn-start" id="btnStartQuiz" onclick="startQuizExam()">🚀 BẮT ĐẦU LÀM BÀI THI</button>
+    </div>
 
-        <!-- MỤC I -->
-        <h2><i class="fa-solid fa-bullseye"></i> I. Đối tượng, Mục tiêu và Thang đo nghiên cứu của Vật lí</h2>
-
-        <h3>1. Đối tượng nghiên cứu của Vật lí học</h3>
-        <p>Vật lí học (Physics) là ngành khoa học tự nhiên nghiên cứu về các dạng vận động cơ bản nhất, tổng quát nhất của <strong>vật chất</strong> và <strong>năng lượng</strong> trong không gian và thời gian.</p>
-
-        <h3>2. Cấp độ thang đo nghiên cứu</h3>
-        <p>Vật lí học nghiên cứu hiện tượng tự nhiên trên một dải thang đo cực kỳ rộng lớn, trải dài từ các hạt siêu vi đến toàn thể vũ trụ:</p>
-
-        <!-- HÌNH 1.2: HÌNH ẢNH 3D REAL THANG ĐO VI MÔ - VĨ MÔ -->
-        <div class="img-banner-box">
-            <img src="./micro_macro_3d.jpg" alt="Thang đo Vi mô và Vĩ mô 3D Real">
-            <div class="img-caption">Hình 1.2: Thang đo nghiên cứu rộng lớn của Vật lí từ Vi mô (Hạt sơ cấp $10^{-15}\text{m}$) đến Vĩ mô (Vũ trụ $10^{26}\text{m}$)</div>
-        </div>
-
-        <div class="comparison-table-wrapper">
-            <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>Cấp độ nghiên cứu</th>
-                        <th>Kích thước / Thang đo</th>
-                        <th>Đối tượng quan sát tiêu biểu</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Vi mô (Microscopic)</strong></td>
-                        <td>Từ $10^{-15}\text{ m}$ đến $10^{-9}\text{ m}$</td>
-                        <td>Hạt sơ cấp (quark, lepton), hạt nhân nguyên tử, nguyên tử, phân tử.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Vĩ mô (Macroscopic)</strong></td>
-                        <td>Từ mét ($\text{m}$) đến $10^{26}\text{ m}$</td>
-                        <td>Vật thể thường ngày, Trái Đất, Hệ Mặt Trời, các thiên hà và toàn thể Vũ trụ.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <h3>3. Mục tiêu của Vật lí học</h3>
-        <p>Mục tiêu tối cao của Vật lí là khám phá ra các <strong>quy luật chung nhất, cơ bản nhất</strong> chi phối sự vận động của vật chất và năng lượng. Nhờ đó, Vật lí thực hiện 3 nhiệm vụ khoa học:</p>
-        <ul style="padding-left: 20px;">
-            <li class="key-point"><strong>Mô tả:</strong> Sử dụng các đại lượng vật lí và ngôn ngữ toán học để định lượng hiện tượng.</li>
-            <li class="key-point"><strong>Giải thích:</strong> Vạch ra nguyên nhân, bản chất và cơ chế tương tác vi mô đằng sau hiện tượng.</li>
-            <li class="key-point"><strong>Dự đoán:</strong> Tiên đoán chính xác trạng thái biến đổi và khám phá các hiện tượng mới trong tương lai.</li>
-        </ul>
-
-        <!-- MỤC II -->
-        <h2><i class="fa-solid fa-flask"></i> II. Hai Phương pháp nghiên cứu cốt lõi trong Vật lí</h2>
-        <p>Sự phát triển vượt bậc của Vật lí học dựa trên sự kết hợp nhuần nhuyễn giữa hai phương pháp nghiên cứu chủ đạo: <strong>Phương pháp Thực nghiệm</strong> và <strong>Phương pháp Mô hình</strong>.</p>
-
-        <div class="diagram-box-clean">
-            <div class="diagram-title-clean">⚡ QUY TRÌNH KHOA HỌC TRONG NGHIÊN CỨU VẬT LÍ</div>
-            <div class="phase-grid">
-                <div class="phase-box">
-                    <div class="phase-name"><i class="fa-solid fa-microscope" style="color:#38bdf8;"></i> Phương pháp Thực nghiệm</div>
-                    <p style="font-size:0.88rem; color:#475569; text-align:left;">Khởi xướng bởi Galileo Galilei. Dùng thí nghiệm đo đạc thực tế để kiểm chứng giả thuyết và rút ra định luật.</p>
-                </div>
-                <div class="phase-box">
-                    <div class="phase-name"><i class="fa-solid fa-draw-polygon" style="color:#818cf8;"></i> Phương pháp Mô hình</div>
-                    <p style="font-size:0.88rem; color:#475569; text-align:left;">Dùng mô hình (vật chất, lý thuyết, toán học, máy tính) để đơn giản hóa và nghiên cứu các thuộc tính của đối tượng thực.</p>
-                </div>
+    <!-- KHUNG BÀI THI TƯƠNG TÁC (ẨN 100% CHO ĐẾN KHI NHẬP TÊN LỚP VA BẤM BẮT ĐẦU) -->
+    <div id="quizContent" class="tex2jax_process" style="display: none;">
+        <div class="progress-container">
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+            <div class="progress-text">
+                <span>Tiến độ làm bài</span>
+                <span id="progressLabel">0/0 ý hoàn thành</span>
             </div>
         </div>
 
-        <!-- 🔬 MÔ PHỎNG TƯƠNG TÁC: THẢ RƠI TỰ DO GALILEO TẠI THÁP PISA -->
-        <div class="diagram-box-clean" style="text-align: left; padding: 25px;">
-            <div class="diagram-title-clean" style="margin-bottom: 15px; text-align: center;">
-                🔬 MÔ PHỎNG TƯƠNG TÁC: THẢ RƠI HAI QUẢ CẦU TẠI THÁP NGHIÊNG PISA
+        <div class="section-header">📌 PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn</div>
+        <div id="part1Container"></div>
+
+        <div class="section-header">📌 PHẦN II. Câu trắc nghiệm Đúng / Sai</div>
+        <div id="part2Container"></div>
+
+        <div class="section-header">📌 PHẦN III. Câu trắc nghiệm trả lời ngắn</div>
+        <div id="part3Container"></div>
+
+        <!-- NÚT NỘP BÀI THI CHỈ XUẤT HIỆN Ở CUỐI BÀI THI SAU KHI LÀM XONG -->
+        <div style="text-align: center; margin-top: 30px;">
+            <button type="button" id="btnSubmitQuiz" onclick="gradeQuiz()" style="background: linear-gradient(135deg, #059669, #10b981); color: white; border: none; padding: 14px 40px; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; box-shadow: 0 6px 20px rgba(16,185,129,0.3);">
+                ✅ NỘP BÀI THI & CHẤM ĐIỂM
+            </button>
+        </div>
+
+        <!-- BẢNG ĐIỂM KẾT QUẢ HIỂN THỊ NGAY DƯỚI NÚT NỘP BÀI KHI BẤM NỘP -->
+        <div id="resultsPanel" class="results-panel">
+            <div class="score-circle">
+                <span id="scoreCircle">0.0</span>
             </div>
-            <p style="color: #94a3b8; font-size: 0.9rem; text-align: center; margin-bottom: 20px;">
-                Mô phỏng thực nghiệm kiểm chứng giả thuyết của Galileo Galilei với giao diện đồ họa trực quan. Hãy chọn môi trường để quan sát hai quả cầu chạm đất!
-            </p>
+            <div id="scoreTitle" class="score-title">Kết Quả Bài Làm</div>
+            <div id="scoreDesc" class="score-desc">Chúc mừng bạn đã hoàn thành bài tập trắc nghiệm!</div>
 
-            <div style="display: grid; grid-template-columns: 1fr 280px; gap: 20px; align-items: start;">
-                <!-- Khung Canvas Mô Phỏng Tương Tác -->
-                <div style="position: relative; background: #090d16; border-radius: 14px; border: 1px solid #334155; overflow: hidden; height: 380px;">
-                    <canvas id="pisaCanvas" width="500" height="380" style="width: 100%; height: 100%; display: block;"></canvas>
-                    <div id="simStatusBadge" style="position: absolute; top: 12px; left: 12px; background: rgba(15, 23, 42, 0.85); color: #38bdf8; border: 1px solid #0284c7; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 0.8rem;">
-                        ⏱️ Đồng hồ: <span id="timerText">0.00</span> s
-                    </div>
+            <div class="details-summary">
+                <div class="summary-card">
+                    <div class="summary-num" id="correctCountText" style="color: #22c55e;">0</div>
+                    <div class="summary-label">Ý Đúng</div>
                 </div>
-
-                <!-- Bảng Điều Khiển Thí Nghiệm -->
-                <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 18px; color: #f8fafc;">
-                    <div style="font-weight: 700; font-size: 1rem; color: #fbbf24; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-                        <i class="fa-solid fa-sliders"></i> Cấu hình Thí nghiệm
-                    </div>
-
-                    <div style="margin-bottom: 14px;">
-                        <label style="font-size: 0.85rem; color: #cbd5e1; display: block; margin-bottom: 6px; font-weight: 600;">Môi trường thí nghiệm:</label>
-                        <select id="envSelect" onchange="resetSim()" style="width: 100%; padding: 8px 10px; background: #0f172a; border: 1px solid #475569; border-radius: 8px; color: white; font-weight: 600; outline: none;">
-                            <option value="vacuum">🌌 Trong Chân không (Không cản không khí)</option>
-                            <option value="air">🌬️ Trong Không khí (Có sức cản không khí)</option>
-                        </select>
-                    </div>
-
-                    <div style="margin-bottom: 14px; font-size: 0.82rem; color: #94a3b8; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;">
-                        <div>🔴 Quả cầu 1: <strong>10 kg</strong> (Chất liệu Sắt)</div>
-                        <div>🔵 Quả cầu 2: <strong>1 kg</strong> (Chất liệu Gỗ)</div>
-                    </div>
-
-                    <div style="display: flex; gap: 8px; margin-top: 15px;">
-                        <button onclick="startSim()" id="btnStartSim" style="flex: 1; padding: 10px; background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
-                            ▶ Thả rơi
-                        </button>
-                        <button onclick="resetSim()" style="padding: 10px 14px; background: #334155; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">
-                            🔄 Đặt lại
-                        </button>
-                    </div>
-
-                    <!-- Hộp kết luận thực nghiệm -->
-                    <div id="simResultBox" style="margin-top: 15px; padding: 10px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; border-radius: 8px; font-size: 0.82rem; color: #6ee7b7; display: none;">
-                        <strong>kết luận:</strong> Trong chân không, cả 2 quả cầu chạm đất <strong>cùng một lúc</strong>! Giả thuyết của Galileo chính xác.
-                    </div>
+                <div class="summary-card">
+                    <div class="summary-num" id="incorrectCountText" style="color: #ef4444;">0</div>
+                    <div class="summary-label">Ý Sai</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-num" id="gradeText" style="color: #4f46e5;">0.0/10</div>
+                    <div class="summary-label">Điểm Số</div>
                 </div>
             </div>
-        </div>
 
-        <script>
-        (function() {
-            const canvas = document.getElementById('pisaCanvas');
-            if(!canvas) return;
-            const ctx = canvas.getContext('2d');
-
-            let animId = null;
-            let startTime = null;
-            let running = false;
-
-            const g = 9.8;
-            const bgImg = new Image();
-            bgImg.src = './pisa_texture_3d.jpg';
-
-            let ball1 = { y: 60, vy: 0, m: 10, radius: 12, color: '#ef4444', landed: false, time: 0 };
-            let ball2 = { y: 60, vy: 0, m: 1, radius: 8, color: '#38bdf8', landed: false, time: 0 };
-
-            function draw3DBall(x, y, radius, isMetallic) {
-                ctx.save();
-                ctx.beginPath();
-                ctx.arc(x, y, radius, 0, Math.PI * 2);
-                
-                // Gradient cầu 3D với điểm sáng highlight
-                let grad = ctx.createRadialGradient(x - radius*0.3, y - radius*0.3, radius*0.1, x, y, radius);
-                if(isMetallic) {
-                    grad.addColorStop(0, '#ffffff');
-                    grad.addColorStop(0.3, '#ef4444');
-                    grad.addColorStop(1, '#7f1d1d');
-                } else {
-                    grad.addColorStop(0, '#bae6fd');
-                    grad.addColorStop(0.3, '#0284c7');
-                    grad.addColorStop(1, '#0c4a6e');
-                }
-                ctx.fillStyle = grad;
-                ctx.fill();
-
-                // Đổ bóng 3D mờ xung quanh
-                ctx.shadowColor = 'rgba(0,0,0,0.5)';
-                ctx.shadowBlur = 6;
-                ctx.shadowOffsetX = 2;
-                ctx.shadowOffsetY = 4;
-                ctx.strokeStyle = 'rgba(255,255,255,0.6)';
-                ctx.lineWidth = 1;
-                ctx.stroke();
-                ctx.restore();
-            }
-
-            function drawTower() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                // Nền bầu trời đên 3D
-                ctx.fillStyle = '#090d16';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                // Vẽ ảnh nền Tháp Nghiêng Pisa 3D Real nếu load xong
-                if(bgImg.complete && bgImg.naturalWidth !== 0) {
-                    ctx.globalAlpha = 0.45;
-                    ctx.drawImage(bgImg, 10, -20, 220, 400);
-                    ctx.globalAlpha = 1.0;
-                } else {
-                    // Vẽ tháp dự phòng
-                    ctx.fillStyle = '#1e293b';
-                    ctx.fillRect(40, 50, 80, 280);
-                }
-
-                // Mặt đất 3D
-                let groundGrad = ctx.createLinearGradient(0, 320, 0, 380);
-                groundGrad.addColorStop(0, '#334155');
-                groundGrad.addColorStop(1, '#0f172a');
-                ctx.fillStyle = groundGrad;
-                ctx.fillRect(0, 320, canvas.width, 60);
-                ctx.strokeStyle = '#475569';
-                ctx.beginPath(); ctx.moveTo(0, 320); ctx.lineTo(canvas.width, 320); ctx.stroke();
-
-                // Vẽ Bóng đổ 3D của quả cầu trên mặt đất
-                if(ball1.y > 100) {
-                    ctx.beginPath();
-                    ctx.ellipse(190, 323, ball1.radius * (ball1.y / 320), 4, 0, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fill();
-                }
-                if(ball2.y > 100) {
-                    ctx.beginPath();
-                    ctx.ellipse(230, 323, ball2.radius * (ball2.y / 320), 3, 0, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fill();
-                }
-
-                // Vẽ 2 quả cầu 3D Real
-                draw3DBall(190, ball1.y, ball1.radius, true);  // Q1 Sắt Đỏ 3D
-                draw3DBall(230, ball2.y, ball2.radius, false); // Q2 Gỗ Xanh 3D
-            }
-
-            window.resetSim = function() {
-                running = false;
-                if(animId) cancelAnimationFrame(animId);
-                ball1 = { y: 60, vy: 0, m: 10, radius: 12, color: '#ef4444', landed: false, time: 0 };
-                ball2 = { y: 60, vy: 0, m: 1, radius: 8, color: '#38bdf8', landed: false, time: 0 };
-                document.getElementById('timerText').innerText = "0.00";
-                document.getElementById('simResultBox').style.display = 'none';
-                drawTower();
-            };
-
-            window.startSim = function() {
-                if(running) return;
-                resetSim();
-                running = true;
-                startTime = performance.now();
-                animateSim();
-            };
-
-            function animateSim() {
-                if(!running) return;
-                const now = performance.now();
-                const dt = (now - startTime) / 1000;
-                document.getElementById('timerText').innerText = dt.toFixed(2);
-
-                const isAir = document.getElementById('envSelect').value === 'air';
-                const k1 = isAir ? 0.05 : 0;
-                const k2 = isAir ? 0.25 : 0;
-
-                const groundY = 312;
-
-                // Cập nhật quả cầu 1
-                if(!ball1.landed) {
-                    let a1 = g - (k1 * ball1.vy) / ball1.m;
-                    ball1.vy += a1 * 0.016 * 12;
-                    ball1.y += ball1.vy * 0.016 * 12;
-                    if(ball1.y >= groundY - ball1.radius) {
-                        ball1.y = groundY - ball1.radius;
-                        ball1.landed = true;
-                        ball1.time = dt;
-                    }
-                }
-
-                // Cập nhật quả cầu 2
-                if(!ball2.landed) {
-                    let a2 = g - (k2 * ball2.vy) / ball2.m;
-                    ball2.vy += a2 * 0.016 * 12;
-                    ball2.y += ball2.vy * 0.016 * 12;
-                    if(ball2.y >= groundY - ball2.radius) {
-                        ball2.y = groundY - ball2.radius;
-                        ball2.landed = true;
-                        ball2.time = dt;
-                    }
-                }
-
-                drawTower();
-
-                if(!ball1.landed || !ball2.landed) {
-                    animId = requestAnimationFrame(animateSim);
-                } else {
-                    running = false;
-                    const resBox = document.getElementById('simResultBox');
-                    resBox.style.display = 'block';
-                    if(!isAir) {
-                        resBox.innerHTML = `<strong>✅ KẾT LUẬN CHÂN KHÔNG:</strong> Cả 2 quả cầu ($10\\text{ kg}$ và $1\\text{ kg}$) rơi chạm đất <strong>CÙNG MỘT LÚC</strong> ($t = ${dt.toFixed(2)}\\text{ s}$). Đúng giả thuyết Galileo!`;
-                    } else {
-                        resBox.innerHTML = `<strong>⚠️ KẾT LUẬN TRONG KHÔNG KHÍ:</strong> Quả cầu $10\\text{ kg}$ rơi chạm đất trước ($t_1 = ${ball1.time.toFixed(2)}\\text{ s}$) do chịu sức cản không khí nhỏ hơn. Điều này giải thích vì sao Aristoteles từng nhầm lẫn!`;
-                    }
-                }
-            }
-
-            bgImg.onload = function() {
-                drawTower();
-            };
-            resetSim();
-        })();
-        </script>
-
-        <h3>1. Quy trình 5 bước của Phương pháp Thực nghiệm</h3>
-        <ol style="padding-left: 25px; margin-bottom: 20px;">
-            <li style="margin-bottom:8px;"><strong>Bước 1 - Xác định vấn đề:</strong> Đặt ra câu hỏi nghiên cứu từ quan sát tự nhiên.</li>
-            <li style="margin-bottom:8px;"><strong>Bước 2 - Quan sát & Đưa ra giả thuyết:</strong> Đưa ra dự đoán có cơ sở về nguyên nhân hiện tượng.</li>
-            <li style="margin-bottom:8px;"><strong>Bước 3 - Thiết kế & Tiến hành thí nghiệm:</strong> Xây dựng phương án đo đạc, thu thập số liệu.</li>
-            <li style="margin-bottom:8px;"><strong>Bước 4 - Phân tích kết quả:</strong> Xử lý số liệu, vẽ đồ thị, tính toán sai số.</li>
-            <li style="margin-bottom:8px;"><strong>Bước 5 - Rút ra kết luận:</strong> Khẳng định giả thuyết đúng (thành định luật) hoặc bác bỏ giả thuyết để xây dựng lại.</li>
-        </ol>
-
-        <h3>2. Quy trình 4 bước của Phương pháp Mô hình</h3>
-        <ol style="padding-left: 25px; margin-bottom: 20px;">
-            <li style="margin-bottom:8px;"><strong>Bước 1:</strong> Xác định đối tượng cần mô hình hóa.</li>
-            <li style="margin-bottom:8px;"><strong>Bước 2:</strong> Xây dựng mô hình (chất điểm, quả địa cầu, công thức toán học...).</li>
-            <li style="margin-bottom:8px;"><strong>Bước 3:</strong> Kiểm tra sự phù hợp của mô hình với thực nghiệm.</li>
-            <li style="margin-bottom:8px;"><strong>Bước 4:</strong> Kết luận (chấp nhận mô hình hoặc điều chỉnh mô hình).</li>
-        </ol>
-
-        <!-- MỤC III -->
-        <h2><i class="fa-solid fa-gears"></i> III. Vai trò của Vật lí đối với Khoa học và Công nghệ</h2>
-        <p>Vật lí học được coi là nền tảng cốt lõi của khoa học tự nhiên và là động cơ thúc đẩy các cuộc cách mạng công nghiệp trong lịch sử nhân loại:</p>
-
-        <!-- HÌNH 1.3: HÌNH ẢNH 3D REAL 4 CÁCH MẠNG CÔNG NGHIỆP -->
-        <div class="img-banner-box">
-            <img src="./industrial_rev_3d.jpg" alt="4 Cuộc cách mạng công nghiệp 3D Real">
-            <div class="img-caption">Hình 1.3: Vật lí học là động cơ thúc đẩy các cuộc cách mạng công nghiệp trong lịch sử nhân loại</div>
-        </div>
-
-        <div class="comparison-table-wrapper">
-            <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>Cuộc CMCN</th>
-                        <th>Khám phá Vật lí cốt lõi</th>
-                        <th>Thành tựu công nghệ đột phá</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Lần 1 (Thế kỷ XVIII)</strong></td>
-                        <td>Nhiệt học & Động lực học</td>
-                        <td>Động cơ hơi nước, cơ giới hóa sản xuất.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Lần 2 (Thế kỷ XIX)</strong></td>
-                        <td>Điện từ học (Faraday, Maxwell)</td>
-                        <td>Động cơ điện, máy phát điện, chiếu sáng điện lực.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Lần 3 (Thế kỷ XX)</strong></td>
-                        <td>Vật lí bán dẫn & Điện tử học</td>
-                        <td>Máy tính, Internet, tự động hóa vi mạch silicon.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Lần 4 (Thế kỷ XXI)</strong></td>
-                        <td>Vật lí lượng tử & Vật liệu mới</td>
-                        <td>Trí tuệ nhân tạo (AI), máy tính lượng tử, năng lượng tái tạo.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- GHI NHỚ NHANH BÀI HỌC CÓ 3 NÚT TƯƠNG TÁC ĐỒNG BỘ VẬT LÍ 12 -->
-        <div class="highlight-card" style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-color: #86efac;">
-            <div class="highlight-card-title" style="color: #166534;"><i class="fa-solid fa-bookmark"></i> GHI NHỚ NHANH BÀI HỌC (KEY TAKEAWAYS)</div>
-            <div class="key-point" style="color: #14532d;">Vật lí nghiên cứu về <strong>vật chất, năng lượng, không gian và thời gian</strong>.</div>
-            <div class="key-point" style="color: #14532d;">Dải thang đo rộng lớn từ <strong>Vi mô ($10^{-15}\text{ m}$)</strong> đến <strong>Vĩ mô ($10^{26}\text{ m}$)</strong>.</div>
-            <div class="key-point" style="color: #14532d;">2 Phương pháp nghiên cứu chính: <strong>Thực nghiệm</strong> (kiểm chứng số liệu) và <strong>Mô hình</strong> (đơn giản hóa đối tượng).</div>
-            <div class="key-point" style="color: #14532d;">Vật lí là nền tảng khởi nguồn cho cả 4 cuộc cách mạng công nghiệp của nhân loại.</div>
-
-            <!-- 3 NÚT BẤM ĐỒNG BỘ VỚI VẬT LÍ 12 -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5 pt-4 border-t border-emerald-300/60">
-                <a href="#video" class="p-3 bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs sm:text-sm rounded-xl text-center shadow-md transition-all flex items-center justify-center gap-2">
-                    <i class="fa-brands fa-youtube text-lg"></i> Xem bài giảng
+            <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
+                <button type="button" onclick="location.reload()" style="background: #f1f5f9; color: #4f46e5; border: 1px solid #cbd5e1; padding: 10px 18px; border-radius: 10px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem;">
+                    🔄 Làm Lại Bài Thi
+                </button>
+                <a href="index.html" style="background: #e0e7ff; color: #4338ca; border: 1px solid #c7d2fe; text-decoration: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem;">
+                    📖 Đọc Bài Giảng
                 </a>
-                <a href="TracNghiem_Online.html" class="p-3 bg-cyan-600 hover:bg-cyan-700 text-white font-extrabold text-xs sm:text-sm rounded-xl text-center shadow-md transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-pen-to-square text-base"></i> Làm bài tập củng cố
+                <a href="https://youtu.be/s63UuSrdz8c" target="_blank" style="background: #ff0000; color: #ffffff; border: 1px solid #cc0000; text-decoration: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(255,0,0,0.25);">
+                    <i class="fa-brands fa-youtube" style="font-size: 1.15rem; margin-right: 3px;"></i> Xem Bài Giảng
                 </a>
-                <a href="../Bài 2 Các quy tắc an toàn trong phòng thực hành Vật lí/ly-thuyet.html" class="p-3 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs sm:text-sm rounded-xl text-center shadow-md transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-arrow-right text-base"></i> Bài tiếp theo
+                <a href="../Bai2/" style="background: linear-gradient(135deg, #06b6d4, #0891b2); color: white; text-decoration: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(6,182,212,0.25);">
+                    ➡️ Bài Tiếp Theo
+                </a>
+                <a href="/" style="background: #4f46e5; color: white; text-decoration: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem;">
+                    🏠 Về Trang Chủ
                 </a>
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- 🎥 VIDEO BÀI GIẢNG YOUTUBE TÍCH HỢP -->
-        <div id="video" style="margin: 35px 0; text-align: center;">
-            <h3 style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                <span style="color: #ff0000; font-size: 1.5rem;">▶</span> Video Bài Giảng Chi Tiết Bài 1 (YouTube)
-            </h3>
-            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid #cbd5e1;">
-                <iframe src="https://www.youtube.com/embed/s63UuSrdz8c" title="Video Bài Giảng YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
-            </div>
-            <div style="margin-top: 10px;">
-                <a href="https://youtu.be/s63UuSrdz8c" target="_blank" style="color: #ff0000; font-weight: 700; text-decoration: none; font-size: 0.9rem; inline-flex; align-items: center; gap: 5px;">
-                    🔗 Mở xem trực tiếp trên YouTube
-                </a>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- 📜 Site Footer -->
-    <footer class="site-footer">
+<!-- 📜 Site Footer -->
+<footer class="site-footer">
+    <div class="footer-container">
         <p>&copy; 2026 Vatli102 (vatli102.com). Bản quyền thuộc về ban quản trị.</p>
-    </footer>
+        <div class="footer-links">
+            <a href="/gioi-thieu.html">Giới thiệu</a> |
+            <a href="/lien-he.html">Liên hệ</a> |
+            <a href="/chinh-sach-bao-mat.html">Chính sách bảo mật</a> |
+            <a href="/dieu-khoan.html">Điều khoản sử dụng</a>
+        </div>
+    </div>
+</footer>
 
+<script>
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
+
+const quizData = {
+    "title": "Vật lí 10 - Bài 1: Làm quen với Vật lí",
+    "part1": [
+        {
+            "id": 1,
+            "competency": "NTVL",
+            "question": "Đối tượng nghiên cứu chính của Vật lí học bao gồm các dạng vận động của",
+            "options": {
+                "A": "các tế bào sinh học và nguồn gen di truyền.",
+                "B": "vật chất (gồm chất và trường) và năng lượng.",
+                "C": "các hợp chất hữu cơ và phản ứng hóa học.",
+                "D": "các tầng lớp xã hội và các nền kinh tế."
+            },
+            "answer": "B",
+            "explanation": "Vật lí học nghiên cứu các dạng vận động của vật chất và năng lượng."
+        },
+        {
+            "id": 2,
+            "competency": "NTVL",
+            "question": "Lĩnh vực nào sau đây thuộc phạm vi nghiên cứu chính của Vật lí học?",
+            "options": {
+                "A": "Quá trình quang hợp ở cây xanh.",
+                "B": "Sự biến đổi của điện trường, từ trường và sóng điện từ.",
+                "C": "Phản ứng trung hòa giữa acid và base.",
+                "D": "Quá trình tiêu hóa thức ăn ở dạ dày."
+            },
+            "answer": "B",
+            "explanation": "Điện trường, từ trường và sóng điện từ là đối tượng nghiên cứu chính của Điện từ học (thuộc Vật lí)."
+        },
+        {
+            "id": 3,
+            "competency": "NTVL",
+            "question": "Phương pháp nghiên cứu đặc trưng của Vật lí học bao gồm hai phương pháp cơ bản là",
+            "options": {
+                "A": "phương pháp khảo sát thị trường và phương pháp phỏng vấn.",
+                "B": "phương pháp thực nghiệm và phương pháp lý thuyết (mô hình hóa).",
+                "C": "phương pháp quy hoạch đô thị và phương pháp dự báo thời tiết.",
+                "D": "phương pháp giải phẫu và phương pháp phân tích gen."
+            },
+            "answer": "B",
+            "explanation": "Hai phương pháp nghiên cứu cơ bản của Vật lí là phương pháp thực nghiệm và phương pháp lý thuyết."
+        },
+        {
+            "id": 4,
+            "competency": "THTN",
+            "question": "Ứng dụng nào sau đây của Vật lí học đã tạo ra bước ngoặt công nghệ trong đời sống hiện đại, giúp hình thành mạng internet toàn cầu và điện thoại thông minh?",
+            "options": {
+                "A": "Thuốc kháng sinh sinh học.",
+                "B": "Công nghệ bán dẫn, vi mạch điện tử và vật lí bán dẫn.",
+                "C": "Phương pháp lai tạo giống cây trồng.",
+                "D": "Phân bón hóa học NPK."
+            },
+            "answer": "B",
+            "explanation": "Công nghệ bán dẫn và vi mạch điện tử là nền tảng tạo nên máy tính, smartphone và internet."
+        },
+        {
+            "id": 5,
+            "competency": "THTN",
+            "question": "Quy trình nghiên cứu Vật lí theo phương pháp thực nghiệm thường được tiến hành theo thứ tự logic nào sau đây?",
+            "options": {
+                "A": "Quan sát hiện tượng $\\to$ Xây dựng giả thuyết $\\to$ Dự đoán $\\to$ Thí nghiệm kiểm tra $\\to$ Kết luận.",
+                "B": "Rút ra kết luận $\\to$ Thí nghiệm kiểm tra $\\to$ Quan sát hiện tượng $\\to$ Xây dựng giả thuyết.",
+                "C": "Viết công thức $\\to$ Tính toán số liệu $\\to$ Báo cáo kết quả.",
+                "D": "Thí nghiệm kiểm tra $\\to$ Quan sát $\\to$ Đặt giả thuyết."
+            },
+            "answer": "A",
+            "explanation": "Quy trình thực nghiệm: Quan sát $\\to$ Giả thuyết $\\to$ Dự đoán $\\to$ Thí nghiệm $\\to$ Kết luận."
+        },
+        {
+            "id": 6,
+            "competency": "THTN",
+            "question": "Việc phát minh ra máy hơi nước của James Watt (khi nghiên cứu về Nhiệt học) đã khởi đầu cho cuộc cách mạng công nghiệp lần thứ mấy của nhân loại?",
+            "options": {
+                "A": "Cách mạng công nghiệp lần thứ nhất (1.0).",
+                "B": "Cách mạng công nghiệp lần thứ hai (2.0).",
+                "C": "Cách mạng công nghiệp lần thứ ba (3.0).",
+                "D": "Cách mạng công nghiệp lần thứ tư (4.0)."
+            },
+            "answer": "A",
+            "explanation": "Máy hơi nước khởi đầu cho Cuộc cách mạng công nghiệp lần thứ nhất (1.0)."
+        },
+        {
+            "id": 7,
+            "competency": "VDKT",
+            "question": "Trong chụp ảnh y khoa, công nghệ chụp X-quang và chụp cộng hưởng từ MRI là ứng dụng trực tiếp từ các thành tựu của ngành nào trong Vật lí?",
+            "options": {
+                "A": "Quang học và Vật lí hạt nhân - Từ học.",
+                "B": "Cơ học cổ điển Newton.",
+                "C": "Nhiệt động lực học.",
+                "D": "Thủy khí động lực học."
+            },
+            "answer": "A",
+            "explanation": "X-quang (tia X - Quang học/Hạt nhân) và MRI (Từ học hạt nhân) là ứng dụng Vật lí y khoa."
+        },
+        {
+            "id": 8,
+            "competency": "THTN",
+            "question": "Nhờ ứng dụng của Vật lí bán dẫn và quang điện tử, ngành năng lượng sạch hiện nay đang phát triển mạnh mẽ thiết bị nào để sản xuất điện năng thân thiện với môi trường?",
+            "options": {
+                "A": "Động cơ đốt trong chạy xăng.",
+                "B": "Pin năng lượng mặt trời (Pin quang điện).",
+                "C": "Đèn dầu hỏa truyền thống.",
+                "D": "Nhà máy nhiệt điện than."
+            },
+            "answer": "B",
+            "explanation": "Pin quang điện (năng lượng mặt trời) biến đổi quang năng thành điện năng nhờ hiệu ứng quang điện trong bán dẫn."
+        },
+        {
+            "id": 9,
+            "competency": "VDKT",
+            "question": "Bước nào sau đây đóng vai trò quyết định để kiểm tra tính đúng đắn của một giả thuyết khoa học trong phương pháp thực nghiệm Vật lí?",
+            "options": {
+                "A": "Thu thập ý kiến của đa số mọi người.",
+                "B": "Tiến hành thí nghiệm đo đạc thực tế có đối chứng.",
+                "C": "Viết bài luận thuyết phục trên báo chí.",
+                "D": "Đặt tên gọi mới cho hiện tượng."
+            },
+            "answer": "B",
+            "explanation": "Thí nghiệm đo đạc thực tế có đối chứng là bước quyết định kiểm chứng giả thuyết."
+        },
+        {
+            "id": 10,
+            "competency": "VDKT",
+            "question": "Việc ứng dụng công nghệ GPS định vị vệ tinh trên điện thoại thông minh dựa trên việc thu nhận sóng điện từ được truyền từ các vệ tinh nhân tạo. Đây là sản phẩm kết hợp giữa Vật lí vũ trụ và ngành nào?",
+            "options": {
+                "A": "Vật lí viễn thông và Sóng điện từ.",
+                "B": "Sinh học tế bào.",
+                "C": "Hóa học polyme.",
+                "D": "Địa chất khoáng sản."
+            },
+            "answer": "A",
+            "explanation": "Hệ thống GPS dựa trên việc phát và thu nhận sóng điện từ viễn thông giữa vệ tinh và thiết bị."
+        }
+    ],
+    "part2": [
+        {
+            "id": 1,
+            "context": "Xét ảnh hưởng và vai trò của Vật lí học đối với sự phát triển của công nghệ và đời sống con người.",
+            "subQuestions": [
+                {
+                    "key": "a",
+                    "competency": "NTVL",
+                    "text": "Vật lí học là ngành khoa học tự nhiên nghiên cứu các quy luật vận động của vật chất và năng lượng.",
+                    "answer": "Đ",
+                    "explanation": "Định nghĩa chuẩn về Vật lí học."
+                },
+                {
+                    "key": "b",
+                    "competency": "THTN",
+                    "text": "Việc nghiên cứu hiện tượng cảm ứng điện từ của Faraday đã tạo nền tảng cho sự ra đời của máy phát điện và dòng điện xoay chiều.",
+                    "answer": "Đ",
+                    "explanation": "Hiện tượng cảm ứng điện từ của Faraday dẫn tới phát minh máy phát điện xoay chiều."
+                },
+                {
+                    "key": "c",
+                    "competency": "THTN",
+                    "text": "Phát minh ra máy hơi nước dựa trên lý thuyết về Cơ học lượng tử hiện đại.",
+                    "answer": "S",
+                    "explanation": "Máy hơi nước ra đời dựa trên Nhiệt học cổ điển, trước khi có Cơ học lượng tử rất lâu."
+                },
+                {
+                    "key": "d",
+                    "competency": "VDKT",
+                    "text": "Ứng dụng của vật lí bán dẫn là nền tảng cốt lõi cho sự phát triển của vi mạch máy tính, trí tuệ nhân tạo (AI) và điện thoại thông minh.",
+                    "answer": "Đ",
+                    "explanation": "Vật lí bán dẫn là trái tim của vi mạch điện tử và trí tuệ nhân tạo."
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "context": "Xét các phương pháp nghiên cứu khoa học cơ bản được sử dụng trong Vật lí học.",
+            "subQuestions": [
+                {
+                    "key": "a",
+                    "competency": "NTVL",
+                    "text": "Phương pháp lý thuyết sử dụng ngôn ngữ toán học và mô hình trí tuệ để suy luận ra các quy luật vật lí mới.",
+                    "answer": "Đ",
+                    "explanation": "Khái niệm đúng về phương pháp lý thuyết."
+                },
+                {
+                    "key": "b",
+                    "competency": "THTN",
+                    "text": "Thí nghiệm kiểm tra trong phương pháp thực nghiệm có thể bị bỏ qua nếu giả thuyết toán học đưa ra đã đủ đẹp và logic.",
+                    "answer": "S",
+                    "explanation": "Trong Vật lí thực nghiệm, thí nghiệm là tiêu chuẩn tối cao để kiểm chứng, không được bỏ qua."
+                },
+                {
+                    "key": "c",
+                    "competency": "THTN",
+                    "text": "Mô hình hạt vật chất, mô hình tia sáng là các ví dụ về việc ứng dụng phương pháp mô hình hóa trong Vật lí.",
+                    "answer": "Đ",
+                    "explanation": "Mô hình hạt, mô hình tia sáng giúp đơn giản hóa việc nghiên cứu."
+                },
+                {
+                    "key": "d",
+                    "competency": "VDKT",
+                    "text": "Khi kết quả thí nghiệm thực nghiệm mâu thuẫn với giả thuyết lý thuyết ban đầu, nhà khoa học bắt buộc phải điều chỉnh hoặc bác bỏ giả thuyết đó.",
+                    "answer": "Đ",
+                    "explanation": "Thực nghiệm là trọng tài cuối cùng; nếu mâu thuẫn phải điều chỉnh giả thuyết."
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "context": "Xét tính thực tiễn và liên môn của Vật lí học với các ngành khoa học khác.",
+            "subQuestions": [
+                {
+                    "key": "a",
+                    "competency": "NTVL",
+                    "text": "Sự kết hợp giữa Vật lí và Sinh học hình thành nên ngành Lý - Sinh (Biophysics) nghiên cứu cơ chế vận động cơ bắp và dòng điện sinh học.",
+                    "answer": "Đ",
+                    "explanation": "Ngành Lý - Sinh nghiên cứu điện sinh học và cơ học sinh học."
+                },
+                {
+                    "key": "b",
+                    "competency": "THTN",
+                    "text": "Ngành Thiên văn học chỉ sử dụng kính viễn vọng quan sát mà không cần áp dụng các quy luật Vật lí.",
+                    "answer": "S",
+                    "explanation": "Thiên văn học áp dụng triệt để các quy luật Quang học, Hấp dẫn và Vật lí thiên văn."
+                },
+                {
+                    "key": "c",
+                    "competency": "VDKT",
+                    "text": "Trong y học, các máy siêu âm chẩn đoán hình ảnh hoạt động dựa trên nguyên lý phản xạ của sóng âm cao tần (sóng siêu âm).",
+                    "answer": "Đ",
+                    "explanation": "Máy siêu âm dựa trên sự phản xạ của sóng âm cao tần khi qua các mô cơ thể."
+                },
+                {
+                    "key": "d",
+                    "competency": "VDKT",
+                    "text": "Công nghệ xe điện hiện đại (EV) sử dụng pin Lithium-ion và động cơ điện là ứng dụng trực tiếp của Điện học và Hóa - Lý hiện đại.",
+                    "answer": "Đ",
+                    "explanation": "Xe điện kết hợp vật lí pin tích trữ điện năng và động cơ điện từ."
+                }
+            ]
+        }
+    ],
+            "part3": [
+        {
+            "id": 1,
+            "competency": "NTVL",
+            "question": "Quy trình nghiên cứu Vật lí theo phương pháp thực nghiệm gồm có bao nhiêu bước cơ bản?",
+            "answer": "5",
+            "explanation": "Quy trình thực nghiệm gồm 5 bước: Quan sát hiện tượng → Xây dựng giả thuyết → Dự đoán kết quả → Thí nghiệm kiểm tra → Phân tích kết quả và rút ra kết luận."
+        },
+        {
+            "id": 2,
+            "competency": "THTN",
+            "question": "Sự ra đời của công nghệ vi mạch bán dẫn, máy tính và tự động hóa là nền tảng khởi đầu cho cuộc cách mạng công nghiệp lần thứ mấy của nhân loại?",
+            "answer": "3",
+            "explanation": "Công nghệ vi mạch bán dẫn và máy tính khởi đầu cho Cuộc cách mạng công nghiệp lần thứ ba (3.0)."
+        },
+        {
+            "id": 3,
+            "competency": "NTVL",
+            "question": "Có bao nhiêu phương pháp nghiên cứu cơ bản được sử dụng chủ yếu trong Vật lí học?",
+            "answer": "2",
+            "explanation": "Hai phương pháp nghiên cứu cơ bản trong Vật lí là phương pháp thực nghiệm và phương pháp lý thuyết (mô hình hóa)."
+        },
+        {
+            "id": 4,
+            "competency": "VDKT",
+            "question": "Cho các phát biểu sau đây về vai trò và đối tượng nghiên cứu của Vật lí học:<br>(1) Vật lí học nghiên cứu các dạng vận động của vật chất và năng lượng.<br>(2) Công nghệ vi mạch bán dẫn là nền tảng khởi đầu cho cuộc cách mạng công nghiệp lần thứ nhất.<br>(3) Thí nghiệm kiểm tra là bước quyết định để đánh giá tính đúng đắn của giả thuyết trong phương pháp thực nghiệm.<br>(4) Ngành Vật lí y khoa ứng dụng các công nghệ như chụp X-quang, chụp cộng hưởng từ MRI để chẩn đoán bệnh.<br>Hỏi có bao nhiêu phát biểu <b>đúng</b> trong các phát biểu trên?",
+            "answer": "3",
+            "explanation": "Có 3 phát biểu đúng là (1), (3), (4). Phát biểu (2) sai vì công nghệ vi mạch bán dẫn là nền tảng của Cuộc cách mạng công nghiệp lần thứ ba (3.0)."
+        }
+    ]
+};
+
+let userAnswers = { part1: {}, part2: {}, part3: {} };
+let isSubmitted = false;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const savedName = localStorage.getItem('saved_student_name');
+    const savedClass = localStorage.getItem('saved_student_class');
+    if (savedName) document.getElementById('studentName').value = savedName;
+    if (savedClass) document.getElementById('studentClass').value = savedClass;
+});
+
+function startQuizExam() {
+    try {
+        const nameInput = document.getElementById('studentName');
+        const classInput = document.getElementById('studentClass');
+        const name = nameInput ? nameInput.value.trim() : "";
+        const className = classInput ? classInput.value.trim() : "";
+
+        if (!name || !className) {
+            alert("Vui lòng điền đầy đủ Họ và tên và Lớp để bắt đầu làm bài!");
+            return;
+        }
+
+        localStorage.setItem('saved_student_name', name);
+        localStorage.setItem('saved_student_class', className);
+
+        const loginCard = document.getElementById('studentLoginCard');
+        if (loginCard) loginCard.style.display = 'none';
+
+        const quizContent = document.getElementById('quizContent');
+        if (quizContent) quizContent.style.display = 'block';
+
+        renderQuiz();
+        updateProgress();
+
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            window.MathJax.typesetPromise();
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+        console.error("Lỗi startQuizExam:", err);
+        const loginCard = document.getElementById('studentLoginCard');
+        if (loginCard) loginCard.style.display = 'none';
+        const quizContent = document.getElementById('quizContent');
+        if (quizContent) quizContent.style.display = 'block';
+    }
+}
+window.startBloggerQuiz = startQuizExam;
+
+function getCompTag(comp) {
+    if (comp === "NTVL") return `<span class="competency-tag tag-ntvl">Nhận thức Vật lí</span>`;
+    if (comp === "THTN") return `<span class="competency-tag tag-thtn">Tìm hiểu Tự nhiên</span>`;
+    if (comp === "VDKT") return `<span class="competency-tag tag-vdkt">Vận dụng kiến thức</span>`;
+    return '';
+}
+
+function renderQuiz() {
+    const p1 = document.getElementById('part1Container');
+    if (p1 && quizData.part1) {
+        p1.innerHTML = quizData.part1.map((q, idx) => `
+            <div class="question-card" id="part1-q${q.id}">
+                <div class="question-title">
+                    <span class="question-num">Câu ${idx + 1}:</span> ${getCompTag(q.competency)}${q.question || q.context || ""}
+                </div>
+                ${q.image ? `<img src="${q.image}" class="question-img" alt="Hình vẽ câu ${idx + 1}">` : ''}
+                <div class="options-grid">
+                    ${['A','B','C','D'].map(opt => `
+                        <div class="option-card" id="part1-q${q.id}-opt${opt}" onclick="selectPart1(${q.id}, '${opt}')">
+                            <div class="option-letter">${opt}</div>
+                            <div>${q.options ? (q.options[opt] || (Array.isArray(q.options) ? q.options[opt.charCodeAt(0)-65] : '')) : ''}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="explanation-box" id="part1-q${q.id}-explanation">
+                    💡 <b>Hướng dẫn giải:</b> ${q.explanation}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    const p2 = document.getElementById('part2Container');
+    if (p2 && quizData.part2) {
+        p2.innerHTML = quizData.part2.map((q, idx) => `
+            <div class="question-card" id="part2-q${q.id}">
+                <div class="question-title">
+                    <span class="question-num">Câu ${idx + 1}:</span> ${getCompTag(q.competency)}${q.question || q.context || ''}
+                </div>
+                ${q.image ? `<img src="${q.image}" class="question-img" alt="Hình vẽ câu ${idx + 1}">` : ''}
+                ${q.subQuestions.map(sub => `
+                    <div class="tf-row" id="part2-q${q.id}-tf-${sub.key}">
+                        <div><b>${sub.key})</b> ${sub.text}</div>
+                        <div class="tf-buttons">
+                            <button type="button" class="btn-tf tf-btn" id="part2-q${q.id}-tf-${sub.key}-T" onclick="selectPart2(${q.id}, '${sub.key}', 'Đ')">ĐÚNG</button>
+                            <button type="button" class="btn-tf tf-btn" id="part2-q${q.id}-tf-${sub.key}-F" onclick="selectPart2(${q.id}, '${sub.key}', 'S')">SAI</button>
+                        </div>
+                    </div>
+                `).join('')}
+                <div class="explanation-box" id="part2-q${q.id}-explanation">
+                    💡 <b>Hướng dẫn giải:</b> ${q.explanation}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    const p3 = document.getElementById('part3Container');
+    if (p3 && quizData.part3) {
+        p3.innerHTML = quizData.part3.map((q, idx) => `
+            <div class="question-card" id="part3-q${q.id}">
+                <div class="question-title">
+                    <span class="question-num">Câu ${idx + 1}:</span> ${getCompTag(q.competency)}${q.question || q.context || ""}
+                </div>
+                ${q.image ? `<img src="${q.image}" class="question-img" alt="Hình vẽ câu ${idx + 1}">` : ''}
+                <div style="margin-top: 10px;">
+                    <input type="text" class="short-answer-input" id="part3-q${q.id}-input" placeholder="Nhập đáp số..." onchange="inputShort(${q.id}, this.value)">
+                    <div id="part3-q${q.id}-correct" style="display:none; color:#22c55e; font-weight:700; margin-top:6px; font-size:0.9rem;"></div>
+                </div>
+                <div class="explanation-box" id="part3-q${q.id}-explanation">
+                    💡 <b>Hướng dẫn giải:</b> ${q.explanation}
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
+function selectPart1(qId, choice) {
+    if (isSubmitted) return;
+    userAnswers.part1[qId] = choice;
+    const cards = ['A','B','C','D'];
+    cards.forEach(c => {
+        const el = document.getElementById(`part1-q${qId}-opt${c}`);
+        if (el) el.classList.remove('selected');
+    });
+    const selectedEl = document.getElementById(`part1-q${qId}-opt${choice}`);
+    if (selectedEl) selectedEl.classList.add('selected');
+    updateProgress();
+}
+
+function selectPart2(qId, subKey, choice) {
+    if (isSubmitted) return;
+    if (!userAnswers.part2[qId]) userAnswers.part2[qId] = {};
+    userAnswers.part2[qId][subKey] = choice;
+    
+    const btnT = document.getElementById(`part2-q${qId}-tf-${subKey}-T`);
+    const btnF = document.getElementById(`part2-q${qId}-tf-${subKey}-F`);
+    if (btnT) btnT.classList.remove('selected-true', 'selected-false');
+    if (btnF) btnF.classList.remove('selected-true', 'selected-false');
+
+    if (choice === 'Đ' && btnT) btnT.classList.add('selected-true');
+    if (choice === 'S' && btnF) btnF.classList.add('selected-false');
+    updateProgress();
+}
+
+function inputShort(qId, val) {
+    if (isSubmitted) return;
+    userAnswers.part3[qId] = val.trim();
+    updateProgress();
+}
+
+function updateProgress() {
+    let totalItems = (quizData.part1 ? quizData.part1.length : 0) + 
+                     (quizData.part2 ? quizData.part2.reduce((acc, q) => acc + q.subQuestions.length, 0) : 0) + 
+                     (quizData.part3 ? quizData.part3.length : 0);
+    let completedCount = Object.keys(userAnswers.part1).length;
+    for (let qId in userAnswers.part2) {
+        completedCount += Object.keys(userAnswers.part2[qId]).length;
+    }
+    for (let qId in userAnswers.part3) {
+        if (userAnswers.part3[qId] !== '') completedCount++;
+    }
+    const percentage = totalItems > 0 ? Math.min((completedCount / totalItems) * 100, 100) : 0;
+    const pb = document.getElementById('progressBar');
+    if (pb) pb.style.width = `${percentage}%`;
+    const pl = document.getElementById('progressLabel');
+    if (pl) pl.textContent = `${completedCount}/${totalItems} ý hoàn thành`;
+}
+
+function gradeQuiz() {
+    if (isSubmitted) return;
+    isSubmitted = true;
+
+    let maxPossibleScore = (quizData.part1 ? quizData.part1.length : 0) + (quizData.part2 ? quizData.part2.length : 0) + (quizData.part3 ? quizData.part3.length : 0);
+    let earnedPoints = 0;
+    let totalCorrectCount = 0;
+
+    // Grade Part 1
+    if (quizData.part1) {
+        quizData.part1.forEach(q => {
+            const userChoice = userAnswers.part1[q.id];
+            const correctOpt = typeof q.answer === 'number' ? ['A','B','C','D'][q.answer] : q.answer;
+            const exp = document.getElementById(`part1-q${q.id}-explanation`);
+            if (exp) exp.style.display = 'block';
+
+            ['A','B','C','D'].forEach(o => {
+                const el = document.getElementById(`part1-q${q.id}-opt${o}`);
+                if (el) {
+                    if (o === correctOpt) el.classList.add('correct');
+                    else if (userChoice === o && userChoice !== correctOpt) el.classList.add('incorrect');
+                }
+            });
+            if (userChoice === correctOpt) {
+                earnedPoints += 1.0;
+                totalCorrectCount++;
+            }
+        });
+    }
+
+    // Grade Part 2
+    if (quizData.part2) {
+        quizData.part2.forEach(q => {
+            let correctSubCount = 0;
+            const exp = document.getElementById(`part2-q${q.id}-explanation`);
+            if (exp) exp.style.display = 'block';
+
+            q.subQuestions.forEach(sub => {
+                const userChoice = userAnswers.part2[q.id] ? userAnswers.part2[q.id][sub.key] : null;
+                const correctChoice = typeof sub.answer === 'boolean' ? (sub.answer ? 'Đ' : 'S') : sub.answer;
+                const btnT = document.getElementById(`part2-q${q.id}-tf-${sub.key}-T`);
+                const btnF = document.getElementById(`part2-q${q.id}-tf-${sub.key}-F`);
+
+                if (userChoice === correctChoice) {
+                    correctSubCount++;
+                    totalCorrectCount++;
+                }
+                if (correctChoice === 'Đ' && btnT) btnT.style.border = '2px solid #22c55e';
+                if (correctChoice === 'S' && btnF) btnF.style.border = '2px solid #22c55e';
+            });
+
+            if (correctSubCount === 1) earnedPoints += 0.1;
+            else if (correctSubCount === 2) earnedPoints += 0.25;
+            else if (correctSubCount === 3) earnedPoints += 0.5;
+            else if (correctSubCount === 4) earnedPoints += 1.0;
+        });
+    }
+
+    // Grade Part 3
+    if (quizData.part3) {
+        quizData.part3.forEach(q => {
+            const userChoice = userAnswers.part3[q.id] || "";
+            const correctAns = String(q.answer).trim();
+            const inputEl = document.getElementById(`part3-q${q.id}-input`);
+            const correctTextEl = document.getElementById(`part3-q${q.id}-correct`);
+            const exp = document.getElementById(`part3-q${q.id}-explanation`);
+            if (exp) exp.style.display = 'block';
+            if (inputEl) inputEl.disabled = true;
+
+            const cleanUser = userChoice.replace(',', '.');
+            const cleanCorrect = correctAns.replace(',', '.');
+
+            if (cleanUser && parseFloat(cleanUser) === parseFloat(cleanCorrect)) {
+                earnedPoints += 1.0;
+                totalCorrectCount++;
+                if (inputEl) inputEl.classList.add('input-correct');
+            } else {
+                if (inputEl) inputEl.classList.add('input-incorrect');
+                if (correctTextEl) {
+                    correctTextEl.innerHTML = `💡 Đáp án đúng: <strong>${correctAns}</strong>`;
+                    correctTextEl.style.display = 'block';
+                }
+            }
+        });
+    }
+
+    const finalGrade = maxPossibleScore > 0 ? ((earnedPoints / maxPossibleScore) * 10).toFixed(1) : "0.0";
+    const totalItems = (quizData.part1 ? quizData.part1.length : 0) + (quizData.part2 ? quizData.part2.reduce((acc, q) => acc + q.subQuestions.length, 0) : 0) + (quizData.part3 ? quizData.part3.length : 0);
+
+    const scoreCircle = document.getElementById('scoreCircle');
+    if (scoreCircle) scoreCircle.textContent = finalGrade;
+
+    const ccEl = document.getElementById('correctCountText');
+    if (ccEl) ccEl.textContent = totalCorrectCount;
+
+    const icEl = document.getElementById('incorrectCountText');
+    if (icEl) icEl.textContent = totalItems - totalCorrectCount;
+
+    const gtEl = document.getElementById('gradeText');
+    if (gtEl) gtEl.textContent = `${earnedPoints.toFixed(2)}/${maxPossibleScore}`;
+
+    let titleText = "Cố Gắng Lên!";
+    let descText = "Hãy ôn tập lại lý thuyết và xem kĩ lời giải chi tiết bên dưới nhé.";
+    if (parseFloat(finalGrade) >= 8.5) {
+        titleText = "Xuất Sắc! 🎉";
+        descText = "Bạn nắm rất chắc kiến thức của bài học này!";
+    } else if (parseFloat(finalGrade) >= 6.5) {
+        titleText = "Khá Tốt!";
+        descText = "Bạn hiểu bài tốt, làm thêm một ít bài tập để đạt điểm tuyệt đối nhé.";
+    }
+
+    const stEl = document.getElementById('scoreTitle');
+    if (stEl) stEl.textContent = titleText;
+    const sdEl = document.getElementById('scoreDesc');
+    if (sdEl) sdEl.textContent = descText;
+
+    const btnSubmit = document.getElementById('btnSubmitQuiz');
+    if (btnSubmit) btnSubmit.style.display = 'none';
+
+    const rp = document.getElementById('resultsPanel');
+    if (rp) {
+        rp.style.display = 'block';
+        setTimeout(function() {
+            var topPos = rp.getBoundingClientRect().top + window.pageYOffset - 80;
+            window.scrollTo({ top: Math.max(0, topPos), behavior: 'smooth' });
+        }, 50);
+    }
+
+    if (typeof confetti === 'function') {
+        confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+    }
+
+    const name = localStorage.getItem('saved_student_name') || 'Học sinh';
+    const className = localStorage.getItem('saved_student_class') || 'Lớp';
+    if (typeof GOOGLE_SHEETS_URL !== 'undefined' && GOOGLE_SHEETS_URL) {
+        try {
+            fetch(GOOGLE_SHEETS_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({
+                    name: name,
+                    className: className,
+                    lesson: quizData.title || "📖 Bài 1 Làm quen với Vật lí (Vật lí 10)",
+                    correct: `${totalCorrectCount}/${totalItems}`,
+                    score: finalGrade
+                }),
+                redirect: "follow"
+            }).catch(function(err){});
+        } catch(err){}
+    }
+}
+</script>
 </body>
 </html>
