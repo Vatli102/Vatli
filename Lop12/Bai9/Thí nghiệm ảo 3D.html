@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thí Nghiệm Ảo 3D: Khảo Sát Định Luật Boyle - Vật Lí 12 (Trang 38 SGK)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Tự động ẩn header khi nhúng iframe */
+        body.is-embedded .nav-capsule-wrap,
+        body.is-embedded header {
+            display: none !important;
+        }
+        body.is-embedded {
+            padding: 0.5rem !important;
+            min-height: auto !important;
+        }
+    </style>
+    <script>
+        if (window.self !== window.top) {
+            document.documentElement.classList.add('is-embedded');
+            window.addEventListener('DOMContentLoaded', function() {
+                document.body.classList.add('is-embedded');
+            });
+        }
+    </script>
+    <style>
+        p { text-align: justify; }
+        :root {
+            --bg-gradient: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e1b4b 100%);
+            --glass-bg: rgba(15, 23, 42, 0.78);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-orange: #f97316;
+            --accent-blue: #0ea5e9;
+            --accent-green: #10b981;
+            --accent-purple: #8b5cf6;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 1.2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 1.2rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        header h1 {
+            font-size: 2.1rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #38bdf8, #818cf8, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 0.98rem;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1.25fr 0.75fr;
+            gap: 1.2rem;
+            width: 100%;
+            max-width: 1240px;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 992px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(12px);
+            padding: 1.2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 2px solid rgba(56, 189, 248, 0.2);
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.9), 0 0 20px rgba(14, 165, 233, 0.15);
+            background: #020617;
+            aspect-ratio: 16/10;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Controls Panel */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .control-label {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .control-value {
+            color: #38bdf8;
+            font-weight: bold;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 7px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #0ea5e9;
+            cursor: pointer;
+            box-shadow: 0 0 12px rgba(14, 165, 233, 0.8);
+            transition: transform 0.1s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.25);
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 0.6rem;
+            margin-top: 0.9rem;
+            width: 100%;
+        }
+
+        button {
+            flex: 1;
+            padding: 0.7rem 0.8rem;
+            border-radius: 12px;
+            border: none;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border-color: #34d399;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn-auto {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+            border-color: #818cf8;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+        }
+
+        .btn-clear {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border-color: #f87171;
+        }
+
+        /* Metrics grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 0.8rem;
+            text-align: center;
+        }
+
+        .metric-title {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .metric-number {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #38bdf8;
+        }
+
+        .metric-unit {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            font-weight: normal;
+        }
+
+        /* Data Table */
+        .table-wrapper {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .data-table th {
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            padding: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 700;
+        }
+
+        .data-table td {
+            padding: 7px 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: #f1f5f9;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 0.8rem;
+        }
+
+        .tab-btn {
+            padding: 0.5rem 0.9rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: #38bdf8;
+            border-bottom-color: #38bdf8;
+        }
+
+        .tab-pane {
+            display: none;
+            font-size: 0.88rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Realtime Graph */
+        .graph-box {
+            margin-top: auto;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 0.8rem;
+        }
+
+        .graph-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.4rem;
+        }
+
+        .graph-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .graph-canvas-container {
+            width: 100%;
+            height: 140px;
+            position: relative;
+        }
+
+        #graphCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .mode-banner {
+            position: absolute;
+            top: 0.8rem;
+            left: 0.8rem;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #34d399;
+            backdrop-filter: blur(8px);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .mode-banner::before {
+            content: '';
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            background: #34d399;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #34d399;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Thí Nghiệm Ảo 3D Real: Định Luật Boyle (SGK Trang 38)</h1>
+        <p>Mô phỏng 3D bộ dụng cụ thí nghiệm gồm Xi-lanh chia vạch, Pít-tông tay quay, Áp kế số và Nhiệt kế bảo toàn nhiệt độ</p>
+    </header>
+
+    <div class="main-container">
+        
+        <!-- Left Panel: Simulation Area -->
+        <div class="panel simulation-area">
+            <div class="mode-banner" id="modeBanner">THÍ NGHIỆM ĐẲNG NHIỆT (T = 298 K CONST)</div>
+            
+            <div class="canvas-container" id="canvasContainer">
+                <canvas id="simCanvas"></canvas>
+            </div>
+
+            <!-- Sliders for Piston control -->
+            <div class="controls-grid">
+                <div class="control-group" style="grid-column: span 2;">
+                    <div class="control-label">
+                        <span><i class="fa-solid fa-arrows-left-right"></i> Dịch chuyển Pít-tông thay đổi Thể tích $V$</span>
+                        <span class="control-value" id="valVolume">20.0 mL</span>
+                    </div>
+                    <input type="range" id="sliderVolume" min="5" max="30" step="0.5" value="20">
+                </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="btn-container">
+                <button id="btnAddMeasurement" class="btn-add">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Ghi Số Liệu Lần Đo
+                </button>
+                <button id="btnAutoExperiment" class="btn-auto">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Đo Tự Động 4 Vị Trí (SGK)
+                </button>
+                <button id="btnClearData" class="btn-clear">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Xóa Số Liệu
+                </button>
+            </div>
+        </div>
+
+        <!-- Right Panel: Data & Graph -->
+        <div class="panel">
+            <!-- Metrics displays -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-title">Thể tích $V$</div>
+                    <div class="metric-number" id="metricV">20.0 <span class="metric-unit">mL</span></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Áp suất $p$</div>
+                    <div class="metric-number" id="metricP">100.0 <span class="metric-unit">kPa</span></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Tích số $p \cdot V$</div>
+                    <div class="metric-number" id="metricPV" style="color:#34d399;">2000 <span class="metric-unit">kPa.mL</span></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Nhiệt độ $T$</div>
+                    <div class="metric-number" id="metricT" style="color:#f59e0b;">298 <span class="metric-unit">K (25°C)</span></div>
+                </div>
+            </div>
+
+            <!-- Bảng số liệu thực nghiệm -->
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Lần đo</th>
+                            <th>$V$ (mL)</th>
+                            <th>$p$ (kPa)</th>
+                            <th>$p \cdot V$</th>
+                            <th>$p / (1/V)$</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr><td colspan="5" style="color:#64748b; font-style:italic;">Chưa có dữ liệu đo (Hãy kéo Pít-tông và nhấn "Ghi Số Liệu")</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tabs area -->
+            <div class="tabs">
+                <div class="tab-btn active" onclick="switchTab('lythuyet')">Lý Thuyết</div>
+                <div class="tab-btn" onclick="switchTab('dungcu')">Dụng Cụ SGK</div>
+                <div class="tab-btn" onclick="switchTab('dothi')">Đồ Thị $p-V$</div>
+            </div>
+
+            <div class="tab-content">
+                <div id="lythuyet" class="tab-pane active">
+                    <p><strong>Định luật Boyle (Định luật Boy-lơ):</strong> Ở nhiệt độ không đổi, áp suất $p$ của một khối lượng khí xác định tỷ lệ nghịch với thể tích $V$ của nó.</p>
+                    <p style="margin-top:0.3rem"><strong>Biểu thức:</strong> $p \cdot V = \text{const}$ hay $p_1 V_1 = p_2 V_2$.</p>
+                </div>
+                <div id="dungcu" class="tab-pane">
+                    <p><strong>Dụng cụ thí nghiệm (SGK Trang 38):</strong></p>
+                    <ul style="margin-left: 15px; margin-top: 4px;">
+                        <li>Xi-lanh trong suốt chia vạch thể tích $V$ (mL).</li>
+                        <li>Pít-tông có tay quay để nén/dãn khí.</li>
+                        <li>Áp kế kỹ thuật số hiển thị áp suất $p$ (kPa).</li>
+                        <li>Nhiệt kế theo dõi nhiệt độ $T$ không đổi.</li>
+                    </ul>
+                </div>
+                <div id="dothi" class="tab-pane">
+                    <p><strong>Đường đẳng nhiệt:</strong> Trong hệ tọa độ $(p-V)$, đường đẳng nhiệt là một đường <strong>hypebol</strong>. Trong hệ tọa độ $(p - 1/V)$, đường đẳng nhiệt là một <strong>đường thẳng</strong> kéo dài đi qua gốc tọa độ.</p>
+                </div>
+            </div>
+
+            <!-- Real-time Plot Box -->
+            <div class="graph-box">
+                <div class="graph-header">
+                    <span class="graph-title">Đồ thị thực nghiệm Đường Đẳng Nhiệt (p - V)</span>
+                    <select id="selectGraphType" onchange="drawGraph()" style="background:#0f172a; color:#38bdf8; border:1px solid #334155; border-radius:6px; font-size:0.75rem; padding:2px 6px;">
+                        <option value="pV">Tọa độ (p - V) [Hypebol]</option>
+                        <option value="p1V">Tọa độ (p - 1/V) [Đường thẳng]</option>
+                    </select>
+                </div>
+                <div class="graph-canvas-container">
+                    <canvas id="graphCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+        const graphCanvas = document.getElementById('graphCanvas');
+        const gctx = graphCanvas.getContext('2d');
+
+        // State variables
+        let currentV = 20.0; // mL (Range 5 -> 30)
+        const C_CONSTANT = 2000.0; // p * V = 2000 (kPa.mL)
+        let currentP = C_CONSTANT / currentV; // kPa
+        let measurements = [];
+
+        // Dynamic 3D gas molecules inside cylinder
+        let molecules = [];
+        const numMolecules = 120;
+
+        function resizeCanvas() {
+            const container = document.getElementById('canvasContainer');
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+
+            const gContainer = graphCanvas.parentElement;
+            graphCanvas.width = gContainer.clientWidth;
+            graphCanvas.height = gContainer.clientHeight;
+        }
+
+        // Initialize 3D gas molecules
+        function initMolecules() {
+            molecules = [];
+            for (let i = 0; i < numMolecules; i++) {
+                let speed = 2.0 + Math.random() * 2.0;
+                let angle = Math.random() * Math.PI * 2;
+                molecules.push({
+                    x: Math.random(), // normalized inside gas chamber (0 -> 1)
+                    y: Math.random(), // normalized inside gas chamber (0 -> 1)
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    radius: 3.5
+                });
+            }
+        }
+
+        // Render 3D Apparatus (Cylinder, Piston, Pressure Gauge, Thermometer)
+        function drawApparatus() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // 1. Background Grid & Lab Bench Shadow
+            ctx.save();
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.8)';
+            ctx.fillRect(0, 0, w, h);
+
+            // Subtle bench grid lines
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.04)';
+            ctx.lineWidth = 1;
+            for (let x = 0; x < w; x += 30) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+            }
+            for (let y = 0; y < h; y += 30) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+            }
+            ctx.restore();
+
+            // Apparatus dimensions
+            const cylX = w * 0.12;
+            const cylY = h * 0.28;
+            const cylW = w * 0.55;
+            const cylH = h * 0.44;
+
+            // Calculate Piston Position based on currentV (5 -> 30 mL)
+            const minV = 5.0, maxV = 30.0;
+            const fillFrac = (currentV - minV) / (maxV - minV); // 0 -> 1
+            const gasWidth = cylW * (0.18 + fillFrac * 0.75);
+            const pistonX = cylX + gasWidth;
+
+            // --- A. GIAO DIỆN LÒNG XI-LANH CHỨA KHÍ ---
+            ctx.save();
+            // Gas Volume Fill 3D Glow
+            let gasGrad = ctx.createLinearGradient(cylX, cylY, cylX, cylY + cylH);
+            gasGrad.addColorStop(0, 'rgba(14, 165, 233, 0.25)');
+            gasGrad.addColorStop(0.5, 'rgba(56, 189, 248, 0.15)');
+            gasGrad.addColorStop(1, 'rgba(2, 132, 199, 0.25)');
+
+            ctx.fillStyle = gasGrad;
+            ctx.fillRect(cylX, cylY, gasWidth, cylH);
+
+            // Draw 3D Gas Molecules inside gas chamber
+            for (let m of molecules) {
+                // Update position inside current gas chamber
+                m.x += (m.vx / gasWidth) * 1.5;
+                m.y += (m.vy / cylH) * 1.5;
+
+                if (m.x <= 0.02) { m.x = 0.02; m.vx = -m.vx; }
+                if (m.x >= 0.98) { m.x = 0.98; m.vx = -m.vx; }
+                if (m.y <= 0.05) { m.y = 0.05; m.vy = -m.vy; }
+                if (m.y >= 0.95) { m.y = 0.95; m.vy = -m.vy; }
+
+                let realX = cylX + m.x * gasWidth;
+                let realY = cylY + 10 + m.y * (cylH - 20);
+
+                // Draw Perfectly Round 3D Spherical Molecule
+                ctx.beginPath();
+                ctx.arc(realX, realY, m.radius, 0, Math.PI * 2);
+                let mGrad = ctx.createRadialGradient(
+                    realX - 1, realY - 1, 0.5,
+                    realX, realY, m.radius
+                );
+                mGrad.addColorStop(0, '#e0f2fe');
+                mGrad.addColorStop(0.4, '#38bdf8');
+                mGrad.addColorStop(1, '#0284c7');
+                ctx.fillStyle = mGrad;
+                ctx.shadowBlur = 6;
+                ctx.shadowColor = '#38bdf8';
+                ctx.fill();
+            }
+            ctx.restore();
+
+            // --- B. VỎ XI-LANH THỦY TINH TRONG SUỐT (3D GLASS CYLINDER) ---
+            ctx.save();
+            // Glass Cylinder Body
+            let glassGrad = ctx.createLinearGradient(cylX, cylY, cylX, cylY + cylH);
+            glassGrad.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
+            glassGrad.addColorStop(0.15, 'rgba(255, 255, 255, 0.05)');
+            glassGrad.addColorStop(0.85, 'rgba(255, 255, 255, 0.05)');
+            glassGrad.addColorStop(1, 'rgba(255, 255, 255, 0.2)');
+
+            ctx.fillStyle = glassGrad;
+            ctx.fillRect(cylX, cylY, cylW, cylH);
+
+            // Glass Cylinder Border & Highlights
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(cylX, cylY, cylW, cylH);
+
+            // Top and Bottom Glass Reflections
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(cylX, cylY + 6);
+            ctx.lineTo(cylX + cylW, cylY + 6);
+            ctx.moveTo(cylX, cylY + cylH - 6);
+            ctx.lineTo(cylX + cylW, cylY + cylH - 6);
+            ctx.stroke();
+
+            // Vạch chia thể tích V (mL) trên thân xi-lanh
+            ctx.fillStyle = 'rgba(248, 250, 252, 0.9)';
+            ctx.font = 'bold 11px Outfit';
+            ctx.textAlign = 'center';
+            for (let vVal = 5; vVal <= 30; vVal += 5) {
+                let vFrac = (vVal - minV) / (maxV - minV);
+                let markX = cylX + cylW * (0.18 + vFrac * 0.75);
+
+                // Vạch kẻ
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(markX, cylY);
+                ctx.lineTo(markX, cylY + 14);
+                ctx.moveTo(markX, cylY + cylH - 14);
+                ctx.lineTo(markX, cylY + cylH);
+                ctx.stroke();
+
+                // Số vạch (mL)
+                ctx.fillText(`${vVal}`, markX, cylY + 28);
+            }
+            ctx.fillText("mL", cylX + cylW - 15, cylY + 28);
+            ctx.restore();
+
+            // --- C. PÍT-TÔNG 3D VÀ TAY QUAY (3D PISTON & SHAFT) ---
+            ctx.save();
+            // Piston Head (Metallic Disc)
+            let pistGrad = ctx.createLinearGradient(pistonX, cylY, pistonX + 18, cylY);
+            pistGrad.addColorStop(0, '#94a3b8');
+            pistGrad.addColorStop(0.4, '#f1f5f9');
+            pistGrad.addColorStop(0.8, '#475569');
+            pistGrad.addColorStop(1, '#1e293b');
+
+            ctx.fillStyle = pistGrad;
+            ctx.fillRect(pistonX, cylY + 2, 18, cylH - 4);
+
+            // Double Rubber O-Rings
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(pistonX + 3, cylY + 2, 3, cylH - 4);
+            ctx.fillRect(pistonX + 12, cylY + 2, 3, cylH - 4);
+
+            // Piston Shaft (Thanh đẩy piston)
+            let shaftGrad = ctx.createLinearGradient(pistonX + 18, cylY + cylH/2 - 8, pistonX + 18, cylY + cylH/2 + 8);
+            shaftGrad.addColorStop(0, '#64748b');
+            shaftGrad.addColorStop(0.5, '#cbd5e1');
+            shaftGrad.addColorStop(1, '#334155');
+
+            ctx.fillStyle = shaftGrad;
+            ctx.fillRect(pistonX + 18, cylY + cylH/2 - 8, w * 0.28, 16);
+
+            // Piston Handle / Tay quay kim loại
+            let handleX = pistonX + 18 + w * 0.28;
+            ctx.fillStyle = '#f97316';
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#f97316';
+            ctx.beginPath();
+            ctx.arc(handleX, cylY + cylH/2, 14, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // --- D. ĐỒNG HỒ ÁP KẾ SỐ 3D (3D PRESSURE GAUGE) ---
+            ctx.save();
+            const gaugeX = w * 0.82;
+            const gaugeY = h * 0.38;
+            const gaugeR = h * 0.24;
+
+            // Nối ống cảm biến áp suất từ đỉnh xi-lanh vào áp kế
+            ctx.strokeStyle = '#0ea5e9';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(cylX + 25, cylY);
+            ctx.lineTo(cylX + 25, cylY - 25);
+            ctx.lineTo(gaugeX, cylY - 25);
+            ctx.lineTo(gaugeX, gaugeY - gaugeR);
+            ctx.stroke();
+
+            // Gauge Outer Ring (Metallic 3D)
+            let ringGrad = ctx.createRadialGradient(gaugeX - 5, gaugeY - 5, gaugeR * 0.8, gaugeX, gaugeY, gaugeR);
+            ringGrad.addColorStop(0, '#38bdf8');
+            ringGrad.addColorStop(0.8, '#0369a1');
+            ringGrad.addColorStop(1, '#0f172a');
+
+            ctx.fillStyle = ringGrad;
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = 'rgba(14, 165, 233, 0.4)';
+            ctx.beginPath();
+            ctx.arc(gaugeX, gaugeY, gaugeR, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Gauge Inner Dial Face (Dark Glass)
+            ctx.fillStyle = '#020617';
+            ctx.beginPath();
+            ctx.arc(gaugeX, gaugeY, gaugeR * 0.85, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Gauge Dial Ticks (Kẻ vạch áp suất)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.lineWidth = 1.5;
+            for (let a = -135; a <= 135; a += 30) {
+                let rad = (a * Math.PI) / 180;
+                let x1 = gaugeX + Math.cos(rad) * (gaugeR * 0.65);
+                let y1 = gaugeY + Math.sin(rad) * (gaugeR * 0.65);
+                let x2 = gaugeX + Math.cos(rad) * (gaugeR * 0.78);
+                let y2 = gaugeY + Math.sin(rad) * (gaugeR * 0.78);
+                ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+            }
+
+            // Gauge Needle Pointer (Kim áp kế)
+            // Pressure range: 50 kPa -> 400 kPa
+            let pAngle = -135 + ((currentP - 50) / 350) * 270;
+            pAngle = Math.max(-135, Math.min(135, pAngle));
+            let pRad = (pAngle * Math.PI) / 180;
+
+            ctx.strokeStyle = '#ef4444';
+            ctx.lineWidth = 3;
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = '#ef4444';
+            ctx.beginPath();
+            ctx.moveTo(gaugeX, gaugeY);
+            ctx.lineTo(gaugeX + Math.cos(pRad) * (gaugeR * 0.62), gaugeY + Math.sin(pRad) * (gaugeR * 0.62));
+            ctx.stroke();
+
+            // Needle Cap Center
+            ctx.fillStyle = '#f8fafc';
+            ctx.beginPath();
+            ctx.arc(gaugeX, gaugeY, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Gauge Digital LED Screen
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(gaugeX - 35, gaugeY + gaugeR * 0.3, 70, 20);
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = 'bold 11px Outfit';
+            ctx.textAlign = 'center';
+            ctx.fillText(`${currentP.toFixed(1)} kPa`, gaugeX, gaugeY + gaugeR * 0.3 + 14);
+
+            // Gauge Title Label
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = 'bold 10px Plus Jakarta Sans';
+            ctx.fillText("ÁP KẾ SỐ (p)", gaugeX, gaugeY - gaugeR * 0.35);
+            ctx.restore();
+
+            // --- E. NHIỆT KẾ BẢO TOÀN NHIỆT ĐỘ T (3D THERMOMETER) ---
+            ctx.save();
+            const thermX = cylX - 35;
+            const thermY = cylY + 10;
+            const thermH = cylH - 20;
+
+            // Tube glass
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.lineWidth = 2;
+            ctx.fillRect(thermX, thermY, 12, thermH);
+            ctx.strokeRect(thermX, thermY, 12, thermH);
+
+            // Red Mercury Fill (Constant 25°C / 298 K)
+            ctx.fillStyle = '#f59e0b';
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = '#f59e0b';
+            ctx.fillRect(thermX + 2, thermY + thermH * 0.4, 8, thermH * 0.6);
+
+            // Bottom Bulb
+            ctx.beginPath();
+            ctx.arc(thermX + 6, thermY + thermH + 6, 9, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Label T = 298 K
+            ctx.fillStyle = '#f59e0b';
+            ctx.font = 'bold 10px Outfit';
+            ctx.textAlign = 'center';
+            ctx.fillText("298 K", thermX + 6, thermY - 8);
+            ctx.fillText("(T=const)", thermX + 6, thermY - 20);
+            ctx.restore();
+        }
+
+        // Simulation update loop
+        function run() {
+            drawApparatus();
+            requestAnimationFrame(run);
+        }
+
+        // Table UI update
+        function updateTableUI() {
+            const tbody = document.getElementById('tableBody');
+            if (measurements.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="color:#64748b; font-style:italic;">Chưa có dữ liệu đo (Hãy kéo Pít-tông và nhấn "Ghi Số Liệu")</td></tr>';
+                return;
+            }
+
+            let html = '';
+            measurements.forEach((m, idx) => {
+                let ratio = (m.p / (1 / m.V)).toFixed(0);
+                html += `<tr>
+                    <td><strong>Lần ${idx + 1}</strong></td>
+                    <td style="color:#38bdf8; font-weight:bold;">${m.V.toFixed(1)}</td>
+                    <td style="color:#ef4444; font-weight:bold;">${m.p.toFixed(1)}</td>
+                    <td style="color:#34d399; font-weight:bold;">${m.pv.toFixed(0)}</td>
+                    <td style="color:#818cf8; font-weight:bold;">${ratio}</td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        // Draw graph p-V or p-1/V
+        function drawGraph() {
+            gctx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
+            const w = graphCanvas.width;
+            const h = graphCanvas.height;
+
+            // Background Grid
+            gctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            gctx.lineWidth = 1;
+            for (let x = 0; x < w; x += 30) {
+                gctx.beginPath(); gctx.moveTo(x, 0); gctx.lineTo(x, h); gctx.stroke();
+            }
+            for (let y = 0; y < h; y += 20) {
+                gctx.beginPath(); gctx.moveTo(0, y); gctx.lineTo(w, y); gctx.stroke();
+            }
+
+            const graphType = document.getElementById('selectGraphType').value;
+
+            // Draw theoretical curve
+            gctx.save();
+            if (graphType === 'pV') {
+                // Isotherm Hyperbola Curve (p - V)
+                gctx.beginPath();
+                for (let vVal = 5; vVal <= 30; vVal += 0.5) {
+                    let pVal = C_CONSTANT / vVal; // kPa
+                    let gx = 30 + ((vVal - 5) / 25) * (w - 50);
+                    let gy = (h - 20) - ((pVal - 50) / 350) * (h - 35);
+                    if (vVal === 5) gctx.moveTo(gx, gy);
+                    else gctx.lineTo(gx, gy);
+                }
+                gctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+                gctx.lineWidth = 2;
+                gctx.setLineDash([4, 4]);
+                gctx.stroke();
+            } else {
+                // Linear Line (p - 1/V)
+                gctx.beginPath();
+                let min1V = 1/30, max1V = 1/5;
+                let gx1 = 30;
+                let gy1 = h - 20;
+                let gx2 = w - 20;
+                let gy2 = 15;
+                gctx.moveTo(gx1, gy1);
+                gctx.lineTo(gx2, gy2);
+                gctx.strokeStyle = 'rgba(129, 140, 248, 0.4)';
+                gctx.lineWidth = 2;
+                gctx.setLineDash([4, 4]);
+                gctx.stroke();
+            }
+            gctx.restore();
+
+            // Draw recorded measurement points
+            measurements.forEach((m, idx) => {
+                let gx, gy;
+                if (graphType === 'pV') {
+                    gx = 30 + ((m.V - 5) / 25) * (w - 50);
+                    gy = (h - 20) - ((m.p - 50) / 350) * (h - 35);
+                } else {
+                    let invV = 1 / m.V;
+                    let min1V = 1/30, max1V = 1/5;
+                    gx = 30 + ((invV - min1V) / (max1V - min1V)) * (w - 50);
+                    gy = (h - 20) - ((m.p - 50) / 350) * (h - 35);
+                }
+
+                gctx.save();
+                gctx.fillStyle = '#f97316';
+                gctx.shadowBlur = 8;
+                gctx.shadowColor = '#f97316';
+                gctx.beginPath();
+                gctx.arc(gx, gy, 5, 0, Math.PI * 2);
+                gctx.fill();
+
+                gctx.fillStyle = '#ffffff';
+                gctx.font = 'bold 9px Outfit';
+                gctx.fillText(`Lần ${idx + 1}`, gx + 8, gy - 2);
+                gctx.restore();
+            });
+        }
+
+        // Slider Event
+        document.getElementById('sliderVolume').addEventListener('input', function(e) {
+            currentV = parseFloat(e.target.value);
+            currentP = C_CONSTANT / currentV;
+
+            document.getElementById('valVolume').innerText = `${currentV.toFixed(1)} mL`;
+            document.getElementById('metricV').innerText = `${currentV.toFixed(1)}`;
+            document.getElementById('metricP').innerText = `${currentP.toFixed(1)}`;
+            document.getElementById('metricPV').innerText = `${(currentP * currentV).toFixed(0)}`;
+        });
+
+        // Add Measurement
+        document.getElementById('btnAddMeasurement').addEventListener('click', function() {
+            if (measurements.length >= 6) {
+                alert("Đã ghi đủ 6 lần đo! Nhấn 'Xóa Số Liệu' nếu muốn đo lại.");
+                return;
+            }
+            measurements.push({
+                V: currentV,
+                p: currentP,
+                pv: currentV * currentP
+            });
+            updateTableUI();
+            drawGraph();
+        });
+
+        // Auto 4 Measurements SGK Trang 38 (20 mL, 15 mL, 10 mL, 5 mL)
+        document.getElementById('btnAutoExperiment').addEventListener('click', function() {
+            measurements = [
+                { V: 20.0, p: 100.0, pv: 2000.0 },
+                { V: 15.0, p: 133.3, pv: 2000.0 },
+                { V: 10.0, p: 200.0, pv: 2000.0 },
+                { V: 5.0,  p: 400.0, pv: 2000.0 }
+            ];
+            currentV = 5.0;
+            currentP = 400.0;
+            document.getElementById('sliderVolume').value = 5.0;
+            document.getElementById('valVolume').innerText = "5.0 mL";
+            document.getElementById('metricV').innerText = "5.0";
+            document.getElementById('metricP').innerText = "400.0";
+            document.getElementById('metricPV').innerText = "2000";
+
+            updateTableUI();
+            drawGraph();
+        });
+
+        // Clear Data
+        document.getElementById('btnClearData').addEventListener('click', function() {
+            measurements = [];
+            updateTableUI();
+            drawGraph();
+        });
+
+        function switchTab(tabId) {
+            let contents = document.querySelectorAll('.tab-pane');
+            let buttons = document.querySelectorAll('.tab-btn');
+            for (let c of contents) { c.classList.remove('active'); }
+            for (let b of buttons) { b.classList.remove('active'); }
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+        });
+
+        window.onload = function() {
+            resizeCanvas();
+            initMolecules();
+            run();
+            drawGraph();
+        };
+    </script>
+</body>
+</html>

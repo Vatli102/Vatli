@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thí Nghiệm Ảo: Chuyển Động Brown Trong Chất Khí</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        p { text-align: justify; }
+        :root {
+            --bg-gradient: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e1b4b 100%);
+            --glass-bg: rgba(15, 23, 42, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent-orange: #f97316;
+            --accent-orange-glow: rgba(249, 115, 22, 0.4);
+            --accent-blue: #0ea5e9;
+            --accent-blue-glow: rgba(14, 165, 233, 0.4);
+            --accent-green: #10b981;
+            --accent-yellow: #eab308;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 1.5rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        header h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #38bdf8, #818cf8, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 30px rgba(129, 140, 248, 0.15);
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 968px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(12px);
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .simulation-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+            background: #020617;
+            aspect-ratio: 3/2;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .microscope-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            pointer-events: none;
+            box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.95);
+            border: 4px solid rgba(255, 255, 255, 0.05);
+            display: none;
+        }
+
+        .microscope-overlay.active {
+            display: block;
+            background: radial-gradient(circle, transparent 40%, rgba(0, 0, 0, 0.85) 75%);
+        }
+
+        .microscope-reticle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 50%;
+            display: none;
+        }
+
+        .microscope-overlay.active .microscope-reticle {
+            display: block;
+        }
+
+        .microscope-reticle::before, .microscope-reticle::after {
+            content: '';
+            position: absolute;
+            background: rgba(6, 182, 212, 0.3);
+        }
+
+        .microscope-reticle::before {
+            top: 50%;
+            left: -10px;
+            width: 100px;
+            height: 1px;
+        }
+
+        .microscope-reticle::after {
+            left: 50%;
+            top: -10px;
+            width: 1px;
+            height: 100px;
+        }
+
+        /* Controls Panel */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .control-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .control-value {
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            outline: none;
+            transition: background 0.3s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent-orange);
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--accent-orange-glow);
+            transition: transform 0.1s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        button {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            border: none;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        button.active {
+            background: var(--accent-orange);
+            color: white;
+            box-shadow: 0 0 15px var(--accent-orange-glow);
+            border-color: var(--accent-orange);
+        }
+
+        button.toggle-active {
+            background: rgba(14, 165, 233, 0.2);
+            border-color: var(--accent-blue);
+            color: #38bdf8;
+        }
+
+        /* Metrics Display */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 1rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .metric-title {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 0.3rem;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #f8fafc, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .metric-unit {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-left: 0.2rem;
+        }
+
+        /* Tabs and Info */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.5rem 0.2rem;
+            border-bottom: 2px solid transparent;
+            border-radius: 0;
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            flex: none;
+        }
+
+        .tab-btn.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--accent-orange);
+            background: none;
+        }
+
+        .tab-btn:hover {
+            transform: none;
+            background: none;
+            color: var(--text-primary);
+        }
+
+        .tab-content {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            overflow-y: auto;
+            max-height: 220px;
+            padding-right: 0.5rem;
+        }
+
+        .tab-content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .tab-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .tab-content strong {
+            color: var(--text-primary);
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Real-time Graph Box */
+        .graph-box {
+            margin-top: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .graph-title {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .graph-canvas-container {
+            width: 100%;
+            height: 100px;
+            background: #020617;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Mode Banner */
+        .mode-banner {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(6, 182, 212, 0.2);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #22d3ee;
+            backdrop-filter: blur(8px);
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .mode-banner::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #22d3ee;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #22d3ee;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        .footer {
+            margin-top: auto;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-align: center;
+            padding-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+<!-- Dynamic Floating Capsule Navigation Bar (Unified Fixed Top - Scroll Permanent) -->
+<style>
+.nav-capsule-wrap {
+    position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 99999;
+    width: 96%; max-width: 760px; font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; pointer-events: auto;
+}
+.nav-capsule-body {
+    background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 50px; padding: 6px 14px;
+    display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35); gap: 8px;
+}
+.nav-btn-home {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.2); color: #ffffff;
+    padding: 7px 14px; border-radius: 30px; font-weight: 700; text-decoration: none;
+    font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.3); white-space: nowrap; flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+.nav-btn-home:hover {
+    background: rgba(255,255,255,0.35); color: #ffffff;
+}
+.nav-btn-sub {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: linear-gradient(135deg, #06b6d4, #0891b2); color: #ffffff;
+    padding: 7px 16px; border-radius: 30px; font-weight: 700; border: none; cursor: pointer;
+    font-size: 0.85rem; box-shadow: 0 4px 12px rgba(6,182,212,0.4); white-space: nowrap; flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+.nav-btn-sub:hover {
+    transform: translateY(-1px); box-shadow: 0 6px 16px rgba(6,182,212,0.6);
+}
+.nav-select-lesson {
+    padding: 7px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3);
+    background: #ffffff; color: #0f172a; font-weight: 600; font-size: 0.82rem;
+    outline: none; cursor: pointer; max-width: 160px; text-overflow: ellipsis; flex-shrink: 1;
+}
+@media (max-width: 480px) {
+    .nav-btn-home, .nav-btn-sub { padding: 6px 10px; font-size: 0.78rem; }
+    .nav-select-lesson { max-width: 110px; padding: 6px 8px; font-size: 0.75rem; }
+}
+</style>
+
+<div class="nav-capsule-wrap">
+    <div class="nav-capsule-body">
+        <a href="../../" class="nav-btn-home">🏠 Trang chủ</a>
+        <button type="button" onclick="openNavSubModal()" class="nav-btn-sub">🔔 Theo dõi</button>
+        <select onchange="if(this.value) window.location.href=this.value;" class="nav-select-lesson">
+            <option value="">📚 Bài tập</option>
+            <optgroup label="--- VẬT LÍ 12 ---">
+                <option value="../../Lop12/Bai1">Bài 1: Cấu trúc của chất</option>
+                <option value="../../Lop12/Bai2">Bài 2: Nội năng & Định luật I</option>
+                <option value="../../Lop12/Bai3">Bài 3: Thang nhiệt độ</option>
+                <option value="../../Lop12/Bai4">Bài 4: Nhiệt dung riêng</option>
+                <option value="../../Lop12/Bai5">Bài 5: Nhiệt nóng chảy riêng</option>
+                <option value="../../Lop12/de1-chuong1">Ôn tập C1 - Đề 1</option>
+                <option value="../../Lop12/de2-chuong1">Ôn tập C1 - Đề 2</option>
+                <option value="../../Lop12/de3-chuong1">Ôn tập C1 - Đề 3</option>
+            </optgroup>
+            <optgroup label="--- VẬT LÍ 11 ---">
+                <option value="../../Lop11/Bai1">Bài 1: Dao động điều hòa</option>
+                <option value="../../Lop11/Bai2">Bài 2: Mô tả DĐĐH</option>
+            </optgroup>
+            <optgroup label="--- VẬT LÍ 10 ---">
+                <option value="../../Lop10/Bai1">Bài 1: Làm quen Vật lí</option>
+                <option value="../../Lop10/Bai2">Bài 2: Quy tắc an toàn</option>
+            </optgroup>
+        </select>
+    </div>
+</div>
+
+<!-- Modal Popup Đăng ký Theo dõi -->
+<div id="navSubModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 10000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: all 0.25s ease;">
+    <div style="background: white; width: 90%; max-width: 420px; border-radius: 16px; padding: 1.8rem; position: relative; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); font-family: 'Inter', sans-serif;">
+        <button type="button" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b;" onclick="closeNavSubModal()">✕</button>
+        <div style="text-align: center; margin-bottom: 1.2rem;">
+            <div style="width: 48px; height: 48px; background: #e0e7ff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin: 0 auto 0.8rem auto;">🔔</div>
+            <h3 style="font-size: 1.2rem; font-weight: 700; color: #0f172a; margin: 0;">Đăng Ký Theo Dõi Bài Học</h3>
+            <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.4rem;">Nhận thông báo bài tập mới & cập nhật từ Thầy Cô!</p>
+        </div>
+        <form onsubmit="saveNavSub(event)">
+            <div style="margin-bottom: 0.8rem; text-align: left;">
+                <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.3rem; color: #334155;">Họ và tên học sinh <span style="color:red;">*</span></label>
+                <input type="text" id="navSubName" required placeholder="Ví dụ: Nguyễn Văn A" style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; outline: none; box-sizing: border-box;">
+            </div>
+            <div style="margin-bottom: 1rem; text-align: left;">
+                <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.3rem; color: #334155;">Số điện thoại / Zalo hoặc Email <span style="color:red;">*</span></label>
+                <input type="text" id="navSubContact" required placeholder="Nhập Zalo hoặc Email" style="width: 100%; padding: 0.65rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; outline: none; box-sizing: border-box;">
+            </div>
+            <button type="submit" style="width: 100%; padding: 0.75rem; background: #4f46e5; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer;">🔔 Đăng Ký Nhận Bài Học</button>
+        </form>
+        <div id="navSubMsg" style="display: none; text-align: center; color: #059669; font-weight: 600; margin-top: 0.8rem; font-size: 0.9rem;">
+            ✓ Đăng ký theo dõi thành công! Cảm ơn bạn.
+        </div>
+    </div>
+</div>
+
+<script>
+function openNavSubModal() { var m = document.getElementById('navSubModal'); if(m) { m.style.opacity = '1'; m.style.pointerEvents = 'auto'; } }
+function closeNavSubModal() { var m = document.getElementById('navSubModal'); if(m) { m.style.opacity = '0'; m.style.pointerEvents = 'none'; } }
+function saveNavSub(e) {
+    e.preventDefault();
+    var name = document.getElementById('navSubName').value;
+    var contact = document.getElementById('navSubContact').value;
+    var subs = JSON.parse(localStorage.getItem('user_subscriptions') || '[]');
+    subs.push({ name: name, contact: contact, date: new Date().toISOString() });
+    localStorage.setItem('user_subscriptions', JSON.stringify(subs));
+    if (typeof GOOGLE_SHEETS_URL !== 'undefined' && GOOGLE_SHEETS_URL) {
+        try {
+            fetch(GOOGLE_SHEETS_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({ name: name, className: "ĐĂNG KÝ THEO DÕI", lesson: "Đăng ký nhận bài mới", correct: contact, score: "Đăng ký" }),
+                redirect: "follow"
+            }).catch(function(err){});
+        } catch(err){}
+    }
+    document.getElementById('navSubMsg').style.display = 'block';
+    setTimeout(function() { closeNavSubModal(); }, 1500);
+}
+</script>
+<div style="height: 48px;"></div>
+
+
+
+
+
+    <header>
+        <h1>Thí Nghiệm Ảo Chuyển Động Brown</h1>
+        <p>Mô phỏng chuyển động hỗn loạn của hạt khói trong không khí dưới kính hiển vi</p>
+    </header>
+
+    <div class="main-container">
+        
+        <!-- Left Panel: Simulation Area -->
+        <div class="panel simulation-area">
+            <div class="mode-banner" id="modeBanner">KÍNH HIỂN VI (AIR INVISIBLE)</div>
+            
+            <div class="canvas-container" id="canvasContainer">
+                <canvas id="simCanvas"></canvas>
+                <div class="microscope-overlay" id="microscopeOverlay">
+                    <div class="microscope-reticle"></div>
+                </div>
+            </div>
+
+            <!-- Playback controls -->
+            <div class="btn-container">
+                <button id="btnPlayPause" class="active">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Tạm Dừng
+                </button>
+                <button id="btnToggleMolecules" class="">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Hiện Phân Tử Khí
+                </button>
+                <button id="btnTracePath" class="toggle-active">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Vẽ Đường Đi
+                </button>
+                <button id="btnReset">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Làm Mới
+                </button>
+            </div>
+
+            <!-- Parameters Sliders -->
+            <div class="controls-grid">
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Nhiệt độ (T)</span>
+                        <span class="control-value" id="valTemp">300 K</span>
+                    </div>
+                    <input type="range" id="sliderTemp" min="50" max="600" value="300">
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Mật độ phân tử khí</span>
+                        <span class="control-value" id="valDensity">150 hạt</span>
+                    </div>
+                    <input type="range" id="sliderDensity" min="20" max="250" value="150">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Kích thước hạt khói</span>
+                        <span class="control-value" id="valSmokeSize">22 px</span>
+                    </div>
+                    <input type="range" id="sliderSmokeSize" min="10" max="35" value="22">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Khối lượng hạt khói (M)</span>
+                        <span class="control-value" id="valSmokeMass">100 u</span>
+                    </div>
+                    <input type="range" id="sliderSmokeMass" min="30" max="300" value="100">
+                </div>
+            </div>
+        </div>
+        <!-- Right Panel: Data & Info -->
+        <div class="panel">
+            <!-- Metrics displays -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-title">Nhiệt độ khí</div>
+                    <div class="metric-number" id="metricTemp">27 <span class="metric-unit">°C</span></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Tần số va đập</div>
+                    <div class="metric-number" id="metricCollisions">0 <span class="metric-unit">Hz</span></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Tốc độ TB phân tử</div>
+                    <div class="metric-number" id="metricMolSpeed">0 <span class="metric-unit">m/s</span></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Hệ số khuếch tán</div>
+                    <div class="metric-number" id="metricDiffusion">0.0 <span class="metric-unit">D</span></div>
+                </div>
+            </div>
+
+            <!-- Tabs area -->
+            <div class="tabs">
+                <div class="tab-btn active" onclick="switchTab('lythuyet')">Lý Thuyết</div>
+                <div class="tab-btn" onclick="switchTab('huongdan')">Hướng Dẫn</div>
+                <div class="tab-btn" onclick="switchTab('tuduy')">Tư Duy</div>
+            </div>
+
+            <div class="tab-content">
+                <div id="lythuyet" class="tab-pane active">
+                    <p><strong>Chuyển động Brown</strong> là chuyển động hỗn loạn không ngừng của các hạt siêu vi (như hạt phấn hoa, hạt khói bụi) khi lơ lửng trong môi trường chất lỏng hoặc chất khí.</p>
+                    <p style="margin-top:0.5rem">Trong chất khí, các **phân tử không khí** (Nitơ, Oxy) luôn chuyển động nhiệt hỗn loạn vô cùng nhanh. Do kích thước cực nhỏ, chúng hoàn toàn **vô hình** dưới kính hiển vi quang học thông thường.</p>
+                    <p style="margin-top:0.5rem">Tuy nhiên, các hạt khói bụi có kích thước lớn hơn lại nhìn thấy rõ. Khi các phân tử khí lao vào tông đập dồn dập vào hạt khói từ mọi phía, do số lượng va đập ở các phía **không cân bằng hoàn toàn** ở mỗi tích tắc, chúng tạo ra một hợp lực đẩy hạt khói xô lệch, tạo thành chuyển động zigzag ngẫu nhiên.</p>
+                </div>
+                <div id="huongdan" class="tab-pane">
+                    <p><strong>Bước 1:</strong> Bắt đầu quan sát ở chế độ mặc định **"Kính hiển vi"**. Bạn sẽ thấy hạt khói nhảy múa zigzag không quy luật mà không thấy có lực nào tác dụng (như Robert Brown đã quan sát).</p>
+                    <p style="margin-top:0.5rem"><strong>Bước 2:</strong> Nhấn nút **"Hiện Phân Tử Khí"**. Bạn sẽ thấy hàng trăm phân tử không khí nhỏ màu xanh dương đang bắn phá liên tục vào hạt khói bụi.</p>
+                    <p style="margin-top:0.5rem"><strong>Bước 3:</strong> Kéo thanh trượt **"Nhiệt độ (T)"** lên tối đa. Quan sát thấy phân tử khí bay nhanh hơn và hạt khói chuyển động dữ dội hơn.</p>
+                    <p style="margin-top:0.5rem"><strong>Bước 4:</strong> Bật nút **"Vẽ Đường Đi"** để ghi lại toàn bộ quỹ đạo chuyển động zigzag của hạt khói.</p>
+                </div>
+                <div id="tuduy" class="tab-pane">
+                    <p><strong>Câu hỏi suy luận:</strong> Nếu khối lượng hạt khói tăng lên quá lớn (ví dụ hạt cát lớn), chuyển động Brown có còn quan sát thấy rõ không? Tại sao?</p>
+                    <p style="margin-top:0.5rem"><strong>Gợi ý:</strong> Khi khối lượng hạt khói quá lớn ($M \gg m$), động năng truyền từ phân tử không khí nhỏ bé không đủ làm thay đổi đáng kể vận tốc của hạt. Lực va chạm từ các phía có xu hướng trung hòa lẫn nhau, khiến hạt đứng yên vĩ mô.</p>
+                    <p style="margin-top:0.5rem"><strong>Kết luận:</strong> Chuyển động Brown chỉ quan sát được rõ rệt đối với các hạt siêu vi có kích thước và khối lượng đủ nhỏ.</p>
+                </div>
+            </div>
+
+            <!-- Real-time Plot Box -->
+            <div class="graph-box">
+                <div class="graph-title">
+                    <span>Đồ thị dịch chuyển của hạt khói x(t)</span>
+                    <span style="font-size:0.75rem; color:var(--accent-orange)" id="graphDiff">Độ dịch chuyển ly tâm: 0 px</span>
+                </div>
+                <div class="graph-canvas-container">
+                    <canvas id="graphCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        Bản quyền mô phỏng thí nghiệm vật lí ảo © 2026 · Bộ môn Vật lí 12
+    </div>
+
+    <script>
+        // Physics variables
+        let canvas = document.getElementById('simCanvas');
+        let ctx = canvas.getContext('2d');
+        let graphCanvas = document.getElementById('graphCanvas');
+        let gctx = graphCanvas.getContext('2d');
+
+        let isRunning = true;
+        let showMolecules = false;
+        let tracePath = true;
+
+        let temperature = 300; // Kelvin
+        let density = 150;
+        let smokeSize = 22;
+        let smokeMass = 100;
+        let molecules = [];
+        let smokeParticle = null;
+        let collisionCount = 0;
+        let collisionTimer = 0;
+
+        // Path trace history
+        let pathHistory = [];
+        let maxPathPoints = 120;
+
+        // Graph data
+        let graphData = [];
+        let graphTimer = 0;
+
+        // Setup size
+        function resizeCanvas() {
+            let container = document.getElementById('canvasContainer');
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+
+            graphCanvas.width = graphCanvas.parentElement.clientWidth;
+            graphCanvas.height = 100;
+        }
+
+        // Initialize particles
+        function initSimulation() {
+            molecules = [];
+            
+            // Spawn smoke particle in center
+            smokeParticle = {
+                x: canvas.width / 2,
+                y: canvas.height / 2,
+                vx: 0,
+                vy: 0,
+                radius: smokeSize,
+                mass: smokeMass,
+                // generate an irregular shape offset
+                vertices: []
+            };
+            generateSmokeShape(smokeParticle);
+
+            // Path trace
+            pathHistory = [{x: smokeParticle.x, y: smokeParticle.y}];
+            graphData = [];
+
+            // Spawn molecules
+            for(let i = 0; i < density; i++) {
+                spawnMolecule(i);
+            }
+        }
+
+        function generateSmokeShape(particle) {
+            particle.vertices = [];
+            let numPoints = 8 + Math.floor(Math.random() * 5);
+            for(let i = 0; i < numPoints; i++) {
+                let angle = (i / numPoints) * Math.PI * 2;
+                let rOffset = particle.radius * (0.85 + Math.random() * 0.3);
+                particle.vertices.push({
+                    x: Math.cos(angle) * rOffset,
+                    y: Math.sin(angle) * rOffset
+                });
+            }
+        }
+
+        function spawnMolecule(index) {
+            let r = 3.5;
+            let x = r + Math.random() * (canvas.width - r * 2);
+            let y = r + Math.random() * (canvas.height - r * 2);
+            
+            // Keep away from smoke particle initially
+            let dx = x - smokeParticle.x;
+            let dy = y - smokeParticle.y;
+            let dist = Math.hypot(dx, dy);
+            if(dist < smokeParticle.radius + 15) {
+                x = r + Math.random() * 100;
+                y = r + Math.random() * 100;
+            }
+
+            // Temperature determines molecule velocity
+            let speed = 0.25 * Math.sqrt(temperature);
+            let angle = Math.random() * Math.PI * 2;
+
+            molecules[index] = {
+                x: x,
+                y: y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                radius: r,
+                mass: 8
+            };
+        }
+        // Draw smoke particle
+        function drawSmokeParticle() {
+            ctx.save();
+            ctx.translate(smokeParticle.x, smokeParticle.y);
+            ctx.beginPath();
+            ctx.moveTo(smokeParticle.vertices[0].x, smokeParticle.vertices[0].y);
+            for(let i = 1; i < smokeParticle.vertices.length; i++) {
+                ctx.lineTo(smokeParticle.vertices[i].x, smokeParticle.vertices[i].y);
+            }
+            ctx.closePath();
+            
+            // Gradient fill to look carbonaceous 3D
+            let grad = ctx.createRadialGradient(-3, -3, 2, 0, 0, smokeParticle.radius);
+            grad.addColorStop(0, '#52525b');
+            grad.addColorStop(0.5, '#27272a');
+            grad.addColorStop(1, '#09090b');
+            ctx.fillStyle = grad;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+            ctx.fill();
+            
+            // Subtle gray rim highlight
+            ctx.strokeStyle = '#71717a';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        // Draw molecules
+        function drawMolecules() {
+            ctx.save();
+            for(let m of molecules) {
+                let radGrad = ctx.createRadialGradient(m.x - 0.5, m.y - 0.5, 0.2, m.x, m.y, m.radius);
+                radGrad.addColorStop(0, '#67e8f9'); // Cyan bright core
+                radGrad.addColorStop(1, '#0284c7'); // Blue edge
+                ctx.fillStyle = radGrad;
+                ctx.beginPath();
+                ctx.arc(m.x, m.y, m.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.restore();
+        }
+
+        // Draw zigzag trace path
+        function drawTracePath() {
+            if(pathHistory.length < 2) return;
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(pathHistory[0].x, pathHistory[0].y);
+            for(let i = 1; i < pathHistory.length; i++) {
+                ctx.lineTo(pathHistory[i].x, pathHistory[i].y);
+            }
+            ctx.strokeStyle = 'rgba(234, 179, 8, 0.85)'; // Yellow neon trace
+            ctx.lineWidth = 2;
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = '#eab308';
+            ctx.stroke();
+
+            // Draw start point indicator
+            ctx.fillStyle = '#10b981';
+            ctx.shadowColor = '#10b981';
+            ctx.beginPath();
+            ctx.arc(pathHistory[0].x, pathHistory[0].y, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        // Physics update loop
+        function updatePhysics() {
+            if(!isRunning) return;
+            // 1. Friction / damping on smoke particle representing gas medium drag
+            smokeParticle.vx *= 0.991;
+            smokeParticle.vy *= 0.991;
+
+            // Update smoke particle position
+            smokeParticle.x += smokeParticle.vx;
+            smokeParticle.y += smokeParticle.vy;
+
+            // Bounce smoke particle off boundaries
+            let sRad = smokeParticle.radius;
+            if(smokeParticle.x < sRad) { smokeParticle.x = sRad; smokeParticle.vx = -smokeParticle.vx; }
+            if(smokeParticle.x > canvas.width - sRad) { smokeParticle.x = canvas.width - sRad; smokeParticle.vx = -smokeParticle.vx; }
+            if(smokeParticle.y < sRad) { smokeParticle.y = sRad; smokeParticle.vy = -smokeParticle.vy; }
+            if(smokeParticle.y > canvas.height - sRad) { smokeParticle.y = canvas.height - sRad; smokeParticle.vy = -smokeParticle.vy; }
+
+            // 2. Update molecules
+            let speed = 0.25 * Math.sqrt(temperature);
+            for(let m of molecules) {
+                m.x += m.vx;
+                m.y += m.vy;
+
+                // Bounce molecules off walls and reset velocity matching constant temp
+                if(m.x < m.radius) { 
+                    m.x = m.radius; 
+                    m.vx = -m.vx;
+                }
+                if(m.x > canvas.width - m.radius) { 
+                    m.x = canvas.width - m.radius; 
+                    m.vx = -m.vx;
+                }
+                if(m.y < m.radius) { 
+                    m.y = m.radius; 
+                    m.vy = -m.vy;
+                }
+                if(m.y > canvas.height - m.radius) { 
+                    m.y = canvas.height - m.radius; 
+                    m.vy = -m.vy;
+                }
+
+                // Force velocity magnitude strictly proportional to temperature to maintain thermodynamic equilibrium
+                let currentSpeed = Math.hypot(m.vx, m.vy);
+                if(currentSpeed > 0) {
+                    m.vx = (m.vx / currentSpeed) * speed;
+                    m.vy = (m.vy / currentSpeed) * speed;
+                }
+
+                // 3. Collision with smoke particle (Elastic 2D)
+                let dx = m.x - smokeParticle.x;
+                let dy = m.y - smokeParticle.y;
+                let dist = Math.hypot(dx, dy);
+                let minDist = m.radius + smokeParticle.radius;
+
+                if(dist < minDist) {
+                    // Collision Normal
+                    let nx = dx / dist;
+                    let ny = dy / dist;
+
+                    // Relative velocity
+                    let rvx = m.vx - smokeParticle.vx;
+                    let rvy = m.vy - smokeParticle.vy;
+
+                    // Normal relative velocity
+                    let velAlongNormal = rvx * nx + rvy * ny;
+
+                    // Only resolve if moving towards each other
+                    if(velAlongNormal < 0) {
+                        let restitution = 1.0; // Elastic collision
+                        let impulse = -(1 + restitution) * velAlongNormal / (1/m.mass + 1/smokeParticle.mass);
+
+                        // Update velocities
+                        m.vx += (impulse / m.mass) * nx;
+                        m.vy += (impulse / m.mass) * ny;
+                        smokeParticle.vx -= (impulse / smokeParticle.mass) * nx;
+                        smokeParticle.vy -= (impulse / smokeParticle.mass) * ny;
+
+                        // Collision metrics tracking
+                        collisionCount++;
+                    }
+
+                    // Push out to avoid overlap sticking
+                    let overlap = minDist - dist;
+                    m.x += nx * overlap;
+                    m.y += ny * overlap;
+                }
+            }
+
+            // Path trace update
+            collisionTimer++;
+            if(collisionTimer % 3 === 0) {
+                pathHistory.push({x: smokeParticle.x, y: smokeParticle.y});
+                if(pathHistory.length > maxPathPoints) {
+                    pathHistory.shift();
+                }
+            }
+
+            // Graph metric displacement update
+            graphTimer++;
+            if(graphTimer % 10 === 0) {
+                let initialPoint = pathHistory[0] || {x: canvas.width/2, y: canvas.height/2};
+                let currentDisplacement = Math.hypot(smokeParticle.x - initialPoint.x, smokeParticle.y - initialPoint.y);
+                graphData.push(currentDisplacement);
+                if(graphData.length > 100) {
+                    graphData.shift();
+                }
+                document.getElementById('graphDiff').innerText = `Độ dịch chuyển ly tâm: ${Math.round(currentDisplacement)} px`;
+            }
+        }
+
+        // Draw graph with auto-scaling
+        function drawGraph() {
+            gctx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
+            
+            // Draw grid
+            gctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            gctx.lineWidth = 1;
+            for(let i = 0; i < graphCanvas.width; i += 40) {
+                gctx.beginPath();
+                gctx.moveTo(i, 0);
+                gctx.lineTo(i, graphCanvas.height);
+                gctx.stroke();
+            }
+            for(let j = 0; j < graphCanvas.height; j += 20) {
+                gctx.beginPath();
+                gctx.moveTo(0, j);
+                gctx.lineTo(graphCanvas.width, j);
+                gctx.stroke();
+            }
+
+            if(graphData.length < 2) return;
+
+            let maxVal = Math.max(...graphData, 40);
+            let yScale = (graphCanvas.height - 15) / maxVal;
+            gctx.beginPath();
+            let step = graphCanvas.width / 100;
+            gctx.moveTo(0, graphCanvas.height - graphData[0] * yScale - 5);
+            for(let i = 1; i < graphData.length; i++) {
+                gctx.lineTo(i * step, graphCanvas.height - graphData[i] * yScale - 5);
+            }
+            gctx.strokeStyle = '#f97316'; // Orange line
+            gctx.lineWidth = 2;
+            gctx.stroke();
+            
+            // Glow effect
+            gctx.save();
+            gctx.shadowBlur = 5;
+            gctx.shadowColor = '#f97316';
+            gctx.strokeStyle = '#f97316';
+            gctx.stroke();
+            gctx.restore();
+        }
+
+
+        // Render main screen loop
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw clean grid lines
+            ctx.save();
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
+            ctx.lineWidth = 1;
+            let gridSize = 30;
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            ctx.restore();
+
+            // Trace paths
+            if(tracePath) {
+                drawTracePath();
+            }
+
+            // Draw molecules if visibility toggle active
+            if(showMolecules) {
+                drawMolecules();
+            }
+
+            // Draw target smoke particles
+            drawSmokeParticle();
+
+            // Draw HUD information directly on canvas
+            ctx.save();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.font = 'bold 12px Outfit';
+            ctx.fillText("Hộp Khí 3D: Cận cảnh hạt khói lơ lửng", 15, 25);
+            ctx.restore();
+        }
+
+        function run() {
+            updatePhysics();
+            draw();
+            drawGraph();
+            updateMetrics();
+            requestAnimationFrame(run);
+        }
+
+        // Update metrics indicators on side panel
+        let lastTime = Date.now();
+        function updateMetrics() {
+            let now = Date.now();
+            let dt = (now - lastTime) / 1000;
+            if(dt >= 1.0) {
+                let collisionsPerSec = Math.round(collisionCount / dt);
+                document.getElementById('metricCollisions').innerHTML = `${collisionsPerSec} <span class="metric-unit">Hz</span>`;
+                collisionCount = 0;
+                lastTime = now;
+
+                // Speed calculation
+                let speedMeters = Math.round(0.15 * Math.sqrt(temperature) * 1.5);
+                document.getElementById('metricMolSpeed').innerHTML = `${speedMeters} <span class="metric-unit">m/s</span>`;
+
+                // Diffusion coefficient estimate
+                let diffCoeff = ((smokeSize / smokeMass) * (temperature / 100)).toFixed(1);
+                document.getElementById('metricDiffusion').innerHTML = `${diffCoeff} <span class="metric-unit">D</span>`;
+            }
+        }
+
+        // Interface controls linkage
+        document.getElementById('btnPlayPause').onclick = function() {
+            isRunning = !isRunning;
+            if(isRunning) {
+                this.classList.add('active');
+                this.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/></svg> Tạm Dừng`;
+            } else {
+                this.classList.remove('active');
+                this.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/></svg> Tiếp Tục`;
+            }
+        };
+
+        document.getElementById('btnToggleMolecules').onclick = function() {
+            showMolecules = !showMolecules;
+            let banner = document.getElementById('modeBanner');
+            let overlay = document.getElementById('microscopeOverlay');
+            if(showMolecules) {
+                this.classList.add('toggle-active');
+                banner.innerText = "VI MÔ GIẢI THÍCH (AIR MOLECULES VISIBLE)";
+                banner.style.color = '#10b981';
+                banner.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                banner.style.background = 'rgba(16, 185, 129, 0.2)';
+                overlay.classList.remove('active');
+            } else {
+                this.classList.remove('toggle-active');
+                banner.innerText = "KÍNH HIỂN VI (AIR INVISIBLE)";
+                banner.style.color = '#22d3ee';
+                banner.style.borderColor = 'rgba(6, 182, 212, 0.3)';
+                banner.style.background = 'rgba(6, 182, 212, 0.2)';
+                overlay.classList.add('active');
+            }
+        };
+
+        document.getElementById('btnTracePath').onclick = function() {
+            tracePath = !tracePath;
+            if(tracePath) {
+                this.classList.add('toggle-active');
+            } else {
+                this.classList.remove('toggle-active');
+            }
+        };
+
+        document.getElementById('btnReset').onclick = function() {
+            initSimulation();
+        };
+
+        // Sliders linkage
+        document.getElementById('sliderTemp').oninput = function() {
+            temperature = parseInt(this.value);
+            document.getElementById('valTemp').innerText = `${temperature} K`;
+            document.getElementById('metricTemp').innerHTML = `${temperature - 273} <span class="metric-unit">°C</span>`;
+        };
+
+        document.getElementById('sliderDensity').oninput = function() {
+            let targetDensity = parseInt(this.value);
+            document.getElementById('valDensity').innerText = `${targetDensity} hạt`;
+            
+            if(targetDensity > density) {
+                // Spawn more
+                for(let i = density; i < targetDensity; i++) {
+                    spawnMolecule(i);
+                }
+            } else {
+                molecules.length = targetDensity;
+            }
+            density = targetDensity;
+        };
+
+        document.getElementById('sliderSmokeSize').oninput = function() {
+            smokeSize = parseInt(this.value);
+            document.getElementById('valSmokeSize').innerText = `${smokeSize} px`;
+            smokeParticle.radius = smokeSize;
+            generateSmokeShape(smokeParticle);
+        };
+
+        document.getElementById('sliderSmokeMass').oninput = function() {
+            smokeMass = parseInt(this.value);
+            document.getElementById('valSmokeMass').innerText = `${smokeMass} u`;
+            smokeParticle.mass = smokeMass;
+        };
+
+        // Tabs switcher
+        function switchTab(tabId) {
+            let contents = document.getElementsByClassName('tab-pane');
+            let buttons = document.getElementsByClassName('tab-btn');
+            
+            for(let c of contents) {
+                c.classList.remove('active');
+            }
+            for(let b of buttons) {
+                b.classList.remove('active');
+            }
+            
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Window resize
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initSimulation();
+        });
+
+        // Run setup
+        window.onload = function() {
+            resizeCanvas();
+            initSimulation();
+            
+            // Set microscope view active initially (invisible molecules)
+            document.getElementById('microscopeOverlay').classList.add('active');
+            
+            run();
+        };
+    </script>
+</body>
+</html>

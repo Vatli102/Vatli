@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thí Nghiệm Ảo 3D: Chuyển Động Brown Trong Chất Khí</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Tự động ẩn khi nhúng iframe */
+        body.is-embedded .nav-capsule-wrap,
+        body.is-embedded header {
+            display: none !important;
+        }
+        body.is-embedded {
+            padding: 0.5rem !important;
+            min-height: auto !important;
+        }
+    </style>
+    <script>
+        if (window.self !== window.top) {
+            document.documentElement.classList.add('is-embedded');
+            window.addEventListener('DOMContentLoaded', function() {
+                document.body.classList.add('is-embedded');
+            });
+        }
+    </script>
+    <style>
+        p { text-align: justify; }
+        :root {
+            --bg-gradient: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e1b4b 100%);
+            --glass-bg: rgba(15, 23, 42, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-orange: #f97316;
+            --accent-orange-glow: rgba(249, 115, 22, 0.5);
+            --accent-blue: #0ea5e9;
+            --accent-blue-glow: rgba(14, 165, 233, 0.5);
+            --accent-green: #10b981;
+            --accent-yellow: #eab308;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 1.2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 1.2rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #38bdf8, #818cf8, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 1.2rem;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 968px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(12px);
+            padding: 1.2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .simulation-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 2px solid rgba(56, 189, 248, 0.2);
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.9), 0 0 20px rgba(14, 165, 233, 0.15);
+            background: #020617;
+            aspect-ratio: 3/2;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .microscope-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            pointer-events: none;
+            box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.95);
+            border: 4px solid rgba(255, 255, 255, 0.05);
+            display: none;
+        }
+
+        .microscope-overlay.active {
+            display: block;
+            background: radial-gradient(circle, transparent 45%, rgba(0, 0, 0, 0.88) 80%);
+        }
+
+        .microscope-reticle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90px;
+            height: 90px;
+            border: 1.5px stroke rgba(6, 182, 212, 0.4);
+            border-radius: 50%;
+            display: none;
+        }
+
+        .microscope-overlay.active .microscope-reticle {
+            display: block;
+        }
+
+        /* Controls Panel */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.9rem;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .control-label {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .control-value {
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent-orange);
+            cursor: pointer;
+            box-shadow: 0 0 12px var(--accent-orange-glow);
+            transition: transform 0.1s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.25);
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 0.7rem;
+            margin-top: 0.9rem;
+            width: 100%;
+        }
+
+        button {
+            flex: 1;
+            padding: 0.7rem 0.9rem;
+            border-radius: 12px;
+            border: none;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-1px);
+        }
+
+        button.active {
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            border-color: #38bdf8;
+            box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
+        }
+
+        button.toggle-active {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            border-color: #f59e0b;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+        }
+
+        /* Metrics grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 0.8rem;
+            text-align: center;
+        }
+
+        .metric-title {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .metric-number {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #38bdf8;
+        }
+
+        .metric-unit {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: normal;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 0.8rem;
+        }
+
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            color: #38bdf8;
+            border-bottom-color: #38bdf8;
+        }
+
+        .tab-pane {
+            display: none;
+            font-size: 0.88rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Realtime Graph */
+        .graph-box {
+            margin-top: auto;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 0.8rem;
+        }
+
+        .graph-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .graph-canvas-container {
+            width: 100%;
+            height: 90px;
+            position: relative;
+        }
+
+        #graphCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .mode-banner {
+            position: absolute;
+            top: 0.8rem;
+            left: 0.8rem;
+            background: rgba(6, 182, 212, 0.25);
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #22d3ee;
+            backdrop-filter: blur(8px);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .mode-banner::before {
+            content: '';
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            background: #22d3ee;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #22d3ee;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Thí Nghiệm Ảo 3D Real: Chuyển Động Brown</h1>
+        <p>Mô phỏng 3D tương tác cận cảnh sự va chạm bất đẳng hướng của các phân tử khí lên hạt khói</p>
+    </header>
+
+    <div class="main-container">
+        
+        <!-- Left Panel: Simulation Area -->
+        <div class="panel simulation-area">
+            <div class="mode-banner" id="modeBanner">MÔ PHỎNG 3D REAL (CHẾ ĐỘ KÍNH HIỂN VI)</div>
+            
+            <div class="canvas-container" id="canvasContainer">
+                <canvas id="simCanvas"></canvas>
+                <div class="microscope-overlay" id="microscopeOverlay">
+                    <div class="microscope-reticle"></div>
+                </div>
+            </div>
+
+            <!-- Playback controls -->
+            <div class="btn-container">
+                <button id="btnPlayPause" class="active">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Tạm Dừng
+                </button>
+                <button id="btnToggleMolecules" class="">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Hiện Phân Tử Khí 3D
+                </button>
+                <button id="btnTracePath" class="toggle-active">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Vẽ Đường Đi Zích Zắc
+                </button>
+                <button id="btnReset">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Làm Mới
+                </button>
+            </div>
+
+            <!-- Parameters Sliders -->
+            <div class="controls-grid">
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Nhiệt độ ($T$)</span>
+                        <span class="control-value" id="valTemp">300 K</span>
+                    </div>
+                    <input type="range" id="sliderTemp" min="50" max="600" value="300">
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Mật độ phân tử khí</span>
+                        <span class="control-value" id="valDensity">150 hạt</span>
+                    </div>
+                    <input type="range" id="sliderDensity" min="20" max="250" value="150">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Kích thước hạt khói</span>
+                        <span class="control-value" id="valSmokeSize">22 px</span>
+                    </div>
+                    <input type="range" id="sliderSmokeSize" min="10" max="35" value="22">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Khối lượng hạt khói ($M$)</span>
+                        <span class="control-value" id="valSmokeMass">100 u</span>
+                    </div>
+                    <input type="range" id="sliderSmokeMass" min="30" max="300" value="100">
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Data & Info -->
+        <div class="panel">
+            <!-- Metrics displays -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-title">Nhiệt độ khí</div>
+                    <div class="metric-number" id="metricTemp">27 <span class="metric-unit">°C</span></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Tần số va đập</div>
+                    <div class="metric-number" id="metricCollisions">0 <span class="metric-unit">Hz</span></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Tốc độ TB phân tử</div>
+                    <div class="metric-number" id="metricMolSpeed">0 <span class="metric-unit">m/s</span></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Hệ số khuếch tán</div>
+                    <div class="metric-number" id="metricDiffusion">0.0 <span class="metric-unit">D</span></div>
+                </div>
+            </div>
+
+            <!-- Tabs area -->
+            <div class="tabs">
+                <div class="tab-btn active" onclick="switchTab('lythuyet')">Lý Thuyết</div>
+                <div class="tab-btn" onclick="switchTab('huongdan')">Hướng Dẫn</div>
+                <div class="tab-btn" onclick="switchTab('tuduy')">Tư Duy</div>
+            </div>
+
+            <div class="tab-content">
+                <div id="lythuyet" class="tab-pane active">
+                    <p><strong>Chuyển động Brown</strong> là chuyển động zích zắc ngẫu nhiên không ngừng của các hạt bụi/khói lơ lửng trong môi trường chất khí.</p>
+                    <p style="margin-top:0.4rem">Các <strong>phân tử khí</strong> (Nitơ, Oxy) vô cùng nhỏ bé, chuyển động nhiệt hỗn loạn với tốc độ hàng trăm m/s, va chạm liên tục từ mọi phía vào hạt khói.</p>
+                    <p style="margin-top:0.4rem">Do số lượng phân tử va chạm ở mỗi phía không cân bằng tuyệt đối tại mọi thời điểm, chúng tạo nên hợp lực va đập bất đẳng hướng đẩy hạt khói lệch hướng liên tục, tạo thành đường đi zích zắc.</p>
+                </div>
+                <div id="huongdan" class="tab-pane">
+                    <p><strong>Bước 1:</strong> Quan sát ở chế độ mặc định **Kính hiển vi**. Hạt khói 3D rực rỡ nhảy múa ngẫu nhiên.</p>
+                    <p style="margin-top:0.4rem"><strong>Bước 2:</strong> Nhấn **"Hiện Phân Tử Khí 3D"** để thấy hàng trăm phân tử khí nhỏ màu xanh neon bắn phá dồn dập vào hạt khói.</p>
+                    <p style="margin-top:0.4rem"><strong>Bước 3:</strong> Kéo **"Nhiệt độ (T)"** lên cao để thấy phân tử bay nhanh hơn và hạt khói giật mạnh hơn.</p>
+                </div>
+                <div id="tuduy" class="tab-pane">
+                    <p><strong>Câu hỏi suy luận:</strong> Tại sao các hạt bụi lớn nhìn bằng mắt thường không thấy chuyển động Brown?</p>
+                    <p style="margin-top:0.4rem"><strong>Giải thích:</strong> Vì khối lượng hạt quá lớn so với phân tử khí, xung lực va chạm nhỏ bé bị trung hòa từ mọi phía làm hạt đứng yên vĩ mô.</p>
+                </div>
+            </div>
+
+            <!-- Real-time Plot Box -->
+            <div class="graph-box">
+                <div class="graph-title">
+                    <span>Đồ thị dịch chuyển ly tâm x(t)</span>
+                    <span style="font-size:0.75rem; color:var(--accent-orange)" id="graphDiff">Độ dịch chuyển: 0 px</span>
+                </div>
+                <div class="graph-canvas-container">
+                    <canvas id="graphCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+        const graphCanvas = document.getElementById('graphCanvas');
+        const gctx = graphCanvas.getContext('2d');
+
+        // State variables
+        let isRunning = true;
+        let showMolecules = false;
+        let tracePath = true;
+        let temperature = 300;
+        let density = 150;
+        let smokeSize = 22;
+        let smokeMass = 100;
+
+        let molecules = [];
+        let smokeParticle = {};
+        let pathHistory = [];
+        let maxPathPoints = 250;
+        let collisionCount = 0;
+        let collisionTimer = 0;
+        let graphData = [];
+        let graphTimer = 0;
+        let sparkParticles = []; // Collision sparks
+
+        // Canvas sizing
+        function resizeCanvas() {
+            const container = document.getElementById('canvasContainer');
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+
+            const gContainer = graphCanvas.parentElement;
+            graphCanvas.width = gContainer.clientWidth;
+            graphCanvas.height = gContainer.clientHeight;
+        }
+
+        // Initialize simulation physics
+        function initSimulation() {
+            pathHistory = [];
+            graphData = [];
+            collisionCount = 0;
+            sparkParticles = [];
+
+            smokeParticle = {
+                x: canvas.width / 2,
+                y: canvas.height / 2,
+                vx: 0,
+                vy: 0,
+                radius: smokeSize,
+                mass: smokeMass
+            };
+
+            molecules = [];
+            let speed = 0.25 * Math.sqrt(temperature);
+            for (let i = 0; i < density; i++) {
+                let angle = Math.random() * Math.PI * 2;
+                let mSpeed = speed * (0.6 + Math.random() * 0.8);
+                let rx = Math.random() * (canvas.width - 20) + 10;
+                let ry = Math.random() * (canvas.height - 20) + 10;
+
+                while (Math.hypot(rx - smokeParticle.x, ry - smokeParticle.y) < smokeSize + 15) {
+                    rx = Math.random() * (canvas.width - 20) + 10;
+                    ry = Math.random() * (canvas.height - 20) + 10;
+                }
+
+                molecules.push({
+                    x: rx,
+                    y: ry,
+                    vx: Math.cos(angle) * mSpeed,
+                    vy: Math.sin(angle) * mSpeed,
+                    radius: 3.5,
+                    mass: 1.5
+                });
+            }
+        }
+
+        // Collision sparks emission
+        function createSparks(x, y, color) {
+            for(let i = 0; i < 4; i++) {
+                let angle = Math.random() * Math.PI * 2;
+                let spd = 1.2 + Math.random() * 2.0;
+                sparkParticles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * spd,
+                    vy: Math.sin(angle) * spd,
+                    life: 1.0,
+                    size: 2 + Math.random() * 1.8,
+                    color: color
+                });
+            }
+        }
+
+        function updateSparks() {
+            for(let i = sparkParticles.length - 1; i >= 0; i--) {
+                let s = sparkParticles[i];
+                s.x += s.vx;
+                s.y += s.vy;
+                s.life -= 0.06;
+                if(s.life <= 0) {
+                    sparkParticles.splice(i, 1);
+                }
+            }
+        }
+
+        function drawSparks() {
+            ctx.save();
+            for(let s of sparkParticles) {
+                ctx.globalAlpha = s.life;
+                ctx.fillStyle = s.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = s.color;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.restore();
+        }
+
+        // Draw 3D Real Smoke Particle (Tròn xoe - Glowing Golden Sphere matching Figure 8.2)
+        function drawSmokeParticle() {
+            ctx.save();
+            let x = smokeParticle.x;
+            let y = smokeParticle.y;
+            let r = smokeParticle.radius;
+
+            // Volumetric Outer Glow
+            ctx.shadowBlur = 35;
+            ctx.shadowColor = 'rgba(249, 115, 22, 0.85)';
+
+            // Outer soft aura circle
+            ctx.fillStyle = 'rgba(249, 115, 22, 0.14)';
+            ctx.beginPath();
+            ctx.arc(x, y, r * 1.35, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 3D Spherical Radial Gradient (Offset highlight for 3D depth)
+            let grad = ctx.createRadialGradient(
+                x - r * 0.35, y - r * 0.35, r * 0.08,
+                x, y, r
+            );
+            grad.addColorStop(0, '#fffbeb');   // Specular white-yellow spot
+            grad.addColorStop(0.2, '#fde047'); // Bright yellow
+            grad.addColorStop(0.5, '#f97316'); // Rich golden orange (Figure 8.2 match)
+            grad.addColorStop(0.8, '#c2410c'); // Deep amber shadow
+            grad.addColorStop(1, '#451a03');    // Ambient dark rim
+
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Specular rim stroke
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = 'rgba(254, 240, 138, 0.7)';
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        // Draw 3D Real Gas Molecules (TRÒN XOE - Perfect Glowing 3D Cyan/Blue Glass Spheres)
+        function drawMolecules() {
+            ctx.save();
+            for (let m of molecules) {
+                ctx.beginPath();
+                ctx.arc(m.x, m.y, m.radius, 0, Math.PI * 2);
+
+                // 3D Spherical Radial Gradient (Offset top-left highlight)
+                let radGrad = ctx.createRadialGradient(
+                    m.x - m.radius * 0.35, m.y - m.radius * 0.35, m.radius * 0.1,
+                    m.x, m.y, m.radius
+                );
+                radGrad.addColorStop(0, '#e0f2fe');   // Bright white-cyan highlight
+                radGrad.addColorStop(0.35, '#38bdf8'); // Pure vibrant cyan sphere body
+                radGrad.addColorStop(0.75, '#0284c7'); // Deep blue
+                radGrad.addColorStop(1, '#075985');    // Dark edge shadow
+
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = 'rgba(56, 189, 248, 0.7)';
+                ctx.fillStyle = radGrad;
+                ctx.fill();
+            }
+            ctx.restore();
+        }
+
+        // Draw Zigzag Trace Path
+        function drawTracePath() {
+            if (pathHistory.length < 2) return;
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(pathHistory[0].x, pathHistory[0].y);
+            for (let i = 1; i < pathHistory.length; i++) {
+                ctx.lineTo(pathHistory[i].x, pathHistory[i].y);
+            }
+            ctx.strokeStyle = 'rgba(250, 204, 21, 0.9)';
+            ctx.lineWidth = 2.5;
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = '#facc15';
+            ctx.stroke();
+
+            // Start point marker
+            ctx.fillStyle = '#10b981';
+            ctx.shadowColor = '#10b981';
+            ctx.beginPath();
+            ctx.arc(pathHistory[0].x, pathHistory[0].y, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        // Physics update loop
+        function updatePhysics() {
+            if (!isRunning) return;
+
+            smokeParticle.vx *= 0.992;
+            smokeParticle.vy *= 0.992;
+
+            smokeParticle.x += smokeParticle.vx;
+            smokeParticle.y += smokeParticle.vy;
+
+            let sRad = smokeParticle.radius;
+            if (smokeParticle.x < sRad) { smokeParticle.x = sRad; smokeParticle.vx = -smokeParticle.vx; }
+            if (smokeParticle.x > canvas.width - sRad) { smokeParticle.x = canvas.width - sRad; smokeParticle.vx = -smokeParticle.vx; }
+            if (smokeParticle.y < sRad) { smokeParticle.y = sRad; smokeParticle.vy = -smokeParticle.vy; }
+            if (smokeParticle.y > canvas.height - sRad) { smokeParticle.y = canvas.height - sRad; smokeParticle.vy = -smokeParticle.vy; }
+
+            let speed = 0.25 * Math.sqrt(temperature);
+            for (let m of molecules) {
+                m.x += m.vx;
+                m.y += m.vy;
+
+                if (m.x < m.radius) { m.x = m.radius; m.vx = -m.vx; }
+                if (m.x > canvas.width - m.radius) { m.x = canvas.width - m.radius; m.vx = -m.vx; }
+                if (m.y < m.radius) { m.y = m.radius; m.vy = -m.vy; }
+                if (m.y > canvas.height - m.radius) { m.y = canvas.height - m.radius; m.vy = -m.vy; }
+
+                let currentSpeed = Math.hypot(m.vx, m.vy);
+                if (currentSpeed > 0) {
+                    m.vx = (m.vx / currentSpeed) * speed;
+                    m.vy = (m.vy / currentSpeed) * speed;
+                }
+
+                let dx = m.x - smokeParticle.x;
+                let dy = m.y - smokeParticle.y;
+                let dist = Math.hypot(dx, dy);
+                let minDist = m.radius + smokeParticle.radius;
+
+                if (dist < minDist) {
+                    let nx = dx / dist;
+                    let ny = dy / dist;
+                    let rvx = m.vx - smokeParticle.vx;
+                    let rvy = m.vy - smokeParticle.vy;
+                    let velAlongNormal = rvx * nx + rvy * ny;
+
+                    if (velAlongNormal < 0) {
+                        let impulse = -(2) * velAlongNormal / (1 / m.mass + 1 / smokeParticle.mass);
+
+                        m.vx += (impulse / m.mass) * nx;
+                        m.vy += (impulse / m.mass) * ny;
+                        smokeParticle.vx -= (impulse / smokeParticle.mass) * nx;
+                        smokeParticle.vy -= (impulse / smokeParticle.mass) * ny;
+
+                        collisionCount++;
+
+                        let collisionX = smokeParticle.x + nx * smokeParticle.radius;
+                        let collisionY = smokeParticle.y + ny * smokeParticle.radius;
+                        createSparks(collisionX, collisionY, '#f97316');
+                    }
+
+                    let overlap = minDist - dist;
+                    m.x += nx * overlap;
+                    m.y += ny * overlap;
+                }
+            }
+
+            updateSparks();
+
+            collisionTimer++;
+            if (collisionTimer % 3 === 0) {
+                pathHistory.push({ x: smokeParticle.x, y: smokeParticle.y });
+                if (pathHistory.length > maxPathPoints) {
+                    pathHistory.shift();
+                }
+            }
+
+            graphTimer++;
+            if (graphTimer % 10 === 0) {
+                let initialPoint = pathHistory[0] || { x: canvas.width / 2, y: canvas.height / 2 };
+                let currentDisplacement = Math.hypot(smokeParticle.x - initialPoint.x, smokeParticle.y - initialPoint.y);
+                graphData.push(currentDisplacement);
+                if (graphData.length > 100) {
+                    graphData.shift();
+                }
+                document.getElementById('graphDiff').innerText = `Độ dịch chuyển: ${Math.round(currentDisplacement)} px`;
+            }
+        }
+
+        // Draw graph
+        function drawGraph() {
+            gctx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
+
+            gctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            gctx.lineWidth = 1;
+            for (let i = 0; i < graphCanvas.width; i += 40) {
+                gctx.beginPath();
+                gctx.moveTo(i, 0);
+                gctx.lineTo(i, graphCanvas.height);
+                gctx.stroke();
+            }
+
+            if (graphData.length < 2) return;
+
+            let maxVal = Math.max(...graphData, 40);
+            let yScale = (graphCanvas.height - 15) / maxVal;
+            gctx.beginPath();
+            let step = graphCanvas.width / 100;
+            gctx.moveTo(0, graphCanvas.height - graphData[0] * yScale - 5);
+            for (let i = 1; i < graphData.length; i++) {
+                gctx.lineTo(i * step, graphCanvas.height - graphData[i] * yScale - 5);
+            }
+            gctx.strokeStyle = '#f97316';
+            gctx.lineWidth = 2;
+            gctx.stroke();
+
+            gctx.save();
+            gctx.shadowBlur = 6;
+            gctx.shadowColor = '#f97316';
+            gctx.stroke();
+            gctx.restore();
+        }
+
+        // Render main screen
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 3D Space Grid
+            ctx.save();
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.04)';
+            ctx.lineWidth = 1;
+            let gridSize = 35;
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            ctx.restore();
+
+            // Trace path
+            if (tracePath) {
+                drawTracePath();
+            }
+
+            // Draw molecules (Tròn xoe 3D)
+            if (showMolecules) {
+                drawMolecules();
+            }
+
+            // Draw collision sparks
+            drawSparks();
+
+            // Draw main smoke particle 3D (Tròn xoe 3D)
+            drawSmokeParticle();
+
+            // HUD overlay text
+            ctx.save();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.font = 'bold 12px Plus Jakarta Sans';
+            ctx.fillText("Mô phỏng 3D Real: Hạt khói & Phân tử khí va chạm", 15, 25);
+            ctx.restore();
+        }
+
+        function run() {
+            updatePhysics();
+            draw();
+            drawGraph();
+            updateMetrics();
+            requestAnimationFrame(run);
+        }
+
+        // Metrics
+        let lastTime = Date.now();
+        function updateMetrics() {
+            let now = Date.now();
+            let dt = (now - lastTime) / 1000;
+            if (dt >= 1.0) {
+                let collisionsPerSec = Math.round(collisionCount / dt);
+                document.getElementById('metricCollisions').innerHTML = `${collisionsPerSec} <span class="metric-unit">Hz</span>`;
+                collisionCount = 0;
+                lastTime = now;
+
+                let speedMeters = Math.round(0.15 * Math.sqrt(temperature) * 1.5);
+                document.getElementById('metricMolSpeed').innerHTML = `${speedMeters} <span class="metric-unit">m/s</span>`;
+
+                let diffCoeff = (temperature / 300 * (smokeSize / 22)).toFixed(1);
+                document.getElementById('metricDiffusion').innerHTML = `${diffCoeff} <span class="metric-unit">D</span>`;
+            }
+        }
+
+        // Event listeners
+        document.getElementById('btnPlayPause').addEventListener('click', function() {
+            isRunning = !isRunning;
+            this.classList.toggle('active', isRunning);
+            this.innerHTML = isRunning ? 
+                '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/></svg> Tạm Dừng' : 
+                '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" stroke-linecap="round" stroke-linejoin="round"/></svg> Tiệp Tục';
+        });
+
+        document.getElementById('btnToggleMolecules').addEventListener('click', function() {
+            showMolecules = !showMolecules;
+            this.classList.toggle('active', showMolecules);
+            let banner = document.getElementById('modeBanner');
+            if (showMolecules) {
+                banner.innerText = "MÔ PHỎNG 3D REAL (HIỆN PHÂN TỬ KHÍ)";
+                banner.style.color = "#38bdf8";
+            } else {
+                banner.innerText = "MÔ PHỎNG 3D REAL (CHẾ ĐỘ KÍNH HIỂN VI)";
+                banner.style.color = "#22d3ee";
+            }
+        });
+
+        document.getElementById('btnTracePath').addEventListener('click', function() {
+            tracePath = !tracePath;
+            this.classList.toggle('toggle-active', tracePath);
+        });
+
+        document.getElementById('btnReset').addEventListener('click', function() {
+            initSimulation();
+        });
+
+        document.getElementById('sliderTemp').addEventListener('input', function(e) {
+            temperature = parseInt(e.target.value);
+            document.getElementById('valTemp').innerText = `${temperature} K`;
+            document.getElementById('metricTemp').innerHTML = `${temperature - 273} <span class="metric-unit">°C</span>`;
+        });
+
+        document.getElementById('sliderDensity').addEventListener('input', function(e) {
+            density = parseInt(e.target.value);
+            document.getElementById('valDensity').innerText = `${density} hạt`;
+            initSimulation();
+        });
+
+        document.getElementById('sliderSmokeSize').addEventListener('input', function(e) {
+            smokeSize = parseInt(e.target.value);
+            document.getElementById('valSmokeSize').innerText = `${smokeSize} px`;
+            smokeParticle.radius = smokeSize;
+        });
+
+        document.getElementById('sliderSmokeMass').addEventListener('input', function(e) {
+            smokeMass = parseInt(e.target.value);
+            document.getElementById('valSmokeMass').innerText = `${smokeMass} u`;
+            smokeParticle.mass = smokeMass;
+        });
+
+        function switchTab(tabId) {
+            let contents = document.querySelectorAll('.tab-pane');
+            let buttons = document.querySelectorAll('.tab-btn');
+            for(let c of contents) { c.classList.remove('active'); }
+            for(let b of buttons) { b.classList.remove('active'); }
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initSimulation();
+        });
+
+        window.onload = function() {
+            resizeCanvas();
+            initSimulation();
+            document.getElementById('microscopeOverlay').classList.add('active');
+            run();
+        };
+    </script>
+</body>
+</html>

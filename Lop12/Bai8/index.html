@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 8: Mô hình động học phân tử chất khí - Vật lí 12 | Vatli102.com</title>
+    
+    <link rel="apple-touch-icon" href="/favicon.svg">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --accent: #06b6d4;
+            --bg-body: #f8fafc;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-body); color: var(--text-dark); line-height: 1.8; }
+
+        .blog-post-content {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            border: 1px solid #e2e8f0;
+            max-width: 880px;
+            margin: 2.5rem auto;
+            padding: 35px 30px;
+        }
+
+        .blog-post-content h1 {
+            color: #0f172a;
+            font-size: 2.1rem;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #2563eb, #0891b2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .blog-post-content h2 {
+            color: #1e3a8a;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-top: 35px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .blog-post-content h2 i { color: #2563eb; }
+
+        .blog-post-content h3 { color: #0369a1; font-size: 1.15rem; font-weight: 600; margin-top: 20px; margin-bottom: 10px; }
+
+        .blog-post-content p, .blog-post-content li {
+            text-align: justify;
+            margin-bottom: 12px;
+        }
+
+        .intro-lead {
+            font-size: 1.1rem; color: #475569; background-color: #f8fafc;
+            border-left: 4px solid #3b82f6; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-bottom: 25px;
+        }
+
+        .img-3d-box {
+            margin: 24px 0;
+            text-align: center;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(15, 23, 42, 0.12);
+            border: 1px solid #cbd5e1;
+            background: #0f172a;
+        }
+
+        .img-3d-box img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .img-3d-box:hover img {
+            transform: scale(1.015);
+        }
+
+        .img-caption {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 10px 14px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* KHUNG THÍ NGHIỆM ẢO EMBED (TỐI GIẢN CHUẨN GIAO DIỆN) */
+        .simulation-embed-card {
+            background: linear-gradient(145deg, #0f172a, #1e293b);
+            border-radius: 18px;
+            padding: 22px;
+            margin: 30px 0;
+            border: 1px solid #38bdf8;
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.35);
+            color: #f8fafc;
+        }
+
+        .sim-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #38bdf8;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sim-desc {
+            font-size: 0.92rem;
+            color: #cbd5e1;
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        .sim-iframe-container {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: #020617;
+        }
+
+        .sim-iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .highlight-card {
+            background: linear-gradient(135deg, #eff6ff, #f0f9ff); border: 1px solid #bfdbfe;
+            border-radius: 14px; padding: 20px; margin: 20px 0; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.05);
+        }
+
+        .highlight-card-title { font-weight: 700; color: #1d4ed8; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+
+        .comparison-table-wrapper { overflow-x: auto; margin: 25px 0; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .comparison-table { width: 100%; border-collapse: collapse; background-color: #ffffff; font-size: 0.98rem; }
+        .comparison-table th { background-color: #1e40af; color: #ffffff; font-weight: 700; text-align: left; padding: 14px 16px; }
+        .comparison-table td { padding: 14px 16px; border-bottom: 1px solid #e2e8f0; }
+        .comparison-table tr:nth-child(even) { background-color: #f8fafc; }
+        .comparison-table tr:hover { background-color: #f1f5f9; }
+
+        .key-point { position: relative; padding-left: 24px; margin-bottom: 10px; }
+        .key-point::before { content: "\f058"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; left: 0; top: 2px; color: #2563eb; font-size: 0.9rem; }
+        .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; background-color: #dbeafe; color: #1e40af; }
+
+        footer { text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.88rem; border-top: 1px solid var(--border); margin-top: 3rem; }
+        footer a { color: var(--primary); text-decoration: none; margin: 0 8px; }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER NAVBAR (ĐỒNG BỘ CHUẨN THIẾT LẬP BÀI 6) -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
+            <a href="/" class="flex items-center gap-2 group text-decoration-none">
+                <img src="/favicon.svg" alt="Vatli102.com" class="w-8 h-8 rounded-lg shadow-sm">
+                <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-600 bg-clip-text text-transparent">Vatli102.com</span>
+            </a>
+            <ul class="flex items-center gap-4 text-xs sm:text-sm font-semibold text-slate-600 list-none m-0 p-0">
+                <li><a href="/" class="hover:text-blue-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
+                <li><a href="/gioi-thieu.html" class="hover:text-blue-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a></li>
+                <li><a href="/lien-he.html" class="hover:text-blue-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-envelope"></i> Liên hệ</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <article class="blog-post-content">
+        
+        <!-- TIÊU ĐỀ BÀI ĐĂNG (ĐỒNG BỘ BÀI 6) -->
+        <h1>BÀI 8: MÔ HÌNH ĐỘNG HỌC PHÂN TỬ CHẤT KHÍ (VẬT LÍ 12 - GDPT 2018)</h1>
+        
+        <div class="intro-lead">
+            📌 <strong>Tóm tắt trọng tâm bài học:</strong> Bài 8 Chương 1 Vật lí 12 phân tích bản chất vi mô của chất khí thông qua Mô hình động học phân tử, lý giải chuyển động Brown của các hạt khói lơ lửng trong không khí, nguồn gốc hình thành áp suất chất khí lên thành bình và định nghĩa mô hình Khí lí tưởng.
+        </div>
+
+        <!-- PHẦN I (TRỰC TIẾP SAU INTRO LEAD - KHÔNG CÓ NÚT BẤM DƯ THỪA) -->
+        <h2><i class="fa-solid fa-cubes-stacked"></i> I. CẤU TRÚC CỦA CHẤT KHÍ</h2>
+        <p>So với chất rắn và chất lỏng, chất khí có cấu tạo vi mô rất đặc biệt với các tính chất đặc trưng:</p>
+        <ul>
+            <li class="key-point"><strong>Khoảng cách giữa các phân tử:</strong> Khoảng cách trung bình giữa các phân tử khí rất lớn so với kích thước của chính chúng. Thể tích của bản thân các phân tử khí là không đáng kể so với thể tích bình chứa.</li>
+            <li class="key-point"><strong>Lực tương tác phân tử:</strong> Lực hút và lực đẩy giữa các phân tử khí rất yếu khi không va chạm. Do đó, các phân tử khí chuyển động tự do về mọi phía.</li>
+            <li class="key-point"><strong>Chuyển động nhiệt hỗn loạn:</strong> Các phân tử khí chuyển động hỗn loạn không ngừng. Nhiệt độ của chất khí càng cao thì tốc độ chuyển động trung bình của các phân tử càng lớn.</li>
+        </ul>
+
+        <!-- MINH HỌA 3D 1: CHUYỂN ĐỘNG PHÂN TỬ KHÍ -->
+        <div class="img-3d-box">
+            <img src="gas_molecules_3d.jpg" alt="Mô phỏng 3D phân tử chất khí trong bình chứa" />
+            <div class="img-caption">
+                <i class="fa-solid fa-camera"></i> Hình 8.1: Mô hình 3D phân tử chất khí chuyển động hỗn loạn và va chạm gây áp suất lên thành bình.
+            </div>
+        </div>
+
+        <!-- PHẦN II -->
+        <h2><i class="fa-solid fa-microscope"></i> II. CHUYỂN ĐỘNG BROWN TRONG CHẤT KHÍ</h2>
+        <p>Năm 1827, Robert Brown phát hiện ra các hạt phấn hoa trong nước chuyển động zích zắc không ngừng. Khi quan sát các hạt khói bụi lơ lửng trong không khí qua kính hiển vi, ta cũng thấy chúng chuyển động zích zắc hỗn loạn tương tự gọi là <strong>chuyển động Brown</strong>.</p>
+
+        <div class="highlight-card">
+            <div class="highlight-card-title"><i class="fa-solid fa-lightbulb"></i> Giải Thích Bản Chất Vi Mô Của Chuyển Động Brown:</div>
+            <p>Các phân tử khí vô cùng nhỏ bé và chuyển động hỗn loạn với tốc độ rất lớn. Chúng va chạm liên tục từ mọi phía vào hạt khói bụi. Vì số lượng phân tử va đập ở các hướng tại mỗi thời điểm là không bằng nhau (bất đẳng hướng), làm cho hạt khói bị đẩy lệch theo các hướng ngẫu nhiên, tạo nên đường đi zích zắc.</p>
+        </div>
+
+        <!-- MINH HỌA 3D 2: CHUYỂN ĐỘNG BROWN -->
+        <div class="img-3d-box">
+            <img src="brownian_motion_3d.jpg" alt="Hình ảnh 3D mô tả chuyển động Brown" />
+            <div class="img-caption">
+                <i class="fa-solid fa-camera"></i> Hình 8.2: Mô phỏng 3D sự va chạm không đồng đều của các phân tử khí vào hạt khói bụi lơ lửng.
+            </div>
+        </div>
+
+        <!-- EMBED THÍ NGHIỆM ẢO 3D BROWN (CHỈ CÓ THÍ NGHIỆM THÔI) -->
+        <div id="sim-area" class="simulation-embed-card">
+            <div class="sim-title">
+                <i class="fa-solid fa-vr-cardboard"></i> THÍ NGHIỆM ẢO 3D: CHUYỂN ĐỘNG BROWN TRONG CHẤT KHÍ
+            </div>
+            <div class="sim-desc">
+                Thực hành tương tác trực tiếp: Thay đổi nhiệt độ $T$ để quan sát biến đổi tốc độ va chạm phân tử, điều chỉnh khối lượng hạt khói, bật/tắt vẽ đường đi zích zắc.
+            </div>
+            <div class="sim-iframe-container">
+                <iframe src="Thí nghiệm ảo 3D.html" title="Thí nghiệm ảo 3D Chuyển động Brown"></iframe>
+            </div>
+        </div>
+
+        <!-- PHẦN III -->
+        <h2><i class="fa-solid fa-fire-burner"></i> III. THUYẾT ĐỘNG HỌC PHÂN TỬ CHẤT KHÍ</h2>
+        <p>Thuyết động học phân tử chất khí bao gồm 3 nội dung cốt lõi:</p>
+        <ol class="list-decimal pl-6 space-y-2 mb-4 font-semibold text-slate-700">
+            <li>Chất khí gồm vô số các phân tử có kích thước rất nhỏ so với khoảng cách giữa chúng.</li>
+            <li>Các phân tử khí chuyển động hỗn loạn không ngừng. Nhiệt độ càng cao thì tốc độ chuyển động trung bình phân tử càng lớn.</li>
+            <li>Khi va chạm vào thành bình, các phân tử khí truyền động lượng cho thành bình, tạo nên <strong>áp suất chất khí</strong> lên thành bình.</li>
+        </ol>
+
+        <!-- MINH HỌA 3D 3: NHIỆT ĐỘ VÀ ĐỘNG NĂNG -->
+        <div class="img-3d-box">
+            <img src="temp_energy_3d.jpg" alt="Mô hình 3D thể hiện mối liên hệ giữa nhiệt độ và tốc độ phân tử" />
+            <div class="img-caption">
+                <i class="fa-solid fa-camera"></i> Hình 8.3: Ở nhiệt độ cao (phải), phân tử khí chuyển động nhanh hơn, tạo ra va chạm mạnh hơn làm tăng áp suất.
+            </div>
+        </div>
+
+        <!-- PHẦN IV -->
+        <h2><i class="fa-solid fa-scale-balanced"></i> IV. MÔ HÌNH KHÍ LÍ TƯỞNG (IDEAL GAS)</h2>
+        <p>Để thuận tiện trong nghiên cứu định lượng các định luật chất khí, các nhà vật lý đưa ra mô hình <strong>Khí lí tưởng</strong>:</p>
+
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Tiêu chí so sánh</th>
+                        <th>Khí thực <span class="badge">Real Gas</span></th>
+                        <th>Khí lí tưởng <span class="badge">Ideal Gas</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Kích thước phân tử</strong></td>
+                        <td>Có kích thước xác định.</td>
+                        <td>Được coi là các <strong>chất điểm</strong> (kích thước bỏ qua).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lực tương tác phân tử</strong></td>
+                        <td>Có lực hút và lực đẩy ở khoảng cách gần.</td>
+                        <td><strong>Bỏ qua lực tương tác</strong> khi chưa va chạm.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tính chất va chạm</strong></td>
+                        <td>Va chạm có thể tiêu hao năng lượng.</td>
+                        <td>Là các <strong>va chạm hoàn toàn đàn hồi</strong> (bảo toàn động năng).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Điều kiện áp dụng</strong></td>
+                        <td>Ở điều kiện nhiệt độ và áp suất thường.</td>
+                        <td>Ở nhiệt độ cao và áp suất thấp, khí thực xấp xỉ khí lí tưởng.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- TÓM TẮT DẠNG THẺ GHI NHỚ VÀ 4 NÚT BẤM ĐIỀU HƯỚNG ĐỒNG BỘ CHUẨN BÀI 6 -->
+        <div class="highlight-card" style="background: linear-gradient(135deg, #fef3c7, #fffbebe); border-color: #fde68a;">
+            <div class="highlight-card-title" style="color: #b45309;"><i class="fa-solid fa-lightbulb"></i> GHI NHỚ NHANH BÀI 8</div>
+            <div class="key-point" style="color: #78350f;">
+                Cấu trúc chất khí: Khoảng cách giữa các phân tử rất lớn, lực tương tác rất yếu, các phân tử chuyển động hỗn loạn không ngừng.
+            </div>
+            <div class="key-point" style="color: #78350f;">
+                Chuyển động Brown: Là chuyển động zích zắc ngẫu nhiên của các hạt bụi/khói lơ lửng do bị các phân tử khí va đập bất đẳng hướng từ mọi phía.
+            </div>
+            <div class="key-point" style="color: #78350f;">
+                Thuyết động học phân tử chất khí: Giải thích áp suất khí do các phân tử va chạm truyền động lượng vào thành bình. Nhiệt độ càng cao phân tử chuyển động càng nhanh.
+            </div>
+            <div class="key-point" style="color: #78350f;">
+                Khí lí tưởng: Là chất khí trong đó các phân tử được coi là các chất điểm và chỉ tương tác khi va chạm.
+            </div>
+
+            <!-- 4 NÚT BẤM KẾT NỐI HỌC LIỆU DƯỚI PHẦN GHI NHỚ (THAY NÚT THÍ NGHIỆM ẢO BẰNG NÚT XEM BÀI GIẢNG ĐỎ YOUTUBE BÀI 6) -->
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 mt-5 pt-4 border-t border-amber-300/60">
+                <a href="../Bài 7 Bài tập về vật lí nhiệt/BaiDang_Blog.html" class="p-3 bg-slate-700 hover:bg-slate-800 text-white font-extrabold text-xs sm:text-sm rounded-xl text-center shadow-md transition-all flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-arrow-left text-sm"></i> Bài trước
+                </a>
+                <a href="#video" class="p-3 bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs sm:text-sm rounded-xl text-center shadow-md transition-all flex items-center justify-center gap-1.5">
+                    <i class="fa-brands fa-youtube text-base"></i> Xem bài giảng
+                </a>
+                <a href="TracNghiem_Online.html" class="p-3 bg-cyan-600 hover:bg-cyan-700 text-white font-extrabold text-xs sm:text-sm rounded-xl text-center shadow-md transition-all flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-pen-to-square text-sm"></i> Làm trắc nghiệm online
+                </a>
+                <a href="../Bài 9 Định luật Boyle/BaiDang_Blog.html" class="p-3 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs sm:text-sm rounded-xl text-center shadow-md transition-all flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-arrow-right text-sm"></i> Bài tiếp theo
+                </a>
+            </div>
+        </div>
+
+        <!-- VIDEO BÀI GIẢNG YOUTUBE TÍCH HỢP (ĐỒNG BỘ BÀI 6) -->
+        <div id="video" style="margin: 30px 0; text-align: center;">
+            <h3 style="font-size: 1.2rem; font-weight: 800; color: #0f172a; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <span style="color: #ff0000; font-size: 1.4rem;">▶</span> Video Bài Giảng Chi Tiết (YouTube)
+            </h3>
+            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid #cbd5e1;">
+                <iframe src="https://www.youtube.com/embed/AUQQv7nnsdc" title="Video Bài Giảng YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
+            </div>
+            <div style="margin-top: 10px;">
+                <a href="https://youtu.be/AUQQv7nnsdc" target="_blank" style="color: #ff0000; font-weight: 700; text-decoration: none; font-size: 0.9rem; inline-flex; align-items: center; gap: 5px;">
+                    🔗 Mở xem trực tiếp trên YouTube
+                </a>
+            </div>
+        </div>
+
+    </article>
+
+    <!-- FOOTER ĐỒNG BỘ CHUẨN THIẾT LẬP BÀI 6 -->
+    <footer>
+        <p>&copy; 2026 Vatli102.com - Hệ Thống AI Giáo Viên Vật Lí 12 GDPT 2018. All rights reserved.</p>
+        <p style="margin-top: 6px;">
+            <a href="/gioi-thieu.html">Giới thiệu</a> |
+            <a href="/lien-he.html">Liên hệ</a> |
+            <a href="/chinh-sach-bao-mat.html">Chính sách bảo mật</a>
+        </p>
+    </footer>
+
+</body>
+</html>
