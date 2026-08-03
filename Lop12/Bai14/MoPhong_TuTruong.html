@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thí Nghiệm Tương Tác: Nam Châm & Kim La Bàn (PhET Standard)</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-dark: #020617;
+            --panel-bg: rgba(15, 23, 42, 0.85);
+            --panel-border: rgba(56, 189, 248, 0.2);
+            --accent-cyan: #38bdf8;
+            --accent-indigo: #6366f1;
+            --red-n: #ef4444;
+            --blue-s: #3b82f6;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--panel-border);
+            padding: 0.6rem 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 20;
+        }
+
+        header h1 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lab-workspace {
+            display: flex;
+            flex: 1;
+            position: relative;
+            height: calc(100vh - 48px);
+        }
+
+        .canvas-wrapper {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+
+        canvas:active {
+            cursor: grabbing;
+        }
+
+        .control-panel {
+            width: 310px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            border-left: 1px solid var(--panel-border);
+            padding: 1.1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .tab-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .tab-btn {
+            padding: 0.55rem 0.4rem;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-indigo);
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        .panel-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .panel-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .option-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .option-toggle input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-cyan);
+            cursor: pointer;
+        }
+
+        .btn-flip {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 0.6rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            transition: all 0.2s;
+        }
+
+        .btn-flip:hover { transform: translateY(-1px); }
+
+        .meter-card {
+            background: #090d16;
+            border: 1px solid var(--accent-cyan);
+            border-radius: 12px;
+            padding: 0.75rem;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.15);
+        }
+
+        .meter-val {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #34d399;
+            font-family: monospace;
+        }
+
+        .meter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 4px;
+            margin-top: 6px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .meter-sub {
+            background: rgba(255,255,255,0.05);
+            padding: 3px;
+            border-radius: 6px;
+        }
+
+        .hud-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(15, 23, 42, 0.88);
+            border: 1px solid var(--panel-border);
+            backdrop-filter: blur(8px);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            color: white;
+            pointer-events: none;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><i class="fa-solid fa-magnet"></i> THÍ NGHIỆM TƯƠNG TÁC: NAM CHÂM & KIM LA BÀN (PhET STANDARD)</h1>
+        <span style="font-size: 0.72rem; color: #94a3b8; font-weight:600;">Vật lí 12 - Chuẩn PhET Colorado</span>
+    </header>
+
+    <div class="lab-workspace">
+        
+        <div class="canvas-wrapper" id="canvasWrapper">
+            <div class="hud-badge" id="hudBadge">
+                <strong style="color: #38bdf8;"><i class="fa-solid fa-hand-pointer"></i> Hướng dẫn:</strong> Kéo di chuyển Nam Châm, Kim La Bàn hoặc Cảm ứng từ kế
+            </div>
+            <canvas id="simCanvas"></canvas>
+        </div>
+
+        <div class="control-panel">
+            
+            <div class="tab-group">
+                <button class="tab-btn active" id="tabBar" onclick="setMode('bar')">
+                    <i class="fa-solid fa-magnet"></i> Nam Châm Thẳng
+                </button>
+                <button class="tab-btn" id="tabElectro" onclick="setMode('electro')">
+                    <i class="fa-solid fa-bolt"></i> Cuộn Điện Từ
+                </button>
+            </div>
+
+            <div class="panel-box" id="boxBar">
+                <div class="panel-title"><i class="fa-solid fa-sliders"></i> Điều Khiển Nam Châm</div>
+                
+                <button class="btn-flip" onclick="flipMagnetPolarity()">
+                    <i class="fa-solid fa-rotate"></i> Đảo Cực Nam Châm (N ↔ S)
+                </button>
+
+                <div class="slider-container" style="margin-top: 4px;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.78rem; color:#94a3b8; font-weight:600;">
+                        <span>Độ mạnh từ trường ($B_0$)</span>
+                        <span id="txtStrength" style="color:#38bdf8;">100%</span>
+                    </div>
+                    <input type="range" id="sliderStrength" min="20" max="200" value="100" style="width:100%; accent-color:#38bdf8;" oninput="updateStrength(this.value)">
+                </div>
+            </div>
+
+            <div class="panel-box" id="boxElectro" style="display: none;">
+                <div class="panel-title"><i class="fa-solid fa-plug"></i> Cuộn Dây Điện Từ</div>
+                
+                <div class="slider-container">
+                    <div style="display:flex; justify-content:space-between; font-size:0.78rem; color:#94a3b8; font-weight:600;">
+                        <span>Điện áp nguồn DC ($V$)</span>
+                        <span id="txtVoltage" style="color:#38bdf8;">+10 V</span>
+                    </div>
+                    <input type="range" id="sliderVoltage" min="-10" max="10" value="10" step="1" style="width:100%; accent-color:#38bdf8;" oninput="updateVoltage(this.value)">
+                </div>
+
+                <div class="slider-container">
+                    <div style="display:flex; justify-content:space-between; font-size:0.78rem; color:#94a3b8; font-weight:600;">
+                        <span>Số vòng dây ($N$)</span>
+                        <span id="txtLoops" style="color:#38bdf8;">4 vòng</span>
+                    </div>
+                    <input type="range" id="sliderLoops" min="1" max="4" value="4" step="1" style="width:100%; accent-color:#38bdf8;" oninput="updateLoops(this.value)">
+                </div>
+            </div>
+
+            <div class="panel-box">
+                <div class="panel-title"><i class="fa-solid fa-eye"></i> Hiển Thị & Dụng Cụ Đo</div>
+                
+                <label class="option-toggle">
+                    <span><i class="fa-solid fa-border-all"></i> Lưới kim nam châm thử</span>
+                    <input type="checkbox" id="chkGrid" checked onchange="draw()">
+                </label>
+
+                <label class="option-toggle">
+                    <span><i class="fa-solid fa-route"></i> Đường sức từ mượt</span>
+                    <input type="checkbox" id="chkLines" checked onchange="draw()">
+                </label>
+
+                <label class="option-toggle">
+                    <span><i class="fa-solid fa-gauge-high"></i> Cảm ứng từ kế (Gaussmeter)</span>
+                    <input type="checkbox" id="chkMeter" checked onchange="draw()">
+                </label>
+            </div>
+
+            <div class="meter-card" id="meterDisplay">
+                <div style="font-size:0.72rem; color:#94a3b8; font-weight:700; text-transform:uppercase; margin-bottom:4px;">
+                    <i class="fa-solid fa-wave-square"></i> CẢM ỨNG TỪ KẾ ($\vec{B}$)
+                </div>
+                <div class="meter-val" id="valB">0.45 G</div>
+                <div class="meter-grid">
+                    <div class="meter-sub">Bx: <span id="valBx" style="color:#38bdf8;">0.35</span></div>
+                    <div class="meter-sub">By: <span id="valBy" style="color:#38bdf8;">0.28</span></div>
+                    <div class="meter-sub">Góc: <span id="valDeg" style="color:#f59e0b;">38°</span></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+        const wrapper = document.getElementById('canvasWrapper');
+
+        let mode = 'bar';
+        let magnetPolarity = 1;
+        let magnetStrength = 100;
+        let voltage = 10;
+        let loops = 4;
+
+        // DRAGGABLE MAGNET OBJECT
+        let magnet = { x: 0, y: 0, w: 180, h: 48, isDragging: false, dragOffsetX: 0, dragOffsetY: 0 };
+        let compass = { x: 0, y: 0, r: 28, angle: 0, isDragging: false, dragOffsetX: 0, dragOffsetY: 0 };
+        let meter = { x: 0, y: 0, w: 110, h: 60, isDragging: false, dragOffsetX: 0, dragOffsetY: 0 };
+
+        function resize() {
+            canvas.width = wrapper.clientWidth;
+            canvas.height = wrapper.clientHeight;
+            
+            if (magnet.x === 0) {
+                magnet.x = canvas.width / 2 - 40;
+                magnet.y = canvas.height / 2;
+            }
+            if (compass.x === 0) {
+                compass.x = canvas.width / 2 + 180;
+                compass.y = canvas.height / 2 - 60;
+            }
+            if (meter.x === 0) {
+                meter.x = canvas.width / 2 - 180;
+                meter.y = canvas.height / 2 + 100;
+            }
+            draw();
+        }
+
+        window.addEventListener('resize', resize);
+
+        function setMode(newMode) {
+            mode = newMode;
+            document.getElementById('tabBar').classList.toggle('active', mode === 'bar');
+            document.getElementById('tabElectro').classList.toggle('active', mode === 'electro');
+            document.getElementById('boxBar').style.display = mode === 'bar' ? 'flex' : 'none';
+            document.getElementById('boxElectro').style.display = mode === 'electro' ? 'flex' : 'none';
+            draw();
+        }
+
+        function flipMagnetPolarity() {
+            magnetPolarity *= -1;
+            draw();
+        }
+
+        function updateStrength(v) {
+            magnetStrength = parseFloat(v);
+            document.getElementById('txtStrength').innerText = v + '%';
+            draw();
+        }
+
+        function updateVoltage(v) {
+            voltage = parseFloat(v);
+            document.getElementById('txtVoltage').innerText = (v > 0 ? '+' + v : v) + ' V';
+            draw();
+        }
+
+        function updateLoops(v) {
+            loops = parseInt(v);
+            document.getElementById('txtLoops').innerText = v + ' vòng';
+            draw();
+        }
+
+        function getMagneticField(x, y) {
+            let Bx = 0, By = 0;
+
+            if (mode === 'bar') {
+                let poleDist = magnet.w * 0.42;
+                let nX = magnet.x - magnetPolarity * poleDist;
+                let nY = magnet.y;
+                let sX = magnet.x + magnetPolarity * poleDist;
+                let sY = magnet.y;
+
+                let rN2 = (x - nX)**2 + (y - nY)**2 + 400;
+                let rS2 = (x - sX)**2 + (y - sY)**2 + 400;
+                let rN = Math.sqrt(rN2);
+                let rS = Math.sqrt(rS2);
+
+                let k = magnetStrength * 12000;
+                Bx += k * ((x - nX) / (rN**3) - (x - sX) / (rS**3));
+                By += k * ((y - nY) / (rN**3) - (y - sY) / (rS**3));
+
+            } else {
+                let current = voltage * loops * 150;
+                let poleDist = magnet.w * 0.35;
+                let nX = magnet.x - Math.sign(current) * poleDist;
+                let nY = magnet.y;
+                let sX = magnet.x + Math.sign(current) * poleDist;
+                let sY = magnet.y;
+
+                let rN2 = (x - nX)**2 + (y - nY)**2 + 400;
+                let rS2 = (x - sX)**2 + (y - sY)**2 + 400;
+                let rN = Math.sqrt(rN2);
+                let rS = Math.sqrt(rS2);
+
+                let k = Math.abs(current) * 80;
+                Bx += k * ((x - nX) / (rN**3) - (x - sX) / (rS**3));
+                By += k * ((y - nY) / (rN**3) - (y - sY) / (rS**3));
+            }
+
+            return { Bx, By, B: Math.sqrt(Bx*Bx + By*By) };
+        }
+
+        function draw() {
+            if (!canvas.width) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 1. Grid of Mini Compass Needles
+            if (document.getElementById('chkGrid').checked) {
+                let spacing = 44;
+                for (let x = spacing / 2; x < canvas.width; x += spacing) {
+                    for (let y = spacing / 2; y < canvas.height; y += spacing) {
+                        if (Math.abs(x - magnet.x) < magnet.w / 2 + 8 && Math.abs(y - magnet.y) < magnet.h / 2 + 8) continue;
+
+                        let f = getMagneticField(x, y);
+                        let ang = Math.atan2(f.By, f.Bx);
+
+                        ctx.save();
+                        ctx.translate(x, y);
+                        ctx.rotate(ang);
+
+                        ctx.beginPath();
+                        ctx.moveTo(9, 0); ctx.lineTo(0, -3.5); ctx.lineTo(0, 3.5); ctx.closePath();
+                        ctx.fillStyle = '#ef4444'; ctx.fill();
+
+                        ctx.beginPath();
+                        ctx.moveTo(-9, 0); ctx.lineTo(0, -3.5); ctx.lineTo(0, 3.5); ctx.closePath();
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.75)'; ctx.fill();
+
+                        ctx.restore();
+                    }
+                }
+            }
+
+            // 2. Smooth Field Lines
+            if (document.getElementById('chkLines').checked) {
+                let numLines = 9;
+                let poleDist = magnet.w * 0.42;
+                let nX = magnet.x - magnetPolarity * poleDist;
+                let sX = magnet.x + magnetPolarity * poleDist;
+
+                ctx.lineWidth = 1.5;
+
+                for (let i = 0; i < numLines; i++) {
+                    let angle = -Math.PI * 0.85 + (i / (numLines - 1)) * Math.PI * 1.7;
+                    if (Math.abs(angle) < 0.1) continue;
+
+                    let px = nX + Math.cos(angle) * 18;
+                    let py = magnet.y + Math.sin(angle) * 18;
+
+                    ctx.beginPath();
+                    ctx.moveTo(px, py);
+                    ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+
+                    for (let step = 0; step < 180; step++) {
+                        let f = getMagneticField(px, py);
+                        if (f.B === 0) break;
+
+                        let stepSize = 4;
+                        px += (f.Bx / f.B) * stepSize;
+                        py += (f.By / f.B) * stepSize;
+
+                        ctx.lineTo(px, py);
+
+                        if (Math.hypot(px - sX, py - magnet.y) < 18 || px < 0 || px > canvas.width || py < 0 || py > canvas.height) break;
+                    }
+                    ctx.stroke();
+                }
+            }
+
+            // 3. Draw Bar Magnet or Electromagnet Apparatus
+            if (mode === 'bar') {
+                ctx.save();
+                ctx.translate(magnet.x, magnet.y);
+
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = 'rgba(0,0,0,0.6)';
+
+                let nColor = magnetPolarity === 1 ? '#ef4444' : '#3b82f6';
+                let sColor = magnetPolarity === 1 ? '#3b82f6' : '#ef4444';
+                let nText = magnetPolarity === 1 ? 'N' : 'S';
+                let sText = magnetPolarity === 1 ? 'S' : 'N';
+
+                ctx.fillStyle = nColor;
+                ctx.fillRect(-magnet.w / 2, -magnet.h / 2, magnet.w / 2, magnet.h);
+
+                ctx.fillStyle = sColor;
+                ctx.fillRect(0, -magnet.h / 2, magnet.w / 2, magnet.h);
+
+                ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(-magnet.w / 2, -magnet.h / 2, magnet.w, magnet.h);
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 22px Plus Jakarta Sans';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(nText, -magnet.w / 4, 0);
+                ctx.fillText(sText, magnet.w / 4, 0);
+
+                ctx.restore();
+
+            } else {
+                ctx.save();
+                ctx.translate(magnet.x, magnet.y);
+
+                ctx.fillStyle = '#475569';
+                ctx.fillRect(-magnet.w / 2, -15, magnet.w, 30);
+                ctx.strokeStyle = '#94a3b8';
+                ctx.strokeRect(-magnet.w / 2, -15, magnet.w, 30);
+
+                let loopSpacing = magnet.w / (loops + 1);
+                for (let i = 1; i <= loops; i++) {
+                    let cx = -magnet.w / 2 + i * loopSpacing;
+                    ctx.strokeStyle = '#f97316';
+                    ctx.lineWidth = 8;
+                    ctx.beginPath();
+                    ctx.ellipse(cx, 0, 10, 26, 0, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                let dirText = voltage >= 0 ? "Dòng điện I ➔" : "Dòng điện I ⬅";
+                ctx.fillStyle = '#38bdf8';
+                ctx.font = 'bold 13px Plus Jakarta Sans';
+                ctx.textAlign = 'center';
+                ctx.fillText(dirText, 0, -35);
+
+                ctx.restore();
+            }
+
+            // 4. Draw Main Draggable Compass
+            let cf = getMagneticField(compass.x, compass.y);
+            compass.angle = Math.atan2(cf.By, cf.Bx);
+
+            ctx.save();
+            ctx.translate(compass.x, compass.y);
+
+            ctx.shadowBlur = 15; ctx.shadowColor = 'rgba(56, 189, 248, 0.4)';
+            ctx.fillStyle = '#0f172a';
+            ctx.beginPath(); ctx.arc(0, 0, compass.r, 0, Math.PI * 2); ctx.fill();
+            ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3; ctx.stroke();
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)'; ctx.lineWidth = 1;
+            for (let a = 0; a < 360; a += 45) {
+                let rad = (a * Math.PI) / 180;
+                ctx.beginPath();
+                ctx.moveTo(Math.cos(rad) * (compass.r - 6), Math.sin(rad) * (compass.r - 6));
+                ctx.lineTo(Math.cos(rad) * (compass.r - 2), Math.sin(rad) * (compass.r - 2));
+                ctx.stroke();
+            }
+
+            ctx.rotate(compass.angle);
+
+            ctx.beginPath();
+            ctx.moveTo(compass.r - 5, 0); ctx.lineTo(0, -6); ctx.lineTo(0, 6); ctx.closePath();
+            ctx.fillStyle = '#ef4444'; ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(-(compass.r - 5), 0); ctx.lineTo(0, -6); ctx.lineTo(0, 6); ctx.closePath();
+            ctx.fillStyle = '#ffffff'; ctx.fill();
+
+            ctx.fillStyle = '#cbd5e1';
+            ctx.beginPath(); ctx.arc(0, 0, 4, 0, Math.PI * 2); ctx.fill();
+
+            ctx.restore();
+
+            // 5. Draw Draggable Field Meter
+            if (document.getElementById('chkMeter').checked) {
+                let mf = getMagneticField(meter.x, meter.y);
+                let bG = (mf.B * 10).toFixed(2);
+                let bxG = (mf.Bx * 10).toFixed(2);
+                let byG = (mf.By * 10).toFixed(2);
+                let deg = Math.round((Math.atan2(mf.By, mf.Bx) * 180) / Math.PI);
+
+                document.getElementById('valB').innerText = bG + " G";
+                document.getElementById('valBx').innerText = bxG;
+                document.getElementById('valBy').innerText = byG;
+                document.getElementById('valDeg').innerText = deg + "°";
+
+                ctx.save();
+                ctx.translate(meter.x, meter.y);
+
+                ctx.shadowBlur = 12; ctx.shadowColor = 'rgba(0,0,0,0.5)';
+                ctx.fillStyle = '#1e293b';
+                ctx.strokeStyle = '#38bdf8';
+                ctx.lineWidth = 2;
+                ctx.fillRect(-meter.w / 2, -meter.h / 2, meter.w, meter.h);
+                ctx.strokeRect(-meter.w / 2, -meter.h / 2, meter.w, meter.h);
+
+                ctx.strokeStyle = '#ef4444';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(0, 0, 8, 0, Math.PI * 2);
+                ctx.stroke();
+
+                ctx.restore();
+            }
+        }
+
+        // Mouse Drag Handlers: Draggable Magnet, Compass, & Meter!
+        canvas.addEventListener('mousedown', (e) => {
+            let rect = canvas.getBoundingClientRect();
+            let mx = e.clientX - rect.left;
+            let my = e.clientY - rect.top;
+
+            if (Math.hypot(mx - compass.x, my - compass.y) < compass.r + 10) {
+                compass.isDragging = true;
+                compass.dragOffsetX = mx - compass.x;
+                compass.dragOffsetY = my - compass.y;
+            } else if (Math.abs(mx - meter.x) < meter.w / 2 && Math.abs(my - meter.y) < meter.h / 2 && document.getElementById('chkMeter').checked) {
+                meter.isDragging = true;
+                meter.dragOffsetX = mx - meter.x;
+                meter.dragOffsetY = my - meter.y;
+            } else if (Math.abs(mx - magnet.x) < magnet.w / 2 + 10 && Math.abs(my - magnet.y) < magnet.h / 2 + 10) {
+                magnet.isDragging = true;
+                magnet.dragOffsetX = mx - magnet.x;
+                magnet.dragOffsetY = my - magnet.y;
+            }
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            let rect = canvas.getBoundingClientRect();
+            let mx = e.clientX - rect.left;
+            let my = e.clientY - rect.top;
+
+            if (magnet.isDragging) {
+                magnet.x = mx - magnet.dragOffsetX;
+                magnet.y = my - magnet.dragOffsetY;
+                draw();
+            } else if (compass.isDragging) {
+                compass.x = mx - compass.dragOffsetX;
+                compass.y = my - compass.dragOffsetY;
+                draw();
+            } else if (meter.isDragging) {
+                meter.x = mx - meter.dragOffsetX;
+                meter.y = my - meter.dragOffsetY;
+                draw();
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            magnet.isDragging = false;
+            compass.isDragging = false;
+            meter.isDragging = false;
+        });
+
+        // Touch Drag Handlers for Mobile Devices
+        canvas.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 0) {
+                let rect = canvas.getBoundingClientRect();
+                let mx = e.touches[0].clientX - rect.left;
+                let my = e.touches[0].clientY - rect.top;
+
+                if (Math.hypot(mx - compass.x, my - compass.y) < compass.r + 15) {
+                    compass.isDragging = true;
+                    compass.dragOffsetX = mx - compass.x;
+                    compass.dragOffsetY = my - compass.y;
+                } else if (Math.abs(mx - meter.x) < meter.w / 2 && Math.abs(my - meter.y) < meter.h / 2 && document.getElementById('chkMeter').checked) {
+                    meter.isDragging = true;
+                    meter.dragOffsetX = mx - meter.x;
+                    meter.dragOffsetY = my - meter.y;
+                } else if (Math.abs(mx - magnet.x) < magnet.w / 2 + 15 && Math.abs(my - magnet.y) < magnet.h / 2 + 15) {
+                    magnet.isDragging = true;
+                    magnet.dragOffsetX = mx - magnet.x;
+                    magnet.dragOffsetY = my - magnet.y;
+                }
+            }
+        }, {passive: true});
+
+        canvas.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                let rect = canvas.getBoundingClientRect();
+                let mx = e.touches[0].clientX - rect.left;
+                let my = e.touches[0].clientY - rect.top;
+
+                if (magnet.isDragging) {
+                    magnet.x = mx - magnet.dragOffsetX;
+                    magnet.y = my - magnet.dragOffsetY;
+                    draw();
+                } else if (compass.isDragging) {
+                    compass.x = mx - compass.dragOffsetX;
+                    compass.y = my - compass.dragOffsetY;
+                    draw();
+                } else if (meter.isDragging) {
+                    meter.x = mx - meter.dragOffsetX;
+                    meter.y = my - meter.dragOffsetY;
+                    draw();
+                }
+            }
+        }, {passive: true});
+
+        window.addEventListener('touchend', () => {
+            magnet.isDragging = false;
+            compass.isDragging = false;
+            meter.isDragging = false;
+        });
+
+        window.onload = () => {
+            resize();
+        };
+    </script>
+</body>
+</html>
