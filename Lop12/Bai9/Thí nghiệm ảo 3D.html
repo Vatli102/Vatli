@@ -415,7 +415,7 @@
             <div class="controls-grid">
                 <div class="control-group" style="grid-column: span 2;">
                     <div class="control-label">
-                        <span><i class="fa-solid fa-arrows-left-right"></i> Dịch chuyển Pít-tông thay đổi Thể tích $V$</span>
+                        <span><i class="fa-solid fa-arrows-left-right"></i> Dịch chuyển Pít-tông thay đổi Thể tích V</span>
                         <span class="control-value" id="valVolume">20.0 mL</span>
                     </div>
                     <input type="range" id="sliderVolume" min="5" max="30" step="0.5" value="20">
@@ -444,19 +444,19 @@
             <!-- Metrics displays -->
             <div class="metrics-grid">
                 <div class="metric-card">
-                    <div class="metric-title">Thể tích $V$</div>
+                    <div class="metric-title">Thể tích V</div>
                     <div class="metric-number" id="metricV">20.0 <span class="metric-unit">mL</span></div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-title">Áp suất $p$</div>
+                    <div class="metric-title">Áp suất p</div>
                     <div class="metric-number" id="metricP">100.0 <span class="metric-unit">kPa</span></div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-title">Tích số $p \cdot V$</div>
+                    <div class="metric-title">Tích số p &middot; V</div>
                     <div class="metric-number" id="metricPV" style="color:#34d399;">2000 <span class="metric-unit">kPa.mL</span></div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-title">Nhiệt độ $T$</div>
+                    <div class="metric-title">Nhiệt độ T</div>
                     <div class="metric-number" id="metricT" style="color:#f59e0b;">298 <span class="metric-unit">K (25°C)</span></div>
                 </div>
             </div>
@@ -467,10 +467,10 @@
                     <thead>
                         <tr>
                             <th>Lần đo</th>
-                            <th>$V$ (mL)</th>
-                            <th>$p$ (kPa)</th>
-                            <th>$p \cdot V$</th>
-                            <th>$p / (1/V)$</th>
+                            <th>Thể tích V (mL)</th>
+                            <th>Áp suất p (kPa)</th>
+                            <th>Tích p &middot; V</th>
+                            <th>Tỉ số p / (1/V)</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
@@ -483,25 +483,25 @@
             <div class="tabs">
                 <div class="tab-btn active" onclick="switchTab('lythuyet')">Lý Thuyết</div>
                 <div class="tab-btn" onclick="switchTab('dungcu')">Dụng Cụ SGK</div>
-                <div class="tab-btn" onclick="switchTab('dothi')">Đồ Thị $p-V$</div>
+                <div class="tab-btn" onclick="switchTab('dothi')">Đồ Thị p - V</div>
             </div>
 
             <div class="tab-content">
                 <div id="lythuyet" class="tab-pane active">
-                    <p><strong>Định luật Boyle (Định luật Boy-lơ):</strong> Ở nhiệt độ không đổi, áp suất $p$ của một khối lượng khí xác định tỷ lệ nghịch với thể tích $V$ của nó.</p>
-                    <p style="margin-top:0.3rem"><strong>Biểu thức:</strong> $p \cdot V = \text{const}$ hay $p_1 V_1 = p_2 V_2$.</p>
+                    <p><strong>Định luật Boyle (Định luật Boy-lơ):</strong> Ở nhiệt độ không đổi, áp suất p của một khối lượng khí xác định tỷ lệ nghịch với thể tích V của nó.</p>
+                    <p style="margin-top:0.3rem"><strong>Biểu thức:</strong> p &middot; V = const hay p₁V₁ = p₂V₂.</p>
                 </div>
                 <div id="dungcu" class="tab-pane">
                     <p><strong>Dụng cụ thí nghiệm (SGK Trang 38):</strong></p>
                     <ul style="margin-left: 15px; margin-top: 4px;">
-                        <li>Xi-lanh trong suốt chia vạch thể tích $V$ (mL).</li>
+                        <li>Xi-lanh trong suốt chia vạch thể tích V (mL).</li>
                         <li>Pít-tông có tay quay để nén/dãn khí.</li>
-                        <li>Áp kế kỹ thuật số hiển thị áp suất $p$ (kPa).</li>
-                        <li>Nhiệt kế theo dõi nhiệt độ $T$ không đổi.</li>
+                        <li>Áp kế kỹ thuật số hiển thị áp suất p (kPa).</li>
+                        <li>Nhiệt kế theo dõi nhiệt độ T không đổi.</li>
                     </ul>
                 </div>
                 <div id="dothi" class="tab-pane">
-                    <p><strong>Đường đẳng nhiệt:</strong> Trong hệ tọa độ $(p-V)$, đường đẳng nhiệt là một đường <strong>hypebol</strong>. Trong hệ tọa độ $(p - 1/V)$, đường đẳng nhiệt là một <strong>đường thẳng</strong> kéo dài đi qua gốc tọa độ.</p>
+                    <p><strong>Đường đẳng nhiệt:</strong> Trong hệ tọa độ (p, V), đường đẳng nhiệt là một đường <strong>hypebol</strong>. Trong hệ tọa độ (p - 1/V), đường đẳng nhiệt là một <strong>đường thẳng</strong> kéo dài đi qua gốc tọa độ.</p>
                 </div>
             </div>
 
@@ -847,6 +847,64 @@
         function run() {
             drawApparatus();
             requestAnimationFrame(run);
+
+        // Add Canvas Dragging for Piston Interaction
+        let isDraggingPiston = false;
+
+        function updateVolumeFromX(mouseX) {
+            const w = canvas.width;
+            const cylX = w * 0.12;
+            const cylW = w * 0.55;
+            const minV = 5.0, maxV = 30.0;
+            
+            // Calculate fill fraction
+            let relX = (mouseX - cylX) / cylW;
+            let fillFrac = (relX - 0.18) / 0.75;
+            fillFrac = Math.max(0, Math.min(1, fillFrac));
+            
+            let newV = minV + fillFrac * (maxV - minV);
+            currentV = Math.round(newV * 10) / 10;
+            currentP = C_CONSTANT / currentV;
+            
+            document.getElementById('sliderVolume').value = currentV;
+            document.getElementById('valVolume').innerText = currentV.toFixed(1) + " mL";
+            document.getElementById('metricV').innerHTML = currentV.toFixed(1) + ' <span class="metric-unit">mL</span>';
+            document.getElementById('metricP').innerHTML = currentP.toFixed(1) + ' <span class="metric-unit">kPa</span>';
+            document.getElementById('metricPV').innerHTML = Math.round(currentP * currentV) + ' <span class="metric-unit">kPa.mL</span>';
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            isDraggingPiston = true;
+            const rect = canvas.getBoundingClientRect();
+            updateVolumeFromX(e.clientX - rect.left);
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (isDraggingPiston) {
+                const rect = canvas.getBoundingClientRect();
+                updateVolumeFromX(e.clientX - rect.left);
+            }
+        });
+
+        window.addEventListener('mouseup', () => { isDraggingPiston = false; });
+
+        canvas.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 0) {
+                isDraggingPiston = true;
+                const rect = canvas.getBoundingClientRect();
+                updateVolumeFromX(e.touches[0].clientX - rect.left);
+            }
+        }, {passive: true});
+
+        canvas.addEventListener('touchmove', (e) => {
+            if (isDraggingPiston && e.touches.length > 0) {
+                const rect = canvas.getBoundingClientRect();
+                updateVolumeFromX(e.touches[0].clientX - rect.left);
+            }
+        }, {passive: true});
+
+        window.addEventListener('touchend', () => { isDraggingPiston = false; });
+    
         }
 
         // Table UI update
