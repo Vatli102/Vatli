@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thí Nghiệm Kiểm Chứng: Định Luật Charles - Vật Lí 12</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN for plotting -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        p { text-align: justify; }
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --card-bg: rgba(30, 41, 59, 0.85);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --primary-color: #f59e0b;
+            --primary-hover: #d97706;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --accent-blue: #06b6d4;
+            --accent-orange: #f97316;
+            --accent-red: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 0.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .dashboard {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 0.85rem 1rem;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.4rem;
+        }
+
+        header h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #fde047, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 0.72rem;
+            margin: 0;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 0.85rem;
+        }
+
+        @media (max-width: 850px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Left Panel: Cylinder + Controls grouped together */
+        .sim-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        /* Top Readings Row */
+        .readings-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.4rem;
+        }
+
+        .reading-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.35rem 0.5rem;
+            text-align: center;
+        }
+
+        .reading-label {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 0.1rem;
+        }
+
+        .reading-value {
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: monospace;
+        }
+
+        /* Side-by-side Cylinder & Controls */
+        .sim-body {
+            display: flex;
+            gap: 0.65rem;
+            align-items: stretch;
+        }
+
+        .cylinder-box {
+            flex: 0 0 145px;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.5rem 0.4rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .cylinder-container {
+            width: 120px;
+            height: 180px;
+            border: 3.5px solid #94a3b8;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            position: relative;
+            background: rgba(15, 23, 42, 0.4);
+            margin-top: 0.2rem;
+            overflow: hidden;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6);
+        }
+
+        .thermal-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; opacity: 0;
+            transition: opacity 0.4s ease, background 0.4s ease;
+            pointer-events: none;
+        }
+
+        .piston {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 16px;
+            background: linear-gradient(90deg, #475569, #94a3b8, #475569);
+            border-bottom: 2px solid #334155;
+            z-index: 2;
+            transition: top 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .piston-shaft {
+            position: absolute;
+            left: 50%;
+            bottom: 16px;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 110px;
+            background: linear-gradient(90deg, #64748b, #cbd5e1, #64748b);
+            z-index: 1;
+        }
+
+        .piston-weight {
+            position: absolute;
+            left: 50%;
+            bottom: 24px;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #1e293b, #475569);
+            border: 1px solid #94a3b8;
+            border-radius: 4px;
+            padding: 2px 4px;
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+            z-index: 3;
+        }
+
+        .particles-canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
+        }
+
+        .burner-source {
+            width: 80px;
+            height: 22px;
+            margin-top: 0.2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .flame-element {
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #f97316 20%, #ef4444 60%, transparent 100%);
+            border-radius: 50% 0 50% 50%;
+            transform: rotate(-45deg);
+            animation: flicker 0.15s infinite alternate;
+            display: none;
+            box-shadow: 0 0 10px #ef4444;
+        }
+
+        .ice-element {
+            width: 55px;
+            height: 15px;
+            background: #06b6d4;
+            border-radius: 3px;
+            box-shadow: 0 0 8px #06b6d4;
+            display: none;
+            color: #fff;
+            font-size: 0.58rem;
+            font-weight: 700;
+            text-align: center;
+            line-height: 15px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        @keyframes flicker {
+            0% { transform: rotate(-45deg) scale(0.9) skewX(2deg); }
+            100% { transform: rotate(-45deg) scale(1.1) skewY(-2deg); }
+        }
+
+        /* Controls Panel right beside Cylinder */
+        .control-card {
+            flex: 1;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.65rem 0.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .control-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        .slider-value {
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: var(--accent-orange);
+            font-weight: 700;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .step-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            color: #f1f5f9;
+            width: 26px;
+            height: 26px;
+            border-radius: 5px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .step-btn:hover {
+            background: var(--primary-color);
+            color: #000;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.8);
+        }
+
+        .press-btn-group {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.35rem 0.3rem;
+            border-radius: 6px;
+            border: none;
+            font-size: 0.68rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            color: #0f172a;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-action-row {
+            display: flex;
+            gap: 0.4rem;
+            margin-top: 0.1rem;
+        }
+
+        /* Right Panel: Chart + Data Table */
+        .data-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+
+        .chart-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.5rem;
+            height: 195px;
+            position: relative;
+        }
+
+        .table-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.45rem 0.6rem;
+        }
+
+        .table-title {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .table-scroll {
+            max-height: 95px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.65rem;
+            text-align: center;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.15rem;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        td {
+            padding: 0.2rem 0.15rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            color: #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <header>
+        <h1><i class="fa-solid fa-flask-vial" style="color: var(--accent-orange);"></i> THÍ NGHIỆM KIỂM CHỨNG ĐỊNH LUẬT CHARLES</h1>
+        <p>Khảo sát mối quan hệ giữa thể tích <i>V</i> và nhiệt độ tuyệt đối <i>T</i> trong quá trình đẳng áp</p>
+    </header>
+
+    <div class="main-layout">
+        <!-- Left: Simulation Display and Controls side-by-side -->
+        <div class="sim-panel">
+            <!-- Readings Row -->
+            <div class="readings-grid">
+                <div class="reading-box">
+                    <span class="reading-label">Nhiệt Độ <i>T</i></span>
+                    <span class="reading-value" id="tempReading" style="color: var(--accent-orange);">300 K</span>
+                </div>
+                <div class="reading-box">
+                    <span class="reading-label">Thể Tích <i>V</i></span>
+                    <span class="reading-value" id="volumeReading" style="color: var(--accent-blue);">15.0 mL</span>
+                </div>
+                <div class="reading-box">
+                    <span class="reading-label">Áp Suất <i>p</i></span>
+                    <span class="reading-value" id="pressureReading" style="color: var(--success-color);">1.0 atm</span>
+                </div>
+            </div>
+
+            <!-- Body: Cylinder Box (Left) + Controls (Right) -->
+            <div class="sim-body">
+                <!-- Cylinder Visualization Box -->
+                <div class="cylinder-box">
+                    <div class="cylinder-container" id="cylinderContainer">
+                        <div class="thermal-overlay" id="thermalOverlay"></div>
+                        <div class="piston" id="piston">
+                            <div class="piston-shaft"></div>
+                            <div class="piston-weight" id="weightLabel">p = 1.0 atm</div>
+                        </div>
+                        <canvas class="particles-canvas" id="canvas"></canvas>
+                    </div>
+
+                    <!-- Burner Source Indicator -->
+                    <div class="burner-source">
+                        <div class="flame-element" id="flame"></div>
+                        <div class="ice-element" id="ice">Làm lạnh</div>
+                    </div>
+                </div>
+
+                <!-- Controls Card side-by-side -->
+                <div class="control-card">
+                    <!-- Temperature Control -->
+                    <div class="control-group">
+                        <div class="control-header">
+                            <span>Nhiệt độ <i>T</i> (K):</span>
+                            <span class="slider-value" id="tempVal">300 K / 27 °C</span>
+                        </div>
+                        <div class="slider-container">
+                            <button type="button" class="step-btn" onclick="stepTemp(-10)" title="Giảm 10 K">-</button>
+                            <input type="range" id="tempSlider" min="150" max="450" step="5" value="300" oninput="updateSimulation()">
+                            <button type="button" class="step-btn" onclick="stepTemp(10)" title="Tăng 10 K">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Pressure Selection -->
+                    <div class="control-group">
+                        <div class="control-header">
+                            <span>Áp suất <i>p</i> (đẳng áp):</span>
+                        </div>
+                        <div class="press-btn-group">
+                            <button type="button" class="btn btn-secondary" onclick="setPressure(0.5)" id="pBtn-05">0.5 atm</button>
+                            <button type="button" class="btn btn-primary" onclick="setPressure(1.0)" id="pBtn-10">1.0 atm</button>
+                            <button type="button" class="btn btn-secondary" onclick="setPressure(1.5)" id="pBtn-15">1.5 atm</button>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="btn-action-row">
+                        <button type="button" class="btn btn-primary" onclick="recordData()">
+                            <i class="fa-solid fa-floppy-disk"></i> Ghi Số Liệu
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="clearData()">
+                            <i class="fa-solid fa-trash-can"></i> Xóa Số Liệu
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Graph and Data Table -->
+        <div class="data-panel">
+            <!-- Holographic Graph -->
+            <div class="chart-box">
+                <canvas id="charlesChart"></canvas>
+            </div>
+
+            <!-- Table of values -->
+            <div class="table-box">
+                <div class="table-title">
+                    <i class="fa-solid fa-table" style="color: var(--success-color);"></i>
+                    Bảng Ghi Số Liệu Thí Nghiệm Đẳng Áp
+                </div>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Lần Đo</th>
+                                <th>Áp Suất <i>p</i></th>
+                                <th><i>T</i> (K)</th>
+                                <th><i>t</i> (°C)</th>
+                                <th><i>V</i> (mL)</th>
+                                <th><i>V</i>/<i>T</i></th>
+                            </tr>
+                        </thead>
+                        <tbody id="dataTableBody">
+                            <tr id="emptyRow"><td colspan="6" style="color: var(--text-secondary); font-style: italic;">Chưa ghi nhận số liệu. Hãy thay đổi nhiệt độ và nhấn Ghi Số Liệu.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Physics Simulation Constants and Variables
+    let temperature = 300; // Kelvin
+    let pressure = 1.0; // atm
+    let volume = 15.0; // mL
+
+    // Base scale constant factor C = V * p / T = 15.0 * 1.0 / 300 = 0.05
+    const cFactor = 0.05;
+
+    // Particles array for canvas simulation
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const maxParticles = 50;
+
+    // Chart.js instance variable
+    let charlesChart;
+    let recordedPoints = []; // Stores {temp, vol, press}
+
+    // Initialize Canvas size & Particles
+    window.addEventListener('DOMContentLoaded', () => {
+        resizeCanvas();
+        initParticles();
+        animateParticles();
+        initChart();
+        updateSimulation();
+    });
+
+    function resizeCanvas() {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+    }
+
+    // Gas Particle class definition
+    class GasParticle {
+        constructor() {
+            this.radius = 3.5;
+            this.reset();
+        }
+
+        reset() {
+            this.x = Math.random() * (canvas.width - this.radius * 2) + this.radius;
+            const pistonTop = getPistonY();
+            this.y = Math.random() * (canvas.height - pistonTop - this.radius * 2 - 8) + pistonTop + 4;
+            
+            const speedFactor = Math.sqrt(temperature / 300) * 1.5;
+            const angle = Math.random() * Math.PI * 2;
+            this.vx = Math.cos(angle) * speedFactor;
+            this.vy = Math.sin(angle) * speedFactor;
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+
+            const pistonTop = getPistonY();
+
+            if (this.x - this.radius < 0) {
+                this.x = this.radius;
+                this.vx = -this.vx;
+            } else if (this.x + this.radius > canvas.width) {
+                this.x = canvas.width - this.radius;
+                this.vx = -this.vx;
+            }
+
+            if (this.y - this.radius < pistonTop) {
+                this.y = pistonTop + this.radius;
+                this.vy = -this.vy;
+            } else if (this.y + this.radius > canvas.height) {
+                this.y = canvas.height - this.radius;
+                this.vy = -this.vy;
+            }
+        }
+
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            
+            if (temperature < 250) {
+                ctx.fillStyle = '#60a5fa'; // Blue (Cold)
+            } else if (temperature <= 350) {
+                ctx.fillStyle = '#f59e0b'; // Amber (Normal)
+            } else {
+                ctx.fillStyle = '#ef4444'; // Red (Hot)
+            }
+            
+            ctx.shadowBlur = 4;
+            ctx.shadowColor = ctx.fillStyle;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+    }
+
+    function initParticles() {
+        particles = [];
+        for (let i = 0; i < maxParticles; i++) {
+            particles.push(new GasParticle());
+        }
+    }
+
+    function getPistonY() {
+        const minVol = 2.0;
+        const maxVol = 40.0;
+        const minY = 15;
+        const maxY = 160;
+        
+        const ratio = (maxVol - volume) / (maxVol - minVol);
+        return minY + ratio * (maxY - minY);
+    }
+
+    window.stepTemp = function(delta) {
+        const slider = document.getElementById('tempSlider');
+        let newVal = parseInt(slider.value) + delta;
+        newVal = Math.max(150, Math.min(450, newVal));
+        slider.value = newVal;
+        updateSimulation();
+    };
+
+    function updateSimulation() {
+        temperature = parseFloat(document.getElementById('tempSlider').value);
+        let celsius = temperature - 273;
+        document.getElementById('tempVal').textContent = `${temperature} K / ${celsius} °C`;
+        document.getElementById('tempReading').textContent = `${temperature} K`;
+
+        volume = (cFactor * temperature) / pressure;
+        document.getElementById('volumeReading').textContent = `${volume.toFixed(1)} mL`;
+
+        const pistonEl = document.getElementById('piston');
+        const pistonY = getPistonY();
+        pistonEl.style.top = `${pistonY}px`;
+
+        const thermalOverlay = document.getElementById('thermalOverlay');
+        const flame = document.getElementById('flame');
+        const ice = document.getElementById('ice');
+
+        if (temperature > 300) {
+            const alpha = Math.min((temperature - 300) / 150 * 0.4, 0.4);
+            thermalOverlay.style.background = `rgba(239, 68, 68, ${alpha})`;
+            thermalOverlay.style.opacity = 1;
+            flame.style.display = 'block';
+            ice.style.display = 'none';
+        } else if (temperature < 300) {
+            const alpha = Math.min((300 - temperature) / 150 * 0.4, 0.4);
+            thermalOverlay.style.background = `rgba(6, 182, 212, ${alpha})`;
+            thermalOverlay.style.opacity = 1;
+            flame.style.display = 'none';
+            ice.style.display = 'block';
+        } else {
+            thermalOverlay.style.opacity = 0;
+            flame.style.display = 'none';
+            ice.style.display = 'none';
+        }
+
+        particles.forEach(p => {
+            const speedFactor = Math.sqrt(temperature / 300) * 1.5;
+            const currentSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+            if (currentSpeed > 0) {
+                p.vx = (p.vx / currentSpeed) * speedFactor;
+                p.vy = (p.vy / currentSpeed) * speedFactor;
+            }
+        });
+
+        updateChartLivePoint();
+    }
+
+    window.setPressure = function(newPress) {
+        pressure = newPress;
+        document.getElementById('pressureReading').textContent = `${pressure.toFixed(1)} atm`;
+
+        const weightLabel = document.getElementById('weightLabel');
+        weightLabel.textContent = `p = ${pressure.toFixed(1)} atm`;
+        if (pressure === 0.5) {
+            weightLabel.style.transform = "translateX(-50%) scale(0.9)";
+        } else if (pressure === 1.0) {
+            weightLabel.style.transform = "translateX(-50%) scale(1.0)";
+        } else {
+            weightLabel.style.transform = "translateX(-50%) scale(1.1)";
+        }
+
+        const pressures = [0.5, 1.0, 1.5];
+        pressures.forEach(p => {
+            const elementId = `pBtn-${p.toFixed(1).replace('.', '')}`;
+            const targetBtn = document.getElementById(elementId);
+            if (targetBtn) {
+                if (p === newPress) {
+                    targetBtn.className = "btn btn-primary";
+                } else {
+                    targetBtn.className = "btn btn-secondary";
+                }
+            }
+        });
+
+        updateSimulation();
+    };
+
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+        ctx.lineWidth = 1;
+        for (let y = 15; y < canvas.height; y += 25) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(canvas.width, y);
+            ctx.stroke();
+        }
+
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+
+        requestAnimationFrame(animateParticles);
+    }
+
+    function initChart() {
+        const ctxChart = document.getElementById('charlesChart').getContext('2d');
+
+        const tempAxis = [];
+        for (let t = 100; t <= 480; t += 10) {
+            tempAxis.push(t);
+        }
+
+        const data05 = tempAxis.map(t => (cFactor * t) / 0.5);
+        const data10 = tempAxis.map(t => (cFactor * t) / 1.0);
+        const data15 = tempAxis.map(t => (cFactor * t) / 1.5);
+
+        charlesChart = new Chart(ctxChart, {
+            type: 'line',
+            data: {
+                labels: tempAxis,
+                datasets: [
+                    {
+                        label: 'p = 0.5 atm',
+                        data: data05,
+                        borderColor: '#06b6d4',
+                        borderWidth: 1.5,
+                        borderDash: [4, 4],
+                        pointRadius: 0,
+                        fill: false
+                    },
+                    {
+                        label: 'p = 1.0 atm',
+                        data: data10,
+                        borderColor: '#f59e0b',
+                        borderWidth: 1.5,
+                        borderDash: [4, 4],
+                        pointRadius: 0,
+                        fill: false
+                    },
+                    {
+                        label: 'p = 1.5 atm',
+                        data: data15,
+                        borderColor: '#ef4444',
+                        borderWidth: 1.5,
+                        borderDash: [4, 4],
+                        pointRadius: 0,
+                        fill: false
+                    },
+                    {
+                        label: 'Đã ghi',
+                        data: [],
+                        borderColor: '#10b981',
+                        backgroundColor: '#10b981',
+                        borderWidth: 0,
+                        pointRadius: 5,
+                        showLine: false
+                    },
+                    {
+                        label: 'Hiện tại',
+                        data: [{x: 300, y: 15.0}],
+                        borderColor: '#fff',
+                        backgroundColor: '#ef4444',
+                        borderWidth: 2,
+                        pointRadius: 7,
+                        showLine: false,
+                        z: 10
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#94a3b8',
+                            font: { size: 9 },
+                            boxWidth: 10
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'linear',
+                        title: {
+                            display: true,
+                            text: 'Nhiệt độ T (K)',
+                            color: '#94a3b8',
+                            font: { size: 10 }
+                        },
+                        min: 0,
+                        max: 500,
+                        ticks: { color: '#64748b', font: { size: 9 } },
+                        grid: { color: 'rgba(255,255,255,0.03)' }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Thể tích V (mL)',
+                            color: '#94a3b8',
+                            font: { size: 10 }
+                        },
+                        min: 0,
+                        max: 50,
+                        ticks: { color: '#64748b', font: { size: 9 } },
+                        grid: { color: 'rgba(255,255,255,0.03)' }
+                    }
+                }
+            }
+        });
+    }
+
+    function updateChartLivePoint() {
+        if (!charlesChart) return;
+        charlesChart.data.datasets[4].data = [{x: temperature, y: volume}];
+        charlesChart.update('none');
+    }
+
+    let measurementCount = 0;
+    window.recordData = function() {
+        measurementCount++;
+        
+        recordedPoints.push({
+            id: measurementCount,
+            press: pressure,
+            temp: temperature,
+            celsius: temperature - 273,
+            vol: volume,
+            ratio: volume / temperature
+        });
+
+        const tableBody = document.getElementById('dataTableBody');
+        const emptyRow = document.getElementById('emptyRow');
+        if (emptyRow) emptyRow.remove();
+
+        const rowHtml = `
+            <tr id="row-${measurementCount}">
+                <td>${measurementCount}</td>
+                <td>${pressure.toFixed(1)}</td>
+                <td>${temperature}</td>
+                <td>${temperature - 273}</td>
+                <td>${volume.toFixed(1)}</td>
+                <td style="color: var(--primary-color); font-weight: 600;">${(volume / temperature).toFixed(5)}</td>
+            </tr>
+        `;
+        tableBody.insertAdjacentHTML('beforeend', rowHtml);
+
+        charlesChart.data.datasets[3].data.push({x: temperature, y: volume});
+        charlesChart.update();
+
+        const tableScroll = document.querySelector('.table-scroll');
+        tableScroll.scrollTop = tableScroll.scrollHeight;
+    };
+
+    window.clearData = function() {
+        measurementCount = 0;
+        recordedPoints = [];
+
+        const tableBody = document.getElementById('dataTableBody');
+        tableBody.innerHTML = `<tr id="emptyRow"><td colspan="6" style="color: var(--text-secondary); font-style: italic;">Chưa ghi nhận số liệu. Hãy thay đổi nhiệt độ và nhấn Ghi Số Liệu.</td></tr>`;
+
+        charlesChart.data.datasets[3].data = [];
+        charlesChart.update();
+    };
+</script>
+</body>
+</html>
