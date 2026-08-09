@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thí Nghiệm Ảo Khinh Khí Cầu - Bài 11 Vật Lí 12</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        p { text-align: justify; }
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #2e1065 100%);
+            --card-bg: rgba(30, 41, 59, 0.85);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --purple-main: #a855f7;
+            --purple-hover: #9333ea;
+            --success-color: #10b981;
+            --accent-orange: #f97316;
+            --accent-blue: #38bdf8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 0.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .dashboard {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 0.85rem 1rem;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.4rem;
+        }
+
+        header h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #c084fc, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 0.72rem;
+            margin: 0;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 0.85rem;
+        }
+
+        @media (max-width: 850px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Left Panel: Hot Air Balloon Simulation Canvas & Controls */
+        .sim-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .readings-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.4rem;
+        }
+
+        .reading-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.35rem 0.4rem;
+            text-align: center;
+        }
+
+        .reading-label {
+            font-size: 0.62rem;
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 0.1rem;
+        }
+
+        .reading-value {
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-family: monospace;
+        }
+
+        .sim-body {
+            display: flex;
+            gap: 0.65rem;
+            align-items: stretch;
+        }
+
+        /* Canvas View Box */
+        .balloon-box {
+            flex: 0 0 160px;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.4rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #balloonCanvas {
+            width: 150px;
+            height: 220px;
+            border-radius: 8px;
+            background: linear-gradient(to bottom, #0284c7 0%, #38bdf8 60%, #4ade80 95%, #166534 100%);
+        }
+
+        /* Controls Panel right beside Balloon Canvas */
+        .control-card {
+            flex: 1;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.65rem 0.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .control-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        .slider-value {
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #c084fc;
+            font-weight: 700;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .step-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            color: #f1f5f9;
+            width: 26px;
+            height: 26px;
+            border-radius: 5px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .step-btn:hover {
+            background: var(--purple-main);
+            color: #fff;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--purple-main);
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(168, 85, 247, 0.8);
+        }
+
+        .btn {
+            padding: 0.4rem 0.5rem;
+            border-radius: 6px;
+            border: none;
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            transition: all 0.2s;
+        }
+
+        .btn-purple {
+            background: linear-gradient(135deg, #a855f7, #7e22ce);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+        }
+
+        .btn-purple:hover {
+            background: linear-gradient(135deg, #9333ea, #6b21a8);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.4);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        /* Right Panel: Chart & Explanations */
+        .data-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+
+        .chart-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.5rem;
+            height: 195px;
+            position: relative;
+        }
+
+        .info-card {
+            background: rgba(168, 85, 247, 0.08);
+            border: 1px solid rgba(168, 85, 247, 0.25);
+            border-radius: 12px;
+            padding: 0.55rem 0.75rem;
+            font-size: 0.72rem;
+            line-height: 1.45;
+            color: #e9d5ff;
+        }
+
+        .info-card strong {
+            color: #f3e8ff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <header>
+        <h1><i class="fa-solid fa-plane-departure" style="color: #c084fc;"></i> THÍ NGHIỆM ẢO KHINH KHÍ CẦU BAY - BÀI 11 VẬT LÍ 12</h1>
+        <p>Ứng dụng Phương trình trạng thái khí lí tưởng: Đun nóng khí ➔ Thể tích mở ➔ Tỉ trọng giảm ➔ Bay lên</p>
+    </header>
+
+    <div class="main-layout">
+        <!-- Left: Simulation Canvas & Controls side-by-side -->
+        <div class="sim-panel">
+            <!-- Readings Grid -->
+            <div class="readings-grid">
+                <div class="reading-box">
+                    <span class="reading-label">Nhiệt Độ <i>T</i></span>
+                    <span class="reading-value" id="tempRead" style="color: #c084fc;">300 K</span>
+                </div>
+                <div class="reading-box">
+                    <span class="reading-label">Khối Lượng Riêng</span>
+                    <span class="reading-value" id="densityRead" style="color: #38bdf8;">1.20 kg/m³</span>
+                </div>
+                <div class="reading-box">
+                    <span class="reading-label">Lực Đẩy Ác-si-mét</span>
+                    <span class="reading-value" id="buoyancyRead" style="color: #4ade80;">12.0 kN</span>
+                </div>
+                <div class="reading-box">
+                    <span class="reading-label">Độ Cao <i>H</i></span>
+                    <span class="reading-value" id="altRead" style="color: #f472b6;">0 m</span>
+                </div>
+            </div>
+
+            <!-- Body: Balloon Canvas (Left) + Controls (Right) -->
+            <div class="sim-body">
+                <!-- Balloon Visual Canvas -->
+                <div class="balloon-box">
+                    <canvas id="balloonCanvas"></canvas>
+                </div>
+
+                <!-- Controls Card -->
+                <div class="control-card">
+                    <!-- Burner Power / Temperature Slider -->
+                    <div class="control-group">
+                        <div class="control-header">
+                            <span>Nhiệt độ khí nóng <i>T</i> bên trong:</span>
+                            <span class="slider-value" id="tempVal">300 K / 27 °C</span>
+                        </div>
+                        <div class="slider-container">
+                            <button type="button" class="step-btn" onclick="stepTemp(-10)" title="Giảm 10 K">-</button>
+                            <input type="range" id="tempSlider" min="300" max="420" step="5" value="300" oninput="updateSimulation()">
+                            <button type="button" class="step-btn" onclick="stepTemp(10)" title="Tăng 10 K">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Burner Toggle Button -->
+                    <div class="control-group">
+                        <div class="control-header">
+                            <span>Trạng thái đầu đốt (Lửa đun):</span>
+                        </div>
+                        <button type="button" class="btn btn-purple" id="burnerBtn" onclick="toggleBurner()">
+                            <i class="fa-solid fa-fire"></i> BẬT ĐẦU ĐỐT ĐUN NÓNG KHÍ
+                        </button>
+                    </div>
+
+                    <!-- Status Display -->
+                    <div class="control-group">
+                        <div class="control-header">
+                            <span>Trạng thái chuyển động:</span>
+                        </div>
+                        <div class="status-badge" id="statusBadge" style="background: rgba(148, 163, 184, 0.2); color: #cbd5e1; border: 1px solid #64748b;">
+                            🛑 Đang đậu cố định trên mặt đất (T = T_ngoài)
+                        </div>
+                    </div>
+
+                    <div style="font-size: 0.65rem; color: #94a3b8; font-style: italic;">
+                        💡 <em>Giải thích: Đun nóng khí ($T \uparrow$) ➔ Thể tích $V \uparrow$ ➔ Mật độ khí giảm $\rho \downarrow$ ➔ Lực đẩy $F_B > P$ ➔ Khinh khí cầu bay lên.</em>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Graph & Scientific Physics Info -->
+        <div class="data-panel">
+            <!-- Chart Box -->
+            <div class="chart-box">
+                <canvas id="altitudeChart"></canvas>
+            </div>
+
+            <!-- Physics Information Card -->
+            <div class="info-card">
+                <strong><i class="fa-solid fa-lightbulb" style="color: #fde047;"></i> Cơ Sơ Vật Lí Khinh Khí Cầu Bay:</strong><br>
+                1. Theo <strong>Phương trình Clapeyron</strong> ($p \cdot V = \frac{m}{M} \cdot R \cdot T$), khối lượng riêng của khí là $\rho = \frac{p \cdot M}{R \cdot T}$.<br>
+                2. Khi đun nóng khí bên trong ($T$ tăng), khối lượng riêng $\rho_{\text{nóng}}$ giảm làm khí trở nên <strong>nhẹ hơn không khí lạnh xung quanh</strong>.<br>
+                3. Lực đẩy Ác-si-mét $F_B = \rho_{\text{lạnh}} \cdot V \cdot g$ vượt quá tổng trọng lượng khinh khí cầu ➔ Khinh khí cầu bay lên cao!
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Physics & Simulation Variables
+    let tempInside = 300; // Kelvin
+    const tempOutside = 300; // Kelvin
+    let burnerActive = false;
+    let altitude = 0; // meters
+    let velocity = 0; // m/s
+    let animationFrameId;
+
+    const balloonCanvas = document.getElementById('balloonCanvas');
+    const bCtx = balloonCanvas.getContext('2d');
+    let altChart;
+    let chartTime = 0;
+
+    window.addEventListener('DOMContentLoaded', () => {
+        balloonCanvas.width = 150;
+        balloonCanvas.height = 220;
+        initChart();
+        updateSimulation();
+        requestAnimationFrame(renderLoop);
+    });
+
+    window.stepTemp = function(delta) {
+        const slider = document.getElementById('tempSlider');
+        let newVal = parseInt(slider.value) + delta;
+        newVal = Math.max(300, Math.min(420, newVal));
+        slider.value = newVal;
+        updateSimulation();
+    };
+
+    window.toggleBurner = function() {
+        burnerActive = !burnerActive;
+        const btn = document.getElementById('burnerBtn');
+        const slider = document.getElementById('tempSlider');
+        if (burnerActive) {
+            btn.className = "btn btn-danger";
+            btn.innerHTML = `<i class="fa-solid fa-fire-burner"></i> TẮT ĐẦU ĐỐT (LÀM LẠNH KHÍ)`;
+            if (parseInt(slider.value) === 300) {
+                slider.value = 360;
+            }
+        } else {
+            btn.className = "btn btn-purple";
+            btn.innerHTML = `<i class="fa-solid fa-fire"></i> BẬT ĐẦU ĐỐT ĐUN NÓNG KHÍ`;
+            slider.value = 300;
+        }
+        updateSimulation();
+    };
+
+    function updateSimulation() {
+        tempInside = parseFloat(document.getElementById('tempSlider').value);
+        let celsius = tempInside - 273;
+        document.getElementById('tempVal').textContent = `${tempInside} K / ${celsius} °C`;
+        document.getElementById('tempRead').textContent = `${tempInside} K`;
+
+        // Calculate air density inside: rho = 1.20 * (300 / T)
+        const densityInside = 1.20 * (300 / tempInside);
+        document.getElementById('densityRead').textContent = `${densityInside.toFixed(2)} kg/m³`;
+
+        // Buoyancy force proportional to volume * (rho_out - rho_in)
+        // Base weight = 10 kN, Buoyancy at 300K = 10 kN
+        const buoyancy = 10.0 * (1.20 / densityInside);
+        document.getElementById('buoyancyRead').textContent = `${buoyancy.toFixed(1)} kN`;
+
+        // Acceleration proportional to (Buoyancy - Weight)
+        const netForce = buoyancy - 10.0;
+        const statusBadge = document.getElementById('statusBadge');
+
+        if (altitude === 0 && netForce <= 0) {
+            statusBadge.style.background = "rgba(148, 163, 184, 0.2)";
+            statusBadge.style.color = "#cbd5e1";
+            statusBadge.style.borderColor = "#64748b";
+            statusBadge.innerHTML = "🛑 Đang đậu trên mặt đất";
+        } else if (netForce > 0) {
+            statusBadge.style.background = "rgba(168, 85, 247, 0.3)";
+            statusBadge.style.color = "#c084fc";
+            statusBadge.style.borderColor = "#a855f7";
+            statusBadge.innerHTML = "🚀 Đang bay vút lên cao (F_B > P)";
+        } else if (altitude > 0 && netForce < 0) {
+            statusBadge.style.background = "rgba(239, 68, 68, 0.3)";
+            statusBadge.style.color = "#f87171";
+            statusBadge.style.borderColor = "#ef4444";
+            statusBadge.innerHTML = "🪂 Khí nguội đi - Đang hạ cánh";
+        } else {
+            statusBadge.style.background = "rgba(16, 185, 129, 0.3)";
+            statusBadge.style.color = "#34d399";
+            statusBadge.style.borderColor = "#10b981";
+            statusBadge.innerHTML = "⚖️ Đang lơ lửng cân bằng (F_B = P)";
+        }
+    }
+
+    function renderLoop() {
+        // Physics motion update
+        const densityInside = 1.20 * (300 / tempInside);
+        const buoyancy = 10.0 * (1.20 / densityInside);
+        const netForce = buoyancy - 10.0; // Net force in kN
+
+        const accel = netForce * 0.8; // acceleration multiplier
+        velocity += accel * 0.05;
+        velocity *= 0.92; // air damping
+        altitude += velocity * 0.2;
+
+        if (altitude < 0) {
+            altitude = 0;
+            velocity = 0;
+        } else if (altitude > 800) {
+            altitude = 800;
+        }
+
+        document.getElementById('altRead').textContent = `${Math.round(altitude)} m`;
+
+        // Update Chart
+        chartTime += 0.5;
+        if (altChart && Math.round(chartTime) % 2 === 0) {
+            altChart.data.labels.push(Math.round(chartTime));
+            altChart.data.datasets[0].data.push(Math.round(altitude));
+            altChart.data.datasets[1].data.push(tempInside);
+            if (altChart.data.labels.length > 25) {
+                altChart.data.labels.shift();
+                altChart.data.datasets[0].data.shift();
+                altChart.data.datasets[1].data.shift();
+            }
+            altChart.update('none');
+        }
+
+        // Draw Canvas Balloon
+        drawBalloon();
+
+        requestAnimationFrame(renderLoop);
+    }
+
+    function drawBalloon() {
+        bCtx.clearRect(0, 0, balloonCanvas.width, balloonCanvas.height);
+
+        // Sky gradient background changes with altitude
+        const altRatio = Math.min(altitude / 800, 1.0);
+        const skyGrad = bCtx.createLinearGradient(0, 0, 0, balloonCanvas.height);
+        if (altRatio < 0.5) {
+            skyGrad.addColorStop(0, '#0284c7');
+            skyGrad.addColorStop(0.7, '#38bdf8');
+            skyGrad.addColorStop(1, '#86efac');
+        } else {
+            skyGrad.addColorStop(0, '#0f172a');
+            skyGrad.addColorStop(0.7, '#0369a1');
+            skyGrad.addColorStop(1, '#38bdf8');
+        }
+        bCtx.fillStyle = skyGrad;
+        bCtx.fillRect(0, 0, balloonCanvas.width, balloonCanvas.height);
+
+        // Draw clouds moving down as balloon climbs
+        bCtx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+        const cloudY1 = ((chartTime * 2 + altitude) % 250) - 30;
+        bCtx.beginPath();
+        bCtx.arc(30, balloonCanvas.height - cloudY1, 20, 0, Math.PI * 2);
+        bCtx.arc(50, balloonCanvas.height - cloudY1 - 5, 25, 0, Math.PI * 2);
+        bCtx.arc(75, balloonCanvas.height - cloudY1, 20, 0, Math.PI * 2);
+        bCtx.fill();
+
+        // Calculate Y position of balloon inside canvas (0m -> bottom, 800m -> top)
+        const balloonY = balloonCanvas.height - 70 - (altRatio * (balloonCanvas.height - 120));
+        const centerX = balloonCanvas.width / 2;
+
+        // Draw Ropes
+        bCtx.strokeStyle = '#f1f5f9';
+        bCtx.lineWidth = 1.5;
+        bCtx.beginPath();
+        bCtx.moveTo(centerX - 15, balloonY + 25);
+        bCtx.lineTo(centerX - 10, balloonY + 48);
+        bCtx.moveTo(centerX + 15, balloonY + 25);
+        bCtx.lineTo(centerX + 10, balloonY + 48);
+        bCtx.stroke();
+
+        // Draw Flame if burner active
+        if (tempInside > 305) {
+            bCtx.fillStyle = '#f97316';
+            bCtx.beginPath();
+            bCtx.arc(centerX, balloonY + 36, 8 + Math.random() * 3, 0, Math.PI * 2);
+            bCtx.fill();
+            bCtx.fillStyle = '#fde047';
+            bCtx.beginPath();
+            bCtx.arc(centerX, balloonY + 36, 4 + Math.random() * 2, 0, Math.PI * 2);
+            bCtx.fill();
+        }
+
+        // Draw Basket
+        bCtx.fillStyle = '#78350f';
+        bCtx.strokeStyle = '#451a03';
+        bCtx.lineWidth = 2;
+        bCtx.fillRect(centerX - 14, balloonY + 48, 28, 18);
+        bCtx.strokeRect(centerX - 14, balloonY + 48, 28, 18);
+
+        // Draw Hot Air Balloon Body
+        bCtx.beginPath();
+        bCtx.arc(centerX, balloonY - 5, 32, Math.PI * 0.15, Math.PI * 0.85, true);
+        bCtx.lineTo(centerX - 15, balloonY + 25);
+        bCtx.lineTo(centerX + 15, balloonY + 25);
+        bCtx.closePath();
+
+        // Balloon gradient color shifts with heat
+        const balloonGrad = bCtx.createLinearGradient(centerX - 30, balloonY - 30, centerX + 30, balloonY + 30);
+        if (tempInside > 350) {
+            balloonGrad.addColorStop(0, '#ef4444');
+            balloonGrad.addColorStop(0.5, '#f97316');
+            balloonGrad.addColorStop(1, '#eab308');
+        } else {
+            balloonGrad.addColorStop(0, '#c084fc');
+            balloonGrad.addColorStop(0.5, '#a855f7');
+            balloonGrad.addColorStop(1, '#6366f1');
+        }
+        bCtx.fillStyle = balloonGrad;
+        bCtx.shadowBlur = 12;
+        bCtx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+        bCtx.fill();
+        bCtx.strokeStyle = '#ffffff';
+        bCtx.lineWidth = 1.5;
+        bCtx.stroke();
+        bCtx.shadowBlur = 0;
+
+        // Decorative stripes on balloon
+        bCtx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        bCtx.lineWidth = 2;
+        bCtx.beginPath();
+        bCtx.arc(centerX, balloonY - 5, 20, Math.PI * 0.2, Math.PI * 0.8, true);
+        bCtx.stroke();
+    }
+
+    function initChart() {
+        const ctxChart = document.getElementById('altitudeChart').getContext('2d');
+        altChart = new Chart(ctxChart, {
+            type: 'line',
+            data: {
+                labels: [0],
+                datasets: [
+                    {
+                        label: 'Độ cao H (m)',
+                        data: [0],
+                        borderColor: '#c084fc',
+                        backgroundColor: 'rgba(192, 132, 252, 0.15)',
+                        borderWidth: 2,
+                        fill: true,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Nhiệt độ T (K)',
+                        data: [300],
+                        borderColor: '#f97316',
+                        borderWidth: 1.5,
+                        borderDash: [3, 3],
+                        pointRadius: 0,
+                        fill: false,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#94a3b8', font: { size: 9 }, boxWidth: 10 }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Thời gian (s)', color: '#94a3b8', font: { size: 9 } },
+                        ticks: { color: '#64748b', font: { size: 8 } },
+                        grid: { color: 'rgba(255,255,255,0.03)' }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: { display: true, text: 'Độ cao H (m)', color: '#c084fc', font: { size: 9 } },
+                        min: 0,
+                        max: 850,
+                        ticks: { color: '#c084fc', font: { size: 8 } },
+                        grid: { color: 'rgba(255,255,255,0.03)' }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: { display: true, text: 'Nhiệt độ T (K)', color: '#f97316', font: { size: 9 } },
+                        min: 280,
+                        max: 440,
+                        ticks: { color: '#f97316', font: { size: 8 } },
+                        grid: { drawOnChartArea: false }
+                    }
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
