@@ -4,7 +4,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mô Phỏng Thí Nghiệm Khinh Khí Cầu Thực Tế - Bài 11 Vật Lí 12</title>
+    <title>Mô Phỏng Thí Nghiệm Khinh Khí Cầu 3D Real - Bài 11 Vật Lí 12</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
@@ -85,7 +85,7 @@
 
         .main-layout {
             display: grid;
-            grid-template-columns: 1.15fr 0.85fr;
+            grid-template-columns: 1.18fr 0.82fr;
             gap: 0.85rem;
         }
 
@@ -134,25 +134,26 @@
             align-items: stretch;
         }
 
+        /* Balloon Visual Viewport */
         .balloon-box {
-            flex: 0 0 175px;
+            flex: 0 0 190px;
             background: rgba(15, 23, 42, 0.8);
             border: 1px solid var(--border-color);
             border-radius: 14px;
-            padding: 0.3rem;
+            padding: 0.25rem;
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
         }
 
         #balloonCanvas {
-            width: 165px;
+            width: 180px;
             height: 235px;
             border-radius: 10px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
         }
 
         .control-card {
@@ -322,8 +323,8 @@
 
 <div class="dashboard">
     <header>
-        <h1><i class="fa-solid fa-fire-burner" style="color: #f97316;"></i> THÍ NGHIỆM ẢO KHINH KHÍ CẦU THỰC TẾ 🎈</h1>
-        <p>Khảo sát Phương trình trạng thái khí lí tưởng pV = nRT & Nguyên lý dãn nở nhiệt nâng khinh khí cầu</p>
+        <h1><i class="fa-solid fa-camera-retro" style="color: #f472b6;"></i> THÍ NGHIỆM ẢO KHINH KHÍ CẦU 3D REAL 🎈</h1>
+        <p>Mô phỏng 3D Real hình ảnh thực tế: Đun nóng khí ➔ Thể tích dãn nở ➔ Bay cất cánh</p>
     </header>
 
     <div class="main-layout">
@@ -349,9 +350,9 @@
                 </div>
             </div>
 
-            <!-- Body: Balloon Canvas (Left) + Controls (Right) -->
+            <!-- Body: Balloon Canvas Viewport (Left) + Controls (Right) -->
             <div class="sim-body">
-                <!-- Balloon Visual Canvas -->
+                <!-- Photorealistic 3D Balloon Canvas -->
                 <div class="balloon-box">
                     <canvas id="balloonCanvas"></canvas>
                 </div>
@@ -397,7 +398,7 @@
                     </div>
 
                     <div style="font-size: 0.65rem; color: #94a3b8; font-style: italic;">
-                        💡 <em>Hướng dẫn: Nhấn & Giữ nút <strong>"ĐUN LỬA PHỤT NÓNG"</strong> để phụt ngọn lửa đun nóng khí bên trong khinh khí cầu bay vút lên bầu trời!</em>
+                        💡 <em>Hướng dẫn: Giữ nút <strong>"ĐUN LỬA PHỤT NÓNG"</strong> để phụt ngọn lửa đun nóng khí $T$ bên trong khinh khí cầu bay vút lên bầu trời!</em>
                     </div>
                 </div>
             </div>
@@ -412,9 +413,9 @@
 
             <!-- Physics Information Card -->
             <div class="info-card">
-                <strong><i class="fa-solid fa-lightbulb" style="color: #fde047;"></i> Cơ Sơ Vật Lí Khinh Khí Cầu Thật:</strong><br>
-                1. Khí bên trong được đun nóng ($T \uparrow$) làm thể tích nở rộng ($V \uparrow$) ➔ Mật độ phân tử giảm ➔ Khối lượng riêng $\rho_{\text{nóng}} = \frac{p \cdot M}{R \cdot T}$ giảm xuống.<br>
-                2. Lực đẩy Ác-si-mét $F_B = \rho_{\text{lạnh}} \cdot V_{\text{cầu}} \cdot g$ lớn hơn tổng trọng lượng $P$ ➔ Tạo lực nâng $F_{\text{nâng}} = F_B - P > 0$ đẩy khinh khí cầu cất cánh bay lên không trung!
+                <strong><i class="fa-solid fa-lightbulb" style="color: #fde047;"></i> Cơ Sơ Vật Lí Khinh Khí Cầu Bay:</strong><br>
+                1. Khí bên trong được đun nóng ($T \uparrow$) làm thể tích dãn nở ($V \uparrow$) ➔ Mật độ phân tử giảm ➔ Khối lượng riêng $\rho_{\text{nóng}} = \frac{p \cdot M}{R \cdot T}$ giảm xuống.<br>
+                2. Lực đẩy Ác-si-mét $F_B = \rho_{\text{lạnh}} \cdot V_{\text{cầu}} \cdot g$ lớn hơn trọng lực $P$ ➔ Tạo lực nâng $F_{\text{nâng}} = F_B - P > 0$ đưa khinh khí cầu bay vút lên cao!
             </div>
         </div>
     </div>
@@ -433,8 +434,16 @@
     let altChart;
     let chartTime = 0;
 
+    // Load Photorealistic Hot Air Balloon Image
+    const balloonImg = new Image();
+    balloonImg.src = './khinh-khi-cau.jpg';
+    let imgLoaded = false;
+    balloonImg.onload = () => {
+        imgLoaded = true;
+    };
+
     window.addEventListener('DOMContentLoaded', () => {
-        balloonCanvas.width = 165;
+        balloonCanvas.width = 180;
         balloonCanvas.height = 235;
         initChart();
         updateSimulation();
@@ -510,13 +519,11 @@
         if (isBurning) {
             let currentT = parseFloat(slider.value);
             if (currentT < 430) {
-                slider.value = Math.min(430, currentT + 0.8);
+                slider.value = Math.min(430, currentT + 0.85);
                 updateSimulation();
             }
-            // Spawn flame particles
             spawnFireParticles();
         } else {
-            // Natural cooling when not burning
             let currentT = parseFloat(slider.value);
             if (currentT > 300) {
                 slider.value = Math.max(300, currentT - 0.25);
@@ -529,9 +536,9 @@
         const buoyancy = 12.0 * (1.20 / densityInside);
         const netForce = buoyancy - 12.0;
 
-        const accel = netForce * 0.7;
+        const accel = netForce * 0.75;
         velocity += accel * 0.04;
-        velocity *= 0.94; // air resistance
+        velocity *= 0.94;
         altitude += velocity * 0.25;
 
         if (altitude < 0) {
@@ -557,8 +564,8 @@
             altChart.update('none');
         }
 
-        // Render visual balloon canvas
-        drawRealHotAirBalloon();
+        // Render Photorealistic 3D Balloon Canvas
+        drawPhotorealisticBalloon();
 
         requestAnimationFrame(renderLoop);
     }
@@ -566,196 +573,116 @@
     function spawnFireParticles() {
         for (let i = 0; i < 3; i++) {
             fireParticles.push({
-                x: (Math.random() - 0.5) * 12,
+                x: (Math.random() - 0.5) * 14,
                 y: 0,
-                vx: (Math.random() - 0.5) * 0.8,
-                vy: -Math.random() * 3 - 2,
-                radius: Math.random() * 4 + 3,
+                vx: (Math.random() - 0.5) * 1.0,
+                vy: -Math.random() * 3.5 - 2,
+                radius: Math.random() * 5 + 3,
                 alpha: 1.0,
                 color: Math.random() > 0.3 ? '#f97316' : '#fde047'
             });
         }
     }
 
-    function drawRealHotAirBalloon() {
+    function drawPhotorealisticBalloon() {
         bCtx.clearRect(0, 0, balloonCanvas.width, balloonCanvas.height);
 
-        // Sky & Cloud Parallax Background
+        // Sky & Atmosphere Gradient according to altitude
         const altRatio = Math.min(altitude / 1000, 1.0);
         const skyGrad = bCtx.createLinearGradient(0, 0, 0, balloonCanvas.height);
         
         if (altRatio < 0.4) {
             skyGrad.addColorStop(0, '#0284c7');
-            skyGrad.addColorStop(0.7, '#38bdf8');
-            skyGrad.addColorStop(1, '#bae6fd');
+            skyGrad.addColorStop(0.6, '#38bdf8');
+            skyGrad.addColorStop(1, '#fed7aa');
         } else if (altRatio < 0.8) {
             skyGrad.addColorStop(0, '#0f172a');
-            skyGrad.addColorStop(0.6, '#0369a1');
-            skyGrad.addColorStop(1, '#38bdf8');
+            skyGrad.addColorStop(0.5, '#0369a1');
+            skyGrad.addColorStop(1, '#f97316');
         } else {
             skyGrad.addColorStop(0, '#020617');
-            skyGrad.addColorStop(0.6, '#0f172a');
-            skyGrad.addColorStop(1, '#1e1b4b');
+            skyGrad.addColorStop(0.6, '#1e1b4b');
+            skyGrad.addColorStop(1, '#7c3aed');
         }
         bCtx.fillStyle = skyGrad;
         bCtx.fillRect(0, 0, balloonCanvas.width, balloonCanvas.height);
 
         // Distant Mountains near ground
-        if (altRatio < 0.6) {
-            const mtnY = balloonCanvas.height - (1 - altRatio * 1.5) * 35;
-            bCtx.fillStyle = '#1e3a8a';
+        if (altRatio < 0.65) {
+            const mtnY = balloonCanvas.height - (1 - altRatio * 1.4) * 40;
+            bCtx.fillStyle = 'rgba(30, 41, 59, 0.7)';
             bCtx.beginPath();
             bCtx.moveTo(0, balloonCanvas.height);
             bCtx.lineTo(0, mtnY + 10);
-            bCtx.lineTo(45, mtnY - 15);
+            bCtx.lineTo(45, mtnY - 18);
             bCtx.lineTo(90, mtnY + 5);
-            bCtx.lineTo(135, mtnY - 20);
-            bCtx.lineTo(165, mtnY + 10);
-            bCtx.lineTo(165, balloonCanvas.height);
+            bCtx.lineTo(140, mtnY - 22);
+            bCtx.lineTo(180, mtnY + 10);
+            bCtx.lineTo(180, balloonCanvas.height);
             bCtx.fill();
         }
 
         // Moving clouds receding downwards as balloon climbs
-        bCtx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+        bCtx.fillStyle = 'rgba(255, 255, 255, 0.4)';
         const cloudY = ((chartTime * 3 + altitude * 0.8) % 260) - 40;
         bCtx.beginPath();
         bCtx.arc(35, balloonCanvas.height - cloudY, 22, 0, Math.PI * 2);
-        bCtx.arc(60, balloonCanvas.height - cloudY - 6, 28, 0, Math.PI * 2);
-        bCtx.arc(90, balloonCanvas.height - cloudY, 22, 0, Math.PI * 2);
+        bCtx.arc(70, balloonCanvas.height - cloudY - 6, 28, 0, Math.PI * 2);
+        bCtx.arc(110, balloonCanvas.height - cloudY, 22, 0, Math.PI * 2);
         bCtx.fill();
 
-        // Calculate Y position of Hot Air Balloon
+        // Calculate Y position & Sway of Hot Air Balloon
+        const swayX = Math.sin(chartTime * 0.05) * 4;
         const balloonY = balloonCanvas.height - 75 - (altRatio * (balloonCanvas.height - 130));
-        const cx = balloonCanvas.width / 2;
-        const radius = 38;
+        const cx = balloonCanvas.width / 2 + swayX;
 
-        // Draw Flame particles inside burner
-        for (let i = fireParticles.length - 1; i >= 0; i--) {
-            let p = fireParticles[i];
-            p.x += p.vx;
-            p.y += p.vy;
-            p.alpha -= 0.05;
-
-            if (p.alpha <= 0) {
-                fireParticles.splice(i, 1);
-                continue;
-            }
+        // Render Photorealistic 3D Balloon Image if loaded
+        if (imgLoaded) {
+            const imgWidth = 140;
+            const imgHeight = 175;
+            const drawX = cx - imgWidth / 2;
+            const drawY = balloonY - 110;
 
             bCtx.save();
-            bCtx.globalAlpha = p.alpha;
-            bCtx.fillStyle = p.color;
-            bCtx.beginPath();
-            bCtx.arc(cx + p.x, balloonY + 28 + p.y, p.radius, 0, Math.PI * 2);
-            bCtx.fill();
+            
+            // Fire Glow halo behind balloon burner
+            if (isBurning || tempInside > 330) {
+                bCtx.shadowBlur = 30;
+                bCtx.shadowColor = 'rgba(249, 115, 22, 1.0)';
+            }
+
+            // Draw high resolution photorealistic 3D balloon image
+            bCtx.drawImage(balloonImg, drawX, drawY, imgWidth, imgHeight);
             bCtx.restore();
-        }
 
-        // 1. Draw Balloon Ropes (Wire suspension cables)
-        bCtx.strokeStyle = '#e2e8f0';
-        bCtx.lineWidth = 1.2;
-        bCtx.beginPath();
-        bCtx.moveTo(cx - 18, balloonY + 24);
-        bCtx.lineTo(cx - 11, balloonY + 48);
-        bCtx.moveTo(cx + 18, balloonY + 24);
-        bCtx.lineTo(cx + 11, balloonY + 48);
-        bCtx.moveTo(cx - 6, balloonY + 25);
-        bCtx.lineTo(cx - 6, balloonY + 48);
-        bCtx.moveTo(cx + 6, balloonY + 25);
-        bCtx.lineTo(cx + 6, balloonY + 48);
-        bCtx.stroke();
+            // Render Animated Flame Particles at Burner location inside image
+            for (let i = fireParticles.length - 1; i >= 0; i--) {
+                let p = fireParticles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.alpha -= 0.05;
 
-        // 2. Draw Burner Nozzle Assembly
-        bCtx.fillStyle = '#475569';
-        bCtx.fillRect(cx - 8, balloonY + 34, 16, 6);
-        bCtx.fillStyle = '#94a3b8';
-        bCtx.fillRect(cx - 5, balloonY + 32, 10, 3);
+                if (p.alpha <= 0) {
+                    fireParticles.splice(i, 1);
+                    continue;
+                }
 
-        // 3. Draw Basket (Woven wicker basket with rim & sandbags)
-        bCtx.fillStyle = '#854d0e';
-        bCtx.fillRect(cx - 16, balloonY + 48, 32, 20);
-        bCtx.strokeStyle = '#451a03';
-        bCtx.lineWidth = 2;
-        bCtx.strokeRect(cx - 16, balloonY + 48, 32, 20);
+                bCtx.save();
+                bCtx.globalAlpha = p.alpha;
+                bCtx.fillStyle = p.color;
+                bCtx.beginPath();
+                bCtx.arc(cx + p.x, drawY + 122 + p.y, p.radius, 0, Math.PI * 2);
+                bCtx.fill();
+                bCtx.restore();
+            }
 
-        // Basket rim top
-        bCtx.fillStyle = '#a16207';
-        bCtx.fillRect(cx - 18, balloonY + 46, 36, 4);
-
-        // Sandbags hanging on basket
-        bCtx.fillStyle = '#d97706';
-        bCtx.beginPath();
-        bCtx.arc(cx - 14, balloonY + 58, 4, 0, Math.PI * 2);
-        bCtx.arc(cx + 14, balloonY + 58, 4, 0, Math.PI * 2);
-        bCtx.fill();
-
-        // Passenger silhouettes
-        bCtx.fillStyle = '#1e293b';
-        bCtx.beginPath();
-        bCtx.arc(cx - 6, balloonY + 43, 4, 0, Math.PI * 2);
-        bCtx.arc(cx + 6, balloonY + 43, 4, 0, Math.PI * 2);
-        bCtx.fill();
-
-        // 4. Draw Hot Air Balloon Envelope (Teardrop 3D graphic)
-        bCtx.save();
-        
-        // Inner Fire Glow when burner active or temperature is hot
-        if (isBurning || tempInside > 330) {
-            bCtx.shadowBlur = 25;
-            bCtx.shadowColor = 'rgba(249, 115, 22, 0.9)';
-        }
-
-        bCtx.beginPath();
-        bCtx.moveTo(cx, balloonY - radius * 1.25);
-        bCtx.bezierCurveTo(cx + radius * 1.25, balloonY - radius * 1.25, cx + radius * 1.15, balloonY + radius * 0.25, cx + radius * 0.45, balloonY + radius * 0.85);
-        bCtx.lineTo(cx - radius * 0.45, balloonY + radius * 0.85);
-        bCtx.bezierCurveTo(cx - radius * 1.15, balloonY + radius * 0.25, cx - radius * 1.25, balloonY - radius * 1.25, cx, balloonY - radius * 1.25);
-        bCtx.closePath();
-
-        // Vibrant gradient fill (Orange-Red-Gold stripes when heated)
-        const envGrad = bCtx.createRadialGradient(cx, balloonY - 10, 5, cx, balloonY, radius * 1.2);
-        if (isBurning) {
-            envGrad.addColorStop(0, '#fff7ed');
-            envGrad.addColorStop(0.3, '#f97316');
-            envGrad.addColorStop(0.7, '#dc2626');
-            envGrad.addColorStop(1, '#7f1d1d');
-        } else if (tempInside > 330) {
-            envGrad.addColorStop(0, '#fef08a');
-            envGrad.addColorStop(0.4, '#eab308');
-            envGrad.addColorStop(0.8, '#ea580c');
-            envGrad.addColorStop(1, '#9a3412');
         } else {
-            envGrad.addColorStop(0, '#f3e8ff');
-            envGrad.addColorStop(0.4, '#c084fc');
-            envGrad.addColorStop(0.8, '#7e22ce');
-            envGrad.addColorStop(1, '#3b0764');
-        }
-
-        bCtx.fillStyle = envGrad;
-        bCtx.fill();
-
-        // Vertical Gore Stripes for 3D Depth
-        const gores = [-0.65, -0.3, 0, 0.3, 0.65];
-        gores.forEach(g => {
+            // Fallback drawing if image loading
+            bCtx.fillStyle = '#f97316';
             bCtx.beginPath();
-            bCtx.moveTo(cx, balloonY - radius * 1.25);
-            bCtx.bezierCurveTo(cx + g * radius * 1.1, balloonY - radius * 1.1, cx + g * radius * 1.0, balloonY + radius * 0.3, cx + g * radius * 0.45, balloonY + radius * 0.85);
-            bCtx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
-            bCtx.lineWidth = 1.8;
-            bCtx.stroke();
-        });
-
-        // Horizontal accent band
-        bCtx.beginPath();
-        bCtx.arc(cx, balloonY - 5, radius * 0.95, Math.PI * 0.15, Math.PI * 0.85, false);
-        bCtx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-        bCtx.lineWidth = 4;
-        bCtx.stroke();
-
-        // Outer stroke
-        bCtx.strokeStyle = 'rgba(15, 23, 42, 0.9)';
-        bCtx.lineWidth = 2;
-        bCtx.stroke();
-        bCtx.restore();
+            bCtx.arc(cx, balloonY - 40, 35, 0, Math.PI * 2);
+            bCtx.fill();
+        }
     }
 
     function initChart() {
