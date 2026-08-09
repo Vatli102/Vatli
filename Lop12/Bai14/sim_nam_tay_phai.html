@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thí nghiệm Quy tắc Nắm Bàn Tay Phải</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: #0b0f19; color: #f8fafc; overflow: hidden; padding: 8px; display: flex; flex-direction: column; height: 100vh; }
+        .controls { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.06); padding: 8px 12px; border-radius: 10px; margin-bottom: 6px; font-size: 0.8rem; gap: 6px; flex-wrap: wrap; }
+        .btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
+        .btn { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; padding: 5px 12px; border-radius: 6px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-size: 0.75rem; }
+        .btn:hover { background: #334155; color: white; }
+        .btn.active { background: #6366f1; color: white; border-color: #818cf8; }
+        .btn-toggle { background: #ef4444; color: white; border: none; }
+        .btn-toggle:hover { background: #dc2626; }
+        .canvas-container { flex: 1; position: relative; background: #020617; border-radius: 12px; border: 1px solid #1e293b; overflow: hidden; }
+        canvas { display: block; width: 100%; height: 100%; }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <span><strong>Thí nghiệm: Quy tắc Nắm Bàn Tay Phải</strong></span>
+        <div class="btn-group">
+            <button class="btn active" id="btnStraight" onclick="setTab('straight')">1. Dòng điện thẳng</button>
+            <button class="btn" id="btnCircular" onclick="setTab('circular')">2. Dòng điện tròn</button>
+            <button class="btn" id="btnSolenoid" onclick="setTab('solenoid')">3. Ống dây</button>
+            <button class="btn btn-toggle" onclick="toggleCurrent()">🔄 Đổi chiều dòng điện I</button>
+        </div>
+    </div>
+    <div class="canvas-container">
+        <canvas id="c"></canvas>
+    </div>
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+
+        let tab = 'straight';
+        let currentDir = 1;
+        let animOffset = 0;
+
+        function resize() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        window.onresize = resize;
+
+        function setTab(t) {
+            tab = t;
+            document.getElementById('btnStraight').classList.toggle('active', t === 'straight');
+            document.getElementById('btnCircular').classList.toggle('active', t === 'circular');
+            document.getElementById('btnSolenoid').classList.toggle('active', t === 'solenoid');
+        }
+
+        function toggleCurrent() {
+            currentDir *= -1;
+        }
+
+        function draw3DRightHand(x, y, type, dir) {
+            ctx.save();
+            ctx.translate(x, y);
+
+            if (type === 'straight') {
+                let flip = dir === 1 ? 1 : -1;
+                ctx.scale(1, flip);
+
+                ctx.fillStyle = '#fca5a5';
+                ctx.strokeStyle = '#b91c1c';
+                ctx.lineWidth = 2;
+
+                ctx.beginPath();
+                ctx.roundRect(-25, 10, 50, 45, 10);
+                ctx.fill(); ctx.stroke();
+
+                ctx.fillStyle = '#f87171';
+                ctx.beginPath();
+                ctx.roundRect(-8, -45, 16, 50, 8);
+                ctx.fill(); ctx.stroke();
+                
+                ctx.fillStyle = '#fecdd3';
+                ctx.beginPath(); ctx.arc(0, -38, 4, 0, Math.PI * 2); ctx.fill();
+
+                ctx.fillStyle = '#fca5a5';
+                for (let i = 0; i < 4; i++) {
+                    let fy = -10 + i * 11;
+                    ctx.beginPath();
+                    ctx.ellipse(10, fy, 22, 7, 0, -Math.PI * 0.4, Math.PI * 0.5);
+                    ctx.stroke();
+                }
+            } 
+            else if (type === 'circular') {
+                let flip = dir === 1 ? 1 : -1;
+                ctx.scale(flip, 1);
+
+                ctx.fillStyle = '#fca5a5'; ctx.strokeStyle = '#b91c1c'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.roundRect(-30, -15, 60, 30, 10); ctx.fill(); ctx.stroke();
+
+                ctx.fillStyle = '#f87171';
+                ctx.beginPath(); ctx.roundRect(-6, -45 * dir, 12, 40, 6); ctx.fill(); ctx.stroke();
+            } 
+            else if (type === 'solenoid') {
+                let flip = dir === 1 ? 1 : -1;
+                ctx.scale(flip, 1);
+
+                ctx.fillStyle = '#f87171'; ctx.strokeStyle = '#b91c1c'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.roundRect(10, -8, 45, 16, 8); ctx.fill(); ctx.stroke();
+
+                ctx.fillStyle = '#fca5a5';
+                for (let i = 0; i < 4; i++) {
+                    let fx = -25 + i * 10;
+                    ctx.beginPath(); ctx.ellipse(fx, 0, 7, 22, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+                }
+            }
+
+            ctx.restore();
+        }
+
+        function drawStraightWire3D(cx, cy) {
+            let radii = [60, 110, 160];
+            radii.forEach(r => {
+                ctx.save();
+                ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 4]);
+                ctx.beginPath(); ctx.ellipse(cx, cy, r, r * 0.35, 0, Math.PI, Math.PI * 2); ctx.stroke();
+                ctx.restore();
+            });
+
+            let wireGrad = ctx.createLinearGradient(cx - 8, 0, cx + 8, 0);
+            wireGrad.addColorStop(0, '#f97316'); wireGrad.addColorStop(0.5, '#ffedd5'); wireGrad.addColorStop(1, '#9a3412');
+            ctx.fillStyle = wireGrad;
+            ctx.fillRect(cx - 8, 40, 16, canvas.height - 80);
+            ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1;
+            ctx.strokeRect(cx - 8, 40, 16, canvas.height - 80);
+
+            let arrowTargetY = currentDir === 1 ? 55 : canvas.height - 55;
+            ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 4;
+            ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx, arrowTargetY); ctx.stroke();
+            ctx.fillStyle = '#ef4444';
+            if (currentDir === 1) {
+                ctx.polygon([cx, arrowTargetY - 8, cx - 8, arrowTargetY + 4, cx + 8, arrowTargetY + 4]);
+            } else {
+                ctx.polygon([cx, arrowTargetY + 8, cx - 8, arrowTargetY - 4, cx + 8, arrowTargetY - 4]);
+            }
+            ctx.font = '800 13px Plus Jakarta Sans'; ctx.textAlign = 'left';
+            ctx.fillText(currentDir === 1 ? 'Dòng điện I (LÊN)' : 'Dòng điện I (XUỐNG)', cx + 18, arrowTargetY);
+
+            radii.forEach(r => {
+                ctx.save();
+                ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2.5; ctx.setLineDash([]);
+                ctx.beginPath(); ctx.ellipse(cx, cy, r, r * 0.35, 0, 0, Math.PI); ctx.stroke();
+                ctx.restore();
+
+                let speed = currentDir * 0.03;
+                let angle = (animOffset * speed + r) % (Math.PI * 2);
+                let px = cx + r * Math.cos(angle);
+                let py = cy + r * 0.35 * Math.sin(angle);
+
+                ctx.fillStyle = '#38bdf8'; ctx.beginPath(); ctx.arc(px, py, 4.5, 0, Math.PI * 2); ctx.fill();
+                let tx = -Math.sin(angle) * currentDir;
+                let ty = Math.cos(angle) * 0.35 * currentDir;
+                ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px + tx * 18, py + ty * 18); ctx.stroke();
+            });
+
+            draw3DRightHand(cx - 35, cy, 'straight', currentDir);
+
+            ctx.fillStyle = '#f8fafc'; ctx.font = '700 13px Plus Jakarta Sans'; ctx.textAlign = 'center';
+            ctx.fillText('QUY TẮC NẮM BÀN TAY PHẢI - DÒNG ĐIỆN THẲNG DÀI', cx, 30);
+            ctx.fillStyle = '#cbd5e1'; ctx.font = '500 12px Plus Jakarta Sans';
+            ctx.fillText('Ngón cái chỉ chiều dòng điện I ➔ 4 ngón tay khum chỉ chiều các đường sức từ B (Nét liền ở trước, nét đứt ở sau)', cx, canvas.height - 18);
+        }
+
+        function drawCircularLoop3D(cx, cy) {
+            let R = 105;
+
+            ctx.save();
+            ctx.strokeStyle = '#c2410c'; ctx.lineWidth = 8; ctx.setLineDash([6, 4]);
+            ctx.beginPath(); ctx.ellipse(cx, cy, R, R * 0.4, 0, Math.PI, Math.PI * 2); ctx.stroke();
+            ctx.restore();
+
+            let bDir = currentDir;
+            ctx.strokeStyle = '#10b981'; ctx.lineWidth = 4;
+            ctx.beginPath(); ctx.moveTo(cx, cy + bDir * 105); ctx.lineTo(cx, cy - bDir * 105); ctx.stroke();
+            ctx.fillStyle = '#10b981';
+            let tipY = cy - bDir * 105;
+            if (bDir === 1) {
+                ctx.polygon([cx, tipY - 10, cx - 8, tipY + 4, cx + 8, tipY + 4]);
+            } else {
+                ctx.polygon([cx, tipY + 10, cx - 8, tipY - 4, cx + 8, tipY - 4]);
+            }
+            ctx.font = '800 13px Plus Jakarta Sans'; ctx.textAlign = 'left';
+            ctx.fillText('Vectơ B tại tâm O', cx + 16, tipY);
+
+            ctx.save();
+            let loopGrad = ctx.createLinearGradient(cx - R, cy, cx + R, cy);
+            loopGrad.addColorStop(0, '#f97316'); loopGrad.addColorStop(0.5, '#ffedd5'); loopGrad.addColorStop(1, '#ea580c');
+            ctx.strokeStyle = loopGrad; ctx.lineWidth = 12; ctx.setLineDash([]);
+            ctx.beginPath(); ctx.ellipse(cx, cy, R, R * 0.4, 0, 0, Math.PI); ctx.stroke();
+            ctx.restore();
+
+            let currentAngle = (animOffset * 0.02 * currentDir) % (Math.PI * 2);
+            let ix = cx + R * Math.cos(currentAngle);
+            let iy = cy + R * 0.4 * Math.sin(currentAngle);
+            ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.arc(ix, iy, 7, 0, Math.PI * 2); ctx.fill();
+
+            draw3DRightHand(cx + R, cy, 'circular', currentDir);
+
+            ctx.fillStyle = '#f8fafc'; ctx.font = '700 13px Plus Jakarta Sans'; ctx.textAlign = 'center';
+            ctx.fillText('QUY TẮC NẮM BÀN TAY PHẢI - DÒNG ĐIỆN TRÒN', cx, 30);
+            ctx.fillStyle = '#cbd5e1'; ctx.font = '500 12px Plus Jakarta Sans';
+            ctx.fillText('4 ngón tay khum theo chiều dòng điện I ➔ Ngón cái choãi ra chỉ chiều đường sức từ B xuyên qua tâm O', cx, canvas.height - 18);
+        }
+
+        function drawSolenoid3D(cx, cy) {
+            let solL = 120, solR = 45;
+            let leftX = cx - solL, rightX = cx + solL;
+
+            let bDir = currentDir;
+            ctx.save();
+            ctx.strokeStyle = '#059669'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 4]);
+            [-25, 25].forEach(offsetY => {
+                let startX = bDir === 1 ? rightX : leftX;
+                let endX = bDir === 1 ? leftX : rightX;
+                ctx.beginPath(); ctx.arc(cx, cy + offsetY * 2, solL, bDir === 1 ? Math.PI : 0, bDir === 1 ? 0 : Math.PI, true); ctx.stroke();
+            });
+            ctx.restore();
+
+            for (let x = leftX; x <= rightX; x += 18) {
+                ctx.save();
+                ctx.strokeStyle = '#c2410c'; ctx.lineWidth = 3; ctx.setLineDash([3, 3]);
+                ctx.beginPath(); ctx.ellipse(x, cy, 8, solR, 0, Math.PI, Math.PI * 2); ctx.stroke();
+                ctx.restore();
+
+                ctx.save();
+                let coilGrad = ctx.createLinearGradient(x - 8, cy - solR, x + 8, cy + solR);
+                coilGrad.addColorStop(0, '#f97316'); coilGrad.addColorStop(0.5, '#ffedd5'); coilGrad.addColorStop(1, '#ea580c');
+                ctx.strokeStyle = coilGrad; ctx.lineWidth = 5; ctx.setLineDash([]);
+                ctx.beginPath(); ctx.ellipse(x, cy, 8, solR, 0, 0, Math.PI); ctx.stroke();
+                ctx.restore();
+            }
+
+            ctx.strokeStyle = '#10b981'; ctx.lineWidth = 3.5;
+            let startX = bDir === 1 ? leftX - 30 : rightX + 30;
+            let endX = bDir === 1 ? rightX + 30 : leftX - 30;
+            ctx.beginPath(); ctx.moveTo(startX, cy); ctx.lineTo(endX, cy); ctx.stroke();
+            ctx.fillStyle = '#10b981';
+            if (bDir === 1) {
+                ctx.polygon([endX + 8, cy, endX - 4, cy - 6, endX - 4, cy + 6]);
+            } else {
+                ctx.polygon([endX - 8, cy, endX + 4, cy - 6, endX + 4, cy + 6]);
+            }
+
+            let nX = bDir === 1 ? rightX + 45 : leftX - 45;
+            let sX = bDir === 1 ? leftX - 45 : rightX + 45;
+
+            ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.arc(nX, cy, 17, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#ffffff'; ctx.font = '800 14px Plus Jakarta Sans'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText('N', nX, cy);
+
+            ctx.fillStyle = '#2563eb'; ctx.beginPath(); ctx.arc(sX, cy, 17, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#ffffff'; ctx.fillText('S', sX, cy);
+
+            draw3DRightHand(cx, cy + solR + 25, 'solenoid', currentDir);
+
+            ctx.fillStyle = '#f8fafc'; ctx.font = '700 13px Plus Jakarta Sans'; ctx.textAlign = 'center';
+            ctx.fillText('QUY TẮC NẮM BÀN TAY PHẢI - ỐNG DÂY CÓ DÒNG ĐIỆN', cx, 30);
+            ctx.fillStyle = '#cbd5e1'; ctx.font = '500 12px Plus Jakarta Sans';
+            ctx.fillText('4 ngón tay khum theo chiều dòng điện I ➔ Ngón cái choãi ra chỉ chiều đường sức từ trong lòng ống dây (hướng về cực N)', cx, canvas.height - 18);
+        }
+
+        CanvasRenderingContext2D.prototype.polygon = function(points) {
+            if (points.length < 2) return;
+            this.beginPath();
+            this.moveTo(points[0], points[1]);
+            for (let i = 2; i < points.length; i += 2) {
+                this.lineTo(points[i], points[i+1]);
+            }
+            this.closePath();
+            this.fill();
+        };
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            animOffset++;
+
+            let cx = canvas.width / 2, cy = canvas.height / 2;
+
+            if (tab === 'straight') {
+                drawStraightWire3D(cx, cy);
+            } else if (tab === 'circular') {
+                drawCircularLoop3D(cx, cy);
+            } else if (tab === 'solenoid') {
+                drawSolenoid3D(cx, cy);
+            }
+
+            requestAnimationFrame(draw);
+        }
+
+        window.onload = () => { resize(); draw(); };
+    </script>
+</body>
+</html>

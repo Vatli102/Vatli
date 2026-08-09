@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô phỏng 3D Từ Phổ & Kim La Bàn Chuẩn PhET Colorado</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: #0b0f19; color: #f8fafc; overflow: hidden; padding: 8px; display: flex; flex-direction: column; height: 100vh; }
+        .controls { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.06); padding: 8px 12px; border-radius: 10px; margin-bottom: 6px; font-size: 0.8rem; gap: 6px; flex-wrap: wrap; }
+        .btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
+        .btn { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; padding: 5px 12px; border-radius: 6px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-size: 0.75rem; }
+        .btn:hover { background: #334155; color: white; }
+        .btn.active { background: #2563eb; color: white; border-color: #3b82f6; }
+        .btn-phet { background: #059669; color: white; border-color: #10b981; }
+        .btn-phet:hover { background: #047857; }
+        .canvas-container { flex: 1; position: relative; background: #020617; border-radius: 12px; border: 1px solid #1e293b; overflow: hidden; }
+        canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+        canvas:active { cursor: grabbing; }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <span><strong>Mô phỏng 3D Từ Phổ PhET Colorado (SGK Trang 57)</strong></span>
+        <div class="btn-group">
+            <button class="btn active" id="btn1a" onclick="setMode('1a')">1a. Nam châm thẳng 3D</button>
+            <button class="btn" id="btn1b" onclick="setMode('1b')">1b. Hai nam châm (Hút/Đẩy)</button>
+            <button class="btn" id="btn1c" onclick="setMode('1c')">1c. Nam châm chữ U 3D</button>
+            <button class="btn btn-phet" id="btnView" onclick="toggleViewMode()">Chế độ: Lưới Kim La Bàn PhET</button>
+        </div>
+    </div>
+    <div class="canvas-container">
+        <canvas id="c"></canvas>
+    </div>
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+
+        let mode = '1a'; // '1a', '1b', '1c'
+        let viewMode = 'compass'; // 'compass' (PhET Compass Grid) or 'filings' (3D Iron Filings)
+        let attract1b = true;
+
+        let mag1 = { x: 0, y: 0, w: 160, h: 42, isDragging: false };
+        let mag2 = { x: 0, y: 0, w: 140, h: 42, isDragging: false };
+        let offset = { x: 0, y: 0 };
+
+        let grid = [];
+
+        function resize() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            resetMagnetPositions();
+            initGrid();
+        }
+        window.onresize = resize;
+
+        function resetMagnetPositions() {
+            let cx = canvas.width / 2, cy = canvas.height / 2;
+            mag1.x = cx; mag1.y = cy;
+            mag2.x = cx + 160; mag2.y = cy;
+        }
+
+        function initGrid() {
+            grid = [];
+            let spacing = viewMode === 'compass' ? 32 : 16;
+            for (let x = 20; x < canvas.width - 20; x += spacing) {
+                for (let y = 20; y < canvas.height - 20; y += spacing) {
+                    grid.push({ x: x, y: y, angle: 0, targetAngle: 0, B: 0 });
+                }
+            }
+        }
+
+        function setMode(m) {
+            mode = m;
+            document.getElementById('btn1a').classList.toggle('active', m === '1a');
+            document.getElementById('btn1b').classList.toggle('active', m === '1b');
+            document.getElementById('btn1c').classList.toggle('active', m === '1c');
+            resetMagnetPositions();
+            initGrid();
+        }
+
+        function toggleViewMode() {
+            viewMode = (viewMode === 'compass') ? 'filings' : 'compass';
+            let btn = document.getElementById('btnView');
+            btn.innerText = viewMode === 'compass' ? 'Chế độ: Lưới Kim La Bàn PhET' : 'Chế độ: Mạt Sắt 3D Real';
+            initGrid();
+        }
+
+        function getFieldVector(px, py) {
+            let Bx = 0, By = 0;
+
+            if (mode === '1a') {
+                let nPole = { x: mag1.x - mag1.w / 2 + 15, y: mag1.y };
+                let sPole = { x: mag1.x + mag1.w / 2 - 15, y: mag1.y };
+
+                let rN = Math.hypot(px - nPole.x, py - nPole.y) + 12;
+                let rS = Math.hypot(px - sPole.x, py - sPole.y) + 12;
+
+                Bx += (px - nPole.x) / (rN ** 3) - (px - sPole.x) / (rS ** 3);
+                By += (py - nPole.y) / (rN ** 3) - (py - sPole.y) / (rS ** 3);
+            } 
+            else if (mode === '1b') {
+                let m1N = { x: mag1.x - 70, y: mag1.y }, m1S = { x: mag1.x - 10, y: mag1.y };
+                let m2N = attract1b ? { x: mag2.x + 10, y: mag2.y } : { x: mag2.x + 70, y: mag2.y };
+                let m2S = attract1b ? { x: mag2.x + 70, y: mag2.y } : { x: mag2.x + 10, y: mag2.y };
+
+                let r1N = Math.hypot(px - m1N.x, py - m1N.y) + 12;
+                let r1S = Math.hypot(px - m1S.x, py - m1S.y) + 12;
+                let r2N = Math.hypot(px - m2N.x, py - m2N.y) + 12;
+                let r2S = Math.hypot(px - m2S.x, py - m2S.y) + 12;
+
+                Bx += (px - m1N.x)/(r1N**3) - (px - m1S.x)/(r1S**3) + (px - m2N.x)/(r2N**3) - (px - m2S.x)/(r2S**3);
+                By += (py - m1N.y)/(r1N**3) - (py - m1S.y)/(r1S**3) + (py - m2N.y)/(r2N**3) - (py - m2S.y)/(r2S**3);
+            } 
+            else if (mode === '1c') {
+                let nPole = { x: mag1.x - 60, y: mag1.y + 20 };
+                let sPole = { x: mag1.x + 60, y: mag1.y + 20 };
+
+                if (px > mag1.x - 55 && px < mag1.x + 55 && py > mag1.y - 20 && py < mag1.y + 55) {
+                    Bx = 0.0008; By = 0;
+                } else {
+                    let rN = Math.hypot(px - nPole.x, py - nPole.y) + 12;
+                    let rS = Math.hypot(px - sPole.x, py - sPole.y) + 12;
+                    Bx = (px - nPole.x) / (rN ** 3) - (px - sPole.x) / (rS ** 3);
+                    By = (py - nPole.y) / (rN ** 3) - (py - sPole.y) / (rS ** 3);
+                }
+            }
+
+            let mag = Math.hypot(Bx, By);
+            return { angle: Math.atan2(By, Bx), B: mag };
+        }
+
+        function draw3DBarMagnet(x, y, w, h, labelN = 'N', labelS = 'S') {
+            ctx.save();
+            ctx.translate(x, y);
+
+            ctx.fillStyle = 'rgba(0,0,0,0.4)';
+            ctx.beginPath();
+            ctx.roundRect(-w/2 + 4, -h/2 + 6, w, h, 6);
+            ctx.fill();
+
+            let nGrad = ctx.createLinearGradient(-w/2, -h/2, -w/2, h/2);
+            nGrad.addColorStop(0, '#f87171');
+            nGrad.addColorStop(0.3, '#ef4444');
+            nGrad.addColorStop(0.7, '#b91c1c');
+            nGrad.addColorStop(1, '#7f1d1d');
+
+            ctx.fillStyle = nGrad;
+            ctx.beginPath();
+            ctx.roundRect(-w/2, -h/2, w/2, h, [6, 0, 0, 6]);
+            ctx.fill();
+            ctx.strokeStyle = '#fca5a5'; ctx.lineWidth = 1; ctx.stroke();
+
+            let sGrad = ctx.createLinearGradient(0, -h/2, 0, h/2);
+            sGrad.addColorStop(0, '#60a5fa');
+            sGrad.addColorStop(0.3, '#3b82f6');
+            sGrad.addColorStop(0.7, '#1d4ed8');
+            sGrad.addColorStop(1, '#1e3a8a');
+
+            ctx.fillStyle = sGrad;
+            ctx.beginPath();
+            ctx.roundRect(0, -h/2, w/2, h, [0, 6, 6, 0]);
+            ctx.fill();
+            ctx.strokeStyle = '#93c5fd'; ctx.lineWidth = 1; ctx.stroke();
+
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillRect(-2, -h/2, 4, h);
+
+            ctx.font = '800 18px Plus Jakarta Sans';
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            
+            ctx.fillStyle = '#7f1d1d'; ctx.fillText(labelN, -w/4 + 1, 1);
+            ctx.fillStyle = '#ffffff'; ctx.fillText(labelN, -w/4, 0);
+
+            ctx.fillStyle = '#1e3a8a'; ctx.fillText(labelS, w/4 + 1, 1);
+            ctx.fillStyle = '#ffffff'; ctx.fillText(labelS, w/4, 0);
+
+            ctx.restore();
+        }
+
+        function draw3DUMagnet(x, y) {
+            ctx.save();
+            ctx.translate(x, y);
+
+            ctx.fillStyle = 'rgba(0,0,0,0.4)';
+            ctx.beginPath(); ctx.arc(0, -20, 75, Math.PI, 0); ctx.fill();
+
+            let archGrad = ctx.createLinearGradient(-75, 0, 75, 0);
+            archGrad.addColorStop(0, '#dc2626');
+            archGrad.addColorStop(0.5, '#475569');
+            archGrad.addColorStop(1, '#1d4ed8');
+
+            ctx.fillStyle = archGrad;
+            ctx.beginPath();
+            ctx.arc(0, -20, 75, Math.PI, 0);
+            ctx.arc(0, -20, 40, 0, Math.PI, true);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1.5; ctx.stroke();
+
+            let nGrad = ctx.createLinearGradient(-75, 0, -40, 0);
+            nGrad.addColorStop(0, '#ef4444'); nGrad.addColorStop(1, '#991b1b');
+            ctx.fillStyle = nGrad;
+            ctx.fillRect(-75, -20, 35, 80);
+            ctx.strokeStyle = '#fca5a5'; ctx.strokeRect(-75, -20, 35, 80);
+
+            let sGrad = ctx.createLinearGradient(40, 0, 75, 0);
+            sGrad.addColorStop(0, '#1d4ed8'); sGrad.addColorStop(1, '#3b82f6');
+            ctx.fillStyle = sGrad;
+            ctx.fillRect(40, -20, 35, 80);
+            ctx.strokeStyle = '#93c5fd'; ctx.strokeRect(40, -20, 35, 80);
+
+            ctx.font = '800 18px Plus Jakarta Sans';
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText('N', -57, 30);
+            ctx.fillText('S', 57, 30);
+
+            ctx.restore();
+        }
+
+        function drawPhETCompass(x, y, angle, intensity) {
+            ctx.save();
+            ctx.translate(x, y);
+
+            let alpha = Math.min(1, Math.max(0.25, intensity * 80000));
+            ctx.globalAlpha = alpha;
+
+            ctx.fillStyle = '#0f172a';
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.arc(0, 0, 11, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+
+            ctx.rotate(angle);
+
+            ctx.fillStyle = '#ef4444';
+            ctx.beginPath(); ctx.moveTo(9, 0); ctx.lineTo(0, -3.5); ctx.lineTo(0, 3.5); ctx.fill();
+
+            ctx.fillStyle = '#e2e8f0';
+            ctx.beginPath(); ctx.moveTo(-9, 0); ctx.lineTo(0, -3.5); ctx.lineTo(0, 3.5); ctx.fill();
+
+            ctx.fillStyle = '#f59e0b';
+            ctx.beginPath(); ctx.arc(0, 0, 2, 0, Math.PI*2); ctx.fill();
+
+            ctx.restore();
+        }
+
+        function draw3DFiling(x, y, angle) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.lineWidth = 1.6;
+            ctx.beginPath();
+            ctx.moveTo(-3.5, 0); ctx.lineTo(3.5, 0);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            grid.forEach(pt => {
+                let res = getFieldVector(pt.x, pt.y);
+                let diff = res.angle - pt.angle;
+                diff = Math.atan2(Math.sin(diff), Math.cos(diff));
+                pt.angle += diff * 0.15;
+                pt.B = res.B;
+
+                if (viewMode === 'compass') {
+                    drawPhETCompass(pt.x, pt.y, pt.angle, pt.B);
+                } else {
+                    draw3DFiling(pt.x, pt.y, pt.angle);
+                }
+            });
+
+            if (mode === '1a') {
+                draw3DBarMagnet(mag1.x, mag1.y, mag1.w, mag1.h, 'N', 'S');
+            } 
+            else if (mode === '1b') {
+                let mag1X = mag1.x - 90;
+                let mag2X = mag1.x + 90;
+                draw3DBarMagnet(mag1X, mag1.y, 130, 42, 'N', 'S');
+                draw3DBarMagnet(mag2X, mag1.y, 130, 42, attract1b ? 'N' : 'S', attract1b ? 'S' : 'N');
+
+                ctx.fillStyle = '#fbbf24'; ctx.font = 'bold 12px Plus Jakarta Sans'; ctx.textAlign = 'center';
+                let polMsg = attract1b ? 'HAI CỰC KHÁC TÊN (HÚT NHAU: S - N)' : 'HAI CỰC CÙNG TÊN (ĐẨY NHAU: S - S)';
+                ctx.fillText(polMsg, canvas.width/2, 25);
+            } 
+            else if (mode === '1c') {
+                draw3DUMagnet(mag1.x, mag1.y);
+            }
+
+            ctx.fillStyle = '#34d399'; ctx.font = 'bold 12px Plus Jakarta Sans'; ctx.textAlign = 'center';
+            ctx.fillText('💡 Kéo di chuyển Nam châm để thấy toàn bộ lưới Kim La Bàn tự động xoay theo từ trường!', canvas.width/2, canvas.height - 14);
+
+            requestAnimationFrame(draw);
+        }
+
+        canvas.onmousedown = (e) => {
+            let rect = canvas.getBoundingClientRect();
+            let mx = e.clientX - rect.left, my = e.clientY - rect.top;
+            if (Math.hypot(mx - mag1.x, my - mag1.y) < 70) {
+                mag1.isDragging = true;
+                offset.x = mx - mag1.x;
+                offset.y = my - mag1.y;
+            }
+        };
+
+        canvas.onmousemove = (e) => {
+            if (mag1.isDragging) {
+                let rect = canvas.getBoundingClientRect();
+                mag1.x = e.clientX - rect.left - offset.x;
+                mag1.y = e.clientY - rect.top - offset.y;
+            }
+        };
+
+        window.onmouseup = () => mag1.isDragging = false;
+
+        window.onload = () => { resize(); draw(); };
+    </script>
+</body>
+</html>

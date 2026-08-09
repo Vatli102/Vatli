@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô phỏng Thí nghiệm Oersted Dòng điện - Nam châm</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: #0f172a; color: #f8fafc; overflow: hidden; padding: 10px; display: flex; flex-direction: column; height: 100vh; }
+        .controls { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 10px; margin-bottom: 8px; font-size: 0.8rem; gap: 8px; flex-wrap: wrap; }
+        .btn-group { display: flex; gap: 8px; }
+        .btn { background: #10b981; color: white; border: none; padding: 6px 14px; border-radius: 6px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .btn:hover { opacity: 0.9; }
+        .btn.active { background: #ef4444; }
+        .btn-dir { background: #6366f1; }
+        .btn-dir:hover { background: #4f46e5; }
+        .canvas-container { flex: 1; position: relative; background: #020617; border-radius: 12px; border: 1px solid #1e293b; overflow: hidden; }
+        canvas { display: block; width: 100%; height: 100%; }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <span><strong>2. Tương tác Dòng điện - Nam châm (Thí nghiệm Oersted 1820):</strong></span>
+        <div class="btn-group">
+            <button class="btn btn-dir" onclick="toggleDirection()">Đổi Chiều Dòng Điện: <span id="dirLabel" style="color:#38bdf8;">I (Trái ➔ Phải)</span></button>
+            <button class="btn" id="btnSwitch" onclick="toggleSwitch()">Bật Dòng Điện (Đóng Công Tắc K)</button>
+        </div>
+    </div>
+    <div class="canvas-container">
+        <canvas id="c"></canvas>
+    </div>
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        let isClosed = false;
+        let dirRight = true; // true: Left -> Right (►), false: Right -> Left (◄)
+        let angle = 0;
+        let targetAngle = 0;
+        let animOffset = 0;
+
+        function resize() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        window.onresize = resize;
+
+        function toggleSwitch() {
+            isClosed = !isClosed;
+            updateTargetAngle();
+            let btn = document.getElementById('btnSwitch');
+            btn.innerText = isClosed ? 'Ngắt Dòng Điện (Mở Công Tắc K)' : 'Bật Dòng Điện (Đóng Công Tắc K)';
+            btn.classList.toggle('active', isClosed);
+        }
+
+        function toggleDirection() {
+            dirRight = !dirRight;
+            let lbl = document.getElementById('dirLabel');
+            lbl.innerText = dirRight ? 'I (Trái ➔ Phải)' : 'I (Phải ➔ Trái)';
+            lbl.style.color = dirRight ? '#38bdf8' : '#f43f5e';
+            updateTargetAngle();
+        }
+
+        function updateTargetAngle() {
+            if (!isClosed) {
+                targetAngle = 0;
+            } else {
+                targetAngle = dirRight ? Math.PI / 2.2 : -Math.PI / 2.2;
+            }
+        }
+
+        function drawHorizontalArrow(x, y, isRight, color) {
+            ctx.save();
+            ctx.fillStyle = color;
+            ctx.translate(x, y);
+            if (!isRight) ctx.rotate(Math.PI);
+            ctx.beginPath();
+            ctx.moveTo(8, 0);
+            ctx.lineTo(-4, -6);
+            ctx.lineTo(-4, 6);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            let cx = canvas.width / 2, cy = canvas.height / 2;
+            let wireY = cy - 35;
+            let wireLeft = 60;
+            let wireRight = canvas.width - 60;
+
+            // Update animation offset for current flow
+            if (isClosed) {
+                animOffset = (animOffset + 1.5) % 35;
+            }
+
+            // Wire line
+            ctx.strokeStyle = isClosed ? (dirRight ? '#f97316' : '#f43f5e') : '#64748b';
+            ctx.lineWidth = 7;
+            if (isClosed) {
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = dirRight ? '#f97316' : '#f43f5e';
+            }
+            ctx.beginPath();
+            ctx.moveTo(wireLeft, wireY);
+            ctx.lineTo(wireRight, wireY);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Wire terminals
+            ctx.fillStyle = '#94a3b8';
+            ctx.beginPath(); ctx.arc(wireLeft, wireY, 6, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath(); ctx.arc(wireRight, wireY, 6, 0, Math.PI*2); ctx.fill();
+
+            // Wire Current Direction Label & Moving Arrows directly ON the conductor wire
+            if (isClosed) {
+                let arrowSpacing = 40;
+                let startX = wireLeft + 30;
+                let endX = wireRight - 30;
+                
+                for (let x = startX; x <= endX; x += arrowSpacing) {
+                    let posX = dirRight 
+                        ? startX + ((x - startX + animOffset) % (endX - startX))
+                        : endX - ((endX - x + animOffset) % (endX - startX));
+                    drawHorizontalArrow(posX, wireY, dirRight, '#ffffff');
+                }
+
+                ctx.fillStyle = dirRight ? '#38bdf8' : '#fb7185';
+                ctx.font = 'bold 13px Plus Jakarta Sans';
+                ctx.textAlign = 'center';
+                let dirSymbol = dirRight ? '►►►' : '◄◄◄';
+                let dirTxt = dirRight ? 'Dòng điện I (Trái ➔ Phải)' : 'Dòng điện I (Phải ➔ Trái)';
+                ctx.fillText(`DÂY DẪN: ${dirTxt} ${dirSymbol}`, cx, wireY - 14);
+            } else {
+                ctx.fillStyle = '#64748b';
+                ctx.font = 'bold 12px Plus Jakarta Sans';
+                ctx.textAlign = 'center';
+                ctx.fillText('DÂY DẪN MANG DÒNG ĐIỆN (Chưa đóng công tắc K)', cx, wireY - 14);
+            }
+
+            // Smooth needle animation
+            angle += (targetAngle - angle) * 0.08;
+
+            // Compass Base
+            ctx.save();
+            ctx.translate(cx, cy + 32);
+            ctx.fillStyle = '#1e293b';
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.arc(0, 0, 38, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+
+            // Dial compass ticks
+            ctx.fillStyle = '#64748b';
+            ctx.font = 'bold 9px Plus Jakarta Sans';
+            ctx.textAlign = 'center';
+            ctx.fillText('N', 0, -26);
+            ctx.fillText('S', 0, 32);
+            ctx.fillText('W', -30, 3);
+            ctx.fillText('E', 30, 3);
+
+            // Rotating Needle
+            ctx.rotate(angle);
+            // North Pole (Red)
+            ctx.fillStyle = '#ef4444';
+            ctx.beginPath(); ctx.moveTo(30, 0); ctx.lineTo(0, -6); ctx.lineTo(0, 6); ctx.fill();
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 10px Plus Jakarta Sans';
+            ctx.fillText('N', 18, 3);
+
+            // South Pole (White/Blue-grey)
+            ctx.fillStyle = '#e2e8f0';
+            ctx.beginPath(); ctx.moveTo(-30, 0); ctx.lineTo(0, -6); ctx.lineTo(0, 6); ctx.fill();
+            ctx.fillStyle = '#0f172a';
+            ctx.font = 'bold 10px Plus Jakarta Sans';
+            ctx.fillText('S', -18, 3);
+
+            // Center Pin
+            ctx.fillStyle = '#fbbf24';
+            ctx.beginPath(); ctx.arc(0, 0, 4.5, 0, Math.PI*2); ctx.fill();
+            ctx.restore();
+
+            // Status text banner at bottom
+            ctx.fillStyle = isClosed ? '#34d399' : '#94a3b8';
+            ctx.font = 'bold 13px Plus Jakarta Sans';
+            ctx.textAlign = 'center';
+            let statusMsg = isClosed 
+                ? (dirRight 
+                    ? '🟢 TRƯỜNG HỢP 1: DÒNG ĐIỆN (➔) SINH TỪ TRƯỜNG ➔ KIM LA BÀN BỊ QUAY LỆCH SANG PHẢI!' 
+                    : '🔴 TRƯỜNG HỢP 2: DÒNG ĐIỆN (⬅) SINH TỪ TRƯỜNG ➔ KIM LA BÀN QUAY LỆCH SANG TRÁI!')
+                : '⚪ CÔNG TẮC MỞ (I = 0) ➔ KIM LA BÀN ĐỊNH HƯỚNG BẮC-NAM MẶC ĐỊNH';
+            ctx.fillText(statusMsg, cx, canvas.height - 16);
+
+            requestAnimationFrame(draw);
+        }
+
+        window.onload = () => { resize(); draw(); };
+    </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô phỏng Tương tác Giữa Hai Dòng Điện Song Song</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: #0f172a; color: #f8fafc; overflow: hidden; padding: 10px; display: flex; flex-direction: column; height: 100vh; }
+        .controls { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 10px; margin-bottom: 8px; font-size: 0.8rem; }
+        .btn { background: #6366f1; color: white; border: none; padding: 6px 14px; border-radius: 6px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .btn:hover { background: #4f46e5; }
+        .canvas-container { flex: 1; position: relative; background: #020617; border-radius: 12px; border: 1px solid #1e293b; overflow: hidden; }
+        canvas { display: block; width: 100%; height: 100%; }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <span><strong>Tương tác giữa hai dòng điện song song:</strong></span>
+        <button class="btn" onclick="toggleCurrents()">Đổi Chiều Dòng Điện: <span id="dirTxt" style="color:#34d399;">Trường Hợp 1: CÙNG CHIỀU (HÚT NHAU)</span></button>
+    </div>
+    <div class="canvas-container">
+        <canvas id="c"></canvas>
+    </div>
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        let sameDir = true;
+        let animOffset = 0;
+
+        function resize() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        window.onresize = resize;
+
+        function toggleCurrents() {
+            sameDir = !sameDir;
+            let btnTxt = document.getElementById('dirTxt');
+            if (sameDir) {
+                btnTxt.innerText = "Trường Hợp 1: CÙNG CHIỀU (HÚT NHAU)";
+                btnTxt.style.color = "#34d399";
+            } else {
+                btnTxt.innerText = "Trường Hợp 2: NGƯỢC CHIỀU (ĐẨY NHAU)";
+                btnTxt.style.color = "#f87171";
+            }
+        }
+
+        function drawArrow(x, y, dirUp, color) {
+            ctx.save();
+            ctx.fillStyle = color;
+            ctx.translate(x, y);
+            if (!dirUp) ctx.rotate(Math.PI);
+            ctx.beginPath();
+            ctx.moveTo(0, -10);
+            ctx.lineTo(-6, 2);
+            ctx.lineTo(6, 2);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            let cx = canvas.width / 2, cy = canvas.height / 2;
+            let bend = sameDir ? 22 : -22;
+
+            animOffset = (animOffset + 1.2) % 30;
+
+            // Wire 1 (Left - Current I1 UPWARDS)
+            let w1X = cx - 75;
+            ctx.strokeStyle = '#f97316'; ctx.lineWidth = 6;
+            ctx.shadowBlur = 10; ctx.shadowColor = '#f97316';
+            ctx.beginPath(); ctx.moveTo(w1X, 25);
+            ctx.quadraticCurveTo(w1X + bend, cy, w1X, canvas.height - 25);
+            ctx.stroke();
+
+            // Wire 2 (Right - Current I2 UPWARDS if sameDir, DOWNWARDS if !sameDir)
+            let w2X = cx + 75;
+            ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 6;
+            ctx.shadowBlur = 10; ctx.shadowColor = '#38bdf8';
+            ctx.beginPath(); ctx.moveTo(w2X, 25);
+            ctx.quadraticCurveTo(w2X - bend, cy, w2X, canvas.height - 25);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Animated Moving Current Flow Particles & Direction Arrows
+            // Wire 1 Particles (Upwards)
+            for (let y = canvas.height - 35 - animOffset; y > 35; y -= 35) {
+                let t = (y - 25) / (canvas.height - 50);
+                let px = (1 - t)**2 * w1X + 2*(1 - t)*t * (w1X + bend) + t**2 * w1X;
+                drawArrow(px, y, true, '#ffedd5');
+            }
+
+            // Wire 2 Particles (Upwards if sameDir, Downwards if !sameDir)
+            for (let i = 0; i < 6; i++) {
+                let y = sameDir ? (canvas.height - 35 - animOffset + i*35) % (canvas.height - 50) + 30 : (35 + animOffset + i*35) % (canvas.height - 50) + 30;
+                let t = (y - 25) / (canvas.height - 50);
+                let px = (1 - t)**2 * w2X + 2*(1 - t)*t * (w2X - bend) + t**2 * w2X;
+                drawArrow(px, y, sameDir, '#e0f2fe');
+            }
+
+            // Labels with explicit arrows
+            ctx.fillStyle = '#f97316'; ctx.font = 'bold 13px Plus Jakarta Sans'; ctx.textAlign = 'center';
+            ctx.fillText('DÂY 1: Dòng I₁ (▲ Hướng lên)', w1X - 10, 22);
+
+            ctx.fillStyle = '#38bdf8';
+            let i2Label = sameDir ? 'DÂY 2: Dòng I₂ (▲ Hướng lên)' : 'DÂY 2: Dòng I₂ (▼ Hướng xuống)';
+            ctx.fillText(i2Label, w2X + 10, 22);
+
+            // Force Status Badge & Arrows
+            ctx.fillStyle = sameDir ? '#34d399' : '#ef4444';
+            ctx.font = 'bold 13px Plus Jakarta Sans';
+            let msg = sameDir ? '🟢 TRƯỜNG HỢP 1: CÙNG CHIỀU (I₁ ▲, I₂ ▲) ➔ LỰC TỪ HÚT NHAU VÀO TRONG' : '🔴 TRƯỜNG HỢP 2: NGƯỢC CHIỀU (I₁ ▲, I₂ ▼) ➔ LỰC TỪ ĐẨY NHAU RA NGOÀI';
+            ctx.fillText(msg, cx, canvas.height - 18);
+
+            // Force Vector Arrows at mid-wire
+            let mid1X = w1X + bend * 0.75;
+            let mid2X = w2X - bend * 0.75;
+            let arrowLen = 36 * (sameDir ? 1 : -1);
+
+            ctx.strokeStyle = sameDir ? '#34d399' : '#ef4444'; ctx.lineWidth = 3.5;
+            // Force on Wire 1 (F21)
+            ctx.beginPath(); ctx.moveTo(mid1X, cy); ctx.lineTo(mid1X + arrowLen, cy); ctx.stroke();
+            ctx.fillStyle = sameDir ? '#34d399' : '#ef4444';
+            ctx.beginPath();
+            if (sameDir) { ctx.moveTo(mid1X + arrowLen, cy); ctx.lineTo(mid1X + arrowLen - 8, cy - 5); ctx.lineTo(mid1X + arrowLen - 8, cy + 5); }
+            else { ctx.moveTo(mid1X + arrowLen, cy); ctx.lineTo(mid1X + arrowLen + 8, cy - 5); ctx.lineTo(mid1X + arrowLen + 8, cy + 5); }
+            ctx.fill();
+
+            // Force on Wire 2 (F12)
+            ctx.beginPath(); ctx.moveTo(mid2X, cy); ctx.lineTo(mid2X - arrowLen, cy); ctx.stroke();
+            ctx.beginPath();
+            if (sameDir) { ctx.moveTo(mid2X - arrowLen, cy); ctx.lineTo(mid2X - arrowLen + 8, cy - 5); ctx.lineTo(mid2X - arrowLen + 8, cy + 5); }
+            else { ctx.moveTo(mid2X - arrowLen, cy); ctx.lineTo(mid2X - arrowLen - 8, cy - 5); ctx.lineTo(mid2X - arrowLen - 8, cy + 5); }
+            ctx.fill();
+
+            requestAnimationFrame(draw);
+        }
+
+        window.onload = () => { resize(); draw(); };
+    </script>
+</body>
+</html>

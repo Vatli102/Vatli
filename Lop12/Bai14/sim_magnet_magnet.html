@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô phỏng Tương tác Nam châm - Nam châm</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: #0f172a; color: #f8fafc; overflow: hidden; padding: 10px; display: flex; flex-direction: column; height: 100vh; }
+        .controls { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 10px; margin-bottom: 8px; font-size: 0.8rem; }
+        .btn { background: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 700; cursor: pointer; }
+        .btn:hover { background: #1d4ed8; }
+        .canvas-container { flex: 1; position: relative; background: #020617; border-radius: 12px; border: 1px solid #1e293b; overflow: hidden; }
+        canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+        canvas:active { cursor: grabbing; }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <span><strong>1. Tương tác Nam châm - Nam châm:</strong> Kéo di chuyển Nam châm bên phải</span>
+        <button class="btn" onclick="togglePolarity()">Đổi Cực: <span id="modeText">Khác Cực (Hút N-S)</span></button>
+    </div>
+    <div class="canvas-container">
+        <canvas id="c"></canvas>
+    </div>
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        let attract = true;
+        let m1 = { x: 180, y: 110, w: 120, h: 36 };
+        let m2 = { x: 420, y: 110, w: 120, h: 36, dragging: false };
+
+        function resize() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            m1.y = canvas.height / 2;
+            m2.y = canvas.height / 2;
+            draw();
+        }
+        window.onresize = resize;
+
+        function togglePolarity() {
+            attract = !attract;
+            document.getElementById('modeText').innerText = attract ? 'Khác Cực (Hút N-S)' : 'Cùng Cực (Đẩy N-N)';
+            draw();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            let dist = Math.max(10, Math.abs(m2.x - m1.x) - m1.w);
+            let force = Math.min(100, Math.round(50000 / (dist + 30)));
+
+            // Magnet 1 (Fixed)
+            ctx.fillStyle = '#ef4444'; ctx.fillRect(m1.x - m1.w/2, m1.y - m1.h/2, m1.w/2, m1.h);
+            ctx.fillStyle = '#3b82f6'; ctx.fillRect(m1.x, m1.y - m1.h/2, m1.w/2, m1.h);
+            ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.strokeRect(m1.x - m1.w/2, m1.y - m1.h/2, m1.w, m1.h);
+            ctx.fillStyle = '#ffffff'; ctx.font = 'bold 14px Plus Jakarta Sans'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText('N', m1.x - m1.w/4, m1.y); ctx.fillText('S', m1.x + m1.w/4, m1.y);
+
+            // Magnet 2 (Draggable)
+            let m2LeftColor = attract ? '#ef4444' : '#3b82f6';
+            let m2RightColor = attract ? '#3b82f6' : '#ef4444';
+            let m2LeftText = attract ? 'N' : 'S';
+            let m2RightText = attract ? 'S' : 'N';
+
+            ctx.fillStyle = m2LeftColor; ctx.fillRect(m2.x - m2.w/2, m2.y - m2.h/2, m2.w/2, m2.h);
+            ctx.fillStyle = m2RightColor; ctx.fillRect(m2.x, m2.y - m2.h/2, m2.w/2, m2.h);
+            ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.strokeRect(m2.x - m2.w/2, m2.y - m2.h/2, m2.w, m2.h);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText(m2LeftText, m2.x - m2.w/4, m2.y); ctx.fillText(m2RightText, m2.x + m2.w/4, m2.y);
+
+            // Force Vectors & HUD
+            ctx.fillStyle = attract ? '#34d399' : '#ef4444';
+            ctx.font = 'bold 13px Plus Jakarta Sans';
+            let fText = attract ? `LỰC HÚT TỪ TỐC ĐỘ: ${force} N` : `LỰC ĐẨY TỪ TỐC ĐỘ: ${force} N`;
+            ctx.fillText(fText, canvas.width/2, 30);
+
+            // Force Arrows
+            let arrowDir = attract ? 1 : -1;
+            let arrowLen = Math.min(60, force * 0.8);
+            
+            // Force on M1
+            ctx.strokeStyle = attract ? '#34d399' : '#ef4444'; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.moveTo(m1.x + m1.w/2, m1.y); ctx.lineTo(m1.x + m1.w/2 + arrowDir * arrowLen, m1.y); ctx.stroke();
+            
+            // Force on M2
+            ctx.beginPath(); ctx.moveTo(m2.x - m2.w/2, m2.y); ctx.lineTo(m2.x - m2.w/2 - arrowDir * arrowLen, m2.y); ctx.stroke();
+        }
+
+        canvas.onmousedown = (e) => {
+            let rect = canvas.getBoundingClientRect();
+            let mx = e.clientX - rect.left, my = e.clientY - rect.top;
+            if (Math.abs(mx - m2.x) < m2.w/2 && Math.abs(my - m2.y) < m2.h/2) m2.dragging = true;
+        };
+        canvas.onmousemove = (e) => {
+            if (m2.dragging) {
+                let rect = canvas.getBoundingClientRect();
+                m2.x = Math.max(m1.x + m1.w + 20, Math.min(canvas.width - m2.w/2, e.clientX - rect.left));
+                draw();
+            }
+        };
+        window.onmouseup = () => m2.dragging = false;
+
+        window.onload = resize;
+    </script>
+</body>
+</html>

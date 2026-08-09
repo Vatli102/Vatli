@@ -811,17 +811,24 @@ function renderQuiz() {
                     <span class="question-num">Câu ${idx + 1}:</span> ${getCompTag(q.competency)}${q.question || q.context || ''}
                 </div>
                 ${q.image ? `<img src="${q.image}" class="question-img" alt="Hình vẽ câu ${idx + 1}">` : ''}
-                ${q.subQuestions.map(sub => `
-                    <div class="tf-row" id="part2-q${q.id}-tf-${sub.key}">
-                        <div><b>${sub.key})</b> ${sub.text}</div>
+                ${q.subQuestions.map((sub, sIdx) => {
+                    const subKey = sub.key || ['a','b','c','d'][sIdx];
+                    const cleanText = (sub.text || '').replace(/^[a-d][\.\)]\s*/, '');
+                    return `
+                    <div class="tf-row" id="part2-q${q.id}-tf-${subKey}">
+                        <div><b>${subKey})</b> ${cleanText}</div>
                         <div class="tf-buttons">
-                            <button type="button" class="btn-tf tf-btn" id="part2-q${q.id}-tf-${sub.key}-T" onclick="selectPart2(${q.id}, '${sub.key}', 'Đ')">ĐÚNG</button>
-                            <button type="button" class="btn-tf tf-btn" id="part2-q${q.id}-tf-${sub.key}-F" onclick="selectPart2(${q.id}, '${sub.key}', 'S')">SAI</button>
+                            <button type="button" class="btn-tf tf-btn" id="part2-q${q.id}-tf-${subKey}-T" onclick="selectPart2(${q.id}, '${subKey}', 'Đ')">ĐÚNG</button>
+                            <button type="button" class="btn-tf tf-btn" id="part2-q${q.id}-tf-${subKey}-F" onclick="selectPart2(${q.id}, '${subKey}', 'S')">SAI</button>
                         </div>
                     </div>
-                `).join('')}
+                `}).join('')}
                 <div class="explanation-box" id="part2-q${q.id}-explanation">
-                    💡 <b>Hướng dẫn giải chi tiết:</b> ${q.explanation || 'Xem lý thuyết bài học.'}
+                    💡 <b>Hướng dẫn giải chi tiết:</b><br>${q.explanation ? q.explanation : q.subQuestions.map((sub, sIdx) => {
+                        const subKey = sub.key || ['a','b','c','d'][sIdx];
+                        const ansStr = typeof sub.answer === 'boolean' ? (sub.answer ? 'ĐÚNG' : 'SAI') : (sub.answer === 'Đ' ? 'ĐÚNG' : 'SAI');
+                        return `• <b>Ý ${subKey}) [${ansStr}]:</b> ${sub.explanation || ''}`;
+                    }).join('<br>')}
                 </div>
             </div>
         `).join('');

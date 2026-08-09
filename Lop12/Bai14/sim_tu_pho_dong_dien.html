@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô phỏng 3D Từ Phổ Dòng Điện Chuẩn PhET Colorado (Hình 14.6 & 14.7)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: #0b0f19; color: #f8fafc; overflow: hidden; padding: 8px; display: flex; flex-direction: column; height: 100vh; }
+        .controls { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.06); padding: 8px 12px; border-radius: 10px; margin-bottom: 6px; font-size: 0.8rem; gap: 6px; flex-wrap: wrap; }
+        .btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
+        .btn { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; padding: 5px 12px; border-radius: 6px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-size: 0.75rem; }
+        .btn:hover { background: #334155; color: white; }
+        .btn.active { background: #2563eb; color: white; border-color: #3b82f6; }
+        .btn-phet { background: #059669; color: white; border-color: #10b981; }
+        .btn-phet:hover { background: #047857; }
+        .canvas-container { flex: 1; position: relative; background: #020617; border-radius: 12px; border: 1px solid #1e293b; overflow: hidden; }
+        canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+        canvas:active { cursor: grabbing; }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <span><strong>Mô phỏng 3D Từ Phổ Dòng Điện PhET (SGK Trang 58)</strong></span>
+        <div class="btn-group">
+            <button class="btn active" id="btn146" onclick="setMode('14.6')">Hình 14.6: Dây thẳng 3D</button>
+            <button class="btn" id="btn147" onclick="setMode('14.7')">Hình 14.7: Ống dây 3D</button>
+            <button class="btn btn-phet" id="btnView" onclick="toggleViewMode()">Chế độ: Lưới Kim La Bàn PhET</button>
+        </div>
+    </div>
+    <div class="canvas-container">
+        <canvas id="c"></canvas>
+    </div>
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+
+        let mode = '14.6'; // '14.6' or '14.7'
+        let viewMode = 'compass'; // 'compass' or 'filings'
+        let grid = [];
+
+        function resize() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            initGrid();
+        }
+        window.onresize = resize;
+
+        function initGrid() {
+            grid = [];
+            let spacing = viewMode === 'compass' ? 32 : 16;
+            for (let x = 20; x < canvas.width - 20; x += spacing) {
+                for (let y = 20; y < canvas.height - 20; y += spacing) {
+                    grid.push({ x: x, y: y, angle: 0, B: 0 });
+                }
+            }
+        }
+
+        function setMode(m) {
+            mode = m;
+            document.getElementById('btn146').classList.toggle('active', m === '14.6');
+            document.getElementById('btn147').classList.toggle('active', m === '14.7');
+            initGrid();
+        }
+
+        function toggleViewMode() {
+            viewMode = (viewMode === 'compass') ? 'filings' : 'compass';
+            let btn = document.getElementById('btnView');
+            btn.innerText = viewMode === 'compass' ? 'Chế độ: Lưới Kim La Bàn PhET' : 'Chế độ: Mạt Sắt 3D Real';
+            initGrid();
+        }
+
+        function getFieldVector(px, py) {
+            let cx = canvas.width / 2;
+            let cy = canvas.height / 2;
+
+            if (mode === '14.6') {
+                let dx = px - cx;
+                let dy = py - cy;
+                let r = Math.hypot(dx, dy) + 5;
+                let angle = Math.atan2(dy, dx) + Math.PI / 2;
+                return { angle: angle, B: 1 / r };
+            } 
+            else if (mode === '14.7') {
+                let solLeft = cx - 100, solRight = cx + 100, solR = 40;
+                if (px >= solLeft && px <= solRight && Math.abs(py - cy) <= solR) {
+                    return { angle: 0, B: 0.05 };
+                } else {
+                    let rN = Math.hypot(px - solLeft, py - cy) + 12;
+                    let rS = Math.hypot(px - solRight, py - cy) + 12;
+                    let Bx = (px - solLeft) / (rN ** 3) - (px - solRight) / (rS ** 3);
+                    let By = (py - cy) / (rN ** 3) - (py - cy) / (rS ** 3);
+                    return { angle: Math.atan2(By, Bx), B: Math.hypot(Bx, By) };
+                }
+            }
+            return { angle: 0, B: 0 };
+        }
+
+        function drawPhETCompass(x, y, angle, intensity) {
+            ctx.save();
+            ctx.translate(x, y);
+            let alpha = Math.min(1, Math.max(0.25, intensity * 60000));
+            ctx.globalAlpha = alpha;
+
+            ctx.fillStyle = '#0f172a'; ctx.strokeStyle = '#334155'; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.arc(0, 0, 11, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+
+            ctx.rotate(angle);
+            ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.moveTo(9, 0); ctx.lineTo(0, -3.5); ctx.lineTo(0, 3.5); ctx.fill();
+            ctx.fillStyle = '#e2e8f0'; ctx.beginPath(); ctx.moveTo(-9, 0); ctx.lineTo(0, -3.5); ctx.lineTo(0, 3.5); ctx.fill();
+            ctx.fillStyle = '#f59e0b'; ctx.beginPath(); ctx.arc(0, 0, 2, 0, Math.PI*2); ctx.fill();
+            ctx.restore();
+        }
+
+        function draw3DFiling(x, y, angle) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+            ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1.6;
+            ctx.beginPath(); ctx.moveTo(-3.5, 0); ctx.lineTo(3.5, 0); ctx.stroke();
+            ctx.restore();
+        }
+
+        function draw3DConductor() {
+            let cx = canvas.width / 2, cy = canvas.height / 2;
+            if (mode === '14.6') {
+                let wireGrad = ctx.createRadialGradient(cx - 3, cy - 3, 2, cx, cy, 16);
+                wireGrad.addColorStop(0, '#ffedd5');
+                wireGrad.addColorStop(0.4, '#f97316');
+                wireGrad.addColorStop(1, '#9a3412');
+
+                ctx.fillStyle = wireGrad;
+                ctx.beginPath(); ctx.arc(cx, cy, 16, 0, Math.PI * 2); ctx.fill();
+                ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.stroke();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath(); ctx.arc(cx, cy, 4, 0, Math.PI * 2); ctx.fill();
+
+                ctx.fillStyle = '#f97316'; ctx.font = 'bold 13px Plus Jakarta Sans'; ctx.textAlign = 'center';
+                ctx.fillText('DÂY DẪN THẲNG 3D (Dòng I vuông góc mặt phẳng)', cx, cy - 26);
+            } 
+            else if (mode === '14.7') {
+                let solLeft = cx - 100, solRight = cx + 100, solR = 40;
+                
+                for (let x = solLeft; x <= solRight; x += 16) {
+                    let coilGrad = ctx.createLinearGradient(x - 6, cy - solR, x + 6, cy + solR);
+                    coilGrad.addColorStop(0, '#f97316');
+                    coilGrad.addColorStop(0.5, '#ffedd5');
+                    coilGrad.addColorStop(1, '#9a3412');
+
+                    ctx.strokeStyle = coilGrad; ctx.lineWidth = 4;
+                    ctx.beginPath(); ctx.ellipse(x, cy, 7, solR, 0, 0, Math.PI * 2); ctx.stroke();
+                }
+
+                ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 13px Plus Jakarta Sans'; ctx.textAlign = 'center';
+                ctx.fillText('ỐNG DÂY 3D CÓ DÒNG ĐIỆN I', cx, cy - solR - 14);
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            grid.forEach(pt => {
+                let res = getFieldVector(pt.x, pt.y);
+                let diff = res.angle - pt.angle;
+                diff = Math.atan2(Math.sin(diff), Math.cos(diff));
+                pt.angle += diff * 0.15;
+                pt.B = res.B;
+
+                if (viewMode === 'compass') {
+                    drawPhETCompass(pt.x, pt.y, pt.angle, pt.B);
+                } else {
+                    draw3DFiling(pt.x, pt.y, pt.angle);
+                }
+            });
+
+            draw3DConductor();
+
+            ctx.fillStyle = '#34d399'; ctx.font = 'bold 12px Plus Jakarta Sans'; ctx.textAlign = 'center';
+            let titleMap = {
+                '14.6': 'HÌNH 14.6: TỪ PHỔ DÒNG ĐIỆN THẲNG 3D (Các đường tròn đồng tâm)',
+                '14.7': 'HÌNH 14.7: TỪ PHỔ DÒNG ĐIỆN TRONG ỐNG DÂY 3D (Đều ở trong lòng, đường cong ở 2 đầu)'
+            };
+            ctx.fillText(titleMap[mode], canvas.width/2, canvas.height - 14);
+
+            requestAnimationFrame(draw);
+        }
+
+        window.onload = () => { resize(); draw(); };
+    </script>
+</body>
+</html>

@@ -735,31 +735,37 @@
 
             // Part 2 Render
             const p2 = document.getElementById('part2Container');
-            if (p2 && quizData.part2) {
-                p2.innerHTML = quizData.part2.map((q, idx) => `
-                    <div class="question-card" id="part2-q${q.id}">
-                        <div class="question-title">Câu ${idx + 1}. ${q.question}</div>
-                        ${q.image ? `<img src="${q.image}" class="question-img" alt="Hình minh họa">` : ''}
-                        <div class="tf-grid">
-                            ${q.subQuestions.map(sub => `
-                                <div class="tf-row" id="part2-q${q.id}-tf-${sub.key}">
-                                    <div class="tf-text"><strong>${sub.key})</strong> ${sub.text}</div>
-                                    <div class="tf-actions">
-                                        <button type="button" class="btn-tf" id="part2-q${q.id}-tf-${sub.key}-T" onclick="selectPart2(${q.id}, '${sub.key}', 'Đ')">Đúng</button>
-                                        <button type="button" class="btn-tf" id="part2-q${q.id}-tf-${sub.key}-F" onclick="selectPart2(${q.id}, '${sub.key}', 'S')">Sai</button>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div class="explanation-box" id="part2-q${q.id}-explanation">
-                            <strong>💡 Lời giải chi tiết:</strong><br>${q.explanation}
+    if (p2 && quizData.part2) {
+        p2.innerHTML = quizData.part2.map((q, idx) => `
+            <div class="question-card" id="part2-q${q.id}">
+                <div class="question-title">
+                    <span class="question-num">Câu ${idx + 1}:</span> ${getCompTag(q.competency)}${q.question || q.context || ''}
+                </div>
+                ${q.image ? `<img src="${q.image}" class="question-img" alt="Hình vẽ câu ${idx + 1}">` : ''}
+                ${q.subQuestions.map((sub, sIdx) => {
+                    const subKey = sub.key || ['a','b','c','d'][sIdx];
+                    const cleanText = (sub.text || '').replace(/^[a-d][\.\)]\s*/, '');
+                    return `
+                    <div class="tf-row" id="part2-q${q.id}-tf-${subKey}">
+                        <div><b>${subKey})</b> ${cleanText}</div>
+                        <div class="tf-buttons">
+                            <button type="button" class="btn-tf tf-btn" id="part2-q${q.id}-tf-${subKey}-T" onclick="selectPart2(${q.id}, '${subKey}', 'Đ')">ĐÚNG</button>
+                            <button type="button" class="btn-tf tf-btn" id="part2-q${q.id}-tf-${subKey}-F" onclick="selectPart2(${q.id}, '${subKey}', 'S')">SAI</button>
                         </div>
                     </div>
-                `).join('');
-            }
+                `}).join('')}
+                <div class="explanation-box" id="part2-q${q.id}-explanation">
+                    💡 <b>Hướng dẫn giải chi tiết:</b><br>${q.explanation ? q.explanation : q.subQuestions.map((sub, sIdx) => {
+                        const subKey = sub.key || ['a','b','c','d'][sIdx];
+                        const ansStr = typeof sub.answer === 'boolean' ? (sub.answer ? 'ĐÚNG' : 'SAI') : (sub.answer === 'Đ' ? 'ĐÚNG' : 'SAI');
+                        return `• <b>Ý ${subKey}) [${ansStr}]:</b> ${sub.explanation || ''}`;
+                    }).join('<br>')}
+                </div>
+            </div>
+        `).join('');
+    }
 
-            // Part 3 Render
-            const p3 = document.getElementById('part3Container');
+    const p3 = document.getElementById('part3Container');
             if (p3 && quizData.part3) {
                 p3.innerHTML = quizData.part3.map((q, idx) => `
                     <div class="question-card" id="part3-q${q.id}">
