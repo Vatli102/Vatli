@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thí Nghiệm Ảo Quả Bóng Bàn Phồng Lại Trong Nước Nóng - Bài 11 Vật Lí 12</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        p { text-align: justify; }
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --card-bg: rgba(30, 41, 59, 0.85);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --purple-main: #a855f7;
+            --purple-hover: #9333ea;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 0.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .dashboard {
+            width: 100%;
+            max-width: 1050px;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 0.85rem 1rem;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.4rem;
+        }
+
+        header h1 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #f472b6, #c084fc, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 0.72rem;
+            margin: 0;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 0.85rem;
+        }
+
+        @media (max-width: 800px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .readings-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .reading-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.35rem 0.4rem;
+            text-align: center;
+        }
+
+        .reading-label {
+            font-size: 0.62rem;
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 0.1rem;
+        }
+
+        .reading-value {
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-family: monospace;
+        }
+
+        .sim-body {
+            display: flex;
+            gap: 0.65rem;
+            align-items: stretch;
+        }
+
+        .visual-box {
+            flex: 0 0 200px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 0.3rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
+        }
+
+        #pongCanvas {
+            width: 190px;
+            height: 220px;
+            border-radius: 10px;
+        }
+
+        .control-card {
+            flex: 1;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.65rem 0.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .control-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        .slider-value {
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #c084fc;
+            font-weight: 700;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .step-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            color: #f1f5f9;
+            width: 26px;
+            height: 26px;
+            border-radius: 5px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .step-btn:hover {
+            background: var(--purple-main);
+            color: #fff;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--purple-main);
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(168, 85, 247, 0.8);
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.45rem 0.5rem;
+            border-radius: 8px;
+            border: none;
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .btn-hot {
+            background: linear-gradient(135deg, #f97316, #ef4444);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-cold {
+            background: rgba(56, 189, 248, 0.2);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .info-card {
+            background: rgba(168, 85, 247, 0.08);
+            border: 1px solid rgba(168, 85, 247, 0.25);
+            border-radius: 12px;
+            padding: 0.6rem 0.75rem;
+            font-size: 0.73rem;
+            line-height: 1.5;
+            color: #e9d5ff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <header>
+        <h1><i class="fa-solid fa-table-tennis-paddle-ball" style="color: #f97316;"></i> THÍ NGHIỆM ẢO: QUẢ BÓNG BÀN PHỒNG LẠI TRONG NƯỚC NÓNG ⚪</h1>
+        <p>Mô phỏng 3D Real: Đun nóng nước ➔ Không khí bên trong nở rộng ➔ Quả bóng bàn móp phồng tròn như cũ</p>
+    </header>
+
+    <div class="main-layout">
+        <!-- Left: Canvas visual + Controls -->
+        <div class="sim-panel">
+            <div class="readings-grid">
+                <div class="reading-box">
+                    <span class="reading-label">Nhiệt Độ Nước <i>t</i></span>
+                    <span class="reading-value" id="tempRead" style="color: #c084fc;">20 °C</span>
+                </div>
+                <div class="reading-box">
+                    <span class="reading-label">Áp Suất Khí Trong Bóng <i>p</i></span>
+                    <span class="reading-value" id="pressRead" style="color: #38bdf8;">1.00 atm</span>
+                </div>
+                <div class="reading-box">
+                    <span class="reading-label">Hình Dạng Vỏ Bóng</span>
+                    <span class="reading-value" id="shapeRead" style="color: #f87171;">Bị bẹp móp</span>
+                </div>
+            </div>
+
+            <div class="sim-body">
+                <!-- Visual Canvas -->
+                <div class="visual-box">
+                    <canvas id="pongCanvas"></canvas>
+                </div>
+
+                <!-- Controls -->
+                <div class="control-card">
+                    <div class="control-group">
+                        <div class="control-header">
+                            <span>Nhiệt độ nước <i>t</i> (°C):</span>
+                            <span class="slider-value" id="tempVal">20 °C / 293 K</span>
+                        </div>
+                        <div class="slider-container">
+                            <button type="button" class="step-btn" onclick="stepTemp(-10)">-</button>
+                            <input type="range" id="tempSlider" min="20" max="95" step="5" value="20" oninput="updateSimulation()">
+                            <button type="button" class="step-btn" onclick="stepTemp(10)">+</button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-header">
+                            <span>Thao tác thí nghiệm:</span>
+                        </div>
+                        <div class="btn-row">
+                            <button type="button" class="btn btn-hot" onclick="dipHotWater()">
+                                <i class="fa-solid fa-mug-hot"></i> NHÚNG NƯỚC NÓNG (85°C)
+                            </button>
+                            <button type="button" class="btn btn-cold" onclick="resetColdWater()">
+                                <i class="fa-solid fa-snowflake"></i> NƯỚC LẠNH (20°C)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-header">
+                            <span>Trạng thái vỏ bóng:</span>
+                        </div>
+                        <div class="status-badge" id="statusBadge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444;">
+                            🔴 Quả bóng bàn đang bị móp vết bẹp (Nước lạnh 20°C)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Physics Explanation -->
+        <div class="info-card">
+            <strong><i class="fa-solid fa-lightbulb" style="color: #fde047;"></i> Giải Thích Hiện Tượng Vật Lí (SGK):</strong><br><br>
+            1. <strong>Lúc đầu:</strong> Quả bóng bàn bị bóp bẹp. Không khí bên trong ở nhiệt độ phòng ($20^\circ\text{C}$).<br>
+            2. <strong>Khi nhúng vào nước nóng ($85^\circ\text{C}$):</strong> Nhiệt độ $T$ của khối khí giam kín trong bóng tăng lên nhanh chóng.<br>
+            3. Theo <strong>Phương trình trạng thái $\frac{p \cdot V}{T} = \text{const}$</strong>, nhiệt độ $T$ tăng làm các phân tử khí chuyển động nhiệt hỗn loạn nhanh hơn, va chạm dồn dập vào thành bên trong.<br>
+            4. Áp suất $p$ và thể tích $V$ của khối khí gia tăng đẩy mạnh vào vết bẹp ➔ <strong>Khôi phục quả bóng bàn tròn căng như ban đầu!</strong>
+        </div>
+    </div>
+</div>
+
+<script>
+    let tempC = 20;
+    const canvas = document.getElementById('pongCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Load Photorealistic Ping Pong Ball Image
+    const realImg = new Image();
+    realImg.src = './bong-ban-nuoc-nong.jpg';
+    let imgLoaded = false;
+    realImg.onload = () => { imgLoaded = true; };
+
+    window.addEventListener('DOMContentLoaded', () => {
+        canvas.width = 190;
+        canvas.height = 220;
+        updateSimulation();
+        requestAnimationFrame(renderLoop);
+    });
+
+    window.dipHotWater = function() {
+        document.getElementById('tempSlider').value = 85;
+        updateSimulation();
+    };
+
+    window.resetColdWater = function() {
+        document.getElementById('tempSlider').value = 20;
+        updateSimulation();
+    };
+
+    window.stepTemp = function(delta) {
+        const slider = document.getElementById('tempSlider');
+        let newVal = parseInt(slider.value) + delta;
+        slider.value = Math.max(20, Math.min(95, newVal));
+        updateSimulation();
+    };
+
+    function updateSimulation() {
+        tempC = parseFloat(document.getElementById('tempSlider').value);
+        let tempK = Math.round(tempC + 273);
+        document.getElementById('tempVal').textContent = `${tempC} °C / ${tempK} K`;
+        document.getElementById('tempRead').textContent = `${tempC} °C`;
+
+        let pressure = 1.0 + (tempC - 20) * 0.008;
+        document.getElementById('pressRead').textContent = `${pressure.toFixed(2)} atm`;
+
+        const shapeRead = document.getElementById('shapeRead');
+        const statusBadge = document.getElementById('statusBadge');
+
+        if (tempC >= 70) {
+            shapeRead.textContent = "Tròn phồng căng như mới";
+            shapeRead.style.color = "#4ade80";
+            statusBadge.style.background = "rgba(16, 185, 129, 0.3)";
+            statusBadge.style.color = "#34d399";
+            statusBadge.style.borderColor = "#10b981";
+            statusBadge.innerHTML = "🟢 Khí đun nóng dãn nở - Bóng bàn phồng tròn lại như cũ!";
+        } else if (tempC >= 45) {
+            shapeRead.textContent = "Đang phồng dần ra";
+            shapeRead.style.color = "#fde047";
+            statusBadge.style.background = "rgba(234, 179, 8, 0.3)";
+            statusBadge.style.color = "#fde047";
+            statusBadge.style.borderColor = "#eab308";
+            statusBadge.innerHTML = "🟡 Áp suất khí tăng - Vết móp đang phồng dần ra";
+        } else {
+            shapeRead.textContent = "Bị bẹp móp vết sẹo";
+            shapeRead.style.color = "#f87171";
+            statusBadge.style.background = "rgba(239, 68, 68, 0.3)";
+            statusBadge.style.color = "#f87171";
+            statusBadge.style.borderColor = "#ef4444";
+            statusBadge.innerHTML = "🔴 Quả bóng bàn bị bẹp móp vết sẹo (Nước nguội)";
+        }
+    }
+
+    function renderLoop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Water background color gradient changes with temperature
+        const heatRatio = (tempC - 20) / 75; // 0 to 1
+        const waterGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        
+        if (heatRatio < 0.4) {
+            waterGrad.addColorStop(0, '#0284c7');
+            waterGrad.addColorStop(1, '#0369a1');
+        } else {
+            waterGrad.addColorStop(0, '#c05621');
+            waterGrad.addColorStop(1, '#7b341e');
+        }
+        ctx.fillStyle = waterGrad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Render Photorealistic 3D Real image if available
+        if (imgLoaded) {
+            ctx.save();
+            ctx.globalAlpha = 0.88;
+            ctx.drawImage(realImg, 0, 0, canvas.width, canvas.height);
+            ctx.restore();
+        }
+
+        // Steam bubbles rising when water is hot
+        if (tempC > 50) {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            for (let i = 0; i < 6; i++) {
+                let bx = (i * 30 + (Date.now() * 0.05) % 30) % canvas.width;
+                let by = canvas.height - ((Date.now() * 0.1 + i * 40) % canvas.height);
+                ctx.beginPath();
+                ctx.arc(bx, by, 3 + (i % 3), 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Draw Interactive Ping Pong Ball Shape Overlay
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2 + 10;
+        const baseRadius = 36;
+        const dentAmount = Math.max(0, (1 - heatRatio) * 14); // dent decreases as heat increases
+
+        ctx.save();
+        ctx.beginPath();
+        // Draw sphere with dent on top left
+        ctx.arc(cx, cy, baseRadius, Math.PI * 0.3, Math.PI * 1.7, false);
+        ctx.quadraticCurveTo(cx - baseRadius + dentAmount * 1.5, cy - baseRadius / 2, cx, cy - baseRadius + dentAmount * 0.5);
+        ctx.closePath();
+
+        const ballGrad = ctx.createRadialGradient(cx - 10, cy - 10, 5, cx, cy, baseRadius + 10);
+        ballGrad.addColorStop(0, '#ffffff');
+        ballGrad.addColorStop(0.7, '#fef08a');
+        ballGrad.addColorStop(1, '#eab308');
+
+        ctx.fillStyle = ballGrad;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = 'rgba(0,0,0,0.5)';
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+
+        requestAnimationFrame(renderLoop);
+    }
+</script>
+</body>
+</html>
