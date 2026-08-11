@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô phỏng Nam châm & Kim la bàn (PhET Standard)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; user-select: none; }
+        body { background: #0f172a; color: #f8fafc; overflow: hidden; padding: 8px; display: flex; flex-direction: column; height: 100vh; }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(10px);
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            font-size: 0.78rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .controls-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+        .btn:hover { background: #1d4ed8; transform: translateY(-1px); }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .toggle-label input[type="checkbox"] {
+            accent-color: #38bdf8;
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+        }
+
+        .canvas-container {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+            border-radius: 12px;
+            border: 1px solid #1e293b;
+            overflow: hidden;
+            min-height: 220px;
+        }
+        canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+        canvas:active { cursor: grabbing; }
+
+        .status-banner {
+            margin-top: 6px;
+            padding: 6px 12px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #34d399;
+        }
+
+        /* RESPONSIVE DESIGN CHO THIẾT BỊ DI ĐỘNG */
+        @media (max-width: 768px) {
+            body { padding: 4px !important; }
+            .controls { flex-direction: column !important; align-items: stretch !important; padding: 6px 8px !important; gap: 6px !important; }
+            .controls-group { justify-content: space-between !important; width: 100% !important; }
+            .btn { width: 100% !important; justify-content: center !important; }
+            .status-banner { font-size: 0.72rem !important; padding: 4px 6px !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <div class="controls-group">
+            <span><i class="fa-solid fa-magnet text-blue-400"></i> <strong>Nam châm & Kim la bàn (PhET Standard):</strong></span>
+            <button class="btn" onclick="flipMagnet()">
+                <i class="fa-solid fa-rotate"></i> Đảo Cực Nam Châm (N ↔ S)
+            </button>
+        </div>
+        <div class="controls-group">
+            <label class="toggle-label">
+                <input type="checkbox" id="chkGrid" checked onchange="draw()">
+                <i class="fa-solid fa-border-all text-sky-400"></i> Lưới kim thử
+            </label>
+            <label class="toggle-label">
+                <input type="checkbox" id="chkLines" checked onchange="draw()">
+                <i class="fa-solid fa-route text-indigo-400"></i> Đường sức từ
+            </label>
+            <label class="toggle-label">
+                <input type="checkbox" id="chkMeter" checked onchange="draw()">
+                <i class="fa-solid fa-gauge-high text-amber-400"></i> Cảm ứng từ kế
+            </label>
+        </div>
+    </div>
+
+    <div class="canvas-container" id="canvasWrapper">
+        <canvas id="c"></canvas>
+    </div>
+
+    <div class="status-banner" id="statusBanner">
+        🧲 KÉO DI CHUYỂN THANH NAM CHÂM HOẶC KIM LA BÀN ĐỂ OBSERVE ĐỊNH HƯỚNG TỪ TRƯỜNG!
+    </div>
+
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        const wrapper = document.getElementById('canvasWrapper');
+
+        let magnetPolarity = 1; // 1: N left / S right, -1: S left / N right
+        let magnet = { x: 0, y: 0, w: 160, h: 42, isDragging: false, dragOffsetX: 0, dragOffsetY: 0, hasMoved: false };
+        let compass = { x: 0, y: 0, r: 26, angle: 0, isDragging: false, dragOffsetX: 0, dragOffsetY: 0, hasMoved: false };
+        let meter = { x: 0, y: 0, w: 110, h: 54, isDragging: false, dragOffsetX: 0, dragOffsetY: 0, hasMoved: false };
+
+        function resize() {
+            if (!wrapper) return;
+            canvas.width = wrapper.clientWidth;
+            canvas.height = wrapper.clientHeight;
+            let w = canvas.width, h = canvas.height;
+            if (w <= 0 || h <= 0) return;
+
+            if (!magnet.hasMoved) {
+                magnet.x = w * 0.38;
+                magnet.y = h * 0.50;
+            } else {
+                magnet.x = Math.max(magnet.w / 2 + 10, Math.min(w - magnet.w / 2 - 10, magnet.x));
+                magnet.y = Math.max(magnet.h / 2 + 10, Math.min(h - magnet.h / 2 - 10, magnet.y));
+            }
+
+            if (!compass.hasMoved) {
+                compass.x = Math.min(w - 50, Math.max(90, w * 0.74));
+                compass.y = h * 0.50;
+            } else {
+                compass.x = Math.max(compass.r + 10, Math.min(w - compass.r - 10, compass.x));
+                compass.y = Math.max(compass.r + 10, Math.min(h - compass.r - 10, compass.y));
+            }
+
+            if (!meter.hasMoved) {
+                meter.x = Math.max(65, Math.min(w - 65, w * 0.20));
+                meter.y = h * 0.78;
+            } else {
+                meter.x = Math.max(meter.w / 2 + 10, Math.min(w - meter.w / 2 - 10, meter.x));
+                meter.y = Math.max(meter.h / 2 + 10, Math.min(h - meter.h / 2 - 10, meter.y));
+            }
+            draw();
+        }
+
+        window.onresize = resize;
+
+        function flipMagnet() {
+            magnetPolarity *= -1;
+            draw();
+        }
+
+        function getMagneticField(x, y) {
+            let poleDist = magnet.w * 0.42;
+            let nX = magnet.x - magnetPolarity * poleDist;
+            let sX = magnet.x + magnetPolarity * poleDist;
+            let nY = magnet.y;
+            let sY = magnet.y;
+
+            let rN2 = (x - nX)**2 + (y - nY)**2 + 400;
+            let rS2 = (x - sX)**2 + (y - sY)**2 + 400;
+            let rN = Math.sqrt(rN2);
+            let rS = Math.sqrt(rS2);
+
+            let k = 12000;
+            let Bx = k * ((x - nX) / (rN**3) - (x - sX) / (rS**3));
+            let By = k * ((y - nY) / (rN**3) - (y - sY) / (rS**3));
+
+            return { Bx, By, B: Math.sqrt(Bx*Bx + By*By) };
+        }
+
+        function draw() {
+            if (!canvas.width || !canvas.height) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 1. Draw Mini Compass Grid
+            if (document.getElementById('chkGrid').checked) {
+                let spacing = 42;
+                for (let x = spacing / 2; x < canvas.width; x += spacing) {
+                    for (let y = spacing / 2; y < canvas.height; y += spacing) {
+                        if (Math.abs(x - magnet.x) < magnet.w / 2 + 10 && Math.abs(y - magnet.y) < magnet.h / 2 + 10) continue;
+
+                        let f = getMagneticField(x, y);
+                        let ang = Math.atan2(f.By, f.Bx);
+
+                        ctx.save();
+                        ctx.translate(x, y);
+                        ctx.rotate(ang);
+
+                        // Red North tip
+                        ctx.beginPath();
+                        ctx.moveTo(8, 0); ctx.lineTo(0, -3); ctx.lineTo(0, 3); ctx.closePath();
+                        ctx.fillStyle = '#ef4444'; ctx.fill();
+
+                        // White South tip
+                        ctx.beginPath();
+                        ctx.moveTo(-8, 0); ctx.lineTo(0, -3); ctx.lineTo(0, 3); ctx.closePath();
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.75)'; ctx.fill();
+
+                        ctx.restore();
+                    }
+                }
+            }
+
+            // 2. Draw Magnetic Field Lines
+            if (document.getElementById('chkLines').checked) {
+                let poleDist = magnet.w * 0.42;
+                let nX = magnet.x - magnetPolarity * poleDist;
+                let sX = magnet.x + magnetPolarity * poleDist;
+
+                ctx.lineWidth = 1.5;
+                ctx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
+
+                let launchAngles = [];
+                let numPairs = 5;
+                for (let p = 1; p <= numPairs; p++) {
+                    let a = (p / (numPairs + 1)) * Math.PI * 0.85;
+                    launchAngles.push(a);
+                    launchAngles.push(-a);
+                }
+                launchAngles.push(0);
+
+                launchAngles.forEach(relAngle => {
+                    let launchAngle = (magnetPolarity === 1 ? Math.PI : 0) + relAngle;
+                    let px = nX + Math.cos(launchAngle) * 16;
+                    let py = magnet.y + Math.sin(launchAngle) * 16;
+
+                    ctx.beginPath();
+                    ctx.moveTo(px, py);
+
+                    for (let step = 0; step < 200; step++) {
+                        let f = getMagneticField(px, py);
+                        if (f.B === 0) break;
+
+                        let stepSize = 4;
+                        px += (f.Bx / f.B) * stepSize;
+                        py += (f.By / f.B) * stepSize;
+
+                        ctx.lineTo(px, py);
+
+                        if (Math.hypot(px - sX, py - magnet.y) < 16 || px < -50 || px > canvas.width + 50 || py < -50 || py > canvas.height + 50) break;
+                    }
+                    ctx.stroke();
+                });
+            }
+
+            // 3. Draw Bar Magnet
+            ctx.save();
+            ctx.translate(magnet.x, magnet.y);
+
+            ctx.shadowBlur = 16; ctx.shadowColor = 'rgba(0,0,0,0.6)';
+
+            let nColor = magnetPolarity === 1 ? '#ef4444' : '#3b82f6';
+            let sColor = magnetPolarity === 1 ? '#3b82f6' : '#ef4444';
+            let nText = magnetPolarity === 1 ? 'N' : 'S';
+            let sText = magnetPolarity === 1 ? 'S' : 'N';
+
+            // Left Half
+            ctx.fillStyle = nColor;
+            ctx.fillRect(-magnet.w / 2, -magnet.h / 2, magnet.w / 2, magnet.h);
+
+            // Right Half
+            ctx.fillStyle = sColor;
+            ctx.fillRect(0, -magnet.h / 2, magnet.w / 2, magnet.h);
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 2;
+            ctx.strokeRect(-magnet.w / 2, -magnet.h / 2, magnet.w, magnet.h);
+
+            // Pole Labels N & S
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 20px Plus Jakarta Sans';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(nText, -magnet.w / 4, 0);
+            ctx.fillText(sText, magnet.w / 4, 0);
+
+            ctx.restore();
+
+            // 4. Draw Draggable Compass
+            let cf = getMagneticField(compass.x, compass.y);
+            compass.angle = Math.atan2(cf.By, cf.Bx);
+
+            ctx.save();
+            ctx.translate(compass.x, compass.y);
+
+            ctx.shadowBlur = 14; ctx.shadowColor = 'rgba(56, 189, 248, 0.4)';
+            ctx.fillStyle = '#0f172a';
+            ctx.beginPath(); ctx.arc(0, 0, compass.r, 0, Math.PI * 2); ctx.fill();
+            ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3; ctx.stroke();
+
+            // Degree marks
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)'; ctx.lineWidth = 1;
+            for (let a = 0; a < 360; a += 45) {
+                let rad = (a * Math.PI) / 180;
+                ctx.beginPath();
+                ctx.moveTo(Math.cos(rad) * (compass.r - 6), Math.sin(rad) * (compass.r - 6));
+                ctx.lineTo(Math.cos(rad) * (compass.r - 2), Math.sin(rad) * (compass.r - 2));
+                ctx.stroke();
+            }
+
+            ctx.rotate(compass.angle);
+
+            // Needle Red N
+            ctx.beginPath();
+            ctx.moveTo(compass.r - 5, 0); ctx.lineTo(0, -5); ctx.lineTo(0, 5); ctx.closePath();
+            ctx.fillStyle = '#ef4444'; ctx.fill();
+
+            // Needle White S
+            ctx.beginPath();
+            ctx.moveTo(-(compass.r - 5), 0); ctx.lineTo(0, -5); ctx.lineTo(0, 5); ctx.closePath();
+            ctx.fillStyle = '#ffffff'; ctx.fill();
+
+            // Center Pin
+            ctx.fillStyle = '#cbd5e1';
+            ctx.beginPath(); ctx.arc(0, 0, 3.5, 0, Math.PI * 2); ctx.fill();
+
+            ctx.restore();
+
+            // 5. Draw Draggable Field Meter (Gaussmeter)
+            if (document.getElementById('chkMeter').checked) {
+                let mf = getMagneticField(meter.x, meter.y);
+                let bG = (mf.B * 10).toFixed(2);
+                let bxG = (mf.Bx * 10).toFixed(2);
+                let byG = (mf.By * 10).toFixed(2);
+                let deg = Math.round((Math.atan2(mf.By, mf.Bx) * 180) / Math.PI);
+
+                ctx.save();
+                ctx.translate(meter.x, meter.y);
+
+                ctx.shadowBlur = 12; ctx.shadowColor = 'rgba(0,0,0,0.5)';
+                ctx.fillStyle = '#1e293b';
+                ctx.strokeStyle = '#38bdf8';
+                ctx.lineWidth = 2;
+                ctx.fillRect(-meter.w / 2, -meter.h / 2, meter.w, meter.h);
+                ctx.strokeRect(-meter.w / 2, -meter.h / 2, meter.w, meter.h);
+
+                // Sensor Crosshair
+                ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.arc(-meter.w/2 + 14, 0, 6, 0, Math.PI * 2); ctx.stroke();
+
+                // Meter Readings Text
+                ctx.fillStyle = '#34d399'; ctx.font = 'bold 12px Plus Jakarta Sans'; ctx.textAlign = 'left';
+                ctx.fillText(`B: ${bG} G`, -meter.w/2 + 28, -meter.h/2 + 16);
+
+                ctx.fillStyle = '#94a3b8'; ctx.font = '600 10px Plus Jakarta Sans';
+                ctx.fillText(`Bx: ${bxG}  By: ${byG}`, -meter.w/2 + 28, -meter.h/2 + 31);
+                ctx.fillText(`Góc: ${deg}°`, -meter.w/2 + 28, -meter.h/2 + 44);
+
+                ctx.restore();
+            }
+
+            // Update status text
+            let nLabel = magnetPolarity === 1 ? 'BẮC (N)' : 'NAM (S)';
+            let sLabel = magnetPolarity === 1 ? 'NAM (S)' : 'BẮC (N)';
+            document.getElementById('statusBanner').innerHTML = `🧲 THANH NAM CHÂM (${nLabel} ➔ ${sLabel}) • KÉO DI CHUYỂN THANH NAM CHÂM HOẶC KIM LA BÀN ĐỂ THẤY KIM XOAY THEO TỪ TRƯỜNG!`;
+        }
+
+        // Mouse Drag Handlers
+        canvas.addEventListener('mousedown', (e) => {
+            let rect = canvas.getBoundingClientRect();
+            let mx = e.clientX - rect.left;
+            let my = e.clientY - rect.top;
+
+            if (Math.hypot(mx - compass.x, my - compass.y) < compass.r + 10) {
+                compass.isDragging = true;
+                compass.hasMoved = true;
+                compass.dragOffsetX = mx - compass.x;
+                compass.dragOffsetY = my - compass.y;
+            } else if (Math.abs(mx - meter.x) < meter.w / 2 && Math.abs(my - meter.y) < meter.h / 2 && document.getElementById('chkMeter').checked) {
+                meter.isDragging = true;
+                meter.hasMoved = true;
+                meter.dragOffsetX = mx - meter.x;
+                meter.dragOffsetY = my - meter.y;
+            } else if (Math.abs(mx - magnet.x) < magnet.w / 2 + 10 && Math.abs(my - magnet.y) < magnet.h / 2 + 10) {
+                magnet.isDragging = true;
+                magnet.hasMoved = true;
+                magnet.dragOffsetX = mx - magnet.x;
+                magnet.dragOffsetY = my - magnet.y;
+            }
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            let rect = canvas.getBoundingClientRect();
+            let mx = e.clientX - rect.left;
+            let my = e.clientY - rect.top;
+
+            if (magnet.isDragging) {
+                magnet.x = mx - magnet.dragOffsetX;
+                magnet.y = my - magnet.dragOffsetY;
+                draw();
+            } else if (compass.isDragging) {
+                compass.x = mx - compass.dragOffsetX;
+                compass.y = my - compass.dragOffsetY;
+                draw();
+            } else if (meter.isDragging) {
+                meter.x = mx - meter.dragOffsetX;
+                meter.y = my - meter.dragOffsetY;
+                draw();
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            magnet.isDragging = false;
+            compass.isDragging = false;
+            meter.isDragging = false;
+        });
+
+        // Touch Drag Handlers
+        canvas.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 0) {
+                let rect = canvas.getBoundingClientRect();
+                let mx = e.touches[0].clientX - rect.left;
+                let my = e.touches[0].clientY - rect.top;
+
+                if (Math.hypot(mx - compass.x, my - compass.y) < compass.r + 15) {
+                    compass.isDragging = true;
+                    compass.hasMoved = true;
+                    compass.dragOffsetX = mx - compass.x;
+                    compass.dragOffsetY = my - compass.y;
+                } else if (Math.abs(mx - meter.x) < meter.w / 2 && Math.abs(my - meter.y) < meter.h / 2 && document.getElementById('chkMeter').checked) {
+                    meter.isDragging = true;
+                    meter.hasMoved = true;
+                    meter.dragOffsetX = mx - meter.x;
+                    meter.dragOffsetY = my - meter.y;
+                } else if (Math.abs(mx - magnet.x) < magnet.w / 2 + 15 && Math.abs(my - magnet.y) < magnet.h / 2 + 15) {
+                    magnet.isDragging = true;
+                    magnet.hasMoved = true;
+                    magnet.dragOffsetX = mx - magnet.x;
+                    magnet.dragOffsetY = my - magnet.y;
+                }
+            }
+        }, {passive: true});
+
+        canvas.addEventListener("touchmove", (e) => {
+            if (magnet.isDragging || compass.isDragging || (typeof meter !== "undefined" && meter.isDragging)) { e.preventDefault(); }
+            if (e.touches.length > 0) {
+                let rect = canvas.getBoundingClientRect();
+                let mx = e.touches[0].clientX - rect.left;
+                let my = e.touches[0].clientY - rect.top;
+
+                if (magnet.isDragging) {
+                    magnet.x = mx - magnet.dragOffsetX;
+                    magnet.y = my - magnet.dragOffsetY;
+                    draw();
+                } else if (compass.isDragging) {
+                    compass.x = mx - compass.dragOffsetX;
+                    compass.y = my - compass.dragOffsetY;
+                    draw();
+                } else if (meter.isDragging) {
+                    meter.x = mx - meter.dragOffsetX;
+                    meter.y = my - meter.dragOffsetY;
+                    draw();
+                }
+            }
+        }, {passive: false});
+
+        window.addEventListener('touchend', () => {
+            magnet.isDragging = false;
+            compass.isDragging = false;
+            meter.isDragging = false;
+        });
+
+        function animate() {
+            if (wrapper && (canvas.width !== wrapper.clientWidth || canvas.height !== wrapper.clientHeight)) {
+                resize();
+            } else {
+                draw();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        window.onload = () => {
+            resize();
+            animate();
+        };
+    </script>
+</body>
+</html>
