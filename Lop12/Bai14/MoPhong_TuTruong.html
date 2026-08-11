@@ -393,29 +393,43 @@
         let loops = 4;
         let animElectronOffset = 0;
 
-        let magnet = { x: 0, y: 0, w: 180, h: 48, isDragging: false, dragOffsetX: 0, dragOffsetY: 0 };
-        let compass = { x: 0, y: 0, r: 28, angle: 0, isDragging: false, dragOffsetX: 0, dragOffsetY: 0 };
-        let meter = { x: 0, y: 0, w: 110, h: 60, isDragging: false, dragOffsetX: 0, dragOffsetY: 0 };
+        let magnet = { x: 0, y: 0, w: 180, h: 48, isDragging: false, dragOffsetX: 0, dragOffsetY: 0, hasMoved: false };
+        let compass = { x: 0, y: 0, r: 28, angle: 0, isDragging: false, dragOffsetX: 0, dragOffsetY: 0, hasMoved: false };
+        let meter = { x: 0, y: 0, w: 110, h: 60, isDragging: false, dragOffsetX: 0, dragOffsetY: 0, hasMoved: false };
 
         function resize() {
+            if (!wrapper) return;
             canvas.width = wrapper.clientWidth;
             canvas.height = wrapper.clientHeight;
             
             let w = canvas.width;
             let h = canvas.height;
 
-            // Always ensure magnet, compass, and meter stay 100% inside visible canvas bounds
-            if (magnet.x === 0 || magnet.x > w) {
-                magnet.x = w * 0.45;
-                magnet.y = h * 0.45;
+            if (w <= 0 || h <= 0) return;
+
+            // Flexibly position elements based on percentages until dragged by user
+            if (!magnet.hasMoved) {
+                magnet.x = w * 0.42;
+                magnet.y = h * 0.48;
+            } else {
+                magnet.x = Math.max(magnet.w / 2 + 10, Math.min(w - magnet.w / 2 - 10, magnet.x));
+                magnet.y = Math.max(magnet.h / 2 + 10, Math.min(h - magnet.h / 2 - 10, magnet.y));
             }
-            if (compass.x === 0 || compass.x > w - 30 || compass.x < 30) {
-                compass.x = Math.min(w - 45, Math.max(80, w * 0.76));
-                compass.y = h * 0.45;
+
+            if (!compass.hasMoved) {
+                compass.x = Math.min(w - 50, Math.max(100, w * 0.76));
+                compass.y = h * 0.48;
+            } else {
+                compass.x = Math.max(compass.r + 10, Math.min(w - compass.r - 10, compass.x));
+                compass.y = Math.max(compass.r + 10, Math.min(h - compass.r - 10, compass.y));
             }
-            if (meter.x === 0 || meter.x > w - 50 || meter.x < 50) {
-                meter.x = Math.max(65, Math.min(w - 65, w * 0.22));
+
+            if (!meter.hasMoved) {
+                meter.x = Math.max(70, Math.min(w - 70, w * 0.22));
                 meter.y = h * 0.78;
+            } else {
+                meter.x = Math.max(meter.w / 2 + 10, Math.min(w - meter.w / 2 - 10, meter.x));
+                meter.y = Math.max(meter.h / 2 + 10, Math.min(h - meter.h / 2 - 10, meter.y));
             }
             draw();
         }
@@ -777,14 +791,17 @@
 
             if (Math.hypot(mx - compass.x, my - compass.y) < compass.r + 10) {
                 compass.isDragging = true;
+                compass.hasMoved = true;
                 compass.dragOffsetX = mx - compass.x;
                 compass.dragOffsetY = my - compass.y;
             } else if (Math.abs(mx - meter.x) < meter.w / 2 && Math.abs(my - meter.y) < meter.h / 2 && document.getElementById('chkMeter').checked) {
                 meter.isDragging = true;
+                meter.hasMoved = true;
                 meter.dragOffsetX = mx - meter.x;
                 meter.dragOffsetY = my - meter.y;
             } else if (Math.abs(mx - magnet.x) < magnet.w / 2 + 10 && Math.abs(my - magnet.y) < magnet.h / 2 + 10) {
                 magnet.isDragging = true;
+                magnet.hasMoved = true;
                 magnet.dragOffsetX = mx - magnet.x;
                 magnet.dragOffsetY = my - magnet.y;
             }
@@ -825,14 +842,17 @@
 
                 if (Math.hypot(mx - compass.x, my - compass.y) < compass.r + 15) {
                     compass.isDragging = true;
+                    compass.hasMoved = true;
                     compass.dragOffsetX = mx - compass.x;
                     compass.dragOffsetY = my - compass.y;
                 } else if (Math.abs(mx - meter.x) < meter.w / 2 && Math.abs(my - meter.y) < meter.h / 2 && document.getElementById('chkMeter').checked) {
                     meter.isDragging = true;
+                    meter.hasMoved = true;
                     meter.dragOffsetX = mx - meter.x;
                     meter.dragOffsetY = my - meter.y;
                 } else if (Math.abs(mx - magnet.x) < magnet.w / 2 + 15 && Math.abs(my - magnet.y) < magnet.h / 2 + 15) {
                     magnet.isDragging = true;
+                    magnet.hasMoved = true;
                     magnet.dragOffsetX = mx - magnet.x;
                     magnet.dragOffsetY = my - magnet.y;
                 }
@@ -869,7 +889,11 @@
         });
 
         function animate() {
-            draw();
+            if (wrapper && (canvas.width !== wrapper.clientWidth || canvas.height !== wrapper.clientHeight)) {
+                resize();
+            } else {
+                draw();
+            }
             requestAnimationFrame(animate);
         }
 

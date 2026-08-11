@@ -63,10 +63,17 @@
         let m2 = { x: 420, y: 110, w: 120, h: 36, dragging: false };
 
         function resize() {
+            if (!canvas.parentElement) return;
             canvas.width = canvas.parentElement.clientWidth;
             canvas.height = canvas.parentElement.clientHeight;
-            m1.y = canvas.height / 2;
-            m2.y = canvas.height / 2;
+            let w = canvas.width, h = canvas.height;
+            if (w <= 0 || h <= 0) return;
+            m1.x = w * 0.28;
+            m1.y = h * 0.5;
+            if (!m2.dragging && (!m2.hasDragged || m2.x > w)) {
+                m2.x = w * 0.68;
+            }
+            m2.y = h * 0.5;
             draw();
         }
         window.onresize = resize;
@@ -78,6 +85,10 @@
         }
 
         function draw() {
+            if (canvas.parentElement && (canvas.width !== canvas.parentElement.clientWidth || canvas.height !== canvas.parentElement.clientHeight)) {
+                resize();
+                return;
+            }
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             let dist = Math.max(10, Math.abs(m2.x - m1.x) - m1.w);
             let force = Math.min(100, Math.round(50000 / (dist + 30)));
