@@ -19,6 +19,36 @@
         .canvas-container { flex: 1; position: relative; background: #020617; border-radius: 12px; border: 1px solid #1e293b; overflow: hidden; }
         canvas { display: block; width: 100%; height: 100%; cursor: grab; }
         canvas:active { cursor: grabbing; }
+    
+        /* RESPONSIVE DESIGN CHO ĐIỆN THOẠI & MÁY TÍNH BẢNG */
+        @media (max-width: 768px) {
+            body {
+                padding: 4px !important;
+                overflow-y: auto !important;
+            }
+            .controls {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                padding: 6px 8px !important;
+                font-size: 0.75rem !important;
+                gap: 6px !important;
+            }
+            .btn-group {
+                flex-direction: column !important;
+                width: 100% !important;
+            }
+            .btn {
+                width: 100% !important;
+                text-align: center !important;
+                padding: 7px 10px !important;
+                font-size: 0.78rem !important;
+            }
+            .canvas-container {
+                min-height: 350px !important;
+                flex: 1 !important;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -320,6 +350,36 @@
         window.onmouseup = () => mag1.isDragging = false;
 
         window.onload = () => { resize(); draw(); };
-    </script>
+    
+        // Full Touch Event Support for Mobile/Tablet
+        canvas.addEventListener('touchstart', function(e) {
+            if (e.touches.length > 0) {
+                var touch = e.touches[0];
+                var mouseEvent = new MouseEvent('mousedown', {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                });
+                canvas.dispatchEvent(mouseEvent);
+            }
+        }, {passive: false});
+
+        canvas.addEventListener('touchmove', function(e) {
+            if (e.touches.length > 0) {
+                e.preventDefault();
+                var touch = e.touches[0];
+                var mouseEvent = new MouseEvent('mousemove', {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                });
+                canvas.dispatchEvent(mouseEvent);
+            }
+        }, {passive: false});
+
+        window.addEventListener('touchend', function(e) {
+            var mouseEvent = new MouseEvent('mouseup', {});
+            window.dispatchEvent(mouseEvent);
+        });
+
+</script>
 </body>
 </html>

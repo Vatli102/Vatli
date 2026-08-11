@@ -133,6 +133,57 @@
             pointer-events: none;
             z-index: 5;
         }
+    
+        /* RESPONSIVE DESIGN CHO ĐIỆN THOẠI & MÁY TÍNH BẢNG */
+        @media (max-width: 768px) {
+            body {
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                height: auto !important;
+                min-height: 100vh;
+            }
+            header {
+                padding: 0.4rem 0.8rem !important;
+            }
+            header h1 {
+                font-size: 0.85rem !important;
+            }
+            .lab-workspace {
+                flex-direction: column !important;
+                height: auto !important;
+                min-height: calc(100vh - 40px) !important;
+            }
+            .canvas-wrapper {
+                width: 100% !important;
+                height: 55vh !important;
+                min-height: 320px !important;
+                flex: none !important;
+            }
+            .control-panel {
+                width: 100% !important;
+                max-height: none !important;
+                border-left: none !important;
+                border-top: 1px solid var(--panel-border) !important;
+                padding: 0.8rem !important;
+                overflow-y: visible !important;
+            }
+            .hud-badge {
+                font-size: 0.7rem !important;
+                padding: 5px 10px !important;
+                top: 6px !important;
+                left: 6px !important;
+                max-width: calc(100% - 12px) !important;
+            }
+            .bottom-rack {
+                padding: 6px 12px !important;
+                gap: 8px !important;
+                bottom: 6px !important;
+                font-size: 0.75rem !important;
+                width: 95% !important;
+                justify-content: center !important;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -403,7 +454,8 @@
             }
         }, {passive: true});
 
-        canvas.addEventListener('touchmove', (e) => {
+        canvas.addEventListener("touchmove", (e) => {
+            if (magnet.isDragging || compass.isDragging || (typeof meter !== "undefined" && meter.isDragging)) { e.preventDefault(); }
             if (e.touches.length > 0) {
                 let rect = canvas.getBoundingClientRect();
                 let mx = e.touches[0].clientX - rect.left;
@@ -413,7 +465,7 @@
                 else if (mB.isDragging) { mB.x = mx - mB.dragOffsetX; mB.y = my - mB.dragOffsetY; draw(); }
                 else if (compass.isDragging) { compass.x = mx - compass.dragOffsetX; compass.y = my - compass.dragOffsetY; draw(); }
             }
-        }, {passive: true});
+        }, {passive: false});
 
         window.addEventListener('touchend', () => {
             mA.isDragging = false; mB.isDragging = false; compass.isDragging = false;
