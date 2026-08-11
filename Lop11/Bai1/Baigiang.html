@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 1: Dao động điều hòa - Vật lí 11 | vatli102.com</title>
+    
+    <link rel="apple-touch-icon" href="/favicon.svg">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --accent: #06b6d4;
+            --bg-body: #f8fafc;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-body); color: var(--text-dark); line-height: 1.8; }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+            padding: 0.8rem 2rem; display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .logo { display: flex; align-items: center; gap: 0.75rem; font-weight: 800; font-size: 1.2rem; color: var(--primary); text-decoration: none; }
+        .logo-icon { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+
+        .nav-links { display: flex; gap: 1.2rem; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 0.92rem; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--primary); }
+
+        .blog-post-content {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            border: 1px solid #e2e8f0;
+            max-width: 880px;
+            margin: 2.5rem auto;
+            padding: 35px 30px;
+        }
+
+        .blog-post-content h1 {
+            color: #0f172a;
+            font-size: 2.1rem;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .blog-post-content h2 {
+            color: #3730a3;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-top: 35px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .blog-post-content h2 i { color: #4f46e5; }
+
+        .blog-post-content h3 { color: #0284c7; font-size: 1.15rem; font-weight: 600; margin-top: 20px; margin-bottom: 10px; }
+
+        .blog-post-content p, .blog-post-content li {
+            text-align: justify;
+            margin-bottom: 12px;
+        }
+
+        .intro-lead {
+            font-size: 1.1rem; color: #475569; background-color: #f8fafc;
+            border-left: 4px solid #4f46e5; padding: 16px 20px; border-radius: 0 12px 12px 0; margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        .highlight-card {
+            background: linear-gradient(135deg, #eeef2a0f, #e0e7ff); border: 1px solid #c7d2fe;
+            border-radius: 14px; padding: 20px; margin: 20px 0; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.05);
+        }
+
+        .highlight-card-title { font-weight: 700; color: #3730a3; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+
+        .comparison-table-wrapper { overflow-x: auto; margin: 25px 0; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .comparison-table { width: 100%; border-collapse: collapse; background-color: #ffffff; font-size: 0.98rem; }
+        .comparison-table th { background-color: #3730a3; color: #ffffff; font-weight: 700; text-align: left; padding: 14px 16px; }
+        .comparison-table td { padding: 14px 16px; border-bottom: 1px solid #e2e8f0; }
+
+        .diagram-box-clean {
+            background: linear-gradient(145deg, #0f172a, #1e1b4b); border-radius: 20px; padding: 30px 15px; margin: 35px 0; text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.35); border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .diagram-title-clean { color: #818cf8; font-weight: 800; font-size: 1.3rem; margin-bottom: 25px; letter-spacing: 0.5px; }
+
+        .phase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 20px 0; }
+        .phase-box { background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 16px; transition: transform 0.2s, border-color 0.2s; }
+        .phase-box:hover { transform: translateY(-3px); border-color: #4f46e5; }
+        .phase-name { font-weight: 700; color: #0f172a; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+
+        .key-point { position: relative; padding-left: 24px; margin-bottom: 10px; }
+        .key-point::before { content: "\f058"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; left: 0; top: 2px; color: #4f46e5; font-size: 0.9rem; }
+        .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; background-color: #e0e7ff; color: #3730a3; }
+
+        .example-box { background-color: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 20px; margin: 25px 0; }
+        .example-header { font-weight: 800; color: #3730a3; font-size: 1.05rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .solution-box { background-color: #ffffff; border-left: 4px solid #10b981; padding: 14px 18px; margin-top: 14px; border-radius: 0 10px 10px 0; }
+
+        .img-banner-box {
+            border-radius: 16px; overflow: hidden; margin: 25px 0; box-shadow: 0 8px 25px rgba(0,0,0,0.08); border: 1px solid #e2e8f0;
+        }
+        .img-caption { text-align: center; font-size: 0.88rem; color: #64748b; font-style: italic; margin-top: 6px; }
+
+        .site-footer { text-align: center; padding: 25px 15px; background: #ffffff; border-top: 1px solid var(--border); margin-top: 40px; color: var(--text-muted); font-size: 0.88rem; }
+    </style>
+</head>
+<body>
+
+    <!-- 🌐 Header Navigation Bar -->
+    <nav class="navbar">
+        <a href="/" class="logo">
+            <div class="logo-icon"><i class="fa-solid fa-atom"></i></div>
+            <span>Vatli102.com</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="/"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
+            <li><a href="/gioi-thieu.html"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a></li>
+            <li><a href="/lien-he.html"><i class="fa-solid fa-envelope"></i> Liên hệ</a></li>
+        </ul>
+    </nav>
+
+    <!-- 📖 MAIN BLOG CONTENT -->
+    <main class="blog-post-content">
+        <span class="badge">Vật lí 11 • Chương I: Dao động</span>
+        <h1>Bài 1: Dao động điều hòa</h1>
+
+        <div class="intro-lead">
+            <strong>Tóm tắt bài học theo SGK:</strong> Trong đời sống, ta thường bắt gặp những chuyển động lặp đi lặp lại nhiều lần quanh một vị trí xác định như chuyển động của quả lắc đồng hồ, màng trống rung động hay chiếc xích đu. Những chuyển động như vậy gọi là dao động cơ học. Bài học này sẽ giúp học sinh hiểu rõ bản chất của dao động cơ, phân biệt dao động tuần hoàn với dao động điều hòa, nắm vững công thức chuẩn $x = A\cos(\omega t + \varphi)$, mối liên hệ với chuyển động tròn đều và kỹ năng đọc đồ thị li độ - thời gian.
+        </div>
+
+        <!-- HÌNH BANNER MÔ PHỎNG DAO ĐỘNG KẾT NỐI TRI THỨC -->
+        <div class="img-banner-box">
+            <svg viewBox="0 0 800 240" width="100%" height="100%" style="background: linear-gradient(135deg, #0f172a, #1e1b4b);">
+                <!-- Trục hoành thời gian -->
+                <line x1="80" y1="120" x2="720" y2="120" stroke="#475569" stroke-width="2" />
+                <polygon points="720,115 735,120 720,125" fill="#475569" />
+                <text x="735" y="138" fill="#94a3b8" font-size="14" font-weight="bold">t</text>
+
+                <!-- Trục tung li độ -->
+                <line x1="120" y1="210" x2="120" y2="30" stroke="#475569" stroke-width="2" />
+                <polygon points="115,30 120,15 125,30" fill="#475569" />
+                <text x="100" y="25" fill="#94a3b8" font-size="14" font-weight="bold">x</text>
+                <text x="95" y="125" fill="#38bdf8" font-size="14" font-weight="bold">O</text>
+                <text x="90" y="55" fill="#34d399" font-size="13" font-weight="bold">+A</text>
+                <text x="90" y="195" fill="#ef4444" font-size="13" font-weight="bold">-A</text>
+
+                <!-- Đường hình sin đại diện dao động điều hòa -->
+                <path d="M 120 120 Q 220 20, 320 120 T 520 120 T 720 120" fill="none" stroke="#818cf8" stroke-width="3.5" />
+                
+                <!-- Các điểm đỉnh biên -->
+                <circle cx="220" cy="50" r="5" fill="#34d399" />
+                <circle cx="420" cy="190" r="5" fill="#ef4444" />
+                <circle cx="620" cy="50" r="5" fill="#34d399" />
+
+                <text x="420" y="80" fill="#ffffff" font-size="16" font-weight="bold" text-anchor="middle">ĐỒ THỊ HÌNH SIN CỦA DAO ĐỘNG ĐIỀU HÒA</text>
+            </svg>
+            <div class="img-caption">Hình 1.1: Đồ thị biểu diễn li độ theo thời gian của một vật dao động điều hòa</div>
+        </div>
+
+        <!-- MỤC I -->
+        <h2><i class="fa-solid fa-arrows-left-right"></i> I. Khái niệm về Dao động Cơ học và Dao động Tuần hoàn</h2>
+
+        <h3>1. Dao động cơ học và Vị trí cân bằng</h3>
+        <p>Trong tự nhiên và kĩ thuật, có rất nhiều vật chuyển động qua lại xung quanh một vị trí xác định. Dưới đây là 4 ví dụ điển hình về dao động cơ học:</p>
+
+                <!-- HÌNH ẢNH MINH HỌA 4 VÍ DỤ DAO ĐỘNG THỰC TẾ (3D REALISTIC) -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 25px 0;">
+            <!-- Ví dụ 1: Quả lắc đồng hồ -->
+            <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.06); transition: transform 0.2s;">
+                <div style="height: 150px; border-radius: 10px; overflow: hidden; margin-bottom: 10px; background: #0f172a;">
+                    <img src="./pendulum_3d.jpg" alt="Quả lắc đồng hồ 3D" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div style="font-weight: 700; font-size: 0.95rem; color: #3730a3;">1. Quả lắc đồng hồ cổ</div>
+                <p style="font-size: 0.8rem; color: #64748b; margin-top: 4px; text-align: center;">Đung đưa qua lại quanh VTCB thẳng đứng</p>
+            </div>
+
+            <!-- Ví dụ 2: Cành cây trước gió -->
+            <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.06); transition: transform 0.2s;">
+                <div style="height: 150px; border-radius: 10px; overflow: hidden; margin-bottom: 10px; background: #0f172a;">
+                    <img src="./tree_branch_3d.jpg" alt="Cành cây đung đưa 3D" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div style="font-weight: 700; font-size: 0.95rem; color: #047857;">2. Cành cây trước gió</div>
+                <p style="font-size: 0.8rem; color: #64748b; margin-top: 4px; text-align: center;">Rung rinh đung đưa quanh vị trí tự nhiên</p>
+            </div>
+
+            <!-- Ví dụ 3: Màng trống rung động -->
+            <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.06); transition: transform 0.2s;">
+                <div style="height: 150px; border-radius: 10px; overflow: hidden; margin-bottom: 10px; background: #0f172a;">
+                    <img src="./drum_vibration_3d.jpg" alt="Màng trống rung động 3D" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div style="font-weight: 700; font-size: 0.95rem; color: #9a3412;">3. Màng trống khi bị gõ</div>
+                <p style="font-size: 0.8rem; color: #64748b; margin-top: 4px; text-align: center;">Rung động nhấp nhô cực nhanh khi phát ra âm</p>
+            </div>
+
+            <!-- Ví dụ 4: Pittông trong xi lanh -->
+            <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.06); transition: transform 0.2s;">
+                <div style="height: 150px; border-radius: 10px; overflow: hidden; margin-bottom: 10px; background: #0f172a;">
+                    <img src="./engine_piston_3d.jpg" alt="Pittông xi lanh 3D" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div style="font-weight: 700; font-size: 0.95rem; color: #1e293b;">4. Pittông trong xi lanh</div>
+                <p style="font-size: 0.8rem; color: #64748b; margin-top: 4px; text-align: center;">Chuyển động tịnh tiến qua lại trong động cơ</p>
+            </div>
+        </div>
+        <p>• <strong>Vị trí cân bằng (VTCB - gốc $O$):</strong> Là vị trí khi vật đứng yên thì hợp lực tác dụng lên vật bằng 0. Khi vật dao động, nó chuyển động qua lại xung quanh vị trí này.</p>
+        <p>• <strong>Dao động cơ học (gọi tắt là dao động):</strong> Là chuyển động lặp đi lặp lại của một vật xung quanh một vị trí cân bằng xác định.</p>
+        <p>• <strong>Giới hạn biên:</strong> Dao động cơ học luôn diễn ra trong một phạm vi không gian giới hạn giữa hai điểm ngoài cùng, gọi là <strong>biên âm ($-A$)</strong> và <strong>biên dương ($+A$)</strong>. Tại các vị trí biên này, vận tốc của vật bị giảm về 0 và vật dừng lại để đảo chiều chuyển động.</p>
+
+        <h3>2. Dao động tuần hoàn</h3>
+        <p>Trong thực tế, một số dao động có tính chất lặp lại rất đều đặn sau những khoảng thời gian bằng nhau.</p>
+        <p>• <strong>Dao động tuần hoàn:</strong> Là dao động cơ mà sau những khoảng thời gian bằng nhau xác định (gọi là chu kỳ $T$), trạng thái dao động của vật (bao gồm vị trí li độ và chiều chuyển động) được lặp lại như cũ.</p>
+
+        <!-- MỤC II -->
+        <h2><i class="fa-solid fa-square-root-variable"></i> II. Phương trình Dao động Điều hòa</h2>
+
+        <div class="highlight-card">
+            <div class="highlight-card-title"><i class="fa-solid fa-star"></i> Định nghĩa Dao động điều hòa:</div>
+            <p><strong>Dao động điều hòa</strong> là dao động tuần hoàn mà li độ $x$ của vật là một hàm cosin (hoặc sin) theo thời gian.</p>
+            <div style="text-align: center; margin: 15px 0;">
+                <span style="font-size: 1.4rem; font-weight: 800; color: #3730a3; background: #ffffff; padding: 8px 24px; border-radius: 12px; border: 2px solid #4f46e5; display: inline-block;">
+                    $$x = A \cos(\omega t + \varphi)$$
+                </span>
+            </div>
+        </div>
+
+        <h3>Ý nghĩa và đơn vị của từng đại lượng trong phương trình:</h3>
+        <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Đại lượng</th>
+                        <th>Ký hiệu & Đơn vị</th>
+                        <th>Bản chất & Ý nghĩa Vật lí</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Li độ</strong></td>
+                        <td>$x$ ($\text{cm}$ hoặc $\text{m}$)</td>
+                        <td>Độ dịch chuyển từ vị trí cân bằng $O$ đến vị trí của vật tại thời điểm $t$. Li độ có thể nhận giá trị âm ($x < 0$), dương ($x > 0$) hoặc bằng 0.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Biên độ</strong></td>
+                        <td>$A$ ($\text{cm}$ hoặc $\text{m}$)</td>
+                        <td>Li độ cực đại của vật ($A = x_{\text{max}}$). Biên độ luôn là hằng số dương ($A > 0$). Chiều dài quỹ đạo chuyển động của vật là $L = 2A$.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tần số góc</strong></td>
+                        <td>$\omega$ ($\text{rad/s}$)</td>
+                        <td>Đại lượng đặc trưng cho nhịp độ biến thiên pha của dao động. Tần số góc luôn là hằng số dương ($\omega > 0$).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pha dao động</strong></td>
+                        <td>$(\omega t + \varphi)$ ($\text{rad}$)</td>
+                        <td>Pha của dao động tại thời điểm $t$, cho biết trạng thái dao động của vật (bao gồm vị trí li độ và chiều chuyển động) ở thời điểm $t$.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pha ban đầu</strong></td>
+                        <td>$\varphi$ ($\text{rad}$)</td>
+                        <td>Pha của dao động tại thời điểm ban đầu $t = 0$, dùng để xác định vị trí li độ $x_0$ và chiều chuyển động lúc bắt đầu quan sát.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+                <!-- MỤC III -->
+        <h2><i class="fa-solid fa-compass-drafting"></i> III. Mối liên hệ giữa Dao động điều hòa và Chuyển động tròn đều</h2>
+
+        <p>Giữa dao động điều hòa và chuyển động tròn đều có mối liên hệ chặt chẽ về mặt hình học lượng giác:</p>
+        <p><strong>Một dao động điều hòa trên một trục thẳng có thể coi là hình chiếu của một chuyển động tròn đều lên một đường kính nằm trong mặt phẳng quỹ đạo đó.</strong></p>
+
+        <!-- 🔬 MÔ PHỎNG TƯƠNG TÁC: CHUYỂN ĐỘNG TRÒN ĐỀU & HÌNH CHIẾU DAO ĐỘNG ĐIỀU HÒA -->
+        <div class="diagram-box-clean" style="text-align: left; padding: 25px; margin: 30px 0;">
+            <div class="diagram-title-clean" style="margin-bottom: 15px; text-align: center;">
+                🔬 MÔ PHỎNG TƯƠNG TÁC: CHUYỂN ĐỘNG TRÒN ĐỀU & HÌNH CHIẾU DAO ĐỘNG ĐIỀU HÒA
+            </div>
+            <p style="color: #94a3b8; font-size: 0.9rem; text-align: center; margin-bottom: 20px;">
+                Quan sát điểm $M$ quay tròn đều trên đường tròn bán kính $R = A$ và hình chiếu $P$ của nó dao động điều hòa trên trục $Ox$!
+            </p>
+
+            <div style="display: grid; grid-template-columns: 1fr 280px; gap: 20px; align-items: start;">
+                <!-- Khung Canvas Mô Phỏng -->
+                <div style="position: relative; background: #090d16; border-radius: 14px; border: 1px solid #334155; overflow: hidden; height: 380px;">
+                    <canvas id="circleSimCanvas" width="500" height="380" style="width: 100%; height: 100%; display: block;"></canvas>
+                    <div style="position: absolute; top: 12px; left: 12px; background: rgba(15, 23, 42, 0.85); color: #38bdf8; border: 1px solid #0284c7; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 0.8rem;">
+                        ⏱️ $t = $ <span id="circleTimeText">0.00</span> s | $\Phi = $ <span id="circlePhaseText">0.00</span> rad
+                    </div>
+                </div>
+
+                <!-- Bảng Điều Khiển Thí Nghiệm -->
+                <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 18px; color: #f8fafc;">
+                    <div style="font-weight: 700; font-size: 1rem; color: #fbbf24; margin-bottom: 14px; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-sliders"></i> Cấu hình Tham số
+                    </div>
+
+                    <!-- Slider Tốc độ góc Omega -->
+                    <div style="margin-bottom: 14px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 4px;">
+                            <span>Tốc độ góc ($\omega$):</span>
+                            <strong style="color: #38bdf8;"><span id="valOmega">2.0</span> rad/s</strong>
+                        </div>
+                        <input type="range" id="sliderOmega" min="0.5" max="5.0" step="0.1" value="2.0" oninput="updateParams()" style="width: 100%; accent-color: #38bdf8; cursor: pointer;">
+                    </div>
+
+                    <!-- Slider Pha ban đầu Phi -->
+                    <div style="margin-bottom: 14px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 4px;">
+                            <span>Pha ban đầu ($\varphi$):</span>
+                            <strong style="color: #818cf8;"><span id="valPhi">0.0</span> rad</strong>
+                        </div>
+                        <input type="range" id="sliderPhi" min="-3.14" max="3.14" step="0.1" value="0" oninput="updateParams()" style="width: 100%; accent-color: #818cf8; cursor: pointer;">
+                    </div>
+
+                    <!-- Đọc trực tiếp Li độ x -->
+                    <div style="margin-bottom: 14px; font-size: 0.85rem; color: #94a3b8; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;">
+                        <div>📍 Li độ hình chiếu $x$: <strong style="color: #34d399;"><span id="valX">0.00</span> cm</strong></div>
+                        <div>🔄 Tốc độ quay: <strong style="color: #fbbf24;"><span id="valSpeed">0.32</span> vòng/s</strong></div>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; margin-top: 15px;">
+                        <button onclick="toggleCircleSim()" id="btnPlayCircle" style="flex: 1; padding: 10px; background: linear-gradient(135deg, #4f46e5, #06b6d4); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+                            ▶ Chạy mô phỏng
+                        </button>
+                        <button onclick="resetCircleSim()" style="padding: 10px 14px; background: #334155; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">
+                            🔄 Đặt lại
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        (function() {
+            const canvas = document.getElementById('circleSimCanvas');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            let animId = null;
+            let running = false;
+            let startTime = 0;
+            let pausedTime = 0;
+            let t = 0;
+
+            const cx = 200;
+            const cy = 190;
+            const R = 110; // Bán kính đường tròn (Biên độ A)
+
+            window.updateParams = function() {
+                const omega = parseFloat(document.getElementById('sliderOmega').value);
+                const phi = parseFloat(document.getElementById('sliderPhi').value);
+                document.getElementById('valOmega').innerText = omega.toFixed(1);
+                document.getElementById('valPhi').innerText = phi.toFixed(2);
+                document.getElementById('valSpeed').innerText = (omega / (2 * Math.PI)).toFixed(2);
+                if(!running) drawFrame();
+            };
+
+            function drawFrame() {
+                const omega = parseFloat(document.getElementById('sliderOmega').value);
+                const phi = parseFloat(document.getElementById('sliderPhi').value);
+                const totalPhase = omega * t + phi;
+
+                const mx = cx + R * Math.cos(totalPhase);
+                const my = cy - R * Math.sin(totalPhase); // Canvas Y hướng xuống
+                const px = mx;
+                const py = cy;
+
+                const x_val = (R * Math.cos(totalPhase) / 10).toFixed(2);
+
+                document.getElementById('circleTimeText').innerText = t.toFixed(2);
+                document.getElementById('circlePhaseText').innerText = (totalPhase % (2 * Math.PI)).toFixed(2);
+                document.getElementById('valX').innerText = (x_val >= 0 ? '+' : '') + x_val;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Bầu trời đêm
+                ctx.fillStyle = '#090d16';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Trục Oy (thẳng đứng)
+                ctx.strokeStyle = '#334155';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.moveTo(cx, cy - R - 30); ctx.lineTo(cx, cy + R + 30); ctx.stroke();
+
+                // Trục Ox (nằm ngang)
+                ctx.strokeStyle = '#64748b';
+                ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(30, cy); ctx.lineTo(460, cy); ctx.stroke();
+                // Mũi tên trục Ox
+                ctx.fillStyle = '#64748b';
+                ctx.beginPath(); ctx.moveTo(460, cy - 5); ctx.lineTo(470, cy); ctx.lineTo(460, cy + 5); ctx.fill();
+                ctx.fillText("x", 472, cy + 4);
+
+                // Đường tròn lượng giác
+                ctx.beginPath();
+                ctx.arc(cx, cy, R, 0, Math.PI * 2);
+                ctx.strokeStyle = '#38bdf8';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Gốc O
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 13px sans-serif';
+                ctx.fillText("O", cx - 14, cy + 18);
+                ctx.fillText("+A", cx + R - 5, cy + 20);
+                ctx.fillText("-A", cx - R - 15, cy + 20);
+
+                // Bán kính quay OM
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(mx, my);
+                ctx.strokeStyle = '#fbbf24';
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
+
+                // Cung góc pha
+                ctx.beginPath();
+                ctx.arc(cx, cy, 30, 0, -totalPhase, true);
+                ctx.strokeStyle = '#a855f7';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                // Đường dóng vuông góc từ M xuống P
+                ctx.beginPath();
+                ctx.moveTo(mx, my);
+                ctx.lineTo(px, py);
+                ctx.strokeStyle = 'rgba(239, 68, 68, 0.7)';
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([4, 4]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Điểm M quay tròn (Vàng)
+                ctx.beginPath();
+                ctx.arc(mx, my, 8, 0, Math.PI * 2);
+                ctx.fillStyle = '#fbbf24';
+                ctx.fill();
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+                ctx.fillStyle = '#fbbf24';
+                ctx.fillText("M (Tròn đều)", mx - 25, my - 12);
+
+                // Điểm P dao động điều hòa (Xanh dương)
+                ctx.beginPath();
+                ctx.arc(px, py, 9, 0, Math.PI * 2);
+                ctx.fillStyle = '#34d399';
+                ctx.fill();
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.fillStyle = '#34d399';
+                ctx.fillText("P (ĐH)", px - 15, py + 25);
+            }
+
+            window.toggleCircleSim = function() {
+                if(!running) {
+                    running = true;
+                    document.getElementById('btnPlayCircle').innerHTML = '⏸ Tạm dừng';
+                    document.getElementById('btnPlayCircle').style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+                    let lastNow = performance.now();
+                    function loop(now) {
+                        if(!running) return;
+                        let dt = (now - lastNow) / 1000;
+                        lastNow = now;
+                        t += dt;
+                        drawFrame();
+                        animId = requestAnimationFrame(loop);
+                    }
+                    animId = requestAnimationFrame(loop);
+                } else {
+                    running = false;
+                    if(animId) cancelAnimationFrame(animId);
+                    document.getElementById('btnPlayCircle').innerHTML = '▶ Chạy mô phỏng';
+                    document.getElementById('btnPlayCircle').style.background = 'linear-gradient(135deg, #4f46e5, #06b6d4)';
+                }
+            };
+
+            window.resetCircleSim = function() {
+                running = false;
+                if(animId) cancelAnimationFrame(animId);
+                t = 0;
+                document.getElementById('btnPlayCircle').innerHTML = '▶ Chạy mô phỏng';
+                document.getElementById('btnPlayCircle').style.background = 'linear-gradient(135deg, #4f46e5, #06b6d4)';
+                drawFrame();
+            };
+
+            updateParams();
+        })();
+        </script>
+
+                <!-- MỤC IV -->
+        <h2><i class="fa-solid fa-chart-area"></i> IV. Đồ thị Li độ - Thời gian của Dao động điều hòa</h2>
+        <p>Khi vẽ đồ thị biểu diễn li độ $x$ theo thời gian $t$, ta thu được một <strong>đường hình sin</strong> uốn lượn tuần hoàn mượt mà từ trái sang phải:</p>
+        <ul style="padding-left: 20px;">
+            <li class="key-point">Khi đường hình sin đạt <strong>đỉnh cao nhất</strong>: Vật ở vị trí biên dương ($x = +A$).</li>
+            <li class="key-point">Khi đường hình sin đạt <strong>đáy thấp nhất</strong>: Vật ở vị trí biên âm ($x = -A$).</li>
+            <li class="key-point">Khi đường hình sin <strong>cắt trục hoành thời gian $Ot$</strong>: Vật đi qua vị trí cân bằng ($x = 0$).</li>
+        </ul>
+
+        <!-- 🔬 MÔ PHỎNG TƯƠNG TÁC: VẼ ĐỒ THỊ LI ĐỘ - THỜI GIAN (x - t) THEO THỜI GIAN THỰC -->
+        <div class="diagram-box-clean" style="text-align: left; padding: 25px; margin: 30px 0;">
+            <div class="diagram-title-clean" style="margin-bottom: 15px; text-align: center;">
+                🔬 MÔ PHỎNG TƯƠNG TÁC: VẼ ĐỒ THỊ LI ĐỘ - THỜI GIAN ($x - t$) THEO THỜI GIAN THỰC
+            </div>
+            <p style="color: #94a3b8; font-size: 0.9rem; text-align: center; margin-bottom: 20px;">
+                Quan sát vật dao động điều hòa ở bên trái quét thành đồ thị sóng hình sin theo thời gian ở bên phải!
+            </p>
+
+            <div style="display: grid; grid-template-columns: 1fr 280px; gap: 20px; align-items: start;">
+                <!-- Khung Canvas Mô Phỏng -->
+                <div style="position: relative; background: #090d16; border-radius: 14px; border: 1px solid #334155; overflow: hidden; height: 380px;">
+                    <canvas id="graphSimCanvas" width="500" height="380" style="width: 100%; height: 100%; display: block;"></canvas>
+                    <div style="position: absolute; top: 12px; left: 12px; background: rgba(15, 23, 42, 0.85); color: #38bdf8; border: 1px solid #0284c7; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 0.8rem;">
+                        ⏱️ $t = $ <span id="graphTimeText">0.00</span> s | $x = $ <span id="graphXText">0.00</span> cm
+                    </div>
+                </div>
+
+                <!-- Bảng Điều Khiển Thí Nghiệm -->
+                <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 18px; color: #f8fafc;">
+                    <div style="font-weight: 700; font-size: 1rem; color: #fbbf24; margin-bottom: 14px; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-sliders"></i> Cấu hình Đồ thị
+                    </div>
+
+                    <!-- Slider Biên độ A -->
+                    <div style="margin-bottom: 14px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 4px;">
+                            <span>Biên độ ($A$):</span>
+                            <strong style="color: #34d399;"><span id="valGraphA">5.0</span> cm</strong>
+                        </div>
+                        <input type="range" id="sliderGraphA" min="2.0" max="8.0" step="0.5" value="5.0" oninput="updateGraphParams()" style="width: 100%; accent-color: #34d399; cursor: pointer;">
+                    </div>
+
+                    <!-- Slider Tần số f -->
+                    <div style="margin-bottom: 14px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 4px;">
+                            <span>Tần số ($f$):</span>
+                            <strong style="color: #38bdf8;"><span id="valGraphF">0.5</span> Hz</strong>
+                        </div>
+                        <input type="range" id="sliderGraphF" min="0.2" max="1.5" step="0.1" value="0.5" oninput="updateGraphParams()" style="width: 100%; accent-color: #38bdf8; cursor: pointer;">
+                    </div>
+
+                    <!-- Slider Pha ban đầu Phi -->
+                    <div style="margin-bottom: 14px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 4px;">
+                            <span>Pha ban đầu ($\varphi$):</span>
+                            <strong style="color: #818cf8;"><span id="valGraphPhi">0.0</span> rad</strong>
+                        </div>
+                        <input type="range" id="sliderGraphPhi" min="-3.14" max="3.14" step="0.1" value="0" oninput="updateGraphParams()" style="width: 100%; accent-color: #818cf8; cursor: pointer;">
+                    </div>
+
+                    <!-- Đọc Chu kỳ T -->
+                    <div style="margin-bottom: 14px; font-size: 0.85rem; color: #94a3b8; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;">
+                        <div>⏱️ Chu kỳ $T = 1/f$: <strong style="color: #fbbf24;"><span id="valGraphT">2.00</span> s</strong></div>
+                        <div>🌊 Tần số góc $\omega$: <strong style="color: #a7f3d0;"><span id="valGraphW">3.14</span> rad/s</strong></div>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; margin-top: 15px;">
+                        <button onclick="toggleGraphSim()" id="btnPlayGraph" style="flex: 1; padding: 10px; background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+                            ▶ Vẽ đồ thị
+                        </button>
+                        <button onclick="resetGraphSim()" style="padding: 10px 14px; background: #334155; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">
+                            🔄 Xóa đồ thị
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        (function() {
+            const canvas = document.getElementById('graphSimCanvas');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            let animId = null;
+            let running = false;
+            let t = 0;
+            let history = []; // Lưu tọa độ vết đồ thị
+
+            const startX = 100; // Trục tung li độ x
+            const centerY = 190; // Vị trí cân bằng O (y)
+
+            window.updateGraphParams = function() {
+                const A = parseFloat(document.getElementById('sliderGraphA').value);
+                const f = parseFloat(document.getElementById('sliderGraphF').value);
+                const phi = parseFloat(document.getElementById('sliderGraphPhi').value);
+
+                document.getElementById('valGraphA').innerText = A.toFixed(1);
+                document.getElementById('valGraphF').innerText = f.toFixed(1);
+                document.getElementById('valGraphPhi').innerText = phi.toFixed(2);
+                document.getElementById('valGraphT').innerText = (1 / f).toFixed(2);
+                document.getElementById('valGraphW').innerText = (2 * Math.PI * f).toFixed(2);
+
+                if(!running) drawGraphFrame();
+            };
+
+            function drawGraphFrame() {
+                const A = parseFloat(document.getElementById('sliderGraphA').value);
+                const f = parseFloat(document.getElementById('sliderGraphF').value);
+                const phi = parseFloat(document.getElementById('sliderGraphPhi').value);
+                const omega = 2 * Math.PI * f;
+
+                const scaleA = A * 12; // Tỷ lệ vẽ pixel
+                const currentX = A * Math.cos(omega * t + phi);
+                const currentY = centerY - currentX * 12;
+
+                document.getElementById('graphTimeText').innerText = t.toFixed(2);
+                document.getElementById('graphXText').innerText = (currentX >= 0 ? '+' : '') + currentX.toFixed(2);
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Nền bầu trời đêm
+                ctx.fillStyle = '#090d16';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Lưới tọa độ mờ
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+                ctx.lineWidth = 1;
+                for(let x=startX; x<canvas.width; x+=40) {
+                    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+                }
+
+                // Trục tung li độ (x cm) bên trái
+                ctx.strokeStyle = '#38bdf8';
+                ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(startX, 20); ctx.lineTo(startX, canvas.height - 20); ctx.stroke();
+                ctx.fillStyle = '#38bdf8';
+                ctx.fillText("x (cm)", startX - 35, 25);
+                ctx.fillText("+A", startX - 25, centerY - scaleA + 5);
+                ctx.fillText("-A", startX - 25, centerY + scaleA + 5);
+                ctx.fillText("O", startX - 18, centerY + 4);
+
+                // Đường giới hạn biên +A và -A
+                ctx.strokeStyle = 'rgba(52, 211, 153, 0.3)';
+                ctx.setLineDash([4, 4]);
+                ctx.beginPath(); ctx.moveTo(startX, centerY - scaleA); ctx.lineTo(canvas.width, centerY - scaleA); ctx.stroke();
+                ctx.strokeStyle = 'rgba(239, 68, 68, 0.3)';
+                ctx.beginPath(); ctx.moveTo(startX, centerY + scaleA); ctx.lineTo(canvas.width, centerY + scaleA); ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Trục hoành thời gian (t s)
+                ctx.strokeStyle = '#64748b';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.moveTo(startX, centerY); ctx.lineTo(canvas.width - 15, centerY); ctx.stroke();
+                ctx.fillStyle = '#64748b';
+                ctx.fillText("t (s)", canvas.width - 25, centerY + 18);
+
+                // Con lắc / Vật dao động ở bên trái
+                const massX = 45;
+                ctx.fillStyle = '#1e293b';
+                ctx.fillRect(35, centerY - scaleA - 15, 20, 10); // Giá treo
+                // Dây lò xo / trục thẳng
+                ctx.strokeStyle = '#94a3b8';
+                ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(massX, centerY - scaleA - 5); ctx.lineTo(massX, currentY); ctx.stroke();
+                // Vật nặng
+                ctx.beginPath(); ctx.arc(massX, currentY, 10, 0, Math.PI * 2);
+                ctx.fillStyle = '#fbbf24'; ctx.fill();
+                ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.stroke();
+
+                // 💧 WATERMARK VATLI102.COM TRÊN KHUNG CANVAS MÔ PHỎNG
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+                ctx.font = 'bold 13px sans-serif';
+                ctx.fillText("Vatli102.com", canvas.width - 95, canvas.height - 12);
+
+
+                // Đường nối ngang từ Vật tới Đồ thị
+                ctx.strokeStyle = 'rgba(251, 191, 36, 0.6)';
+                ctx.setLineDash([3, 3]);
+                ctx.beginPath(); ctx.moveTo(massX, currentY); ctx.lineTo(startX, currentY); ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Lưu vết đồ thị (history)
+                if(running) {
+                    history.push({ time: t, y: currentY });
+                    if(history.length > 350) history.shift();
+                }
+
+                // Vẽ đường đồ thị hình sin uốn lượn (history)
+                if(history.length > 1) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = '#818cf8';
+                    ctx.lineWidth = 3;
+                    for(let i=0; i<history.length; i++) {
+                        let ptX = startX + (t - history[i].time) * 80;
+                        let ptY = history[i].y;
+                        if(i === 0) ctx.moveTo(ptX, ptY);
+                        else ctx.lineTo(ptX, ptY);
+                    }
+                    ctx.stroke();
+                }
+
+                // Điểm li độ hiện tại trên đồ thị
+                ctx.beginPath(); ctx.arc(startX, currentY, 6, 0, Math.PI * 2);
+                ctx.fillStyle = '#818cf8'; ctx.fill();
+                ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.stroke();
+
+                // 💧 WATERMARK VATLI102.COM TRÊN KHUNG CANVAS MÔ PHỎNG
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+                ctx.font = 'bold 13px sans-serif';
+                ctx.fillText("Vatli102.com", canvas.width - 95, canvas.height - 12);
+
+            }
+
+            window.toggleGraphSim = function() {
+                if(!running) {
+                    running = true;
+                    document.getElementById('btnPlayGraph').innerHTML = '⏸ Tạm dừng';
+                    document.getElementById('btnPlayGraph').style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+                    let lastNow = performance.now();
+                    function loop(now) {
+                        if(!running) return;
+                        let dt = (now - lastNow) / 1000;
+                        lastNow = now;
+                        t += dt;
+                        drawGraphFrame();
+                        animId = requestAnimationFrame(loop);
+                    }
+                    animId = requestAnimationFrame(loop);
+                } else {
+                    running = false;
+                    if(animId) cancelAnimationFrame(animId);
+                    document.getElementById('btnPlayGraph').innerHTML = '▶ Vẽ đồ thị';
+                    document.getElementById('btnPlayGraph').style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                }
+            };
+
+            window.resetGraphSim = function() {
+                running = false;
+                if(animId) cancelAnimationFrame(animId);
+                t = 0;
+                history = [];
+                document.getElementById('btnPlayGraph').innerHTML = '▶ Vẽ đồ thị';
+                document.getElementById('btnPlayGraph').style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                drawGraphFrame();
+            };
+
+            updateGraphParams();
+        })();
+        </script>
+
+        <!-- VÍ DỤ MINH HỌA BÁM SÁT SGK -->
+        <div class="example-box">
+            <div class="example-header"><i class="fa-solid fa-lightbulb"></i> Ví dụ minh họa (SGK Kết nối tri thức)</div>
+            <p>Một vật dao động điều hòa dọc theo trục $Ox$ có phương trình li độ là: $x = 6 \cos\left(5\pi t - \frac{\pi}{4}\right)$ ($\text{cm}$, $t$ tính bằng giây).</p>
+            <p>a) Xác định biên độ $A$, tần số góc $\omega$ và pha ban đầu $\varphi$ của dao động.</p>
+            <p>b) Tính chiều dài quỹ đạo $L$ của vật.</p>
+            <p>c) Xác định pha dao động và li độ $x$ của vật tại thời điểm $t = 0,2\text{ s}$.</p>
+
+            <div class="solution-box">
+                <p><strong>Lời giải chi tiết:</strong></p>
+                <p>a) So sánh phương trình đã cho với phương trình chuẩn $x = A \cos(\omega t + \varphi)$, ta rút ra:</p>
+                <p>• Biên độ dao động: $A = 6\text{ cm}$.</p>
+                <p>• Tần số góc: $\omega = 5\pi\text{ rad/s}$.</p>
+                <p>• Pha ban đầu: $\varphi = -\frac{\pi}{4}\text{ rad}$.</p>
+                <p>b) Chiều dài quỹ đạo chuyển động của vật là:</p>
+                <p>$$L = 2A = 2 \times 6 = 12\text{ cm}$$</p>
+                <p>c) Tại thời điểm $t = 0,2\text{ s}$:</p>
+                <p>• Pha dao động của vật là: $\omega t + \varphi = 5\pi \times 0,2 - \frac{\pi}{4} = \pi - \frac{\pi}{4} = \frac{3\pi}{4}\text{ rad}$.</p>
+                <p>• Li độ của vật là:</p>
+                <p>$$x = 6 \cos\left(\frac{3\pi}{4}\right) = 6 \times \left(-\frac{\sqrt{2}}{2}\right) = -3\sqrt{2}\text{ cm} \approx -4,24\text{ cm}$$</p>
+            </div>
+        </div>
+
+        <!-- GHI NHỚ NHANH BÀI HỌC CÓ 3 NÚT TƯƠNG TÁC ĐỒNG BỘ BÀI 1 VẬT LÍ 12 -->
+        <div class="highlight-card" style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-color: #86efac;">
+            <div class="highlight-card-title" style="color: #166534;"><i class="fa-solid fa-bookmark"></i> GHI NHỚ NHANH BÀI HỌC (KEY TAKEAWAYS)</div>
+            <div class="key-point" style="color: #14532d;">Dao động cơ là chuyển động lặp đi lặp lại quanh <strong>Vị trí cân bằng</strong>.</div>
+            <div class="key-point" style="color: #14532d;">Dao động điều hòa có phương trình chuẩn dạng cosin: <strong>$x = A \cos(\omega t + \varphi)$</strong>.</div>
+            <div class="key-point" style="color: #14532d;">Biên độ $A > 0$ và Tần số góc $\omega > 0$ luôn là các hằng số dương. Quỹ đạo $L = 2A$.</div>
+            <div class="key-point" style="color: #14532d;">Dao động điều hòa là hình chiếu của một chuyển động tròn đều lên trục đường kính. Đồ thị $x-t$ là đường hình sin.</div>
+
+            <!-- 3 NÚT BẤM ĐỒNG BỘ BÀI 1 VẬT LÍ 12 -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5 pt-4 border-t border-emerald-300/60">
+                <a href="#video" class="p-3 bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs sm:text-sm rounded-xl text-center shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-youtube text-lg"></i> Xem bài giảng
+                </a>
+                <a href="TracNghiem_Online.html" class="p-3 bg-cyan-600 hover:bg-cyan-700 text-white font-extrabold text-xs sm:text-sm rounded-xl text-center shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-base"></i> Bài tập củng cố
+                </a>
+                <a href="../Bài 2 Mô tả dao động điều hòa/ly-thuyet.html" class="p-3 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs sm:text-sm rounded-xl text-center shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-arrow-right text-base"></i> Bài tiếp theo
+                </a>
+            </div>
+        </div>
+
+        <!-- 🎥 VIDEO BÀI GIẢNG YOUTUBE TÍCH HỢP -->
+        <div id="video" style="margin: 35px 0; text-align: center;">
+            <h3 style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <span style="color: #ff0000; font-size: 1.5rem;">▶</span> Video Bài Giảng Chi Tiết Bài 1 (YouTube)
+            </h3>
+            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid #cbd5e1;">
+                <iframe src="https://www.youtube.com/embed/0-fhbcMAWew" title="Video Bài Giảng YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
+            </div>
+            <div style="margin-top: 10px;">
+                <a href="https://youtu.be/0-fhbcMAWew" target="_blank" style="color: #ff0000; font-weight: 700; text-decoration: none; font-size: 0.9rem; inline-flex; align-items: center; gap: 5px;">
+                    🔗 Mở xem trực tiếp trên YouTube
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 📜 Site Footer -->
+    <footer class="site-footer">
+        <p>&copy; 2026 Vatli102 (vatli102.com). Bản quyền thuộc về ban quản trị.</p>
+    </footer>
+
+</body>
+</html>
