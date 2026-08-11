@@ -232,7 +232,7 @@
                 }
             }
 
-            // 2. Draw Magnetic Field Lines with directional arrows
+            // 2. Draw Magnetic Field Lines with directional arrows (Symmetric N & S)
             if (document.getElementById('chkLines').checked) {
                 let poleDist = magnet.w * 0.42;
                 let nX = magnet.x - magnetPolarity * poleDist;
@@ -241,8 +241,8 @@
                 ctx.lineWidth = 1.8;
                 ctx.strokeStyle = 'rgba(56, 189, 248, 0.75)';
 
-                let launchAngles = [];
                 let numPairs = 7;
+                let launchAngles = [];
                 for (let p = 1; p <= numPairs; p++) {
                     let a = (p / (numPairs + 1)) * Math.PI * 0.88;
                     launchAngles.push(a);
@@ -250,6 +250,7 @@
                 }
                 launchAngles.push(0);
 
+                // A. Trace Forward from North Pole (N)
                 launchAngles.forEach(relAngle => {
                     let launchAngle = (magnetPolarity === 1 ? Math.PI : 0) + relAngle;
                     let px = nX + Math.cos(launchAngle) * 16;
@@ -257,9 +258,10 @@
 
                     let points = [{x: px, y: py}];
                     let distAccum = 0;
-                    let arrowDistance = 65; // Draw arrowhead every ~65px
+                    let arrowDistance = 60;
 
-                    for (let step = 0; step < 260; step++) {
+                    let reachedS = false;
+                    for (let step = 0; step < 300; step++) {
                         let f = getMagneticField(px, py);
                         if (f.B === 0) break;
 
@@ -274,7 +276,11 @@
                         px = nextX;
                         py = nextY;
 
-                        if (Math.hypot(px - sX, py - magnet.y) < 16 || px < -80 || px > canvas.width + 80 || py < -80 || py > canvas.height + 80) break;
+                        if (Math.hypot(px - sX, py - magnet.y) < 16) {
+                            reachedS = true;
+                            break;
+                        }
+                        if (px < -100 || px > canvas.width + 100 || py < -100 || py > canvas.height + 100) break;
                     }
 
                     // Stroke field line
@@ -286,7 +292,7 @@
                         }
                         ctx.stroke();
 
-                        // Draw direction arrows along the field line (Vào Nam Ra Bắc)
+                        // Direction arrows (Vào Nam Ra Bắc)
                         points.forEach(pt => {
                             if (pt.drawArrow && pt.B > 0) {
                                 let ang = Math.atan2(pt.By, pt.Bx);
@@ -294,15 +300,62 @@
                                 ctx.translate(pt.x, pt.y);
                                 ctx.rotate(ang);
                                 ctx.beginPath();
-                                ctx.moveTo(5, 0);
-                                ctx.lineTo(-4, -3.5);
-                                ctx.lineTo(-4, 3.5);
-                                ctx.closePath();
-                                ctx.fillStyle = '#38bdf8';
-                                ctx.fill();
+                                ctx.moveTo(5, 0); ctx.lineTo(-4, -3.5); ctx.lineTo(-4, 3.5); ctx.closePath();
+                                ctx.fillStyle = '#38bdf8'; ctx.fill();
                                 ctx.restore();
                             }
                         });
+                    }
+
+                    // B. If this line went off-screen (did NOT reach S), draw symmetric line entering South Pole (S)
+                    if (!reachedS) {
+                        let sAngle = (magnetPolarity === 1 ? 0 : Math.PI) + relAngle;
+                        let spx = sX + Math.cos(sAngle) * 16;
+                        let spy = magnet.y + Math.sin(sAngle) * 16;
+
+                        let sPoints = [{x: spx, y: spy}];
+                        let sDistAccum = 0;
+
+                        for (let step = 0; step < 300; step++) {
+                            let f = getMagneticField(spx, spy);
+                            if (f.B === 0) break;
+
+                            let stepSize = 3;
+                            // Move backwards along -B
+                            let nextX = spx - (f.Bx / f.B) * stepSize;
+                            let nextY = spy - (f.By / f.B) * stepSize;
+
+                            sDistAccum += stepSize;
+                            sPoints.unshift({x: nextX, y: nextY, Bx: f.Bx, By: f.By, B: f.B, drawArrow: sDistAccum >= arrowDistance});
+                            if (sDistAccum >= arrowDistance) sDistAccum = 0;
+
+                            spx = nextX;
+                            spy = nextY;
+
+                            if (Math.hypot(spx - nX, spy - magnet.y) < 16 || spx < -100 || spx > canvas.width + 100 || spy < -100 || spy > canvas.height + 100) break;
+                        }
+
+                        if (sPoints.length > 1) {
+                            ctx.beginPath();
+                            ctx.moveTo(sPoints[0].x, sPoints[0].y);
+                            for (let i = 1; i < sPoints.length; i++) {
+                                ctx.lineTo(sPoints[i].x, sPoints[i].y);
+                            }
+                            ctx.stroke();
+
+                            sPoints.forEach(pt => {
+                                if (pt.drawArrow && pt.B > 0) {
+                                    let ang = Math.atan2(pt.By, pt.Bx);
+                                    ctx.save();
+                                    ctx.translate(pt.x, pt.y);
+                                    ctx.rotate(ang);
+                                    ctx.beginPath();
+                                    ctx.moveTo(5, 0); ctx.lineTo(-4, -3.5); ctx.lineTo(-4, 3.5); ctx.closePath();
+                                    ctx.fillStyle = '#38bdf8'; ctx.fill();
+                                    ctx.restore();
+                                }
+                            });
+                        }
                     }
                 });
 
