@@ -134,18 +134,26 @@
 
             // Animated Moving Current Flow Particles
             let totalH = botY - topY;
+            
+            // Wire 1 Particles (Left - I1 UPWARDS)
             for (let y = botY - 10 - animOffset; y > topY + 10; y -= 32) {
                 let t = (y - topY) / totalH;
                 let px = (1 - t)**2 * w1X + 2*(1 - t)*t * (w1X + bend) + t**2 * w1X;
                 drawArrow(px, y, true, '#ffedd5');
             }
 
-            for (let i = 0; i < 6; i++) {
-                let y = sameDir ? (botY - 10 - animOffset + i*32) : (topY + 10 + animOffset + i*32);
-                if (y >= topY + 10 && y <= botY - 10) {
+            // Wire 2 Particles (Right - I2 UPWARDS when sameDir, DOWNWARDS when !sameDir)
+            if (sameDir) {
+                for (let y = botY - 10 - animOffset; y > topY + 10; y -= 32) {
                     let t = (y - topY) / totalH;
                     let px = (1 - t)**2 * w2X + 2*(1 - t)*t * (w2X - bend) + t**2 * w2X;
-                    drawArrow(px, y, sameDir, '#e0f2fe');
+                    drawArrow(px, y, true, '#e0f2fe');
+                }
+            } else {
+                for (let y = topY + 10 + animOffset; y < botY - 10; y += 32) {
+                    let t = (y - topY) / totalH;
+                    let px = (1 - t)**2 * w2X + 2*(1 - t)*t * (w2X - bend) + t**2 * w2X;
+                    drawArrow(px, y, false, '#e0f2fe');
                 }
             }
 
