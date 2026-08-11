@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mô phỏng Nam châm & Kim la bàn (PhET Standard)</title>
+    <title>Mô phỏng Nam châm & Kim la bàn</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -101,7 +101,7 @@
 <body>
     <div class="controls">
         <div class="controls-group">
-            <span><i class="fa-solid fa-magnet text-blue-400"></i> <strong>Nam châm & Kim la bàn (PhET Standard):</strong></span>
+            <span><i class="fa-solid fa-magnet text-blue-400"></i> <strong>Nam châm & Kim la bàn:</strong></span>
             <button class="btn" onclick="flipMagnet()">
                 <i class="fa-solid fa-rotate"></i> Đảo Cực Nam Châm (N ↔ S)
             </button>
@@ -127,7 +127,7 @@
     </div>
 
     <div class="status-banner" id="statusBanner">
-        🧲 KÉO DI CHUYỂN THANH NAM CHÂM HOẶC KIM LA BÀN ĐỂ OBSERVE ĐỊNH HƯỚNG TỪ TRƯỜNG!
+        🧲 KÉO DI CHUYỂN THANH NAM CHÂM HOẶC KIM LA BÀN ĐỂ QUAN SÁT ĐỊNH HƯỚNG TỪ TRƯỜNG!
     </div>
 
     <script>
@@ -232,19 +232,19 @@
                 }
             }
 
-            // 2. Draw Magnetic Field Lines
+            // 2. Draw Magnetic Field Lines with directional arrows
             if (document.getElementById('chkLines').checked) {
                 let poleDist = magnet.w * 0.42;
                 let nX = magnet.x - magnetPolarity * poleDist;
                 let sX = magnet.x + magnetPolarity * poleDist;
 
-                ctx.lineWidth = 1.5;
-                ctx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
+                ctx.lineWidth = 1.8;
+                ctx.strokeStyle = 'rgba(56, 189, 248, 0.75)';
 
                 let launchAngles = [];
-                let numPairs = 5;
+                let numPairs = 7;
                 for (let p = 1; p <= numPairs; p++) {
-                    let a = (p / (numPairs + 1)) * Math.PI * 0.85;
+                    let a = (p / (numPairs + 1)) * Math.PI * 0.88;
                     launchAngles.push(a);
                     launchAngles.push(-a);
                 }
@@ -255,23 +255,70 @@
                     let px = nX + Math.cos(launchAngle) * 16;
                     let py = magnet.y + Math.sin(launchAngle) * 16;
 
-                    ctx.beginPath();
-                    ctx.moveTo(px, py);
+                    let points = [{x: px, y: py}];
+                    let distAccum = 0;
+                    let arrowDistance = 65; // Draw arrowhead every ~65px
 
-                    for (let step = 0; step < 200; step++) {
+                    for (let step = 0; step < 260; step++) {
                         let f = getMagneticField(px, py);
                         if (f.B === 0) break;
 
-                        let stepSize = 4;
-                        px += (f.Bx / f.B) * stepSize;
-                        py += (f.By / f.B) * stepSize;
+                        let stepSize = 3;
+                        let nextX = px + (f.Bx / f.B) * stepSize;
+                        let nextY = py + (f.By / f.B) * stepSize;
 
-                        ctx.lineTo(px, py);
+                        distAccum += stepSize;
+                        points.push({x: nextX, y: nextY, Bx: f.Bx, By: f.By, B: f.B, drawArrow: distAccum >= arrowDistance});
+                        if (distAccum >= arrowDistance) distAccum = 0;
 
-                        if (Math.hypot(px - sX, py - magnet.y) < 16 || px < -50 || px > canvas.width + 50 || py < -50 || py > canvas.height + 50) break;
+                        px = nextX;
+                        py = nextY;
+
+                        if (Math.hypot(px - sX, py - magnet.y) < 16 || px < -80 || px > canvas.width + 80 || py < -80 || py > canvas.height + 80) break;
                     }
-                    ctx.stroke();
+
+                    // Stroke field line
+                    if (points.length > 1) {
+                        ctx.beginPath();
+                        ctx.moveTo(points[0].x, points[0].y);
+                        for (let i = 1; i < points.length; i++) {
+                            ctx.lineTo(points[i].x, points[i].y);
+                        }
+                        ctx.stroke();
+
+                        // Draw direction arrows along the field line (Vào Nam Ra Bắc)
+                        points.forEach(pt => {
+                            if (pt.drawArrow && pt.B > 0) {
+                                let ang = Math.atan2(pt.By, pt.Bx);
+                                ctx.save();
+                                ctx.translate(pt.x, pt.y);
+                                ctx.rotate(ang);
+                                ctx.beginPath();
+                                ctx.moveTo(5, 0);
+                                ctx.lineTo(-4, -3.5);
+                                ctx.lineTo(-4, 3.5);
+                                ctx.closePath();
+                                ctx.fillStyle = '#38bdf8';
+                                ctx.fill();
+                                ctx.restore();
+                            }
+                        });
+                    }
                 });
+
+                // Also draw closed lines inside magnet from S to N
+                ctx.save();
+                ctx.setLineDash([4, 4]);
+                ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+                ctx.lineWidth = 1.5;
+                for (let i = -3; i <= 3; i++) {
+                    let offsetY = i * 5;
+                    ctx.beginPath();
+                    ctx.moveTo(sX, magnet.y + offsetY);
+                    ctx.lineTo(nX, magnet.y + offsetY);
+                    ctx.stroke();
+                }
+                ctx.restore();
             }
 
             // 3. Draw Bar Magnet
@@ -382,7 +429,7 @@
             // Update status text
             let nLabel = magnetPolarity === 1 ? 'BẮC (N)' : 'NAM (S)';
             let sLabel = magnetPolarity === 1 ? 'NAM (S)' : 'BẮC (N)';
-            document.getElementById('statusBanner').innerHTML = `🧲 THANH NAM CHÂM (${nLabel} ➔ ${sLabel}) • KÉO DI CHUYỂN THANH NAM CHÂM HOẶC KIM LA BÀN ĐỂ THẤY KIM XOAY THEO TỪ TRƯỜNG!`;
+            document.getElementById('statusBanner').innerHTML = `🧲 THANH NAM CHÂM (${nLabel} ➔ ${sLabel}) • KÉO DI CHUYỂN NAM CHÂM HOẶC KIM LA BÀN ĐỂ SỜ XEM ĐỊNH HƯỚNG TỪ TRƯỜNG!`;
         }
 
         // Mouse Drag Handlers
