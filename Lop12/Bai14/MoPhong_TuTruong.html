@@ -521,27 +521,34 @@
                 }
             }
 
-            // 2. Smooth Field Lines
+            // 2. Smooth Field Lines (100% Symmetrical Top/Bottom & Left/Right)
             if (document.getElementById('chkLines').checked) {
-                let numLines = 9;
                 let poleDist = magnet.w * 0.42;
                 let nX = magnet.x - magnetPolarity * poleDist;
                 let sX = magnet.x + magnetPolarity * poleDist;
 
                 ctx.lineWidth = 1.5;
+                ctx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
 
-                for (let i = 0; i < numLines; i++) {
-                    let angle = -Math.PI * 0.85 + (i / (numLines - 1)) * Math.PI * 1.7;
-                    if (Math.abs(angle) < 0.1) continue;
+                // Symmetric angles launching from North Pole above & below center line + axial center line
+                let launchAngles = [];
+                let numPairs = 5;
+                for (let p = 1; p <= numPairs; p++) {
+                    let a = (p / (numPairs + 1)) * Math.PI * 0.85;
+                    launchAngles.push(a);
+                    launchAngles.push(-a);
+                }
+                launchAngles.push(0);
 
-                    let px = nX + Math.cos(angle) * 18;
-                    let py = magnet.y + Math.sin(angle) * 18;
+                launchAngles.forEach(relAngle => {
+                    let launchAngle = (magnetPolarity === 1 ? Math.PI : 0) + relAngle;
+                    let px = nX + Math.cos(launchAngle) * 18;
+                    let py = magnet.y + Math.sin(launchAngle) * 18;
 
                     ctx.beginPath();
                     ctx.moveTo(px, py);
-                    ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
 
-                    for (let step = 0; step < 180; step++) {
+                    for (let step = 0; step < 220; step++) {
                         let f = getMagneticField(px, py);
                         if (f.B === 0) break;
 
@@ -551,10 +558,11 @@
 
                         ctx.lineTo(px, py);
 
-                        if (Math.hypot(px - sX, py - magnet.y) < 18 || px < 0 || px > canvas.width || py < 0 || py > canvas.height) break;
+                        if (Math.hypot(px - sX, py - magnet.y) < 18 || px < -50 || px > canvas.width + 50 || py < -50 || py > canvas.height + 50) break;
                     }
                     ctx.stroke();
-                }
+                });
+            }
             }
 
             // 3. Draw Bar Magnet OR PhET Electromagnet Coils & DC Battery

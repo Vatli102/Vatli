@@ -15,7 +15,7 @@
         .btn:hover { background: #334155; }
         .btn.active { background: #2563eb; border-color: #3b82f6; }
         .btn-dir { background: #0f172a; border-color: #38bdf8; }
-        .canvas-container { flex: 1; position: relative; background: #020617; border-radius: 12px; border: 1px solid #1e293b; overflow: hidden; min-height: 280px; }
+        .canvas-container { flex: 1; position: relative; background: #020617; border-radius: 12px; border: 1px solid #1e293b; overflow: hidden; min-height: 260px; }
         canvas { display: block; width: 100%; height: 100%; }
         
         .status-banner {
@@ -129,7 +129,7 @@
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             let cx = canvas.width / 2, cy = canvas.height / 2;
-            let wireY = cy - 40;
+            let wireY = cy - 35;
             let wireLeft = 40;
             let wireRight = canvas.width - 40;
 
@@ -137,11 +137,18 @@
                 animOffset = (animOffset + 1.5) % 35;
             }
 
-            // Wire line
+            // 1. Stand Base & Metallic Pillar supporting compass
+            let compassY = cy + 45;
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(cx - 30, compassY + 38, 60, 8); // Stand foot
+            ctx.fillStyle = '#64748b';
+            ctx.fillRect(cx - 4, compassY + 5, 8, 35); // Metal rod
+
+            // 2. Wire conductor line
             ctx.strokeStyle = isClosed ? (dirRight ? '#f97316' : '#f43f5e') : '#64748b';
-            ctx.lineWidth = 6;
+            ctx.lineWidth = 7;
             if (isClosed) {
-                ctx.shadowBlur = 10;
+                ctx.shadowBlur = 12;
                 ctx.shadowColor = dirRight ? '#f97316' : '#f43f5e';
             }
             ctx.beginPath();
@@ -152,8 +159,8 @@
 
             // Wire terminals
             ctx.fillStyle = '#94a3b8';
-            ctx.beginPath(); ctx.arc(wireLeft, wireY, 5, 0, Math.PI*2); ctx.fill();
-            ctx.beginPath(); ctx.arc(wireRight, wireY, 5, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath(); ctx.arc(wireLeft, wireY, 6, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath(); ctx.arc(wireRight, wireY, 6, 0, Math.PI*2); ctx.fill();
 
             // Wire Current Arrows & Label
             if (isClosed) {
@@ -184,43 +191,64 @@
             // Smooth needle animation
             angle += (targetAngle - angle) * 0.08;
 
-            // Compass Base (Positioned cleanly below wire)
-            let compassY = cy + 42;
+            // 3. Compass Outer Dial
             ctx.save();
             ctx.translate(cx, compassY);
+            
+            // Dial shadow & body
             ctx.fillStyle = '#1e293b';
             ctx.strokeStyle = '#38bdf8';
-            ctx.lineWidth = 2;
-            ctx.beginPath(); ctx.arc(0, 0, 36, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+            ctx.lineWidth = 2.5;
+            ctx.beginPath(); ctx.arc(0, 0, 42, 0, Math.PI*2); ctx.fill(); ctx.stroke();
 
-            // Dial compass ticks
-            ctx.fillStyle = '#94a3b8';
-            ctx.font = 'bold 9px Plus Jakarta Sans';
-            ctx.textAlign = 'center';
-            ctx.fillText('N', 0, -25);
-            ctx.fillText('S', 0, 30);
-            ctx.fillText('W', -28, 3);
-            ctx.fillText('E', 28, 3);
+            // Dial compass ticks & Cardinal Labels
+            ctx.fillStyle = '#cbd5e1';
+            ctx.font = 'bold 11px Plus Jakarta Sans';
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText('N', 0, -29);
+            ctx.fillText('S', 0, 29);
+            ctx.fillText('W', -30, 0);
+            ctx.fillText('E', 30, 0);
 
-            // Rotating Needle
+            // 4. Prominent 3D Rotating Compass Needle
             ctx.rotate(angle);
-            // North Pole (Red)
-            ctx.fillStyle = '#ef4444';
-            ctx.beginPath(); ctx.moveTo(28, 0); ctx.lineTo(0, -5); ctx.lineTo(0, 5); ctx.fill();
+            
+            // North Pole (Red Pointer)
+            let nGrad = ctx.createLinearGradient(0, -6, 40, 6);
+            nGrad.addColorStop(0, '#f87171');
+            nGrad.addColorStop(0.5, '#ef4444');
+            nGrad.addColorStop(1, '#b91c1c');
+            ctx.fillStyle = nGrad;
+            ctx.beginPath();
+            ctx.moveTo(38, 0); ctx.lineTo(0, -8); ctx.lineTo(0, 8);
+            ctx.closePath(); ctx.fill();
+            ctx.strokeStyle = '#fca5a5'; ctx.lineWidth = 1; ctx.stroke();
+
             ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 9px Plus Jakarta Sans';
-            ctx.fillText('N', 16, 3);
+            ctx.font = 'bold 10px Plus Jakarta Sans';
+            ctx.fillText('N', 20, 0);
 
-            // South Pole (White/Blue-grey)
-            ctx.fillStyle = '#e2e8f0';
-            ctx.beginPath(); ctx.moveTo(-28, 0); ctx.lineTo(0, -5); ctx.lineTo(0, 5); ctx.fill();
+            // South Pole (Silver / Blue-Grey Pointer)
+            let sGrad = ctx.createLinearGradient(-40, -6, 0, 6);
+            sGrad.addColorStop(0, '#64748b');
+            sGrad.addColorStop(0.5, '#cbd5e1');
+            sGrad.addColorStop(1, '#f1f5f9');
+            ctx.fillStyle = sGrad;
+            ctx.beginPath();
+            ctx.moveTo(-38, 0); ctx.lineTo(0, -8); ctx.lineTo(0, 8);
+            ctx.closePath(); ctx.fill();
+            ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1; ctx.stroke();
+
             ctx.fillStyle = '#0f172a';
-            ctx.font = 'bold 9px Plus Jakarta Sans';
-            ctx.fillText('S', -16, 3);
+            ctx.font = 'bold 10px Plus Jakarta Sans';
+            ctx.fillText('S', -20, 0);
 
-            // Center Pin
-            ctx.fillStyle = '#fbbf24';
-            ctx.beginPath(); ctx.arc(0, 0, 4, 0, Math.PI*2); ctx.fill();
+            // Gold Center Pin & Pivot Cap
+            ctx.fillStyle = '#f59e0b';
+            ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = '#fef08a';
+            ctx.beginPath(); ctx.arc(-1, -1, 2.5, 0, Math.PI*2); ctx.fill();
+
             ctx.restore();
 
             requestAnimationFrame(draw);

@@ -1,75 +1,54 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mô phỏng 3D Từ Phổ Dòng Điện Chuẩn PhET Colorado (Hình 14.6 & 14.7)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+    <title>Mô phỏng Thí nghiệm 2: Từ phổ của Dòng điện (Thí nghiệm 2a, 2b)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: #0b0f19; color: #f8fafc; overflow: hidden; padding: 8px; display: flex; flex-direction: column; height: 100vh; }
-        .controls { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.06); padding: 8px 12px; border-radius: 10px; margin-bottom: 6px; font-size: 0.8rem; gap: 6px; flex-wrap: wrap; }
+        body { background: #0f172a; color: #f8fafc; overflow: hidden; padding: 8px; display: flex; flex-direction: column; height: 100vh; }
+        .controls { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 10px; margin-bottom: 8px; font-size: 0.8rem; gap: 8px; flex-wrap: wrap; }
         .btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
-        .btn { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; padding: 5px 12px; border-radius: 6px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-size: 0.75rem; }
-        .btn:hover { background: #334155; color: white; }
-        .btn.active { background: #2563eb; color: white; border-color: #3b82f6; }
-        .btn-phet { background: #059669; color: white; border-color: #10b981; }
-        .btn-phet:hover { background: #047857; }
-        .canvas-container { flex: 1; position: relative; background: #020617; border-radius: 12px; border: 1px solid #1e293b; overflow: hidden; }
-        canvas { display: block; width: 100%; height: 100%; cursor: grab; }
-        canvas:active { cursor: grabbing; }
-    
+        .btn { background: #1e293b; color: white; border: 1px solid #334155; padding: 6px 12px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.78rem; transition: all 0.2s; }
+        .btn:hover { background: #334155; }
+        .btn.active { background: #059669; border-color: #10b981; }
+        .btn-view { background: #0f172a; border-color: #38bdf8; }
+        .canvas-container { flex: 1; position: relative; background: #020617; border-radius: 12px; border: 1px solid #1e293b; overflow: hidden; min-height: 260px; }
+        canvas { display: block; width: 100%; height: 100%; }
+
         /* RESPONSIVE DESIGN CHO ĐIỆN THOẠI & MÁY TÍNH BẢNG */
         @media (max-width: 768px) {
-            body {
-                padding: 4px !important;
-                overflow-y: auto !important;
-            }
-            .controls {
-                flex-direction: column !important;
-                align-items: stretch !important;
-                padding: 6px 8px !important;
-                font-size: 0.75rem !important;
-                gap: 6px !important;
-            }
-            .btn-group {
-                flex-direction: column !important;
-                width: 100% !important;
-            }
-            .btn {
-                width: 100% !important;
-                text-align: center !important;
-                padding: 7px 10px !important;
-                font-size: 0.78rem !important;
-            }
-            .canvas-container {
-                min-height: 350px !important;
-                flex: 1 !important;
-            }
+            body { padding: 4px !important; overflow-y: auto !important; }
+            .controls { flex-direction: column !important; align-items: stretch !important; padding: 6px 8px !important; font-size: 0.75rem !important; gap: 6px !important; }
+            .btn-group { flex-direction: column !important; width: 100% !important; }
+            .btn { width: 100% !important; text-align: center !important; padding: 7px 10px !important; font-size: 0.78rem !important; }
         }
-
     </style>
 </head>
 <body>
     <div class="controls">
-        <span><strong>Mô phỏng 3D Từ Phổ Dòng Điện PhET (SGK Trang 58)</strong></span>
+        <span><strong>Thí nghiệm 2: Từ phổ của dòng điện:</strong></span>
         <div class="btn-group">
-            <button class="btn active" id="btn146" onclick="setMode('14.6')">Hình 14.6: Dây thẳng 3D</button>
-            <button class="btn" id="btn147" onclick="setMode('14.7')">Hình 14.7: Ống dây 3D</button>
-            <button class="btn btn-phet" id="btnView" onclick="toggleViewMode()">Chế độ: Lưới Kim La Bàn PhET</button>
+            <button class="btn active" id="btn2a" onclick="setMode('2a')">Thí nghiệm 2a: Dây dẫn thẳng dài</button>
+            <button class="btn" id="btn2b" onclick="setMode('2b')">Thí nghiệm 2b: Dòng điện trong ống dây (Solenoid PhET)</button>
+            <button class="btn btn-view" id="btnView" onclick="toggleViewMode()">Chế độ: Lưới Kim La Bàn PhET</button>
         </div>
     </div>
+    
     <div class="canvas-container">
         <canvas id="c"></canvas>
     </div>
+
     <script>
         const canvas = document.getElementById('c');
         const ctx = canvas.getContext('2d');
 
-        let mode = '14.6'; // '14.6' or '14.7'
+        let mode = '2a'; // '2a' or '2b'
         let viewMode = 'compass'; // 'compass' or 'filings'
         let grid = [];
+        let animCurrentOffset = 0;
 
         function resize() {
             canvas.width = canvas.parentElement.clientWidth;
@@ -90,8 +69,8 @@
 
         function setMode(m) {
             mode = m;
-            document.getElementById('btn146').classList.toggle('active', m === '14.6');
-            document.getElementById('btn147').classList.toggle('active', m === '14.7');
+            document.getElementById('btn2a').classList.toggle('active', m === '2a');
+            document.getElementById('btn2b').classList.toggle('active', m === '2b');
             initGrid();
         }
 
@@ -106,22 +85,30 @@
             let cx = canvas.width / 2;
             let cy = canvas.height / 2;
 
-            if (mode === '14.6') {
+            if (mode === '2a') {
                 let dx = px - cx;
                 let dy = py - cy;
                 let r = Math.hypot(dx, dy) + 5;
                 let angle = Math.atan2(dy, dx) + Math.PI / 2;
                 return { angle: angle, B: 1 / r };
             } 
-            else if (mode === '14.7') {
-                let solLeft = cx - 100, solRight = cx + 100, solR = 40;
-                if (px >= solLeft && px <= solRight && Math.abs(py - cy) <= solR) {
-                    return { angle: 0, B: 0.05 };
+            else if (mode === '2b') {
+                let solLeft = cx - 110, solRight = cx + 110, solR = 40;
+                
+                // Inside solenoid: Uniform parallel field pointing Right (North at solRight, South at solLeft)
+                if (px >= solLeft && px <= solRight && Math.abs(py - cy) <= solR * 0.85) {
+                    return { angle: 0, B: 0.08 };
                 } else {
-                    let rN = Math.hypot(px - solLeft, py - cy) + 12;
-                    let rS = Math.hypot(px - solRight, py - cy) + 12;
-                    let Bx = (px - solLeft) / (rN ** 3) - (px - solRight) / (rS ** 3);
-                    let By = (py - cy) / (rN ** 3) - (py - cy) / (rS ** 3);
+                    // Outside solenoid: Loops from North (Right) to South (Left)
+                    let nPole = { x: solRight, y: cy };
+                    let sPole = { x: solLeft, y: cy };
+
+                    let rN = Math.hypot(px - nPole.x, py - nPole.y) + 15;
+                    let rS = Math.hypot(px - sPole.x, py - sPole.y) + 15;
+
+                    let Bx = (px - nPole.x) / (rN ** 2.8) - (px - sPole.x) / (rS ** 2.8);
+                    let By = (py - nPole.y) / (rN ** 2.8) - (py - sPole.y) / (rS ** 2.8);
+
                     return { angle: Math.atan2(By, Bx), B: Math.hypot(Bx, By) };
                 }
             }
@@ -155,37 +142,107 @@
 
         function draw3DConductor() {
             let cx = canvas.width / 2, cy = canvas.height / 2;
-            if (mode === '14.6') {
-                let wireGrad = ctx.createRadialGradient(cx - 3, cy - 3, 2, cx, cy, 16);
+            animCurrentOffset = (animCurrentOffset + 1.2) % 20;
+
+            if (mode === '2a') {
+                // Straight Conductor (3D Cross-section)
+                let wireGrad = ctx.createRadialGradient(cx - 4, cy - 4, 3, cx, cy, 20);
                 wireGrad.addColorStop(0, '#ffedd5');
                 wireGrad.addColorStop(0.4, '#f97316');
                 wireGrad.addColorStop(1, '#9a3412');
 
                 ctx.fillStyle = wireGrad;
-                ctx.beginPath(); ctx.arc(cx, cy, 16, 0, Math.PI * 2); ctx.fill();
-                ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.stroke();
+                ctx.beginPath(); ctx.arc(cx, cy, 20, 0, Math.PI * 2); ctx.fill();
+                ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2.5; ctx.stroke();
 
+                // Current Dot Symbol (⊙ Out of page)
                 ctx.fillStyle = '#ffffff';
-                ctx.beginPath(); ctx.arc(cx, cy, 4, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI * 2); ctx.fill();
 
                 ctx.fillStyle = '#f97316'; ctx.font = 'bold 13px Plus Jakarta Sans'; ctx.textAlign = 'center';
-                ctx.fillText('DÂY DẪN THẲNG 3D (Dòng I vuông góc mặt phẳng)', cx, cy - 26);
+                ctx.fillText('DÂY DẪN THẲNG dài 3D (Dòng I ⊙ hướng vuông góc ra ngoài mặt phẳng)', cx, cy - 30);
             } 
-            else if (mode === '14.7') {
-                let solLeft = cx - 100, solRight = cx + 100, solR = 40;
-                
-                for (let x = solLeft; x <= solRight; x += 16) {
-                    let coilGrad = ctx.createLinearGradient(x - 6, cy - solR, x + 6, cy + solR);
-                    coilGrad.addColorStop(0, '#f97316');
-                    coilGrad.addColorStop(0.5, '#ffedd5');
-                    coilGrad.addColorStop(1, '#9a3412');
+            else if (mode === '2b') {
+                // PhET Standard 3D Solenoid (Ống Dây Cuộn Đồng 3D)
+                let solLeft = cx - 110, solRight = cx + 110, solR = 40;
+                let numTurns = 8;
+                let turnGap = (solRight - solLeft) / (numTurns - 1);
 
-                    ctx.strokeStyle = coilGrad; ctx.lineWidth = 4;
-                    ctx.beginPath(); ctx.ellipse(x, cy, 7, solR, 0, 0, Math.PI * 2); ctx.stroke();
+                // 1. Back Arc of Copper Loops (Behind Glass Core Cylinder)
+                for (let i = 0; i < numTurns; i++) {
+                    let x = solLeft + i * turnGap;
+                    let backGrad = ctx.createLinearGradient(x - 12, cy - solR, x + 12, cy + solR);
+                    backGrad.addColorStop(0, '#92400e');
+                    backGrad.addColorStop(0.5, '#b45309');
+                    backGrad.addColorStop(1, '#78350f');
+
+                    ctx.strokeStyle = backGrad;
+                    ctx.lineWidth = 6.5;
+                    ctx.beginPath();
+                    ctx.ellipse(x, cy, 14, solR, 0, Math.PI * 1.5, Math.PI * 0.5);
+                    ctx.stroke();
                 }
 
+                // 2. Glass / Acrylic Cylinder Tube Core
+                let glassGrad = ctx.createLinearGradient(solLeft, cy - solR, solLeft, cy + solR);
+                glassGrad.addColorStop(0, 'rgba(56, 189, 248, 0.15)');
+                glassGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.05)');
+                glassGrad.addColorStop(1, 'rgba(56, 189, 248, 0.15)');
+                
+                ctx.fillStyle = glassGrad;
+                ctx.fillRect(solLeft - 10, cy - solR, (solRight - solLeft) + 20, solR * 2);
+                ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)'; ctx.lineWidth = 1.5;
+                ctx.strokeRect(solLeft - 10, cy - solR, (solRight - solLeft) + 20, solR * 2);
+
+                // Pole Badges on Solenoid Ends
+                ctx.fillStyle = '#ef4444'; ctx.font = 'bold 16px Plus Jakarta Sans'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                ctx.fillText('N', solRight + 22, cy); ctx.fillStyle = '#3b82f6';
+                ctx.fillText('S', solLeft - 22, cy);
+
+                // 3. Front Arc of Copper Loops (In Front of Glass Core Tube - PhET Metallic 3D Glow)
+                for (let i = 0; i < numTurns; i++) {
+                    let x = solLeft + i * turnGap;
+                    let frontGrad = ctx.createLinearGradient(x - 12, cy - solR, x + 12, cy + solR);
+                    frontGrad.addColorStop(0, '#fbbf24');
+                    frontGrad.addColorStop(0.3, '#f59e0b');
+                    frontGrad.addColorStop(0.7, '#d97706');
+                    frontGrad.addColorStop(1, '#b45309');
+
+                    ctx.strokeStyle = frontGrad;
+                    ctx.lineWidth = 7;
+                    ctx.beginPath();
+                    ctx.ellipse(x, cy, 14, solR, 0, Math.PI * 0.5, Math.PI * 1.5);
+                    ctx.stroke();
+
+                    // Metallic Specular Highlight Line
+                    ctx.strokeStyle = '#fef08a';
+                    ctx.lineWidth = 1.8;
+                    ctx.beginPath();
+                    ctx.ellipse(x, cy, 14, solR, 0, Math.PI * 0.7, Math.PI * 1.3);
+                    ctx.stroke();
+                }
+
+                // 4. Connecting Wire Leads to DC Battery Power Source
+                ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 4;
+                ctx.beginPath(); ctx.moveTo(solRight, cy + solR); ctx.lineTo(solRight, cy + solR + 25); ctx.lineTo(cx + 40, cy + solR + 25); ctx.stroke();
+                
+                ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 4;
+                ctx.beginPath(); ctx.moveTo(solLeft, cy + solR); ctx.lineTo(solLeft, cy + solR + 25); ctx.lineTo(cx - 40, cy + solR + 25); ctx.stroke();
+
+                // DC Battery Pack Box (PhET Style)
+                ctx.fillStyle = '#1e293b'; ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+                ctx.fillRect(cx - 40, cy + solR + 12, 80, 26);
+                ctx.strokeRect(cx - 40, cy + solR + 12, 80, 26);
+                
+                ctx.fillStyle = '#ef4444'; ctx.font = 'bold 14px Plus Jakarta Sans'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                ctx.fillText('+', cx - 25, cy + solR + 25);
+                ctx.fillStyle = '#3b82f6';
+                ctx.fillText('-', cx + 25, cy + solR + 25);
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 11px Plus Jakarta Sans';
+                ctx.fillText('Nguồn DC', cx, cy + solR + 25);
+
                 ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 13px Plus Jakarta Sans'; ctx.textAlign = 'center';
-                ctx.fillText('ỐNG DÂY 3D CÓ DÒNG ĐIỆN I', cx, cy - solR - 14);
+                ctx.fillText('ỐNG DÂY (SOLENOID CHUẨN PhET COLORADO 3D)', cx, cy - solR - 16);
             }
         }
 
@@ -210,8 +267,8 @@
 
             ctx.fillStyle = '#34d399'; ctx.font = 'bold 12px Plus Jakarta Sans'; ctx.textAlign = 'center';
             let titleMap = {
-                '14.6': 'HÌNH 14.6: TỪ PHỔ DÒNG ĐIỆN THẲNG 3D (Các đường tròn đồng tâm)',
-                '14.7': 'HÌNH 14.7: TỪ PHỔ DÒNG ĐIỆN TRONG ỐNG DÂY 3D (Đều ở trong lòng, đường cong ở 2 đầu)'
+                '2a': 'THÍ NGHIỆM 2a: TỪ PHỔ DÒNG ĐIỆN THẲNG 3D (Các đường tròn đồng tâm)',
+                '2b': 'THÍ NGHIỆM 2b: TỪ PHỔ DÒNG ĐIỆN TRONG ỐNG DÂY 3D (Đều ở trong lòng, đường cong ở 2 đầu)'
             };
             ctx.fillText(titleMap[mode], canvas.width/2, canvas.height - 14);
 
@@ -220,7 +277,6 @@
 
         window.onload = () => { resize(); draw(); };
     
-        // Full Touch Event Support for Mobile/Tablet
         canvas.addEventListener('touchstart', function(e) {
             if (e.touches.length > 0) {
                 var touch = e.touches[0];
@@ -248,7 +304,6 @@
             var mouseEvent = new MouseEvent('mouseup', {});
             window.dispatchEvent(mouseEvent);
         });
-
-</script>
+    </script>
 </body>
 </html>
