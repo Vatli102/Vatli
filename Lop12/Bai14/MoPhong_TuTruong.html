@@ -401,19 +401,19 @@
             if (!wrapper) return;
             let w = wrapper.clientWidth;
             let h = wrapper.clientHeight;
-            if (w > 0 && h > 0 && (canvas.width !== w || canvas.height !== h)) {
-                canvas.width = w;
-                canvas.height = h;
+            if (w > 0 && h > 0) {
+                let sizeChanged = (canvas.width !== w || canvas.height !== h);
+                if (sizeChanged) {
+                    canvas.width = w;
+                    canvas.height = h;
 
-                if (magnet.x === 0 || magnet.x > w - 40) {
-                    magnet.x = w * 0.45;
-                    magnet.y = h * 0.45;
-                }
-                if (compass.x === 0 || compass.x > w - 30 || compass.x < 30) {
-                    compass.x = Math.min(w - 45, Math.max(80, w * 0.76));
-                    compass.y = h * 0.45;
-                }
-                if (meter.x === 0 || meter.x > w - 50 || meter.x < 50) {
+                    // Always scale and center magnet, compass, and meter proportionally when canvas size is set or changed
+                    magnet.x = w * 0.42;
+                    magnet.y = h * 0.44;
+
+                    compass.x = Math.min(w - 45, Math.max(80, w * 0.78));
+                    compass.y = h * 0.44;
+
                     meter.x = Math.max(65, Math.min(w - 65, w * 0.22));
                     meter.y = h * 0.78;
                 }
