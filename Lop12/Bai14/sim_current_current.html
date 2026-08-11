@@ -8,21 +8,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: #0f172a; color: #f8fafc; overflow: hidden; padding: 8px; display: flex; flex-direction: column; height: 100vh; }
-        .controls { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 10px; margin-bottom: 6px; font-size: 0.8rem; }
-        .btn { background: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.78rem; transition: all 0.2s; }
+        body { background: #0f172a; color: #f8fafc; overflow: hidden; padding: 6px; display: flex; flex-direction: column; height: 100vh; }
+        .controls { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 6px 10px; border-radius: 8px; margin-bottom: 6px; font-size: 0.78rem; }
+        .btn { background: #2563eb; color: white; border: none; padding: 5px 10px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.75rem; transition: all 0.2s; }
         .btn:hover { background: #1d4ed8; }
-        .canvas-container { flex: 1; position: relative; background: #020617; border-radius: 12px; border: 1px solid #1e293b; overflow: hidden; min-height: 280px; }
+        .canvas-container { flex: 1; position: relative; background: #020617; border-radius: 10px; border: 1px solid #1e293b; overflow: hidden; min-height: 180px; }
         canvas { display: block; width: 100%; height: 100%; }
 
         .status-banner {
-            margin-top: 6px;
-            padding: 8px 12px;
+            margin-top: 5px;
+            padding: 6px 10px;
             background: rgba(15, 23, 42, 0.95);
             border: 1px solid #1e293b;
-            border-radius: 10px;
+            border-radius: 8px;
             text-align: center;
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             font-weight: 700;
             color: #34d399;
             transition: all 0.3s;
@@ -31,9 +31,9 @@
         /* RESPONSIVE DESIGN CHO ĐIỆN THOẠI & MÁY TÍNH BẢNG */
         @media (max-width: 768px) {
             body { padding: 4px !important; overflow-y: auto !important; }
-            .controls { flex-direction: column !important; align-items: stretch !important; padding: 6px 8px !important; font-size: 0.75rem !important; gap: 6px !important; }
-            .btn { width: 100% !important; text-align: center !important; padding: 7px 10px !important; font-size: 0.78rem !important; }
-            .status-banner { font-size: 0.75rem !important; padding: 6px 8px !important; }
+            .controls { flex-direction: column !important; align-items: stretch !important; padding: 5px 8px !important; font-size: 0.75rem !important; gap: 5px !important; }
+            .btn { width: 100% !important; text-align: center !important; padding: 6px 8px !important; font-size: 0.75rem !important; }
+            .status-banner { font-size: 0.72rem !important; padding: 5px 6px !important; }
         }
     </style>
 </head>
@@ -103,11 +103,11 @@
 
             animOffset = (animOffset + 1.2) % 30;
 
-            let wireGap = Math.min(75, canvas.width * 0.22);
+            let wireGap = Math.min(80, canvas.width * 0.24);
             let w1X = cx - wireGap;
             let w2X = cx + wireGap;
-            let topY = 42;
-            let botY = canvas.height - 25;
+            let topY = 32;
+            let botY = canvas.height - 22;
 
             // Wire 1 (Left - Current I1 UPWARDS)
             ctx.strokeStyle = '#f97316'; ctx.lineWidth = 6;
@@ -126,22 +126,22 @@
 
             // Wire Top Labels (Formatted neatly to avoid overlap)
             ctx.fillStyle = '#f97316'; ctx.font = 'bold 12px Plus Jakarta Sans'; ctx.textAlign = 'center';
-            ctx.fillText('DÂY 1: I₁ (▲)', w1X, 22);
+            ctx.fillText('DÂY 1: I₁ (▲)', w1X, 20);
 
             ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 12px Plus Jakarta Sans'; ctx.textAlign = 'center';
             let i2Label = sameDir ? 'DÂY 2: I₂ (▲)' : 'DÂY 2: I₂ (▼)';
-            ctx.fillText(i2Label, w2X, 22);
+            ctx.fillText(i2Label, w2X, 20);
 
             // Animated Moving Current Flow Particles
             let totalH = botY - topY;
-            for (let y = botY - 10 - animOffset; y > topY + 10; y -= 35) {
+            for (let y = botY - 10 - animOffset; y > topY + 10; y -= 32) {
                 let t = (y - topY) / totalH;
                 let px = (1 - t)**2 * w1X + 2*(1 - t)*t * (w1X + bend) + t**2 * w1X;
                 drawArrow(px, y, true, '#ffedd5');
             }
 
             for (let i = 0; i < 6; i++) {
-                let y = sameDir ? (botY - 10 - animOffset + i*35) : (topY + 10 + animOffset + i*35);
+                let y = sameDir ? (botY - 10 - animOffset + i*32) : (topY + 10 + animOffset + i*32);
                 if (y >= topY + 10 && y <= botY - 10) {
                     let t = (y - topY) / totalH;
                     let px = (1 - t)**2 * w2X + 2*(1 - t)*t * (w2X - bend) + t**2 * w2X;
@@ -152,29 +152,34 @@
             // Force Vector Arrows at mid-wire
             let mid1X = w1X + bend * 0.75;
             let mid2X = w2X - bend * 0.75;
-            let arrowLen = Math.min(36, wireGap * 0.45) * (sameDir ? 1 : -1);
+            let forceMag = Math.min(36, wireGap * 0.45);
+            let color = sameDir ? '#34d399' : '#ef4444';
 
-            ctx.strokeStyle = sameDir ? '#34d399' : '#ef4444'; ctx.lineWidth = 3.5;
-            // Force on Wire 1 (F21)
-            ctx.beginPath(); ctx.moveTo(mid1X, cy); ctx.lineTo(mid1X + arrowLen, cy); ctx.stroke();
-            ctx.fillStyle = sameDir ? '#34d399' : '#ef4444';
-            ctx.beginPath();
-            if (sameDir) { ctx.moveTo(mid1X + arrowLen, cy); ctx.lineTo(mid1X + arrowLen - 8, cy - 5); ctx.lineTo(mid1X + arrowLen - 8, cy + 5); }
-            else { ctx.moveTo(mid1X + arrowLen, cy); ctx.lineTo(mid1X + arrowLen + 8, cy - 5); ctx.lineTo(mid1X + arrowLen + 8, cy + 5); }
-            ctx.fill();
+            ctx.strokeStyle = color; ctx.lineWidth = 3.5;
+            ctx.fillStyle = color;
 
-            // Force on Wire 2 (F12)
-            ctx.beginPath(); ctx.moveTo(mid2X, cy); ctx.lineTo(mid2X - arrowLen, cy); ctx.stroke();
-            ctx.beginPath();
-            if (sameDir) { ctx.moveTo(mid2X - arrowLen, cy); ctx.lineTo(mid2X - arrowLen + 8, cy - 5); ctx.lineTo(mid2X - arrowLen + 8, cy - 5); ctx.lineTo(mid2X - arrowLen + 8, cy + 5); }
-            else { ctx.moveTo(mid2X - arrowLen, cy); ctx.lineTo(mid2X - arrowLen - 8, cy - 5); ctx.lineTo(mid2X - arrowLen - 8, cy + 5); }
-            ctx.fill();
+            if (sameDir) {
+                // Hút nhau: F21 (Wire 1 -> Right), F12 (Wire 2 -> Left)
+                ctx.beginPath(); ctx.moveTo(mid1X, cy); ctx.lineTo(mid1X + forceMag, cy); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(mid1X + forceMag, cy); ctx.lineTo(mid1X + forceMag - 8, cy - 5); ctx.lineTo(mid1X + forceMag - 8, cy + 5); ctx.fill();
+
+                ctx.beginPath(); ctx.moveTo(mid2X, cy); ctx.lineTo(mid2X - forceMag, cy); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(mid2X - forceMag, cy); ctx.lineTo(mid2X - forceMag + 8, cy - 5); ctx.lineTo(mid2X - forceMag + 8, cy + 5); ctx.fill();
+            } else {
+                // Đẩy nhau: F21 (Wire 1 -> Left), F12 (Wire 2 -> Right)
+                ctx.beginPath(); ctx.moveTo(mid1X, cy); ctx.lineTo(mid1X - forceMag, cy); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(mid1X - forceMag, cy); ctx.lineTo(mid1X - forceMag + 8, cy - 5); ctx.lineTo(mid1X - forceMag + 8, cy + 5); ctx.fill();
+
+                ctx.beginPath(); ctx.moveTo(mid2X, cy); ctx.lineTo(mid2X + forceMag, cy); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(mid2X + forceMag, cy); ctx.lineTo(mid2X + forceMag - 8, cy - 5); ctx.lineTo(mid2X + forceMag - 8, cy + 5); ctx.fill();
+            }
 
             // Vector Labels F21 & F12
             ctx.font = 'bold 11px Plus Jakarta Sans'; ctx.textAlign = 'center';
-            ctx.fillStyle = sameDir ? '#34d399' : '#ef4444';
-            ctx.fillText('F₂₁', mid1X + arrowLen / 2, cy - 10);
-            ctx.fillText('F₁₂', mid2X - arrowLen / 2, cy - 10);
+            let label1X = sameDir ? mid1X + forceMag / 2 : mid1X - forceMag / 2;
+            let label2X = sameDir ? mid2X - forceMag / 2 : mid2X + forceMag / 2;
+            ctx.fillText('F₂₁', label1X, cy - 10);
+            ctx.fillText('F₁₂', label2X, cy - 10);
 
             requestAnimationFrame(draw);
         }
