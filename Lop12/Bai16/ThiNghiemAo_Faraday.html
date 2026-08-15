@@ -1,0 +1,2892 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phòng Thí Nghiệm Ảo Cảm Ứng Điện Từ Faraday (PhET Style) | Vật Lí 12</title>
+    <meta name="description" content="Thí nghiệm ảo cảm ứng điện từ Faraday và Định luật Lenz chuẩn PhET dành cho Vật lí 12. Kéo thả tự do thanh nam châm và cuộn dây xuyên qua nhau, bóng đèn phát sáng, vôn kế số 0 ở giữa, đầu dò từ trường và máy phát điện quay.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- MathJax 3 -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --bg-deep: #030712;
+            --panel-bg: rgba(15, 23, 42, 0.88);
+            --panel-border: rgba(56, 189, 248, 0.25);
+            --accent-sky: #38bdf8;
+            --accent-blue: #2563eb;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --accent-emerald: #10b981;
+            --accent-cyan: #06b6d4;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 25% 15%, rgba(14, 165, 233, 0.15) 0%, transparent 45%),
+                radial-gradient(circle at 75% 85%, rgba(244, 63, 94, 0.12) 0%, transparent 45%);
+        }
+
+        /* TOP NAVIGATION & PHET SCREENS SWITCHER */
+        header {
+            width: 100%;
+            max-width: 1440px;
+            padding: 0.75rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(16px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .phet-badge {
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            color: #ffffff;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 5px 11px;
+            border-radius: 8px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(2, 132, 199, 0.45);
+        }
+
+        .header-text h1 {
+            font-size: 1.22rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #38bdf8, #60a5fa, #f43f5e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .header-text p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* PHET 4 LAB SCREENS TABS */
+        .screens-nav {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 4px;
+            gap: 4px;
+        }
+
+        .screen-nav-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .screen-nav-btn:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .screen-nav-btn.active {
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            color: #ffffff;
+            box-shadow: 0 2px 10px rgba(2, 132, 199, 0.4);
+        }
+
+        .header-tools {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-tool {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-tool:hover {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: var(--accent-sky);
+        }
+
+        /* WORKSPACE MAIN LAYOUT */
+        .workspace {
+            width: 100%;
+            max-width: 1440px;
+            padding: 1rem 1.25rem;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 1.25rem;
+            flex: 1;
+        }
+
+        @media (max-width: 1120px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* MAIN SIMULATION PANEL */
+        .main-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 22px;
+            padding: 1rem;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* CANVAS STYLING */
+        .canvas-container {
+            position: relative;
+            background: radial-gradient(circle at 50% 50%, #0d1b38 0%, #030712 100%);
+            border: 1.5px solid rgba(56, 189, 248, 0.2);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8);
+            min-height: 520px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        canvas#simCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            touch-action: none;
+        }
+
+        /* FLOATING HUD BAR ON CANVAS */
+        .canvas-hud-top {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: none;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .hud-pills {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            pointer-events: auto;
+        }
+
+        .hud-chip {
+            background: rgba(15, 23, 42, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #cbd5e1;
+            font-family: 'JetBrains Mono', monospace;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .hud-chip.flux {
+            border-color: rgba(6, 182, 212, 0.5);
+            color: #22d3ee;
+        }
+
+        .hud-chip.emf {
+            border-color: rgba(244, 63, 94, 0.5);
+            color: #fb7185;
+        }
+
+        .hud-chip.speed {
+            border-color: rgba(245, 158, 11, 0.5);
+            color: #fbbf24;
+        }
+
+        /* BOTTOM OVERLAY SWITCHES */
+        .canvas-switches {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            pointer-events: auto;
+        }
+
+        .switch-btn {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            color: #94a3b8;
+            padding: 6px 13px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(10px);
+        }
+
+        .switch-btn:hover {
+            color: #ffffff;
+            border-color: var(--accent-sky);
+        }
+
+        .switch-btn.active {
+            background: rgba(2, 132, 199, 0.4);
+            border-color: var(--accent-sky);
+            color: #38bdf8;
+            box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+        }
+
+        /* TOOLBAR CONTROLS */
+        .control-shelf {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .shelf-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .shelf-col {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .shelf-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #cbd5e1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .shelf-title span.val {
+            color: var(--accent-sky);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .ctrl-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #e2e8f0;
+            font-weight: 700;
+            font-size: 0.78rem;
+            padding: 7px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ctrl-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: var(--accent-sky);
+            color: #ffffff;
+        }
+
+        .ctrl-btn.active {
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            border-color: #38bdf8;
+            color: #ffffff;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
+        }
+
+        .action-btn-primary {
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            border: none;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 0.82rem;
+            padding: 9px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+        }
+
+        .action-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(2, 132, 199, 0.55);
+            background: linear-gradient(135deg, #0369a1, #1d4ed8);
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            background: #1e293b;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent-sky);
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+            transition: transform 0.1s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.25);
+        }
+
+        /* RIGHT PANEL: OSCILLOSCOPE, DATA, QUIZ */
+        .side-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 22px;
+            padding: 1.2rem;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tab-bar {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            gap: 4px;
+        }
+
+        .tab-trigger {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 12px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tab-trigger:hover {
+            color: var(--text-main);
+        }
+
+        .tab-trigger.active {
+            color: var(--accent-sky);
+            border-bottom-color: var(--accent-sky);
+        }
+
+        .tab-view {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .tab-view.active {
+            display: flex;
+        }
+
+        /* REALTIME OSCILLOSCOPE GRAPH */
+        .oscilloscope-card {
+            background: #020617;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 8px;
+            height: 230px;
+            position: relative;
+        }
+
+        canvas#graphCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* DATA TABLE */
+        .table-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .table-card-header {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--accent-amber);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.78rem;
+            text-align: center;
+        }
+
+        .data-table th {
+            background: rgba(56, 189, 248, 0.14);
+            color: var(--accent-sky);
+            padding: 8px 4px;
+            font-weight: 800;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .data-table td {
+            padding: 7px 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .data-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* SUMMARY BOX */
+        .info-card {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 0.8rem;
+            line-height: 1.65;
+            color: #d1fae5;
+        }
+
+        .info-card strong {
+            color: #34d399;
+        }
+
+        /* QUIZ CARDS */
+        .quiz-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+
+        .quiz-q {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+        }
+
+        .quiz-opts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .quiz-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            padding: 6px 8px;
+            border-radius: 8px;
+            font-size: 0.76rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-btn:hover {
+            background: rgba(255, 255, 255, 0.14);
+            border-color: var(--accent-sky);
+        }
+
+        .quiz-btn.correct {
+            background: rgba(16, 185, 129, 0.35) !important;
+            border-color: #10b981 !important;
+            color: #6ee7b7 !important;
+            font-weight: 700;
+        }
+
+        .quiz-btn.wrong {
+            background: rgba(239, 68, 68, 0.35) !important;
+            border-color: #ef4444 !important;
+            color: #fca5a5 !important;
+        }
+
+        .quiz-feedback {
+            margin-top: 6px;
+            font-size: 0.76rem;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 3px solid var(--accent-cyan);
+            color: #94a3b8;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header>
+        <div class="brand-group">
+            <span class="phet-badge"><i class="fa-solid fa-bolt"></i> Vật Lí 12</span>
+            <div class="header-text">
+                <h1>Phòng Thí Nghiệm Cảm Ứng Điện Từ Faraday</h1>
+                <p>Bài 16: Từ thông. Hiện tượng cảm ứng điện từ & Định luật Lenz</p>
+            </div>
+        </div>
+
+        <!-- 2 LAB SCREENS -->
+        <nav class="screens-nav">
+            <button class="screen-nav-btn active" id="btnScr1" onclick="switchLabScreen('pickupCoil')">
+                <i class="fa-solid fa-ring"></i> Cuộn Dây Cảm Ứng
+            </button>
+            <button class="screen-nav-btn" id="btnScr2" onclick="switchLabScreen('generator')">
+                <i class="fa-solid fa-faucet-drip"></i> Máy Phát Điện Turbine
+            </button>
+        </nav>
+
+        <div class="header-tools">
+            <button class="btn-tool" onclick="toggleSound()" id="soundBtn">
+                <i class="fa-solid fa-volume-xmark" id="soundIcon"></i> <span id="soundTxt">Âm thanh: Tắt</span>
+            </button>
+            <button class="btn-tool" onclick="toggleFullScreen()">
+                <i class="fa-solid fa-expand"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- ==================== MAIN WORKSPACE ==================== -->
+    <main class="workspace">
+        
+        <!-- LEFT: SIMULATION WORKBENCH -->
+        <section class="main-panel">
+            
+            <div class="canvas-container">
+                <canvas id="simCanvas" width="860" height="520"></canvas>
+
+                <!-- TOP HUD TELEMETRY -->
+                <div class="canvas-hud-top">
+                    <div class="hud-pills">
+                        <div class="hud-chip flux">
+                            <i class="fa-solid fa-circle-nodes"></i> $\Phi$: <span id="chipFlux">0.00</span> mWb
+                        </div>
+                        <div class="hud-chip emf">
+                            <i class="fa-solid fa-bolt"></i> $e_c$: <span id="chipEMF">0.00</span> V
+                        </div>
+                        <div class="hud-chip speed">
+                            <i class="fa-solid fa-gauge-high"></i> $v$: <span id="chipSpeed">0.0</span> cm/s
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTTOM OVERLAY SWITCHES -->
+                <div class="canvas-switches">
+                    <button class="switch-btn active" id="swField" onclick="toggleSwitch('field')">
+                        <i class="fa-solid fa-water"></i> Đường sức từ
+                    </button>
+                    <button class="switch-btn active" id="swCompass" onclick="toggleSwitch('compass')">
+                        <i class="fa-solid fa-compass"></i> Mạng lưới la bàn
+                    </button>
+                    <button class="switch-btn" id="swFieldMeter" onclick="toggleSwitch('fieldMeter')">
+                        <i class="fa-solid fa-crosshairs"></i> Đầu dò từ trường ($B$)
+                    </button>
+                    <button class="switch-btn active" id="swElectrons" onclick="toggleSwitch('electrons')">
+                        <i class="fa-solid fa-atom"></i> Dòng electron
+                    </button>
+                </div>
+            </div>
+
+            <!-- CONTROLS SHELF -->
+            <div class="control-shelf">
+                <div class="shelf-grid">
+                    <!-- INDICATOR SELECTOR -->
+                    <div class="shelf-col" id="colIndicator">
+                        <div class="shelf-title">
+                            <span><i class="fa-solid fa-lightbulb"></i> Thiết bị đo:</span>
+                        </div>
+                        <div class="btn-row">
+                            <button class="ctrl-btn active" id="btnBulb" onclick="setIndicator('bulb')">
+                                <i class="fa-solid fa-lightbulb"></i> Bóng đèn
+                            </button>
+                            <button class="ctrl-btn" id="btnMeter" onclick="setIndicator('meter')">
+                                <i class="fa-solid fa-gauge"></i> Vôn kế số 0
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- TURNS SELECTOR -->
+                    <div class="shelf-col" id="colTurns">
+                        <div class="shelf-title">
+                            <span><i class="fa-solid fa-ring"></i> Số vòng cuộn dây ($N$):</span>
+                            <span class="val" id="lblTurns">2 vòng</span>
+                        </div>
+                        <div class="btn-row">
+                            <button class="ctrl-btn" onclick="setCoilTurns(1)">1 vòng</button>
+                            <button class="ctrl-btn active" id="btnTurn2" onclick="setCoilTurns(2)">2 vòng</button>
+                            <button class="ctrl-btn" onclick="setCoilTurns(3)">3 vòng</button>
+                            <button class="ctrl-btn" onclick="setCoilTurns(4)">4 vòng</button>
+                        </div>
+                    </div>
+
+                    <!-- MAGNET STRENGTH SLIDER -->
+                    <div class="shelf-col">
+                        <div class="shelf-title">
+                            <span><i class="fa-solid fa-magnet"></i> Độ mạnh nam châm:</span>
+                            <span class="val" id="lblStrength">100%</span>
+                        </div>
+                        <input type="range" id="rngStrength" min="20" max="100" value="100" step="5" oninput="onStrengthChange(this.value)">
+                    </div>
+
+                    <!-- COIL AREA SLIDER -->
+                    <div class="shelf-col" id="colArea">
+                        <div class="shelf-title">
+                            <span><i class="fa-solid fa-expand"></i> Diện tích vòng dây ($S$):</span>
+                            <span class="val" id="lblArea">100%</span>
+                        </div>
+                        <input type="range" id="rngArea" min="60" max="140" value="100" step="5" oninput="onAreaChange(this.value)">
+                    </div>
+
+                    <!-- WATER FLOW SLIDER FOR TURBINE GENERATOR -->
+                    <div class="shelf-col" id="colWaterFlow" style="display:none;">
+                        <div class="shelf-title">
+                            <span><i class="fa-solid fa-faucet-drip"></i> Lưu lượng nước (Turbine):</span>
+                            <span class="val" id="lblWaterFlow">0% (Đang tắt)</span>
+                        </div>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <input type="range" id="rngWaterFlow" min="0" max="100" value="0" step="5" oninput="onWaterFlowChange(this.value)" style="flex:1;">
+                            <button class="ctrl-btn" id="btnWaterToggle" onclick="toggleWaterFlow()" style="padding:4px 10px; font-size:0.78rem; white-space:nowrap; background:rgba(34, 197, 94, 0.2); border-color:#22c55e; color:#86efac;">
+                                <i class="fa-solid fa-play"></i> Bật nước
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACTIONS BAR -->
+                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px; flex-wrap: wrap; gap: 8px;">
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <button class="action-btn-primary" onclick="flipPoles()">
+                            <i class="fa-solid fa-rotate"></i> Đảo cực N ↔ S
+                        </button>
+                        <button class="action-btn-primary" id="btnAuto" onclick="toggleAutoOsc()" style="background: linear-gradient(135deg, #d97706, #b45309);">
+                            <i class="fa-solid fa-bolt"></i> <span id="lblAuto">Dao động điều hòa (AC)</span>
+                        </button>
+                        <button class="ctrl-btn" onclick="recordPoint()">
+                            <i class="fa-solid fa-camera"></i> Ghi điểm đo
+                        </button>
+                    </div>
+                    <button class="ctrl-btn" onclick="resetPositions()">
+                        <i class="fa-solid fa-arrows-rotate"></i> Đặt lại vị trí
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- RIGHT: REALTIME OSCILLOSCOPE, TABLE & QUIZ -->
+        <aside class="side-panel">
+            
+            <div class="tab-bar">
+                <button class="tab-trigger active" id="tabH1" onclick="switchSideTab(1)">
+                    <i class="fa-solid fa-chart-line"></i> Đồ thị sóng
+                </button>
+                <button class="tab-trigger" id="tabH2" onclick="switchSideTab(2)">
+                    <i class="fa-solid fa-table"></i> Bảng số liệu
+                </button>
+                <button class="tab-trigger" id="tabH3" onclick="switchSideTab(3)">
+                    <i class="fa-solid fa-circle-question"></i> Trắc nghiệm
+                </button>
+            </div>
+
+            <!-- TAB 1: OSCILLOSCOPE -->
+            <div class="tab-view active" id="tabV1">
+                <div class="oscilloscope-card">
+                    <canvas id="graphCanvas" width="370" height="215"></canvas>
+                </div>
+
+                <div class="info-card">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                        <span><i class="fa-solid fa-wave-square text-cyan-400"></i> Từ thông $\Phi$: <strong id="valCurPhi">0.00 mWb</strong></span>
+                        <span><i class="fa-solid fa-bolt text-rose-400"></i> Suất điện động $e_c$: <strong id="valCurEMF" style="color:#fb7185;">0.00 V</strong></span>
+                    </div>
+                    <p style="margin:0; font-size:0.76rem; color:#94a3b8; text-align:justify;">
+                        <strong>Định luật Faraday:</strong> $e_c = -N \frac{d\Phi}{dt}$. Khi nam châm xuyên qua cuộn dây tạo ra 2 xung suất điện động trái dấu (xung dương khi đi vào, xung âm khi đi ra), tạo ra dòng điện xoay chiều.
+                    </p>
+                </div>
+
+                <div class="info-card" style="background: rgba(2, 132, 199, 0.08); border-color: rgba(2, 132, 199, 0.25); color: #bae6fd;">
+                    <strong>Quy tắc Định luật Lenz:</strong><br>
+                    • Lại gần: $\Phi$ tăng $\Rightarrow \vec{B}_c \uparrow\downarrow \vec{B}_0$ (Đẩy nam châm).<br>
+                    • Ra xa: $\Phi$ giảm $\Rightarrow \vec{B}_c \uparrow\uparrow \vec{B}_0$ (Hút nam châm).
+                </div>
+            </div>
+
+            <!-- TAB 2: DATA TABLE -->
+            <div class="tab-view" id="tabV2">
+                <div class="table-card">
+                    <div class="table-card-header">
+                        <span><i class="fa-solid fa-table-list"></i> DỮ LIỆU ĐO CẢM ỨNG</span>
+                        <div style="display:flex; gap:6px;">
+                            <button class="ctrl-btn" style="padding:2px 6px; font-size:0.7rem;" onclick="clearTable()">Xóa</button>
+                            <button class="ctrl-btn" style="padding:2px 6px; font-size:0.7rem;" onclick="exportTable()"><i class="fa-solid fa-download"></i> TXT</button>
+                        </div>
+                    </div>
+                    <div style="max-height:300px; overflow-y:auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Lần</th>
+                                    <th>$v$ (cm/s)</th>
+                                    <th>$\Phi$ (mWb)</th>
+                                    <th>$e_c$ (V)</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <p style="font-size:0.75rem; color:#94a3b8; margin:0;">
+                    💡 <em>Nhấp chuột kéo nhanh / chậm nam châm và bấm <strong>📸 Ghi điểm đo</strong> để lưu số liệu vào bảng.</em>
+                </p>
+            </div>
+
+            <!-- TAB 3: QUIZ -->
+            <div class="tab-view" id="tabV3">
+                <div class="quiz-item" id="q1">
+                    <div class="quiz-q">1. Khi đưa cực Bắc của nam châm chuyển động lại gần cuộn dây dẫn kín, dòng điện cảm ứng xuất hiện có tác dụng:</div>
+                    <div class="quiz-opts">
+                        <button class="quiz-btn" onclick="checkAnswer(1, 'A')">A. Hút nam châm lại gần</button>
+                        <button class="quiz-btn" onclick="checkAnswer(1, 'B')">B. Đẩy nam châm ra xa</button>
+                        <button class="quiz-btn" onclick="checkAnswer(1, 'C')">C. Không tác dụng lực</button>
+                        <button class="quiz-btn" onclick="checkAnswer(1, 'D')">D. Giữ nam châm đứng yên</button>
+                    </div>
+                    <div class="quiz-feedback" id="exp1"><strong>Giải thích:</strong> Theo Định luật Lenz, từ thông tăng làm xuất hiện cực Bắc ở mặt đối diện để đẩy nam châm ra xa.</div>
+                </div>
+
+                <div class="quiz-item" id="q2">
+                    <div class="quiz-q">2. Nếu nam châm đứng yên ở chính giữa lòng cuộn dây thì kim vôn kế sẽ:</div>
+                    <div class="quiz-opts">
+                        <button class="quiz-btn" onclick="checkAnswer(2, 'A')">A. Lệch cực đại sang phải</button>
+                        <button class="quiz-btn" onclick="checkAnswer(2, 'B')">B. Lệch cực đại sang trái</button>
+                        <button class="quiz-btn" onclick="checkAnswer(2, 'C')">C. Đứng yên ở vạch số 0</button>
+                        <button class="quiz-btn" onclick="checkAnswer(2, 'D')">D. Dao động liên tục</button>
+                    </div>
+                    <div class="quiz-feedback" id="exp2"><strong>Giải thích:</strong> Khi đứng yên, từ thông không đổi ($d\Phi/dt = 0$), suất điện động $e_c = 0$, kim chỉ vạch 0.</div>
+                </div>
+
+                <div class="quiz-item" id="q3">
+                    <div class="quiz-q">3. Để làm bóng đèn nối với cuộn dây sáng rực nhất, ta cần:</div>
+                    <div class="quiz-opts">
+                        <button class="quiz-btn" onclick="checkAnswer(3, 'A')">A. Dùng 4 vòng dây và kéo nam châm thật nhanh</button>
+                        <button class="quiz-btn" onclick="checkAnswer(3, 'B')">B. Dùng 1 vòng dây và kéo thật chậm</button>
+                        <button class="quiz-btn" onclick="checkAnswer(3, 'C')">C. Giữ cố định nam châm</button>
+                        <button class="quiz-btn" onclick="checkAnswer(3, 'D')">D. Giảm độ mạnh nam châm</button>
+                    </div>
+                    <div class="quiz-feedback" id="exp3"><strong>Giải thích:</strong> Suất điện động $e_c = -N (d\Phi/dt)$ lớn nhất khi số vòng $N$ lớn và tốc độ dịch chuyển cao.</div>
+                </div>
+            </div>
+
+        </aside>
+
+    </main>
+
+    <!-- ==================== PHYSICS & GRAPHICS ENGINE ==================== -->
+    <script>
+        // --- ADVANCED ORGANIC & HARMONIC SOUND SYNTHESIZER ---
+        let audioCtx = null;
+        let soundOn = false; // Mặc định tắt để tránh bất ngờ, bật lên nghe rất êm và chân thực
+        let waterNoiseSource = null;
+        let waterGainNode = null;
+        let dynamoOsc = null;
+        let dynamoGain = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                setupAmbientAudioEngines();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // 1. Natural Water Stream Sound & Dynamo Hum Synthesis
+        function setupAmbientAudioEngines() {
+            try {
+                // Pink-Brown filtered noise buffer for natural bubbling water
+                const bufferSize = audioCtx.sampleRate * 2;
+                const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const output = noiseBuffer.getChannelData(0);
+                let b0 = 0, b1 = 0, b2 = 0;
+                for (let i = 0; i < bufferSize; i++) {
+                    const white = Math.random() * 2 - 1;
+                    b0 = 0.99 * b0 + white * 0.05;
+                    b1 = 0.96 * b1 + white * 0.11;
+                    b2 = 0.86 * b2 + white * 0.25;
+                    output[i] = (b0 + b1 + b2) * 0.2;
+                }
+                waterNoiseSource = audioCtx.createBufferSource();
+                waterNoiseSource.buffer = noiseBuffer;
+                waterNoiseSource.loop = true;
+
+                const waterFilter = audioCtx.createBiquadFilter();
+                waterFilter.type = 'lowpass';
+                waterFilter.frequency.value = 750;
+
+                waterGainNode = audioCtx.createGain();
+                waterGainNode.gain.value = 0;
+
+                waterNoiseSource.connect(waterFilter);
+                waterFilter.connect(waterGainNode);
+                waterGainNode.connect(audioCtx.destination);
+                waterNoiseSource.start();
+
+                // Turbine dynamo hum (Deep, smooth rotational whir)
+                dynamoOsc = audioCtx.createOscillator();
+                dynamoOsc.type = 'sine';
+                dynamoOsc.frequency.value = 50;
+
+                dynamoGain = audioCtx.createGain();
+                dynamoGain.gain.value = 0;
+
+                dynamoOsc.connect(dynamoGain);
+                dynamoGain.connect(audioCtx.destination);
+                dynamoOsc.start();
+            } catch (e) {}
+        }
+
+        // 2. Harmonic Pentatonic Bell Chime for Electromagnetic Induction
+        function playInductionChime(emfVal) {
+            if (!soundOn) return;
+            try {
+                initAudio();
+                const now = audioCtx.currentTime;
+                const absEMF = Math.min(Math.abs(emfVal), 10);
+                if (absEMF < 0.25) return;
+
+                // Pentatonic warm acoustic scale: C4 (261), D4 (293), E4 (329), G4 (392), A4 (440), C5 (523)
+                const scale = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 659.25];
+                const noteIdx = Math.min(Math.floor(absEMF * 0.85), scale.length - 1);
+                const baseFreq = scale[noteIdx];
+
+                const osc1 = audioCtx.createOscillator();
+                const osc2 = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                const filter = audioCtx.createBiquadFilter();
+
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(1200, now);
+                filter.frequency.exponentialRampToValueAtTime(350, now + 0.28);
+
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(baseFreq, now);
+
+                osc2.type = 'triangle';
+                osc2.frequency.setValueAtTime(baseFreq * 2.005, now); // Harmonic overtone
+
+                const volume = Math.min(0.038, (absEMF / 7.0) * 0.038);
+                gain.gain.setValueAtTime(0.0001, now);
+                gain.gain.linearRampToValueAtTime(volume, now + 0.02); // Soft attack
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.26); // Smooth decay
+
+                osc1.connect(gain);
+                osc2.connect(gain);
+                gain.connect(filter);
+                filter.connect(audioCtx.destination);
+
+                osc1.start(now);
+                osc2.start(now);
+                osc1.stop(now + 0.28);
+                osc2.stop(now + 0.28);
+            } catch (e) {}
+        }
+
+        function toggleSound() {
+            soundOn = !soundOn;
+            if (soundOn) initAudio();
+            document.getElementById('soundTxt').innerText = soundOn ? 'Âm thanh: Bật' : 'Âm thanh: Tắt';
+            const icon = document.getElementById('soundIcon');
+            if (icon) {
+                icon.className = soundOn ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+            }
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+            else document.exitFullscreen().catch(() => {});
+        }
+
+        // --- GLOBAL SIMULATION STATE ---
+        const sim = {
+            currentScreen: 'pickupCoil', // 'pickupCoil' | 'barMagnet' | 'electromagnet' | 'generator'
+            
+            // Bar Magnet
+            magnet: {
+                x: 220,
+                y: 260,
+                w: 165,
+                h: 58,
+                isNorthLeft: false, // false: S left, N right
+                strength: 1.0,
+                vx: 0,
+                vy: 0,
+                lastX: 220,
+                lastY: 260,
+                angle: 0
+            },
+            
+            // Pickup Coil
+            coil: {
+                x: 600,
+                y: 260,
+                radius: 65,
+                turns: 2,
+                vx: 0,
+                vy: 0,
+                lastX: 600,
+                lastY: 260
+            },
+
+            // Compass Object (Screen 2)
+            compass: {
+                x: 600,
+                y: 260,
+                angle: 0
+            },
+
+            // Field Meter Tool
+            fieldMeter: {
+                visible: false,
+                x: 420,
+                y: 120,
+                w: 140,
+                h: 90
+            },
+
+            // Turbine Generator (Screen 4)
+            generator: {
+                waterFlow: 0, // 0 to 1
+                rotorAngle: 0,
+                speed: 0
+            },
+
+            // Electromagnet (Screen 3)
+            electromagnet: {
+                x: 240,
+                y: 260,
+                sourceType: 'dc', // 'dc' | 'ac'
+                voltage: 5.0,     // -10 to +10 V
+                acFreq: 1.0,
+                time: 0
+            },
+
+            // Physics Variables
+            flux: 0,
+            lastFlux: 0,
+            dFluxDt: 0,
+            emf: 0,
+            voltmeterAngle: 0,
+            bulbBrightness: 0,
+            indicator: 'bulb', // 'bulb' | 'meter'
+
+            // Visual Toggles
+            showField: true,
+            showCompass: true,
+            showElectrons: true,
+
+            // Drag State
+            draggedItem: null, // 'magnet' | 'coil' | 'compass' | 'fieldMeter' | null
+            dragOffsetX: 0,
+            dragOffsetY: 0,
+
+            // Auto Oscillation
+            autoOsc: false,
+            oscTime: 0,
+
+            // Water Turbine Generator Mode (Mặc định tắt nước để học sinh tự tương tác)
+            waterFlow: 0,
+            waterEnabled: false,
+            lastSavedFlow: 70,
+
+            // Waveform History Buffer
+            historyTime: 0,
+            graphData: [],
+            records: [],
+            electronShift: 0
+        };
+
+        // --- SCREEN NAVIGATION ---
+        function switchLabScreen(screenName) {
+            sim.currentScreen = screenName;
+            document.querySelectorAll('.screen-nav-btn').forEach(btn => btn.classList.remove('active'));
+            if (screenName === 'pickupCoil') {
+                const b1 = document.getElementById('btnScr1');
+                if (b1) b1.classList.add('active');
+                document.getElementById('colWaterFlow').style.display = 'none';
+                document.getElementById('colArea').style.display = 'flex';
+                document.getElementById('btnAuto').style.display = 'inline-flex';
+                document.getElementById('swField').parentElement.style.display = 'inline-flex';
+                document.getElementById('swCompass').parentElement.style.display = 'inline-flex';
+            }
+            if (screenName === 'generator') {
+                const b2 = document.getElementById('btnScr2');
+                if (b2) b2.classList.add('active');
+                document.getElementById('colWaterFlow').style.display = 'flex';
+                document.getElementById('colArea').style.display = 'none';
+                document.getElementById('btnAuto').style.display = 'none';
+                document.getElementById('swField').parentElement.style.display = 'none';
+                document.getElementById('swCompass').parentElement.style.display = 'inline-flex';
+                sim.showCompass = true;
+                document.getElementById('swCompass').classList.add('active');
+
+                // Mặc định tắt nước khi mới chuyển sang tab máy phát điện
+                sim.waterFlow = 0;
+                sim.waterEnabled = false;
+                document.getElementById('rngWaterFlow').value = 0;
+                document.getElementById('lblWaterFlow').innerText = '0% (Đang tắt)';
+                const btn = document.getElementById('btnWaterToggle');
+                if (btn) {
+                    btn.innerHTML = '<i class="fa-solid fa-play"></i> Bật nước';
+                    btn.style.background = 'rgba(34, 197, 94, 0.2)';
+                    btn.style.borderColor = '#22c55e';
+                    btn.style.color = '#86efac';
+                }
+            }
+
+            resetPositions();
+        }
+
+        function onWaterFlowChange(val) {
+            sim.waterFlow = parseFloat(val);
+            sim.waterEnabled = sim.waterFlow > 0;
+            document.getElementById('lblWaterFlow').innerText = val + '%';
+            const btn = document.getElementById('btnWaterToggle');
+            if (btn) {
+                btn.innerHTML = sim.waterEnabled ? '<i class="fa-solid fa-power-off"></i> Tắt nước' : '<i class="fa-solid fa-play"></i> Bật nước';
+                btn.style.background = sim.waterEnabled ? 'rgba(239, 68, 68, 0.2)' : 'rgba(34, 197, 94, 0.2)';
+                btn.style.borderColor = sim.waterEnabled ? '#ef4444' : '#22c55e';
+                btn.style.color = sim.waterEnabled ? '#fca5a5' : '#86efac';
+            }
+        }
+
+        function toggleWaterFlow() {
+            sim.waterEnabled = !sim.waterEnabled;
+            if (!sim.waterEnabled) {
+                sim.lastSavedFlow = sim.waterFlow || 70;
+                sim.waterFlow = 0;
+                document.getElementById('rngWaterFlow').value = 0;
+                document.getElementById('lblWaterFlow').innerText = '0% (Đã tắt)';
+            } else {
+                sim.waterFlow = sim.lastSavedFlow || 70;
+                document.getElementById('rngWaterFlow').value = sim.waterFlow;
+                document.getElementById('lblWaterFlow').innerText = sim.waterFlow + '%';
+            }
+            const btn = document.getElementById('btnWaterToggle');
+            if (btn) {
+                btn.innerHTML = sim.waterEnabled ? '<i class="fa-solid fa-power-off"></i> Tắt nước' : '<i class="fa-solid fa-play"></i> Bật nước';
+                btn.style.background = sim.waterEnabled ? 'rgba(239, 68, 68, 0.2)' : 'rgba(34, 197, 94, 0.2)';
+                btn.style.borderColor = sim.waterEnabled ? '#ef4444' : '#22c55e';
+                btn.style.color = sim.waterEnabled ? '#fca5a5' : '#86efac';
+            }
+        }
+
+        function setIndicator(type) {
+            sim.indicator = type;
+            document.getElementById('btnBulb').classList.toggle('active', type === 'bulb');
+            document.getElementById('btnMeter').classList.toggle('active', type === 'meter');
+        }
+
+        function setCoilTurns(n) {
+            sim.coil.turns = n;
+            document.getElementById('lblTurns').innerText = n + ' vòng';
+            document.querySelectorAll('#colTurns .ctrl-btn').forEach(b => {
+                b.classList.toggle('active', b.innerText.startsWith(n + ' vòng'));
+            });
+        }
+
+        function onStrengthChange(val) {
+            sim.magnet.strength = parseFloat(val) / 100.0;
+            document.getElementById('lblStrength').innerText = val + '%';
+        }
+
+        function onAreaChange(val) {
+            const scale = parseFloat(val) / 100.0;
+            sim.coil.radius = 65 * scale;
+            document.getElementById('lblArea').innerText = val + '%';
+        }
+
+        function flipPoles() {
+            sim.magnet.isNorthLeft = !sim.magnet.isNorthLeft;
+        }
+
+        function toggleAutoOsc() {
+            sim.autoOsc = !sim.autoOsc;
+            document.getElementById('btnAuto').classList.toggle('active', sim.autoOsc);
+            document.getElementById('lblAuto').innerText = sim.autoOsc ? 'Dừng dao động' : 'Dao động điều hòa (AC)';
+        }
+
+        function resetPositions() {
+            sim.autoOsc = false;
+            document.getElementById('btnAuto').classList.remove('active');
+            document.getElementById('lblAuto').innerText = 'Dao động điều hòa (AC)';
+            if (sim.currentScreen === 'generator') {
+                sim.magnet.x = 280;
+                sim.magnet.y = 260;
+                sim.coil.x = 520;
+                sim.coil.y = 260;
+            } else {
+                sim.magnet.x = 220;
+                sim.magnet.y = 260;
+                sim.coil.x = 600;
+                sim.coil.y = 260;
+            }
+            sim.magnet.vx = 0;
+            sim.magnet.vy = 0;
+            sim.magnet.angle = 0;
+            sim.coil.vx = 0;
+            sim.coil.vy = 0;
+
+            sim.compass.x = 600;
+            sim.compass.y = 260;
+
+            sim.fieldMeter.x = 420;
+            sim.fieldMeter.y = 120;
+        }
+
+        function toggleSwitch(name) {
+            if (name === 'field') {
+                sim.showField = !sim.showField;
+                document.getElementById('swField').classList.toggle('active', sim.showField);
+            } else if (name === 'compass') {
+                sim.showCompass = !sim.showCompass;
+                document.getElementById('swCompass').classList.toggle('active', sim.showCompass);
+            } else if (name === 'fieldMeter') {
+                sim.fieldMeter.visible = !sim.fieldMeter.visible;
+                document.getElementById('swFieldMeter').classList.toggle('active', sim.fieldMeter.visible);
+            } else if (name === 'electrons') {
+                sim.showElectrons = !sim.showElectrons;
+                document.getElementById('swElectrons').classList.toggle('active', sim.showElectrons);
+            }
+        }
+
+        // --- POINTER DRAGGING SYSTEM ---
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function getMousePos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: (clientX - rect.left) * (canvas.width / rect.width),
+                y: (clientY - rect.top) * (canvas.height / rect.height)
+            };
+        }
+
+        function hitTestMagnet(x, y) {
+            if (sim.currentScreen === 'generator') return false; // Magnet is fixed to generator rotor
+            const m = sim.magnet;
+            return Math.abs(x - m.x) <= m.w / 2 && Math.abs(y - m.y) <= m.h / 2;
+        }
+
+        function hitTestCoil(x, y) {
+            const c = sim.coil;
+            return Math.hypot(x - c.x, y - c.y) <= c.radius + 30;
+        }
+
+        function hitTestCompass(x, y) {
+            return Math.hypot(x - sim.compass.x, y - sim.compass.y) <= 45;
+        }
+
+        function hitTestMeter(x, y) {
+            if (!sim.fieldMeter.visible) return false;
+            return Math.abs(x - sim.fieldMeter.x) <= sim.fieldMeter.w / 2 &&
+                   Math.abs(y - sim.fieldMeter.y) <= sim.fieldMeter.h / 2;
+        }
+
+        canvas.addEventListener('mousedown', onDown);
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onUp);
+
+        canvas.addEventListener('touchstart', onDown, { passive: false });
+        canvas.addEventListener('touchmove', onMove, { passive: false });
+        canvas.addEventListener('touchend', onUp);
+
+        function onDown(e) {
+            const p = getMousePos(e);
+
+            // Hit test faucet valve knob in generator mode
+            if (sim.currentScreen === 'generator') {
+                const fx = sim.magnet.x - 28;
+                const fy = 85;
+                if (p.x >= fx && p.x <= fx + 24 && p.y >= fy - 28 && p.y <= fy + 5) {
+                    toggleWaterFlow();
+                    return;
+                }
+            }
+
+            if (hitTestMeter(p.x, p.y)) {
+                sim.draggedItem = 'fieldMeter';
+                sim.dragOffsetX = p.x - sim.fieldMeter.x;
+                sim.dragOffsetY = p.y - sim.fieldMeter.y;
+            } else if (sim.currentScreen === 'barMagnet' && hitTestCompass(p.x, p.y)) {
+                sim.draggedItem = 'compass';
+                sim.dragOffsetX = p.x - sim.compass.x;
+                sim.dragOffsetY = p.y - sim.compass.y;
+            } else if (hitTestMagnet(p.x, p.y)) {
+                sim.draggedItem = 'magnet';
+                sim.dragOffsetX = p.x - sim.magnet.x;
+                sim.dragOffsetY = p.y - sim.magnet.y;
+                sim.autoOsc = false;
+                document.getElementById('btnAuto').classList.remove('active');
+                document.getElementById('lblAuto').innerText = 'Dao động điều hòa (AC)';
+            } else if (hitTestCoil(p.x, p.y) && sim.currentScreen !== 'barMagnet') {
+                sim.draggedItem = 'coil';
+                sim.dragOffsetX = p.x - sim.coil.x;
+                sim.dragOffsetY = p.y - sim.coil.y;
+            }
+        }
+
+        function onMove(e) {
+            const p = getMousePos(e);
+            if (!sim.draggedItem) {
+                if (hitTestMeter(p.x, p.y) || hitTestMagnet(p.x, p.y) || 
+                   (sim.currentScreen !== 'barMagnet' && hitTestCoil(p.x, p.y)) ||
+                   (sim.currentScreen === 'barMagnet' && hitTestCompass(p.x, p.y))) {
+                    canvas.style.cursor = 'grab';
+                } else if (sim.currentScreen === 'generator' && p.x >= sim.magnet.x - 28 && p.x <= sim.magnet.x - 4 && p.y >= 57 && p.y <= 90) {
+                    canvas.style.cursor = 'pointer';
+                } else {
+                    canvas.style.cursor = 'default';
+                }
+                return;
+            }
+            canvas.style.cursor = 'grabbing';
+
+            if (sim.draggedItem === 'magnet') {
+                sim.magnet.x = Math.max(90, Math.min(canvas.width - 90, p.x - sim.dragOffsetX));
+                sim.magnet.y = Math.max(90, Math.min(canvas.height - 90, p.y - sim.dragOffsetY));
+            } else if (sim.draggedItem === 'coil') {
+                sim.coil.x = Math.max(120, Math.min(canvas.width - 120, p.x - sim.dragOffsetX));
+                sim.coil.y = Math.max(90, Math.min(canvas.height - 90, p.y - sim.dragOffsetY));
+            } else if (sim.draggedItem === 'compass') {
+                sim.compass.x = Math.max(50, Math.min(canvas.width - 50, p.x - sim.dragOffsetX));
+                sim.compass.y = Math.max(50, Math.min(canvas.height - 50, p.y - sim.dragOffsetY));
+            } else if (sim.draggedItem === 'fieldMeter') {
+                sim.fieldMeter.x = Math.max(80, Math.min(canvas.width - 80, p.x - sim.dragOffsetX));
+                sim.fieldMeter.y = Math.max(60, Math.min(canvas.height - 60, p.y - sim.dragOffsetY));
+            }
+        }
+
+        function onUp() {
+            sim.draggedItem = null;
+            canvas.style.cursor = 'default';
+        }
+
+        // --- MAGNETIC FIELD & PHYSICS CALCULATIONS ---
+        function getMagneticFieldAt(x, y) {
+            const m = sim.magnet;
+            const poleSign = m.isNorthLeft ? -1 : 1;
+            const sep = 55;
+            
+            // Dipole poles coordinates
+            const nX = m.x + Math.cos(m.angle) * (poleSign * sep);
+            const nY = m.y + Math.sin(m.angle) * (poleSign * sep);
+            const sX = m.x - Math.cos(m.angle) * (poleSign * sep);
+            const sY = m.y - Math.sin(m.angle) * (poleSign * sep);
+
+            const rxN = x - nX;
+            const ryN = y - nY;
+            const rN = Math.hypot(rxN, ryN) + 12;
+
+            const rxS = x - sX;
+            const ryS = y - sY;
+            const rS = Math.hypot(rxS, ryS) + 12;
+
+            const bScale = 1400.0 * m.strength;
+            const bxN = (rxN / Math.pow(rN, 3)) * bScale;
+            const byN = (ryN / Math.pow(rN, 3)) * bScale;
+
+            const bxS = -(rxS / Math.pow(rS, 3)) * bScale;
+            const byS = -(ryS / Math.pow(rS, 3)) * bScale;
+
+            const bx = bxN + bxS;
+            const by = byN + byS;
+            const bMag = Math.hypot(bx, by);
+
+            return { bx, by, bMag, angle: Math.atan2(by, bx) };
+        }
+
+        function updatePhysics(dt) {
+            const m = sim.magnet;
+            const c = sim.coil;
+
+            // Auto oscillation (AC in pickup coil mode)
+            if (sim.autoOsc && sim.currentScreen !== 'generator') {
+                sim.oscTime += dt * 3.4;
+                m.x = 430 + Math.sin(sim.oscTime) * 260;
+                m.y = 260;
+            }
+
+            // Generator water turbine rotation & induction
+            if (sim.currentScreen === 'generator') {
+                m.x = 280;
+                m.y = 260;
+                
+                const flowRate = (sim.waterEnabled ? sim.waterFlow : 0) / 100.0;
+                const omega = flowRate * 6.28; // Angular speed (rad/s)
+                m.angle += omega * dt;
+
+                // Relative distance factor between magnet and coil
+                const dist = Math.max(100, Math.hypot(c.x - m.x, c.y - m.y));
+                const distFactor = Math.pow(240 / dist, 2.0);
+                const areaFactor = Math.pow(c.radius / 65, 2);
+                const phiMax = 3.6 * m.strength * c.turns * areaFactor * distFactor;
+
+                // Instantaneous magnetic flux Phi(t) = Phi_max * cos(angle)
+                sim.flux = phiMax * Math.cos(m.angle); // mWb
+
+                // Faraday Induced EMF: e_c(t) = - dPhi/dt = Phi_max * omega * sin(angle)
+                const rawEMF = phiMax * omega * Math.sin(m.angle) * 1.5;
+                sim.emf = rawEMF; // Volts (0 to ~6V)
+            } else {
+                // Pickup coil translation mode
+                m.angle = 0;
+
+                // Magnetic flux through coil: Phi = N * B_x * Area
+                const bAtCoil = getMagneticFieldAt(c.x, c.y);
+                const areaFactor = Math.pow(c.radius / 65, 2);
+                
+                const rawFlux = bAtCoil.bx * areaFactor * c.turns * 0.45;
+                sim.flux = rawFlux; // mWb
+
+                // dPhi/dt and EMF e_c = - dPhi/dt
+                const dFlux = (sim.flux - sim.lastFlux) / dt;
+                sim.lastFlux = sim.flux;
+                sim.dFluxDt = dFlux;
+
+                const rawEMF = -sim.dFluxDt * 1.6;
+                sim.emf = rawEMF; // Volts
+            }
+
+            // Velocities
+            m.vx = (m.x - m.lastX) / dt;
+            m.vy = (m.y - m.lastY) / dt;
+            m.lastX = m.x;
+            m.lastY = m.y;
+
+            c.vx = (c.x - c.lastX) / dt;
+            c.vy = (c.y - c.lastY) / dt;
+            c.lastX = c.x;
+            c.lastY = c.y;
+
+            const relSpeed = Math.hypot(m.vx - c.vx, m.vy - c.vy);
+            document.getElementById('chipSpeed').innerText = (relSpeed * 0.1).toFixed(1);
+
+            // Display Telemetry
+            document.getElementById('chipFlux').innerText = sim.flux.toFixed(2);
+            document.getElementById('chipEMF').innerText = sim.emf.toFixed(2);
+            document.getElementById('valCurPhi').innerText = sim.flux.toFixed(2) + ' mWb';
+            document.getElementById('valCurEMF').innerText = sim.emf.toFixed(2) + ' V';
+
+            // Lightbulb Brightness (Pulsing glowing filaments)
+            const targetBrightness = Math.min(Math.abs(sim.emf) / 3.0, 1.0);
+            sim.bulbBrightness += (targetBrightness - sim.bulbBrightness) * 0.45;
+
+            // Voltmeter needle damping with harmonic oscillation
+            const targetAngle = Math.max(-0.95, Math.min(0.95, sim.emf / 4.2));
+            sim.voltmeterAngle += (targetAngle - sim.voltmeterAngle) * 0.38;
+
+            // Ambient Water Stream and Dynamo Hum Sound Control
+            if (soundOn && audioCtx && waterGainNode) {
+                const nowAudio = audioCtx.currentTime;
+                if (sim.currentScreen === 'generator' && sim.waterEnabled && sim.waterFlow > 0) {
+                    const flowNorm = sim.waterFlow / 100.0;
+                    waterGainNode.gain.setTargetAtTime(0.045 * flowNorm, nowAudio, 0.08);
+                    dynamoGain.gain.setTargetAtTime(0.02 * flowNorm, nowAudio, 0.08);
+                    dynamoOsc.frequency.setTargetAtTime(45 + flowNorm * 75, nowAudio, 0.08);
+                } else {
+                    waterGainNode.gain.setTargetAtTime(0, nowAudio, 0.08);
+                    dynamoGain.gain.setTargetAtTime(0, nowAudio, 0.08);
+                }
+            }
+
+            // Harmonic Induction Chime on Electromagnetic Induction Peaks
+            if (soundOn && Math.abs(sim.emf) > 0.35) {
+                const now = Date.now();
+                if (!sim.lastChimeTime || now - sim.lastChimeTime > 220) {
+                    sim.lastChimeTime = now;
+                    playInductionChime(sim.emf);
+                }
+            }
+
+            // Electron drift along wire
+            if (Math.abs(sim.emf) > 0.05) {
+                sim.electronShift += sim.emf * 1.8;
+            }
+
+            // Update compass angle
+            const bAtCompass = getMagneticFieldAt(sim.compass.x, sim.compass.y);
+            sim.compass.angle = bAtCompass.angle;
+
+            // Waveform History Buffer (130 samples)
+            sim.historyTime += dt;
+            sim.graphData.push({
+                t: sim.historyTime,
+                phi: sim.flux,
+                emf: sim.emf
+            });
+            if (sim.graphData.length > 130) sim.graphData.shift();
+        }
+
+        // --- MAIN RENDER LOOP ---
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 1. Background Grid Tabletop
+            drawDeskGrid();
+
+            // 2. Magnetic Field Lines & Vector Needles (Ẩn đường sức từ ở chế độ máy phát điện turbine, hiển thị nền các nam châm nhỏ)
+            if (sim.showField && sim.currentScreen !== 'generator') drawFieldLines();
+            if (sim.showCompass) drawCompassGrid();
+
+            // 3. Render 3D Apparatus with Z-index Sorting
+            if (sim.currentScreen === 'generator') {
+                drawTurbineAssembly();
+                drawCoilBack();
+                drawMagnet();
+                drawCoilFront();
+                drawCircuitIndicator();
+            } else if (sim.currentScreen === 'pickupCoil') {
+                drawCoilBack();
+                drawMagnet();
+                drawCoilFront();
+                drawCircuitIndicator();
+            }
+
+            // 4. Field Meter Tool
+            if (sim.fieldMeter.visible) {
+                drawFieldMeter();
+            }
+
+            requestAnimationFrame(() => {
+                updatePhysics(1 / 60);
+                render();
+                drawOscilloscope();
+            });
+        }
+
+        // --- 3.1. WATER TURBINE GENERATOR ASSEMBLY (CỤM MÁY PHÁT ĐIỆN TURBINE NƯỚC) ---
+        function drawTurbineAssembly() {
+            const m = sim.magnet;
+            ctx.save();
+
+            // 1. REALISTIC METALLIC CHROME FAUCET (VÒI NƯỚC KIM LOẠI UỐN CONG CHUẨN PHET)
+            const nozzleX = 236;
+            const nozzleY = 96;
+            const isFlowing = sim.waterEnabled && sim.waterFlow > 0;
+            const flowPercent = isFlowing ? sim.waterFlow : 0;
+            const rpm = Math.round(flowPercent * 0.95);
+
+            // Chrome Horizontal Supply Pipe
+            const pipeGrad = ctx.createLinearGradient(160, 48, 160, 72);
+            pipeGrad.addColorStop(0, '#64748b');
+            pipeGrad.addColorStop(0.3, '#f8fafc');
+            pipeGrad.addColorStop(0.7, '#cbd5e1');
+            pipeGrad.addColorStop(1, '#334155');
+
+            ctx.fillStyle = pipeGrad;
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 1.8;
+            ctx.beginPath();
+            ctx.roundRect(160, 48, 64, 24, [4, 0, 0, 4]);
+            ctx.fill();
+            ctx.stroke();
+
+            // Curved Elbow Connector
+            const elbowGrad = ctx.createLinearGradient(210, 48, 248, 88);
+            elbowGrad.addColorStop(0, '#94a3b8');
+            elbowGrad.addColorStop(0.5, '#f8fafc');
+            elbowGrad.addColorStop(1, '#334155');
+
+            ctx.fillStyle = elbowGrad;
+            ctx.beginPath();
+            ctx.moveTo(224, 48);
+            ctx.bezierCurveTo(248, 48, 252, 68, 248, 84);
+            ctx.lineTo(224, 84);
+            ctx.bezierCurveTo(226, 72, 222, 72, 224, 72);
+            ctx.lineTo(224, 48);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // Downward Spout Nozzle
+            const nozzleGrad = ctx.createLinearGradient(224, 80, 248, 96);
+            nozzleGrad.addColorStop(0, '#d97706');
+            nozzleGrad.addColorStop(0.5, '#fef08a');
+            nozzleGrad.addColorStop(1, '#b45309');
+
+            ctx.fillStyle = nozzleGrad;
+            ctx.beginPath();
+            ctx.moveTo(222, 80);
+            ctx.lineTo(250, 80);
+            ctx.lineTo(245, nozzleY);
+            ctx.lineTo(227, nozzleY);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // Interactive Faucet Valve Knob on top
+            const valveX = 202;
+            const valveY = 48;
+            ctx.fillStyle = isFlowing ? '#ef4444' : '#64748b';
+            ctx.strokeStyle = '#0f172a';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.roundRect(valveX - 12, valveY - 18, 24, 14, 3);
+            ctx.fill();
+            ctx.stroke();
+
+            // Valve Stem
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillRect(valveX - 3, valveY - 5, 6, 6);
+
+            // On-canvas Flow & RPM Badges
+            ctx.fillStyle = '#0f172a';
+            ctx.beginPath();
+            ctx.roundRect(162, 18, 80, 22, 6);
+            ctx.fill();
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            ctx.fillStyle = isFlowing ? '#38bdf8' : '#94a3b8';
+            ctx.font = 'bold 10px JetBrains Mono, monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText(`${flowPercent}% (${rpm} RPM)`, 202, 33);
+
+            // 2. ULTRA-REALISTIC DYNAMIC FLUID WATER STREAM & SPLASH DYNAMICS
+            if (isFlowing) {
+                const baseW = 7 + (flowPercent / 100.0) * 11;
+                const impactY = m.y - 36;
+                const now = Date.now() * 0.001; // Seconds
+
+                // Compute smooth wavy fluid boundaries along stream height
+                const yStep = 4;
+                const leftPts = [];
+                const rightPts = [];
+
+                for (let sy = nozzleY; sy <= impactY; sy += yStep) {
+                    const normY = (sy - nozzleY) / (impactY - nozzleY);
+                    // Gravitational acceleration tapering (A1/A2 = v2/v1)
+                    const taper = 1.0 - 0.28 * Math.sqrt(normY);
+                    // Dynamic fluid surface wave oscillations
+                    const waveL = Math.sin(sy * 0.09 - now * 14) * 1.4 + Math.sin(sy * 0.22 - now * 24) * 0.7;
+                    const waveR = Math.cos(sy * 0.08 - now * 13) * 1.4 + Math.sin(sy * 0.24 - now * 25) * 0.7;
+                    const streamCenter = nozzleX + Math.sin(sy * 0.04 - now * 9) * 0.8;
+                    const curW = baseW * taper;
+
+                    leftPts.push({ x: streamCenter - curW / 2 + waveL, y: sy });
+                    rightPts.push({ x: streamCenter + curW / 2 + waveR, y: sy });
+                }
+
+                // A. Outer Fluid Water Volume (Khối nước trong suốt khúc xạ ánh sáng)
+                const waterGrad = ctx.createLinearGradient(nozzleX - baseW, nozzleY, nozzleX + baseW, impactY);
+                waterGrad.addColorStop(0, 'rgba(56, 189, 248, 0.88)');
+                waterGrad.addColorStop(0.35, 'rgba(14, 165, 233, 0.75)');
+                waterGrad.addColorStop(0.75, 'rgba(2, 132, 199, 0.82)');
+                waterGrad.addColorStop(1, 'rgba(186, 230, 253, 0.9)');
+
+                ctx.fillStyle = waterGrad;
+                ctx.beginPath();
+                ctx.moveTo(leftPts[0].x, leftPts[0].y);
+                for (let i = 1; i < leftPts.length; i++) ctx.lineTo(leftPts[i].x, leftPts[i].y);
+                for (let i = rightPts.length - 1; i >= 0; i--) ctx.lineTo(rightPts[i].x, rightPts[i].y);
+                ctx.closePath();
+                ctx.fill();
+
+                // B. Dense Inner Liquid Core (Lõi dòng chảy đậm đặc)
+                ctx.fillStyle = 'rgba(3, 105, 161, 0.4)';
+                ctx.beginPath();
+                ctx.moveTo(leftPts[0].x + 2, leftPts[0].y);
+                for (let i = 1; i < leftPts.length; i++) ctx.lineTo(leftPts[i].x + 2, leftPts[i].y);
+                for (let i = rightPts.length - 1; i >= 0; i--) ctx.lineTo(rightPts[i].x - 2, rightPts[i].y);
+                ctx.closePath();
+                ctx.fill();
+
+                // C. Cascading Aeration Foams & Bubbling Streaks (Dải bọt khí cuộn chảy xiết)
+                ctx.lineWidth = 1.4;
+                for (let s = 0; s < 3; s++) {
+                    const streakSpeed = 16 + s * 8;
+                    const streakOffset = (now * streakSpeed + s * 14) % (impactY - nozzleY);
+                    const sY1 = nozzleY + streakOffset;
+                    const sY2 = Math.min(impactY, sY1 + 18 + s * 6);
+                    if (sY1 < impactY) {
+                        const sX = nozzleX - 3 + s * 3 + Math.sin(sY1 * 0.1 - now * 10) * 1.2;
+                        const streakGrad = ctx.createLinearGradient(sX, sY1, sX, sY2);
+                        streakGrad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+                        streakGrad.addColorStop(1, 'rgba(255, 255, 255, 0.1)');
+                        ctx.strokeStyle = streakGrad;
+                        ctx.beginPath();
+                        ctx.moveTo(sX, sY1);
+                        ctx.lineTo(sX + Math.sin(sY2 * 0.08) * 1.5, sY2);
+                        ctx.stroke();
+                    }
+                }
+
+                // D. Specular Gloss Highlight along Left Flank (Vệt phản quang trắng bóng mượt)
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+                ctx.lineWidth = 1.6;
+                ctx.beginPath();
+                ctx.moveTo(leftPts[0].x + 1.5, leftPts[0].y + 4);
+                for (let i = 1; i < leftPts.length - 2; i += 2) {
+                    ctx.lineTo(leftPts[i].x + 1.5, leftPts[i].y);
+                }
+                ctx.stroke();
+
+                // E. Turbulent Foamy Impact Cloud (Bọt nước trắng xóa tại điểm chạm gầu turbine)
+                const foamRadiusX = baseW * 1.4 + Math.sin(now * 30) * 2;
+                const foamRadiusY = 6 + Math.cos(now * 26) * 1.5;
+                const foamGrad = ctx.createRadialGradient(nozzleX, impactY, 2, nozzleX, impactY, foamRadiusX);
+                foamGrad.addColorStop(0, 'rgba(255, 255, 255, 0.98)');
+                foamGrad.addColorStop(0.5, 'rgba(186, 230, 253, 0.85)');
+                foamGrad.addColorStop(1, 'rgba(56, 189, 248, 0)');
+
+                ctx.fillStyle = foamGrad;
+                ctx.beginPath();
+                ctx.ellipse(nozzleX, impactY, foamRadiusX, foamRadiusY, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // F. Realistic Spray Splash Particles with Parabolic Physics (Bụi nước bắn tung tóe)
+                const numParticles = 14;
+                for (let p = 0; p < numParticles; p++) {
+                    const phase = (now * (3.5 + p * 0.25) + p * (1 / numParticles)) % 1;
+                    const angle = -Math.PI * 0.85 + (p / numParticles) * Math.PI * 1.1;
+                    const speed = 24 + (p % 4) * 8;
+                    const pDist = speed * phase;
+                    const px = nozzleX + Math.cos(angle) * pDist - phase * 6;
+                    const py = impactY + Math.sin(angle) * pDist + 0.5 * 55 * phase * phase; // Gravity arc
+                    const pR = Math.max(0.5, (1.8 - phase * 1.3));
+                    const pAlpha = (1 - phase) * 0.9;
+
+                    ctx.fillStyle = `rgba(255, 255, 255, ${pAlpha})`;
+                    ctx.beginPath();
+                    ctx.arc(px, py, pR, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // G. Water Drizzle falling off wheel into bottom drain (Dòng nước xả rơi xuống máng thu)
+                for (let d = 0; d < 4; d++) {
+                    const dPhase = (now * 2.8 + d * 0.28) % 1;
+                    const dx = m.x - 22 + (d % 2) * 16 + Math.sin(dPhase * 5) * 3;
+                    const dy = m.y + 35 + dPhase * 36;
+                    const dAlpha = (1 - dPhase) * 0.75;
+                    ctx.fillStyle = `rgba(56, 189, 248, ${dAlpha})`;
+                    ctx.beginPath();
+                    ctx.ellipse(dx, dy, 1.4, 3.2, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // 3. AUTHENTIC PHET WATER PADDLE WHEEL (BÁNH XE NƯỚC 4 GẦU MÚC CHUẨN PHET)
+            ctx.save();
+            ctx.translate(m.x, m.y);
+            ctx.rotate(m.angle);
+
+            // Translucent Acrylic Wheel Rim Base
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.65)';
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.7)';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.arc(0, 0, 52, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // 4 Curved Bucket Cups (4 gầu đón nước hình cánh cung đón dòng nước chuẩn PhET)
+            const cups = 4;
+            for (let c = 0; c < cups; c++) {
+                const ca = (c * Math.PI * 2) / cups;
+                ctx.save();
+                ctx.rotate(ca);
+
+                // Bucket Cup Body (Gầu đón nước)
+                const cupGrad = ctx.createLinearGradient(20, -14, 56, 14);
+                cupGrad.addColorStop(0, '#94a3b8');
+                cupGrad.addColorStop(0.5, '#e2e8f0');
+                cupGrad.addColorStop(1, '#475569');
+
+                ctx.fillStyle = cupGrad;
+                ctx.strokeStyle = '#1e293b';
+                ctx.lineWidth = 1.4;
+                ctx.beginPath();
+                ctx.moveTo(24, 0);
+                ctx.bezierCurveTo(34, -16, 52, -18, 56, -4);
+                ctx.bezierCurveTo(46, -2, 36, -2, 28, 4);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+
+                // Inner Cup Cavity Shadow (Lòng gầu múc nước)
+                ctx.fillStyle = 'rgba(30, 41, 59, 0.45)';
+                ctx.beginPath();
+                ctx.moveTo(28, 0);
+                ctx.bezierCurveTo(36, -12, 48, -12, 53, -4);
+                ctx.bezierCurveTo(44, -3, 36, -2, 28, 0);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.restore();
+            }
+
+            // Central Brass Hub Axle Bolt
+            ctx.fillStyle = '#d97706';
+            ctx.strokeStyle = '#fef08a';
+            ctx.lineWidth = 1.4;
+            ctx.beginPath();
+            ctx.arc(0, 0, 16, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#0f172a';
+            ctx.beginPath();
+            ctx.arc(0, 0, 5.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+
+            // 4. Stand & Drain Sump Base under Wheel
+            ctx.fillStyle = '#334155';
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.roundRect(m.x - 65, m.y + 68, 130, 14, 4);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        // --- DRAWING FUNCTIONS (PHOTOREALISTIC RENDERING) ---
+        function drawDeskGrid() {
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.04)';
+            ctx.lineWidth = 1;
+            for (let x = 0; x < canvas.width; x += 36) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += 36) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+        }
+
+        function drawMagnet() {
+            const m = sim.magnet;
+            ctx.save();
+            ctx.translate(m.x, m.y);
+            ctx.rotate(m.angle);
+
+            // Realistic Drop shadow
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+            ctx.beginPath();
+            ctx.roundRect(-m.w / 2 + 5, -m.h / 2 + 8, m.w, m.h, 8);
+            ctx.fill();
+
+            const isNLeft = m.isNorthLeft;
+            const halfW = m.w / 2;
+            const halfH = m.h / 2;
+
+            // Left Pole Half
+            const gradL = ctx.createLinearGradient(-halfW, -halfH, 0, halfH);
+            if (isNLeft) {
+                gradL.addColorStop(0, '#ef4444');
+                gradL.addColorStop(0.5, '#dc2626');
+                gradL.addColorStop(1, '#991b1b');
+            } else {
+                gradL.addColorStop(0, '#3b82f6');
+                gradL.addColorStop(0.5, '#2563eb');
+                gradL.addColorStop(1, '#1d4ed8');
+            }
+            ctx.fillStyle = gradL;
+            ctx.beginPath();
+            ctx.roundRect(-halfW, -halfH, halfW, m.h, [8, 0, 0, 8]);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Right Pole Half
+            const gradR = ctx.createLinearGradient(0, -halfH, halfW, halfH);
+            if (isNLeft) {
+                gradR.addColorStop(0, '#3b82f6');
+                gradR.addColorStop(0.5, '#2563eb');
+                gradR.addColorStop(1, '#1d4ed8');
+            } else {
+                gradR.addColorStop(0, '#ef4444');
+                gradR.addColorStop(0.5, '#dc2626');
+                gradR.addColorStop(1, '#991b1b');
+            }
+            ctx.fillStyle = gradR;
+            ctx.beginPath();
+            ctx.roundRect(0, -halfH, halfW, m.h, [0, 8, 8, 0]);
+            ctx.fill();
+            ctx.stroke();
+
+            // Metallic highlight shine
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.22)';
+            ctx.beginPath();
+            ctx.roundRect(-halfW + 3, -halfH + 3, m.w - 6, halfH - 5, 5);
+            ctx.fill();
+
+            // Engraved N and S Letters
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '900 24px Outfit, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
+            ctx.shadowBlur = 4;
+            ctx.fillText(isNLeft ? 'N' : 'S', -halfW / 2, 0);
+            ctx.fillText(isNLeft ? 'S' : 'N', halfW / 2, 0);
+            ctx.shadowBlur = 0;
+
+            if (sim.draggedItem === 'magnet') {
+                ctx.strokeStyle = '#38bdf8';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 4]);
+                ctx.strokeRect(-halfW - 5, -halfH - 5, m.w + 10, m.h + 10);
+                ctx.setLineDash([]);
+            }
+
+            ctx.restore();
+        }
+
+        // --- 3. SINGLE CONTINUOUS 3D HELICAL WIRE APPARATUS (MỘT SỢI DÂY DUY NHẤT CUỐN THÀNH CÁC VÒNG) ---
+        function drawCoilBack() {
+            const c = sim.coil;
+            const turns = c.turns;
+            const spacing = 24;
+            const totalW = turns * spacing;
+            const startX = c.x - totalW / 2;
+            const r = c.radius;
+            const rxRad = 16 * (r / 65);
+
+            ctx.save();
+
+            // Back half segments of the single continuous helical wire (theta: PI -> 2PI, 3PI -> 4PI, ...)
+            for (let k = 0; k < turns; k++) {
+                const pts = [];
+                const steps = 32;
+                for (let i = 0; i <= steps; i++) {
+                    const t = i / steps;
+                    const x = startX + ((2 * k + 1 + t) / 2) * spacing - Math.sin(t * Math.PI) * rxRad;
+                    const y = c.y + r * Math.cos(t * Math.PI);
+                    pts.push({ x, y });
+                }
+
+                // Dark shaded copper back wire
+                ctx.strokeStyle = '#5a2609';
+                ctx.lineWidth = 8;
+                ctx.beginPath();
+                ctx.moveTo(pts[0].x, pts[0].y);
+                for (let j = 1; j < pts.length; j++) ctx.lineTo(pts[j].x, pts[j].y);
+                ctx.stroke();
+
+                ctx.strokeStyle = '#8c4a17';
+                ctx.lineWidth = 6.5;
+                ctx.beginPath();
+                ctx.moveTo(pts[0].x, pts[0].y);
+                for (let j = 1; j < pts.length; j++) ctx.lineTo(pts[j].x, pts[j].y);
+                ctx.stroke();
+            }
+
+            // Electrons moving along the Back segments of the single wire
+            if (sim.showElectrons && Math.abs(sim.emf) > 0.04) {
+                const totalElectrons = turns * 4;
+                for (let p = 0; p < totalElectrons; p++) {
+                    const totalA = turns * Math.PI * 2;
+                    let a = (p * (totalA / totalElectrons) + sim.electronShift * 0.7) % totalA;
+                    if (a < 0) a += totalA;
+
+                    const sinA = Math.sin(a);
+                    if (sinA <= 0) { // Back half
+                        const x = startX + (a / (Math.PI * 2)) * spacing + sinA * rxRad;
+                        const y = c.y - r * Math.cos(a);
+                        drawPhETElectron(x, y);
+                    }
+                }
+            }
+
+            ctx.restore();
+        }
+
+        function drawCoilFront() {
+            const c = sim.coil;
+            const turns = c.turns;
+            const spacing = 24;
+            const totalW = turns * spacing;
+            const startX = c.x - totalW / 2;
+            const r = c.radius;
+            const rxRad = 16 * (r / 65);
+
+            ctx.save();
+
+            // Front half segments of the single continuous helical wire (theta: 0 -> PI, 2PI -> 3PI, ...)
+            for (let k = 0; k < turns; k++) {
+                const pts = [];
+                const steps = 32;
+                for (let i = 0; i <= steps; i++) {
+                    const t = i / steps;
+                    const x = startX + ((2 * k + t) / 2) * spacing + Math.sin(t * Math.PI) * rxRad;
+                    const y = c.y - r * Math.cos(t * Math.PI);
+                    pts.push({ x, y });
+                }
+
+                // Base shadow
+                ctx.strokeStyle = '#5a2609';
+                ctx.lineWidth = 8.5;
+                ctx.beginPath();
+                ctx.moveTo(pts[0].x, pts[0].y);
+                for (let j = 1; j < pts.length; j++) ctx.lineTo(pts[j].x, pts[j].y);
+                ctx.stroke();
+
+                // Shiny metallic copper gradient along wire
+                const copperGrad = ctx.createLinearGradient(startX + k * spacing - rxRad, c.y - r, startX + (k + 1) * spacing + rxRad, c.y + r);
+                copperGrad.addColorStop(0, '#d97706');
+                copperGrad.addColorStop(0.2, '#fde047');
+                copperGrad.addColorStop(0.55, '#f59e0b');
+                copperGrad.addColorStop(1, '#92400e');
+
+                ctx.strokeStyle = copperGrad;
+                ctx.lineWidth = 6.5;
+                ctx.beginPath();
+                ctx.moveTo(pts[0].x, pts[0].y);
+                for (let j = 1; j < pts.length; j++) ctx.lineTo(pts[j].x, pts[j].y);
+                ctx.stroke();
+
+                // Specular highlight gloss line along apex
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
+                ctx.lineWidth = 1.8;
+                ctx.beginPath();
+                const startIdx = Math.floor(steps * 0.15);
+                const endIdx = Math.floor(steps * 0.75);
+                ctx.moveTo(pts[startIdx].x - 1, pts[startIdx].y);
+                for (let j = startIdx + 1; j <= endIdx; j++) ctx.lineTo(pts[j].x - 1, pts[j].y);
+                ctx.stroke();
+            }
+
+            // Electrons moving along the Front segments of the single wire
+            if (sim.showElectrons && Math.abs(sim.emf) > 0.04) {
+                const totalElectrons = turns * 4;
+                for (let p = 0; p < totalElectrons; p++) {
+                    const totalA = turns * Math.PI * 2;
+                    let a = (p * (totalA / totalElectrons) + sim.electronShift * 0.7) % totalA;
+                    if (a < 0) a += totalA;
+
+                    const sinA = Math.sin(a);
+                    if (sinA > 0) { // Front half
+                        const x = startX + (a / (Math.PI * 2)) * spacing + sinA * rxRad;
+                        const y = c.y - r * Math.cos(a);
+                        drawPhETElectron(x, y);
+                    }
+                }
+            }
+
+            // Dragged selection highlight ring
+            if (sim.draggedItem === 'coil') {
+                ctx.strokeStyle = '#38bdf8';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 4]);
+                ctx.beginPath();
+                ctx.arc(c.x, c.y, r + 24, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            ctx.restore();
+        }
+
+        // Draw Authentic PhET Blue Electron Charge Sphere with Minus Sign
+        function drawPhETElectron(x, y) {
+            ctx.save();
+            ctx.fillStyle = '#38bdf8';
+            ctx.strokeStyle = '#0284c7';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(x, y, 4.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // Minus sign
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(x - 2.5, y - 0.75, 5, 1.5);
+            ctx.restore();
+        }
+
+        function drawCircuitIndicator() {
+            const c = sim.coil;
+            const turns = c.turns;
+            const spacing = 24;
+            const totalW = turns * spacing;
+            const startX = c.x - totalW / 2;
+            const endX = startX + turns * spacing;
+            const r = c.radius;
+
+            const indX = c.x;
+            const indY = c.y - r - 85;
+
+            ctx.save();
+
+            // 1. Left Red Wire (Xuất phát liền mạch từ điểm đầu của sợi dây đồng)
+            ctx.strokeStyle = '#ef4444';
+            ctx.lineWidth = 4.5;
+            ctx.beginPath();
+            ctx.moveTo(startX, c.y - r);
+            ctx.bezierCurveTo(startX - 18, c.y - r - 25, indX - 35, indY + 45, indX - 16, indY + 28);
+            ctx.stroke();
+
+            // Specular shine on left wire
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+            ctx.lineWidth = 1.4;
+            ctx.beginPath();
+            ctx.moveTo(startX, c.y - r);
+            ctx.bezierCurveTo(startX - 18, c.y - r - 25, indX - 35, indY + 45, indX - 16, indY + 28);
+            ctx.stroke();
+
+            // 2. Right Royal Blue Wire (Xuất phát liền mạch từ điểm cuối của sợi dây đồng)
+            ctx.strokeStyle = '#2563eb';
+            ctx.lineWidth = 4.5;
+            ctx.beginPath();
+            ctx.moveTo(endX, c.y - r);
+            ctx.bezierCurveTo(endX + 18, c.y - r - 25, indX + 35, indY + 45, indX + 16, indY + 28);
+            ctx.stroke();
+
+            // Specular shine on right wire
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+            ctx.lineWidth = 1.4;
+            ctx.beginPath();
+            ctx.moveTo(endX, c.y - r);
+            ctx.bezierCurveTo(endX + 18, c.y - r - 25, indX + 35, indY + 45, indX + 16, indY + 28);
+            ctx.stroke();
+
+            // Draw Bulb or Voltmeter cleanly mounted on top of the two wires
+            if (sim.indicator === 'bulb') {
+                drawBulb(indX, indY);
+            } else {
+                drawVoltmeter(indX, indY);
+            }
+
+            ctx.restore();
+        }
+
+        function drawBulb(bx, by) {
+            ctx.save();
+            ctx.translate(bx, by);
+
+            const b = sim.bulbBrightness;
+
+            // 1. Dynamic Radiant Bloom & Corona
+            if (b > 0.04) {
+                const glowRadius = 55 + b * 75;
+                const glow = ctx.createRadialGradient(0, -10, 8, 0, -10, glowRadius);
+                glow.addColorStop(0, `rgba(255, 255, 255, ${b * 0.95})`);
+                glow.addColorStop(0.2, `rgba(254, 240, 138, ${b * 0.85})`);
+                glow.addColorStop(0.55, `rgba(245, 158, 11, ${b * 0.45})`);
+                glow.addColorStop(1, 'rgba(245, 158, 11, 0)');
+                ctx.fillStyle = glow;
+                ctx.beginPath();
+                ctx.arc(0, -10, glowRadius, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Spreading Optical Light Rays
+                const numRays = 10;
+                ctx.strokeStyle = `rgba(254, 240, 138, ${b * 0.75})`;
+                ctx.lineWidth = 2.5;
+                for (let i = 0; i < numRays; i++) {
+                    const a = (i * Math.PI * 2) / numRays;
+                    ctx.beginPath();
+                    ctx.moveTo(Math.cos(a) * 32, -10 + Math.sin(a) * 32);
+                    ctx.lineTo(Math.cos(a) * (42 + b * 32), -10 + Math.sin(a) * (42 + b * 32));
+                    ctx.stroke();
+                }
+            }
+
+            // 2. Heavy Ceramic/Brass Screw Socket Mount
+            const socketGrad = ctx.createLinearGradient(-15, 12, 15, 28);
+            socketGrad.addColorStop(0, '#78350f');
+            socketGrad.addColorStop(0.4, '#f59e0b');
+            socketGrad.addColorStop(1, '#451a03');
+            ctx.fillStyle = socketGrad;
+            ctx.beginPath();
+            ctx.roundRect(-15, 12, 30, 18, 4);
+            ctx.fill();
+
+            // Screw Thread Ridges
+            ctx.strokeStyle = '#451a03';
+            ctx.lineWidth = 2;
+            for (let ty = 16; ty <= 26; ty += 4) {
+                ctx.beginPath();
+                ctx.moveTo(-15, ty);
+                ctx.lineTo(15, ty);
+                ctx.stroke();
+            }
+
+            // Dark Contact Base Pad
+            ctx.fillStyle = '#0f172a';
+            ctx.beginPath();
+            ctx.roundRect(-10, 30, 20, 6, [0, 0, 4, 4]);
+            ctx.fill();
+
+            // 3. Pear-Shaped Incandescent Glass Envelope
+            ctx.beginPath();
+            ctx.moveTo(-14, 12);
+            ctx.bezierCurveTo(-26, 4, -28, -20, 0, -38);
+            ctx.bezierCurveTo(28, -20, 26, 4, 14, 12);
+            ctx.closePath();
+
+            // Glass Fill
+            const glassFill = ctx.createRadialGradient(0, -12, 4, 0, -12, 28);
+            if (b > 0.04) {
+                glassFill.addColorStop(0, `rgba(255, 255, 255, ${0.4 + b * 0.55})`);
+                glassFill.addColorStop(0.6, `rgba(254, 240, 138, ${0.3 + b * 0.4})`);
+                glassFill.addColorStop(1, `rgba(245, 158, 11, ${0.2 + b * 0.3})`);
+            } else {
+                glassFill.addColorStop(0, 'rgba(255, 255, 255, 0.18)');
+                glassFill.addColorStop(1, 'rgba(255, 255, 255, 0.05)');
+            }
+            ctx.fillStyle = glassFill;
+            ctx.fill();
+
+            // Glass Outline
+            ctx.strokeStyle = b > 0.04 ? '#fef08a' : 'rgba(255, 255, 255, 0.45)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // 4. Inner Glass Stem & Nickel Support Leads
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+            ctx.fillRect(-4, 0, 8, 12);
+
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            // Left lead
+            ctx.moveTo(-4, 2);
+            ctx.lineTo(-8, -14);
+            // Right lead
+            ctx.moveTo(4, 2);
+            ctx.lineTo(8, -14);
+            ctx.stroke();
+
+            // 5. Coiled Tungsten Filament
+            if (b > 0.04) {
+                ctx.strokeStyle = b > 0.4 ? '#ffffff' : '#fde047';
+                ctx.lineWidth = 3.2;
+                ctx.shadowColor = '#f59e0b';
+                ctx.shadowBlur = 10;
+            } else {
+                ctx.strokeStyle = '#64748b';
+                ctx.lineWidth = 1.5;
+                ctx.shadowBlur = 0;
+            }
+
+            ctx.beginPath();
+            ctx.moveTo(-8, -14);
+            ctx.lineTo(-4, -20);
+            ctx.lineTo(0, -15);
+            ctx.lineTo(4, -20);
+            ctx.lineTo(8, -14);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // 6. Realistic Glass Specular Highlight Arc
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
+            ctx.lineWidth = 2.2;
+            ctx.beginPath();
+            ctx.arc(0, -14, 20, -Math.PI * 0.85, -Math.PI * 0.45);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        function drawVoltmeter(vx, vy) {
+            ctx.save();
+            ctx.translate(vx, vy);
+
+            // 1. Heavy Gauge Analogue Meter Housing
+            ctx.fillStyle = '#0f172a';
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.roundRect(-56, -46, 112, 88, 12);
+            ctx.fill();
+            ctx.stroke();
+
+            // Metallic Bezel Ring
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(-52, -42, 104, 80);
+
+            // 2. Vintage Cream/Dark Dial Face
+            ctx.fillStyle = '#020617';
+            ctx.beginPath();
+            ctx.roundRect(-46, -36, 92, 54, 8);
+            ctx.fill();
+
+            // Dial Arc Scale
+            ctx.strokeStyle = '#64748b';
+            ctx.lineWidth = 1.8;
+            ctx.beginPath();
+            ctx.arc(0, 10, 36, -Math.PI * 0.8, -Math.PI * 0.2);
+            ctx.stroke();
+
+            // Scale Graduations
+            for (let a = -Math.PI * 0.8; a <= -Math.PI * 0.2 + 0.01; a += (Math.PI * 0.6) / 10) {
+                const innerR = (Math.abs(a + Math.PI * 0.5) < 0.05) ? 26 : 30;
+                ctx.strokeStyle = (Math.abs(a + Math.PI * 0.5) < 0.05) ? '#f43f5e' : '#94a3b8';
+                ctx.lineWidth = (Math.abs(a + Math.PI * 0.5) < 0.05) ? 2.5 : 1.2;
+                ctx.beginPath();
+                ctx.moveTo(Math.cos(a) * innerR, 10 + Math.sin(a) * innerR);
+                ctx.lineTo(Math.cos(a) * 36, 10 + Math.sin(a) * 36);
+                ctx.stroke();
+            }
+
+            // Zero Center Mark Labels
+            ctx.fillStyle = '#f43f5e';
+            ctx.font = 'bold 10px Outfit, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('0', 0, -10);
+
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = 'bold 8.5px Outfit, sans-serif';
+            ctx.fillText('-10V', -32, -10);
+            ctx.fillText('+10V', 32, -10);
+
+            // 3. Realistic Red Needle with Harmonic Spring Physics
+            ctx.save();
+            ctx.translate(0, 10);
+            ctx.rotate(sim.voltmeterAngle);
+
+            ctx.strokeStyle = '#f43f5e';
+            ctx.lineWidth = 2.4;
+            ctx.beginPath();
+            ctx.moveTo(0, 4);
+            ctx.lineTo(0, -36);
+            ctx.stroke();
+
+            // Polished Brass Pivot Cap
+            ctx.fillStyle = '#d97706';
+            ctx.strokeStyle = '#fef08a';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(0, 0, 4.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.restore();
+
+            // 4. Digital Telemetry Readout Box on Bottom
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(-35, 22, 70, 16);
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = 'bold 11px JetBrains Mono, monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText(`${sim.emf.toFixed(2)} V`, 0, 34);
+
+            // 5. Glass Reflection Highlight
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(-40, -30);
+            ctx.lineTo(25, -30);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        // --- NON-INTERSECTING PHYSICAL STREAMLINE TRACER (RK2 INTEGRATOR) ---
+        function traceStreamLine(startX, startY, dir = 1) {
+            const pts = [{ x: startX, y: startY }];
+            let cx = startX;
+            let cy = startY;
+            const step = 6.0;
+            const maxSteps = 150;
+            const m = sim.magnet;
+            const poleSign = m.isNorthLeft ? -1 : 1;
+            const targetX = (dir === 1) ? (m.x - poleSign * 55) : (m.x + poleSign * 55);
+            const targetY = m.y;
+
+            for (let i = 0; i < maxSteps; i++) {
+                const b1 = getMagneticFieldAt(cx, cy);
+                if (b1.bMag < 0.0001) break;
+
+                const u1x = (b1.bx / b1.bMag) * dir;
+                const u1y = (b1.by / b1.bMag) * dir;
+
+                // RK2 Midpoint evaluation
+                const mx = cx + u1x * (step * 0.5);
+                const my = cy + u1y * (step * 0.5);
+                const b2 = getMagneticFieldAt(mx, my);
+                if (b2.bMag < 0.0001) break;
+
+                const u2x = (b2.bx / b2.bMag) * dir;
+                const u2y = (b2.by / b2.bMag) * dir;
+
+                cx += u2x * step;
+                cy += u2y * step;
+
+                // Stop if reached the destination pole
+                if (Math.hypot(cx - targetX, cy - targetY) < 24) {
+                    pts.push({ x: targetX, y: targetY });
+                    break;
+                }
+
+                // Stop if out of canvas boundary
+                if (cx < -50 || cx > canvas.width + 50 || cy < -50 || cy > canvas.height + 50) {
+                    pts.push({ x: cx, y: cy });
+                    break;
+                }
+
+                pts.push({ x: cx, y: cy });
+            }
+            return pts;
+        }
+
+        function drawPolylineWithArrows(pts, isBackwardFromS = false) {
+            if (!pts || pts.length < 2) return;
+            ctx.beginPath();
+            ctx.moveTo(pts[0].x, pts[0].y);
+            for (let i = 1; i < pts.length; i++) {
+                ctx.lineTo(pts[i].x, pts[i].y);
+            }
+            ctx.stroke();
+
+            // Draw single clean directional arrowhead along B field
+            if (pts.length >= 8) {
+                const midIdx = Math.floor(pts.length * 0.42);
+                const p1 = pts[midIdx];
+                const p2 = pts[midIdx + 1];
+                let arrowAngle;
+                if (!isBackwardFromS) {
+                    arrowAngle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+                } else {
+                    // Points go against B, so arrow points back from p2 to p1
+                    arrowAngle = Math.atan2(p1.y - p2.y, p1.x - p2.x);
+                }
+                drawFieldArrow(p1.x, p1.y, arrowAngle);
+            }
+        }
+
+        function drawFieldLines() {
+            const m = sim.magnet;
+            const poleSign = m.isNorthLeft ? -1 : 1;
+            const nX = m.x + poleSign * 55;
+            const sX = m.x - poleSign * 55;
+            const pY = m.y;
+            const baseN = poleSign === 1 ? 0 : Math.PI;
+            const baseS = poleSign === 1 ? Math.PI : 0;
+
+            ctx.save();
+            ctx.strokeStyle = 'rgba(6, 182, 212, 0.45)';
+            ctx.lineWidth = 1.35;
+            ctx.setLineDash([4, 4]);
+
+            // 1. WELL-SPACED DEPARTURE ANGLES (VẼ THƯA, ĐỀU, KHÔNG BAO GIỜ CẮT NHAU)
+            const departureAngles = [0, 20, 42, 70, 105, 145];
+            const r0 = 14;
+
+            departureAngles.forEach(deg => {
+                const rad = (deg * Math.PI) / 180;
+
+                if (deg === 0) {
+                    // Central axial ray straight out from North
+                    const ptsAxialN = traceStreamLine(nX + Math.cos(baseN) * r0, pY, 1);
+                    drawPolylineWithArrows(ptsAxialN, false);
+
+                    // Central axial ray straight into South
+                    const ptsAxialS = traceStreamLine(sX + Math.cos(baseS) * r0, pY, -1);
+                    drawPolylineWithArrows(ptsAxialS, true);
+                } else {
+                    // Top symmetry line (+Y)
+                    const angTopN = baseN - (poleSign * rad);
+                    const ptsTop = traceStreamLine(nX + Math.cos(angTopN) * r0, pY + Math.sin(angTopN) * r0, 1);
+                    drawPolylineWithArrows(ptsTop, false);
+
+                    // Bottom symmetry line (-Y)
+                    const angBotN = baseN + (poleSign * rad);
+                    const ptsBot = traceStreamLine(nX + Math.cos(angBotN) * r0, pY + Math.sin(angBotN) * r0, 1);
+                    drawPolylineWithArrows(ptsBot, false);
+
+                    // For shallow open rays (20, 42) that exit canvas, trace symmetrical incoming rays at South pole
+                    if (deg <= 42) {
+                        const angTopS = baseS - (poleSign * rad);
+                        const ptsSTop = traceStreamLine(sX + Math.cos(angTopS) * r0, pY + Math.sin(angTopS) * r0, -1);
+                        drawPolylineWithArrows(ptsSTop, true);
+
+                        const angBotS = baseS + (poleSign * rad);
+                        const ptsSBot = traceStreamLine(sX + Math.cos(angBotS) * r0, pY + Math.sin(angBotS) * r0, -1);
+                        drawPolylineWithArrows(ptsSBot, true);
+                    }
+                }
+            });
+
+            // 2. PARALLEL FIELD LINES INSIDE MAGNET (TỪ CỰC NAM SANG CỰC BẮC)
+            const insideOffsets = [-15, -7, 0, 7, 15];
+            insideOffsets.forEach(dy => {
+                ctx.beginPath();
+                ctx.moveTo(sX, pY + dy);
+                ctx.lineTo(nX, pY + dy);
+                ctx.stroke();
+                drawFieldArrow((sX + nX) / 2, pY + dy, baseN);
+            });
+
+            ctx.setLineDash([]);
+            ctx.restore();
+        }
+
+        function drawFieldArrow(x, y, angle) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+            ctx.fillStyle = '#22d3ee';
+            ctx.beginPath();
+            ctx.moveTo(5, 0);
+            ctx.lineTo(-4, -3.5);
+            ctx.lineTo(-2, 0);
+            ctx.lineTo(-4, 3.5);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function drawCompassGrid() {
+            ctx.save();
+            const step = 38; // Dense PhET grid
+            const m = sim.magnet;
+            for (let x = 20; x < canvas.width; x += step) {
+                for (let y = 20; y < canvas.height; y += step) {
+                    if (sim.currentScreen === 'generator') {
+                        if (Math.hypot(x - m.x, y - m.y) < 60) continue;
+                        if (x >= m.x - 45 && x <= m.x + 20 && y <= 110) continue;
+                    } else {
+                        if (hitTestMagnet(x, y)) continue;
+                    }
+
+                    const b = getMagneticFieldAt(x, y);
+                    const alpha = Math.min(0.92, Math.max(0.18, b.bMag / 1.15));
+
+                    ctx.save();
+                    ctx.translate(x, y);
+                    ctx.rotate(b.angle);
+                    ctx.globalAlpha = alpha;
+
+                    // North tip (Red)
+                    ctx.fillStyle = '#ef4444';
+                    ctx.beginPath();
+                    ctx.moveTo(9, 0);
+                    ctx.lineTo(0, -2.8);
+                    ctx.lineTo(-0.8, 0);
+                    ctx.lineTo(0, 2.8);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    // South tip (White)
+                    ctx.fillStyle = '#f8fafc';
+                    ctx.beginPath();
+                    ctx.moveTo(-9, 0);
+                    ctx.lineTo(0, -2.8);
+                    ctx.lineTo(-0.8, 0);
+                    ctx.lineTo(0, 2.8);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    // Center Pivot Pin
+                    ctx.fillStyle = '#475569';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 1.2, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.restore();
+                }
+            }
+            ctx.restore();
+        }
+
+        function drawCompassDevice() {
+            const cmp = sim.compass;
+            ctx.save();
+            ctx.translate(cmp.x, cmp.y);
+
+            // Compass Outer Casing
+            ctx.fillStyle = '#1e293b';
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(0, 0, 42, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // Glass Face
+            ctx.fillStyle = '#020617';
+            ctx.beginPath();
+            ctx.arc(0, 0, 36, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Cardinal marks
+            ctx.fillStyle = '#64748b';
+            ctx.font = 'bold 8px Outfit, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('N', 0, -28);
+            ctx.fillText('S', 0, 28);
+            ctx.fillText('E', 28, 0);
+            ctx.fillText('W', -28, 0);
+
+            // Rotating Needle
+            ctx.save();
+            ctx.rotate(cmp.angle);
+
+            // North Half
+            ctx.fillStyle = '#ef4444';
+            ctx.beginPath();
+            ctx.moveTo(0, -30);
+            ctx.lineTo(6, 0);
+            ctx.lineTo(-6, 0);
+            ctx.closePath();
+            ctx.fill();
+
+            // South Half
+            ctx.fillStyle = '#f8fafc';
+            ctx.beginPath();
+            ctx.moveTo(0, 30);
+            ctx.lineTo(6, 0);
+            ctx.lineTo(-6, 0);
+            ctx.closePath();
+            ctx.fill();
+
+            // Pivot Center
+            ctx.fillStyle = '#fbbf24';
+            ctx.beginPath();
+            ctx.arc(0, 0, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            ctx.restore();
+        }
+
+        function drawFieldMeter() {
+            const fm = sim.fieldMeter;
+            const b = getMagneticFieldAt(fm.x, fm.y);
+
+            ctx.save();
+            ctx.translate(fm.x, fm.y);
+
+            // Meter Housing
+            ctx.fillStyle = '#0f172a';
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.roundRect(-fm.w / 2, -fm.h / 2, fm.w, fm.h, 10);
+            ctx.fill();
+            ctx.stroke();
+
+            // Header title
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = 'bold 10px Outfit, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('ĐẦU DÒ TỪ TRƯỜNG', 0, -fm.h / 2 + 15);
+
+            // Digital Readings
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(-fm.w / 2 + 8, -fm.h / 2 + 24, fm.w - 16, 56);
+
+            ctx.fillStyle = '#22d3ee';
+            ctx.font = 'bold 11px JetBrains Mono, monospace';
+            ctx.textAlign = 'left';
+            ctx.fillText(`B : ${(b.bMag * 10).toFixed(2)} G`, -fm.w / 2 + 14, -fm.h / 2 + 40);
+            ctx.fillText(`Bx: ${(b.bx * 10).toFixed(2)} G`, -fm.w / 2 + 14, -fm.h / 2 + 54);
+            ctx.fillText(`By: ${(b.by * 10).toFixed(2)} G`, -fm.w / 2 + 14, -fm.h / 2 + 68);
+
+            // Crosshair sensor pointer on the left
+            ctx.strokeStyle = '#f43f5e';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(-fm.w / 2, 0, 8, 0, Math.PI * 2);
+            ctx.moveTo(-fm.w / 2 - 12, 0); ctx.lineTo(-fm.w / 2 + 12, 0);
+            ctx.moveTo(-fm.w / 2, -12); ctx.lineTo(-fm.w / 2, 12);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        // --- REALTIME OSCILLOSCOPE GRAPH ---
+        function drawOscilloscope() {
+            const gCanvas = document.getElementById('graphCanvas');
+            if (!gCanvas) return;
+            const gCtx = gCanvas.getContext('2d');
+            const gw = gCanvas.width;
+            const gh = gCanvas.height;
+
+            gCtx.clearRect(0, 0, gw, gh);
+
+            const padL = 35;
+            const padR = 15;
+            const padT = 15;
+            const padB = 25;
+            const plotW = gw - padL - padR;
+            const plotH = gh - padT - padB;
+            const midY = padT + plotH / 2;
+
+            // Background Grid
+            gCtx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+            gCtx.lineWidth = 1;
+            for (let y = 0; y <= 4; y++) {
+                const gy = padT + (y / 4) * plotH;
+                gCtx.beginPath();
+                gCtx.moveTo(padL, gy);
+                gCtx.lineTo(padL + plotW, gy);
+                gCtx.stroke();
+            }
+
+            // Zero Horizontal Line
+            gCtx.strokeStyle = '#475569';
+            gCtx.lineWidth = 1.5;
+            gCtx.beginPath();
+            gCtx.moveTo(padL, midY);
+            gCtx.lineTo(padL + plotW, midY);
+            gCtx.stroke();
+
+            gCtx.fillStyle = '#94a3b8';
+            gCtx.font = '9px JetBrains Mono, monospace';
+            gCtx.textAlign = 'right';
+            gCtx.fillText('+Max', padL - 4, padT + 10);
+            gCtx.fillText('0', padL - 4, midY + 3);
+            gCtx.fillText('-Max', padL - 4, padT + plotH);
+            gCtx.fillText('t (s)', padL + plotW, gh - 8);
+
+            const data = sim.graphData;
+            if (data.length < 2) return;
+
+            // Plot 1: Flux Phi (Cyan)
+            gCtx.strokeStyle = '#06b6d4';
+            gCtx.lineWidth = 2;
+            gCtx.beginPath();
+            for (let i = 0; i < data.length; i++) {
+                const px = padL + (i / 130) * plotW;
+                const py = midY - (data[i].phi / 15.0) * (plotH / 2);
+                if (i === 0) gCtx.moveTo(px, py);
+                else gCtx.lineTo(px, py);
+            }
+            gCtx.stroke();
+
+            // Plot 2: EMF e_c (Rose Neon)
+            gCtx.strokeStyle = '#f43f5e';
+            gCtx.lineWidth = 2;
+            gCtx.beginPath();
+            for (let i = 0; i < data.length; i++) {
+                const px = padL + (i / 130) * plotW;
+                const py = midY - (data[i].emf / 5.0) * (plotH / 2);
+                if (i === 0) gCtx.moveTo(px, py);
+                else gCtx.lineTo(px, py);
+            }
+            gCtx.stroke();
+        }
+
+        // --- DATA TABLE ---
+        function recordPoint() {
+            const relV = (Math.hypot(sim.magnet.vx - sim.coil.vx, sim.magnet.vy - sim.coil.vy) * 0.1).toFixed(1);
+            const rec = {
+                id: sim.records.length + 1,
+                v: relV,
+                phi: sim.flux.toFixed(2),
+                emf: sim.emf.toFixed(2),
+                status: Math.abs(sim.emf) > 0.2 ? 'Sáng / Lệch kim' : 'Tắt / Số 0'
+            };
+            sim.records.push(rec);
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            sim.records.forEach(r => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight:700; color:#38bdf8;">${r.id}</td>
+                    <td>${r.v}</td>
+                    <td style="color:#22d3ee; font-weight:700;">${r.phi}</td>
+                    <td style="color:#fb7185; font-weight:700;">${r.emf}</td>
+                    <td style="color:#fde68a;">${r.status}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function clearTable() {
+            sim.records = [];
+            renderTable();
+        }
+
+        function exportTable() {
+            if (sim.records.length === 0) {
+                alert('Chưa có dữ liệu thí nghiệm để xuất báo cáo!');
+                return;
+            }
+            let text = `===========================================================\n`;
+            text += `BÁO CÁO THÍ NGHIỆM CẢM ỨNG ĐIỆN TỪ (FARADAY & LENZ)\n`;
+            text += `BÀI 16: TỪ THÔNG. HIỆN TƯỢNG CẢM ỨNG ĐIỆN TỪ - VẬT LÍ 12\n`;
+            text += `===========================================================\n\n`;
+            text += `Số vòng cuộn cảm: N = ${sim.coil.turns} vòng\n`;
+            text += `Độ mạnh nam châm: ${(sim.magnet.strength * 100).toFixed(0)} %\n\n`;
+            text += `Lần\tv (cm/s)\tPhi (mWb)\te_c (V)\tTrạng thái\n`;
+            sim.records.forEach(r => {
+                text += `${r.id}\t${r.v}\t${r.phi}\t${r.emf}\t${r.status}\n`;
+            });
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `BaoCao_Faraday_Lab_Bai16.txt`;
+            a.click();
+        }
+
+        function switchSideTab(idx) {
+            for (let i = 1; i <= 3; i++) {
+                document.getElementById('tabH' + i).classList.toggle('active', i === idx);
+                document.getElementById('tabV' + i).classList.toggle('active', i === idx);
+            }
+        }
+
+        // --- QUIZ CHECKER ---
+        const answers = { 1: 'B', 2: 'C', 3: 'A' };
+        function checkAnswer(qNum, opt) {
+            const card = document.getElementById('q' + qNum);
+            const btns = card.querySelectorAll('.quiz-btn');
+            const exp = document.getElementById('exp' + qNum);
+            const correct = answers[qNum];
+
+            btns.forEach(b => {
+                b.disabled = true;
+                if (b.innerText.startsWith(correct + '.')) b.classList.add('correct');
+                if (b.innerText.startsWith(opt + '.') && opt !== correct) b.classList.add('wrong');
+            });
+            exp.style.display = 'block';
+        }
+
+        // Initialize simulation
+        window.addEventListener('DOMContentLoaded', () => {
+            render();
+        });
+    </script>
+</body>
+</html>
