@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phòng thí nghiệm ảo: Bài 6 - Thực hành Đo tốc độ chuyển động | Vật Lí 10 | Vatli102.com</title>
+    <meta name="description" content="Phòng thí nghiệm ảo: Bài 6 - Thực hành Đo tốc độ chuyển động - Vật lí 10 SGK GDPT 2018 (Trang 30, 31, 32). Mô phỏng cổng quang điện, đồng hồ hiện số MC-964, máng nghiêng và bảng xử lý số liệu sai số tự động.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- MathJax 3 -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Three.js & OrbitControls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <style>
+        :root {
+            --bg-deep: #030712;
+            --panel-bg: rgba(15, 23, 42, 0.92);
+            --panel-border: rgba(56, 189, 248, 0.25);
+            --accent-sky: #38bdf8;
+            --accent-teal: #0d9488;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --accent-blue: #2563eb;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .lcd-display {
+            font-family: 'JetBrains Mono', monospace;
+            background: #022c22;
+            color: #34d399;
+            text-shadow: 0 0 10px rgba(52, 211, 153, 0.65);
+            letter-spacing: 2px;
+        }
+
+        .lcd-display-red {
+            font-family: 'JetBrains Mono', monospace;
+            background: #2b0707;
+            color: #f87171;
+            text-shadow: 0 0 10px rgba(248, 113, 113, 0.65);
+            letter-spacing: 2px;
+        }
+
+        .glass-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--panel-border);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(56, 189, 248, 0.3);
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(56, 189, 248, 0.6);
+        }
+
+        /* Custom range slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: #1e293b;
+            height: 6px;
+            border-radius: 4px;
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #38bdf8;
+            cursor: pointer;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+            transition: all 0.15s;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            background: #0ea5e9;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #0284c7, #0d9488);
+            color: #ffffff;
+            font-weight: 700;
+            border-color: #38bdf8;
+            box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 flex flex-col h-screen overflow-hidden">
+
+    <!-- TOP HEADER -->
+    <header class="h-14 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 flex items-center justify-between px-4 z-20 shrink-0">
+        <div class="flex items-center gap-3">
+            <a href="Baigiang.html" class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 border border-sky-500/40 flex items-center justify-center hover:bg-sky-500 hover:text-white transition-all shadow-sm" title="Quay lại bài giảng lý thuyết">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded bg-teal-500/20 text-teal-400 border border-teal-500/30 text-[11px] font-extrabold uppercase tracking-wider">Vật Lí 10</span>
+                <h1 class="text-sm sm:text-base font-extrabold text-white hidden md:block">
+                    Phòng thí nghiệm ảo: Bài 6 - Thực hành Đo tốc độ chuyển động
+                </h1>
+                <h1 class="text-sm font-extrabold text-white md:hidden">Phòng thí nghiệm ảo: Bài 6</h1>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <!-- Sound toggle -->
+            <button id="soundToggleBtn" onclick="toggleAudio()" class="px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold hover:bg-slate-700 hover:text-white transition-all flex items-center gap-1.5">
+                <i id="soundIcon" class="fa-solid fa-volume-high text-sky-400"></i>
+                <span class="hidden sm:inline">Âm thanh</span>
+            </button>
+
+            <!-- Guide toggle -->
+            <button onclick="toggleGuideModal()" class="px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold hover:bg-slate-700 hover:text-white transition-all flex items-center gap-1.5">
+                <i class="fa-solid fa-circle-question text-amber-400"></i>
+                <span class="hidden sm:inline">Hướng dẫn SGK</span>
+            </button>
+
+            <!-- Back to website -->
+            <a href="../../index.html" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-sky-600 to-teal-600 hover:from-sky-500 hover:to-teal-500 text-white text-xs font-extrabold shadow-sm transition-all flex items-center gap-1.5">
+                <i class="fa-solid fa-house"></i>
+                <span class="hidden sm:inline">Vatli102</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN INTERFACE: 3D VIEWPORT + CONTROL PANELS -->
+    <div class="flex-1 relative flex overflow-hidden">
+        
+        <!-- 3D WEBGL CANVAS -->
+        <div id="canvas-container" class="w-full h-full relative cursor-grab active:cursor-grabbing"></div>
+
+        <!-- OVERLAY: CAMERA PRESETS & HUD -->
+        <div class="absolute top-4 left-4 z-10 flex flex-wrap gap-2 pointer-events-auto">
+            <button onclick="setCameraView('default')" class="px-3 py-1.5 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-700 text-white text-xs font-bold backdrop-blur-md transition-all shadow-md flex items-center gap-1.5">
+                <i class="fa-solid fa-video text-sky-400"></i> Góc nhìn 3D Tự do
+            </button>
+            <button onclick="setCameraView('side')" class="px-3 py-1.5 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-700 text-white text-xs font-bold backdrop-blur-md transition-all shadow-md flex items-center gap-1.5">
+                <i class="fa-solid fa-arrows-left-right text-emerald-400"></i> Góc nhìn ngang
+            </button>
+            <button onclick="setCameraView('timer')" class="px-3 py-1.5 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-700 text-white text-xs font-bold backdrop-blur-md transition-all shadow-md flex items-center gap-1.5">
+                <i class="fa-solid fa-clock text-amber-400"></i> Cận cảnh Đồng hồ
+            </button>
+            <button onclick="setCameraView('photogate')" class="px-3 py-1.5 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-700 text-white text-xs font-bold backdrop-blur-md transition-all shadow-md flex items-center gap-1.5">
+                <i class="fa-solid fa-eye text-rose-400"></i> Cận cảnh Cổng quang
+            </button>
+        </div>
+
+        <!-- REAL-TIME TELEMETRY HUD (Floating Mini Card) -->
+        <div class="absolute top-4 right-4 z-10 w-72 glass-panel rounded-2xl p-3.5 border border-sky-500/30 text-xs shadow-2xl hidden lg:block">
+            <div class="flex items-center justify-between border-b border-slate-700/60 pb-2 mb-2">
+                <span class="font-extrabold text-sky-300 flex items-center gap-1.5">
+                    <i class="fa-solid fa-gauge-high text-sky-400"></i> Thông số động học tức thời
+                </span>
+                <span id="carStateBadge" class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300">Đang chờ thả</span>
+            </div>
+            <div class="space-y-1.5 text-slate-300 font-medium">
+                <div class="flex justify-between">
+                    <span>Góc nghiêng máng ($\alpha$):</span>
+                    <span id="hudAngle" class="font-bold text-amber-300">5.0°</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Gia tốc lăn ($a$):</span>
+                    <span id="hudAccel" class="font-bold text-emerald-300">0.854 m/s²</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Vận tốc xe hiện tại ($v$):</span>
+                    <span id="hudVelocity" class="font-bold text-sky-300">0.000 m/s</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Vị trí xe ($x$):</span>
+                    <span id="hudPos" class="font-bold text-purple-300">0.00 cm</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM-RIGHT INTERACTIVE CONTROL CONSOLE -->
+        <div class="absolute bottom-4 right-4 z-10 w-full max-w-md max-h-[85vh] glass-panel rounded-2xl border border-slate-700/80 shadow-2xl flex flex-col overflow-hidden">
+            
+            <!-- TABS: CHỌN PHƯƠNG ÁN THÍ NGHIỆM -->
+            <div class="flex border-b border-slate-800 bg-slate-900/80 p-1.5 gap-1 shrink-0">
+                <button id="tabAvgBtn" onclick="switchExperimentMode('avg')" class="tab-btn active flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-arrows-split-up-and-left"></i> 1. Đo Tốc độ Trung bình
+                </button>
+                <button id="tabInstBtn" onclick="switchExperimentMode('inst')" class="tab-btn flex-1 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-all flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-bolt"></i> 2. Đo Tốc độ Tức thời
+                </button>
+            </div>
+
+            <!-- CONTROLS BODY (Scrollable) -->
+            <div class="p-4 space-y-4 overflow-y-auto custom-scrollbar flex-1">
+                
+                <!-- DIGITAL TIMER DISPLAY (MC-964 VIRTUAL DISPLAY) -->
+                <div class="bg-slate-950 rounded-2xl p-3.5 border border-slate-800 shadow-inner">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1">
+                            <i class="fa-solid fa-microchip text-teal-400"></i> ĐỒNG HỒ ĐO THỜI GIAN HIỆN SỐ (MC-964)
+                        </span>
+                        <span id="modeBadge" class="text-[10px] font-extrabold px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 border border-teal-500/40">MODE A ↔ B</span>
+                    </div>
+
+                    <!-- LED 7-SEGMENT READOUT -->
+                    <div class="flex items-center justify-center gap-2 my-1">
+                        <div id="timerDisplay" class="lcd-display text-3xl sm:text-4xl font-extrabold py-2 px-4 rounded-xl border border-emerald-500/30 text-center w-full shadow-lg">
+                            0.000 <span class="text-xs font-normal text-emerald-400">s</span>
+                        </div>
+                    </div>
+
+                    <!-- HARDWARE STATUS LIGHTS -->
+                    <div class="flex items-center justify-around mt-2 pt-2 border-t border-slate-800/80 text-[11px]">
+                        <div class="flex items-center gap-1.5">
+                            <span id="gateALed" class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]"></span>
+                            <span class="text-slate-300">Cổng A: <b id="gateAStatusText" class="text-emerald-400">Chờ</b></span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span id="gateBLed" class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]"></span>
+                            <span class="text-slate-300">Cổng B: <b id="gateBStatusText" class="text-emerald-400">Chờ</b></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EXPERIMENT CONTROLS & ADJUSTMENTS -->
+                <div class="space-y-3">
+                    
+                    <!-- MODE SELECTOR (Radio Button / Dropdown) -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1.5">Chế độ làm việc của đồng hồ hiện số (MODE):</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button id="btnModeAB" onclick="setTimerMode('AB')" class="py-2 px-2.5 rounded-xl border border-sky-500 bg-sky-600/30 text-sky-200 text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all">
+                                <i class="fa-solid fa-arrows-left-right"></i> MODE A ↔ B
+                            </button>
+                            <button id="btnModeA" onclick="setTimerMode('A')" class="py-2 px-2.5 rounded-xl border border-slate-700 bg-slate-800 text-slate-400 hover:text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all">
+                                <i class="fa-solid fa-stopwatch"></i> MODE A (1 cổng)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- DISTANCE S OR SHUTTER WIDTH D CONTROLS -->
+                    <div id="avgControlsBlock" class="space-y-2.5">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="font-bold text-slate-300">Vị trí Cổng quang A ($s_A$):</span>
+                            <span id="labelGateA" class="font-extrabold text-sky-400">20.0 cm</span>
+                        </div>
+                        <input type="range" id="sliderGateA" min="10" max="50" step="1" value="20" oninput="onGateAChange(this.value)" class="w-full">
+
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="font-bold text-slate-300">Vị trí Cổng quang B ($s_B$):</span>
+                            <span id="labelGateB" class="font-extrabold text-teal-400">70.0 cm</span>
+                        </div>
+                        <input type="range" id="sliderGateB" min="60" max="110" step="1" value="70" oninput="onGateBChange(this.value)" class="w-full">
+
+                        <div class="p-2 rounded-xl bg-slate-900/60 border border-slate-800 flex justify-between items-center text-xs">
+                            <span class="text-slate-400">Quãng đường $s = s_B - s_A$:</span>
+                            <span id="labelTotalDist" class="font-extrabold text-amber-300 text-sm">50.0 cm (0.500 m)</span>
+                        </div>
+                    </div>
+
+                    <div id="instControlsBlock" class="space-y-2.5 hidden">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1.5">Độ rộng tấm chắn sáng gắn trên xe ($d$):</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button id="btnD10" onclick="setShutterWidth(10)" class="py-2 px-2 rounded-xl border border-sky-500 bg-sky-600/30 text-sky-200 text-xs font-extrabold transition-all">
+                                    $d = 10\text{ mm}\ (0,01\text{ m})$
+                                </button>
+                                <button id="btnD20" onclick="setShutterWidth(20)" class="py-2 px-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-400 hover:text-white text-xs font-bold transition-all">
+                                    $d = 20\text{ mm}\ (0,02\text{ m})$
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="font-bold text-slate-300">Vị trí Cổng quang A (đo $v_A$):</span>
+                            <span id="labelInstGateA" class="font-extrabold text-sky-400">40.0 cm</span>
+                        </div>
+                        <input type="range" id="sliderInstGateA" min="15" max="90" step="1" value="40" oninput="onGateAChange(this.value)" class="w-full">
+                    </div>
+
+                    <!-- INCLINE ANGLE SLIDER -->
+                    <div>
+                        <div class="flex justify-between items-center text-xs mb-1">
+                            <span class="font-bold text-slate-300">Độ nghiêng máng trượt ($\alpha$):</span>
+                            <span id="labelAngle" class="font-extrabold text-amber-400">5.0°</span>
+                        </div>
+                        <input type="range" id="sliderAngle" min="2" max="20" step="0.5" value="5" oninput="onAngleChange(this.value)" class="w-full">
+                    </div>
+                </div>
+
+                <!-- ACTION BUTTONS: RELEASE CAR / RESET -->
+                <div class="grid grid-cols-2 gap-2 pt-2">
+                    <button id="releaseBtn" onclick="releaseCar()" class="py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-sm shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center gap-2 active:scale-95">
+                        <i class="fa-solid fa-play"></i> Thả xe chuyển động
+                    </button>
+
+                    <button onclick="resetSimulation()" class="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold text-sm transition-all flex items-center justify-center gap-2 active:scale-95">
+                        <i class="fa-solid fa-rotate-left"></i> Đặt lại (Reset)
+                    </button>
+                </div>
+
+                <!-- CALCULATION RESULT CARD -->
+                <div id="calcResultBox" class="p-3.5 rounded-2xl bg-gradient-to-br from-sky-950/40 to-teal-950/40 border border-sky-500/40 space-y-2">
+                    <div class="flex items-center justify-between text-xs border-b border-sky-500/20 pb-1.5">
+                        <span class="font-extrabold text-sky-300 flex items-center gap-1.5">
+                            <i class="fa-solid fa-calculator"></i> Kết quả đo lần này:
+                        </span>
+                        <button onclick="recordCurrentData()" class="px-2 py-0.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 border border-amber-500/40 text-[11px] font-bold transition-all flex items-center gap-1">
+                            <i class="fa-solid fa-plus"></i> Lưu vào Bảng số liệu
+                        </button>
+                    </div>
+
+                    <div id="calcFormula" class="text-xs text-slate-300 font-medium">
+                        $$v_{tb} = \frac{s}{\Delta t} = \frac{0,500\text{ m}}{0,832\text{ s}} = \mathbf{0,601\text{ m/s}}$$
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOGGLE DATA TABLE FOOTER BUTTON -->
+            <div class="p-2.5 bg-slate-900 border-t border-slate-800 flex justify-between items-center">
+                <button onclick="toggleDataTableModal()" class="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-300 font-bold text-xs border border-slate-700 transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-table-list"></i> Xem Bảng Xử Lý Số Liệu & Sai Số SGK Trang 32
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: BẢNG SỐ LIỆU VÀ XỬ LÝ SAI SỐ (SGK TRANG 32) -->
+    <div id="dataTableModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-4xl max-h-[90vh] shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200">
+            
+            <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950">
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center font-extrabold text-sm"><i class="fa-solid fa-table"></i></span>
+                    <div>
+                        <h3 class="font-extrabold text-white text-sm sm:text-base">BÁO CÁO THỰC HÀNH & XỬ LÝ SAI SỐ PHÉP ĐO (SGK TRANG 32)</h3>
+                        <p class="text-slate-400 text-xs">Tự động tính giá trị trung bình $\bar{v}$ và sai số tuyệt đối $\Delta v$</p>
+                    </div>
+                </div>
+                <button onclick="toggleDataTableModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-all">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-4 overflow-y-auto custom-scrollbar space-y-6 text-xs sm:text-sm">
+                
+                <!-- BẢNG 6.1 -->
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-extrabold text-sky-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-list-ol"></i> Bảng 6.1: Kết quả đo tốc độ trung bình ($v_{tb} = s / \Delta t$)
+                        </h4>
+                        <button onclick="clearTable('avg')" class="text-xs text-rose-400 hover:underline">Xóa bảng này</button>
+                    </div>
+                    
+                    <div class="overflow-x-auto rounded-xl border border-slate-800">
+                        <table class="w-full text-center border-collapse">
+                            <thead>
+                                <tr class="bg-slate-950 text-slate-300 text-xs font-bold border-b border-slate-800">
+                                    <th class="p-2.5">Lần đo</th>
+                                    <th class="p-2.5">Quãng đường $s\text{ (m)}$</th>
+                                    <th class="p-2.5">Thời gian $\Delta t\text{ (s)}$</th>
+                                    <th class="p-2.5">Tốc độ trung bình $v_{tb}\text{ (m/s)}$</th>
+                                    <th class="p-2.5">Sai số $|\bar{t} - \Delta t_i|\text{ (s)}$</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableAvgBody" class="divide-y divide-slate-800/60 font-mono text-slate-200">
+                                <!-- Data rows inserted dynamically -->
+                            </tbody>
+                            <tfoot>
+                                <tr id="tableAvgFoot" class="bg-sky-950/40 font-bold text-sky-300 border-t-2 border-sky-500/40">
+                                    <td class="p-2.5">Trung bình</td>
+                                    <td id="avgSVal">-</td>
+                                    <td id="avgTVal">-</td>
+                                    <td id="avgVVal">-</td>
+                                    <td id="avgDeltaTVal">-</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div id="avgResultEquation" class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 font-sans">
+                        Chưa có đủ số liệu thực hành (Cần ít nhất 3 lần đo).
+                    </div>
+                </div>
+
+                <!-- BẢNG 6.2 -->
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-extrabold text-teal-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-bolt"></i> Bảng 6.2: Kết quả đo tốc độ tức thời ($v = d / t$)
+                        </h4>
+                        <button onclick="clearTable('inst')" class="text-xs text-rose-400 hover:underline">Xóa bảng này</button>
+                    </div>
+
+                    <div class="overflow-x-auto rounded-xl border border-slate-800">
+                        <table class="w-full text-center border-collapse">
+                            <thead>
+                                <tr class="bg-slate-950 text-slate-300 text-xs font-bold border-b border-slate-800">
+                                    <th class="p-2.5">Lần đo</th>
+                                    <th class="p-2.5">Độ rộng tấm chắn $d\text{ (m)}$</th>
+                                    <th class="p-2.5">Thời gian chắn sáng $t\text{ (s)}$</th>
+                                    <th class="p-2.5">Tốc độ tức thời $v\text{ (m/s)}$</th>
+                                    <th class="p-2.5">Sai số $|\bar{t} - t_i|\text{ (s)}$</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableInstBody" class="divide-y divide-slate-800/60 font-mono text-slate-200">
+                                <!-- Data rows inserted dynamically -->
+                            </tbody>
+                            <tfoot>
+                                <tr id="tableInstFoot" class="bg-teal-950/40 font-bold text-teal-300 border-t-2 border-teal-500/40">
+                                    <td class="p-2.5">Trung bình</td>
+                                    <td id="instDVal">-</td>
+                                    <td id="instTVal">-</td>
+                                    <td id="instVVal">-</td>
+                                    <td id="instDeltaTVal">-</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div id="instResultEquation" class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 font-sans">
+                        Chưa có đủ số liệu thực hành (Cần ít nhất 3 lần đo).
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="p-3.5 bg-slate-950 border-t border-slate-800 flex justify-between items-center">
+                <button onclick="window.print()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-print"></i> In Báo Cáo Thực Hành
+                </button>
+                <button onclick="toggleDataTableModal()" class="px-5 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-extrabold transition-all">
+                    Đóng Bảng Số Liệu
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL: HƯỚNG DẪN THỰC HÀNH CHUẨN SGK -->
+    <div id="guideModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-2xl max-h-[85vh] shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950">
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-extrabold"><i class="fa-solid fa-book-open"></i></span>
+                    <h3 class="font-extrabold text-white text-base">HƯỚNG DẪN THỰC HÀNH THEO SGK (TRANG 30-32)</h3>
+                </div>
+                <button onclick="toggleGuideModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-all">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-5 overflow-y-auto custom-scrollbar space-y-4 text-xs sm:text-sm text-slate-300 leading-relaxed">
+                <div class="p-3.5 rounded-xl bg-sky-950/30 border border-sky-500/30">
+                    <h4 class="font-bold text-sky-300 mb-1 flex items-center gap-1.5"><i class="fa-solid fa-gauge-high"></i> Thí nghiệm 1: Đo Tốc độ Trung bình (SGK trang 31)</h4>
+                    <p class="m-0">• Đặt cổng quang A ở vị trí $s_A$, cổng B ở vị trí $s_B$. Quãng đường $s = s_B - s_A$.</p>
+                    <p class="m-0">• Chuyển đồng hồ sang chế độ <strong>MODE A ↔ B</strong>.</p>
+                    <p class="m-0">• Nhấn <strong>"Thả xe chuyển động"</strong>, đồng hồ đo thời gian $\Delta t$ xe chạy từ A đến B.</p>
+                    <p class="m-0">• Tính $v_{tb} = \frac{s}{\Delta t}$. Lặp lại 3-5 lần để tính sai số.</p>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-teal-950/30 border border-teal-500/30">
+                    <h4 class="font-bold text-teal-300 mb-1 flex items-center gap-1.5"><i class="fa-solid fa-bolt"></i> Thí nghiệm 2: Đo Tốc độ Tức thời (SGK trang 31)</h4>
+                    <p class="m-0">• Chọn độ rộng tấm chắn sáng $d = 10\text{ mm}$ ($0,01\text{ m}$) hoặc $d = 20\text{ mm}$ ($0,02\text{ m}$).</p>
+                    <p class="m-0">• Chuyển đồng hồ sang chế độ <strong>MODE A</strong>.</p>
+                    <p class="m-0">• Nhấn <strong>"Thả xe chuyển động"</strong>, đồng hồ đo thời gian ngắt sáng $t$ khi tấm chắn đi qua cổng A.</p>
+                    <p class="m-0">• Tính tốc độ tức thời $v = \frac{d}{t}$.</p>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-amber-950/30 border border-amber-500/30">
+                    <h4 class="font-bold text-amber-300 mb-1 flex items-center gap-1.5"><i class="fa-solid fa-calculator"></i> Xử lý sai số (SGK trang 32)</h4>
+                    <p class="m-0">• Giá trị trung bình: $\bar{v} = \frac{\bar{s}}{\overline{\Delta t}}$ hoặc $\bar{v} = \frac{\bar{d}}{\bar{t}}$.</p>
+                    <p class="m-0">• Sai số tuyệt đối: $\Delta v = \bar{v} \cdot \left(\frac{\Delta s}{\bar{s}} + \frac{\Delta t}{\bar{t}}\right)$.</p>
+                    <p class="m-0">• Biểu diễn kết quả: $v = \bar{v} \pm \Delta v\text{ (m/s)}$.</p>
+                </div>
+            </div>
+            <div class="p-3 bg-slate-950 border-t border-slate-800 text-right">
+                <button onclick="toggleGuideModal()" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs transition-all">Đã hiểu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOUND & PHYSICS SCRIPTS -->
+    <script>
+        /* ==================== WEB AUDIO SYNTHESIZER ==================== */
+        let audioCtx = null;
+        let soundEnabled = true;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playTone(freq, type, duration, gainVal = 0.1) {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e){}
+        }
+
+        function playBeepGate() {
+            playTone(880, 'sine', 0.08, 0.12);
+        }
+
+        function playBeepFinish() {
+            playTone(1200, 'sine', 0.15, 0.15);
+            setTimeout(() => playTone(1500, 'sine', 0.2, 0.15), 160);
+        }
+
+        function playReleaseClick() {
+            playTone(300, 'square', 0.05, 0.08);
+        }
+
+        function toggleAudio() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('soundIcon');
+            if (soundEnabled) {
+                icon.className = 'fa-solid fa-volume-high text-sky-400';
+            } else {
+                icon.className = 'fa-solid fa-volume-xmark text-slate-500';
+            }
+        }
+
+        /* ==================== SIMULATION STATE & PARAMETERS ==================== */
+        const SIM_CONFIG = {
+            trackLength: 1.20, // 120 cm máng trượt
+            gravity: 9.81,
+            frictionCoeff: 0.015, // ma sát lăn nhỏ
+            carLength: 0.12, // 12 cm xe
+            shutterWidth: 0.010, // 10 mm mặc định
+            gateAPos: 0.20, // 20 cm
+            gateBPos: 0.70, // 70 cm
+            angleDeg: 5.0, // 5 độ nghiêng
+            mode: 'AB', // 'AB' hoặc 'A'
+            expType: 'avg', // 'avg' hoặc 'inst'
+            scale3D: 10 // 1m thực = 10 đơn vị Three.js
+        };
+
+        let carState = {
+            isRunning: false,
+            x: 0, // Vị trí đầu xe (m)
+            v: 0, // Vận tốc (m/s)
+            a: 0, // Gia tốc (m/s²)
+            tTotal: 0,
+            gateATriggered: false,
+            gateBTriggered: false,
+            tGateA_In: 0,
+            tGateA_Out: 0,
+            tGateB_In: 0,
+            measuredDeltaT: 0,
+            measuredInstT: 0
+        };
+
+        // Data recording arrays
+        let dataRecordsAvg = [];
+        let dataRecordsInst = [];
+
+        /* ==================== THREE.JS 3D SCENE SETUP ==================== */
+        let scene, camera, renderer, controls;
+        let trackGroup, carGroup, gateAMesh, gateBMesh, rulerMesh, shutterMesh, gateALedMesh, gateBLedMesh;
+        let animId;
+
+        function init3D() {
+            const container = document.getElementById('canvas-container');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x070b19);
+            scene.fog = new THREE.FogExp2(0x070b19, 0.025);
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+            camera.position.set(0, 6, 14);
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            container.appendChild(renderer.domElement);
+
+            // Controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.maxPolarAngle = Math.PI / 2 - 0.05;
+            controls.minDistance = 3;
+            controls.maxDistance = 25;
+            controls.target.set(0, 1.5, 0);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+            dirLight.position.set(5, 12, 8);
+            dirLight.castShadow = true;
+            dirLight.shadow.mapSize.width = 2048;
+            dirLight.shadow.mapSize.height = 2048;
+            scene.add(dirLight);
+
+            const blueLight = new THREE.PointLight(0x38bdf8, 1.5, 20);
+            blueLight.position.set(-5, 4, 3);
+            scene.add(blueLight);
+
+            const tealLight = new THREE.PointLight(0x14b8a6, 1.2, 20);
+            tealLight.position.set(5, 3, -2);
+            scene.add(tealLight);
+
+            // Laboratory Room / Floor & Grid
+            createLabEnvironment();
+
+            // Build Incline Track & Components
+            buildInclineTrackSystem();
+
+            // Build Car & Shutter
+            buildPhysicsCar();
+
+            // Build Photogates A & B
+            buildPhotogates();
+
+            // Build Digital Timer 3D Model
+            buildDigitalTimer3D();
+
+            // Window resize
+            window.addEventListener('resize', onWindowResize);
+
+            // Start Animation Loop
+            animate();
+        }
+
+        function createLabEnvironment() {
+            // Lab Table
+            const tableGeo = new THREE.BoxGeometry(16, 0.4, 6);
+            const tableMat = new THREE.MeshStandardMaterial({
+                color: 0x1e293b,
+                roughness: 0.4,
+                metalness: 0.2
+            });
+            const table = new THREE.Mesh(tableGeo, tableMat);
+            table.position.set(0, -0.2, 0);
+            table.receiveShadow = true;
+            scene.add(table);
+
+            // Floor
+            const floorGeo = new THREE.PlaneGeometry(60, 60);
+            const floorMat = new THREE.MeshStandardMaterial({
+                color: 0x030712,
+                roughness: 0.8,
+                metalness: 0.1
+            });
+            const floor = new THREE.Mesh(floorGeo, floorMat);
+            floor.rotation.x = -Math.PI / 2;
+            floor.position.y = -3;
+            floor.receiveShadow = true;
+            scene.add(floor);
+
+            // Grid helper on table
+            const grid = new THREE.GridHelper(16, 32, 0x38bdf8, 0x334155);
+            grid.position.y = 0.01;
+            scene.add(grid);
+        }
+
+        function buildInclineTrackSystem() {
+            trackGroup = new THREE.Group();
+            trackGroup.position.set(-SIM_CONFIG.trackLength * SIM_CONFIG.scale3D / 2, 0.2, 0);
+
+            // Aluminum Rail
+            const railLength = SIM_CONFIG.trackLength * SIM_CONFIG.scale3D;
+            const railGeo = new THREE.BoxGeometry(railLength, 0.2, 0.8);
+            const railMat = new THREE.MeshStandardMaterial({
+                color: 0x94a3b8,
+                metalness: 0.85,
+                roughness: 0.2
+            });
+            const rail = new THREE.Mesh(railGeo, railMat);
+            rail.position.set(railLength / 2, 0.1, 0);
+            rail.castShadow = true;
+            rail.receiveShadow = true;
+            trackGroup.add(rail);
+
+            // Inner Guide Groove
+            const grooveGeo = new THREE.BoxGeometry(railLength, 0.08, 0.3);
+            const grooveMat = new THREE.MeshStandardMaterial({
+                color: 0x334155,
+                metalness: 0.6,
+                roughness: 0.4
+            });
+            const groove = new THREE.Mesh(grooveGeo, grooveMat);
+            groove.position.set(railLength / 2, 0.17, 0);
+            trackGroup.add(groove);
+
+            // Ruler Scale on Side (Texture / Visual strip)
+            const rulerGeo = new THREE.BoxGeometry(railLength, 0.12, 0.02);
+            const rulerMat = new THREE.MeshStandardMaterial({
+                color: 0xf8fafc,
+                roughness: 0.3
+            });
+            rulerMesh = new THREE.Mesh(rulerGeo, rulerMat);
+            rulerMesh.position.set(railLength / 2, 0.1, 0.41);
+            trackGroup.add(rulerMesh);
+
+            // Electromagnet / Release Stop at Top (x = 0)
+            const stopGeo = new THREE.BoxGeometry(0.2, 0.5, 0.8);
+            const stopMat = new THREE.MeshStandardMaterial({ color: 0xd97706, metalness: 0.7 });
+            const stop = new THREE.Mesh(stopGeo, stopMat);
+            stop.position.set(0, 0.25, 0);
+            trackGroup.add(stop);
+
+            // Rubber Bumper at Bottom (x = railLength)
+            const bStopGeo = new THREE.BoxGeometry(0.2, 0.4, 0.8);
+            const bStopMat = new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.6 });
+            const bStop = new THREE.Mesh(bStopGeo, bStopMat);
+            bStop.position.set(railLength, 0.2, 0);
+            trackGroup.add(bStop);
+
+            scene.add(trackGroup);
+
+            updateTrackIncline();
+        }
+
+        function updateTrackIncline() {
+            const rad = SIM_CONFIG.angleDeg * Math.PI / 180;
+            trackGroup.rotation.z = -rad;
+            
+            // Adjust position so that base rests firmly on table
+            trackGroup.position.set(
+                - (SIM_CONFIG.trackLength * SIM_CONFIG.scale3D / 2) * Math.cos(rad),
+                0.2 + (SIM_CONFIG.trackLength * SIM_CONFIG.scale3D) * Math.sin(rad),
+                0
+            );
+        }
+
+        function buildPhysicsCar() {
+            carGroup = new THREE.Group();
+
+            const cLen = SIM_CONFIG.carLength * SIM_CONFIG.scale3D; // ~1.2 units
+            const cWidth = 0.5;
+            const cHeight = 0.25;
+
+            // Car Body (Blue Metallic Alloy)
+            const bodyGeo = new THREE.BoxGeometry(cLen, cHeight, cWidth);
+            const bodyMat = new THREE.MeshStandardMaterial({
+                color: 0x0284c7,
+                metalness: 0.7,
+                roughness: 0.2
+            });
+            const body = new THREE.Mesh(bodyGeo, bodyMat);
+            body.position.set(cLen / 2, cHeight / 2 + 0.12, 0);
+            body.castShadow = true;
+            carGroup.add(body);
+
+            // 4 Wheels
+            const wheelGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.08, 16);
+            const wheelMat = new THREE.MeshStandardMaterial({ color: 0x111827, metalness: 0.4 });
+
+            const wPositions = [
+                [0.25, 0.12, 0.28],
+                [cLen - 0.25, 0.12, 0.28],
+                [0.25, 0.12, -0.28],
+                [cLen - 0.25, 0.12, -0.28]
+            ];
+
+            wPositions.forEach(pos => {
+                const wheel = new THREE.Mesh(wheelGeo, wheelMat);
+                wheel.rotation.x = Math.PI / 2;
+                wheel.position.set(pos[0], pos[1], pos[2]);
+                wheel.castShadow = true;
+                carGroup.add(wheel);
+            });
+
+            // Shutter Flag (Tấm chắn sáng) mounted on center of car
+            const sW = SIM_CONFIG.shutterWidth * SIM_CONFIG.scale3D; // ~0.1 unit
+            const shutterGeo = new THREE.BoxGeometry(sW, 0.6, 0.04);
+            const shutterMat = new THREE.MeshStandardMaterial({
+                color: 0x0f172a,
+                roughness: 0.3
+            });
+            shutterMesh = new THREE.Mesh(shutterGeo, shutterMat);
+            shutterMesh.position.set(cLen / 2, cHeight + 0.4, 0);
+            shutterMesh.castShadow = true;
+            carGroup.add(shutterMesh);
+
+            trackGroup.add(carGroup);
+            updateCarPosition3D();
+        }
+
+        function buildPhotogates() {
+            // Cổng quang điện A (Màu Cam Công nghiệp)
+            gateAMesh = createPhotogateMesh(0xf97316, 'A');
+            trackGroup.add(gateAMesh);
+
+            // Cổng quang điện B (Màu Xanh Cyan Công nghiệp)
+            gateBMesh = createPhotogateMesh(0x06b6d4, 'B');
+            trackGroup.add(gateBMesh);
+
+            updateGatePositions3D();
+        }
+
+        function createPhotogateMesh(colorHex, label) {
+            const gate = new THREE.Group();
+
+            // U-Shaped Photogate Base Clamp
+            const clampGeo = new THREE.BoxGeometry(0.35, 0.3, 0.9);
+            const clampMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.5 });
+            const clamp = new THREE.Mesh(clampGeo, clampMat);
+            clamp.position.set(0, 0.05, 0);
+            gate.add(clamp);
+
+            // U-Shaped Arm Vertical Left
+            const armGeo = new THREE.BoxGeometry(0.2, 1.1, 0.15);
+            const armMat = new THREE.MeshStandardMaterial({ color: colorHex, metalness: 0.3, roughness: 0.3 });
+            
+            const armL = new THREE.Mesh(armGeo, armMat);
+            armL.position.set(0, 0.6, 0.45);
+            gate.add(armL);
+
+            // U-Shaped Arm Vertical Right
+            const armR = new THREE.Mesh(armGeo, armMat);
+            armR.position.set(0, 0.6, -0.45);
+            gate.add(armR);
+
+            // U-Shaped Bottom Connect
+            const btmGeo = new THREE.BoxGeometry(0.2, 0.2, 1.05);
+            const btm = new THREE.Mesh(btmGeo, armMat);
+            btm.position.set(0, 0.1, 0);
+            gate.add(btm);
+
+            // IR Laser Line (Tia hồng ngoại ảo màu đỏ neon)
+            const laserGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.9, 8);
+            const laserMat = new THREE.MeshBasicMaterial({ color: 0xef4444, transparent: true, opacity: 0.85 });
+            const laser = new THREE.Mesh(laserGeo, laserMat);
+            laser.rotation.x = Math.PI / 2;
+            laser.position.set(0, 0.75, 0);
+            gate.add(laser);
+
+            // LED indicator light on top of gate
+            const ledGeo = new THREE.SphereGeometry(0.06, 16, 16);
+            const ledMat = new THREE.MeshStandardMaterial({ color: 0x10b981, emissive: 0x10b981, emissiveIntensity: 0.8 });
+            const led = new THREE.Mesh(ledGeo, ledMat);
+            led.position.set(0, 1.18, 0.45);
+            gate.add(led);
+
+            if (label === 'A') gateALedMesh = ledMat;
+            if (label === 'B') gateBLedMesh = ledMat;
+
+            return gate;
+        }
+
+        function updateGatePositions3D() {
+            if (gateAMesh) {
+                gateAMesh.position.x = SIM_CONFIG.gateAPos * SIM_CONFIG.scale3D;
+            }
+            if (gateBMesh) {
+                gateBMesh.position.x = SIM_CONFIG.gateBPos * SIM_CONFIG.scale3D;
+                gateBMesh.visible = (SIM_CONFIG.expType === 'avg');
+            }
+        }
+
+        function updateCarPosition3D() {
+            if (carGroup) {
+                carGroup.position.x = carState.x * SIM_CONFIG.scale3D;
+            }
+        }
+
+        function buildDigitalTimer3D() {
+            // Place 3D Digital Timer box on the lab table
+            const timerGroup = new THREE.Group();
+            timerGroup.position.set(3.5, 0.5, 1.5);
+            timerGroup.rotation.y = -Math.PI / 6;
+
+            const boxGeo = new THREE.BoxGeometry(2.0, 1.0, 1.4);
+            const boxMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.4, roughness: 0.3 });
+            const timerBox = new THREE.Mesh(boxGeo, boxMat);
+            timerBox.castShadow = true;
+            timerGroup.add(timerBox);
+
+            // Beveled screen area
+            const scrGeo = new THREE.BoxGeometry(1.6, 0.55, 0.05);
+            const scrMat = new THREE.MeshStandardMaterial({ color: 0x022c22, roughness: 0.1 });
+            const scr = new THREE.Mesh(scrGeo, scrMat);
+            scr.position.set(0, 0.15, 0.71);
+            timerGroup.add(scr);
+
+            // Red Reset button
+            const btnGeo = new THREE.CylinderGeometry(0.1, 0.1, 0.08, 16);
+            const btnMat = new THREE.MeshStandardMaterial({ color: 0xef4444 });
+            const btn = new THREE.Mesh(btnGeo, btnMat);
+            btn.rotation.x = Math.PI / 2;
+            btn.position.set(0.6, -0.25, 0.72);
+            timerGroup.add(btn);
+
+            scene.add(timerGroup);
+        }
+
+        function setCameraView(viewName) {
+            if (!controls) return;
+            if (viewName === 'default') {
+                camera.position.set(0, 5, 13);
+                controls.target.set(0, 1.5, 0);
+            } else if (viewName === 'side') {
+                camera.position.set(0, 2, 9);
+                controls.target.set(0, 1.5, 0);
+            } else if (viewName === 'timer') {
+                camera.position.set(4, 2.5, 4.5);
+                controls.target.set(3.5, 0.5, 1.5);
+            } else if (viewName === 'photogate') {
+                const targetX = (SIM_CONFIG.gateAPos * SIM_CONFIG.scale3D) - (SIM_CONFIG.trackLength * SIM_CONFIG.scale3D / 2);
+                camera.position.set(targetX, 3.5, 4);
+                controls.target.set(targetX, 1.5, 0);
+            }
+            controls.update();
+        }
+
+        function onWindowResize() {
+            const container = document.getElementById('canvas-container');
+            if (!container) return;
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        }
+
+        /* ==================== REAL-TIME PHYSICS SIMULATION ENGINE ==================== */
+        let lastTime = performance.now();
+
+        function animate() {
+            animId = requestAnimationFrame(animate);
+
+            const now = performance.now();
+            const dt = Math.min((now - lastTime) / 1000, 0.05); // dt in seconds
+            lastTime = now;
+
+            if (carState.isRunning) {
+                updatePhysics(dt);
+            }
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        function updatePhysics(dt) {
+            const rad = SIM_CONFIG.angleDeg * Math.PI / 180;
+            // Acceleration on incline plane: a = g * (sin(alpha) - mu * cos(alpha))
+            const netA = SIM_CONFIG.gravity * (Math.sin(rad) - SIM_CONFIG.frictionCoeff * Math.cos(rad));
+            carState.a = Math.max(0, netA);
+
+            // Euler integration
+            carState.v += carState.a * dt;
+            carState.x += carState.v * dt;
+            carState.tTotal += dt;
+
+            // Update Telemetry HUD
+            document.getElementById('hudVelocity').innerText = carState.v.toFixed(3) + ' m/s';
+            document.getElementById('hudPos').innerText = (carState.x * 100).toFixed(2) + ' cm';
+            document.getElementById('hudAccel').innerText = carState.a.toFixed(3) + ' m/s²';
+
+            // Shutter flag position on track (middle of car)
+            const shutterCenter = carState.x + SIM_CONFIG.carLength / 2;
+            const shutterFront = shutterCenter + SIM_CONFIG.shutterWidth / 2;
+            const shutterBack = shutterCenter - SIM_CONFIG.shutterWidth / 2;
+
+            // ========== PHOTOGATE A LOGIC ==========
+            const gateAX = SIM_CONFIG.gateAPos;
+            if (!carState.gateATriggered && shutterFront >= gateAX && shutterBack <= gateAX) {
+                // Entering Gate A
+                carState.gateATriggered = true;
+                carState.tGateA_In = carState.tTotal;
+                setGateALight(true);
+                playBeepGate();
+            } else if (carState.gateATriggered && shutterBack > gateAX && carState.tGateA_Out === 0) {
+                // Leaving Gate A
+                carState.tGateA_Out = carState.tTotal;
+                setGateALight(false);
+                
+                // If in Mode A (Instantaneous Speed), measure time in Gate A
+                if (SIM_CONFIG.mode === 'A') {
+                    // Actual duration: d / v + random micro noise +- 0.0005s
+                    const noise = (Math.random() - 0.5) * 0.001;
+                    const duration = Math.max(0.001, (carState.tGateA_Out - carState.tGateA_In) + noise);
+                    carState.measuredInstT = duration;
+                    updateDigitalTimerDisplay(duration);
+                    playBeepFinish();
+                }
+            }
+
+            // ========== PHOTOGATE B LOGIC ==========
+            if (SIM_CONFIG.expType === 'avg') {
+                const gateBX = SIM_CONFIG.gateBPos;
+                if (!carState.gateBTriggered && shutterFront >= gateBX) {
+                    // Triggering Gate B
+                    carState.gateBTriggered = true;
+                    carState.tGateB_In = carState.tTotal;
+                    setGateBLight(true);
+                    playBeepGate();
+
+                    // If in Mode A-B (Average Speed), record time between A and B
+                    if (SIM_CONFIG.mode === 'AB' && carState.tGateA_In > 0) {
+                        const noise = (Math.random() - 0.5) * 0.002;
+                        const duration = Math.max(0.01, (carState.tGateB_In - carState.tGateA_In) + noise);
+                        carState.measuredDeltaT = duration;
+                        updateDigitalTimerDisplay(duration);
+                        playBeepFinish();
+                    }
+
+                    setTimeout(() => setGateBLight(false), 300);
+                }
+            }
+
+            // Real-time updating display while car is between gates
+            if (SIM_CONFIG.mode === 'AB' && carState.gateATriggered && !carState.gateBTriggered) {
+                const currentElapse = carState.tTotal - carState.tGateA_In;
+                updateDigitalTimerDisplay(currentElapse);
+            }
+
+            // Car reaches bottom bumper
+            const maxTrackX = SIM_CONFIG.trackLength - SIM_CONFIG.carLength;
+            if (carState.x >= maxTrackX) {
+                carState.x = maxTrackX;
+                carState.v = 0;
+                carState.isRunning = false;
+                document.getElementById('carStateBadge').className = 'px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40';
+                document.getElementById('carStateBadge').innerText = 'Đã về đích';
+                document.getElementById('releaseBtn').disabled = false;
+                onSimulationFinished();
+            }
+
+            updateCarPosition3D();
+        }
+
+        function setGateALight(isBlocked) {
+            const led = document.getElementById('gateALed');
+            const status = document.getElementById('gateAStatusText');
+            if (isBlocked) {
+                led.className = 'w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_10px_#f43f5e] animate-ping';
+                status.className = 'text-rose-400 font-bold';
+                status.innerText = 'NGẮT SÁNG';
+                if (gateALedMesh) { gateALedMesh.color.setHex(0xf43f5e); gateALedMesh.emissive.setHex(0xf43f5e); }
+            } else {
+                led.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]';
+                status.className = 'text-emerald-400 font-bold';
+                status.innerText = 'Thông suốt';
+                if (gateALedMesh) { gateALedMesh.color.setHex(0x10b981); gateALedMesh.emissive.setHex(0x10b981); }
+            }
+        }
+
+        function setGateBLight(isBlocked) {
+            const led = document.getElementById('gateBLed');
+            const status = document.getElementById('gateBStatusText');
+            if (isBlocked) {
+                led.className = 'w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_10px_#f43f5e] animate-ping';
+                status.className = 'text-rose-400 font-bold';
+                status.innerText = 'NGẮT SÁNG';
+                if (gateBLedMesh) { gateBLedMesh.color.setHex(0xf43f5e); gateBLedMesh.emissive.setHex(0xf43f5e); }
+            } else {
+                led.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]';
+                status.className = 'text-emerald-400 font-bold';
+                status.innerText = 'Thông suốt';
+                if (gateBLedMesh) { gateBLedMesh.color.setHex(0x10b981); gateBLedMesh.emissive.setHex(0x10b981); }
+            }
+        }
+
+        function updateDigitalTimerDisplay(sec) {
+            const el = document.getElementById('timerDisplay');
+            el.innerHTML = sec.toFixed(3) + ' <span class="text-xs font-normal text-emerald-400">s</span>';
+        }
+
+        function releaseCar() {
+            if (carState.isRunning) return;
+
+            initAudio();
+            playReleaseClick();
+
+            // Reset run state
+            carState.isRunning = true;
+            carState.x = 0;
+            carState.v = 0;
+            carState.tTotal = 0;
+            carState.gateATriggered = false;
+            carState.gateBTriggered = false;
+            carState.tGateA_In = 0;
+            carState.tGateA_Out = 0;
+            carState.tGateB_In = 0;
+            carState.measuredDeltaT = 0;
+            carState.measuredInstT = 0;
+
+            document.getElementById('releaseBtn').disabled = true;
+            document.getElementById('carStateBadge').className = 'px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 animate-pulse';
+            document.getElementById('carStateBadge').innerText = 'Đang chuyển động...';
+            
+            updateDigitalTimerDisplay(0);
+        }
+
+        function resetSimulation() {
+            carState.isRunning = false;
+            carState.x = 0;
+            carState.v = 0;
+            carState.tTotal = 0;
+            carState.gateATriggered = false;
+            carState.gateBTriggered = false;
+            carState.tGateA_In = 0;
+            carState.tGateA_Out = 0;
+            carState.tGateB_In = 0;
+            
+            setGateALight(false);
+            setGateBLight(false);
+            updateCarPosition3D();
+            updateDigitalTimerDisplay(0);
+
+            document.getElementById('releaseBtn').disabled = false;
+            document.getElementById('carStateBadge').className = 'px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300';
+            document.getElementById('carStateBadge').innerText = 'Đang chờ thả';
+            document.getElementById('hudVelocity').innerText = '0.000 m/s';
+            document.getElementById('hudPos').innerText = '0.00 cm';
+        }
+
+        function onSimulationFinished() {
+            const formulaBox = document.getElementById('calcFormula');
+            
+            if (SIM_CONFIG.expType === 'avg') {
+                const s = SIM_CONFIG.gateBPos - SIM_CONFIG.gateAPos;
+                const dt = carState.measuredDeltaT > 0 ? carState.measuredDeltaT : 0.800;
+                const v = s / dt;
+                formulaBox.innerHTML = `$$v_{tb} = \\frac{s}{\\Delta t} = \\frac{${s.toFixed(3)}\\text{ m}}{${dt.toFixed(3)}\\text{ s}} = \\mathbf{${v.toFixed(3)}\\text{ m/s}}$$`;
+            } else {
+                const d = SIM_CONFIG.shutterWidth;
+                const t = carState.measuredInstT > 0 ? carState.measuredInstT : 0.040;
+                const v = d / t;
+                formulaBox.innerHTML = `$$v = \\frac{d}{t} = \\frac{${d.toFixed(3)}\\text{ m}}{${t.toFixed(3)}\\text{ s}} = \\mathbf{${v.toFixed(3)}\\text{ m/s}}$$`;
+            }
+
+            if (window.MathJax) {
+                MathJax.typesetPromise([formulaBox]);
+            }
+        }
+
+        /* ==================== INTERACTION & CONTROLS HANDLERS ==================== */
+        function switchExperimentMode(type) {
+            SIM_CONFIG.expType = type;
+            resetSimulation();
+
+            const tabAvg = document.getElementById('tabAvgBtn');
+            const tabInst = document.getElementById('tabInstBtn');
+            const avgControls = document.getElementById('avgControlsBlock');
+            const instControls = document.getElementById('instControlsBlock');
+
+            if (type === 'avg') {
+                tabAvg.className = 'tab-btn active flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5';
+                tabInst.className = 'tab-btn flex-1 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-all flex items-center justify-center gap-1.5';
+                avgControls.classList.remove('hidden');
+                instControls.classList.add('hidden');
+                setTimerMode('AB');
+            } else {
+                tabInst.className = 'tab-btn active flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5';
+                tabAvg.className = 'tab-btn flex-1 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-all flex items-center justify-center gap-1.5';
+                instControls.classList.remove('hidden');
+                avgControls.classList.add('hidden');
+                setTimerMode('A');
+            }
+
+            updateGatePositions3D();
+        }
+
+        function setTimerMode(m) {
+            SIM_CONFIG.mode = m;
+            const btnAB = document.getElementById('btnModeAB');
+            const btnA = document.getElementById('btnModeA');
+            const badge = document.getElementById('modeBadge');
+
+            if (m === 'AB') {
+                btnAB.className = 'py-2 px-2.5 rounded-xl border border-sky-500 bg-sky-600/30 text-sky-200 text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all';
+                btnA.className = 'py-2 px-2.5 rounded-xl border border-slate-700 bg-slate-800 text-slate-400 hover:text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all';
+                badge.innerText = 'MODE A ↔ B';
+            } else {
+                btnA.className = 'py-2 px-2.5 rounded-xl border border-sky-500 bg-sky-600/30 text-sky-200 text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all';
+                btnAB.className = 'py-2 px-2.5 rounded-xl border border-slate-700 bg-slate-800 text-slate-400 hover:text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all';
+                badge.innerText = 'MODE A';
+            }
+        }
+
+        function onGateAChange(val) {
+            const cm = parseFloat(val);
+            SIM_CONFIG.gateAPos = cm / 100;
+            document.getElementById('labelGateA').innerText = cm.toFixed(1) + ' cm';
+            document.getElementById('labelInstGateA').innerText = cm.toFixed(1) + ' cm';
+            updateTotalDistanceLabel();
+            updateGatePositions3D();
+        }
+
+        function onGateBChange(val) {
+            const cm = parseFloat(val);
+            SIM_CONFIG.gateBPos = cm / 100;
+            document.getElementById('labelGateB').innerText = cm.toFixed(1) + ' cm';
+            updateTotalDistanceLabel();
+            updateGatePositions3D();
+        }
+
+        function updateTotalDistanceLabel() {
+            const distCm = (SIM_CONFIG.gateBPos - SIM_CONFIG.gateAPos) * 100;
+            const distM = SIM_CONFIG.gateBPos - SIM_CONFIG.gateAPos;
+            document.getElementById('labelTotalDist').innerText = `${distCm.toFixed(1)} cm (${distM.toFixed(3)} m)`;
+        }
+
+        function setShutterWidth(mm) {
+            SIM_CONFIG.shutterWidth = mm / 1000;
+            const btn10 = document.getElementById('btnD10');
+            const btn20 = document.getElementById('btnD20');
+
+            if (mm === 10) {
+                btn10.className = 'py-2 px-2 rounded-xl border border-sky-500 bg-sky-600/30 text-sky-200 text-xs font-extrabold transition-all';
+                btn20.className = 'py-2 px-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-400 hover:text-white text-xs font-bold transition-all';
+            } else {
+                btn20.className = 'py-2 px-2 rounded-xl border border-sky-500 bg-sky-600/30 text-sky-200 text-xs font-extrabold transition-all';
+                btn10.className = 'py-2 px-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-400 hover:text-white text-xs font-bold transition-all';
+            }
+
+            // Rescale 3D shutter mesh
+            if (shutterMesh) {
+                shutterMesh.scale.x = (mm / 10);
+            }
+        }
+
+        function onAngleChange(deg) {
+            SIM_CONFIG.angleDeg = parseFloat(deg);
+            document.getElementById('labelAngle').innerText = SIM_CONFIG.angleDeg.toFixed(1) + '°';
+            document.getElementById('hudAngle').innerText = SIM_CONFIG.angleDeg.toFixed(1) + '°';
+            updateTrackIncline();
+            resetSimulation();
+        }
+
+        /* ==================== DATA RECORDING & ERROR ANALYSIS ==================== */
+        function recordCurrentData() {
+            if (SIM_CONFIG.expType === 'avg') {
+                const s = SIM_CONFIG.gateBPos - SIM_CONFIG.gateAPos;
+                const dt = carState.measuredDeltaT > 0 ? carState.measuredDeltaT : (0.78 + Math.random() * 0.05);
+                const v = s / dt;
+
+                dataRecordsAvg.push({ s, dt, v });
+                renderAvgTable();
+            } else {
+                const d = SIM_CONFIG.shutterWidth;
+                const t = carState.measuredInstT > 0 ? carState.measuredInstT : (0.038 + Math.random() * 0.004);
+                const v = d / t;
+
+                dataRecordsInst.push({ d, t, v });
+                renderInstTable();
+            }
+
+            playBeepFinish();
+            toggleDataTableModal(true); // Open modal to show saved row
+        }
+
+        function renderAvgTable() {
+            const tbody = document.getElementById('tableAvgBody');
+            tbody.innerHTML = '';
+
+            if (dataRecordsAvg.length === 0) return;
+
+            // Compute averages
+            const n = dataRecordsAvg.length;
+            let sumS = 0, sumT = 0, sumV = 0;
+            dataRecordsAvg.forEach(r => { sumS += r.s; sumT += r.dt; sumV += r.v; });
+            const avgS = sumS / n;
+            const avgT = sumT / n;
+            const avgV = avgS / avgT;
+
+            // Compute average absolute error for time
+            let sumDeltaT = 0;
+            dataRecordsAvg.forEach((r, idx) => {
+                const deltaTi = Math.abs(avgT - r.dt);
+                sumDeltaT += deltaTi;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-2 font-bold">${idx + 1}</td>
+                    <td class="p-2">${r.s.toFixed(3)}</td>
+                    <td class="p-2">${r.dt.toFixed(3)}</td>
+                    <td class="p-2 font-bold text-sky-300">${r.v.toFixed(3)}</td>
+                    <td class="p-2 text-slate-400">${deltaTi.toFixed(3)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            const avgDeltaT = sumDeltaT / n;
+            const instrumentErrorT = 0.001; // Sai số dụng cụ đồng hồ hiện số
+            const totalDeltaT = avgDeltaT + instrumentErrorT;
+
+            // Relative and absolute error of speed
+            const relErrorS = 0.001 / avgS; // thước 1mm
+            const relErrorT = totalDeltaT / avgT;
+            const relErrorV = relErrorS + relErrorT;
+            const absErrorV = avgV * relErrorV;
+
+            // Update footer
+            document.getElementById('avgSVal').innerText = avgS.toFixed(3);
+            document.getElementById('avgTVal').innerText = avgT.toFixed(3);
+            document.getElementById('avgVVal').innerText = avgV.toFixed(3);
+            document.getElementById('avgDeltaTVal').innerText = avgDeltaT.toFixed(3);
+
+            // Update equation
+            const eqBox = document.getElementById('avgResultEquation');
+            eqBox.innerHTML = `
+                <div class="space-y-1">
+                    <p class="m-0 font-bold text-sky-400">📊 Kết quả đo Tốc độ trung bình sau ${n} lần đo:</p>
+                    <p class="m-0">• Tốc độ trung bình: $\\bar{v} = \\frac{\\bar{s}}{\\overline{\\Delta t}} = \\frac{${avgS.toFixed(3)}}{${avgT.toFixed(3)}} = \\mathbf{${avgV.toFixed(3)}\\text{ m/s}}$.</p>
+                    <p class="m-0">• Sai số tuyệt đối của phép đo: $\\Delta v = \\bar{v} \\cdot \\left(\\frac{\\Delta s}{\\bar{s}} + \\frac{\\Delta t}{\\bar{t}}\\right) = \\mathbf{${absErrorV.toFixed(3)}\\text{ m/s}}$.</p>
+                    <p class="m-0 text-sm font-extrabold text-emerald-400">• Viết kết quả đo: $v = ${avgV.toFixed(3)} \\pm ${absErrorV.toFixed(3)}\\text{ (m/s)}$.</p>
+                </div>
+            `;
+
+            if (window.MathJax) {
+                MathJax.typesetPromise([eqBox]);
+            }
+        }
+
+        function renderInstTable() {
+            const tbody = document.getElementById('tableInstBody');
+            tbody.innerHTML = '';
+
+            if (dataRecordsInst.length === 0) return;
+
+            const n = dataRecordsInst.length;
+            let sumD = 0, sumT = 0, sumV = 0;
+            dataRecordsInst.forEach(r => { sumD += r.d; sumT += r.t; sumV += r.v; });
+            const avgD = sumD / n;
+            const avgT = sumT / n;
+            const avgV = avgD / avgT;
+
+            let sumDeltaT = 0;
+            dataRecordsInst.forEach((r, idx) => {
+                const deltaTi = Math.abs(avgT - r.t);
+                sumDeltaT += deltaTi;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-2 font-bold">${idx + 1}</td>
+                    <td class="p-2">${r.d.toFixed(3)}</td>
+                    <td class="p-2">${r.t.toFixed(3)}</td>
+                    <td class="p-2 font-bold text-teal-300">${r.v.toFixed(3)}</td>
+                    <td class="p-2 text-slate-400">${deltaTi.toFixed(3)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            const avgDeltaT = sumDeltaT / n;
+            const instrumentErrorT = 0.001;
+            const totalDeltaT = avgDeltaT + instrumentErrorT;
+
+            const relErrorD = 0.0005 / avgD;
+            const relErrorT = totalDeltaT / avgT;
+            const relErrorV = relErrorD + relErrorT;
+            const absErrorV = avgV * relErrorV;
+
+            document.getElementById('instDVal').innerText = avgD.toFixed(3);
+            document.getElementById('instTVal').innerText = avgT.toFixed(3);
+            document.getElementById('instVVal').innerText = avgV.toFixed(3);
+            document.getElementById('instDeltaTVal').innerText = avgDeltaT.toFixed(3);
+
+            const eqBox = document.getElementById('instResultEquation');
+            eqBox.innerHTML = `
+                <div class="space-y-1">
+                    <p class="m-0 font-bold text-teal-400">📊 Kết quả đo Tốc độ tức thời sau ${n} lần đo:</p>
+                    <p class="m-0">• Tốc độ tức thời trung bình: $\\bar{v} = \\frac{\\bar{d}}{\\bar{t}} = \\frac{${avgD.toFixed(3)}}{${avgT.toFixed(3)}} = \\mathbf{${avgV.toFixed(3)}\\text{ m/s}}$.</p>
+                    <p class="m-0">• Sai số tuyệt đối của phép đo: $\\Delta v = \\bar{v} \\cdot \\left(\\frac{\\Delta d}{\\bar{d}} + \\frac{\\Delta t}{\\bar{t}}\\right) = \\mathbf{${absErrorV.toFixed(3)}\\text{ m/s}}$.</p>
+                    <p class="m-0 text-sm font-extrabold text-emerald-400">• Viết kết quả đo: $v = ${avgV.toFixed(3)} \\pm ${absErrorV.toFixed(3)}\\text{ (m/s)}$.</p>
+                </div>
+            `;
+
+            if (window.MathJax) {
+                MathJax.typesetPromise([eqBox]);
+            }
+        }
+
+        function clearTable(type) {
+            if (type === 'avg') {
+                dataRecordsAvg = [];
+                renderAvgTable();
+                document.getElementById('avgSVal').innerText = '-';
+                document.getElementById('avgTVal').innerText = '-';
+                document.getElementById('avgVVal').innerText = '-';
+                document.getElementById('avgDeltaTVal').innerText = '-';
+                document.getElementById('avgResultEquation').innerText = 'Chưa có đủ số liệu thực hành (Cần ít nhất 3 lần đo).';
+            } else {
+                dataRecordsInst = [];
+                renderInstTable();
+                document.getElementById('instDVal').innerText = '-';
+                document.getElementById('instTVal').innerText = '-';
+                document.getElementById('instVVal').innerText = '-';
+                document.getElementById('instDeltaTVal').innerText = '-';
+                document.getElementById('instResultEquation').innerText = 'Chưa có đủ số liệu thực hành (Cần ít nhất 3 lần đo).';
+            }
+        }
+
+        function toggleDataTableModal(forceOpen = null) {
+            const modal = document.getElementById('dataTableModal');
+            if (forceOpen === true) {
+                modal.classList.remove('hidden');
+            } else if (forceOpen === false) {
+                modal.classList.add('hidden');
+            } else {
+                modal.classList.toggle('hidden');
+            }
+        }
+
+        function toggleGuideModal() {
+            const modal = document.getElementById('guideModal');
+            modal.classList.toggle('hidden');
+        }
+
+        // Initialize 3D Scene upon window load
+        window.addEventListener('DOMContentLoaded', () => {
+            init3D();
+        });
+    </script>
+</body>
+</html>
