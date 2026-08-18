@@ -971,7 +971,7 @@ function renderQuizQuestions() {
                         <div><b>${subKey})</b> ${getCompTag(sub.competency)}${cleanText}</div>
                         <div class="tf-buttons">
                             <button type="button" class="btn-tf tf-btn" id="part2-q${q.id}-tf-${subKey}-T" onclick="selectPart2(${q.id}, '${subKey}', 'Đ')">ĐÚNG</button>
-                            <button type="button" class="btn-tf tf-btn" id="part2-q${q.id}-tf-${subKey}-F" onclick="selectPart2(${q.id}, '${subKey}', 'SAI')">SAI</button>
+                            <button type="button" class="btn-tf tf-btn" id="part2-q${q.id}-tf-${subKey}-F" onclick="selectPart2(${q.id}, '${subKey}', 'S')">SAI</button>
                         </div>
                     </div>
                 `}).join('')}
@@ -1020,15 +1020,16 @@ function selectPart1(qId, choice) {
 function selectPart2(qId, subKey, choice) {
     if (isSubmitted) return;
     if (!userAnswers.part2[qId]) userAnswers.part2[qId] = {};
-    userAnswers.part2[qId][subKey] = choice;
+    const normChoice = (choice === 'Đ' || choice === 'DUNG' || choice === 'ĐÚNG') ? 'Đ' : 'S';
+    userAnswers.part2[qId][subKey] = normChoice;
     
     const btnT = document.getElementById(`part2-q${qId}-tf-${subKey}-T`);
     const btnF = document.getElementById(`part2-q${qId}-tf-${subKey}-F`);
     if (btnT) btnT.classList.remove('selected-true', 'selected-false');
     if (btnF) btnF.classList.remove('selected-true', 'selected-false');
 
-    if (choice === 'Đ' && btnT) btnT.classList.add('selected-true');
-    if (choice === 'S' && btnF) btnF.classList.add('selected-false');
+    if (normChoice === 'Đ' && btnT) btnT.classList.add('selected-true');
+    if (normChoice === 'S' && btnF) btnF.classList.add('selected-false');
     updateProgress();
 }
 
@@ -1133,16 +1134,33 @@ function gradeQuiz(isTimeout = false) {
 
             q.subQuestions.forEach(sub => {
                 const userChoice = userAnswers.part2[q.id] ? userAnswers.part2[q.id][sub.key] : null;
-                const correctChoice = sub.answer;
+                const correctChoice = (sub.answer === 'Đ' || sub.answer === 'ĐÚNG') ? 'Đ' : 'S';
                 const btnT = document.getElementById(`part2-q${q.id}-tf-${sub.key}-T`);
                 const btnF = document.getElementById(`part2-q${q.id}-tf-${sub.key}-F`);
 
-                if (userChoice === correctChoice) {
+                const isCorrect = userChoice && (userChoice === correctChoice);
+                if (isCorrect) {
                     correctSubCount++;
                     totalCorrectCount++;
                 }
+
+                // Hiển thị đáp án chuẩn viền xanh
                 if (correctChoice === 'Đ' && btnT) btnT.style.border = '2px solid #22c55e';
                 if (correctChoice === 'S' && btnF) btnF.style.border = '2px solid #22c55e';
+
+                // Nếu học sinh chọn sai, viền đỏ phương án đã chọn
+                if (userChoice && userChoice !== correctChoice) {
+                    if (userChoice === 'Đ' && btnT) {
+                        btnT.style.border = '2px solid #ef4444';
+                        btnT.style.background = '#fef2f2';
+                        btnT.style.color = '#dc2626';
+                    }
+                    if (userChoice === 'S' && btnF) {
+                        btnF.style.border = '2px solid #ef4444';
+                        btnF.style.background = '#fef2f2';
+                        btnF.style.color = '#dc2626';
+                    }
+                }
             });
 
             if (correctSubCount === 1) earnedPoints += 0.1;
@@ -1163,10 +1181,12 @@ function gradeQuiz(isTimeout = false) {
             if (exp) exp.style.display = 'block';
             if (inputEl) inputEl.disabled = true;
 
-            const cleanUser = userChoice.replace(',', '.');
-            const cleanCorrect = correctAns.replace(',', '.');
+            const cleanUser = userChoice.trim().replace(',', '.');
+            const cleanCorrect = correctAns.trim().replace(',', '.');
 
-            if (cleanUser && parseFloat(cleanUser) === parseFloat(cleanCorrect)) {
+            const isCorrect = (cleanUser !== "" && !isNaN(cleanUser) && Math.abs(parseFloat(cleanUser) - parseFloat(cleanCorrect)) < 1e-4);
+
+            if (isCorrect) {
                 earnedPoints += 0.25;
                 totalCorrectCount++;
                 if (inputEl) inputEl.classList.add('input-correct');
