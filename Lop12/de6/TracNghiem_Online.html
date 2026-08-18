@@ -189,6 +189,71 @@
         .footer-links { margin-top: 8px; font-size: 0.82rem; }
         .footer-links a { color: #4f46e5; text-decoration: none; margin: 0 4px; transition: color 0.2s; }
         .footer-links a:hover { text-decoration: underline; color: #3730a3; }
+
+        /* Countdown Timer & Student Bar */
+        .header-timer-badge {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1.5px solid #93c5fd;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            font-family: monospace;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+        .student-info-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 18px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+        .student-info-name {
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .floating-timer {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f8fafc;
+            color: #4338ca;
+            border: 2px solid #818cf8;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        .timer-warning {
+            border-color: #f59e0b !important;
+            color: #b45309 !important;
+            background: #fffbeb !important;
+        }
+        .timer-danger {
+            border-color: #ef4444 !important;
+            color: #b91c1c !important;
+            background: #fef2f2 !important;
+            animation: pulseTimer 1s infinite;
+        }
+        @keyframes pulseTimer {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
     </style>
 </head>
 <body class="tex2jax_ignore">
@@ -199,6 +264,9 @@
             <img src="/favicon.svg" alt="Logo" class="logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%234f46e5\'/><text x=\'50\' y=\'65\' font-size=\'45\' text-anchor=\'middle\' fill=\'white\' font-family=\'sans-serif\' font-weight=\'bold\'>V</text></svg>';">
             <span class="logo-text">Vatli102.com</span>
         </a>
+        <div id="headerTimerBadge" class="header-timer-badge">
+            <i class="fa-solid fa-stopwatch"></i> <span id="timerText">50:00</span>
+        </div>
         <nav class="nav-links">
             <a href="/" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
             <a href="/gioi-thieu.html" class="nav-item"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a>
@@ -231,6 +299,17 @@
     </div>
 
     <div id="quizContent" class="tex2jax_process" style="display: none;">
+        <div class="student-info-bar">
+            <div class="student-info-name">
+                <i class="fa-solid fa-user-graduate text-indigo-600"></i>
+                <span id="displayStudentInfo">Học sinh</span>
+            </div>
+            <div class="floating-timer" id="mainTimerBox">
+                <i class="fa-solid fa-clock"></i>
+                <span>Thời gian còn lại: <strong id="timerDisplay" style="font-family: monospace; font-size: 1.05rem;">50:00</strong></span>
+            </div>
+        </div>
+
         <div class="progress-container">
             <div class="progress-bar-bg">
                 <div class="progress-bar-fill" id="progressBar"></div>
@@ -251,7 +330,7 @@
         <div id="part3Container"></div>
 
         <div style="text-align: center; margin-top: 30px;">
-            <button type="button" id="btnSubmitQuiz" onclick="gradeQuiz()" style="background: linear-gradient(135deg, #059669, #10b981); color: white; border: none; padding: 14px 40px; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; box-shadow: 0 6px 20px rgba(16,185,129,0.3);">
+            <button type="button" id="btnSubmitQuiz" onclick="confirmSubmitQuiz()" style="background: linear-gradient(135deg, #059669, #10b981); color: white; border: none; padding: 14px 40px; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; box-shadow: 0 6px 20px rgba(16,185,129,0.3); transition: all 0.2s;">
                 ✅ NỘP BÀI THI & CHẤM ĐIỂM
             </button>
         </div>
@@ -271,6 +350,10 @@
                 <div class="summary-card">
                     <div class="summary-num" style="color: #ef4444;" id="incorrectCountText">0</div>
                     <div class="summary-label">Số ý chưa chính xác</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-num" style="color: #0284c7;" id="timeSpentText">0 phút</div>
+                    <div class="summary-label">Thời gian làm bài</div>
                 </div>
                 <div class="summary-card">
                     <div class="summary-num" style="color: #4f46e5;" id="gradeText">0.0/10</div>
@@ -720,6 +803,9 @@ const quizData = {
 
 let userAnswers = { part1: {}, part2: {}, part3: {} };
 let isSubmitted = false;
+const EXAM_DURATION_SECONDS = 50 * 60; // 50 phút = 3000 giây
+let timeRemaining = EXAM_DURATION_SECONDS;
+let examTimerInterval = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     const savedName = localStorage.getItem('saved_student_name');
@@ -743,11 +829,17 @@ function startQuizExam() {
         localStorage.setItem('saved_student_name', name);
         localStorage.setItem('saved_student_class', className);
 
+        const infoEl = document.getElementById('displayStudentInfo');
+        if (infoEl) infoEl.textContent = `${name} - Lớp: ${className}`;
+
         const loginCard = document.getElementById('studentLoginCard');
         if (loginCard) loginCard.style.display = 'none';
 
         const quizContent = document.getElementById('quizContent');
         if (quizContent) quizContent.style.display = 'block';
+
+        const headerTimer = document.getElementById('headerTimerBadge');
+        if (headerTimer) headerTimer.style.display = 'flex';
 
         renderQuizQuestions();
         updateProgress();
@@ -755,8 +847,81 @@ function startQuizExam() {
         if (window.MathJax && window.MathJax.typesetPromise) {
             window.MathJax.typesetPromise();
         }
+
+        // Bắt đầu đếm ngược 50 phút
+        startTimerCountdown();
     } catch (e) {
         console.error("Lỗi khởi động bài thi:", e);
+    }
+}
+
+function startTimerCountdown() {
+    if (examTimerInterval) clearInterval(examTimerInterval);
+    updateTimerDisplays(timeRemaining);
+
+    examTimerInterval = setInterval(() => {
+        if (isSubmitted) {
+            clearInterval(examTimerInterval);
+            return;
+        }
+
+        timeRemaining--;
+
+        if (timeRemaining <= 0) {
+            clearInterval(examTimerInterval);
+            timeRemaining = 0;
+            updateTimerDisplays(0);
+            alert("⏰ HẾT THỜI GIAN LÀM BÀI (50 phút)!\n\nHệ thống đang tự động thu bài và chấm điểm của bạn.");
+            gradeQuiz(true);
+        } else {
+            updateTimerDisplays(timeRemaining);
+        }
+    }, 1000);
+}
+
+function updateTimerDisplays(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    const timeStr = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+    const tDisplay = document.getElementById('timerDisplay');
+    if (tDisplay) tDisplay.textContent = timeStr;
+
+    const tHeader = document.getElementById('timerText');
+    if (tHeader) tHeader.textContent = timeStr;
+
+    const timerBox = document.getElementById('mainTimerBox');
+    const headerBox = document.getElementById('headerTimerBadge');
+
+    if (seconds <= 60) {
+        if (timerBox) { timerBox.className = 'floating-timer timer-danger'; }
+        if (headerBox) { headerBox.className = 'header-timer-badge timer-danger'; }
+    } else if (seconds <= 300) {
+        if (timerBox) { timerBox.className = 'floating-timer timer-warning'; }
+        if (headerBox) { headerBox.className = 'header-timer-badge timer-warning'; }
+    } else {
+        if (timerBox) { timerBox.className = 'floating-timer'; }
+        if (headerBox) { headerBox.className = 'header-timer-badge'; }
+    }
+}
+
+function confirmSubmitQuiz() {
+    if (isSubmitted) return;
+    
+    let totalItems = (quizData.part1 ? quizData.part1.length : 0) + 
+                     (quizData.part2 ? quizData.part2.reduce((acc, q) => acc + q.subQuestions.length, 0) : 0) + 
+                     (quizData.part3 ? quizData.part3.length : 0);
+    let completedCount = Object.keys(userAnswers.part1).length;
+    for (let qId in userAnswers.part2) completedCount += Object.keys(userAnswers.part2[qId]).length;
+    for (let qId in userAnswers.part3) { if (userAnswers.part3[qId] !== '') completedCount++; }
+
+    let msg = "Bạn có chắc chắn muốn nộp bài thi và kết thúc không?";
+    if (completedCount < totalItems) {
+        msg = `Bạn mới hoàn thành ${completedCount}/${totalItems} ý hỏi.\n\nBạn có chắc chắn muốn nộp bài thi ngay bây giờ không?`;
+    }
+
+    if (confirm(msg)) {
+        gradeQuiz(false);
     }
 }
 
@@ -806,7 +971,7 @@ function renderQuizQuestions() {
                         <div><b>${subKey})</b> ${getCompTag(sub.competency)}${cleanText}</div>
                         <div class="tf-buttons">
                             <button type="button" class="btn-tf tf-btn" id="part2-q${q.id}-tf-${subKey}-T" onclick="selectPart2(${q.id}, '${subKey}', 'Đ')">ĐÚNG</button>
-                            <button type="button" class="btn-tf tf-btn" id="part2-q${q.id}-tf-${subKey}-F" onclick="selectPart2(${q.id}, '${subKey}', 'S')">SAI</button>
+                            <button type="button" class="btn-tf tf-btn" id="part2-q${q.id}-tf-${subKey}-F" onclick="selectPart2(${q.id}, '${subKey}', 'SAI')">SAI</button>
                         </div>
                     </div>
                 `}).join('')}
@@ -891,9 +1056,48 @@ function updateProgress() {
     if (pl) pl.textContent = `${completedCount}/${totalItems} ý hoàn thành`;
 }
 
-function gradeQuiz() {
+function gradeQuiz(isTimeout = false) {
     if (isSubmitted) return;
     isSubmitted = true;
+
+    if (examTimerInterval) clearInterval(examTimerInterval);
+
+    // Tính thời gian làm bài thực tế
+    const timeSpentSec = Math.max(0, EXAM_DURATION_SECONDS - timeRemaining);
+    const spentMins = Math.floor(timeSpentSec / 60);
+    const spentSecs = timeSpentSec % 60;
+    const timeSpentStr = `${spentMins} phút ${spentSecs < 10 ? '0' : ''}${spentSecs} giây`;
+
+    const tsEl = document.getElementById('timeSpentText');
+    if (tsEl) tsEl.textContent = timeSpentStr;
+
+    // Cập nhật trạng thái đồng hồ
+    const tDisplay = document.getElementById('timerDisplay');
+    if (tDisplay) tDisplay.textContent = isTimeout ? "Hết giờ" : "Đã nộp bài";
+
+    const tHeader = document.getElementById('timerText');
+    if (tHeader) tHeader.textContent = isTimeout ? "Hết giờ" : "Đã nộp";
+
+    const timerBox = document.getElementById('mainTimerBox');
+    if (timerBox) {
+        timerBox.className = 'floating-timer';
+        timerBox.style.borderColor = '#10b981';
+        timerBox.style.color = '#047857';
+        timerBox.style.background = '#ecfdf5';
+    }
+
+    const subBtn = document.getElementById('btnSubmitQuiz');
+    if (subBtn) {
+        subBtn.disabled = true;
+        subBtn.style.opacity = '0.6';
+        subBtn.style.cursor = 'not-allowed';
+        subBtn.textContent = isTimeout ? '⏰ ĐÃ TỰ ĐỘNG NỘP (HẾT GIỜ)' : '✅ ĐÃ NỘP BÀI THI';
+    }
+
+    // Khóa các ô nhập liệu và nút chọn
+    document.querySelectorAll('.short-answer-input').forEach(inp => inp.disabled = true);
+    document.querySelectorAll('.tf-btn').forEach(btn => btn.style.pointerEvents = 'none');
+    document.querySelectorAll('.option-card').forEach(card => card.style.pointerEvents = 'none');
 
     let earnedPoints = 0;
     let totalCorrectCount = 0;
