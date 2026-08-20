@@ -697,7 +697,28 @@ function gradeQuiz() {
 
     // Hiệu ứng pháo hoa khi điểm cao
     if (totalGrade >= 7.0) {
-        confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+        confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } }
+
+    const name = (typeof localStorage !== 'undefined' && localStorage.getItem('saved_student_name')) || (document.getElementById('studentName') && document.getElementById('studentName').value.trim()) || 'Học sinh';
+    const className = (typeof localStorage !== 'undefined' && localStorage.getItem('saved_student_class')) || (document.getElementById('studentClass') && document.getElementById('studentClass').value.trim()) || 'Lớp';
+    const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
+    if (typeof GOOGLE_SHEETS_URL !== 'undefined' && GOOGLE_SHEETS_URL) {
+        try {
+            fetch(GOOGLE_SHEETS_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({
+                    name: name,
+                    className: className,
+                    lesson: (typeof quizData !== 'undefined' && quizData.title) || document.title || "Bài trắc nghiệm online",
+                    correct: (typeof totalCorrectCount !== 'undefined' && typeof totalItems !== 'undefined') ? `${totalCorrectCount}/${totalItems}` : (typeof totalCorrectSub !== 'undefined' ? `${totalCorrectSub}/20` : "Hoàn thành"),
+                    score: (typeof finalGrade !== 'undefined') ? finalGrade : (typeof totalGrade !== 'undefined' ? totalGrade.toFixed(1) : (typeof totalScore !== 'undefined' ? totalScore.toFixed(2) : "10"))
+                }),
+                redirect: "follow"
+            }).catch(function(err){});
+        } catch(err){}
+    }
+);
     }
 
     if (window.MathJax && window.MathJax.typesetPromise) {
