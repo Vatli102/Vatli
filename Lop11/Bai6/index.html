@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2547909591568871"
+         crossorigin="anonymous"></script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trắc Nghiệm Online: Bài 6 - Dao Động Tắt Dần & Hiện Tượng Cộng Hưởng | Vatli102.com</title>
+    <meta name="description" content="Đề kiểm tra trắc nghiệm online Vật lí 11 Bài 6: Dao động tắt dần, dao động cưỡng bức và hiện tượng cộng hưởng cơ học. Đánh giá năng lực suy luận lí thuyết chuẩn GDPT 2018.">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .question-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .question-card:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 16px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            background: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .option-label:hover {
+            background-color: #f8fafc;
+            border-color: #94a3b8;
+        }
+
+        .option-label.selected {
+            background-color: #eff6ff;
+            border-color: #4f46e5;
+            color: #1e1b4b;
+            font-weight: 600;
+        }
+
+        .option-label.correct {
+            background-color: #f0fdf4 !important;
+            border-color: #22c55e !important;
+            color: #15803d !important;
+        }
+
+        .option-label.incorrect {
+            background-color: #fef2f2 !important;
+            border-color: #ef4444 !important;
+            color: #b91c1c !important;
+        }
+
+        .sticky-timer {
+            position: sticky;
+            top: 64px;
+            z-index: 40;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .math-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+<body class="tex2jax_process antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- 🌐 Header Navigation -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
+            <a href="../../index.html" class="flex items-center gap-2 group text-decoration-none">
+                <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-indigo-700 via-purple-600 to-cyan-600 bg-clip-text text-transparent">Vatli102.com</span>
+            </a>
+            <ul class="flex items-center gap-4 text-xs sm:text-sm font-semibold text-slate-600 list-none m-0 p-0">
+                <li><a href="Baigiang.html" class="hover:text-indigo-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-book-open"></i> Bài giảng</a></li>
+                <li><a href="TracNghiem_Online.html" class="text-indigo-600 font-bold flex items-center gap-1"><i class="fa-solid fa-pen-to-square"></i> Trắc nghiệm</a></li>
+                <li><a href="../../index.html" class="hover:text-indigo-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- ⏱️ Sticky Info & Timer Bar (Visible when test starts) -->
+    <div id="stickyTimerBar" class="sticky-timer px-4 py-2.5 shadow-sm hidden">
+        <div class="max-w-4xl mx-auto flex items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-xs font-bold border border-indigo-200">
+                    <i class="fa-solid fa-layer-group"></i> Bài 6 • Vật lí 11
+                </span>
+                <span id="studentDisplay" class="text-xs font-semibold text-slate-700 hidden sm:inline">Chưa nhập tên</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-1.5 text-slate-700 font-bold text-sm bg-slate-100 px-3 py-1 rounded-lg border border-slate-200">
+                    <i class="fa-regular fa-clock text-indigo-600"></i>
+                    <span id="timerText" class="math-mono text-indigo-700">20:00</span>
+                </div>
+                <button onclick="submitQuiz()" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-paper-plane"></i> Nộp bài
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 📖 Main Container -->
+    <main class="max-w-4xl mx-auto px-4 py-6 w-full flex-grow">
+
+        <!-- Banner Tiêu Đề -->
+        <div class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 text-white rounded-2xl p-6 sm:p-8 mb-8 shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="inline-block px-3 py-1 bg-indigo-500/30 backdrop-blur-md rounded-full text-indigo-200 text-xs font-bold uppercase tracking-wider mb-2 border border-indigo-400/30">
+                    Kiểm tra đánh giá năng lực GDPT 2018
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">
+                    BÀI 6: DAO ĐỘNG TẮT DẦN. DAO ĐỘNG CƯỠNG BỨC. HIỆN TƯỢNG CỘNG HƯỞNG
+                </h1>
+                <p class="text-indigo-200 text-xs sm:text-sm font-medium">
+                    Thời gian làm bài: 20 phút • Thang điểm 10,0
+                </p>
+            </div>
+            <div class="absolute -right-10 -bottom-10 opacity-10 text-white text-9xl pointer-events-none">
+                <i class="fa-solid fa-wave-square"></i>
+            </div>
+        </div>
+
+        <!-- KHUNG NHẬP THÔNG TIN HỌC SINH (BẮT BUỘC ĐỂ BẮT ĐẦU LÀM BÀI) -->
+        <div id="studentLoginCard" class="bg-white border-2 border-indigo-200 rounded-2xl p-6 sm:p-8 mb-8 shadow-md text-center max-w-xl mx-auto">
+            <div class="w-14 h-14 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center text-2xl mx-auto mb-4 shadow-sm">
+                <i class="fa-solid fa-user-pen"></i>
+            </div>
+            <h2 class="text-xl font-extrabold text-slate-800 mb-2">THÔNG TIN HỌC SINH LÀM BÀI</h2>
+            <p class="text-xs sm:text-sm text-slate-500 mb-6">Vui lòng nhập đầy đủ Họ tên và Lớp để bắt đầu làm bài và lưu điểm vào hệ thống.</p>
+            
+            <div class="space-y-4 text-left mb-6">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Họ và tên học sinh <span class="text-red-500">*</span></label>
+                    <input type="text" id="studentName" placeholder="Ví dụ: Nguyễn Văn An" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Lớp / Trường <span class="text-red-500">*</span></label>
+                    <input type="text" id="studentClass" placeholder="Ví dụ: 11A1" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition-all">
+                </div>
+            </div>
+
+            <button type="button" onclick="startQuizExam()" class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-extrabold text-base rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-play"></i> BẮT ĐẦU LÀM BÀI
+            </button>
+        </div>
+
+        <!-- KHUNG BÀI THI (ẨN KHI CHƯA BẮT ĐẦU) -->
+        <div id="quizContent" class="hidden">
+
+            <!-- Thẻ thông tin học sinh khi đang làm bài -->
+            <div class="bg-indigo-50/80 border border-indigo-200 rounded-xl p-3.5 mb-6 flex items-center justify-between">
+                <div class="text-xs sm:text-sm font-bold text-indigo-950">
+                    <i class="fa-solid fa-user-check text-indigo-600 mr-1.5"></i>
+                    Thí sinh: <span id="activeStudentName" class="text-indigo-700">---</span> • Lớp: <span id="activeStudentClass" class="text-indigo-700">---</span>
+                </div>
+                <span class="text-xs font-bold text-indigo-600 bg-white px-2.5 py-1 rounded-md border border-indigo-200 shadow-xs">
+                    Thời gian: 20 phút
+                </span>
+            </div>
+
+            <!-- ==================== PHẦN I ==================== -->
+            <div class="mb-8">
+                <div class="flex items-center justify-between border-b-2 border-indigo-600 pb-2 mb-4">
+                    <h2 class="text-lg sm:text-xl font-extrabold text-indigo-950 flex items-center gap-2">
+                        <span class="w-7 h-7 bg-indigo-600 text-white rounded-lg flex items-center justify-center text-sm font-black">I</span>
+                        PHẦN I: Câu Trắc Nghiệm Nhiều Phương Án Lựa Chọn
+                    </h2>
+                    <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-200">
+                        9 câu • 4,5 điểm
+                    </span>
+                </div>
+                <p class="text-xs text-slate-500 mb-4 italic">Mỗi câu hỏi thí sinh chỉ chọn một phương án. Mỗi câu đúng được 0,5 điểm.</p>
+
+                <div id="part1Container"></div>
+            </div>
+
+            <!-- ==================== PHẦN II ==================== -->
+            <div class="mb-8">
+                <div class="flex items-center justify-between border-b-2 border-purple-600 pb-2 mb-4">
+                    <h2 class="text-lg sm:text-xl font-extrabold text-purple-950 flex items-center gap-2">
+                        <span class="w-7 h-7 bg-purple-600 text-white rounded-lg flex items-center justify-center text-sm font-black">II</span>
+                        PHẦN II: Câu Trắc Nghiệm Đúng / Sai
+                    </h2>
+                    <span class="text-xs font-bold text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-200">
+                        2 câu • 4,0 điểm
+                    </span>
+                </div>
+                <p class="text-xs text-slate-500 mb-4 italic">Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn Đúng hoặc Sai. Thang điểm phân bậc: Đúng 4 ý = 2,0 đ; Đúng 3 ý = 1,0 đ; Đúng 2 ý = 0,5 đ; Đúng 1 ý = 0,2 đ.</p>
+
+                <div id="part2Container"></div>
+            </div>
+
+            <!-- ==================== PHẦN III ==================== -->
+            <div class="mb-8">
+                <div class="flex items-center justify-between border-b-2 border-emerald-600 pb-2 mb-4">
+                    <h2 class="text-lg sm:text-xl font-extrabold text-emerald-950 flex items-center gap-2">
+                        <span class="w-7 h-7 bg-emerald-600 text-white rounded-lg flex items-center justify-center text-sm font-black">III</span>
+                        PHẦN III: Câu Trắc Nghiệm Trả Lời Ngắn
+                    </h2>
+                    <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                        3 câu • 1,5 điểm
+                    </span>
+                </div>
+                <p class="text-xs text-slate-500 mb-4 italic">Viết đáp số ngắn gọn vào ô trống (tối đa 4 ký tự, ví dụ: 0,5 hoặc 90 hoặc 10). Mỗi câu đúng được 0,5 điểm.</p>
+
+                <div id="part3Container"></div>
+            </div>
+
+            <!-- Nút Nộp Bài Dưới Cùng -->
+            <div class="text-center my-8">
+                <button onclick="submitQuiz()" class="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-extrabold text-base rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
+                    <i class="fa-solid fa-check-circle mr-2"></i> HOÀN THÀNH VÀ NỘP BÀI
+                </button>
+            </div>
+
+            <!-- BẢNG KẾT QUẢ KHI NỘP BÀI (Modal/Card) -->
+            <div id="resultCard" class="hidden bg-white border-2 border-indigo-500 rounded-2xl p-6 sm:p-8 mb-10 shadow-xl">
+                <div class="text-center border-b border-slate-200 pb-5 mb-5">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 text-indigo-700 rounded-full text-3xl mb-3">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <h3 class="text-2xl font-black text-slate-800 mb-1">KẾT QUẢ BÀI LÀM</h3>
+                    <p id="resStudentInfo" class="text-sm font-semibold text-slate-600">Thí sinh: ---</p>
+                    <div class="flex items-center justify-center gap-6 mt-4">
+                        <div class="bg-indigo-50 border border-indigo-200 px-5 py-3 rounded-xl">
+                            <span class="text-xs text-slate-500 block uppercase font-bold">Tổng điểm</span>
+                            <span id="resScore" class="text-3xl font-black text-indigo-700 math-mono">0.0 / 10.0</span>
+                        </div>
+                        <div class="bg-emerald-50 border border-emerald-200 px-5 py-3 rounded-xl">
+                            <span class="text-xs text-slate-500 block uppercase font-bold">Số ý / câu đúng</span>
+                            <span id="resCount" class="text-2xl font-black text-emerald-700 math-mono">0 / 16</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="syncStatus" class="text-center text-xs font-bold text-slate-500 mb-4">
+                    <i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang đồng bộ kết quả về hệ thống Google Sheets...
+                </div>
+
+                <div class="flex flex-wrap items-center justify-center gap-3">
+                    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs sm:text-sm rounded-xl">
+                        <i class="fa-solid fa-arrow-up mr-1"></i> Xem lại đáp án chi tiết
+                    </button>
+                    <a href="Baigiang.html" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm rounded-xl text-decoration-none">
+                        <i class="fa-solid fa-book-open mr-1"></i> Ôn lại lý thuyết Bài 6
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- 🌐 Footer -->
+    <footer class="border-t border-slate-200 bg-white py-6 text-center text-slate-500 text-xs mt-10">
+        <p>&copy; 2026 Vatli102.com • Nền tảng học tập và ôn thi môn Vật lí chuẩn GDPT 2018.</p>
+        <div style="margin-top: 8px;">
+            <a href="../../gioi-thieu.html" class="text-indigo-600 hover:underline">Giới thiệu</a> •
+            <a href="../../lien-he.html" class="text-indigo-600 hover:underline">Liên hệ</a> •
+            <a href="../../index.html" class="text-indigo-600 hover:underline">Trang chủ</a>
+        </div>
+    </footer>
+
+    <!-- ================= JAVASCRIPT QUIZ ENGINE ================= -->
+    <script>
+        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
+
+        // DATA: PART 1 (9 questions, 0.5 pt each = 4.5 pts - 100% SUY LUẬN LÍ THUYẾT)
+        const part1Data = [
+            {
+                q: "Một con lắc lò xo dao động trong không khí. Đại lượng nào sau đây của con lắc luôn giảm dần theo thời gian?",
+                opts: ["Chu kì dao động.", "Biên độ và cơ năng dao động.", "Tần số dao động.", "Pha ban đầu của dao động."],
+                ans: 1,
+                explain: "Dao động tắt dần có biên độ và cơ năng luôn giảm dần theo thời gian do ma sát và lực cản của môi trường."
+            },
+            {
+                q: "Nguyên nhân cốt lõi dẫn đến sự tắt dần của một hệ dao động tự do trong môi trường là",
+                opts: [
+                    "lực đàn hồi của hệ giảm dần theo thời gian.",
+                    "khối lượng của vật dao động bị hao mòn trong quá trình chuyển động.",
+                    "ma sát và lực cản của môi trường sinh công cản làm tiêu hao cơ năng thành nhiệt năng.",
+                    "gia tốc trọng trường thay đổi liên tục theo vị trí của vật."
+                ],
+                ans: 2,
+                explain: "Công của lực cản và ma sát là công cản, làm tiêu tán cơ năng thành nội năng (nhiệt lượng)."
+            },
+            {
+                q: "Khi nói về dao động cưỡng bức ở giai đoạn ổn định, phát biểu nào sau đây là <strong>sai</strong>?",
+                opts: [
+                    "Dao động cưỡng bức là một dao động điều hòa.",
+                    "Tần số của dao động cưỡng bức luôn bằng tần số của ngoại lực cưỡng bức.",
+                    "Tần số của dao động cưỡng bức luôn bằng tần số dao động riêng của hệ.",
+                    "Biên độ của dao động cưỡng bức phụ thuộc vào biên độ của ngoại lực và lực cản môi trường."
+                ],
+                ans: 2,
+                explain: "Phát biểu C sai vì khi ổn định, tần số dao động cưỡng bức luôn bằng tần số của ngoại lực $f_F$, chỉ bằng $f_0$ khi xảy ra hiện tượng cộng hưởng."
+            },
+            {
+                q: "Biên độ của dao động cưỡng bức ở trạng thái ổn định <strong>không</strong> phụ thuộc vào yếu tố nào sau đây?",
+                opts: [
+                    "Biên độ của ngoại lực cưỡng bức.",
+                    "Lực cản và ma sát của môi trường.",
+                    "Độ chênh lệch giữa tần số ngoại lực và tần số riêng của hệ.",
+                    "Pha ban đầu của ngoại lực cưỡng bức."
+                ],
+                ans: 3,
+                explain: "Biên độ dao động cưỡng bức phụ thuộc vào $F_0$, lực cản môi trường và độ lệch $|f - f_0|$, không phụ thuộc vào pha ban đầu của lực."
+            },
+            {
+                q: "Một hệ dao động có tần số riêng $f_0$. Tác dụng vào hệ lần lượt hai ngoại lực cưỡng bức có cùng biên độ nhưng tần số khác nhau là $f_1$ và $f_2$ thỏa mãn $|f_1 - f_0| < |f_2 - f_0|$. Khi ổn định, biên độ dao động tương ứng là $A_1$ và $A_2$. Kết luận nào sau đây đúng?",
+                opts: [
+                    "$A_1 > A_2$.",
+                    "$A_1 < A_2$.",
+                    "$A_1 = A_2$.",
+                    "Chưa đủ dữ kiện để so sánh $A_1$ và $A_2$."
+                ],
+                ans: 0,
+                explain: "Vì $|f_1 - f_0| < |f_2 - f_0|$ (tần số $f_1$ gần tần số riêng $f_0$ hơn so với $f_2$) nên biên độ $A_1 > A_2$."
+            },
+            {
+                q: "Hiện tượng cộng hưởng cơ học xảy ra khi",
+                opts: [
+                    "tần số của ngoại lực cưỡng bức bằng tần số dao động riêng của hệ.",
+                    "lực cản của môi trường đạt giá trị cực đại.",
+                    "biên độ của ngoại lực cưỡng bức đạt giá trị cực tiểu.",
+                    "tần số của ngoại lực cưỡng bức lớn hơn rất nhiều so với tần số riêng của hệ."
+                ],
+                ans: 0,
+                explain: "Điều kiện cộng hưởng cơ học: Tần số của ngoại lực cưỡng bức bằng tần số dao động riêng của hệ ($f = f_0$)."
+            },
+            {
+                q: "Một hệ dao động cơ học có tần số riêng $f_0$. Khi kích thích hệ bằng ngoại lực tuần hoàn có tần số $f$ thay đổi được, người ta quan sát thấy biên độ dao động của hệ đạt giá trị cực đại khi $f = 6\\,\\text{Hz}$. Tần số dao động riêng $f_0$ của hệ là",
+                opts: ["$3\\,\\text{Hz}$.", "$6\\,\\text{Hz}$.", "$12\\,\\text{Hz}$.", "$4\\,\\text{Hz}$."],
+                ans: 1,
+                explain: "Biên độ đạt cực đại khi xảy ra cộng hưởng ($f = f_0$), do đó $f_0 = 6\\,\\text{Hz}$."
+            },
+            {
+                q: "Bộ phận giảm xóc (phuộc nhún) ở bánh xe máy, ô tô hoạt động dựa trên ứng dụng của hiện tượng",
+                opts: [
+                    "cộng hưởng cơ học để tăng độ đàn hồi cho khung xe.",
+                    "dao động tắt dần nhanh nhờ lực cản của dầu nhớt để dập tắt rung lắc.",
+                    "dao động cưỡng bức với tần số biến đổi theo mặt đường.",
+                    "dao động điều hòa không ma sát."
+                ],
+                ans: 1,
+                explain: "Bộ giảm xóc ứng dụng dao động tắt dần nhanh nhờ lực cản của dầu nhớt để triệt tiêu nhanh dao động rung nảy của khung xe."
+            },
+            {
+                q: "Khi một đoàn quân duyệt binh bước đều qua một chiếc cầu treo, chỉ huy thường ra lệnh cho binh lính đi bước một (không bước đều) nhằm mục đích",
+                opts: [
+                    "giảm áp lực tĩnh do trọng lượng đoàn quân tác dụng lên mặt cầu.",
+                    "tránh để tần số nhịp bước chân trùng với tần số riêng của cầu gây ra cộng hưởng làm sập cầu.",
+                    "tăng lực ma sát giữa đế giày của binh lính và mặt đường cầu.",
+                    "làm tăng chu kì dao động riêng của chiếc cầu treo."
+                ],
+                ans: 1,
+                explain: "Đi bước một để nhịp bước chân không tuần hoàn, tránh cộng hưởng làm biên độ dao động của cầu tăng vọt dẫn tới sập cầu."
+            }
+        ];
+
+        // DATA: PART 2 (2 TF questions, 4 items each, 2.0 pts each = 4.0 pts - 100% SUY LUẬN LÍ THUYẾT NÂNG CAO)
+        const part2Data = [
+            {
+                text: "Một học sinh tiến hành nghiên cứu về đặc điểm của dao động tắt dần bằng cách kích thích một con lắc đơn dao động trong các điều kiện môi trường khác nhau:",
+                items: [
+                    { label: "a", q: "Trong quá trình dao động tắt dần, cơ năng của con lắc giảm dần do lực cản môi trường sinh công cản âm chuyển hóa cơ năng thành nội năng (nhiệt lượng).", ans: true, explain: "Đúng. Lực cản không khí sinh công cản âm làm tiêu tán cơ năng thành nội năng." },
+                    { label: "b", q: "Khi con lắc dao động trong nước, dao động sẽ tắt dần nhanh hơn so với khi dao động trong không khí vì lực cản của nước lớn hơn lực cản của không khí.", ans: true, explain: "Đúng. Môi trường có độ nhớt và lực cản càng lớn thì dao động tắt dần càng nhanh." },
+                    { label: "c", q: "Quá trình dao động tắt dần càng nhanh thì số dao động toàn phần mà con lắc thực hiện được cho đến khi dừng lại càng nhiều.", ans: false, explain: "Sai. Dao động tắt càng nhanh thì hệ dừng lại càng sớm, nghĩa là số dao động toàn phần thực hiện được càng ít." },
+                    { label: "d", q: "Trong các thiết bị giảm xóc của xe máy, người ta cố tình tăng lực cản bằng dầu nhớt có độ nhớt thích hợp để làm cho dao động của khung xe tắt càng nhanh càng tốt.", ans: true, explain: "Đúng. Bộ giảm xóc cần dập tắt dao động nảy càng nhanh càng tốt để người ngồi trên xe cảm thấy êm ái." }
+                ]
+            },
+            {
+                text: "Tiến hành thí nghiệm khảo sát dao động cưỡng bức của một hệ cơ học có tần số dao động riêng $f_0 = 5\\,\\text{Hz}$ dưới tác dụng của ngoại lực tuần hoàn $F = F_0 \\cos(2\\pi f t)$ có biên độ $F_0$ không đổi:",
+                items: [
+                    { label: "a", q: "Khi hệ đã dao động ổn định, tần số dao động của hệ luôn bằng tần số $f$ của ngoại lực cưỡng bức, không phụ thuộc vào tần số riêng $f_0$.", ans: true, explain: "Đúng. Sau giai đoạn chuyển tiếp, tần số dao động cưỡng bức ổn định luôn bằng tần số của ngoại lực." },
+                    { label: "b", q: "Nếu giữ nguyên biên độ ngoại lực $F_0$ và tăng tần số $f$ từ $2\\,\\text{Hz}$ lên $8\\,\\text{Hz}$, biên độ dao động của hệ sẽ tăng dần đến giá trị cực đại khi $f = 5\\,\\text{Hz}$ rồi sau đó giảm dần.", ans: true, explain: "Đúng. Khi $f$ tiến từ $2\\,\\text{Hz} \\to 5\\,\\text{Hz}$ ($f_0$), biên độ tăng đến cực đại; khi $f$ tăng từ $5\\,\\text{Hz} \\to 8\\,\\text{Hz}$ (ra xa $f_0$), biên độ giảm." },
+                    { label: "c", q: "Khi thực hiện thí nghiệm trong môi trường có lực cản lớn hơn, hiện tượng cộng hưởng sẽ xảy ra rõ nét hơn với đỉnh cộng hưởng cao hơn và nhọn hơn.", ans: false, explain: "Sai. Lực cản càng lớn thì đỉnh cộng hưởng càng thấp và tù; lực cản càng nhỏ thì cộng hưởng càng cao và nhọn." },
+                    { label: "d", q: "Giữ nguyên tần số ngoại lực ở hai giá trị $f_1 = 3\\,\\text{Hz}$ và $f_2 = 7\\,\\text{Hz}$ (cùng cách đều $f_0 = 5\\,\\text{Hz}$ một khoảng $2\\,\\text{Hz}$), nếu bỏ qua sự phụ thuộc của lực cản vào vận tốc thì biên độ dao động cưỡng bức của hệ trong hai trường hợp này là bằng nhau.", ans: true, explain: "Đúng. Hai tần số $f_1 = 3\\,\\text{Hz}$ và $f_2 = 7\\,\\text{Hz}$ có cùng độ chênh lệch $|f - f_0| = 2\\,\\text{Hz}$ nên đáp ứng biên độ đối xứng bằng nhau ($A_1 = A_2$)." }
+                ]
+            }
+        ];
+
+        // DATA: PART 3 (3 short answers, 0.5 pt each = 1.5 pts)
+        const part3Data = [
+            {
+                q: "Một người xách một xô nước đi bộ trên đường với chiều dài mỗi bước chân là $50\\,\\text{cm}$. Chu kì dao động riêng của nước trong xô là $1\\,\\text{s}$. Để nước trong xô bị sóng sánh mạnh nhất (xảy ra hiện tượng cộng hưởng), người đó phải đi bộ với tốc độ bằng bao nhiêu $\\text{m/s}$?",
+                accepts: ["0,5", "0.5", ".5", "0,50"],
+                displayAns: "0,5",
+                unit: "m/s",
+                explain: "Cộng hưởng xảy ra khi $T = T_0 = 1\\,\\text{s}$. Tốc độ đi bộ: $v = \\frac{s}{T} = \\frac{0,5\\,\\text{m}}{1\\,\\text{s}} = 0,5\\,\\text{m/s}$."
+            },
+            {
+                q: "Một con lắc lò xo gồm vật nặng $m = 250\\,\\text{g}$ dao động cưỡng bức dưới tác dụng của ngoại lực tuần hoàn. Khi thay đổi tần số của ngoại lực thì thấy biên độ dao động của con lắc đạt giá trị cực đại khi tần số ngoại lực bằng $3\\,\\text{Hz}$. Lấy $\\pi^2 \\approx 10$. Tính độ cứng $k$ của lò xo theo đơn vị $\\text{N/m}$.",
+                accepts: ["90", "90,0", "90.0"],
+                displayAns: "90",
+                unit: "N/m",
+                explain: "Tại cộng hưởng: $f_0 = 3\\,\\text{Hz} \\implies \\omega_0 = 2\\pi f_0 = 6\\pi\\,\\text{rad/s}$. Độ cứng lò xo: $k = m\\omega_0^2 = 0,25 \\cdot (6\\pi)^2 = 0,25 \\cdot 36 \\cdot 10 = 90\\,\\text{N/m}$."
+            },
+            {
+                q: "Một đoàn tàu chuyển động đều trên một đường ray, mỗi thanh ray có chiều dài $12,5\\,\\text{m}$. Ở chỗ nối các thanh ray có một khe hở nhỏ. Khung xe của toa tàu là một hệ dao động có chu kì dao động riêng $T_0 = 1,25\\,\\text{s}$. Đoàn tàu chạy với tốc độ bằng bao nhiêu $\\text{m/s}$ thì các toa tàu rung lắc mạnh nhất?",
+                accepts: ["10", "10,0", "10.0"],
+                displayAns: "10",
+                unit: "m/s",
+                explain: "Xảy ra cộng hưởng khi chu kì kích động bằng chu kì riêng: $T = T_0 = 1,25\\,\\text{s}$. Tốc độ đoàn tàu: $v = \\frac{L}{T} = \\frac{12,5\\,\\text{m}}{1,25\\,\\text{s}} = 10\\,\\text{m/s}$."
+            }
+        ];
+
+        // RENDER QUESTIONS
+        function renderQuiz() {
+            // Part 1
+            const p1 = document.getElementById('part1Container');
+            p1.innerHTML = part1Data.map((item, idx) => `
+                <div class="question-card" id="q1_${idx}">
+                    <div class="flex items-start gap-2 mb-3">
+                        <span class="px-2.5 py-0.5 bg-indigo-100 text-indigo-800 text-xs font-extrabold rounded-md mt-0.5">Câu ${idx + 1}</span>
+                        <div class="font-semibold text-slate-800 text-sm sm:text-base leading-relaxed flex-1">${item.q}</div>
+                    </div>
+                    <div class="grid grid-cols-1 gap-2 mt-3">
+                        ${item.opts.map((opt, oIdx) => `
+                            <label class="option-label" id="lbl_p1_${idx}_${oIdx}" onclick="selectOption(${idx}, ${oIdx})">
+                                <input type="radio" name="p1_q${idx}" value="${oIdx}" class="mt-1 text-indigo-600 focus:ring-indigo-500">
+                                <span class="text-xs sm:text-sm font-medium text-slate-700 leading-snug"><strong>${String.fromCharCode(65 + oIdx)}.</strong> ${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div id="exp_p1_${idx}" class="hidden mt-3 p-3 bg-indigo-50/70 border border-indigo-200 rounded-xl text-xs text-indigo-950 font-medium"></div>
+                </div>
+            `).join('');
+
+            // Part 2
+            const p2 = document.getElementById('part2Container');
+            p2.innerHTML = part2Data.map((item, idx) => `
+                <div class="question-card" id="q2_${idx}">
+                    <div class="flex items-start gap-2 mb-3">
+                        <span class="px-2.5 py-0.5 bg-purple-100 text-purple-800 text-xs font-extrabold rounded-md mt-0.5">Câu ${idx + 1}</span>
+                        <div class="font-semibold text-slate-800 text-sm sm:text-base leading-relaxed flex-1">${item.text}</div>
+                    </div>
+                    <div class="space-y-3 mt-3">
+                        ${item.items.map((sub, sIdx) => `
+                            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3" id="box_p2_${idx}_${sIdx}">
+                                <div class="text-xs sm:text-sm font-medium text-slate-700 leading-snug flex-1">
+                                    <strong class="text-purple-700 font-bold">${sub.label})</strong> ${sub.q}
+                                </div>
+                                <div class="flex items-center gap-3 self-end sm:self-center">
+                                    <label class="flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-white border border-slate-300 px-3 py-1.5 rounded-lg cursor-pointer hover:bg-emerald-50">
+                                        <input type="radio" name="p2_q${idx}_s${sIdx}" value="true" class="text-emerald-600 focus:ring-emerald-500"> Đúng
+                                    </label>
+                                    <label class="flex items-center gap-1.5 text-xs font-bold text-rose-700 bg-white border border-slate-300 px-3 py-1.5 rounded-lg cursor-pointer hover:bg-rose-50">
+                                        <input type="radio" name="p2_q${idx}_s${sIdx}" value="false" class="text-rose-600 focus:ring-rose-500"> Sai
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="exp_p2_${idx}_${sIdx}" class="hidden p-2.5 bg-purple-50/70 border border-purple-200 rounded-lg text-xs text-purple-950 font-medium -mt-1 mb-2"></div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            // Part 3
+            const p3 = document.getElementById('part3Container');
+            p3.innerHTML = part3Data.map((item, idx) => `
+                <div class="question-card" id="q3_${idx}">
+                    <div class="flex items-start gap-2 mb-3">
+                        <span class="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 text-xs font-extrabold rounded-md mt-0.5">Câu ${idx + 1}</span>
+                        <div class="font-semibold text-slate-800 text-sm sm:text-base leading-relaxed flex-1">${item.q}</div>
+                    </div>
+                    <div class="mt-3 flex items-center gap-3">
+                        <span class="text-xs font-bold text-slate-600">Đáp số:</span>
+                        <input type="text" id="ans_p3_${idx}" maxlength="4" placeholder="..." class="w-32 px-3 py-2 border-2 border-slate-300 rounded-xl text-center text-sm font-bold math-mono focus:outline-none focus:border-emerald-600">
+                        <span class="text-xs font-bold text-slate-500">${item.unit}</span>
+                    </div>
+                    <div id="exp_p3_${idx}" class="hidden mt-3 p-3 bg-emerald-50/70 border border-emerald-200 rounded-xl text-xs text-emerald-950 font-medium"></div>
+                </div>
+            `).join('');
+        }
+
+        function selectOption(qIdx, oIdx) {
+            for (let i = 0; i < 4; i++) {
+                const el = document.getElementById(`lbl_p1_${qIdx}_${i}`);
+                if (el) el.classList.remove('selected');
+            }
+            const activeEl = document.getElementById(`lbl_p1_${qIdx}_${oIdx}`);
+            if (activeEl) activeEl.classList.add('selected');
+            const radio = activeEl.querySelector('input[type="radio"]');
+            if (radio) radio.checked = true;
+        }
+
+        // START EXAM FLOW
+        let timerInterval = null;
+        let timeLeft = 20 * 60; // 20 minutes
+
+        function startQuizExam() {
+            const name = document.getElementById('studentName').value.trim();
+            const className = document.getElementById('studentClass').value.trim();
+
+            if (!name) {
+                alert('Vui lòng nhập Họ và tên của em để bắt đầu làm bài!');
+                document.getElementById('studentName').focus();
+                return;
+            }
+
+            // Hide login card & show quiz content
+            document.getElementById('studentLoginCard').classList.add('hidden');
+            document.getElementById('quizContent').classList.remove('hidden');
+            document.getElementById('stickyTimerBar').classList.remove('hidden');
+
+            // Update student header info
+            document.getElementById('studentDisplay').textContent = `HS: ${name}${className ? ' (' + className + ')' : ''}`;
+            document.getElementById('activeStudentName').textContent = name;
+            document.getElementById('activeStudentClass').textContent = className || "Tự do";
+
+            // Render Questions & MathJax
+            renderQuiz();
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+
+            // Start 20-minute countdown timer
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Hết thời gian làm bài (20 phút)! Hệ thống sẽ tự động nộp bài.');
+                    submitQuiz();
+                    return;
+                }
+                timeLeft--;
+                const mins = Math.floor(timeLeft / 60);
+                const secs = timeLeft % 60;
+                document.getElementById('timerText').textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }, 1000);
+
+            // Smooth scroll to top of quiz content
+            document.getElementById('quizContent').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // SUBMIT & SCORING (RULE 8 + RULE 9)
+        let isSubmitted = false;
+        function submitQuiz() {
+            if (isSubmitted) return;
+            const name = document.getElementById('studentName').value.trim();
+            const className = document.getElementById('studentClass').value.trim();
+
+            if (!confirm('Em có chắc chắn muốn nộp bài để chấm điểm và xem giải thích chi tiết không?')) {
+                return;
+            }
+
+            isSubmitted = true;
+            if (timerInterval) clearInterval(timerInterval);
+
+            let totalScore = 0.0;
+            let totalCorrectItems = 0;
+
+            // 1. Grade Part 1 (9 MCQ x 0.5 = 4.5 pts)
+            part1Data.forEach((item, idx) => {
+                const selectedRadio = document.querySelector(`input[name="p1_q${idx}"]:checked`);
+                const userAns = selectedRadio ? parseInt(selectedRadio.value) : -1;
+                const isCorrect = userAns === item.ans;
+
+                if (isCorrect) {
+                    totalScore += 0.5;
+                    totalCorrectItems++;
+                }
+
+                // UI feedback
+                for (let o = 0; o < 4; o++) {
+                    const lbl = document.getElementById(`lbl_p1_${idx}_${o}`);
+                    if (o === item.ans) {
+                        lbl.classList.add('correct');
+                    } else if (o === userAns && !isCorrect) {
+                        lbl.classList.add('incorrect');
+                    }
+                }
+                const exp = document.getElementById(`exp_p1_${idx}`);
+                exp.innerHTML = `<strong>${isCorrect ? '✅ Chính xác (+0,5 điểm)' : '❌ Chưa chính xác (0 điểm)'}:</strong> ${item.explain}`;
+                exp.classList.remove('hidden');
+            });
+
+            // 2. Grade Part 2 (2 TF x 2.0 = 4.0 pts - Step scale)
+            // 4 correct: 2.0; 3: 1.0; 2: 0.5; 1: 0.2; 0: 0
+            part2Data.forEach((item, idx) => {
+                let correctCountInQ = 0;
+                item.items.forEach((sub, sIdx) => {
+                    const selectedRadio = document.querySelector(`input[name="p2_q${idx}_s${sIdx}"]:checked`);
+                    const userVal = selectedRadio ? (selectedRadio.value === 'true') : null;
+                    const isSubCorrect = userVal === sub.ans;
+
+                    const box = document.getElementById(`box_p2_${idx}_${sIdx}`);
+                    if (isSubCorrect) {
+                        correctCountInQ++;
+                        totalCorrectItems++;
+                        box.classList.add('bg-emerald-50/80', 'border-emerald-300');
+                    } else {
+                        box.classList.add('bg-rose-50/80', 'border-rose-300');
+                    }
+
+                    const exp = document.getElementById(`exp_p2_${idx}_${sIdx}`);
+                    exp.innerHTML = `<strong>${isSubCorrect ? '✅ Đúng' : '❌ Sai'} (Đáp án chuẩn: ${sub.ans ? 'ĐÚNG' : 'SAI'}):</strong> ${sub.explain}`;
+                    exp.classList.remove('hidden');
+                });
+
+                let qScore = 0.0;
+                if (correctCountInQ === 4) qScore = 2.0;
+                else if (correctCountInQ === 3) qScore = 1.0;
+                else if (correctCountInQ === 2) qScore = 0.5;
+                else if (correctCountInQ === 1) qScore = 0.2;
+                else qScore = 0.0;
+
+                totalScore += qScore;
+            });
+
+            // 3. Grade Part 3 (3 Short Answer x 0.5 = 1.5 pts)
+            part3Data.forEach((item, idx) => {
+                const inputEl = document.getElementById(`ans_p3_${idx}`);
+                const userVal = inputEl.value.trim().toLowerCase().replace(/\s+/g, '');
+                const isCorrect = item.accepts.some(a => a.toLowerCase().replace(/\s+/g, '') === userVal);
+
+                if (isCorrect) {
+                    totalScore += 0.5;
+                    totalCorrectItems++;
+                    inputEl.classList.add('bg-emerald-50', 'border-emerald-500', 'text-emerald-700');
+                } else {
+                    inputEl.classList.add('bg-rose-50', 'border-rose-500', 'text-rose-700');
+                }
+
+                const exp = document.getElementById(`exp_p3_${idx}`);
+                exp.innerHTML = `<strong>${isCorrect ? '✅ Chính xác (+0,5 điểm)' : '❌ Chưa chính xác (0 điểm)'} (Đáp số chuẩn: ${item.displayAns} ${item.unit}):</strong> ${item.explain}`;
+                exp.classList.remove('hidden');
+            });
+
+            // Display Results
+            totalScore = Math.round(totalScore * 10) / 10;
+            const resCard = document.getElementById('resultCard');
+            resCard.classList.remove('hidden');
+            document.getElementById('resStudentInfo').textContent = `Thí sinh: ${name} • Lớp: ${className || 'Tự do'}`;
+            document.getElementById('resScore').textContent = `${totalScore.toFixed(1)} / 10.0`;
+            document.getElementById('resCount').textContent = `${totalCorrectItems} / 16`;
+
+            // Confetti if high score
+            if (totalScore >= 8.0 && typeof confetti === 'function') {
+                confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+            }
+
+            // Sync to Google Sheets (Rule 9)
+            syncToGoogleSheets(name, className, totalCorrectItems, totalScore);
+
+            // Scroll to result card
+            resCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        function syncToGoogleSheets(name, className, correct, score) {
+            const statusEl = document.getElementById('syncStatus');
+            const payload = {
+                name: name,
+                className: className || "Không ghi rõ",
+                lesson: "Bài 6: Dao động tắt dần - Cộng hưởng",
+                correct: `${correct}/16`,
+                score: score
+            };
+
+            fetch(GOOGLE_SHEETS_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                statusEl.innerHTML = '<span class="text-emerald-600"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Kết quả đã được tự động lưu về Google Sheets của giáo viên!</span>';
+            }).catch(() => {
+                statusEl.innerHTML = '<span class="text-amber-600"><i class="fa-solid fa-circle-exclamation mr-1"></i> Không thể kết nối tới Google Sheets (kết quả hiển thị cục bộ).</span>';
+            });
+        }
+    </script>
+
+</body>
+</html>
