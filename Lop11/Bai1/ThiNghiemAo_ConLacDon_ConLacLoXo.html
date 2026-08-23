@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thí Nghiệm Ảo: Con Lắc Đơn & Con Lắc Lò Xo - Vật Lí 11 | Vatli102.com</title>
+    <meta name="description" content="Thí nghiệm ảo Vật lí 11: Khảo sát dao động của con lắc đơn và con lắc lò xo, vị trí cân bằng, vị trí biên, băng giấy ghi vết hình sin.">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --accent-cyan: #06b6d4;
+            --accent-amber: #f59e0b;
+            --accent-emerald: #10b981;
+            --accent-rose: #f43f5e;
+            --bg-lab: #0f172a;
+            --panel-bg: #1e293b;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .lab-card {
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+
+        .tab-btn {
+            padding: 12px 18px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: #475569;
+            background: #f1f5f9;
+            border: 1px solid transparent;
+        }
+
+        .tab-btn:hover {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .tab-btn.active {
+            background: #4f46e5;
+            color: #ffffff;
+            border-color: #4338ca;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        }
+
+        .param-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 12px 16px;
+        }
+
+        .digital-display {
+            background: #020617;
+            border: 1.5px solid #334155;
+            border-radius: 10px;
+            padding: 8px 12px;
+            color: #38bdf8;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            text-align: right;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.6);
+        }
+
+        .vector-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+        }
+
+        canvas {
+            touch-action: none;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- 🌐 Header Navigation -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
+            <a href="../../index.html" class="flex items-center gap-2 text-decoration-none">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-cyan-500 flex items-center justify-center text-white font-bold text-base shadow-sm">
+                    <i class="fa-solid fa-atom"></i>
+                </div>
+                <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-indigo-700 via-purple-600 to-cyan-600 bg-clip-text text-transparent">Vatli102.com</span>
+            </a>
+            <ul class="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm font-semibold text-slate-600 list-none m-0 p-0">
+                <li><a href="ly-thuyet.html" class="hover:text-indigo-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-book-open"></i> Bài học</a></li>
+                <li><a href="TracNghiem_Online.html" class="hover:text-indigo-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-pen-to-square"></i> Trắc nghiệm</a></li>
+                <li><a href="MoPhong_DaoDong_TronDeu.html" class="hover:text-indigo-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-circle-notch"></i> Tròn đều & DĐĐH</a></li>
+                <li><a href="../../index.html" class="hover:text-indigo-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- 📖 Main Lab Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
+
+        <!-- Banner Tiêu Đề -->
+        <div class="bg-gradient-to-r from-indigo-950 via-slate-900 to-slate-950 text-white rounded-3xl p-6 sm:p-8 mb-6 shadow-xl border border-indigo-900/50 relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/20 backdrop-blur-md rounded-full text-indigo-300 text-xs font-bold uppercase tracking-wider mb-3 border border-indigo-400/30">
+                    <i class="fa-solid fa-flask-vial text-cyan-400"></i> Thí Nghiệm Ảo Vật Lí 11
+                </div>
+                <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight mb-2 text-white">
+                    KHẢO SÁT DAO ĐỘNG CƠ HỌC: CON LẮC ĐƠN & CON LẮC LÒ XO
+                </h1>
+            </div>
+            <div class="absolute -right-6 -bottom-10 opacity-10 text-indigo-400 text-9xl pointer-events-none">
+                <i class="fa-solid fa-arrows-left-right"></i>
+            </div>
+        </div>
+
+        <!-- Thanh Điều Hướng 4 Chế Độ Thí Nghiệm -->
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-5 p-2 bg-slate-100/80 rounded-2xl border border-slate-200">
+            <button class="tab-btn active" id="tabSpring" onclick="switchLabMode('spring')">
+                <i class="fa-solid fa-cubes-stacked text-indigo-400"></i> 1. Con Lắc Lò Xo
+            </button>
+            <button class="tab-btn" id="tabPendulum" onclick="switchLabMode('pendulum')">
+                <i class="fa-solid fa-bell text-amber-400"></i> 2. Con Lắc Đơn
+            </button>
+            <button class="tab-btn" id="tabPaper" onclick="switchLabMode('paper')">
+                <i class="fa-solid fa-tape text-emerald-400"></i> 3. Băng Giấy Ghi Vết Hình Sin
+            </button>
+            <button class="tab-btn" id="tabDual" onclick="switchLabMode('dual')">
+                <i class="fa-solid fa-columns text-cyan-400"></i> 4. So Sánh Song Song 2 Con Lắc
+            </button>
+        </div>
+
+        <!-- ================= KHUNG MÔ PHỎNG CHÍNH ================= -->
+        <div class="lab-card p-4 sm:p-6 mb-6">
+
+            <!-- Lưới 2 Cột: Khung Canvas Thí Nghiệm (Trái) & Khung Đồ Thị / Dữ Liệu (Phải) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 mb-5">
+                
+                <!-- CỘT TRÁI: KHUNG VẬT THỂ THÍ NGHIỆM TƯƠNG TÁC TRỰC TIẾP (7 CỘT) -->
+                <div class="lg:col-span-7 flex flex-col bg-slate-950 rounded-2xl p-4 border border-slate-800 shadow-inner relative overflow-hidden">
+                    
+                    <!-- Header Canvas: Tên mô hình & Nút tương tác nhanh -->
+                    <div class="flex items-center justify-between pb-3 mb-2 border-b border-slate-800 text-xs">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span id="canvasTitle" class="font-extrabold text-slate-200 tracking-wide">MÔ HÌNH THÍ NGHIỆM CON LẮC LÒ XO</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="toggleSlowMo()" id="btnSlowMo" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-amber-400 rounded-lg text-[11px] font-bold border border-slate-700 transition" title="Đổi tốc độ chuyển động chậm">
+                                <i class="fa-solid fa-gauge-high mr-1"></i> <span id="speedText">0.4x (Chậm)</span>
+                            </button>
+                            <button onclick="resetLab()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-[11px] font-bold border border-slate-700 transition" title="Đặt lại vị trí ban đầu">
+                                <i class="fa-solid fa-rotate-left"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Canvas mô phỏng chính -->
+                    <div class="relative w-full flex-grow flex items-center justify-center bg-slate-900/90 rounded-xl border border-slate-800/80 overflow-hidden" style="min-height: 380px;">
+                        <canvas id="simCanvas" width="640" height="420" class="w-full h-auto cursor-grab active:cursor-grabbing"></canvas>
+                        
+                        <!-- Lời nhắc kéo thả -->
+                        <div id="dragHint" class="absolute bottom-3 left-3 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-lg border border-slate-700/70 text-[11px] text-cyan-300 pointer-events-none flex items-center gap-1.5 shadow-md">
+                            <i class="fa-solid fa-hand-pointer animate-bounce"></i> Dùng chuột / ngón tay kéo thả vật để tạo dao động
+                        </div>
+
+                        <!-- Vị trí Đồng hồ bấm giây ảo nổi trên góc phải -->
+                        <div id="floatingStopwatch" class="absolute top-3 right-3 bg-slate-950/90 backdrop-blur-md border border-slate-700 rounded-xl p-2.5 text-center shadow-lg w-36">
+                            <div class="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1 flex items-center justify-between">
+                                <span><i class="fa-solid fa-stopwatch text-amber-400"></i> Bấm giây</span>
+                                <span id="lapCount" class="text-cyan-400 font-mono">Lap: 0</span>
+                            </div>
+                            <div id="stopwatchDisplay" class="font-mono text-base font-extrabold text-amber-400 bg-slate-900 py-1 px-2 rounded border border-slate-800 mb-1.5">
+                                00:00.00
+                            </div>
+                            <div class="flex items-center justify-center gap-1">
+                                <button onclick="toggleStopwatch()" id="btnStopwatch" class="px-2 py-0.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-[10px] font-bold transition">
+                                    <i class="fa-solid fa-play" id="iconStopwatch"></i>
+                                </button>
+                                <button onclick="lapStopwatch()" class="px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-cyan-300 rounded text-[10px] font-bold transition" title="Ghi 1 chu kì">
+                                    Lap
+                                </button>
+                                <button onclick="resetStopwatch()" class="px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded text-[10px] font-bold transition">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bảng tùy chọn hiển thị Vector & Đường gióng vị trí -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 mt-3 pt-2.5 border-t border-slate-800 text-xs text-slate-300">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="font-bold text-slate-400 mr-1">Hiển thị:</span>
+                            <label class="vector-badge bg-emerald-500/15 border border-emerald-500/40 text-emerald-300">
+                                <input type="checkbox" id="chkShowV" checked class="accent-emerald-500" onchange="redrawCanvas()"> Vận tốc $\vec{v}$
+                            </label>
+                            <label class="vector-badge bg-rose-500/15 border border-rose-500/40 text-rose-300">
+                                <input type="checkbox" id="chkShowA" checked class="accent-rose-500" onchange="redrawCanvas()"> Gia tốc $\vec{a}$
+                            </label>
+                            <label class="vector-badge bg-amber-500/15 border border-amber-500/40 text-amber-300">
+                                <input type="checkbox" id="chkShowF" checked class="accent-amber-500" onchange="redrawCanvas()"> Lực $\vec{F}$
+                            </label>
+                            <label class="vector-badge bg-cyan-500/15 border border-cyan-500/40 text-cyan-300">
+                                <input type="checkbox" id="chkShowMarks" checked class="accent-cyan-500" onchange="redrawCanvas()"> Mốc VTCB & Biên
+                            </label>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <label class="vector-badge bg-slate-800 border border-slate-700 text-slate-300">
+                                <input type="checkbox" id="chkRuler" onchange="redrawCanvas()"> <i class="fa-solid fa-ruler-combined mr-1"></i> Thước đo
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- CỘT PHẢI: ĐỒ THỊ LI ĐỘ - THỜI GIAN THỜI GIAN THỰC & CƠ NĂNG (5 CỘT) -->
+                <div class="lg:col-span-5 flex flex-col justify-between bg-slate-950 rounded-2xl p-4 border border-slate-800 shadow-inner">
+                    
+                    <!-- Header Đồ thị -->
+                    <div class="flex items-center justify-between pb-3 mb-2 border-b border-slate-800 text-xs">
+                        <div class="flex items-center gap-1.5 font-bold text-slate-200">
+                            <i class="fa-solid fa-chart-line text-cyan-400"></i> Đồ Thị Li Độ - Thời Gian ($x - t$)
+                        </div>
+                        <div class="text-[11px] font-mono text-slate-400" id="graphTimeDisplay">
+                            t = 0.00 s
+                        </div>
+                    </div>
+
+                    <!-- Canvas Đồ thị li độ - thời gian -->
+                    <div class="relative w-full bg-slate-900/90 rounded-xl border border-slate-800 overflow-hidden mb-3" style="height: 220px;">
+                        <canvas id="graphCanvas" width="480" height="220" class="w-full h-full"></canvas>
+                    </div>
+
+                    <!-- Thanh Biểu Diễn Động Năng, Thế Năng & Cơ Năng Bảo Toàn -->
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 mb-3">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-300 mb-1.5">
+                            <span>Sự chuyển hóa Năng lượng:</span>
+                            <span class="font-mono text-indigo-400" id="totalEnergyText">W = 0.050 J</span>
+                        </div>
+                        <!-- Cột năng lượng phân đoạn -->
+                        <div class="w-full bg-slate-950 h-4 rounded-full overflow-hidden flex p-0.5 border border-slate-800">
+                            <div id="barKinetic" class="bg-emerald-500 h-full transition-all duration-75 rounded-l" style="width: 50%;" title="Động năng"></div>
+                            <div id="barPotential" class="bg-indigo-500 h-full transition-all duration-75 rounded-r" style="width: 50%;" title="Thế năng"></div>
+                        </div>
+                        <div class="flex items-center justify-between text-[11px] text-slate-400 mt-1.5 font-semibold">
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Động năng: <b id="textWd" class="text-emerald-400 font-mono">0.025 J</b></span>
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span> Thế năng: <b id="textWt" class="text-indigo-300 font-mono">0.025 J</b></span>
+                        </div>
+                    </div>
+
+                    <!-- 4 Ô Thông Số Đo Đạc Tức Thời Chuẩn Xác -->
+                    <div class="grid grid-cols-2 gap-2 text-center">
+                        <div class="bg-slate-900/80 border border-slate-800 p-2 rounded-xl">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase block">Li độ ($x$ hoặc $\alpha$)</span>
+                            <span id="dispX" class="text-base font-extrabold text-cyan-400 font-mono">+5,0 cm</span>
+                        </div>
+                        <div class="bg-slate-900/80 border border-slate-800 p-2 rounded-xl">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase block">Vận tốc ($v$)</span>
+                            <span id="dispV" class="text-base font-extrabold text-emerald-400 font-mono">0,00 m/s</span>
+                        </div>
+                        <div class="bg-slate-900/80 border border-slate-800 p-2 rounded-xl">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase block">Gia tốc ($a$)</span>
+                            <span id="dispA" class="text-base font-extrabold text-rose-400 font-mono">-2,00 m/s²</span>
+                        </div>
+                        <div class="bg-slate-900/80 border border-slate-800 p-2 rounded-xl">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase block">Chu kì lí thuyết ($T$)</span>
+                            <span id="dispT" class="text-base font-extrabold text-amber-400 font-mono">1,00 s</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- THANH ĐIỀU KHIỂN & BẢNG THIẾT LẬP THAM SỐ THỰC NGHIỆM -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5">
+                
+                <!-- Hàng 1: Nút điều khiển Play/Pause/Reset/Step -->
+                <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-200">
+                    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                        <button onclick="togglePlay()" id="btnPlay" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm rounded-xl shadow-md transition flex items-center gap-2">
+                            <i class="fa-solid fa-play" id="iconPlay"></i> <span id="textPlay">Bắt Đầu Dao Động</span>
+                        </button>
+                        <button onclick="stepForward()" class="px-3.5 py-2.5 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-xl border border-slate-300 transition flex items-center gap-1.5 shadow-sm" title="Bước tới 1 khung hình (0.02s)">
+                            <i class="fa-solid fa-forward-step"></i> Từng bước
+                        </button>
+                        <button onclick="resetLab()" class="px-3.5 py-2.5 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-xl border border-slate-300 transition flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-rotate-left"></i> Đặt lại
+                        </button>
+
+                        <!-- Thanh trượt điều chỉnh tốc độ chạy chậm / nhanh -->
+                        <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-slate-300 shadow-sm ml-1">
+                            <span class="text-xs font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-gauge text-indigo-600"></i> Tốc độ:</span>
+                            <input type="range" id="sliderSpeed" min="0.1" max="1.2" step="0.05" value="0.4" class="w-24 accent-indigo-600 cursor-pointer" oninput="changeSimulationSpeed(this.value)">
+                            <span id="dispSpeedVal" class="text-xs font-mono font-extrabold text-indigo-700 w-10">0.4x</span>
+                        </div>
+                    </div>
+
+                    <!-- Chế độ âm thanh gõ nhịp & Băng giấy -->
+                    <div class="flex items-center gap-3 text-xs font-bold text-slate-600">
+                        <label class="flex items-center gap-2 cursor-pointer select-none">
+                            <input type="checkbox" id="chkSound" class="accent-indigo-600"> Âm thanh qua VTCB
+                        </label>
+                        <button onclick="takeSnapshot()" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg text-xs font-bold transition flex items-center gap-1">
+                            <i class="fa-solid fa-camera"></i> Chụp ảnh
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Hàng 2: Bảng Điều Chỉnh Tham Số (Động theo Tab hiện tại) -->
+                <div id="controlsSpring" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="param-card">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-700 mb-1">
+                            <span>Khối lượng vật ($m$):</span>
+                            <span id="dispMassVal" class="text-indigo-700 font-mono font-extrabold">500 g</span>
+                        </div>
+                        <input type="range" id="sliderMass" min="100" max="1000" step="50" value="500" class="w-full accent-indigo-600" oninput="updateSpringParams()">
+                        <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-semibold">
+                            <span>100 g</span><span>500 g</span><span>1000 g</span>
+                        </div>
+                    </div>
+
+                    <div class="param-card">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-700 mb-1">
+                            <span>Độ cứng lò xo ($k$):</span>
+                            <span id="dispKVal" class="text-indigo-700 font-mono font-extrabold">10 N/m</span>
+                        </div>
+                        <input type="range" id="sliderK" min="5" max="50" step="1" value="10" class="w-full accent-indigo-600" oninput="updateSpringParams()">
+                        <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-semibold">
+                            <span>5 N/m</span><span>25 N/m</span><span>50 N/m</span>
+                        </div>
+                    </div>
+
+                    <div class="param-card">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-700 mb-1">
+                            <span>Biên độ kéo ban đầu ($A$):</span>
+                            <span id="dispAmpVal" class="text-indigo-700 font-mono font-extrabold">6,0 cm</span>
+                        </div>
+                        <input type="range" id="sliderAmp" min="20" max="100" step="5" value="60" class="w-full accent-indigo-600" oninput="updateSpringParams()">
+                        <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-semibold">
+                            <span>2 cm</span><span>6 cm</span><span>10 cm</span>
+                        </div>
+                    </div>
+
+                    <div class="param-card">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-700 mb-1">
+                            <span>Kiểu lò xo:</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mt-1">
+                            <button onclick="setSpringOrientation('vertical')" id="btnSpringVert" class="py-1 px-2 rounded-lg text-xs font-bold bg-indigo-600 text-white transition">Thẳng đứng</button>
+                            <button onclick="setSpringOrientation('horizontal')" id="btnSpringHoriz" class="py-1 px-2 rounded-lg text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">Nằm ngang</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tham số Con lắc đơn -->
+                <div id="controlsPendulum" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="param-card">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-700 mb-1">
+                            <span>Chiều dài dây ($l$):</span>
+                            <span id="dispLengthVal" class="text-amber-700 font-mono font-extrabold">0,80 m</span>
+                        </div>
+                        <input type="range" id="sliderLength" min="0.2" max="1.5" step="0.05" value="0.8" class="w-full accent-amber-600" oninput="updatePendulumParams()">
+                        <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-semibold">
+                            <span>0.2 m</span><span>0.8 m</span><span>1.5 m</span>
+                        </div>
+                    </div>
+
+                    <div class="param-card">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-700 mb-1">
+                            <span>Góc lệch ban đầu ($\alpha_0$):</span>
+                            <span id="dispAngleVal" class="text-amber-700 font-mono font-extrabold">10,0°</span>
+                        </div>
+                        <input type="range" id="sliderAngle" min="2" max="45" step="1" value="10" class="w-full accent-amber-600" oninput="updatePendulumParams()">
+                        <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-semibold">
+                            <span>2° (Góc nhỏ)</span><span>20°</span><span>45°</span>
+                        </div>
+                    </div>
+
+                    <div class="param-card">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-700 mb-1">
+                            <span>Khối lượng quả cầu ($m$):</span>
+                            <span id="dispPendMassVal" class="text-amber-700 font-mono font-extrabold">100 g</span>
+                        </div>
+                        <input type="range" id="sliderPendMass" min="50" max="500" step="10" value="100" class="w-full accent-amber-600" oninput="updatePendulumParams()">
+                        <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-semibold">
+                            <span>50 g</span><span>250 g</span><span>500 g</span>
+                        </div>
+                    </div>
+
+                    <div class="param-card">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-700 mb-1">
+                            <span>Trọng trường ($g$):</span>
+                            <span id="dispGVal" class="text-amber-700 font-mono font-extrabold">9,8 m/s²</span>
+                        </div>
+                        <select id="selectG" onchange="changeGravity(this.value)" class="w-full mt-1 bg-white border border-slate-300 rounded-lg py-1 px-2 text-xs font-bold text-slate-700">
+                            <option value="9.8">Trái Đất (g = 9.8 m/s²)</option>
+                            <option value="1.62">Mặt Trăng (g = 1.62 m/s²)</option>
+                            <option value="3.71">Sao Hỏa (g = 3.71 m/s²)</option>
+                            <option value="24.79">Sao Mộc (g = 24.79 m/s²)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Tham số Băng giấy ghi vết (SGK Hình 1.2) -->
+                <div id="controlsPaper" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="param-card">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-700 mb-1">
+                            <span>Vận tốc kéo băng giấy ($v_{giấy}$):</span>
+                            <span id="dispPaperSpeed" class="text-emerald-700 font-mono font-extrabold">5,0 cm/s</span>
+                        </div>
+                        <input type="range" id="sliderPaperSpeed" min="2" max="15" step="1" value="5" class="w-full accent-emerald-600" oninput="updatePaperParams()">
+                    </div>
+
+                    <div class="param-card">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-700 mb-1">
+                            <span>Màu mực vẽ trên giấy:</span>
+                        </div>
+                        <div class="flex items-center gap-2 mt-1">
+                            <button onclick="setInkColor('#38bdf8')" class="w-7 h-7 rounded-full bg-cyan-400 border-2 border-white shadow-sm"></button>
+                            <button onclick="setInkColor('#f43f5e')" class="w-7 h-7 rounded-full bg-rose-500 border-2 border-white shadow-sm"></button>
+                            <button onclick="setInkColor('#10b981')" class="w-7 h-7 rounded-full bg-emerald-500 border-2 border-white shadow-sm"></button>
+                            <button onclick="setInkColor('#818cf8')" class="w-7 h-7 rounded-full bg-indigo-400 border-2 border-white shadow-sm"></button>
+                        </div>
+                    </div>
+
+                    <div class="param-card flex items-center justify-center">
+                        <button onclick="clearPaperTrace()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-bold transition flex items-center gap-2">
+                            <i class="fa-solid fa-eraser"></i> Xóa vết mực trên giấy
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tham số So sánh song song -->
+                <div id="controlsDual" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="param-card flex items-center justify-between">
+                        <div>
+                            <div class="font-bold text-xs text-slate-800">Tự động đồng bộ chu kì:</div>
+                            <div class="text-[11px] text-slate-500">Căn chỉnh chiều dài $l$ để $T_{đơn} = T_{lò\ xo}$</div>
+                        </div>
+                        <button onclick="syncDualPeriods()" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-xs font-extrabold shadow-sm transition">
+                            <i class="fa-solid fa-link mr-1"></i> Đồng Bộ Chu Kì
+                        </button>
+                    </div>
+                    <div class="param-card flex items-center justify-between">
+                        <div>
+                            <div class="font-bold text-xs text-slate-800">Khảo sát cùng pha / ngược pha:</div>
+                            <div class="text-[11px] text-slate-500">Thả cùng lúc 2 vật tại biên dương</div>
+                        </div>
+                        <button onclick="releaseInPhase()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold shadow-sm transition">
+                            <i class="fa-solid fa-play mr-1"></i> Thả Cùng Lúc
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- 4 Nút Điều Hướng Bài Học Cuối Trang -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-4 border-t border-slate-200">
+            <a href="ly-thuyet.html" class="p-3 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs sm:text-sm rounded-xl text-center shadow-md transition flex items-center justify-center gap-2 text-decoration-none">
+                <i class="fa-solid fa-book-open"></i> 📖 Xem Bài Học
+            </a>
+            <a href="TracNghiem_Online.html" class="p-3 bg-cyan-600 hover:bg-cyan-700 text-white font-extrabold text-xs sm:text-sm rounded-xl text-center shadow-md transition flex items-center justify-center gap-2 text-decoration-none">
+                <i class="fa-solid fa-pen-to-square"></i> 📝 Làm Trắc Nghiệm Đầy Đủ
+            </a>
+            <a href="MoPhong_DaoDong_TronDeu.html" class="p-3 bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs sm:text-sm rounded-xl text-center shadow-md transition flex items-center justify-center gap-2 text-decoration-none">
+                <i class="fa-solid fa-circle-notch"></i> 🔄 Mô Phỏng Vòng Tròn Lượng Giác
+            </a>
+            <a href="../../index.html" class="p-3 bg-slate-700 hover:bg-slate-800 text-white font-extrabold text-xs sm:text-sm rounded-xl text-center shadow-md transition flex items-center justify-center gap-2 text-decoration-none">
+                <i class="fa-solid fa-house"></i> 🏠 Về Trang Chủ
+            </a>
+        </div>
+
+    </main>
+
+    <!-- 🌐 Footer -->
+    <footer class="border-t border-slate-200 bg-white py-6 text-center text-slate-500 text-xs mt-10">
+        <p>&copy; 2026 Vatli102.com • Nền tảng học tập và ôn thi môn Vật lí chuẩn GDPT 2018.</p>
+        <div class="mt-2">
+            <a href="../../gioi-thieu.html" class="text-indigo-600 hover:underline">Giới thiệu</a> •
+            <a href="../../lien-he.html" class="text-indigo-600 hover:underline">Liên hệ</a> •
+            <a href="../../index.html" class="text-indigo-600 hover:underline">Trang chủ</a>
+        </div>
+    </footer>
+
+    <!-- ================= JAVASCRIPT ENGINE TOÀN DIỆN THÍ NGHIỆM ẢO ================= -->
+    <script>
+        /* ================= 1. KHỞI TẠO BIẾN TOÀN CỤC & TRẠNG THÁI ================= */
+        let currentMode = 'spring'; // 'spring', 'pendulum', 'paper', 'dual'
+        let isPlaying = false;
+        let simTime = 0.0;
+        let timeSpeed = 0.4; // Tốc độ chạy chậm 0.4x giúp quan sát rõ ràng chi tiết
+        let animFrameId = null;
+        let lastTimestamp = 0;
+
+        // Trạng thái Con lắc lò xo (chu kì êm dịu, thấy rõ từng chuyển động)
+        let spring = {
+            m: 0.50,       // kg (500g)
+            k: 10.0,       // N/m
+            A: 0.06,       // m (6cm)
+            orientation: 'vertical', // 'vertical' hoặc 'horizontal'
+            x: 0.06,       // Li độ hiện tại (m)
+            v: 0.0,        // Vận tốc (m/s)
+            phi: 0.0,      // Pha ban đầu
+            isDragging: false
+        };
+
+        // Trạng thái Con lắc đơn
+        let pendulum = {
+            l: 0.80,       // m (80cm)
+            alpha0: 10 * Math.PI / 180, // rad (10 độ)
+            m: 0.10,       // kg (100g)
+            g: 9.8,        // m/s2
+            alpha: 10 * Math.PI / 180, // rad
+            omega_vel: 0.0, // rad/s
+            isDragging: false
+        };
+
+        // Trạng thái Băng giấy (SGK Hình 1.2)
+        let paper = {
+            speed: 5.0, // cm/s
+            inkColor: '#38bdf8',
+            tracePoints: [] // Mảng lưu các vết mực {x, y}
+        };
+
+        // Lịch sử Đồ thị li độ - thời gian
+        let graphHistory = [];
+        const MAX_GRAPH_POINTS = 300;
+
+        // Trạng thái Đồng hồ bấm giây
+        let stopwatch = {
+            isRunning: false,
+            startTime: 0,
+            elapsedTime: 0,
+            intervalId: null,
+            laps: 0
+        };
+
+        // DOM Elements
+        const simCanvas = document.getElementById('simCanvas');
+        const simCtx = simCanvas.getContext('2d');
+        const graphCanvas = document.getElementById('graphCanvas');
+        const graphCtx = graphCanvas.getContext('2d');
+
+        // Audio Context (Gõ nhịp qua VTCB)
+        let audioCtx = null;
+        let lastPassVTCB = 0;
+
+        function playBeep() {
+            if (!document.getElementById('chkSound').checked) return;
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime); // 880 Hz
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.05);
+            } catch (e) {}
+        }
+
+        /* ================= 2. CHUYỂN ĐỔI CHẾ ĐỘ THÍ NGHIỆM ================= */
+        function switchLabMode(mode) {
+            currentMode = mode;
+            ['spring', 'pendulum', 'paper', 'dual'].forEach(m => {
+                const btn = document.getElementById('tab' + m.charAt(0).toUpperCase() + m.slice(1));
+                const ctrl = document.getElementById('controls' + m.charAt(0).toUpperCase() + m.slice(1));
+                if (m === mode) {
+                    btn.classList.add('active');
+                    if (ctrl) ctrl.classList.remove('hidden');
+                } else {
+                    btn.classList.remove('active');
+                    if (ctrl) ctrl.classList.add('hidden');
+                }
+            });
+
+            const titles = {
+                'spring': 'MÔ HÌNH THÍ NGHIỆM CON LẮC LÒ XO',
+                'pendulum': 'MÔ HÌNH THÍ NGHIỆM CON LẮC ĐƠN',
+                'paper': 'THÍ NGHIỆM TẠO ĐỒ THỊ TRÊN BĂNG GIẤY CHUYỂN ĐỘNG ĐỀU',
+                'dual': 'SO SÁNH SONG SONG CON LẮC ĐƠN & CON LẮC LÒ XO'
+            };
+            document.getElementById('canvasTitle').textContent = titles[mode] || 'THÍ NGHIỆM ẢO VẬT LÍ 11';
+            
+            resetLab();
+        }
+
+        /* ================= 3. ĐIỀU KHIỂN & CẬP NHẬT THAM SỐ ================= */
+        function togglePlay() {
+            if (isPlaying) {
+                pauseLab();
+            } else {
+                startLab();
+            }
+        }
+
+        function startLab() {
+            isPlaying = true;
+            document.getElementById('iconPlay').className = 'fa-solid fa-pause';
+            document.getElementById('textPlay').textContent = 'Tạm Dừng';
+            document.getElementById('btnPlay').classList.replace('bg-indigo-600', 'bg-amber-600');
+            document.getElementById('btnPlay').classList.replace('hover:bg-indigo-700', 'hover:bg-amber-700');
+            lastTimestamp = performance.now();
+            if (!animFrameId) animLoop(performance.now());
+        }
+
+        function pauseLab() {
+            isPlaying = false;
+            document.getElementById('iconPlay').className = 'fa-solid fa-play';
+            document.getElementById('textPlay').textContent = 'Tiếp Tục Dao Động';
+            document.getElementById('btnPlay').classList.replace('bg-amber-600', 'bg-indigo-600');
+            document.getElementById('btnPlay').classList.replace('hover:bg-amber-700', 'hover:bg-indigo-700');
+        }
+
+        function resetLab() {
+            pauseLab();
+            simTime = 0.0;
+            graphHistory = [];
+            paper.tracePoints = [];
+            document.getElementById('textPlay').textContent = 'Bắt Đầu Dao Động';
+            
+            // Đặt lại con lắc lò xo
+            spring.x = spring.A;
+            spring.v = 0.0;
+            
+            // Đặt lại con lắc đơn
+            pendulum.alpha = pendulum.alpha0;
+            pendulum.omega_vel = 0.0;
+            
+            updateMetrics();
+            redrawAll();
+        }
+
+        function stepForward() {
+            pauseLab();
+            updatePhysics(0.02);
+            updateMetrics();
+            redrawAll();
+        }
+
+        function changeSimulationSpeed(val) {
+            timeSpeed = parseFloat(val);
+            document.getElementById('dispSpeedVal').textContent = timeSpeed.toFixed(2) + 'x';
+            document.getElementById('speedText').textContent = timeSpeed.toFixed(2) + 'x';
+            if (timeSpeed < 0.6) {
+                document.getElementById('btnSlowMo').classList.add('text-amber-400');
+            } else {
+                document.getElementById('btnSlowMo').classList.remove('text-amber-400');
+            }
+        }
+
+        function toggleSlowMo() {
+            const speeds = [0.4, 0.2, 0.1, 0.7, 1.0];
+            const idx = speeds.indexOf(timeSpeed);
+            timeSpeed = speeds[(idx + 1) % speeds.length];
+            document.getElementById('speedText').textContent = timeSpeed.toFixed(2) + 'x';
+            if (document.getElementById('sliderSpeed')) document.getElementById('sliderSpeed').value = timeSpeed;
+            if (document.getElementById('dispSpeedVal')) document.getElementById('dispSpeedVal').textContent = timeSpeed.toFixed(2) + 'x';
+            if (timeSpeed < 0.6) {
+                document.getElementById('btnSlowMo').classList.add('text-amber-400');
+            } else {
+                document.getElementById('btnSlowMo').classList.remove('text-amber-400');
+            }
+        }
+
+        function updateSpringParams() {
+            spring.m = parseFloat(document.getElementById('sliderMass').value) / 1000;
+            spring.k = parseFloat(document.getElementById('sliderK').value);
+            spring.A = parseFloat(document.getElementById('sliderAmp').value) / 1000;
+            
+            document.getElementById('dispMassVal').textContent = (spring.m * 1000).toFixed(0) + ' g';
+            document.getElementById('dispKVal').textContent = spring.k.toFixed(0) + ' N/m';
+            document.getElementById('dispAmpVal').textContent = (spring.A * 100).toFixed(1).replace('.', ',') + ' cm';
+            
+            resetLab();
+        }
+
+        function setSpringOrientation(orien) {
+            spring.orientation = orien;
+            if (orien === 'vertical') {
+                document.getElementById('btnSpringVert').className = 'py-1 px-2 rounded-lg text-xs font-bold bg-indigo-600 text-white transition';
+                document.getElementById('btnSpringHoriz').className = 'py-1 px-2 rounded-lg text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition';
+            } else {
+                document.getElementById('btnSpringHoriz').className = 'py-1 px-2 rounded-lg text-xs font-bold bg-indigo-600 text-white transition';
+                document.getElementById('btnSpringVert').className = 'py-1 px-2 rounded-lg text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition';
+            }
+            resetLab();
+        }
+
+        function updatePendulumParams() {
+            pendulum.l = parseFloat(document.getElementById('sliderLength').value);
+            const deg = parseFloat(document.getElementById('sliderAngle').value);
+            pendulum.alpha0 = deg * Math.PI / 180;
+            pendulum.m = parseFloat(document.getElementById('sliderPendMass').value) / 1000;
+
+            document.getElementById('dispLengthVal').textContent = pendulum.l.toFixed(2).replace('.', ',') + ' m';
+            document.getElementById('dispAngleVal').textContent = deg.toFixed(1).replace('.', ',') + '°';
+            document.getElementById('dispPendMassVal').textContent = (pendulum.m * 1000).toFixed(0) + ' g';
+
+            resetLab();
+        }
+
+        function changeGravity(val) {
+            pendulum.g = parseFloat(val);
+            document.getElementById('dispGVal').textContent = pendulum.g.toFixed(2).replace('.', ',') + ' m/s²';
+            resetLab();
+        }
+
+        function updatePaperParams() {
+            paper.speed = parseFloat(document.getElementById('sliderPaperSpeed').value);
+            document.getElementById('dispPaperSpeed').textContent = paper.speed.toFixed(1).replace('.', ',') + ' cm/s';
+        }
+
+        function setInkColor(c) {
+            paper.inkColor = c;
+        }
+
+        function clearPaperTrace() {
+            paper.tracePoints = [];
+            redrawAll();
+        }
+
+        function syncDualPeriods() {
+            // Căn chỉnh để T_đơn = T_lò xo => l = g * (m / k)
+            const targetL = pendulum.g * (spring.m / spring.k);
+            pendulum.l = Math.min(Math.max(targetL, 0.2), 1.5);
+            document.getElementById('sliderLength').value = pendulum.l;
+            document.getElementById('dispLengthVal').textContent = pendulum.l.toFixed(2).replace('.', ',') + ' m';
+            resetLab();
+        }
+
+        function releaseInPhase() {
+            resetLab();
+            startLab();
+        }
+
+        /* ================= 4. VẬT LÝ & TÍNH TOÁN ================= */
+        function updatePhysics(dt) {
+            simTime += dt;
+
+            // 1. Con lắc lò xo: DĐĐH x(t) = A * cos(omega * t)
+            const omega_s = Math.sqrt(spring.k / spring.m);
+            const prevX = spring.x;
+            spring.x = spring.A * Math.cos(omega_s * simTime);
+            spring.v = -spring.A * omega_s * Math.sin(omega_s * simTime);
+
+            // Kiểm tra qua VTCB để phát âm thanh
+            if ((prevX > 0 && spring.x <= 0) || (prevX < 0 && spring.x >= 0)) {
+                if (simTime - lastPassVTCB > 0.1) {
+                    playBeep();
+                    lastPassVTCB = simTime;
+                }
+            }
+
+            // 2. Con lắc đơn: Với góc nhỏ alpha(t) = alpha0 * cos(omega_p * t)
+            const omega_p = Math.sqrt(pendulum.g / pendulum.l);
+            pendulum.alpha = pendulum.alpha0 * Math.cos(omega_p * simTime);
+            pendulum.omega_vel = -pendulum.alpha0 * omega_p * Math.sin(omega_p * simTime);
+
+            // 3. Ghi dữ liệu đồ thị
+            let curVal = 0;
+            if (currentMode === 'spring' || currentMode === 'paper') {
+                curVal = spring.x * 100; // cm
+            } else if (currentMode === 'pendulum') {
+                curVal = (pendulum.alpha * 180 / Math.PI); // độ
+            } else if (currentMode === 'dual') {
+                curVal = spring.x * 100; // cm
+            }
+            
+            graphHistory.push({ t: simTime, val: curVal });
+            if (graphHistory.length > MAX_GRAPH_POINTS) {
+                graphHistory.shift();
+            }
+
+            // 4. Ghi vết băng giấy (SGK Hình 1.2)
+            if (currentMode === 'paper') {
+                const shiftDist = paper.speed * 2 * dt; // Tốc độ cuốn giấy
+                for (let i = 0; i < paper.tracePoints.length; i++) {
+                    paper.tracePoints[i].x -= shiftDist;
+                }
+                // Thêm điểm mới tại vị trí đầu bút
+                paper.tracePoints.push({
+                    x: simCanvas.width / 2 + 60,
+                    y: (simCanvas.height / 2) + (spring.x * 100 * 2.2), // Tỉ lệ px
+                    t: simTime
+                });
+                // Xóa các điểm trôi ra ngoài biên trái
+                paper.tracePoints = paper.tracePoints.filter(p => p.x > 80);
+            }
+        }
+
+        function updateMetrics() {
+            document.getElementById('graphTimeDisplay').textContent = `t = ${simTime.toFixed(2)} s`;
+
+            if (currentMode === 'spring' || currentMode === 'paper' || currentMode === 'dual') {
+                const omega_s = Math.sqrt(spring.k / spring.m);
+                const T_s = 2 * Math.PI / omega_s;
+                const a_s = -omega_s * omega_s * spring.x;
+                const W_t = 0.5 * spring.k * spring.x * spring.x;
+                const W_d = 0.5 * spring.m * spring.v * spring.v;
+                const W = W_t + W_d;
+
+                document.getElementById('dispX').textContent = `${(spring.x * 100 >= 0 ? '+' : '')}${(spring.x * 100).toFixed(1).replace('.', ',')} cm`;
+                document.getElementById('dispV').textContent = `${spring.v.toFixed(2).replace('.', ',')} m/s`;
+                document.getElementById('dispA').textContent = `${a_s.toFixed(2).replace('.', ',')} m/s²`;
+                document.getElementById('dispT').textContent = `${T_s.toFixed(2).replace('.', ',')} s`;
+
+                document.getElementById('totalEnergyText').textContent = `W = ${W.toFixed(4)} J`;
+                document.getElementById('textWd').textContent = `${W_d.toFixed(4)} J`;
+                document.getElementById('textWt').textContent = `${W_t.toFixed(4)} J`;
+
+                const pctD = Math.min(Math.max((W_d / (W || 0.0001)) * 100, 0), 100);
+                document.getElementById('barKinetic').style.width = pctD + '%';
+                document.getElementById('barPotential').style.width = (100 - pctD) + '%';
+            } else if (currentMode === 'pendulum') {
+                const omega_p = Math.sqrt(pendulum.g / pendulum.l);
+                const T_p = 2 * Math.PI / omega_p;
+                const deg = pendulum.alpha * 180 / Math.PI;
+                const v_tan = pendulum.l * pendulum.omega_vel;
+                const a_tan = -pendulum.g * Math.sin(pendulum.alpha);
+                
+                const W_t = pendulum.m * pendulum.g * pendulum.l * (1 - Math.cos(pendulum.alpha));
+                const W_d = 0.5 * pendulum.m * v_tan * v_tan;
+                const W = W_t + W_d;
+
+                document.getElementById('dispX').textContent = `${(deg >= 0 ? '+' : '')}${deg.toFixed(1).replace('.', ',')}°`;
+                document.getElementById('dispV').textContent = `${v_tan.toFixed(2).replace('.', ',')} m/s`;
+                document.getElementById('dispA').textContent = `${a_tan.toFixed(2).replace('.', ',')} m/s²`;
+                document.getElementById('dispT').textContent = `${T_p.toFixed(2).replace('.', ',')} s`;
+
+                document.getElementById('totalEnergyText').textContent = `W = ${W.toFixed(4)} J`;
+                document.getElementById('textWd').textContent = `${W_d.toFixed(4)} J`;
+                document.getElementById('textWt').textContent = `${W_t.toFixed(4)} J`;
+
+                const pctD = Math.min(Math.max((W_d / (W || 0.0001)) * 100, 0), 100);
+                document.getElementById('barKinetic').style.width = pctD + '%';
+                document.getElementById('barPotential').style.width = (100 - pctD) + '%';
+            }
+        }
+
+        /* ================= 5. VẼ CANVAS MÔ PHỎNG CHI TIẾT ================= */
+        function redrawCanvas() {
+            simCtx.clearRect(0, 0, simCanvas.width, simCanvas.height);
+            
+            // Vẽ nền phòng Lab
+            drawLabBackground();
+
+            if (currentMode === 'spring') {
+                drawSpringSystem(simCanvas.width / 2, spring.orientation);
+            } else if (currentMode === 'pendulum') {
+                drawPendulumSystem(simCanvas.width / 2, 60);
+            } else if (currentMode === 'paper') {
+                drawPaperRecordingSystem();
+            } else if (currentMode === 'dual') {
+                drawSpringSystem(simCanvas.width * 0.3, 'vertical');
+                drawPendulumSystem(simCanvas.width * 0.72, 60);
+            }
+
+            // Vẽ thước đo nếu bật
+            if (document.getElementById('chkRuler').checked) {
+                drawRulerOverlay();
+            }
+        }
+
+        function drawLabBackground() {
+            // Lưới toạ độ mờ
+            simCtx.save();
+            simCtx.strokeStyle = 'rgba(51, 65, 85, 0.25)';
+            simCtx.lineWidth = 1;
+            for (let x = 0; x < simCanvas.width; x += 40) {
+                simCtx.beginPath();
+                simCtx.moveTo(x, 0);
+                simCtx.lineTo(x, simCanvas.height);
+                simCtx.stroke();
+            }
+            for (let y = 0; y < simCanvas.height; y += 40) {
+                simCtx.beginPath();
+                simCtx.moveTo(0, y);
+                simCtx.lineTo(simCanvas.width, y);
+                simCtx.stroke();
+            }
+            simCtx.restore();
+        }
+
+        // Vẽ Con lắc lò xo
+        function drawSpringSystem(centerX, orientation) {
+            const ctx = simCtx;
+            ctx.save();
+
+            const showMarks = document.getElementById('chkShowMarks').checked;
+            const showV = document.getElementById('chkShowV').checked;
+            const showA = document.getElementById('chkShowA').checked;
+            const showF = document.getElementById('chkShowF').checked;
+
+            if (orientation === 'vertical') {
+                const topY = 40;
+                const eqY = 220; // Vị trí cân bằng O
+                const scale = 2000; // px/m
+                const massY = eqY + spring.x * scale;
+                const massRadius = 22 + (spring.m * 30);
+
+                // 1. Giá treo trên trần
+                ctx.fillStyle = '#475569';
+                ctx.fillRect(centerX - 50, topY - 12, 100, 12);
+                ctx.strokeStyle = '#94a3b8';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(centerX - 50, topY - 12, 100, 12);
+
+                // Vạch chéo giá treo
+                for (let i = -40; i < 40; i += 12) {
+                    ctx.beginPath();
+                    ctx.moveTo(centerX + i, topY - 12);
+                    ctx.lineTo(centerX + i + 10, topY);
+                    ctx.stroke();
+                }
+
+                // 2. Lò xo xoắn kim loại
+                drawCoilSpring(centerX, topY, centerX, massY - massRadius, 14, 18);
+
+                // 3. Mốc VTCB và Biên
+                if (showMarks) {
+                    const ampPx = spring.A * scale;
+                    // VTCB O
+                    ctx.strokeStyle = '#38bdf8';
+                    ctx.setLineDash([4, 4]);
+                    ctx.lineWidth = 1.5;
+                    ctx.beginPath();
+                    ctx.moveTo(centerX - 90, eqY);
+                    ctx.lineTo(centerX + 90, eqY);
+                    ctx.stroke();
+                    ctx.fillStyle = '#38bdf8';
+                    ctx.font = 'bold 12px "JetBrains Mono"';
+                    ctx.fillText('VTCB (O)', centerX + 95, eqY + 4);
+
+                    // Biên âm (-A) phía trên
+                    ctx.strokeStyle = '#f43f5e';
+                    ctx.beginPath();
+                    ctx.moveTo(centerX - 70, eqY - ampPx);
+                    ctx.lineTo(centerX + 70, eqY - ampPx);
+                    ctx.stroke();
+                    ctx.fillStyle = '#f43f5e';
+                    ctx.fillText('-A', centerX + 75, eqY - ampPx + 4);
+
+                    // Biên dương (+A) phía dưới
+                    ctx.strokeStyle = '#10b981';
+                    ctx.beginPath();
+                    ctx.moveTo(centerX - 70, eqY + ampPx);
+                    ctx.lineTo(centerX + 70, eqY + ampPx);
+                    ctx.stroke();
+                    ctx.fillStyle = '#10b981';
+                    ctx.fillText('+A', centerX + 75, eqY + ampPx + 4);
+                    ctx.setLineDash([]);
+                }
+
+                // 4. Quả nặng kim loại
+                const grad = ctx.createRadialGradient(centerX - 6, massY - 6, 2, centerX, massY, massRadius);
+                grad.addColorStop(0, '#818cf8');
+                grad.addColorStop(0.7, '#4f46e5');
+                grad.addColorStop(1, '#312e81');
+
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(centerX, massY, massRadius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#c7d2fe';
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
+
+                // Chữ m trên quả nặng
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 12px "JetBrains Mono"';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(`${(spring.m * 1000).toFixed(0)}g`, centerX, massY);
+
+                // 5. Vẽ các Vector
+                if (showV && Math.abs(spring.v) > 0.01) {
+                    drawVector(centerX, massY, 0, spring.v * 70, '#10b981', 'v');
+                }
+                if (showA && Math.abs(spring.x) > 0.002) {
+                    const a_s = -Math.pow(Math.sqrt(spring.k / spring.m), 2) * spring.x;
+                    drawVector(centerX + 25, massY, 0, a_s * 8, '#f43f5e', 'a');
+                }
+                if (showF && Math.abs(spring.x) > 0.002) {
+                    const F_kv = -spring.k * spring.x;
+                    drawVector(centerX - 25, massY, 0, F_kv * 25, '#f59e0b', 'F_kv');
+                }
+
+            } else {
+                // Lò xo nằm ngang
+                const leftX = 80;
+                const eqX = 320;
+                const trackY = 240;
+                const scale = 1800;
+                const massX = eqX + spring.x * scale;
+                const massSize = 46;
+
+                // Giá cố định bên trái
+                ctx.fillStyle = '#475569';
+                ctx.fillRect(leftX - 16, trackY - 45, 16, 90);
+
+                // Đệm không khí / Thanh trượt nằm ngang
+                ctx.fillStyle = '#1e293b';
+                ctx.fillRect(leftX, trackY + 22, 480, 8);
+                ctx.strokeStyle = '#475569';
+                ctx.strokeRect(leftX, trackY + 22, 480, 8);
+
+                // Lò xo nằm ngang
+                drawHorizontalCoilSpring(leftX, trackY, massX - massSize / 2, trackY, 14, 18);
+
+                // Mốc O, -A, +A
+                if (showMarks) {
+                    const ampPx = spring.A * scale;
+                    // VTCB
+                    ctx.strokeStyle = '#38bdf8';
+                    ctx.setLineDash([4, 4]);
+                    ctx.beginPath();
+                    ctx.moveTo(eqX, trackY - 60);
+                    ctx.lineTo(eqX, trackY + 50);
+                    ctx.stroke();
+                    ctx.fillStyle = '#38bdf8';
+                    ctx.font = 'bold 12px "JetBrains Mono"';
+                    ctx.fillText('VTCB (O)', eqX - 25, trackY - 65);
+
+                    // -A
+                    ctx.strokeStyle = '#f43f5e';
+                    ctx.beginPath();
+                    ctx.moveTo(eqX - ampPx, trackY - 40);
+                    ctx.lineTo(eqX - ampPx, trackY + 40);
+                    ctx.stroke();
+                    ctx.fillStyle = '#f43f5e';
+                    ctx.fillText('-A', eqX - ampPx - 8, trackY - 45);
+
+                    // +A
+                    ctx.strokeStyle = '#10b981';
+                    ctx.beginPath();
+                    ctx.moveTo(eqX + ampPx, trackY - 40);
+                    ctx.lineTo(eqX + ampPx, trackY + 40);
+                    ctx.stroke();
+                    ctx.fillStyle = '#10b981';
+                    ctx.fillText('+A', eqX + ampPx - 8, trackY - 45);
+                    ctx.setLineDash([]);
+                }
+
+                // Vật nặng hình hộp
+                ctx.fillStyle = '#4f46e5';
+                ctx.fillRect(massX - massSize / 2, trackY - massSize / 2, massSize, massSize);
+                ctx.strokeStyle = '#c7d2fe';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(massX - massSize / 2, trackY - massSize / 2, massSize, massSize);
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 11px "JetBrains Mono"';
+                ctx.textAlign = 'center';
+                ctx.fillText(`${(spring.m * 1000).toFixed(0)}g`, massX, trackY + 4);
+
+                // Vector ngang
+                if (showV && Math.abs(spring.v) > 0.01) {
+                    drawVector(massX, trackY - 35, spring.v * 70, 0, '#10b981', 'v');
+                }
+                if (showF && Math.abs(spring.x) > 0.002) {
+                    const F_kv = -spring.k * spring.x;
+                    drawVector(massX, trackY + 35, F_kv * 25, 0, '#f59e0b', 'F_kv');
+                }
+            }
+
+            ctx.restore();
+        }
+
+        // Vẽ Con lắc đơn
+        function drawPendulumSystem(pivotX, pivotY) {
+            const ctx = simCtx;
+            ctx.save();
+
+            const showMarks = document.getElementById('chkShowMarks').checked;
+            const showV = document.getElementById('chkShowV').checked;
+            const showA = document.getElementById('chkShowA').checked;
+            const showF = document.getElementById('chkShowF').checked;
+
+            const lengthPx = pendulum.l * 240; // Tỉ lệ px/m
+            const bobX = pivotX + lengthPx * Math.sin(pendulum.alpha);
+            const bobY = pivotY + lengthPx * Math.cos(pendulum.alpha);
+            const bobRadius = 18 + pendulum.m * 25;
+
+            // 1. Thước đo độ bán nguyệt gắn tại điểm treo
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(pivotX, pivotY, 65, Math.PI * 0.25, Math.PI * 0.75);
+            ctx.stroke();
+
+            // Vạch chia độ
+            for (let deg = -45; deg <= 45; deg += 10) {
+                const rad = Math.PI / 2 + deg * Math.PI / 180;
+                const x1 = pivotX + 60 * Math.cos(rad);
+                const y1 = pivotY + 60 * Math.sin(rad);
+                const x2 = pivotX + 70 * Math.cos(rad);
+                const y2 = pivotY + 70 * Math.sin(rad);
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.stroke();
+            }
+
+            // 2. Trục thẳng đứng VTCB
+            if (showMarks) {
+                ctx.strokeStyle = '#38bdf8';
+                ctx.setLineDash([4, 4]);
+                ctx.beginPath();
+                ctx.moveTo(pivotX, pivotY);
+                ctx.lineTo(pivotX, pivotY + lengthPx + 40);
+                ctx.stroke();
+                ctx.fillStyle = '#38bdf8';
+                ctx.font = 'bold 12px "JetBrains Mono"';
+                ctx.fillText('VTCB (O)', pivotX - 25, pivotY + lengthPx + 55);
+
+                // Vết quỹ đạo cung tròn giới hạn bởi biên
+                const maxAngle = pendulum.alpha0;
+                ctx.strokeStyle = 'rgba(245, 158, 11, 0.3)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(pivotX, pivotY, lengthPx, Math.PI / 2 - maxAngle, Math.PI / 2 + maxAngle);
+                ctx.stroke();
+
+                // Đánh dấu biên trái (-alpha0) và biên phải (+alpha0)
+                const leftX = pivotX - lengthPx * Math.sin(maxAngle);
+                const leftY = pivotY + lengthPx * Math.cos(maxAngle);
+                const rightX = pivotX + lengthPx * Math.sin(maxAngle);
+                const rightY = pivotY + lengthPx * Math.cos(maxAngle);
+
+                ctx.fillStyle = '#f43f5e';
+                ctx.fillText('-α₀', leftX - 24, leftY);
+                ctx.fillStyle = '#10b981';
+                ctx.fillText('+α₀', rightX + 8, rightY);
+                ctx.setLineDash([]);
+            }
+
+            // 3. Dây treo con lắc
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(pivotX, pivotY);
+            ctx.lineTo(bobX, bobY);
+            ctx.stroke();
+
+            // Điểm treo
+            ctx.fillStyle = '#e2e8f0';
+            ctx.beginPath();
+            ctx.arc(pivotX, pivotY, 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 4. Quả cầu kim loại
+            const grad = ctx.createRadialGradient(bobX - 4, bobY - 4, 2, bobX, bobY, bobRadius);
+            grad.addColorStop(0, '#fbbf24');
+            grad.addColorStop(0.7, '#d97706');
+            grad.addColorStop(1, '#78350f');
+
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(bobX, bobY, bobRadius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#fef3c7';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 11px "JetBrains Mono"';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`${(pendulum.m * 1000).toFixed(0)}g`, bobX, bobY);
+
+            // 5. Vector lực và vận tốc
+            if (showV && Math.abs(pendulum.omega_vel) > 0.05) {
+                const v_tan = pendulum.l * pendulum.omega_vel;
+                const vx = v_tan * Math.cos(pendulum.alpha) * 60;
+                const vy = -v_tan * Math.sin(pendulum.alpha) * 60;
+                drawVector(bobX, bobY, vx, vy, '#10b981', 'v');
+            }
+
+            if (showF) {
+                // Trọng lực P hướng thẳng đứng xuống
+                drawVector(bobX, bobY, 0, 50, '#f43f5e', 'P');
+                // Lực căng T hướng dọc theo dây về điểm treo
+                const Tx = -Math.sin(pendulum.alpha) * 60;
+                const Ty = -Math.cos(pendulum.alpha) * 60;
+                drawVector(bobX, bobY, Tx, Ty, '#38bdf8', 'T_căng');
+            }
+
+            ctx.restore();
+        }
+
+        // Vẽ Thí nghiệm Băng giấy ghi vết hình sin (SGK Hình 1.2)
+        function drawPaperRecordingSystem() {
+            const ctx = simCtx;
+            ctx.save();
+
+            const paperTop = 70;
+            const paperHeight = 280;
+            const penX = simCanvas.width / 2 + 60;
+            const midY = simCanvas.height / 2;
+
+            // 1. Khung cuộn giấy và dải băng giấy chạy ngang
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(80, paperTop, simCanvas.width - 120, paperHeight);
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(80, paperTop, simCanvas.width - 120, paperHeight);
+
+            // Đường trục thời gian nằm ngang ở giữa băng giấy
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([6, 6]);
+            ctx.beginPath();
+            ctx.moveTo(80, midY);
+            ctx.lineTo(simCanvas.width - 40, midY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Mũi tên chiều chuyển động của băng giấy (sang trái)
+            ctx.fillStyle = '#0284c7';
+            ctx.font = 'bold 12px "Plus Jakarta Sans"';
+            ctx.fillText('Chiều kéo băng giấy v_giấy ◄──────', 120, paperTop + 24);
+
+            // 2. Vẽ vết mực hình sin trên băng giấy
+            if (paper.tracePoints.length > 1) {
+                ctx.strokeStyle = paper.inkColor;
+                ctx.lineWidth = 3.5;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.beginPath();
+                ctx.moveTo(paper.tracePoints[0].x, paper.tracePoints[0].y);
+                for (let i = 1; i < paper.tracePoints.length; i++) {
+                    ctx.lineTo(paper.tracePoints[i].x, paper.tracePoints[i].y);
+                }
+                ctx.stroke();
+            }
+
+            // 3. Con lắc lò xo thẳng đứng gắn bút dạ ở đầu
+            const springCenterX = penX;
+            const massY = midY + spring.x * 100 * 2.2;
+            
+            // Lò xo
+            drawCoilSpring(springCenterX, 30, springCenterX, massY - 20, 10, 16);
+
+            // Quả nặng gắn bút
+            ctx.fillStyle = '#4f46e5';
+            ctx.beginPath();
+            ctx.arc(springCenterX, massY, 18, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Ngòi bút dạ tiếp xúc với băng giấy
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(springCenterX - 3, massY, 6, 12);
+            ctx.fillStyle = paper.inkColor;
+            ctx.beginPath();
+            ctx.arc(springCenterX, massY + 12, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Nhãn chỉ dẫn SGK
+            ctx.fillStyle = '#1e293b';
+            ctx.font = 'bold 11px "Plus Jakarta Sans"';
+            ctx.fillText('Bút dạ ghi vết', springCenterX + 22, massY + 4);
+
+            ctx.restore();
+        }
+
+        // Hàm phụ trợ vẽ lò xo xoắn thẳng đứng
+        function drawCoilSpring(x1, y1, x2, y2, coils, radius) {
+            const ctx = simCtx;
+            const dy = y2 - y1;
+            const step = dy / (coils * 2);
+
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x1, y1 + 10);
+
+            let curY = y1 + 10;
+            for (let i = 0; i < coils; i++) {
+                ctx.lineTo(x1 + radius, curY + step);
+                ctx.lineTo(x1 - radius, curY + step * 2);
+                curY += step * 2;
+            }
+
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
+
+        // Lò xo nằm ngang
+        function drawHorizontalCoilSpring(x1, y1, x2, y2, coils, radius) {
+            const ctx = simCtx;
+            const dx = x2 - x1;
+            const step = dx / (coils * 2);
+
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            let curX = x1;
+            for (let i = 0; i < coils; i++) {
+                ctx.lineTo(curX + step, y1 - radius);
+                ctx.lineTo(curX + step * 2, y1 + radius);
+                curX += step * 2;
+            }
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
+
+        // Hàm vẽ Vector có mũi tên
+        function drawVector(fromX, fromY, vecX, vecY, color, label) {
+            const ctx = simCtx;
+            const toX = fromX + vecX;
+            const toY = fromY + vecY;
+            const len = Math.hypot(vecX, vecY);
+            if (len < 5) return;
+
+            const headLen = 9;
+            const angle = Math.atan2(vecY, vecX);
+
+            ctx.save();
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = 2.5;
+
+            // Thân vector
+            ctx.beginPath();
+            ctx.moveTo(fromX, fromY);
+            ctx.lineTo(toX, toY);
+            ctx.stroke();
+
+            // Mũi tên
+            ctx.beginPath();
+            ctx.moveTo(toX, toY);
+            ctx.lineTo(toX - headLen * Math.cos(angle - Math.PI / 6), toY - headLen * Math.sin(angle - Math.PI / 6));
+            ctx.lineTo(toX - headLen * Math.cos(angle + Math.PI / 6), toY - headLen * Math.sin(angle + Math.PI / 6));
+            ctx.closePath();
+            ctx.fill();
+
+            // Nhãn chữ
+            ctx.font = 'bold 12px "JetBrains Mono"';
+            ctx.fillText(label, toX + 6 * Math.cos(angle), toY + 6 * Math.sin(angle));
+            ctx.restore();
+        }
+
+        // Vẽ thước đo phủ lên màn hình
+        function drawRulerOverlay() {
+            const ctx = simCtx;
+            ctx.save();
+            ctx.fillStyle = 'rgba(254, 240, 138, 0.85)'; // Màu vàng nhạt trong suốt
+            ctx.fillRect(20, 30, 35, 340);
+            ctx.strokeStyle = '#ca8a04';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(20, 30, 35, 340);
+
+            ctx.fillStyle = '#713f12';
+            ctx.font = '9px "JetBrains Mono"';
+            for (let y = 30, cm = 0; y <= 370; y += 10, cm++) {
+                const isMajor = (cm % 5 === 0);
+                const markW = isMajor ? 18 : 10;
+                ctx.beginPath();
+                ctx.moveTo(55 - markW, y);
+                ctx.lineTo(55, y);
+                ctx.stroke();
+                if (isMajor) {
+                    ctx.fillText(cm.toString(), 24, y + 3);
+                }
+            }
+            ctx.restore();
+        }
+
+        /* ================= 6. VẼ ĐỒ THỊ LI ĐỘ - THỜI GIAN REALTIME ================= */
+        function redrawGraph() {
+            graphCtx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
+            
+            const w = graphCanvas.width;
+            const h = graphCanvas.height;
+            const midY = h / 2;
+
+            // Trục tọa độ
+            graphCtx.strokeStyle = '#334155';
+            graphCtx.lineWidth = 1;
+            
+            // Trục hoành t
+            graphCtx.beginPath();
+            graphCtx.moveTo(40, midY);
+            graphCtx.lineTo(w - 15, midY);
+            graphCtx.stroke();
+
+            // Trục tung x
+            graphCtx.beginPath();
+            graphCtx.moveTo(40, 15);
+            graphCtx.lineTo(40, h - 15);
+            graphCtx.stroke();
+
+            // Mũi tên & Nhãn trục
+            graphCtx.fillStyle = '#94a3b8';
+            graphCtx.font = 'bold 11px "JetBrains Mono"';
+            graphCtx.fillText('t (s)', w - 35, midY - 8);
+            graphCtx.fillText(currentMode === 'pendulum' ? 'α (°)' : 'x (cm)', 8, 20);
+            graphCtx.fillText('O', 26, midY + 14);
+
+            // Vạch +A và -A
+            graphCtx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+            graphCtx.setLineDash([3, 3]);
+            graphCtx.beginPath();
+            graphCtx.moveTo(40, midY - 70);
+            graphCtx.lineTo(w - 15, midY - 70);
+            graphCtx.moveTo(40, midY + 70);
+            graphCtx.lineTo(w - 15, midY + 70);
+            graphCtx.stroke();
+            graphCtx.setLineDash([]);
+
+            graphCtx.fillStyle = '#34d399';
+            graphCtx.fillText('+A', 15, midY - 66);
+            graphCtx.fillStyle = '#f87171';
+            graphCtx.fillText('-A', 15, midY + 74);
+
+            if (graphHistory.length < 2) return;
+
+            // Vẽ đường cong đồ thị
+            graphCtx.strokeStyle = currentMode === 'pendulum' ? '#fbbf24' : '#38bdf8';
+            graphCtx.lineWidth = 2.5;
+            graphCtx.beginPath();
+
+            const scaleX = (w - 60) / MAX_GRAPH_POINTS;
+            const maxVal = currentMode === 'pendulum' ? (pendulum.alpha0 * 180 / Math.PI) : (spring.A * 100);
+            const scaleY = 70 / (maxVal || 1);
+
+            for (let i = 0; i < graphHistory.length; i++) {
+                const pt = graphHistory[i];
+                const px = 40 + i * scaleX;
+                const py = midY - pt.val * scaleY;
+                if (i === 0) graphCtx.moveTo(px, py);
+                else graphCtx.lineTo(px, py);
+            }
+            graphCtx.stroke();
+
+            // Điểm hiện tại phát sáng ở đầu đồ thị
+            const lastPt = graphHistory[graphHistory.length - 1];
+            const lastPx = 40 + (graphHistory.length - 1) * scaleX;
+            const lastPy = midY - lastPt.val * scaleY;
+
+            graphCtx.fillStyle = '#ffffff';
+            graphCtx.beginPath();
+            graphCtx.arc(lastPx, lastPy, 4.5, 0, Math.PI * 2);
+            graphCtx.fill();
+        }
+
+        function redrawAll() {
+            redrawCanvas();
+            redrawGraph();
+        }
+
+        /* ================= 7. VÒNG LẶP CHÍNH CỦA ANIMATION ================= */
+        function animLoop(timestamp) {
+            if (isPlaying) {
+                const elapsed = (timestamp - lastTimestamp) / 1000;
+                lastTimestamp = timestamp;
+                
+                // Giới hạn dt tránh nhảy vọt khung hình
+                const dt = Math.min(elapsed, 0.05) * timeSpeed;
+                updatePhysics(dt);
+                updateMetrics();
+                redrawAll();
+            }
+            animFrameId = requestAnimationFrame(animLoop);
+        }
+
+        /* ================= 8. TƯƠNG TÁC CHUỘT & KÉO THẢ VẬT THỂ ẢO ================= */
+        let isPointerDown = false;
+
+        simCanvas.addEventListener('pointerdown', (e) => {
+            const rect = simCanvas.getBoundingClientRect();
+            const clientX = (e.clientX - rect.left) * (simCanvas.width / rect.width);
+            const clientY = (e.clientY - rect.top) * (simCanvas.height / rect.height);
+
+            isPointerDown = true;
+            pauseLab();
+
+            if (currentMode === 'spring' || currentMode === 'dual') {
+                spring.isDragging = true;
+                handleSpringDrag(clientY);
+            } else if (currentMode === 'pendulum') {
+                pendulum.isDragging = true;
+                handlePendulumDrag(clientX, clientY);
+            }
+        });
+
+        window.addEventListener('pointermove', (e) => {
+            if (!isPointerDown) return;
+            const rect = simCanvas.getBoundingClientRect();
+            const clientX = (e.clientX - rect.left) * (simCanvas.width / rect.width);
+            const clientY = (e.clientY - rect.top) * (simCanvas.height / rect.height);
+
+            if (spring.isDragging) {
+                handleSpringDrag(clientY);
+            } else if (pendulum.isDragging) {
+                handlePendulumDrag(clientX, clientY);
+            }
+        });
+
+        window.addEventListener('pointerup', () => {
+            if (isPointerDown) {
+                isPointerDown = false;
+                spring.isDragging = false;
+                pendulum.isDragging = false;
+                startLab(); // Thả tay để dao động tự do
+            }
+        });
+
+        function handleSpringDrag(mouseY) {
+            const eqY = 220;
+            const scale = 2000;
+            let newX = (mouseY - eqY) / scale;
+            newX = Math.max(Math.min(newX, 0.10), -0.10);
+            spring.x = newX;
+            spring.A = Math.abs(newX) || 0.02;
+            spring.v = 0;
+            simTime = 0;
+            document.getElementById('sliderAmp').value = (spring.A * 1000);
+            document.getElementById('dispAmpVal').textContent = (spring.A * 100).toFixed(1).replace('.', ',') + ' cm';
+            updateMetrics();
+            redrawAll();
+        }
+
+        function handlePendulumDrag(mouseX, mouseY) {
+            const pivotX = simCanvas.width / 2;
+            const pivotY = 60;
+            const dx = mouseX - pivotX;
+            const dy = mouseY - pivotY;
+            let newAngle = Math.atan2(dx, dy);
+            newAngle = Math.max(Math.min(newAngle, 45 * Math.PI / 180), -45 * Math.PI / 180);
+            pendulum.alpha = newAngle;
+            pendulum.alpha0 = Math.abs(newAngle) || (2 * Math.PI / 180);
+            pendulum.omega_vel = 0;
+            simTime = 0;
+            const deg = pendulum.alpha0 * 180 / Math.PI;
+            document.getElementById('sliderAngle').value = deg;
+            document.getElementById('dispAngleVal').textContent = deg.toFixed(1).replace('.', ',') + '°';
+            updateMetrics();
+            redrawAll();
+        }
+
+        /* ================= 9. ĐỒNG HỒ BẤM GIÂY ẢO ================= */
+        function toggleStopwatch() {
+            if (stopwatch.isRunning) {
+                stopwatch.isRunning = false;
+                clearInterval(stopwatch.intervalId);
+                document.getElementById('iconStopwatch').className = 'fa-solid fa-play';
+                document.getElementById('btnStopwatch').classList.replace('bg-amber-600', 'bg-indigo-600');
+            } else {
+                stopwatch.isRunning = true;
+                stopwatch.startTime = performance.now() - stopwatch.elapsedTime;
+                document.getElementById('iconStopwatch').className = 'fa-solid fa-pause';
+                document.getElementById('btnStopwatch').classList.replace('bg-indigo-600', 'bg-amber-600');
+                stopwatch.intervalId = setInterval(() => {
+                    stopwatch.elapsedTime = performance.now() - stopwatch.startTime;
+                    updateStopwatchDisplay();
+                }, 10);
+            }
+        }
+
+        function lapStopwatch() {
+            stopwatch.laps++;
+            document.getElementById('lapCount').textContent = `Lap: ${stopwatch.laps}`;
+        }
+
+        function resetStopwatch() {
+            if (stopwatch.isRunning) toggleStopwatch();
+            stopwatch.elapsedTime = 0;
+            stopwatch.laps = 0;
+            document.getElementById('lapCount').textContent = 'Lap: 0';
+            updateStopwatchDisplay();
+        }
+
+        function updateStopwatchDisplay() {
+            const totalMs = stopwatch.elapsedTime;
+            const mins = Math.floor(totalMs / 60000);
+            const secs = Math.floor((totalMs % 60000) / 1000);
+            const ms = Math.floor((totalMs % 1000) / 10);
+            const str = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}.${ms.toString().padStart(2, '0')}`;
+            document.getElementById('stopwatchDisplay').textContent = str;
+        }
+
+        function takeSnapshot() {
+            const link = document.createElement('a');
+            link.download = `ThiNghiemAo_VatLi11_${currentMode}.png`;
+            link.href = simCanvas.toDataURL();
+            link.click();
+        }
+
+        /* ================= 10. KHỞI CHẠY LẦN ĐẦU ================= */
+        window.addEventListener('DOMContentLoaded', () => {
+            updateSpringParams();
+            updatePendulumParams();
+            startLab();
+        });
+    </script>
+</body>
+</html>
