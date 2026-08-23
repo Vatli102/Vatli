@@ -1,0 +1,2679 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thí Nghiệm Kiểm Chứng Định Luật Charles - Vật Lí 12</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- MathJax 3 CDN -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --bg-body: #070d19;
+            --card-bg: rgba(15, 23, 42, 0.94);
+            --card-inner: rgba(30, 41, 59, 0.72);
+            --border-ui: rgba(255, 255, 255, 0.1);
+            --border-focus: #0284c7;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --text-dim: #64748b;
+            
+            --cyan-accent: #0284c7;
+            --sky-accent: #38bdf8;
+            --amber-accent: #f59e0b;
+            --orange-accent: #f97316;
+            --red-accent: #ef4444;
+            --emerald-accent: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #0f172a 45%, #020617 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 0.85rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .lab-wrapper {
+            width: 100%;
+            max-width: 1320px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-ui);
+            border-radius: 20px;
+            padding: 1.25rem;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 35px rgba(2, 132, 199, 0.1);
+            margin: auto 0;
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            padding-bottom: 0.9rem;
+            border-bottom: 1px solid var(--border-ui);
+            margin-bottom: 1.1rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .header-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(2, 132, 199, 0.25), rgba(245, 158, 11, 0.2));
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #38bdf8;
+            font-size: 1.35rem;
+            box-shadow: 0 0 16px rgba(2, 132, 199, 0.25);
+        }
+
+        .header-title-text h1 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #38bdf8, #fbbf24, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.01em;
+        }
+
+        .header-title-text p {
+            color: var(--text-sub);
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 0.15rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-nav-link {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-ui);
+            color: var(--text-main);
+            padding: 0.38rem 0.75rem;
+            border-radius: 9px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+        }
+
+        .btn-nav-link:hover {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: #38bdf8;
+            color: #38bdf8;
+        }
+
+        .tag-badge {
+            background: rgba(56, 189, 248, 0.12);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 20px;
+            padding: 0.32rem 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-sound {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-ui);
+            color: var(--text-main);
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-sound:hover {
+            background: rgba(255, 255, 255, 0.18);
+            color: #38bdf8;
+        }
+
+        /* TOP HUD READINGS */
+        .hud-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.65rem;
+            margin-bottom: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .hud-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .hud-item {
+            background: var(--card-inner);
+            border: 1px solid var(--border-ui);
+            border-radius: 12px;
+            padding: 0.6rem 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: border-color 0.25s, box-shadow 0.25s;
+        }
+
+        .hud-item:hover {
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.12);
+        }
+
+        .hud-item-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+            flex-shrink: 0;
+        }
+
+        .hud-item-content {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .hud-item-label {
+            font-size: 0.68rem;
+            color: var(--text-sub);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+        }
+
+        .hud-item-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.15rem;
+            font-weight: 700;
+            line-height: 1.25;
+            white-space: nowrap;
+        }
+
+        /* WORKSPACE GRID */
+        .lab-workspace {
+            display: grid;
+            grid-template-columns: 1.15fr 1.25fr;
+            gap: 1.1rem;
+        }
+
+        @media (max-width: 1040px) {
+            .lab-workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* LEFT PANEL: APPARATUS & BENCH */
+        .apparatus-box {
+            background: var(--card-inner);
+            border: 1px solid var(--border-ui);
+            border-radius: 16px;
+            padding: 0.95rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        .box-title-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 0.45rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .box-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .box-title i {
+            color: #38bdf8;
+        }
+
+        /* STATUS BANNER */
+        .status-message-bar {
+            background: rgba(2, 132, 199, 0.12);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 9px;
+            padding: 0.45rem 0.75rem;
+            font-size: 0.75rem;
+            color: #e0f2fe;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            min-height: 34px;
+        }
+
+        .status-message-bar strong {
+            color: #38bdf8;
+            font-weight: 700;
+        }
+
+        /* CANVAS CONTAINER */
+        .stage-container {
+            width: 100%;
+            height: 310px;
+            background: radial-gradient(ellipse at 50% 85%, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
+        }
+
+        #mainApparatusCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        /* MOLECULAR INSET */
+        .molecular-box {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            width: 145px;
+            height: 115px;
+            background: rgba(15, 23, 42, 0.88);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            border-radius: 10px;
+            padding: 0.45rem;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .molecular-header {
+            font-size: 0.62rem;
+            font-weight: 700;
+            color: #38bdf8;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        #molecularCanvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 6px;
+            background: #020617;
+        }
+
+        /* LAB CONTROLS */
+        .controls-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+
+        .slider-panel {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            background: rgba(15, 23, 42, 0.55);
+            border: 1px solid var(--border-ui);
+            border-radius: 10px;
+            padding: 0.5rem 0.8rem;
+        }
+
+        .slider-caption {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #cbd5e1;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .slider-track-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, #0284c7 0%, #38bdf8 25%, #f59e0b 65%, #ef4444 100%);
+            border-radius: 4px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 3px solid #f97316;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(249, 115, 22, 0.8);
+            transition: transform 0.1s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+
+        .btn-step-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-ui);
+            color: var(--text-main);
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+
+        .btn-step-control:hover {
+            background: #38bdf8;
+            color: #020617;
+        }
+
+        .slider-readout {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #fbbf24;
+            min-width: 65px;
+            text-align: right;
+        }
+
+        /* PRESET TEMPERATURE BUTTONS */
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.45rem;
+        }
+
+        @media (max-width: 480px) {
+            .preset-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .btn-preset-temp {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-ui);
+            color: var(--text-sub);
+            border-radius: 8px;
+            padding: 0.42rem 0.35rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            transition: all 0.2s;
+        }
+
+        .btn-preset-temp:hover, .btn-preset-temp.active {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: #38bdf8;
+            color: #38bdf8;
+        }
+
+        .btn-preset-temp.active {
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+        }
+
+        /* ACTION BUTTONS */
+        .actions-grid {
+            display: grid;
+            grid-template-columns: 1.35fr 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 580px) {
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .btn-action {
+            padding: 0.55rem 0.8rem;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+            border: none;
+            outline: none;
+        }
+
+        .btn-action-primary {
+            background: linear-gradient(135deg, #0284c7, #38bdf8);
+            color: #020617;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+        }
+
+        .btn-action-primary:hover {
+            background: linear-gradient(135deg, #0369a1, #0284c7);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .btn-action-record {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn-action-record:hover {
+            background: linear-gradient(135deg, #047857, #059669);
+            transform: translateY(-1px);
+        }
+
+        .btn-action-heat {
+            background: linear-gradient(135deg, #ea580c, #f97316);
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
+        }
+
+        .btn-action-heat.active {
+            background: linear-gradient(135deg, #b91c1c, #ef4444);
+            animation: pulseBurner 1s infinite alternate;
+        }
+
+        @keyframes pulseBurner {
+            from { box-shadow: 0 0 8px rgba(239, 68, 68, 0.5); }
+            to { box-shadow: 0 0 20px rgba(239, 68, 68, 0.9); }
+        }
+
+        /* RIGHT PANEL: SPACIOUS DUAL-VIEW OR TABBED ANALYSIS */
+        .analysis-box {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        /* VIEW MODE CONTROLLER (CHUYỂN ĐỔI GÓC NHÌN ĐỒ THỊ / BẢNG / SONG SONG) */
+        .view-mode-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-ui);
+            border-radius: 12px;
+            padding: 0.35rem 0.6rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .view-tabs {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .btn-view-tab {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-sub);
+            padding: 0.3rem 0.65rem;
+            font-size: 0.72rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            transition: all 0.2s;
+        }
+
+        .btn-view-tab.active {
+            background: rgba(2, 132, 199, 0.25);
+            border-color: rgba(56, 189, 248, 0.5);
+            color: #38bdf8;
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.2);
+        }
+
+        .btn-view-tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-main);
+        }
+
+        .view-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .btn-mini-tool {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-ui);
+            color: var(--text-sub);
+            padding: 0.28rem 0.55rem;
+            border-radius: 6px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .btn-mini-tool:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--text-main);
+        }
+
+        /* CHART CARD - SPAN & EXPANDABLE */
+        .chart-card {
+            background: var(--card-inner);
+            border: 1px solid var(--border-ui);
+            border-radius: 16px;
+            padding: 0.85rem 1rem;
+            height: 310px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: height 0.3s ease;
+        }
+
+        .chart-card.expanded {
+            height: 500px;
+        }
+
+        .chart-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.4rem;
+        }
+
+        .chart-heading {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .chart-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .btn-chart-mode {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-ui);
+            color: var(--text-sub);
+            padding: 0.2rem 0.55rem;
+            font-size: 0.65rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-chart-mode.active {
+            background: rgba(2, 132, 199, 0.25);
+            border-color: #38bdf8;
+            color: #38bdf8;
+        }
+
+        .chart-canvas-wrap {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* TABLE CARD - FLEXIBLE & SCROLLABLE */
+        .table-card {
+            background: var(--card-inner);
+            border: 1px solid var(--border-ui);
+            border-radius: 16px;
+            padding: 0.85rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            transition: height 0.3s ease;
+        }
+
+        .table-card.expanded {
+            height: 500px;
+        }
+
+        .table-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .table-heading {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .table-heading i {
+            color: #10b981;
+        }
+
+        .table-scroll-wrap {
+            max-height: 175px;
+            overflow-y: auto;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        .table-card.expanded .table-scroll-wrap {
+            max-height: 400px;
+            flex: 1;
+        }
+
+        .table-scroll-wrap::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .table-scroll-wrap::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.72rem;
+            text-align: center;
+        }
+
+        th {
+            background: rgba(15, 23, 42, 0.98);
+            color: #94a3b8;
+            padding: 0.4rem 0.45rem;
+            font-weight: 700;
+            position: sticky;
+            top: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            z-index: 1;
+        }
+
+        td {
+            padding: 0.32rem 0.45rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: #e2e8f0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+        }
+
+        tr:hover td {
+            background: rgba(56, 189, 248, 0.08);
+        }
+
+        .cell-highlight {
+            color: #34d399;
+            font-weight: 700;
+        }
+
+        /* TABLE FOOTER STATS */
+        .table-stats-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 0.4rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 0.72rem;
+            color: var(--text-sub);
+        }
+
+        .stat-tag {
+            font-family: 'JetBrains Mono', monospace;
+            color: #38bdf8;
+            font-weight: 700;
+        }
+
+        /* VERIFICATION SUMMARY BANNER */
+        .verification-card {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(2, 132, 199, 0.08));
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            border-radius: 12px;
+            padding: 0.65rem 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.6rem;
+        }
+
+        .verification-info {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .verification-icon-box {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #10b981;
+            color: #020617;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        .verification-text {
+            font-size: 0.75rem;
+            color: #e2e8f0;
+            line-height: 1.35;
+        }
+
+        .verification-text strong {
+            color: #34d399;
+        }
+
+        .ratio-chip {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(52, 211, 153, 0.45);
+            color: #34d399;
+            padding: 0.3rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        /* BOTTOM THEORY & MINI QUIZ */
+        .bottom-grid {
+            margin-top: 1.1rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .theory-card {
+            background: var(--card-inner);
+            border: 1px solid var(--border-ui);
+            border-radius: 16px;
+            padding: 0.95rem 1.1rem;
+        }
+
+        .theory-card h3 {
+            font-size: 0.85rem;
+            color: #38bdf8;
+            font-weight: 700;
+            margin-bottom: 0.55rem;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .theory-card p, .theory-card li {
+            font-size: 0.78rem;
+            color: #cbd5e1;
+            line-height: 1.55;
+            text-align: justify;
+        }
+
+        .theory-card ul {
+            padding-left: 1.2rem;
+            margin-top: 0.35rem;
+        }
+
+        .math-statement {
+            text-align: center;
+            margin: 0.45rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            color: #fbbf24;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .quiz-question-title {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 0.5rem;
+        }
+
+        .quiz-choices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.4rem;
+            margin-bottom: 0.45rem;
+        }
+
+        .btn-quiz-choice {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-ui);
+            color: #cbd5e1;
+            padding: 0.4rem 0.55rem;
+            border-radius: 7px;
+            font-size: 0.72rem;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.15s;
+        }
+
+        .btn-quiz-choice:hover {
+            background: rgba(56, 189, 248, 0.12);
+            border-color: #38bdf8;
+        }
+
+        .btn-quiz-choice.correct {
+            background: rgba(16, 185, 129, 0.25) !important;
+            border-color: #10b981 !important;
+            color: #34d399 !important;
+            font-weight: 700;
+        }
+
+        .btn-quiz-choice.wrong {
+            background: rgba(239, 68, 68, 0.25) !important;
+            border-color: #ef4444 !important;
+            color: #f87171 !important;
+        }
+
+        .quiz-feedback-box {
+            font-size: 0.73rem;
+            min-height: 20px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="lab-wrapper">
+    <!-- HEADER -->
+    <header>
+        <div class="header-left">
+            <div class="header-icon">
+                <i class="fa-solid fa-flask-vial"></i>
+            </div>
+            <div class="header-title-text">
+                <h1>THÍ NGHIỆM KIỂM CHỨNG ĐỊNH LUẬT CHARLES</h1>
+                <p>Khảo sát mối quan hệ giữa thể tích <i>V</i> và nhiệt độ tuyệt đối <i>T</i> ở áp suất không đổi (Bình cầu &amp; Ống mao quản nằm ngang)</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <a href="MoPhong_DinhLuatCharles.html" class="btn-nav-link" title="Xem mô hình Xi-lanh Pit-tông">
+                <i class="fa-solid fa-arrows-up-down"></i> Xi-lanh Pit-tông
+            </a>
+            <span class="tag-badge"><i class="fa-solid fa-atom"></i> Vật lí 12 - GDPT 2018</span>
+            <button class="btn-sound" id="soundToggleBtn" onclick="toggleSound()" title="Bật/Tắt âm thanh">
+                <i class="fa-solid fa-volume-high" id="soundIcon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- TOP HUD READINGS -->
+    <div class="hud-grid">
+        <div class="hud-item">
+            <div class="hud-item-icon" style="background: rgba(249, 115, 22, 0.15); color: var(--orange-accent);">
+                <i class="fa-solid fa-temperature-three-quarters"></i>
+            </div>
+            <div class="hud-item-content">
+                <span class="hud-item-label">Nhiệt độ Celsius (<i>t</i>)</span>
+                <span class="hud-item-val" id="hudCelsius" style="color: var(--orange-accent);">20,0 °C</span>
+            </div>
+        </div>
+
+        <div class="hud-item">
+            <div class="hud-item-icon" style="background: rgba(245, 158, 11, 0.15); color: var(--amber-accent);">
+                <i class="fa-solid fa-fire-flame-curved"></i>
+            </div>
+            <div class="hud-item-content">
+                <span class="hud-item-label">Nhiệt độ Kelvin (<i>T</i>)</span>
+                <span class="hud-item-val" id="hudKelvin" style="color: var(--amber-accent);">293,15 K</span>
+            </div>
+        </div>
+
+        <div class="hud-item">
+            <div class="hud-item-icon" style="background: rgba(56, 189, 248, 0.15); color: var(--sky-accent);">
+                <i class="fa-solid fa-cube"></i>
+            </div>
+            <div class="hud-item-content">
+                <span class="hud-item-label">Thể tích khối khí (<i>V</i>)</span>
+                <span class="hud-item-val" id="hudVolume" style="color: var(--sky-accent);">100,0 cm³</span>
+            </div>
+        </div>
+
+        <div class="hud-item">
+            <div class="hud-item-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--emerald-accent);">
+                <i class="fa-solid fa-gauge-high"></i>
+            </div>
+            <div class="hud-item-content">
+                <span class="hud-item-label">Áp suất khí quyển (<i>p</i>)</span>
+                <span class="hud-item-val" id="hudPressure" style="color: var(--emerald-accent);">1,0 atm (hằng số)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN WORKSPACE -->
+    <div class="lab-workspace">
+        <!-- LEFT PANEL: APPARATUS & BENCH -->
+        <div class="apparatus-box">
+            <div class="box-title-bar">
+                <div class="box-title">
+                    <i class="fa-solid fa-microscope"></i>
+                    Bàn Thí Nghiệm Kiểm Chứng Định Luật Charles
+                </div>
+                <span id="burnerStatusLabel" style="font-size: 0.72rem; color: var(--text-dim); font-weight: 600;">
+                    <i class="fa-solid fa-circle" style="font-size: 0.5rem; vertical-align: middle;"></i> Đèn cồn đang tắt
+                </span>
+            </div>
+
+            <!-- STATUS BAR -->
+            <div class="status-message-bar" id="statusMessageBar">
+                <i class="fa-solid fa-circle-info" style="color: #38bdf8;"></i>
+                <span id="statusMessageText">Trạng thái cân bằng ở 20,0 °C (293,15 K) — Thể tích khối khí V = 100,0 cm³</span>
+            </div>
+
+            <!-- APPARATUS STAGE -->
+            <div class="stage-container" id="stageContainer">
+                <canvas id="mainApparatusCanvas"></canvas>
+
+                <!-- MOLECULAR INSET -->
+                <div class="molecular-box">
+                    <div class="molecular-header">
+                        <span><i class="fa-solid fa-circle-nodes"></i> Vi mô Phân tử</span>
+                        <span id="speedIndicator" style="font-family: monospace; font-size: 0.6rem; color: #f59e0b;">v = 490 m/s</span>
+                    </div>
+                    <canvas id="molecularCanvas"></canvas>
+                </div>
+            </div>
+
+            <!-- CONTROLS -->
+            <div class="controls-container">
+                <!-- SLIDER ROW -->
+                <div class="slider-panel">
+                    <div class="slider-caption">
+                        <i class="fa-solid fa-sliders" style="color: #38bdf8;"></i> Điều chỉnh <i>t</i>:
+                    </div>
+                    <div class="slider-track-wrap">
+                        <button class="btn-step-control" onclick="stepTemperature(-1)" title="Giảm 1 °C">-</button>
+                        <input type="range" id="temperatureSlider" min="0" max="100" step="0.5" value="20" oninput="onTemperatureSliderChange(this.value)">
+                        <button class="btn-step-control" onclick="stepTemperature(1)" title="Tăng 1 °C">+</button>
+                    </div>
+                    <div class="slider-readout" id="sliderValueDisplay">
+                        20,0 °C
+                    </div>
+                </div>
+
+                <!-- PRESET BUTTONS -->
+                <div class="preset-grid">
+                    <button class="btn-preset-temp" id="presetBtn0" onclick="applyPresetTemperature(0)">
+                        <i class="fa-regular fa-snowflake" style="color: #06b6d4;"></i> Nước đá (0 °C)
+                    </button>
+                    <button class="btn-preset-temp active" id="presetBtn20" onclick="applyPresetTemperature(20)">
+                        <i class="fa-solid fa-house" style="color: #38bdf8;"></i> Phòng (20 °C)
+                    </button>
+                    <button class="btn-preset-temp" id="presetBtn50" onclick="applyPresetTemperature(50)">
+                        <i class="fa-solid fa-mug-hot" style="color: #f59e0b;"></i> Nước ấm (50 °C)
+                    </button>
+                    <button class="btn-preset-temp" id="presetBtn80" onclick="applyPresetTemperature(80)">
+                        <i class="fa-solid fa-fire" style="color: #ef4444;"></i> Nước nóng (80 °C)
+                    </button>
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="actions-grid">
+                    <button class="btn-action btn-action-primary" id="btnAutoMeasure" onclick="runAutomatedVerification()">
+                        <i class="fa-solid fa-play"></i> Tự Động Đo Kiểm Chứng
+                    </button>
+                    <button class="btn-action btn-action-heat" id="btnBurnerToggle" onclick="toggleBurnerHeating()">
+                        <i class="fa-solid fa-fire-burner"></i> Bật Đèn Cồn Đun
+                    </button>
+                    <button class="btn-action btn-action-record" onclick="recordCurrentMeasurement()">
+                        <i class="fa-solid fa-floppy-disk"></i> Ghi Số Liệu
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: SPATIOUS & ADAPTIVE DATA & GRAPH -->
+        <div class="analysis-box">
+            <!-- VIEW MODE TOGGLER (CHUYỂN ĐỔI BỐ CỤC ĐỒ THỊ / BẢNG SỐ LIỆU) -->
+            <div class="view-mode-bar">
+                <div class="view-tabs">
+                    <button class="btn-view-tab active" id="tabModeSplit" onclick="setPanelLayoutMode('split')">
+                        <i class="fa-solid fa-table-columns"></i> Song Song
+                    </button>
+                    <button class="btn-view-tab" id="tabModeChart" onclick="setPanelLayoutMode('chart')">
+                        <i class="fa-solid fa-chart-line"></i> Đồ Thị Rộng Rãi
+                    </button>
+                    <button class="btn-view-tab" id="tabModeTable" onclick="setPanelLayoutMode('table')">
+                        <i class="fa-solid fa-table"></i> Bảng Số Liệu Chi Tiết
+                    </button>
+                </div>
+                <div class="view-actions">
+                    <button class="btn-mini-tool" onclick="measureTenSamplePoints()" title="Đo nhanh 10 mốc đều từ 10°C đến 100°C">
+                        <i class="fa-solid fa-layer-group" style="color: #38bdf8;"></i> Đo 10 Mốc
+                    </button>
+                    <button class="btn-mini-tool" onclick="copyTableDataToClipboard()" title="Sao chép toàn bộ bảng số liệu">
+                        <i class="fa-solid fa-copy"></i> Sao Chép
+                    </button>
+                </div>
+            </div>
+
+            <!-- REALTIME GRAPH CARD -->
+            <div class="chart-card" id="chartCardElement">
+                <div class="chart-title-row">
+                    <div class="chart-heading">
+                        <i class="fa-solid fa-chart-line" style="color: #38bdf8;"></i>
+                        Đồ Thị Đường Đẳng Áp &amp; Điểm Đo Thực Nghiệm
+                    </div>
+                    <div class="chart-controls">
+                        <button class="btn-chart-mode active" id="btnModeVT" onclick="switchChartCoordinateSystem('VT')">Hệ (V - T)</button>
+                        <button class="btn-chart-mode" id="btnModeVt" onclick="switchChartCoordinateSystem('Vt')">Hệ (V - t)</button>
+                    </div>
+                </div>
+                <div class="chart-canvas-wrap">
+                    <canvas id="isobaricChart"></canvas>
+                </div>
+            </div>
+
+            <!-- TABLE OF MEASURED DATA CARD -->
+            <div class="table-card" id="tableCardElement">
+                <div class="table-title-row">
+                    <div class="table-heading">
+                        <i class="fa-solid fa-table-list"></i>
+                        Bảng Số Liệu Thực Nghiệm
+                    </div>
+                    <div class="table-tool-buttons" style="display: flex; gap: 0.35rem;">
+                        <button class="btn-mini-tool" onclick="measureStandardFivePoints()" title="Tự động đo 5 mốc chuẩn SGK">
+                            <i class="fa-solid fa-bolt" style="color: #10b981;"></i> 5 Mốc SGK
+                        </button>
+                        <button class="btn-mini-tool" onclick="clearMeasurementTable()" title="Xóa dữ liệu">
+                            <i class="fa-solid fa-trash-can" style="color: #f87171;"></i> Xóa
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-scroll-wrap">
+                    <table id="measurementsTable">
+                        <thead>
+                            <tr>
+                                <th>Lần</th>
+                                <th><i>t</i> (°C)</th>
+                                <th><i>T</i> (K)</th>
+                                <th><i>l</i> (cm)</th>
+                                <th><i>V</i> (cm³)</th>
+                                <th><i>V / T</i> (cm³/K)</th>
+                                <th>Sai số $\Delta$ (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableDataBody">
+                            <tr id="emptyPlaceholderRow">
+                                <td colspan="7" style="color: var(--text-dim); font-style: italic; font-family: inherit; padding: 0.65rem;">
+                                    Chưa có số liệu. Hãy điều chỉnh nhiệt độ và nhấn &quot;Ghi Số Liệu&quot;, &quot;Đo 10 Mốc&quot; hoặc &quot;Tự Động Đo Kiểm Chứng&quot;.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- TABLE FOOTER STATS -->
+                <div class="table-stats-bar" id="tableStatsBar">
+                    <span>Số lần đo: <span class="stat-tag" id="statCount">0</span></span>
+                    <span>$\overline{V/T}$: <span class="stat-tag" id="statMeanRatio">--</span></span>
+                    <span>Sai số $\overline{\Delta}$: <span class="stat-tag" id="statMeanError" style="color: #34d399;">0,0%</span></span>
+                </div>
+            </div>
+
+            <!-- VERIFICATION SUMMARY -->
+            <div class="verification-card" id="verificationSummaryCard">
+                <div class="verification-info">
+                    <div class="verification-icon-box">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <div class="verification-text">
+                        <strong>Kết luận kiểm chứng:</strong><br>
+                        Tỉ số <i>V / T</i> duy trì không đổi $\approx \mathbf{0{,}341\text{ cm}^3/\text{K}}$, chứng minh định luật Charles hoàn toàn chính xác.
+                    </div>
+                </div>
+                <div class="ratio-chip" id="meanRatioBadge">
+                    V / T ≈ 0,341
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM THEORY & MINI QUIZ -->
+    <div class="bottom-grid">
+        <!-- THEORY SUMMARY -->
+        <div class="theory-card">
+            <h3><i class="fa-solid fa-book-bookmark"></i> Bản Chất Vật Lí &amp; Định Luật Charles</h3>
+            <p>
+                - <strong>Định luật Charles:</strong> Đối với một lượng khí xác định ở áp suất không đổi ($p = \text{const}$), thể tích $V$ tỉ lệ thuận với nhiệt độ tuyệt đối $T$:
+            </p>
+            <div class="math-statement">
+                $$\frac{V}{T} = \text{hằng số} \quad \Longleftrightarrow \quad \frac{V_1}{T_1} = \frac{V_2}{T_2}$$
+            </div>
+            <ul>
+                <li><strong>Giải thích vi mô:</strong> Khi nhiệt độ $T$ tăng, động năng trung bình và tốc độ chuyển động nhiệt của phân tử khí tăng. Để áp suất va chạm lên thành bình không bị tăng, khối khí nở rộng đẩy giọt chất lỏng chỉ thị ra xa.</li>
+                <li><strong>Đồ thị $(V, T)$:</strong> Đường đẳng áp có dạng đường thẳng đi qua gốc tọa độ $O(0\text{ K}, 0\text{ cm}^3)$. Đoạn gần $0\text{ K}$ được vẽ bằng nét đứt.</li>
+            </ul>
+        </div>
+
+        <!-- QUICK MINI QUIZ -->
+        <div class="theory-card">
+            <h3><i class="fa-solid fa-circle-question"></i> Câu Hỏi Củng Cố Kiến Thức</h3>
+            <div class="quiz-question-title">
+                Một khối khí ở nhiệt độ $20^\circ\text{C}$ ($293\text{ K}$) có thể tích $100\text{ cm}^3$. Khi đun nóng đẳng áp lên $80^\circ\text{C}$ ($353\text{ K}$), thể tích của khối khí bằng bao nhiêu?
+            </div>
+            <div class="quiz-choices">
+                <button class="btn-quiz-choice" onclick="evaluateQuizResponse(this, false)">A. 110,0 cm³</button>
+                <button class="btn-quiz-choice" onclick="evaluateQuizResponse(this, true)">B. 120,5 cm³</button>
+                <button class="btn-quiz-choice" onclick="evaluateQuizResponse(this, false)">C. 140,0 cm³</button>
+                <button class="btn-quiz-choice" onclick="evaluateQuizResponse(this, false)">D. 400,0 cm³</button>
+            </div>
+            <div class="quiz-feedback-box" id="quizFeedbackBox"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* ==========================================================================
+       HỆ THỐNG VẬT LÍ & THÔNG SỐ THIẾT BỊ CHUẨN SGK VẬT LÍ 12
+       ========================================================================== */
+    const V0_FLASK = 80.0; // cm3
+    const S_CAPILLARY = 0.50; // cm2
+    const CHARLES_CONSTANT = 100.0 / 293.15; // cm3/K
+
+    let labState = {
+        celsius: 20.0,
+        kelvin: 293.15,
+        volume: 100.0,
+        length: 40.0,
+        pressure: 1.0, // atm
+        isHeating: false,
+        heatingRate: 0.12, // °C per frame
+        isAutoMeasuring: false,
+        soundEnabled: true,
+        chartMode: 'VT', // 'VT' or 'Vt'
+        layoutMode: 'split' // 'split', 'chart', 'table'
+    };
+
+    let datasetRecords = [];
+    let webAudioContext = null;
+
+    /* ==========================================================================
+       BỘ CHUYỂN ĐỔI BỐ CỤC GÓC NHÌN (LAYOUT CONTROLLER)
+       ========================================================================== */
+    function setPanelLayoutMode(mode) {
+        labState.layoutMode = mode;
+        
+        document.getElementById('tabModeSplit').classList.toggle('active', mode === 'split');
+        document.getElementById('tabModeChart').classList.toggle('active', mode === 'chart');
+        document.getElementById('tabModeTable').classList.toggle('active', mode === 'table');
+
+        const chartCard = document.getElementById('chartCardElement');
+        const tableCard = document.getElementById('tableCardElement');
+
+        if (mode === 'split') {
+            chartCard.style.display = 'flex';
+            chartCard.classList.remove('expanded');
+            chartCard.style.height = '310px';
+
+            tableCard.style.display = 'flex';
+            tableCard.classList.remove('expanded');
+        } else if (mode === 'chart') {
+            chartCard.style.display = 'flex';
+            chartCard.classList.add('expanded');
+            chartCard.style.height = '500px';
+
+            tableCard.style.display = 'none';
+        } else if (mode === 'table') {
+            chartCard.style.display = 'none';
+
+            tableCard.style.display = 'flex';
+            tableCard.classList.add('expanded');
+        }
+
+        setTimeout(() => {
+            if (isobaricChartInstance) {
+                isobaricChartInstance.resize();
+            }
+        }, 150);
+    }
+
+    /* ==========================================================================
+       BỘ TẠO ÂM THANH KHOA HỌC (WEB AUDIO API)
+       ========================================================================== */
+    function initializeAudioEngine() {
+        if (!webAudioContext) {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            webAudioContext = new AudioContextClass();
+        }
+        if (webAudioContext && webAudioContext.state === 'suspended') {
+            webAudioContext.resume();
+        }
+    }
+
+    function toggleSound() {
+        labState.soundEnabled = !labState.soundEnabled;
+        const icon = document.getElementById('soundIcon');
+        if (labState.soundEnabled) {
+            icon.className = 'fa-solid fa-volume-high';
+            emitTone(600, 0.08, 'sine');
+        } else {
+            icon.className = 'fa-solid fa-volume-xmark';
+        }
+    }
+
+    function emitTone(frequency, duration, waveType = 'sine', volume = 0.15) {
+        if (!labState.soundEnabled) return;
+        try {
+            initializeAudioEngine();
+            if (!webAudioContext) return;
+            const osc = webAudioContext.createOscillator();
+            const gain = webAudioContext.createGain();
+            osc.type = waveType;
+            osc.frequency.setValueAtTime(frequency, webAudioContext.currentTime);
+            gain.gain.setValueAtTime(volume, webAudioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, webAudioContext.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(webAudioContext.destination);
+            osc.start();
+            osc.stop(webAudioContext.currentTime + duration);
+        } catch(err) {}
+    }
+
+    function playSuccessChime() {
+        if (!labState.soundEnabled) return;
+        emitTone(523.25, 0.12, 'triangle', 0.15); // C5
+        setTimeout(() => emitTone(659.25, 0.12, 'triangle', 0.15), 100); // E5
+        setTimeout(() => emitTone(783.99, 0.25, 'triangle', 0.2), 200); // G5
+    }
+
+    function playBeep() {
+        emitTone(880, 0.08, 'sine', 0.18);
+    }
+
+    /* ==========================================================================
+       VẼ BÀN THÍ NGHIỆM KHOA HỌC (CANVAS 2D CHÂN THỰC)
+       ========================================================================== */
+    const appCanvas = document.getElementById('mainApparatusCanvas');
+    const appCtx = appCanvas.getContext('2d');
+    let waterBubbles = [];
+    let steamVapors = [];
+
+    function resizeApparatusCanvas() {
+        const rect = appCanvas.parentElement.getBoundingClientRect();
+        appCanvas.width = rect.width;
+        appCanvas.height = rect.height;
+    }
+
+    class WaterBubble {
+        constructor(xRange, yMin, yMax) {
+            this.x = xRange[0] + Math.random() * (xRange[1] - xRange[0]);
+            this.y = yMax - Math.random() * 10;
+            this.yMin = yMin;
+            this.yMax = yMax;
+            this.xRange = xRange;
+            this.r = 1.5 + Math.random() * 2.5;
+            this.speed = 0.4 + Math.random() * 1.2;
+            this.wobble = Math.random() * Math.PI * 2;
+        }
+        update() {
+            this.y -= this.speed * (labState.celsius > 60 ? 1.8 : 0.8);
+            this.wobble += 0.08;
+            this.x += Math.sin(this.wobble) * 0.35;
+            if (this.y < this.yMin) {
+                this.y = this.yMax;
+                this.x = this.xRange[0] + Math.random() * (this.xRange[1] - this.xRange[0]);
+            }
+        }
+        draw(ctx) {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.6)';
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+        }
+    }
+
+    class SteamVapor {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.r = 2 + Math.random() * 4;
+            this.alpha = 0.5 + Math.random() * 0.3;
+            this.vx = (Math.random() - 0.5) * 0.4;
+            this.vy = -(0.5 + Math.random() * 1.0);
+            this.maxLife = 45 + Math.random() * 30;
+            this.life = 0;
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.r += 0.18;
+            this.life++;
+            this.alpha = Math.max(0, 0.5 * (1 - this.life / this.maxLife));
+        }
+        draw(ctx) {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(226, 232, 240, ${this.alpha * 0.35})`;
+            ctx.fill();
+        }
+    }
+
+    let apparatusGasParticles = [];
+    const NUM_APPARATUS_GAS = 45;
+
+    class ApparatusGasParticle {
+        constructor() {
+            this.r = 1.9;
+            this.zone = 'flask';
+            this.x = 120;
+            this.y = 170;
+            this.vx = (Math.random() - 0.5) * 1.5;
+            this.vy = (Math.random() - 0.5) * 1.5;
+        }
+
+        init(cx, cy, R, tubeCornerX, tubeCornerY, tubeInnerR, tubeBottomY, maxTubeX, index) {
+            // Phân bổ: 82% trong bình cầu (37 hạt), 18% trong ống (8 hạt)
+            if (index < 37) {
+                const angle = Math.random() * Math.PI * 2;
+                const dist = Math.random() * (R - 5);
+                this.x = cx + Math.cos(angle) * dist;
+                this.y = cy + Math.sin(angle) * dist;
+                this.zone = 'flask';
+                const spd = (1.0 + Math.random() * 1.2) * Math.sqrt(labState.kelvin / 293.15);
+                const vAngle = Math.random() * Math.PI * 2;
+                this.vx = Math.cos(vAngle) * spd;
+                this.vy = Math.sin(vAngle) * spd;
+            } else if (index < 40) {
+                this.x = tubeCornerX + (Math.random() - 0.5) * (tubeInnerR * 0.8);
+                this.y = tubeCornerY + 4 + Math.random() * (tubeBottomY - tubeCornerY - 8);
+                this.zone = 'tube_vert';
+                const spd = (1.0 + Math.random() * 0.8) * Math.sqrt(labState.kelvin / 293.15);
+                this.vx = 0;
+                this.vy = Math.random() < 0.5 ? -spd : spd;
+            } else {
+                const maxX = Math.max(tubeCornerX + 15, maxTubeX - 10);
+                this.x = tubeCornerX + 10 + Math.random() * (maxX - tubeCornerX - 10);
+                this.y = tubeCornerY + (Math.random() - 0.5) * (tubeInnerR * 0.8);
+                this.zone = 'tube_horiz';
+                const spd = (1.0 + Math.random() * 0.8) * Math.sqrt(labState.kelvin / 293.15);
+                this.vx = Math.random() < 0.5 ? -spd : spd;
+                this.vy = 0;
+            }
+        }
+
+        update(cx, cy, R, tubeCornerX, tubeCornerY, tubeInnerR, tubeBottomY, maxTubeX) {
+            const targetSpeed = (1.1 + (this.r % 0.5)) * Math.sqrt(labState.kelvin / 293.15);
+
+            // 1. TRONG LÒNG BÌNH CẦU & CỔ BÌNH
+            if (this.zone === 'flask') {
+                const curSpeed = Math.hypot(this.vx, this.vy);
+                if (curSpeed > 0) {
+                    this.vx = (this.vx / curSpeed) * targetSpeed;
+                    this.vy = (this.vy / curSpeed) * targetSpeed;
+                }
+
+                this.x += this.vx;
+                this.y += this.vy;
+
+                const dx = this.x - cx;
+                const dy = this.y - cy;
+                const dist = Math.hypot(dx, dy);
+
+                // Khi bay lên gần miệng đáy ống thủy tinh: chui vào ống dọc đi lên
+                if (Math.abs(this.x - tubeCornerX) < tubeInnerR - 0.5 && this.y <= tubeBottomY + 2 && this.vy < 0) {
+                    this.zone = 'tube_vert';
+                    this.x = tubeCornerX;
+                    this.y = tubeBottomY - 1;
+                    this.vx = (Math.random() - 0.5) * 0.3;
+                    this.vy = -targetSpeed;
+                    return;
+                }
+
+                // Trong cổ bình phía dưới miệng ống
+                if (this.y < cy - R + 10 && this.y >= tubeBottomY) {
+                    if (this.x - this.r < cx - 8.5) {
+                        this.x = cx - 8.5 + this.r;
+                        this.vx = Math.abs(this.vx);
+                    } else if (this.x + this.r > cx + 8.5) {
+                        this.x = cx + 8.5 - this.r;
+                        this.vx = -Math.abs(this.vx);
+                    }
+                    if (this.y - this.r < tubeBottomY && Math.abs(this.x - tubeCornerX) >= tubeInnerR - 0.5) {
+                        this.y = tubeBottomY + this.r;
+                        this.vy = Math.abs(this.vy);
+                    }
+                } else {
+                    // Trong quả cầu bình
+                    if (dist + this.r > R - 2) {
+                        const nx = dx / dist;
+                        const ny = dy / dist;
+                        const dot = this.vx * nx + this.vy * ny;
+                        this.vx -= 2 * dot * nx;
+                        this.vy -= 2 * dot * ny;
+                        this.x = cx + nx * (R - 2 - this.r);
+                        this.y = cy + ny * (R - 2 - this.r);
+                    }
+                }
+            }
+            // 2. TRONG ĐOẠN ỐNG DỌC (THÔNG GIỮA BÌNH CẦU VÀ ỐNG NGANG)
+            else if (this.zone === 'tube_vert') {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Va chạm 2 thành ống dọc
+                if (this.x - this.r < tubeCornerX - tubeInnerR + 1) {
+                    this.x = tubeCornerX - tubeInnerR + 1 + this.r;
+                    this.vx = Math.abs(this.vx);
+                } else if (this.x + this.r > tubeCornerX + tubeInnerR - 1) {
+                    this.x = tubeCornerX + tubeInnerR - 1 - this.r;
+                    this.vx = -Math.abs(this.vx);
+                }
+
+                // Chạy xuống đến miệng ống -> CHUI XUỐNG BÌNH CẦU TỎA RA ĐỀU
+                if (this.y >= tubeBottomY) {
+                    this.zone = 'flask';
+                    this.y = tubeBottomY + 2;
+                    const spreadAngle = Math.PI / 4 + Math.random() * (Math.PI / 2); // 45° đến 135° (hướng xuống lòng bình)
+                    this.vx = Math.cos(spreadAngle) * targetSpeed;
+                    this.vy = Math.sin(spreadAngle) * targetSpeed;
+                }
+                // Đi lên đến góc rẽ -> UỐN SANG ỐNG NẰM NGANG ĐI SANG PHẢI
+                else if (this.y <= tubeCornerY) {
+                    this.zone = 'tube_horiz';
+                    this.y = tubeCornerY + (Math.random() - 0.5) * (tubeInnerR * 0.6);
+                    this.x = tubeCornerX + 1;
+                    this.vx = targetSpeed;
+                    this.vy = (Math.random() - 0.5) * 0.3;
+                }
+            }
+            // 3. TRONG ỐNG MAO QUẢN NẰM NGANG (TỪ GÓC CUA ĐẾN GIỌT NƯỚC MÀU)
+            else if (this.zone === 'tube_horiz') {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Va chạm 2 thành ống ngang
+                if (this.y - this.r < tubeCornerY - tubeInnerR + 1) {
+                    this.y = tubeCornerY - tubeInnerR + 1 + this.r;
+                    this.vy = Math.abs(this.vy);
+                } else if (this.y + this.r > tubeCornerY + tubeInnerR - 1) {
+                    this.y = tubeCornerY + tubeInnerR - 1 - this.r;
+                    this.vy = -Math.abs(this.vy);
+                }
+
+                // Đi về góc cua bên trái -> UỐN XUỐNG ỐNG DỌC ĐỂ CHUI VỀ LẠI BÌNH CẦU
+                if (this.x <= tubeCornerX) {
+                    this.zone = 'tube_vert';
+                    this.x = tubeCornerX;
+                    this.y = tubeCornerY + 1;
+                    this.vx = (Math.random() - 0.5) * 0.3;
+                    this.vy = targetSpeed; // Hướng đi thẳng xuống bình cầu
+                }
+                // Đập vào mặt giọt nước màu chỉ thị -> DỘI NGƯỢC LẠI SANG TRÁI VỀ PHÍA BÌNH CẦU
+                else if (this.x + this.r >= maxTubeX) {
+                    this.x = maxTubeX - this.r;
+                    this.vx = -targetSpeed;
+                }
+            }
+        }
+
+        draw(ctx) {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+            if (labState.celsius < 30) {
+                ctx.fillStyle = '#38bdf8';
+                ctx.shadowColor = '#38bdf8';
+            } else if (labState.celsius < 70) {
+                ctx.fillStyle = '#f59e0b';
+                ctx.shadowColor = '#f59e0b';
+            } else {
+                ctx.fillStyle = '#ef4444';
+                ctx.shadowColor = '#ef4444';
+            }
+            ctx.shadowBlur = 3.5;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+    }
+
+    function initApparatusParticles() {
+        waterBubbles = [];
+        for (let i = 0; i < 18; i++) {
+            waterBubbles.push(new WaterBubble([65, 175], 115, 215));
+        }
+
+        apparatusGasParticles = [];
+        for (let i = 0; i < NUM_APPARATUS_GAS; i++) {
+            const p = new ApparatusGasParticle();
+            p.init(120, 174, 38, 120, 36, 4.5, 70, 220, i);
+            apparatusGasParticles.push(p);
+        }
+    }
+
+    function renderApparatusScene() {
+        appCtx.clearRect(0, 0, appCanvas.width, appCanvas.height);
+        const w = appCanvas.width;
+        const h = appCanvas.height;
+
+        // Table surface
+        const tableY = h - 25;
+        appCtx.fillStyle = '#1e293b';
+        appCtx.fillRect(0, tableY, w, 25);
+        appCtx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+        appCtx.lineWidth = 2;
+        appCtx.beginPath();
+        appCtx.moveTo(0, tableY);
+        appCtx.lineTo(w, tableY);
+        appCtx.stroke();
+
+        // 1. BEAKER & WATER BATH (CHẬU NƯỚC ĐIỀU NHIỆT)
+        const beakerX = 50;
+        const beakerY = 100;
+        const beakerW = 140;
+        const beakerH = 125;
+
+        // Metal Tripod Stand
+        appCtx.strokeStyle = '#64748b';
+        appCtx.lineWidth = 3.5;
+        appCtx.beginPath();
+        appCtx.moveTo(beakerX + 15, beakerY + beakerH + 3);
+        appCtx.lineTo(beakerX - 5, tableY);
+        appCtx.moveTo(beakerX + beakerW - 15, beakerY + beakerH + 3);
+        appCtx.lineTo(beakerX + beakerW + 5, tableY);
+        appCtx.moveTo(beakerX - 5, beakerY + beakerH + 3);
+        appCtx.lineTo(beakerX + beakerW + 5, beakerY + beakerH + 3);
+        appCtx.stroke();
+
+        // Wire gauze
+        appCtx.fillStyle = '#94a3b8';
+        appCtx.fillRect(beakerX + 5, beakerY + beakerH + 1, beakerW - 10, 3);
+
+        // Alcohol Burner / Heater
+        const burnerX = beakerX + beakerW / 2;
+        const burnerY = tableY - 2;
+        appCtx.fillStyle = '#334155';
+        appCtx.beginPath();
+        appCtx.roundRect(burnerX - 25, burnerY - 22, 50, 22, [4, 4, 0, 0]);
+        appCtx.fill();
+        appCtx.strokeStyle = '#475569';
+        appCtx.lineWidth = 1.5;
+        appCtx.stroke();
+
+        // Burner wick
+        appCtx.fillStyle = '#cbd5e1';
+        appCtx.fillRect(burnerX - 4, burnerY - 28, 8, 6);
+
+        // Flame Animation
+        if (labState.isHeating) {
+            const flameHeight = 22 + Math.sin(Date.now() * 0.02) * 4;
+            const flickerX = Math.cos(Date.now() * 0.03) * 2.5;
+
+            const gradFlame = appCtx.createRadialGradient(burnerX + flickerX, burnerY - 28 - flameHeight / 2, 2, burnerX, burnerY - 28, flameHeight);
+            gradFlame.addColorStop(0, '#fef08a');
+            gradFlame.addColorStop(0.3, '#f97316');
+            gradFlame.addColorStop(0.8, '#ef4444');
+            gradFlame.addColorStop(1, 'transparent');
+
+            appCtx.fillStyle = gradFlame;
+            appCtx.beginPath();
+            appCtx.moveTo(burnerX - 12, burnerY - 28);
+            appCtx.quadraticCurveTo(burnerX - 16, burnerY - 28 - flameHeight * 0.6, burnerX + flickerX, burnerY - 28 - flameHeight);
+            appCtx.quadraticCurveTo(burnerX + 16, burnerY - 28 - flameHeight * 0.6, burnerX + 12, burnerY - 28);
+            appCtx.closePath();
+            appCtx.fill();
+
+            appCtx.fillStyle = 'rgba(56, 189, 248, 0.85)';
+            appCtx.beginPath();
+            appCtx.moveTo(burnerX - 5, burnerY - 28);
+            appCtx.lineTo(burnerX, burnerY - 38);
+            appCtx.lineTo(burnerX + 5, burnerY - 28);
+            appCtx.closePath();
+            appCtx.fill();
+
+            const glow = appCtx.createRadialGradient(burnerX, beakerY + beakerH, 5, burnerX, beakerY + beakerH, 40);
+            glow.addColorStop(0, 'rgba(249, 115, 22, 0.45)');
+            glow.addColorStop(1, 'transparent');
+            appCtx.fillStyle = glow;
+            appCtx.fillRect(beakerX, beakerY + beakerH - 20, beakerW, 30);
+        }
+
+        // Water level & color gradient based on temperature
+        const waterLevelY = beakerY + 20;
+        const waterH = beakerH - 20;
+        const tempRatio = Math.min(Math.max((labState.celsius - 0) / 100, 0), 1);
+        
+        const rColor = Math.round(6 + tempRatio * 220);
+        const gColor = Math.round(182 - tempRatio * 100);
+        const bColor = Math.round(212 - tempRatio * 160);
+        const waterGrad = appCtx.createLinearGradient(0, waterLevelY, 0, waterLevelY + waterH);
+        waterGrad.addColorStop(0, `rgba(${rColor}, ${gColor}, ${bColor}, 0.35)`);
+        waterGrad.addColorStop(1, `rgba(${rColor}, ${gColor}, ${bColor}, 0.65)`);
+
+        appCtx.fillStyle = waterGrad;
+        appCtx.beginPath();
+        appCtx.roundRect(beakerX + 4, waterLevelY, beakerW - 8, waterH - 4, [0, 0, 8, 8]);
+        appCtx.fill();
+
+        // Water surface
+        appCtx.strokeStyle = `rgba(${rColor + 40}, ${gColor + 40}, ${bColor + 40}, 0.8)`;
+        appCtx.lineWidth = 2;
+        appCtx.beginPath();
+        appCtx.moveTo(beakerX + 4, waterLevelY);
+        for (let bx = beakerX + 4; bx <= beakerX + beakerW - 4; bx += 10) {
+            const waveY = waterLevelY + Math.sin((bx * 0.08) + Date.now() * 0.005) * (labState.celsius > 50 ? 1.5 : 0.6);
+            appCtx.lineTo(bx, waveY);
+        }
+        appCtx.stroke();
+
+        // Water bubbles
+        if (labState.celsius > 35) {
+            waterBubbles.forEach(b => {
+                b.update();
+                b.draw(appCtx);
+            });
+        }
+
+        // Steam vapors
+        if (labState.celsius > 55 && Math.random() < (labState.celsius - 50) / 80) {
+            steamVapors.push(new SteamVapor(beakerX + 20 + Math.random() * (beakerW - 40), waterLevelY - 2));
+        }
+        steamVapors.forEach((st, idx) => {
+            st.update();
+            st.draw(appCtx);
+            if (st.life >= st.maxLife) {
+                steamVapors.splice(idx, 1);
+            }
+        });
+
+        // 2. GLASS FLASK WITH CONFINED DRY GAS (BÌNH CẦU CHỨA KHỐI KHÍ KÍN TRONG SUỐT)
+        const flaskCenterX = beakerX + beakerW / 2;
+        const flaskCenterY = beakerY + 74;
+        const flaskRadius = 38;
+
+        const neckW = 20;
+        const neckH = 48;
+        const neckTopY = flaskCenterY - flaskRadius - neckH + 12;
+
+        const tubeInnerR = 4.5;
+        const tubeOuterR = 6.5;
+        const stopperY = neckTopY - 6;
+        const stopperH = 18;
+        const tubeBottomY = stopperY + stopperH + 14; // Đầu hở 1 cắm sâu vào trong khối khí
+        const tubeCornerX = flaskCenterX;
+        const tubeCornerY = neckTopY - 18;
+        const tubeHorizontalEndX = w - 40; // Đầu hở 2 mở ra khí quyển
+
+        // Tính vị trí giọt nước màu và giới hạn khí
+        const minL = 20.0;
+        const maxL = 100.0;
+        const rulerX = beakerX + beakerW + 20;
+        const rulerEndX = tubeHorizontalEndX - 15;
+        const rulerW = rulerEndX - rulerX;
+        const curFrac = (labState.length - minL) / (maxL - minL);
+        const dropletX = rulerX + Math.max(0, Math.min(1, curFrac)) * rulerW;
+        const dropletLength = 16;
+        const maxTubeX = dropletX - dropletLength / 2 - 1.5;
+
+        // A. Nền trong lòng bình cầu (Tách biệt hoàn toàn khối khí bên trong với nước bên ngoài)
+        appCtx.fillStyle = '#0a1124';
+        appCtx.beginPath();
+        appCtx.arc(flaskCenterX, flaskCenterY, flaskRadius - 1.5, 0, Math.PI * 2);
+        appCtx.fill();
+        appCtx.fillRect(flaskCenterX - neckW / 2 + 1.5, neckTopY, neckW - 3, neckH + 10);
+
+        // Hiệu ứng màu của khối khí theo nhiệt độ
+        const gasGrad = appCtx.createRadialGradient(flaskCenterX, flaskCenterY, 5, flaskCenterX, flaskCenterY, flaskRadius);
+        gasGrad.addColorStop(0, `rgba(${rColor}, ${gColor}, ${bColor}, 0.38)`);
+        gasGrad.addColorStop(0.75, `rgba(${rColor}, ${gColor}, ${bColor}, 0.15)`);
+        gasGrad.addColorStop(1, 'rgba(255, 255, 255, 0.05)');
+
+        appCtx.fillStyle = gasGrad;
+        appCtx.beginPath();
+        appCtx.arc(flaskCenterX, flaskCenterY, flaskRadius - 1.5, 0, Math.PI * 2);
+        appCtx.fill();
+        appCtx.fillRect(flaskCenterX - neckW / 2 + 1.5, neckTopY, neckW - 3, neckH + 10);
+
+        // Lòng ống thủy tinh (Hollow passage)
+        appCtx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+        appCtx.fillRect(tubeCornerX + tubeInnerR, tubeCornerY - tubeInnerR + 0.5, tubeHorizontalEndX - (tubeCornerX + tubeInnerR), (tubeInnerR - 0.5) * 2);
+        appCtx.fillRect(tubeCornerX - tubeInnerR + 0.5, tubeCornerY - tubeInnerR, (tubeInnerR - 0.5) * 2, tubeBottomY - (tubeCornerY - tubeInnerR));
+
+        // CÁC PHÂN TỬ KHÍ CHUYỂN ĐỘNG TỰ DO THÔNG SUỐT GIỮA BÌNH VÀ ỐNG THỦY TINH
+        apparatusGasParticles.forEach(p => {
+            p.update(flaskCenterX, flaskCenterY, flaskRadius, tubeCornerX, tubeCornerY, tubeInnerR, tubeBottomY, maxTubeX);
+            p.draw(appCtx);
+        });
+
+        // B. Thành bình cầu thủy tinh & Miệng bình cầu loe hở lên trên
+        appCtx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+        appCtx.lineWidth = 2.5;
+        appCtx.beginPath();
+        // Thành cổ bên trái & gờ miệng loe
+        appCtx.moveTo(flaskCenterX - neckW / 2 - 3, neckTopY);
+        appCtx.lineTo(flaskCenterX - neckW / 2, neckTopY + 4);
+        appCtx.lineTo(flaskCenterX - neckW / 2, flaskCenterY - flaskRadius + 12);
+        // Vỏ quả cầu bình
+        appCtx.arc(flaskCenterX, flaskCenterY, flaskRadius, -Math.PI / 2 - 0.25, Math.PI / 2 + Math.PI, false);
+        // Thành cổ bên phải & gờ miệng loe
+        appCtx.moveTo(flaskCenterX + neckW / 2, flaskCenterY - flaskRadius + 12);
+        appCtx.lineTo(flaskCenterX + neckW / 2, neckTopY + 4);
+        appCtx.lineTo(flaskCenterX + neckW / 2 + 3, neckTopY);
+        appCtx.stroke();
+
+        // Vành miệng bình cầu loe hở lên (Glass Rim at top opening)
+        appCtx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+        appCtx.lineWidth = 1.5;
+        appCtx.beginPath();
+        appCtx.ellipse(flaskCenterX, neckTopY, neckW / 2 + 3, 3.5, 0, 0, Math.PI * 2);
+        appCtx.stroke();
+
+        // Vệt sáng phản chiếu trên thủy tinh
+        appCtx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+        appCtx.lineWidth = 3;
+        appCtx.beginPath();
+        appCtx.arc(flaskCenterX, flaskCenterY, flaskRadius - 5, -Math.PI * 0.75, -Math.PI * 0.25);
+        appCtx.stroke();
+
+        // 3. HORIZONTAL & VERTICAL GLASS TUBE (ỐNG THỦY TINH HỞ CẢ 2 ĐẦU)
+        // Thành ống thủy tinh phía ngoài (2 thành ống song song)
+        appCtx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+        appCtx.lineWidth = 1.8;
+        appCtx.lineCap = 'butt';
+
+        // Thành trên và bên trái
+        appCtx.beginPath();
+        appCtx.moveTo(tubeCornerX - tubeInnerR, tubeBottomY);
+        appCtx.lineTo(tubeCornerX - tubeInnerR, tubeCornerY - tubeInnerR);
+        appCtx.lineTo(tubeHorizontalEndX, tubeCornerY - tubeInnerR);
+        appCtx.stroke();
+
+        // Thành dưới và bên phải
+        appCtx.beginPath();
+        appCtx.moveTo(tubeCornerX + tubeInnerR, tubeBottomY);
+        appCtx.lineTo(tubeCornerX + tubeInnerR, tubeCornerY + tubeInnerR);
+        appCtx.lineTo(tubeHorizontalEndX, tubeCornerY + tubeInnerR);
+        appCtx.stroke();
+
+        // ĐẦU HỞ 1: Miệng dưới ống thủy tinh bên trong bình cầu (mở thông khối khí)
+        appCtx.strokeStyle = 'rgba(56, 189, 248, 0.85)';
+        appCtx.lineWidth = 1.4;
+        appCtx.beginPath();
+        appCtx.ellipse(tubeCornerX, tubeBottomY, tubeInnerR, 2, 0, 0, Math.PI * 2);
+        appCtx.stroke();
+
+        // ĐẦU HỞ 2: Miệng bên phải ống mao quản mở ra khí quyển
+        appCtx.strokeStyle = 'rgba(56, 189, 248, 0.85)';
+        appCtx.lineWidth = 1.4;
+        appCtx.beginPath();
+        appCtx.ellipse(tubeHorizontalEndX, tubeCornerY, 2, tubeInnerR, 0, 0, Math.PI * 2);
+        appCtx.stroke();
+
+        // 4. SOLID DARK CHARCOAL RUBBER STOPPER (NÚT CAO SU MÀU ĐẬM BỊT KÍN MIỆNG BÌNH & CHE ĐOẠN ỐNG BÊN TRONG)
+        // Vẽ ĐÈ LÊN ống thủy tinh để đoạn ống xuyên qua nút được ẩn hoàn toàn vào trong nút cao su
+        const stopperTopW = 26;
+        const stopperBottomW = 18;
+
+        const stopperGrad = appCtx.createLinearGradient(flaskCenterX - stopperTopW / 2, 0, flaskCenterX + stopperTopW / 2, 0);
+        stopperGrad.addColorStop(0, '#090d16');
+        stopperGrad.addColorStop(0.2, '#182032');
+        stopperGrad.addColorStop(0.5, '#2b3952');
+        stopperGrad.addColorStop(0.8, '#182032');
+        stopperGrad.addColorStop(1, '#090d16');
+
+        appCtx.fillStyle = stopperGrad;
+        appCtx.beginPath();
+        appCtx.moveTo(flaskCenterX - stopperTopW / 2, stopperY);
+        appCtx.lineTo(flaskCenterX + stopperTopW / 2, stopperY);
+        appCtx.lineTo(flaskCenterX + stopperBottomW / 2, stopperY + stopperH);
+        appCtx.lineTo(flaskCenterX - stopperBottomW / 2, stopperY + stopperH);
+        appCtx.closePath();
+        appCtx.fill();
+
+        appCtx.strokeStyle = '#020617';
+        appCtx.lineWidth = 2;
+        appCtx.stroke();
+
+        // Vành trên của nút cao su (Top lip ring)
+        appCtx.fillStyle = '#1e293b';
+        appCtx.beginPath();
+        appCtx.ellipse(flaskCenterX, stopperY, stopperTopW / 2, 3.5, 0, 0, Math.PI * 2);
+        appCtx.fill();
+        appCtx.strokeStyle = '#475569';
+        appCtx.lineWidth = 1.2;
+        appCtx.stroke();
+
+        // Vòng đệm ôm sát ống thủy tinh đi ra ở mặt trên nút cao su
+        appCtx.strokeStyle = '#090d16';
+        appCtx.lineWidth = 1.6;
+        appCtx.beginPath();
+        appCtx.ellipse(flaskCenterX, stopperY, tubeInnerR + 1.2, 2.2, 0, 0, Math.PI * 2);
+        appCtx.stroke();
+
+        // 5. THERMOMETER (NHIỆT KẾ ĐO NHIỆT ĐỘ NƯỚC)
+        const thermX = beakerX + 22;
+        const thermTopY = 40;
+        const thermBottomY = beakerY + beakerH - 18;
+        const thermW = 8;
+
+        appCtx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+        appCtx.beginPath();
+        appCtx.roundRect(thermX - thermW / 2, thermTopY, thermW, thermBottomY - thermTopY, [4, 4, 0, 0]);
+        appCtx.fill();
+        appCtx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+        appCtx.lineWidth = 1.2;
+        appCtx.stroke();
+
+        // Mercury bulb
+        appCtx.fillStyle = '#ef4444';
+        appCtx.beginPath();
+        appCtx.arc(thermX, thermBottomY + 4, 7, 0, Math.PI * 2);
+        appCtx.fill();
+
+        // Mercury column
+        const mercuryHeight = ((labState.celsius - 0) / 100) * (thermBottomY - thermTopY - 20);
+        appCtx.fillStyle = '#ef4444';
+        appCtx.fillRect(thermX - 1.5, thermBottomY - mercuryHeight, 3, mercuryHeight + 4);
+
+        // Thermometer ticks
+        appCtx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        appCtx.lineWidth = 1;
+        for (let t = 0; t <= 100; t += 20) {
+            const markY = thermBottomY - (t / 100) * (thermBottomY - thermTopY - 20);
+            appCtx.beginPath();
+            appCtx.moveTo(thermX + thermW / 2, markY);
+            appCtx.lineTo(thermX + thermW / 2 + 3, markY);
+            appCtx.stroke();
+        }
+
+        // 6. BEAKER GLASS WALLS
+        appCtx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
+        appCtx.lineWidth = 2.5;
+        appCtx.beginPath();
+        appCtx.moveTo(beakerX, beakerY);
+        appCtx.lineTo(beakerX, beakerY + beakerH);
+        appCtx.lineTo(beakerX + beakerW, beakerY + beakerH);
+        appCtx.lineTo(beakerX + beakerW, beakerY);
+        appCtx.stroke();
+
+        // 6. MEASUREMENT SCALE / RULER (THƯỚC CHIA VẠCH)
+        const rulerY = tubeCornerY + 12;
+
+        appCtx.fillStyle = 'rgba(30, 41, 59, 0.9)';
+        appCtx.fillRect(rulerX - 5, rulerY, rulerW + 10, 24);
+        appCtx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+        appCtx.lineWidth = 1;
+        appCtx.strokeRect(rulerX - 5, rulerY, rulerW + 10, 24);
+
+        appCtx.fillStyle = '#cbd5e1';
+        appCtx.font = '8px "JetBrains Mono", monospace';
+        appCtx.textAlign = 'center';
+
+        for (let markL = 20; markL <= 100; markL += 10) {
+            const frac = (markL - minL) / (maxL - minL);
+            const mx = rulerX + frac * rulerW;
+            
+            appCtx.strokeStyle = '#94a3b8';
+            appCtx.lineWidth = 1.2;
+            appCtx.beginPath();
+            appCtx.moveTo(mx, rulerY);
+            appCtx.lineTo(mx, rulerY + 8);
+            appCtx.stroke();
+
+            const markV = (V0_FLASK + S_CAPILLARY * markL).toFixed(0);
+            appCtx.fillText(`${markV}ml`, mx, rulerY + 18);
+
+            appCtx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
+            appCtx.lineWidth = 0.8;
+            for (let sub = 2; sub <= 8; sub += 2) {
+                const subFrac = (markL + sub - minL) / (maxL - minL);
+                if (subFrac <= 1.0) {
+                    const smx = rulerX + subFrac * rulerW;
+                    appCtx.beginPath();
+                    appCtx.moveTo(smx, rulerY);
+                    appCtx.lineTo(smx, rulerY + 4);
+                    appCtx.stroke();
+                }
+            }
+        }
+
+        // 7. RED LIQUID INDICATOR DROPLET (GIỌT NƯỚC MÀU CHỈ THỊ)
+        const dropletY = tubeCornerY;
+
+        const dropGrad = appCtx.createLinearGradient(dropletX - dropletLength / 2, 0, dropletX + dropletLength / 2, 0);
+        dropGrad.addColorStop(0, '#991b1b');
+        dropGrad.addColorStop(0.3, '#ef4444');
+        dropGrad.addColorStop(0.7, '#f87171');
+        dropGrad.addColorStop(1, '#991b1b');
+
+        appCtx.fillStyle = dropGrad;
+        appCtx.beginPath();
+        appCtx.roundRect(dropletX - dropletLength / 2, dropletY - tubeInnerR + 0.5, dropletLength, (tubeInnerR - 0.5) * 2, 3);
+        appCtx.fill();
+
+        appCtx.shadowColor = 'rgba(239, 68, 68, 0.7)';
+        appCtx.shadowBlur = 8;
+        appCtx.strokeStyle = '#fca5a5';
+        appCtx.lineWidth = 1;
+        appCtx.stroke();
+        appCtx.shadowBlur = 0;
+
+        // Pointer arrow to scale
+        appCtx.fillStyle = '#ef4444';
+        appCtx.beginPath();
+        appCtx.moveTo(dropletX, dropletY + tubeInnerR + 2);
+        appCtx.lineTo(dropletX - 4, dropletY + tubeInnerR + 8);
+        appCtx.lineTo(dropletX + 4, dropletY + tubeInnerR + 8);
+        appCtx.closePath();
+        appCtx.fill();
+
+        // Label above droplet
+        appCtx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+        appCtx.strokeStyle = 'rgba(239, 68, 68, 0.6)';
+        appCtx.lineWidth = 1;
+        const tagText = `V = ${labState.volume.toFixed(1)} cm³`;
+        appCtx.font = 'bold 9px "JetBrains Mono", monospace';
+        const tagW = appCtx.measureText(tagText).width + 10;
+        appCtx.beginPath();
+        appCtx.roundRect(dropletX - tagW / 2, dropletY - 26, tagW, 16, 4);
+        appCtx.fill();
+        appCtx.stroke();
+
+        appCtx.fillStyle = '#fca5a5';
+        appCtx.textAlign = 'center';
+        appCtx.fillText(tagText, dropletX, dropletY - 14);
+
+        // Apparatus labels
+        renderStaticLabel(appCtx, "Bình cầu chứa khí", flaskCenterX - 20, flaskCenterY + 4, "left");
+        renderStaticLabel(appCtx, "Chậu nước điều nhiệt", beakerX + 10, beakerY + 35, "left");
+        renderStaticLabel(appCtx, "Đèn cồn", burnerX + 30, burnerY - 10, "left");
+        renderStaticLabel(appCtx, "Nút cao su kín", flaskCenterX + 16, stopperY + 11, "left");
+        renderStaticLabel(appCtx, "Đầu hở (p₀ = 1 atm)", tubeHorizontalEndX - 10, tubeCornerY - 12, "right");
+        renderStaticLabel(appCtx, "Giọt nước màu chỉ thị", dropletX, dropletY - 32, "center");
+    }
+
+    function renderStaticLabel(ctx, text, x, y, align = "center") {
+        ctx.fillStyle = 'rgba(148, 163, 184, 0.8)';
+        ctx.font = '8px "Plus Jakarta Sans", sans-serif';
+        ctx.textAlign = align;
+        ctx.fillText(text, x, y);
+    }
+
+    /* ==========================================================================
+       MÔ PHỎNG VI MÔ PHÂN TỬ KHÍ
+       ========================================================================== */
+    const molCanvas = document.getElementById('molecularCanvas');
+    const molCtx = molCanvas.getContext('2d');
+    let molecularParticles = [];
+    const NUM_MOLECULES = 24;
+
+    class MoleculeParticle {
+        constructor(w, h) {
+            this.r = 3;
+            this.x = this.r + Math.random() * (w - this.r * 2);
+            this.y = this.r + Math.random() * (h - this.r * 2);
+            const angle = Math.random() * Math.PI * 2;
+            const speed = this.getSpeed();
+            this.vx = Math.cos(angle) * speed;
+            this.vy = Math.sin(angle) * speed;
+        }
+
+        getSpeed() {
+            return Math.sqrt(labState.kelvin / 293.15) * 2.2;
+        }
+
+        update(w, h) {
+            const targetSpeed = this.getSpeed();
+            const curSpeed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+            if (curSpeed > 0) {
+                this.vx = (this.vx / curSpeed) * targetSpeed;
+                this.vy = (this.vy / curSpeed) * targetSpeed;
+            }
+
+            this.x += this.vx;
+            this.y += this.vy;
+
+            if (this.x - this.r < 0) {
+                this.x = this.r;
+                this.vx = -this.vx;
+            } else if (this.x + this.r > w) {
+                this.x = w - this.r;
+                this.vx = -this.vx;
+            }
+
+            if (this.y - this.r < 0) {
+                this.y = this.r;
+                this.vy = -this.vy;
+            } else if (this.y + this.r > h) {
+                this.y = h - this.r;
+                this.vy = -this.vy;
+            }
+        }
+
+        draw(ctx) {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+            
+            if (labState.celsius < 30) {
+                ctx.fillStyle = '#38bdf8';
+                ctx.shadowColor = '#38bdf8';
+            } else if (labState.celsius < 70) {
+                ctx.fillStyle = '#f59e0b';
+                ctx.shadowColor = '#f59e0b';
+            } else {
+                ctx.fillStyle = '#ef4444';
+                ctx.shadowColor = '#ef4444';
+            }
+            ctx.shadowBlur = 4;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+    }
+
+    function initMolecularSimulation() {
+        molCanvas.width = molCanvas.parentElement.clientWidth - 10;
+        molCanvas.height = molCanvas.parentElement.clientHeight - 26;
+        molecularParticles = [];
+        for (let i = 0; i < NUM_MOLECULES; i++) {
+            molecularParticles.push(new MoleculeParticle(molCanvas.width, molCanvas.height));
+        }
+    }
+
+    function renderMolecularScene() {
+        molCtx.clearRect(0, 0, molCanvas.width, molCanvas.height);
+        molecularParticles.forEach(p => {
+            p.update(molCanvas.width, molCanvas.height);
+            p.draw(molCtx);
+        });
+
+        const v_rms = Math.round(Math.sqrt((3 * 8.314 * labState.kelvin) / 0.028));
+        document.getElementById('speedIndicator').textContent = `v = ${v_rms} m/s`;
+    }
+
+    /* ==========================================================================
+       VẼ ĐỒ THỊ ĐƯỜNG ĐẲNG ÁP RỘNG RÃI & CHI TIẾT (CHART.JS)
+       ========================================================================== */
+    let isobaricChartInstance = null;
+
+    function initIsobaricChart() {
+        const ctx = document.getElementById('isobaricChart').getContext('2d');
+        
+        const linePoints = [];
+        if (labState.chartMode === 'VT') {
+            for (let tKelvin = 0; tKelvin <= 420; tKelvin += 20) {
+                linePoints.push({ x: tKelvin, y: parseFloat((CHARLES_CONSTANT * tKelvin).toFixed(2)) });
+            }
+        } else {
+            for (let tC = -273; tC <= 120; tC += 20) {
+                const Tk = tC + 273.15;
+                linePoints.push({ x: tC, y: parseFloat((Math.max(0, CHARLES_CONSTANT * Tk)).toFixed(2)) });
+            }
+        }
+
+        const xTitle = labState.chartMode === 'VT' ? 'Nhiệt độ tuyệt đối T (K)' : 'Nhiệt độ Celsius t (°C)';
+        const xMin = labState.chartMode === 'VT' ? 0 : -280;
+        const xMax = labState.chartMode === 'VT' ? 420 : 120;
+
+        isobaricChartInstance = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [
+                    {
+                        label: 'Đường đẳng áp lí thuyết (V ∝ T)',
+                        data: linePoints,
+                        showLine: true,
+                        borderColor: '#38bdf8',
+                        borderWidth: 2,
+                        borderDash: [6, 6],
+                        pointRadius: 0,
+                        fill: false
+                    },
+                    {
+                        label: 'Điểm thực nghiệm đã đo',
+                        data: [],
+                        backgroundColor: '#10b981',
+                        borderColor: '#ffffff',
+                        borderWidth: 1.5,
+                        pointRadius: 5.5,
+                        pointHoverRadius: 8
+                    },
+                    {
+                        label: 'Trạng thái hiện tại',
+                        data: [{ 
+                            x: labState.chartMode === 'VT' ? labState.kelvin : labState.celsius, 
+                            y: labState.volume 
+                        }],
+                        backgroundColor: '#f59e0b',
+                        borderColor: '#ef4444',
+                        borderWidth: 2.5,
+                        pointRadius: 8,
+                        pointHoverRadius: 10
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 120 },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            color: '#cbd5e1',
+                            boxWidth: 14,
+                            font: { size: 10, family: 'Plus Jakarta Sans', weight: 600 }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                        titleColor: '#38bdf8',
+                        bodyColor: '#f87171',
+                        borderColor: 'rgba(56, 189, 248, 0.3)',
+                        borderWidth: 1,
+                        padding: 8,
+                        callbacks: {
+                            label: function(ctx) {
+                                return `T = ${ctx.parsed.x.toFixed(1)}${labState.chartMode === 'VT' ? ' K' : ' °C'} | V = ${ctx.parsed.y.toFixed(1)} cm³`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: xTitle,
+                            color: '#94a3b8',
+                            font: { size: 11, weight: 700 }
+                        },
+                        min: xMin,
+                        max: xMax,
+                        grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                        ticks: { color: '#94a3b8', font: { size: 10, family: 'JetBrains Mono' } }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Thể tích V (cm³)',
+                            color: '#94a3b8',
+                            font: { size: 11, weight: 700 }
+                        },
+                        min: 0,
+                        max: 145,
+                        grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                        ticks: { color: '#94a3b8', font: { size: 10, family: 'JetBrains Mono' } }
+                    }
+                }
+            }
+        });
+    }
+
+    function switchChartCoordinateSystem(mode) {
+        labState.chartMode = mode;
+        document.getElementById('btnModeVT').classList.toggle('active', mode === 'VT');
+        document.getElementById('btnModeVt').classList.toggle('active', mode === 'Vt');
+        if (isobaricChartInstance) {
+            isobaricChartInstance.destroy();
+        }
+        initIsobaricChart();
+        updateChartLiveStatus();
+        refreshRecordedPointsOnChart();
+    }
+
+    function updateChartLiveStatus() {
+        if (!isobaricChartInstance) return;
+        const curX = labState.chartMode === 'VT' ? labState.kelvin : labState.celsius;
+        isobaricChartInstance.data.datasets[2].data = [{ x: curX, y: parseFloat(labState.volume.toFixed(1)) }];
+        isobaricChartInstance.update('none');
+    }
+
+    function refreshRecordedPointsOnChart() {
+        if (!isobaricChartInstance) return;
+        const pts = datasetRecords.map(item => ({
+            x: labState.chartMode === 'VT' ? item.kelvin : item.celsius,
+            y: item.volume
+        }));
+        isobaricChartInstance.data.datasets[1].data = pts;
+        isobaricChartInstance.update('none');
+    }
+
+    /* ==========================================================================
+       TÍNH TOÁN VẬT LÍ & CẬP NHẬT GIAO DIỆN
+       ========================================================================== */
+    function syncPhysicsState() {
+        labState.kelvin = labState.celsius + 273.15;
+        labState.volume = CHARLES_CONSTANT * labState.kelvin;
+        labState.length = (labState.volume - V0_FLASK) / S_CAPILLARY;
+
+        document.getElementById('hudCelsius').textContent = `${labState.celsius.toFixed(1).replace('.', ',')} °C`;
+        document.getElementById('hudKelvin').textContent = `${labState.kelvin.toFixed(2).replace('.', ',')} K`;
+        document.getElementById('hudVolume').textContent = `${labState.volume.toFixed(1).replace('.', ',')} cm³`;
+        document.getElementById('sliderValueDisplay').textContent = `${labState.celsius.toFixed(1).replace('.', ',')} °C`;
+        document.getElementById('temperatureSlider').value = labState.celsius;
+
+        [0, 20, 50, 80].forEach(presetTemp => {
+            const btn = document.getElementById(`presetBtn${presetTemp}`);
+            if (btn) btn.classList.toggle('active', Math.abs(labState.celsius - presetTemp) < 0.5);
+        });
+
+        updateChartLiveStatus();
+    }
+
+    function onTemperatureSliderChange(val) {
+        labState.celsius = parseFloat(val);
+        syncPhysicsState();
+        document.getElementById('statusMessageText').textContent = `Đang đặt nhiệt độ t = ${labState.celsius.toFixed(1).replace('.', ',')} °C (T = ${labState.kelvin.toFixed(1).replace('.', ',')} K) — Thể tích V = ${labState.volume.toFixed(1).replace('.', ',')} cm³`;
+    }
+
+    function stepTemperature(delta) {
+        labState.celsius = Math.max(0, Math.min(100, labState.celsius + delta));
+        syncPhysicsState();
+        emitTone(440 + labState.celsius * 4, 0.04, 'sine', 0.1);
+        document.getElementById('statusMessageText').textContent = `Nhiệt độ t = ${labState.celsius.toFixed(1).replace('.', ',')} °C (T = ${labState.kelvin.toFixed(1).replace('.', ',')} K) — Thể tích V = ${labState.volume.toFixed(1).replace('.', ',')} cm³`;
+    }
+
+    function applyPresetTemperature(targetC) {
+        labState.celsius = targetC;
+        syncPhysicsState();
+        emitTone(500 + targetC * 3, 0.08, 'sine', 0.15);
+        document.getElementById('statusMessageText').textContent = `Chuyển sang mốc t = ${labState.celsius.toFixed(1).replace('.', ',')} °C — Thể tích V = ${labState.volume.toFixed(1).replace('.', ',')} cm³`;
+    }
+
+    function toggleBurnerHeating() {
+        labState.isHeating = !labState.isHeating;
+        const btn = document.getElementById('btnBurnerToggle');
+        const label = document.getElementById('burnerStatusLabel');
+
+        if (labState.isHeating) {
+            btn.classList.add('active');
+            btn.innerHTML = '<i class="fa-solid fa-fire-burner"></i> Đang Đun (Tắt)';
+            label.innerHTML = '<i class="fa-solid fa-circle" style="color: #ef4444; font-size: 0.5rem; vertical-align: middle;"></i> Đèn cồn đang đun';
+            label.style.color = '#ef4444';
+            emitTone(220, 0.15, 'sawtooth', 0.2);
+            document.getElementById('statusMessageText').textContent = 'Đang đun nóng chậu nước — Khí trong bình cầu nở ra đẩy giọt nước màu sang phải...';
+        } else {
+            btn.classList.remove('active');
+            btn.innerHTML = '<i class="fa-solid fa-fire-burner"></i> Bật Đèn Cồn Đun';
+            label.innerHTML = '<i class="fa-solid fa-circle" style="font-size: 0.5rem; vertical-align: middle;"></i> Đèn cồn đang tắt';
+            label.style.color = 'var(--text-dim)';
+            document.getElementById('statusMessageText').textContent = `Đã dừng đun nóng — Cân bằng ở ${labState.celsius.toFixed(1).replace('.', ',')} °C`;
+        }
+    }
+
+    /* ==========================================================================
+       GHI NHẬN SỐ LIỆU ĐO & BẢNG THỰC NGHIỆM ĐẦY ĐỦ KHÔNG GIỚI HẠN
+       ========================================================================== */
+    function recordCurrentMeasurement() {
+        const theoreticalV = CHARLES_CONSTANT * labState.kelvin;
+        const currentRatio = labState.volume / labState.kelvin;
+        const errorPercent = Math.abs((labState.volume - theoreticalV) / theoreticalV) * 100;
+
+        const item = {
+            num: datasetRecords.length + 1,
+            celsius: parseFloat(labState.celsius.toFixed(1)),
+            kelvin: parseFloat(labState.kelvin.toFixed(2)),
+            length: parseFloat(labState.length.toFixed(1)),
+            volume: parseFloat(labState.volume.toFixed(1)),
+            ratio: parseFloat(currentRatio.toFixed(3)),
+            error: parseFloat(errorPercent.toFixed(2))
+        };
+
+        datasetRecords.push(item);
+        renderMeasurementTable();
+        refreshRecordedPointsOnChart();
+        playBeep();
+        updateSummaryEvaluation();
+    }
+
+    function renderMeasurementTable() {
+        const tbody = document.getElementById('tableDataBody');
+        if (datasetRecords.length === 0) {
+            tbody.innerHTML = `
+                <tr id="emptyPlaceholderRow">
+                    <td colspan="7" style="color: var(--text-dim); font-style: italic; font-family: inherit; padding: 0.65rem;">
+                        Chưa có số liệu. Hãy điều chỉnh nhiệt độ và nhấn &quot;Ghi Số Liệu&quot;, &quot;Đo 10 Mốc&quot; hoặc &quot;Tự Động Đo Kiểm Chứng&quot;.
+                    </td>
+                </tr>`;
+            document.getElementById('statCount').textContent = '0';
+            document.getElementById('statMeanRatio').textContent = '--';
+            document.getElementById('statMeanError').textContent = '0,0%';
+            return;
+        }
+
+        tbody.innerHTML = '';
+        datasetRecords.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>#${row.num}</strong></td>
+                <td>${row.celsius.toFixed(1).replace('.', ',')}</td>
+                <td>${row.kelvin.toFixed(2).replace('.', ',')}</td>
+                <td>${row.length.toFixed(1).replace('.', ',')}</td>
+                <td style="color: #38bdf8; font-weight: 700;">${row.volume.toFixed(1).replace('.', ',')}</td>
+                <td class="cell-highlight">${row.ratio.toFixed(3).replace('.', ',')}</td>
+                <td style="color: #34d399;">${row.error.toFixed(1).replace('.', ',')}%</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // Cập nhật thanh thống kê chân bảng
+        const totalCount = datasetRecords.length;
+        const sumRatio = datasetRecords.reduce((acc, cur) => acc + cur.ratio, 0);
+        const meanRatio = sumRatio / totalCount;
+
+        document.getElementById('statCount').textContent = totalCount;
+        document.getElementById('statMeanRatio').textContent = `${meanRatio.toFixed(3).replace('.', ',')} cm³/K`;
+        document.getElementById('statMeanError').textContent = `0,0%`;
+
+        const scrollBox = tbody.parentElement.parentElement;
+        scrollBox.scrollTop = scrollBox.scrollHeight;
+    }
+
+    function clearMeasurementTable() {
+        datasetRecords = [];
+        renderMeasurementTable();
+        refreshRecordedPointsOnChart();
+        emitTone(300, 0.08, 'sine', 0.1);
+        document.getElementById('statusMessageText').textContent = 'Đã xóa toàn bộ bảng số liệu đo.';
+    }
+
+    function measureStandardFivePoints() {
+        clearMeasurementTable();
+        const testTemps = [20, 35, 50, 65, 80];
+        let idx = 0;
+
+        function recordNextPoint() {
+            if (idx >= testTemps.length) {
+                playSuccessChime();
+                document.getElementById('statusMessageText').textContent = 'Đã hoàn tất đo 5 mốc nhiệt độ chuẩn SGK: Tỉ số V / T không đổi ≈ 0,341 cm³/K.';
+                return;
+            }
+            labState.celsius = testTemps[idx];
+            syncPhysicsState();
+            recordCurrentMeasurement();
+            idx++;
+            setTimeout(recordNextPoint, 200);
+        }
+        recordNextPoint();
+    }
+
+    function measureTenSamplePoints() {
+        clearMeasurementTable();
+        const testTemps = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+        let idx = 0;
+
+        function recordNextPoint() {
+            if (idx >= testTemps.length) {
+                playSuccessChime();
+                document.getElementById('statusMessageText').textContent = 'Đã hoàn tất đo 10 mốc nhiệt độ đều đặn (10°C - 100°C) — Đồ thị hiển thị đầy đủ và rõ nét!';
+                return;
+            }
+            labState.celsius = testTemps[idx];
+            syncPhysicsState();
+            recordCurrentMeasurement();
+            idx++;
+            setTimeout(recordNextPoint, 150);
+        }
+        recordNextPoint();
+    }
+
+    function copyTableDataToClipboard() {
+        if (datasetRecords.length === 0) {
+            alert('Chưa có số liệu đo để sao chép!');
+            return;
+        }
+
+        let clipboardText = "Lần\tt (°C)\tT (K)\tl (cm)\tV (cm³)\tV/T (cm³/K)\tSai số (%)\n";
+        datasetRecords.forEach(r => {
+            clipboardText += `${r.num}\t${r.celsius}\t${r.kelvin}\t${r.length}\t${r.volume}\t${r.ratio}\t${r.error}%\n`;
+        });
+
+        navigator.clipboard.writeText(clipboardText).then(() => {
+            playBeep();
+            document.getElementById('statusMessageText').textContent = 'Đã sao chép toàn bộ bảng số liệu vào bộ nhớ tạm (Clipboard)!';
+        }).catch(() => {
+            alert('Sao chép dữ liệu thành công!');
+        });
+    }
+
+    function updateSummaryEvaluation() {
+        if (datasetRecords.length >= 2) {
+            const sum = datasetRecords.reduce((acc, cur) => acc + cur.ratio, 0);
+            const avg = sum / datasetRecords.length;
+            document.getElementById('meanRatioBadge').textContent = `V / T ≈ ${avg.toFixed(3).replace('.', ',')}`;
+            document.getElementById('verificationSummaryCard').style.borderColor = '#10b981';
+        }
+    }
+
+    /* ==========================================================================
+       TỰ ĐỘNG THỰC HIỆN ĐO KIỂM CHỨNG
+       ========================================================================== */
+    let autoMeasureTimer = null;
+
+    function runAutomatedVerification() {
+        if (labState.isAutoMeasuring) {
+            stopAutomatedVerification();
+            return;
+        }
+        startAutomatedVerification();
+    }
+
+    function startAutomatedVerification() {
+        labState.isAutoMeasuring = true;
+        document.getElementById('btnAutoMeasure').innerHTML = '<i class="fa-solid fa-stop"></i> Dừng Tự Động Đo';
+        document.getElementById('btnAutoMeasure').style.background = 'linear-gradient(135deg, #b91c1c, #ef4444)';
+
+        clearMeasurementTable();
+        if (labState.isHeating) toggleBurnerHeating();
+
+        document.getElementById('statusMessageText').textContent = 'Bước 1: Đo trạng thái 1 ở 20,0 °C (293,15 K) — Thể tích V₁ = 100,0 cm³';
+        applyPresetTemperature(20);
+        playBeep();
+
+        autoMeasureTimer = setTimeout(() => {
+            recordCurrentMeasurement();
+            
+            document.getElementById('statusMessageText').textContent = 'Bước 2: Bật đèn cồn đun nóng nước trong cốc — Giọt nước màu dịch chuyển sang phải...';
+            toggleBurnerHeating();
+
+            const heatInterval = setInterval(() => {
+                if (!labState.isAutoMeasuring) {
+                    clearInterval(heatInterval);
+                    return;
+                }
+                if (labState.celsius < 80) {
+                    labState.celsius = Math.min(80, labState.celsius + 1.0);
+                    syncPhysicsState();
+                } else {
+                    clearInterval(heatInterval);
+                    toggleBurnerHeating();
+
+                    document.getElementById('statusMessageText').textContent = 'Bước 3: Trạng thái 2 ở 80,0 °C (353,15 K) — Thể tích V₂ = 120,5 cm³';
+                    recordCurrentMeasurement();
+
+                    setTimeout(() => {
+                        document.getElementById('statusMessageText').innerHTML = 'Bước 4: Tính tỉ số <strong>V₁ / T₁ = 100 / 293,15 ≈ 0,341</strong> và <strong>V₂ / T₂ = 120,5 / 353,15 ≈ 0,341</strong> — Kết quả trùng khớp hoàn hảo!';
+                        playSuccessChime();
+
+                        setTimeout(() => {
+                            document.getElementById('statusMessageText').textContent = 'Kết luận: Thể tích V tỉ lệ thuận với nhiệt độ tuyệt đối T ở áp suất không đổi (Định luật Charles nghiệm đúng).';
+                            setTimeout(stopAutomatedVerification, 4500);
+                        }, 3000);
+                    }, 1500);
+                }
+            }, 50);
+
+        }, 1500);
+    }
+
+    function stopAutomatedVerification() {
+        labState.isAutoMeasuring = false;
+        if (autoMeasureTimer) clearTimeout(autoMeasureTimer);
+        if (labState.isHeating) toggleBurnerHeating();
+        
+        document.getElementById('btnAutoMeasure').innerHTML = '<i class="fa-solid fa-play"></i> Tự Động Đo Kiểm Chứng';
+        document.getElementById('btnAutoMeasure').style.background = '';
+    }
+
+    /* ==========================================================================
+       KIỂM TRA CÂU HỎI TRẮC NGHIỆM CỦNG CỐ
+       ========================================================================== */
+    function evaluateQuizResponse(btn, isCorrect) {
+        const feedback = document.getElementById('quizFeedbackBox');
+        const parent = btn.parentElement;
+        const allButtons = parent.querySelectorAll('.btn-quiz-choice');
+
+        allButtons.forEach(b => {
+            b.classList.remove('correct', 'wrong');
+            b.disabled = true;
+        });
+
+        if (isCorrect) {
+            btn.classList.add('correct');
+            feedback.style.color = '#34d399';
+            feedback.innerHTML = '<i class="fa-solid fa-circle-check"></i> Chính xác! Theo định luật Charles: $V_2 = V_1 \\cdot \\frac{T_2}{T_1} = 100 \\cdot \\frac{353}{293} \\approx 120{,}5\\text{ cm}^3$.';
+            playSuccessChime();
+        } else {
+            btn.classList.add('wrong');
+            feedback.style.color = '#f87171';
+            feedback.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Chưa đúng! Lưu ý quy đổi sang nhiệt độ tuyệt đối Kelvin: $T_1 = 293\\text{ K}, T_2 = 353\\text{ K} \\Rightarrow V_2 = 100 \\times \\frac{353}{293} \\approx 120{,}5\\text{ cm}^3$.';
+            emitTone(250, 0.2, 'sawtooth', 0.2);
+        }
+        if (window.MathJax) {
+            MathJax.typesetPromise([feedback]);
+        }
+    }
+
+    /* ==========================================================================
+       VÒNG LẶP HOẠT HỌA CHÍNH (MAIN ANIMATION LOOP)
+       ========================================================================== */
+    function labAnimationLoop() {
+        if (labState.isHeating && !labState.isAutoMeasuring) {
+            if (labState.celsius < 100) {
+                labState.celsius = Math.min(100, labState.celsius + labState.heatingRate);
+                syncPhysicsState();
+            }
+        }
+
+        renderApparatusScene();
+        renderMolecularScene();
+        requestAnimationFrame(labAnimationLoop);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        resizeApparatusCanvas();
+        initApparatusParticles();
+        initMolecularSimulation();
+        initIsobaricChart();
+        syncPhysicsState();
+        labAnimationLoop();
+    });
+
+    window.addEventListener('resize', () => {
+        resizeApparatusCanvas();
+        initMolecularSimulation();
+        if (isobaricChartInstance) {
+            isobaricChartInstance.resize();
+        }
+    });
+</script>
+
+</body>
+</html>
