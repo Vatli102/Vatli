@@ -1243,13 +1243,14 @@ function gradeQuiz(isTimeout = false) {
         confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
     }
 
-    const name = localStorage.getItem('saved_student_name') || 'Học sinh';
-    const className = localStorage.getItem('saved_student_class') || 'Lớp';
+    const name = (typeof localStorage !== 'undefined' && localStorage.getItem('saved_student_name')) || (document.getElementById('studentName') && document.getElementById('studentName').value.trim()) || 'Học sinh';
+    const className = (typeof localStorage !== 'undefined' && localStorage.getItem('saved_student_class')) || (document.getElementById('studentClass') && document.getElementById('studentClass').value.trim()) || 'Lớp';
     const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
     if (typeof GOOGLE_SHEETS_URL !== 'undefined' && GOOGLE_SHEETS_URL) {
         try {
             fetch(GOOGLE_SHEETS_URL, {
                 method: "POST",
+                mode: "no-cors",
                 headers: { "Content-Type": "text/plain;charset=utf-8" },
                 body: JSON.stringify({
                     name: name,
@@ -1257,8 +1258,7 @@ function gradeQuiz(isTimeout = false) {
                     lesson: "📝 Đề 6 - Chương 1, 2 Vật lí 12",
                     correct: `${totalCorrectCount}/${totalItems}`,
                     score: finalGrade
-                }),
-                redirect: "follow"
+                })
             }).catch(function(err){});
         } catch(err){}
     }
