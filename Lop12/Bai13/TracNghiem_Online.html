@@ -7,13 +7,13 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📖 Bài 13 Bài tập về khí lí tưởng (Vật lí 12) - Trắc Nghiệm Online | Vatli102.com</title>
+    <title>Bài 13: Bài tập về khí lí tưởng - Trắc Nghiệm Online | Vật lí 12</title>
     <script>
         if (!window.location.pathname.endsWith('/') && !window.location.pathname.endsWith('.html')) {
             window.history.replaceState(null, '', window.location.pathname + '/' + window.location.search);
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
@@ -38,8 +38,19 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-dark); line-height: 1.6; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-dark); line-height: 1.6; padding-bottom: 0; }
 
+        /* Chống dính chữ cho công thức MathJax */
+        mjx-container {
+            margin: 0 0.35em !important;
+            display: inline-block !important;
+        }
+        mjx-container[display="true"] {
+            margin: 1em 0 !important;
+            display: block !important;
+        }
+
+        /* Sticky Header */
         .sticky-header {
             position: sticky; top: 0; z-index: 1000;
             background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
@@ -50,31 +61,49 @@
             display: flex; justify-content: space-between; align-items: center;
         }
         .site-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
-        .logo-text { font-weight: 800; font-size: 1.2rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .nav-links { display: flex; gap: 12px; }
-        .nav-item { text-decoration: none; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); padding: 6px 12px; border-radius: 8px; transition: all 0.2s; }
-        .nav-item:hover { color: var(--primary); background: #f1f5f9; }
+        .logo-img { width: 32px; height: 32px; border-radius: 8px; object-fit: contain; }
+        .logo-text { font-weight: 800; font-size: 1.25rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 18px; align-items: center; }
+        .nav-item { text-decoration: none; font-size: 0.9rem; font-weight: 600; color: #475569; display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s; }
+        .nav-item:hover { color: var(--primary); }
 
-        .quiz-container { max-width: 920px; margin: 20px auto; padding: 0 15px; }
+        .quiz-container { max-width: 920px; margin: 20px auto; padding: 0 15px; min-height: 80vh; }
 
         .exam-banner {
-            background: linear-gradient(135deg, #059669, #0284c7); color: white;
-            border-radius: 16px; padding: 24px; text-align: center; margin-bottom: 25px;
-            box-shadow: 0 10px 25px rgba(5,150,105,0.2);
+            background: linear-gradient(135deg, #064e3b, #059669); color: white;
+            padding: 2.2rem 1.5rem; border-radius: 20px; text-align: center; margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(5,150,105,0.25);
         }
-        .exam-banner h1 { font-size: 1.4rem; font-weight: 800; margin-bottom: 8px; line-height: 1.3; }
-        .exam-banner p { font-size: 0.9rem; opacity: 0.9; text-align: center; }
+        .exam-banner h1 { font-size: 1.7rem; font-weight: 800; margin-bottom: 8px; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .badge-exam { display: inline-block; background: rgba(255,255,255,0.2); padding: 5px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 700; margin-top: 6px; }
 
-        .student-info-card {
-            background: white; border-radius: 14px; padding: 18px; margin-bottom: 25px;
-            border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            display: flex; flex-wrap: wrap; gap: 15px; align-items: center; justify-content: space-between;
+        /* Sticky Countdown Timer Bar */
+        .sticky-timer-bar {
+            position: sticky; top: 58px; z-index: 990;
+            background: #ffffff; border: 1px solid #a7f3d0; box-shadow: 0 4px 15px rgba(5,150,105,0.1);
+            padding: 10px 18px; margin-bottom: 20px; border-radius: 14px; display: none;
         }
-        .input-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 200px; }
-        .input-group label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-        .input-control { padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
-        .input-control:focus { border-color: var(--primary); }
+        .timer-bar-content {
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+        }
+        .timer-student-tag {
+            font-weight: 700; font-size: 0.92rem; color: #064e3b; display: flex; align-items: center; gap: 6px;
+        }
+        .timer-badge {
+            display: flex; align-items: center; gap: 8px; background: #ecfdf5; padding: 6px 16px;
+            border-radius: 20px; border: 1px solid #a7f3d0;
+        }
+        .timer-digits {
+            font-size: 1.25rem; font-weight: 800; color: #dc2626; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.5px;
+        }
 
+        .login-card {
+            background: white; border-radius: 16px; padding: 30px 20px; text-align: center;
+            border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 30px;
+        }
+        .form-group { margin-bottom: 15px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
+        .form-group label { display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 5px; color: #334155; }
+        .form-control { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; outline: none; box-sizing: border-box; }
         .btn-start {
             background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; border: none;
             padding: 12px 30px; border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer;
@@ -85,468 +114,951 @@
         .section-header {
             background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #064e3b; padding: 12px 18px;
             border-radius: 12px; font-weight: 800; font-size: 1.1rem; margin: 30px 0 15px 0; border-left: 5px solid var(--primary);
-            text-align: justify;
         }
 
         .question-card {
             background: white; border-radius: 14px; padding: 20px; margin-bottom: 20px;
-            border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
-        .question-title { font-weight: 700; font-size: 1.02rem; color: var(--text-dark); margin-bottom: 14px; line-height: 1.65; text-align: justify; }
-        
-        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-        @media (min-width: 600px) { .options-grid { grid-template-columns: 1fr 1fr; } }
-        
-        .option-card {
-            background: #f8fafc; border: 1.5px solid var(--border); padding: 12px 15px; border-radius: 10px;
-            cursor: pointer; font-size: 0.95rem; text-align: justify; transition: all 0.15s; display: flex; align-items: center; gap: 10px;
-            color: var(--text-dark);
-        }
-        .option-card:hover { background: #f1f5f9; border-color: rgba(5, 150, 105, 0.4); }
-        .option-card.selected { background: #d1fae5; border-color: var(--primary); font-weight: 700; color: #064e3b; }
-        .option-card.correct { border-color: #22c55e !important; background: #dcfce7 !important; color: #15803d !important; }
-        .option-card.incorrect { border-color: #ef4444 !important; background: #fee2e2 !important; color: #b91c1c !important; }
-        .option-card span:last-child { text-align: justify; width: 100%; }
+        .q-title { font-weight: 700; font-size: 1rem; color: #0f172a; margin-bottom: 15px; text-align: justify; line-height: 1.65; }
+        .q-score-badge { float: right; background: #ecfdf5; color: #065f46; padding: 2px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; }
 
-        .option-letter {
-            width: 28px; height: 28px; border-radius: 50%; background: #e2e8f0; color: #475569;
-            font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        /* Options for Part 1 */
+        .option-list { display: flex; flex-direction: column; gap: 10px; }
+        .option-item {
+            display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px;
+            border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s;
         }
-        .option-card.selected .option-letter { background: var(--primary); color: white; }
+        .option-item:hover { background-color: #f1f5f9; border-color: #cbd5e1; }
+        .option-item input[type="radio"] { margin-top: 4px; }
+        .option-label { flex: 1; font-size: 0.95rem; text-align: justify; }
 
-        .tf-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
-        .tf-item {
-            background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 12px 15px;
-            display: flex; align-items: center; justify-content: space-between; gap: 15px;
-        }
-        .tf-text { font-size: 0.93rem; font-weight: 500; text-align: justify; flex: 1; }
-        .tf-btns { display: flex; gap: 8px; flex-shrink: 0; }
-        .btn-tf {
-            padding: 6px 16px; border-radius: 8px; border: 1px solid var(--border); background: white;
-            font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.15s;
-        }
-        .btn-tf.selected-true { background: #dcfce7; border-color: #22c55e; color: #15803d; }
-        .btn-tf.selected-false { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
+        /* True/False Table for Part 2 */
+        .tf-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .tf-table th, .tf-table td { padding: 10px 12px; border: 1px solid var(--border); font-size: 0.92rem; text-align: justify; }
+        .tf-table th { background: #f8fafc; font-weight: 700; text-align: center; }
+        .tf-table td:nth-child(2), .tf-table td:nth-child(3) { text-align: center; width: 85px; }
 
-        .short-input {
-            width: 100%; max-width: 250px; padding: 10px 14px; border: 2px solid var(--border);
-            border-radius: 8px; font-weight: 700; font-size: 1.1rem; outline: none; margin-top: 8px;
+        /* Short Answer for Part 3 */
+        .short-ans-group { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+        .short-ans-input {
+            width: 140px; padding: 8px 12px; font-size: 1.1rem; font-weight: 700;
+            border: 2px solid #cbd5e1; border-radius: 8px; text-align: center; outline: none;
+            font-family: 'JetBrains Mono', monospace; color: #064e3b;
         }
-        .short-input:focus { border-color: var(--primary); }
+        .short-ans-input:focus { border-color: var(--primary); }
 
-        .solution-box {
-            background: #f0fdf4; border-left: 4px solid #10b981; border-radius: 8px; padding: 14px;
-            margin-top: 14px; font-size: 0.9rem; color: #166534; display: none; text-align: justify;
+        .explanation-box {
+            background: #f0fdf4; border-left: 4px solid #10b981; padding: 12px 16px;
+            border-radius: 0 8px 8px 0; margin-top: 15px; font-size: 0.9rem; color: #166534; display: none; text-align: justify;
         }
-        .solution-box.show { display: block; }
 
-        .submit-bar {
-            position: sticky; bottom: 20px; z-index: 100; background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(10px); padding: 14px 24px; border-radius: 16px; color: white;
-            display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            margin-top: 30px; margin-bottom: 30px;
-        }
-        .btn-submit {
-            background: #10b981; color: white; border: none; padding: 10px 24px; border-radius: 10px;
-            font-weight: 700; cursor: pointer; transition: all 0.2s;
-        }
-        .btn-submit:hover { background: #059669; }
-
+        /* Result Card */
         .result-card {
             background: white; border-radius: 20px; padding: 30px; text-align: center;
-            border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.08); display: none; margin-bottom: 30px;
+            border: 2px solid #a7f3d0; box-shadow: 0 15px 35px rgba(5,150,105,0.15); margin-top: 30px; display: none;
         }
-        .score-display { font-size: 3.5rem; font-weight: 800; color: var(--primary); margin: 10px 0; }
+        .score-big { font-size: 3.5rem; font-weight: 800; color: var(--primary); font-family: 'JetBrains Mono', monospace; line-height: 1; }
+        .score-detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 25px 0; }
+        @media (max-width: 600px) { .score-detail-grid { grid-template-columns: 1fr; } }
+        .score-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 15px; }
+        .score-box-num { font-size: 1.5rem; font-weight: 800; color: #0f172a; }
+        .score-box-label { font-size: 0.82rem; color: #64748b; font-weight: 600; margin-top: 4px; }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #059669, #10b981); color: white; border: none;
+            padding: 14px 40px; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer;
+            box-shadow: 0 6px 20px rgba(16,185,129,0.3); transition: all 0.2s;
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(16,185,129,0.4); }
+
+        .btn-action-quiz {
+            background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; text-decoration: none;
+            padding: 10px 20px; border-radius: 10px; font-weight: 700; display: inline-flex; align-items: center;
+            gap: 6px; font-size: 0.9rem; transition: all 0.2s;
+        }
+        .btn-action-quiz:hover { background: #a7f3d0; }
+
+        .site-footer {
+            width: 100%; text-align: center; padding: 25px 15px; background: #ffffff;
+            border-top: 1px solid var(--border); margin-top: 50px; color: #64748b; font-size: 0.88rem;
+        }
     </style>
 </head>
-<body>
+<body class="tex2jax_ignore">
 
+    <!-- 🌐 Header Bar -->
     <header class="sticky-header">
         <div class="header-container">
-            <a href="../../index.html" class="site-logo">
+            <a href="/" class="site-logo">
+                <img src="/favicon.svg" alt="Logo" class="logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%23059669\'/><text x=\'50\' y=\'65\' font-size=\'45\' text-anchor=\'middle\' fill=\'white\' font-family=\'sans-serif\' font-weight=\'bold\'>V</text></svg>';">
                 <span class="logo-text">Vatli102.com</span>
             </a>
-            <div class="nav-links">
-                <a href="../../index.html" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
-                <a href="Baigiang.html" class="nav-item"><i class="fa-solid fa-book-open"></i> Bài đọc lý thuyết</a>
-            </div>
+            <nav class="nav-links">
+                <a href="/" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
+                <a href="Baigiang.html" class="nav-item"><i class="fa-solid fa-book-open"></i> Đọc bài giảng</a>
+            </nav>
         </div>
     </header>
 
     <div class="quiz-container">
-        
         <div class="exam-banner">
-            <h1>📖 ĐỀ TRẮC NGHIỆM ONLINE: BÀI 13 BÀI TẬP VỀ KHÍ LÍ TƯỞNG</h1>
-            <p>Kiểm tra củng cố kiến thức Vật lí 12 - Chương II: Khí lí tưởng (Chuẩn GDPT 2018)</p>
+            <h1>Bài 13: Bài tập về khí lí tưởng - Trắc Nghiệm Online</h1>
+            <span class="badge-exam">⏱ Thời gian: 45 phút | Thang điểm: 10,0</span>
         </div>
 
-        <!-- THÔNG TIN HỌC SINH -->
-        <div class="student-info-card" id="studentInfoBox">
-            <div class="input-group">
-                <label for="studentName"><i class="fa-solid fa-user"></i> Họ và tên học sinh:</label>
-                <input type="text" id="studentName" class="input-control" placeholder="Nhập họ và tên...">
-            </div>
-            <div class="input-group">
-                <label for="studentClass"><i class="fa-solid fa-school"></i> Lớp học / Trường:</label>
-                <input type="text" id="studentClass" class="input-control" placeholder="Nhập tên lớp/trường...">
-            </div>
-            <div style="width: 100%; text-align: center;">
-                <button class="btn-start" onclick="startQuiz()"><i class="fa-solid fa-play"></i> BẮT ĐẦU LÀM BÀI THI</button>
+        <!-- Khung đếm ngược thời gian làm bài (Sticky Timer Bar) -->
+        <div id="stickyTimerBar" class="sticky-timer-bar">
+            <div class="timer-bar-content">
+                <div class="timer-student-tag">
+                    <i class="fa-solid fa-user-graduate text-emerald-600"></i>
+                    <span id="timerStudentDisplay">Thí sinh: ---</span>
+                </div>
+                <div class="timer-badge">
+                    <i class="fa-solid fa-clock text-emerald-600"></i>
+                    <span style="font-size: 0.85rem; font-weight: 700; color: #065f46;">Thời gian còn lại:</span>
+                    <span id="timerCountdown" class="timer-digits">45:00</span>
+                </div>
             </div>
         </div>
 
-        <!-- BÀI THI QUIZ -->
-        <div id="quizContent" style="display: none;">
+        <!-- Khung nhập thông tin học sinh -->
+        <div id="studentLoginCard" class="login-card">
+            <div style="width: 50px; height: 50px; background: #ecfdf5; color: #059669; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 12px auto;">
+                <i class="fa-solid fa-user-graduate"></i>
+            </div>
+            <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; color: #0f172a;">THÔNG TIN HỌC SINH</h2>
+            <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 20px;">Vui lòng nhập Họ tên và Lớp để bắt đầu làm bài và lưu kết quả học tập.</p>
+            
+            <div class="form-group">
+                <label>Họ và tên học sinh <span style="color:red;">*</span></label>
+                <input type="text" id="studentName" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
+            </div>
+            <div class="form-group">
+                <label>Lớp (Không bắt buộc)</label>
+                <input type="text" id="studentClass" class="form-control" placeholder="Ví dụ: 12A1">
+            </div>
+            <button type="button" class="btn-start" id="btnStartExam" onclick="startQuizExam()">🚀 BẮT ĐẦU LÀM BÀI THI (45 PHÚT)</button>
+        </div>
+
+        <!-- Khung nội dung bài thi tương tác -->
+        <div id="quizContent" class="tex2jax_process" style="display: none;">
             
             <!-- PHẦN I -->
             <div class="section-header">
-                PHẦN I. CÂU HỎI TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN (18 CÂU)
+                <i class="fa-solid fa-circle-check"></i> PHẦN I. Câu hỏi trắc nghiệm nhiều phương án lựa chọn (4,5 điểm - 18 câu)
             </div>
-            <div id="part1Container"></div>
+            <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 15px;"><i>Thí sinh trả lời từ Câu 1 đến Câu 18. Mỗi câu trả lời đúng được 0,25 điểm.</i></p>
+
+            <!-- Câu 1 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 1:</strong> Đơn vị nào sau đây <strong>KHÔNG PHẢI</strong> là đơn vị của áp suất chất khí?</div>
+                <div class="option-list">
+                    <label class="option-item"><input type="radio" name="q1" value="A"><span class="option-label">A. Pa ($\text{N/m}^2$)</span></label>
+                    <label class="option-item"><input type="radio" name="q1" value="B"><span class="option-label">B. atm</span></label>
+                    <label class="option-item"><input type="radio" name="q1" value="C"><span class="option-label">C. mmHg</span></label>
+                    <label class="option-item"><input type="radio" name="q1" value="D"><span class="option-label">D. $\text{J/m}^2$</span></label>
+                </div>
+                <div id="exp1" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> $\text{J/m}^2$ là đơn vị năng lượng trên diện tích mặt, không phải đơn vị áp suất ($\text{N/m}^2 = \text{Pa}$). $\Rightarrow$ <strong>Đáp án D</strong>.
+                </div>
+            </div>
+
+            <!-- Câu 2 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 2:</strong> Phương trình nào sau đây biểu diễn <strong>phương trình trạng thái</strong> của một lượng khí lí tưởng xác định?</div>
+                <div class="option-list">
+                    <label class="option-item"><input type="radio" name="q2" value="A"><span class="option-label">A. $\frac{p_1 \cdot V_1}{T_1} = \frac{p_2 \cdot V_2}{T_2}$</span></label>
+                    <label class="option-item"><input type="radio" name="q2" value="B"><span class="option-label">B. $p_1 \cdot V_1 \cdot T_1 = p_2 \cdot V_2 \cdot T_2$</span></label>
+                    <label class="option-item"><input type="radio" name="q2" value="C"><span class="option-label">C. $\frac{p_1}{V_1 \cdot T_1} = \frac{p_2}{V_2 \cdot T_2}$</span></label>
+                    <label class="option-item"><input type="radio" name="q2" value="D"><span class="option-label">D. $p_1 \cdot V_2 \cdot T_1 = p_2 \cdot V_1 \cdot T_2$</span></label>
+                </div>
+                <div id="exp2" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> Phương trình trạng thái khí lí tưởng Clapeyron: $\frac{p \cdot V}{T} = \text{const} \iff \frac{p_1 V_1}{T_1} = \frac{p_2 V_2}{T_2}$. $\Rightarrow$ <strong>Đáp án A</strong>.
+                </div>
+            </div>
+
+            <!-- Câu 3 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 3:</strong> Hằng số khí lí tưởng $R$ trong phương trình Clapeyron - Mendeleev có giá trị xấp xỉ bằng bao nhiêu khi các đại lượng tính theo hệ SI ($\text{J/(mol}\cdot\text{K)}$)?</div>
+                <div class="option-list">
+                    <label class="option-item"><input type="radio" name="q3" value="A"><span class="option-label">A. $8,31\text{ J/(mol}\cdot\text{K)}$</span></label>
+                    <label class="option-item"><input type="radio" name="q3" value="B"><span class="option-label">B. $0,082\text{ J/(mol}\cdot\text{K)}$</span></label>
+                    <label class="option-item"><input type="radio" name="q3" value="C"><span class="option-label">C. $1,38 \cdot 10^{-23}\text{ J/(mol}\cdot\text{K)}$</span></label>
+                    <label class="option-item"><input type="radio" name="q3" value="D"><span class="option-label">D. $6,02 \cdot 10^{23}\text{ J/(mol}\cdot\text{K)}$</span></label>
+                </div>
+                <div id="exp3" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> Trong hệ SI, $R \approx 8,31\text{ J/(mol}\cdot\text{K)}$. $\Rightarrow$ <strong>Đáp án A</strong>.
+                </div>
+            </div>
+
+            <!-- Câu 4 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 4:</strong> Khi nhiệt độ tuyệt đối của một lượng khí lí tưởng tăng lên 2 lần và thể tích tăng lên 3 lần thì áp suất của chất khí sẽ:</div>
+                <div class="option-list">
+                    <label class="option-item"><input type="radio" name="q4" value="A"><span class="option-label">A. tăng 1,5 lần</span></label>
+                    <label class="option-item"><input type="radio" name="q4" value="B"><span class="option-label">B. giảm 1,5 lần (xuống còn $\frac{2}{3}$ áp suất ban đầu)</span></label>
+                    <label class="option-item"><input type="radio" name="q4" value="C"><span class="option-label">C. tăng 6 lần</span></label>
+                    <label class="option-item"><input type="radio" name="q4" value="D"><span class="option-label">D. giảm 6 lần</span></label>
+                </div>
+                <div id="exp4" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> $p = \frac{nRT}{V} \implies p' = \frac{nR(2T)}{3V} = \frac{2}{3}p$. Áp suất giảm xuống còn $\frac{2}{3}$ ban đầu, tức giảm 1,5 lần. $\Rightarrow$ <strong>Đáp án B</strong>.
+                </div>
+            </div>
+
+            <!-- Câu 5 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 5:</strong> Cho một lượng khí lí tưởng biến đổi trạng thái theo chu trình kín $1 \rightarrow 2 \rightarrow 3 \rightarrow 1$ trên hệ tọa độ $(p, V)$, trong đó (1)-(2) là quá trình dãn đẳng nhiệt, (2)-(3) là quá trình nén đẳng áp, (3)-(1) là quá trình đun nóng đẳng tích. Nhận xét nào sau đây về dạng các đường biểu diễn là <strong>chuẩn xác nhất</strong>?</div>
+                <div class="option-list">
+                    <label class="option-item"><input type="radio" name="q5" value="A"><span class="option-label">A. Đoạn (1)-(2) là nhánh hypebol đi xuống, (2)-(3) là đoạn thẳng nằm ngang, (3)-(1) là đoạn thẳng đứng</span></label>
+                    <label class="option-item"><input type="radio" name="q5" value="B"><span class="option-label">B. Ba đoạn thẳng nối liền nhau tạo thành một tam giác vuông</span></label>
+                    <label class="option-item"><input type="radio" name="q5" value="C"><span class="option-label">C. Cả ba đoạn đều là các đường cong hypebol</span></label>
+                    <label class="option-item"><input type="radio" name="q5" value="D"><span class="option-label">D. Đồ thị chu trình là một đường tròn kín</span></label>
+                </div>
+                <div id="exp5" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> Trên hệ $(p, V)$, đường đẳng nhiệt (1)-(2) là hypebol dốc xuống, đẳng áp (2)-(3) là đoạn ngang song song $V$, đẳng tích (3)-(1) là đoạn thẳng đứng song song $p$. $\Rightarrow$ <strong>Đáp án A</strong>.
+                </div>
+            </div>
+
+            <!-- Câu 6 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 6:</strong> Một bình kín bằng thép dung tích không đổi chứa một lượng khí lí tưởng. Khi đun nóng bình khí này, nhận định nào sau đây về các thông số và tính chất của chất khí là <strong>đúng</strong>?</div>
+                <div class="option-list">
+                    <label class="option-item"><input type="radio" name="q6" value="A"><span class="option-label">A. Áp suất của khí giảm do thể tích tăng</span></label>
+                    <label class="option-item"><input type="radio" name="q6" value="B"><span class="option-label">B. Mật độ phân tử khí tăng lên do phân tử chuyển động nhanh hơn</span></label>
+                    <label class="option-item"><input type="radio" name="q6" value="C"><span class="option-label">C. Áp suất khí tăng tỉ lệ thuận với nhiệt độ tuyệt đối $T$ do tần số và cường độ va chạm phân tử vào thành bình tăng lên</span></label>
+                    <label class="option-item"><input type="radio" name="q6" value="D"><span class="option-label">D. Động năng trung bình của các phân tử khí giữ nguyên không đổi</span></label>
+                </div>
+                <div id="exp6" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> Thể tích $V = \text{const}$, khi $T$ tăng làm động năng trung bình phân tử tăng $\implies$ tốc độ và lực va chạm vào thành bình tăng $\implies p \sim T$ tăng. $\Rightarrow$ <strong>Đáp án C</strong>.
+                </div>
+            </div>
+
+            <!-- Câu 7 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 7:</strong> Khi xe máy chạy đường dài với tốc độ cao, lốp xe nóng lên làm nhiệt độ không khí bên trong lốp tăng đáng kể. Coi thể tích lốp xe không đổi, áp suất không khí trong lốp tăng lên chủ yếu là do:</div>
+                <div class="option-list">
+                    <label class="option-item"><input type="radio" name="q7" value="A"><span class="option-label">A. Khối lượng không khí trong lốp tự động tăng thêm</span></label>
+                    <label class="option-item"><input type="radio" name="q7" value="B"><span class="option-label">B. Động năng chuyển động nhiệt trung bình của các phân tử không khí tăng lên làm tăng lực va chạm vuông góc lên mặt trong của lốp</span></label>
+                    <label class="option-item"><input type="radio" name="q7" value="C"><span class="option-label">C. Thể tích phân tử không khí bị nở ra lớn hơn</span></label>
+                    <label class="option-item"><input type="radio" name="q7" value="D"><span class="option-label">D. Lực hút giữa các phân tử khí tăng lên mạnh mẽ</span></label>
+                </div>
+                <div id="exp7" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> Nhiệt độ $T$ tăng làm động năng chuyển động nhiệt trung bình của phân tử tăng, tăng tần số và cường độ va chạm vào mặt trong của lốp. $\Rightarrow$ <strong>Đáp án B</strong>.
+                </div>
+            </div>
+
+            <!-- Câu 8 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 8:</strong> Nén đẳng nhiệt một khối khí lí tưởng xác định làm thể tích khí giảm đi. Kết luận nào sau đây về đặc điểm của khối khí là <strong>SAI</strong>?</div>
+                <div class="option-list">
+                    <label class="option-item"><input type="radio" name="q8" value="A"><span class="option-label">A. Áp suất khí tăng lên tỉ lệ nghịch với thể tích</span></label>
+                    <label class="option-item"><input type="radio" name="q8" value="B"><span class="option-label">B. Mật độ phân tử khí trong bình tăng lên</span></label>
+                    <label class="option-item"><input type="radio" name="q8" value="C"><span class="option-label">C. Động năng chuyển động nhiệt trung bình của các phân tử khí tăng lên</span></label>
+                    <label class="option-item"><input type="radio" name="q8" value="D"><span class="option-label">D. Tích $p \cdot V$ giữ nguyên không đổi</span></label>
+                </div>
+                <div id="exp8" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> Quá trình đẳng nhiệt có $T = \text{const}$ nên động năng chuyển động nhiệt trung bình $\bar{E}_d = \frac{3}{2}kT$ giữ nguyên không đổi, do đó phát biểu C là SAI. $\Rightarrow$ <strong>Đáp án C</strong>.
+                </div>
+            </div>
+
+            <!-- Câu 9 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 9:</strong> Biểu thức tính khối lượng riêng $\rho$ của khí lí tưởng từ phương trình Clapeyron - Mendeleev là $\rho = \frac{p \cdot M}{R \cdot T}$. Từ biểu thức này, khẳng định nào sau đây là <strong>ĐÚNG</strong>?</div>
+                <div class="option-list">
+                    <label class="option-item"><input type="radio" name="q9" value="A"><span class="option-label">A. Ở cùng nhiệt độ và áp suất, khí có khối lượng mol $M$ càng lớn thì khối lượng riêng càng nhỏ</span></label>
+                    <label class="option-item"><input type="radio" name="q9" value="B"><span class="option-label">B. Khi áp suất $p$ tăng và nhiệt độ tuyệt đối $T$ giảm thì khối lượng riêng $\rho$ tăng lên</span></label>
+                    <label class="option-item"><input type="radio" name="q9" value="C"><span class="option-label">C. Khối lượng riêng $\rho$ tỉ lệ thuận với nhiệt độ tuyệt đối $T$</span></label>
+                    <label class="option-item"><input type="radio" name="q9" value="D"><span class="option-label">D. Khối lượng riêng của chất khí không phụ thuộc vào áp suất $p$</span></label>
+                </div>
+                <div id="exp9" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> Từ $\rho = \frac{p \cdot M}{R \cdot T}$: $p$ ở tử số tăng và $T$ ở mẫu số giảm đều làm khối lượng riêng $\rho$ tăng lên. $\Rightarrow$ <strong>Đáp án B</strong>.
+                </div>
+            </div>
+
+            <!-- Câu 10 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 10:</strong> Khi mở van xả của một bình khí nén kín ở nhiệt độ không đổi, một lượng khí thoát ra ngoài môi trường. Nhận định nào sau đây là <strong>ĐÚNG</strong> về khối lượng khí còn lại trong bình và áp suất khí trong bình?</div>
+                <div class="option-list">
+                    <label class="option-item"><input type="radio" name="q10" value="A"><span class="option-label">A. Khối lượng khí trong bình giảm làm mật độ phân tử giảm, do đó áp suất khí còn lại trong bình giảm xuống</span></label>
+                    <label class="option-item"><input type="radio" name="q10" value="B"><span class="option-label">B. Khối lượng khí giảm nhưng áp suất trong bình giữ nguyên không đổi</span></label>
+                    <label class="option-item"><input type="radio" name="q10" value="C"><span class="option-label">C. Áp suất khí trong bình tăng lên do khí thoát ra tạo phản lực</span></label>
+                    <label class="option-item"><input type="radio" name="q10" value="D"><span class="option-label">D. Mật độ phân tử khí trong bình không thay đổi do thể tích bình không đổi</span></label>
+                </div>
+                <div id="exp10" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> Khi xả khí, khối lượng $m$ giảm $\implies$ mật độ phân tử $\mu = \frac{N}{V}$ giảm $\implies$ số va chạm phân tử vào thành bình giảm $\implies p$ giảm. $\Rightarrow$ <strong>Đáp án A</strong>.
+                </div>
+            </div>
+
+            <!-- Câu 11 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 11:</strong> Trong quá trình dùng ống bơm nén không khí vào một quả bóng rổ ở nhiệt độ không đổi, nhận xét nào sau đây là <strong>ĐÚNG</strong>?</div>
+                <div class="option-list">
+                    <label class="option-item"><input type="radio" name="q11" value="A"><span class="option-label">A. Mỗi lần nén bơm, thể tích bóng giữ không đổi nhưng lượng khí trong bóng tăng lên làm áp suất khí trong bóng tăng</span></label>
+                    <label class="option-item"><input type="radio" name="q11" value="B"><span class="option-label">B. Áp suất khí trong bóng giảm sau mỗi lần nén bơm</span></label>
+                    <label class="option-item"><input type="radio" name="q11" value="C"><span class="option-label">C. Mật độ phân tử khí trong bóng giảm dần sau các lần bơm</span></label>
+                    <label class="option-item"><input type="radio" name="q11" value="D"><span class="option-label">D. Động năng trung bình của các phân tử khí tăng lên sau mỗi lần bơm</span></label>
+                </div>
+                <div id="exp11" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> Thể tích quả bóng $V = \text{const}$, mỗi lần bơm nạp thêm khối lượng khí $\Delta m$ làm tăng số mol $n$ và mật độ phân tử $\mu$, do đó áp suất $p = \mu kT$ tăng. $\Rightarrow$ <strong>Đáp án A</strong>.
+                </div>
+            </div>
+
+            <!-- Câu 12 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 12:</strong> Khảo sát một xi-lanh đặt thẳng đứng có pít-tông khối lượng $m$ đậy kín một lượng khí bên trong. Khi đun nóng xi-lanh từ từ để pít-tông di chuyển đi lên, quá trình biến đổi trạng thái của khối khí là đẳng áp vì:</div>
+                <div class="option-list">
+                    <label class="option-item"><input type="radio" name="q12" value="A"><span class="option-label">A. Áp suất khí luôn cân bằng với tổng áp suất khí quyển phía trên và áp suất do trọng lượng pít-tông gây ra ($p = p_0 + \frac{mg}{S} = \text{const}$)</span></label>
+                    <label class="option-item"><input type="radio" name="q12" value="B"><span class="option-label">B. Pít-tông đứng yên không di chuyển</span></label>
+                    <label class="option-item"><input type="radio" name="q12" value="C"><span class="option-label">C. Nhiệt độ khí giữ nguyên không đổi</span></label>
+                    <label class="option-item"><input type="radio" name="q12" value="D"><span class="option-label">D. Thể tích khí bị thu hẹp lại</span></label>
+                </div>
+                <div id="exp12" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> Cân bằng lực tác dụng lên pít-tông: $p \cdot S = p_0 \cdot S + mg \implies p = p_0 + \frac{mg}{S} = \text{const}$ không đổi trong suốt quá trình giãn nở. $\Rightarrow$ <strong>Đáp án A</strong>.
+                </div>
+            </div>
+
+            <!-- Câu 13 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 13:</strong> Khái niệm Khí lí tưởng được xây dựng dựa trên mô hình đơn giản hóa chất khí. Khẳng định nào sau đây là <strong>SAI</strong> khi nói về khí lí tưởng?</div>
+                <div class="option-list">
+                    <label class="option-item"><input type="radio" name="q13" value="A"><span class="option-label">A. Các phân tử khí được coi là các chất điểm có kích thước nhỏ vô cùng so với khoảng cách giữa chúng</span></label>
+                    <label class="option-item"><input type="radio" name="q13" value="B"><span class="option-label">B. Bỏ qua lực tương tác giữa các phân tử khí khi chưa va chạm</span></label>
+                    <label class="option-item"><input type="radio" name="q13" value="C"><span class="option-label">C. Va chạm giữa các phân tử khí với nhau và với thành bình là va chạm hoàn toàn đàn hồi</span></label>
+                    <label class="option-item"><input type="radio" name="q13" value="D"><span class="option-label">D. Thế năng tương tác giữa các phân tử khí đóng vai trò quyết định nội năng của chất khí</span></label>
+                </div>
+                <div id="exp13" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> Khí lí tưởng bỏ qua lực tương tác phân tử nên thế năng tương tác coi như bằng 0, nội năng của khí lí tưởng chỉ phụ thuộc vào nhiệt độ (tổng động năng nhiệt của các phân tử). Phát biểu D là SAI. $\Rightarrow$ <strong>Đáp án D</strong>.
+                </div>
+            </div>
+
+            <!-- Câu 14 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 14:</strong> Nối hai bình kín $V_1$ và $V_2$ chứa cùng một loại khí lí tưởng ở áp suất $p_1$ và $p_2$ bằng ống nối có khóa. Khi mở khóa để hai bình thông nhau ở nhiệt độ không đổi, áp suất $p$ của hệ khi đạt trạng thái cân bằng thỏa mãn:</div>
+                <div class="option-list">
+                    <label class="option-item"><input type="radio" name="q14" value="A"><span class="option-label">A. Áp suất cân bằng $p = p_1 + p_2$</span></label>
+                    <label class="option-item"><input type="radio" name="q14" value="B"><span class="option-label">B. Áp suất cân bằng $p$ nằm trong khoảng giữa $p_1$ và $p_2$ (theo công thức trung bình trọng số $p = \frac{p_1 V_1 + p_2 V_2}{V_1 + V_2}$)</span></label>
+                    <label class="option-item"><input type="radio" name="q14" value="C"><span class="option-label">C. Áp suất cân bằng $p$ luôn bằng 0</span></label>
+                    <label class="option-item"><input type="radio" name="q14" value="D"><span class="option-label">D. Áp suất cân bằng $p$ lớn hơn cả $p_1$ và $p_2$</span></label>
+                </div>
+                <div id="exp14" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> Bảo toàn số mol ở nhiệt độ không đổi: $p(V_1 + V_2) = p_1 V_1 + p_2 V_2 \implies p = \frac{p_1 V_1 + p_2 V_2}{V_1 + V_2}$, giá trị này luôn nằm kẹp giữa $p_1$ và $p_2$. $\Rightarrow$ <strong>Đáp án B</strong>.
+                </div>
+            </div>
+
+            <!-- Câu 15 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 15:</strong> Vào những ngày trời nắng nóng, nhiệt độ không khí trong một căn phòng tăng lên làm một lượng không khí thoát ra khỏi phòng qua các khe cửa. Nguyên nhân chính khiến không khí thoát ra ngoài là:</div>
+                <div class="option-list">
+                    <label class="option-item"><input type="radio" name="q15" value="A"><span class="option-label">A. Nhiệt độ tăng làm không khí trong phòng dãn nở đẳng áp, mật độ không khí giảm nên phần thể tích dãn nở phải tràn ra ngoài</span></label>
+                    <label class="option-item"><input type="radio" name="q15" value="B"><span class="option-label">B. Áp suất khí quyển bên ngoài phòng giảm xuống bằng 0</span></label>
+                    <label class="option-item"><input type="radio" name="q15" value="C"><span class="option-label">C. Lực hấp dẫn của Trái Đất bị suy giảm khi trời nắng</span></label>
+                    <label class="option-item"><input type="radio" name="q15" value="D"><span class="option-label">D. Các phân tử không khí bị phân hủy do nhiệt độ</span></label>
+                </div>
+                <div id="exp15" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> Căn phòng thông với khí quyển nên áp suất $p = p_0 = \text{const}$. Khi $T$ tăng, thể tích dãn nở tỉ lệ với $T$, lượng dãn nở vượt quá dung tích phòng tràn qua khe cửa ra ngoài. $\Rightarrow$ <strong>Đáp án A</strong>.
+                </div>
+            </div>
+
+            <!-- Câu 16 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 16:</strong> Một bọt khí nhỏ tích tụ từ đáy hồ nước sâu từ từ nổi lên mặt nước. Coi nhiệt độ nước hồ tăng nhẹ từ đáy lên mặt nước. Kích thước (thể tích) của bọt khí tăng lên khi nổi gần đến mặt nước là do:</div>
+                <div class="option-list">
+                    <label class="option-item"><input type="radio" name="q16" value="A"><span class="option-label">A. Áp suất cột nước tác dụng lên bọt khí giảm dần khi nổi lên cao kết hợp với nhiệt độ tăng làm thể tích dãn nở theo phương trình trạng thái</span></label>
+                    <label class="option-item"><input type="radio" name="q16" value="B"><span class="option-label">B. Áp suất nước phía trên bọt khí tăng lên làm ép bọt khí to ra</span></label>
+                    <label class="option-item"><input type="radio" name="q16" value="C"><span class="option-label">C. Bọt khí bị ngấm thêm nước lỏng vào bên trong</span></label>
+                    <label class="option-item"><input type="radio" name="q16" value="D"><span class="option-label">D. Lực cản của nước đẩy bọt khí dẹt lại</span></label>
+                </div>
+                <div id="exp16" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> Áp suất tại độ sâu $h$: $p = p_0 + \rho g h$. Khi nổi lên, $h$ giảm $\implies p$ giảm mạnh, kết hợp $T$ tăng nhẹ $\implies V = \frac{nRT}{p}$ tăng lên rõ rệt. $\Rightarrow$ <strong>Đáp án A</strong>.
+                </div>
+            </div>
+
+            <!-- Câu 17 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 17:</strong> Trên hệ tọa độ $(p, T)$, đường đẳng tích của một lượng khí lí tưởng xác định là một đường thẳng kéo dài đi qua gốc tọa độ $O$. Nếu xét hai đường đẳng tích ứng với thể tích $V_1$ và $V_2$ sao cho đường $V_1$ nằm phía trên (độ dốc lớn hơn) đường $V_2$, mối quan hệ giữa hai thể tích là:</div>
+                <div class="option-list">
+                    <label class="option-item"><input type="radio" name="q17" value="A"><span class="option-label">A. $V_1 < V_2$ (vì hệ số góc $\frac{p}{T} = \frac{nR}{V}$ tỉ lệ nghịch với thể tích $V$)</span></label>
+                    <label class="option-item"><input type="radio" name="q17" value="B"><span class="option-label">B. $V_1 > V_2$</span></label>
+                    <label class="option-item"><input type="radio" name="q17" value="C"><span class="option-label">C. $V_1 = V_2$</span></label>
+                    <label class="option-item"><input type="radio" name="q17" value="D"><span class="option-label">D. Không so sánh được</span></label>
+                </div>
+                <div id="exp17" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> Hệ số góc đường đẳng tích trên đồ thị $(p, T)$ là $\frac{p}{T} = \frac{nR}{V}$. Đường nào dốc hơn (hệ số góc lớn hơn) thì thể tích $V$ tương ứng phải nhỏ hơn $\implies V_1 < V_2$. $\Rightarrow$ <strong>Đáp án A</strong>.
+                </div>
+            </div>
+
+            <!-- Câu 18 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 18:</strong> Một ống thủy tinh hẹp, dài, đặt thẳng đứng đầu dưới kín, đầu trên mở, chứa một cột không khí bị giam bởi một cột thủy ngân phía trên. Khi lộn ngược ống thủy tinh để đầu mở hướng xuống dưới ở nhiệt độ không đổi, cột thủy ngân di chuyển xuống dưới làm cột không khí dãn nở ra. Lực trực tiếp làm cột không khí dãn nở là do:</div>
+                <div class="option-list">
+                    <label class="option-item"><input type="radio" name="q18" value="A"><span class="option-label">A. Trọng lượng cột thủy ngân kéo xuống làm giảm áp suất khí trong ống ($p_2 = p_0 - h < p_0$), áp suất giảm làm khí dãn nở theo định luật Boyle</span></label>
+                    <label class="option-item"><input type="radio" name="q18" value="B"><span class="option-label">B. Áp suất khí quyển đẩy thủy ngân đi lên</span></label>
+                    <label class="option-item"><input type="radio" name="q18" value="C"><span class="option-label">C. Nhiệt độ không khí trong ống tăng lên đột ngột</span></label>
+                    <label class="option-item"><input type="radio" name="q18" value="D"><span class="option-label">D. Lực ma sát giữa thủy ngân và thành ống tăng lên</span></label>
+                </div>
+                <div id="exp18" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> Khi lộn ngược ống, trọng lượng cột thủy ngân kéo xuống làm áp suất khí giam giảm từ $p_1 = p_0 + h$ xuống $p_2 = p_0 - h$. Theo định luật Boyle đẳng nhiệt, áp suất giảm thì thể tích khí tăng lên. $\Rightarrow$ <strong>Đáp án A</strong>.
+                </div>
+            </div>
 
             <!-- PHẦN II -->
             <div class="section-header">
-                PHẦN II. CÂU HỎI TRẮC NGHIỆM ĐÚNG SAI (4 CÂU - MỖI CÂU 4 Ý)
+                <i class="fa-solid fa-list-check"></i> PHẦN II. Câu hỏi trắc nghiệm Đúng / Sai (4,0 điểm - 4 câu)
             </div>
-            <div id="part2Container"></div>
+            <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 15px;"><i>Thí sinh trả lời từ Câu 1 đến Câu 4. Trong mỗi ý a, b, c, d ở mỗi câu, chọn Đúng hoặc Sai. (Đúng 1 ý: 0,1đ | Đúng 2 ý: 0,25đ | Đúng 3 ý: 0,5đ | Đúng 4 ý: 1,0đ).</i></p>
+
+            <!-- Câu II.1 -->
+            <div class="question-card">
+                <span class="q-score-badge">1,0 điểm</span>
+                <div class="q-title"><strong>Câu 1:</strong> Khảo sát một bình thép kín dung tích không đổi chứa một khối lượng khí lí tưởng xác định. Đun nóng bình từ nhiệt độ $T_1$ đến $T_2$ làm áp suất khí tăng lên. Nếu áp suất vượt quá ngưỡng an toàn $p_{\text{an toàn}}$, van xả tự động mở ra giữ áp suất không đổi ở $p_{\text{an toàn}}$.</div>
+                <table class="tf-table">
+                    <thead>
+                        <tr><th>Phát biểu</th><th>Đúng</th><th>Sai</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>a)</strong> Trong giai đoạn đun nóng trước khi van xả mở, quá trình biến đổi trạng thái của khối khí trong bình là quá trình đẳng tích ($V = \text{const}$).</td>
+                            <td><input type="radio" name="tf1_a" value="T"></td>
+                            <td><input type="radio" name="tf1_a" value="F"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>b)</strong> Khi chưa mở van xả, áp suất chất khí trong bình tỉ lệ thuận với nhiệt độ tuyệt đối $T$ do động năng trung bình của phân tử khí tăng lên.</td>
+                            <td><input type="radio" name="tf1_b" value="T"></td>
+                            <td><input type="radio" name="tf1_b" value="F"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>c)</strong> Ngay tại thời điểm áp suất vừa đạt ngưỡng an toàn $p_{\text{an toàn}}$ và van vừa chớm mở, khối lượng khí thoát ra ngoài đã chiếm ngay $50\%$ khối lượng ban đầu.</td>
+                            <td><input type="radio" name="tf1_c" value="T"></td>
+                            <td><input type="radio" name="tf1_c" value="F"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>d)</strong> Khi van xả đang mở và giữ áp suất không đổi ở $p_{\text{an toàn}}$, nếu tiếp tục đun nóng làm nhiệt độ $T$ tăng lên thì khối lượng khí còn lại trong bình sẽ giảm xuống.</td>
+                            <td><input type="radio" name="tf1_d" value="T"></td>
+                            <td><input type="radio" name="tf1_d" value="F"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="exp_tf1" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong><br>
+                    • a) <strong>ĐÚNG</strong>: Bình thép kín cố định $\implies V = \text{const}$.<br>
+                    • b) <strong>ĐÚNG</strong>: Đẳng tích có $p \sim T$.<br>
+                    • c) <strong>SAI</strong>: Ngay lúc chớm mở khí chưa kịp thoát ra.<br>
+                    • d) <strong>ĐÚNG</strong>: $m = \frac{p \cdot V \cdot M}{R \cdot T}$, với $p, V$ không đổi, $T$ tăng thì $m$ còn lại trong bình giảm.
+                </div>
+            </div>
+
+            <!-- Câu II.2 -->
+            <div class="question-card">
+                <span class="q-score-badge">1,0 điểm</span>
+                <div class="q-title"><strong>Câu 2:</strong> Dùng một ống bơm tay để nén không khí vào một quả bóng chuyền có dung tích cố định ở nhiệt độ môi trường không đổi.</div>
+                <table class="tf-table">
+                    <thead>
+                        <tr><th>Phát biểu</th><th>Đúng</th><th>Sai</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>a)</strong> Trong quá trình nén khí vào bóng ở nhiệt độ không đổi, tích $p \cdot V$ của lượng khí đưa vào tuân theo định luật Boyle.</td>
+                            <td><input type="radio" name="tf2_a" value="T"></td>
+                            <td><input type="radio" name="tf2_a" value="F"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>b)</strong> Số lần nén bơm cần thiết để đạt một áp suất nhất định tỉ lệ thuận với dung tích quả bóng và áp suất cần đạt.</td>
+                            <td><input type="radio" name="tf2_b" value="T"></td>
+                            <td><input type="radio" name="tf2_b" value="F"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>c)</strong> Nếu trước khi bơm, trong bóng đã có sẵn không khí ở áp suất khí quyển thì số lần bơm cần thiết sẽ ít hơn so với trường hợp bóng ban đầu bị xẹp hoàn toàn.</td>
+                            <td><input type="radio" name="tf2_c" value="T"></td>
+                            <td><input type="radio" name="tf2_c" value="F"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>d)</strong> Khi áp suất khí trong bóng tăng gấp 2 lần ở nhiệt độ không đổi, mật độ phân tử khí $\mu$ trong bóng cũng tăng lên gấp 2 lần.</td>
+                            <td><input type="radio" name="tf2_d" value="T"></td>
+                            <td><input type="radio" name="tf2_d" value="F"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="exp_tf2" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong><br>
+                    • a) <strong>ĐÚNG</strong>: Quá trình đẳng nhiệt tuân theo định luật Boyle.<br>
+                    • b) <strong>ĐÚNG</strong>: $p_0(V_0 + n \Delta V) = p V_b \implies n \propto V_b \cdot p$.<br>
+                    • c) <strong>ĐÚNG</strong>: Lượng khí có sẵn đã tạo ra một phần áp suất $p_0$.<br>
+                    • d) <strong>ĐÚNG</strong>: Mật độ $\mu = \frac{N}{V} = \frac{p}{kT}$, tỉ lệ thuận với áp suất $p$.
+                </div>
+            </div>
+
+            <!-- Câu II.3 -->
+            <div class="question-card">
+                <span class="q-score-badge">1,0 điểm</span>
+                <div class="q-title"><strong>Câu 3:</strong> Khảo sát không khí trong một phòng học kín có các khe cửa thông với môi trường khí quyển bên ngoài ở áp suất $p_0 = \text{const}$. Khi bật điều hòa sưởi ấm làm nhiệt độ trong phòng tăng lên:</div>
+                <table class="tf-table">
+                    <thead>
+                        <tr><th>Phát biểu</th><th>Đúng</th><th>Sai</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>a)</strong> Quá trình biến đổi của không khí trong phòng là quá trình đẳng áp vì phòng thông với khí quyển bên ngoài ($p = p_0$).</td>
+                            <td><input type="radio" name="tf3_a" value="T"></td>
+                            <td><input type="radio" name="tf3_a" value="F"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>b)</strong> Khi nhiệt độ tuyệt đối trong phòng tăng lên, thể tích của toàn bộ lượng không khí ban đầu bị dãn nở ra.</td>
+                            <td><input type="radio" name="tf3_b" value="T"></td>
+                            <td><input type="radio" name="tf3_b" value="F"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>c)</strong> Phần thể tích dãn nở vượt quá dung tích phòng sẽ tràn qua các khe cửa thoát ra ngoài, làm khối lượng không khí còn lại trong phòng giảm xuống.</td>
+                            <td><input type="radio" name="tf3_c" value="T"></td>
+                            <td><input type="radio" name="tf3_c" value="F"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>d)</strong> Mật độ phân tử không khí trong phòng tăng lên khi nhiệt độ trong phòng tăng lên.</td>
+                            <td><input type="radio" name="tf3_d" value="T"></td>
+                            <td><input type="radio" name="tf3_d" value="F"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="exp_tf3" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong><br>
+                    • a) <strong>ĐÚNG</strong>: Phòng thông với bên ngoài nên $p = p_0 = \text{const}$.<br>
+                    • b) <strong>ĐÚNG</strong>: Đẳng áp có $V \propto T$.<br>
+                    • c) <strong>ĐÚNG</strong>: Phần dãn nở tràn qua khe cửa làm khối lượng không khí còn lại trong phòng giảm.<br>
+                    • d) <strong>SAI</strong>: Mật độ $\mu = \frac{p_0}{kT}$, khi $T$ tăng thì mật độ phân tử trong phòng giảm xuống chứ không tăng.
+                </div>
+            </div>
+
+            <!-- Câu II.4 -->
+            <div class="question-card">
+                <span class="q-score-badge">1,0 điểm</span>
+                <div class="q-title"><strong>Câu 4:</strong> Xét một xi-lanh đặt thẳng đứng có pít-tông khối lượng $m$, diện tích đáy $S$, đậy kín một lượng khí lí tưởng ở nhiệt độ $T_1$. Pít-tông có thể di chuyển không ma sát dọc theo thành xi-lanh.</div>
+                <table class="tf-table">
+                    <thead>
+                        <tr><th>Phát biểu</th><th>Đúng</th><th>Sai</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>a)</strong> Áp suất chất khí giam trong xi-lanh lớn hơn áp suất khí quyển bên ngoài một lượng bằng $\frac{mg}{S}$.</td>
+                            <td><input type="radio" name="tf4_a" value="T"></td>
+                            <td><input type="radio" name="tf4_a" value="F"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>b)</strong> Khi đun nóng xi-lanh từ từ, lực áp suất khí đẩy pít-tông di chuyển đi lên, quá trình biến đổi trạng thái của khối khí là quá trình đẳng áp.</td>
+                            <td><input type="radio" name="tf4_b" value="T"></td>
+                            <td><input type="radio" name="tf4_b" value="F"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>c)</strong> Độ dịch chuyển đi lên của pít-tông $\Delta h$ tỉ lệ thuận với độ tăng nhiệt độ tuyệt đối $\Delta T$ của khối khí.</td>
+                            <td><input type="radio" name="tf4_c" value="T"></td>
+                            <td><input type="radio" name="tf4_c" value="F"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>d)</strong> Chiều di chuyển của pít-tông khi đun nóng ngược chiều với lực do áp suất chất khí tác dụng lên pít-tông.</td>
+                            <td><input type="radio" name="tf4_d" value="T"></td>
+                            <td><input type="radio" name="tf4_d" value="F"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="exp_tf4" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong><br>
+                    • a) <strong>ĐÚNG</strong>: $p = p_0 + \frac{mg}{S}$.<br>
+                    • b) <strong>ĐÚNG</strong>: Quá trình đun nóng đẩy pít-tông di chuyển tự do là đẳng áp $p = \text{const}$.<br>
+                    • c) <strong>ĐÚNG</strong>: $\Delta V = S \cdot \Delta h = \frac{V_1}{T_1} \Delta T \implies \Delta h \propto \Delta T$.<br>
+                    • d) <strong>SAI</strong>: Lực áp suất khí đẩy pít-tông hướng lên cùng chiều chuyển động đi lên của pít-tông.
+                </div>
+            </div>
 
             <!-- PHẦN III -->
             <div class="section-header">
-                PHẦN III. CÂU HỎI TRẮC NGHIỆM TRẢ LỜI NGẮN (6 CÂU)
+                <i class="fa-solid fa-pen-to-square"></i> PHẦN III. Câu hỏi trắc nghiệm trả lời ngắn (1,5 điểm - 6 câu)
             </div>
-            <div id="part3Container"></div>
+            <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 15px;"><i>Thí sinh trả lời từ Câu 1 đến Câu 6. Mỗi câu trả lời đúng được 0,25 điểm. Đáp số tối đa 4 ký tự.</i></p>
 
-            <div class="submit-bar">
-                <div>
-                    <span style="font-size: 0.85rem; color: #94a3b8;">Tiến độ làm bài:</span>
-                    <div id="progressText" style="font-weight: 700; font-size: 1.1rem; color: #10b981;">0 / 28 câu</div>
+            <!-- Câu III.1 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 1:</strong> Một lốp xe ô tô chứa không khí ở áp suất $2,0\text{ bar}$ và nhiệt độ $27^\circ\text{C}$. Sau khi chạy trên đường cao tốc nắng nóng, áp suất trong lốp tăng lên $2,4\text{ bar}$. Coi thể tích lốp xe không đổi, tính nhiệt độ không khí trong lốp lúc này theo đơn vị $^\circ\text{C}$.</div>
+                <div class="short-ans-group">
+                    <label><strong>Đáp số:</strong></label>
+                    <input type="text" id="sa1" class="short-ans-input" placeholder="..." maxlength="4">
+                    <span style="font-size: 0.9rem; color: #64748b;">($^\circ\text{C}$)</span>
                 </div>
-                <button class="btn-submit" onclick="submitQuiz()"><i class="fa-solid fa-paper-plane"></i> NỘP BÀI THI</button>
+                <div id="exp_sa1" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> $T_2 = T_1 \cdot \frac{p_2}{p_1} = 300 \cdot \frac{2,4}{2,0} = 360\text{ K} \implies t_2 = 360 - 273 = 87^\circ\text{C}$. $\Rightarrow$ <strong>Đáp số: 87</strong>.
+                </div>
+            </div>
+
+            <!-- Câu III.2 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 2:</strong> Dùng ống bơm tay dung tích $125\text{ cm}^3$ mỗi lần nén để bơm khí vào quả bóng rổ dung tích $2,5\text{ lít}$ ban đầu chưa có khí. Áp suất khí quyển là $1\text{ atm}$. Sau bao nhiêu lần bơm thì áp suất trong bóng đạt $2,5\text{ atm}$? (Nhiệt độ giữ không đổi).</div>
+                <div class="short-ans-group">
+                    <label><strong>Đáp số:</strong></label>
+                    <input type="text" id="sa2" class="short-ans-input" placeholder="..." maxlength="4">
+                    <span style="font-size: 0.9rem; color: #64748b;">(lần)</span>
+                </div>
+                <div id="exp_sa2" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> $p_0 \cdot (N \cdot V_0) = p \cdot V_b \implies 1 \cdot (N \cdot 125) = 2,5 \cdot 2500 \implies N = 50\text{ lần}$. $\Rightarrow$ <strong>Đáp số: 50</strong>.
+                </div>
+            </div>
+
+            <!-- Câu III.3 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 3:</strong> Một bình kín dung tích $16,62\text{ lít}$ chứa khí Oxygen ($\text{O}_2, M = 32\text{ g/mol}$) ở nhiệt độ $27^\circ\text{C}$ ($300\text{ K}$) và áp suất $1,5 \cdot 10^5\text{ Pa}$. Tính khối lượng khí Oxygen chứa trong bình theo đơn vị gam ($\text{g}$). Cho $R = 8,31\text{ J/(mol}\cdot\text{K)}$.</div>
+                <div class="short-ans-group">
+                    <label><strong>Đáp số:</strong></label>
+                    <input type="text" id="sa3" class="short-ans-input" placeholder="..." maxlength="4">
+                    <span style="font-size: 0.9rem; color: #64748b;">(g)</span>
+                </div>
+                <div id="exp_sa3" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> $m = \frac{p \cdot V \cdot M}{R \cdot T} = \frac{1,5 \cdot 10^5 \cdot 0,01662 \cdot 32}{8,31 \cdot 300} = 32\text{ g}$. $\Rightarrow$ <strong>Đáp số: 32</strong>.
+                </div>
+            </div>
+
+            <!-- Câu III.4 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 4:</strong> Nén $12\text{ lít}$ khí ở áp suất $1\text{ atm}$ vào một bình chứa dung tích $3\text{ lít}$ ở cùng nhiệt độ. Tính áp suất khí trong bình sau khi nén theo đơn vị atm.</div>
+                <div class="short-ans-group">
+                    <label><strong>Đáp số:</strong></label>
+                    <input type="text" id="sa4" class="short-ans-input" placeholder="..." maxlength="4">
+                    <span style="font-size: 0.9rem; color: #64748b;">(atm)</span>
+                </div>
+                <div id="exp_sa4" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> Định luật Boyle: $p_2 = p_1 \cdot \frac{V_1}{V_2} = 1 \cdot \frac{12}{3} = 4\text{ atm}$. $\Rightarrow$ <strong>Đáp số: 4</strong>.
+                </div>
+            </div>
+
+            <!-- Câu III.5 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 5:</strong> Một căn phòng dung tích $60\text{ m}^3$ ở $17^\circ\text{C}$ ($290\text{ K}$) và áp suất $10^5\text{ Pa}$. Khi đun nóng phòng lên $27^\circ\text{C}$ ($300\text{ K}$) ở áp suất $1,02 \cdot 10^5\text{ Pa}$, tính khối lượng không khí thoát ra khỏi phòng theo đơn vị kg (làm tròn đến hàng phần mười). Cho $M = 29\text{ g/mol}, R = 8,31\text{ J/(mol}\cdot\text{K)}$.</div>
+                <div class="short-ans-group">
+                    <label><strong>Đáp số:</strong></label>
+                    <input type="text" id="sa5" class="short-ans-input" placeholder="..." maxlength="4">
+                    <span style="font-size: 0.9rem; color: #64748b;">(kg)</span>
+                </div>
+                <div id="exp_sa5" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> $m_1 = \frac{10^5 \cdot 60 \cdot 29}{8,31 \cdot 290} \approx 72,2\text{ kg}$; $m_2 = \frac{1,02 \cdot 10^5 \cdot 60 \cdot 29}{8,31 \cdot 300} \approx 71,2\text{ kg} \implies \Delta m = m_1 - m_2 = 1,0\text{ kg}$. $\Rightarrow$ <strong>Đáp số: 1.0</strong> (hoặc <strong>1</strong>).
+                </div>
+            </div>
+
+            <!-- Câu III.6 -->
+            <div class="question-card">
+                <span class="q-score-badge">0,25 điểm</span>
+                <div class="q-title"><strong>Câu 6:</strong> Một xi-lanh đặt thẳng đứng có pít-tông khối lượng $m = 2\text{ kg}$, diện tích $S = 20\text{ cm}^2$, giam một cột khí cao $h_1 = 30\text{ cm}$ ở $27^\circ\text{C}$ ($300\text{ K}$). Khi đun nóng khí đến $87^\circ\text{C}$ ($360\text{ K}$), pít-tông dịch chuyển lên phía trên một đoạn bao nhiêu cm?</div>
+                <div class="short-ans-group">
+                    <label><strong>Đáp số:</strong></label>
+                    <input type="text" id="sa6" class="short-ans-input" placeholder="..." maxlength="4">
+                    <span style="font-size: 0.9rem; color: #64748b;">(cm)</span>
+                </div>
+                <div id="exp_sa6" class="explanation-box">
+                    <strong>💡 Lời giải chi tiết:</strong> Quá trình đẳng áp: $h_2 = h_1 \cdot \frac{T_2}{T_1} = 30 \cdot \frac{360}{300} = 36\text{ cm} \implies \Delta h = 36 - 30 = 6\text{ cm}$. $\Rightarrow$ <strong>Đáp số: 6</strong>.
+                </div>
+            </div>
+
+            <!-- Nút nộp bài -->
+            <div style="text-align: center; margin: 40px 0;">
+                <button type="button" class="btn-submit" id="btnSubmitQuiz" onclick="gradeQuiz()">
+                    <i class="fa-solid fa-paper-plane"></i> NỘP BÀI THI & XEM ĐIỂM
+                </button>
+            </div>
+
+            <!-- Bảng kết quả bài thi -->
+            <div id="resultCard" class="result-card">
+                <div style="font-size: 1.1rem; font-weight: 700; color: #64748b; margin-bottom: 5px;" id="studentResultInfo"></div>
+                <h2 style="font-size: 1.8rem; font-weight: 800; color: #0f172a; margin-bottom: 15px;">KẾT QUẢ BÀI THI</h2>
+                <div class="score-big" id="finalScoreDisplay">0.0</div>
+                <div style="font-weight: 700; color: var(--primary); margin-top: 5px; font-size: 1.1rem;">Thang điểm 10,0</div>
+
+                <div class="score-detail-grid">
+                    <div class="score-box">
+                        <div class="score-box-num" id="p1Score" style="color: #0284c7;">0.0 / 4.5</div>
+                        <div class="score-box-label">Phần I (18 câu MCQ)</div>
+                    </div>
+                    <div class="score-box">
+                        <div class="score-box-num" id="p2Score" style="color: #059669;">0.0 / 4.0</div>
+                        <div class="score-box-label">Phần II (4 câu Đ/S)</div>
+                    </div>
+                    <div class="score-box">
+                        <div class="score-box-num" id="p3Score" style="color: #d97706;">0.0 / 1.5</div>
+                        <div class="score-box-label">Phần III (6 câu Trả lời ngắn)</div>
+                    </div>
+                </div>
+
+                <p id="feedbackText" style="font-size: 1.05rem; font-weight: 600; color: #334155; margin-bottom: 25px; text-align: center;"></p>
+
+                <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+                    <button type="button" class="btn-action-quiz" onclick="location.reload()">
+                        <i class="fa-solid fa-rotate-right"></i> Làm lại bài
+                    </button>
+                    <a href="Baigiang.html" class="btn-action-quiz">
+                        <i class="fa-solid fa-book-open"></i> Đọc lại bài giảng
+                    </a>
+                    <a href="/" class="btn-action-quiz" style="background: var(--primary); color: white; border-color: var(--primary-hover);">
+                        <i class="fa-solid fa-house"></i> Về Trang chủ
+                    </a>
+                </div>
             </div>
 
         </div>
-
-        <!-- RESULT CARD -->
-        <div id="resultCard" class="result-card">
-            <h2 style="font-size: 1.5rem; color: #0f172a;"><i class="fa-solid fa-trophy text-amber-500"></i> KẾT QUẢ BÀI LÀM TRẮC NGHIỆM</h2>
-            <p id="resultStudentInfo" style="color: #64748b; font-weight: 600; margin-top: 5px;"></p>
-            <div class="score-display" id="scoreDisplay">0.0</div>
-            <p style="font-weight: 700; color: #334155;" id="scoreSummary"></p>
-            <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="btn-start" style="margin-top: 20px;"><i class="fa-solid fa-magnifying-glass"></i> XEM CHI TIẾT LỜI GIẢI PHÍA DƯỚI</button>
-        </div>
-
     </div>
 
+    <!-- 📜 Site Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <p>&copy; 2026 Vatli102 (vatli102.com). Nền tảng học tập Vật lí thông minh GDPT 2018.</p>
+        </div>
+    </footer>
+
     <script>
-        const mcqQuestions = [
-            { id: 1, title: "Câu 1: Đơn vị nào sau đây KHÔNG PHẢI là đơn vị của áp suất chất khí?", options: ["A. Pa (N/m²)", "B. atm", "C. mmHg", "D. J/m²"], correct: 3, sol: "$\\text{J/m}^2$ là đơn vị của năng lượng trên diện tích, không phải đơn vị của áp suất ($\\text{N/m}^2 = \\text{Pa}$)." },
-            { id: 2, title: "Câu 2: Phương trình nào sau đây biểu diễn phương trình trạng thái của một lượng khí lí tưởng xác định?", options: ["A. $\\frac{p_1 \\cdot V_1}{T_1} = \\frac{p_2 \\cdot V_2}{T_2}$", "B. $p_1 \\cdot V_1 \\cdot T_1 = p_2 \\cdot V_2 \\cdot T_2$", "C. $\\frac{p_1}{V_1 \\cdot T_1} = \\frac{p_2}{V_2 \\cdot T_2}$", "D. $p_1 \\cdot V_2 \\cdot T_1 = p_2 \\cdot V_1 \\cdot T_2$"], correct: 0, sol: "Phương trình Clapeyron tổng quát: $\\frac{p_1 \\cdot V_1}{T_1} = \\frac{p_2 \\cdot V_2}{T_2}$." },
-            { id: 3, title: "Câu 3: Hằng số khí lí tưởng $R$ trong phương trình Clapeyron - Mendeleev có giá trị xấp xỉ bằng bao nhiêu khi các đại lượng tính theo hệ SI ($\\text{J/(mol}\\cdot\\text{K)}$)?", options: ["A. $8,31\\text{ J/(mol}\\cdot\\text{K)}$", "B. $0,082\\text{ J/(mol}\\cdot\\text{K)}$", "C. $1,38 \\cdot 10^{-23}\\text{ J/(mol}\\cdot\\text{K)}$", "D. $6,02 \\cdot 10^{23}\\text{ J/(mol}\\cdot\\text{K)}$"], correct: 0, sol: "Trong hệ SI, Hằng số khí lí tưởng $R \\approx 8,31\\text{ J/(mol}\\cdot\\text{K)}$." },
-            { id: 4, title: "Câu 4: Khi nhiệt độ tuyệt đối của một lượng khí lí tưởng tăng lên 2 lần và thể tích tăng lên 3 lần thì áp suất của chất khí sẽ:", options: ["A. tăng 1,5 lần", "B. giảm 1,5 lần (xuống còn $\\frac{2}{3}$ áp suất ban đầu)", "C. tăng 6 lần", "D. giảm 6 lần"], correct: 1, sol: "Từ $p = \\frac{nRT}{V}$: khi $T' = 2T$ và $V' = 3V$ thì $p' = \\frac{2}{3}p$, tức là áp suất giảm 1,5 lần." },
-            { id: 5, title: "Câu 5: Cho một lượng khí lí tưởng biến đổi trạng thái theo chu trình kín $1 \\rightarrow 2 \\rightarrow 3 \\rightarrow 1$ như hình vẽ:<br><div style='text-align:center; margin: 10px 0;'><svg width='240' height='160' viewBox='0 0 240 160' style='max-width:100%;'><line x1='35' y1='140' x2='220' y2='140' stroke='#334155' stroke-width='2'/><line x1='35' y1='140' x2='35' y2='15' stroke='#334155' stroke-width='2'/><text x='210' y='155' font-size='11' font-weight='bold' fill='#475569'>V</text><text x='18' y='22' font-size='11' font-weight='bold' fill='#475569'>p</text><text x='22' y='152' font-size='11' fill='#475569'>O</text><path d='M 70,30 Q 95,85 180,110' stroke='#ef4444' stroke-width='2.5' fill='none'/><line x1='180' y1='110' x2='70' y2='110' stroke='#2563eb' stroke-width='2.5'/><line x1='70' y1='110' x2='70' y2='30' stroke='#16a34a' stroke-width='2.5'/><circle cx='70' cy='30' r='4' fill='#ef4444'/><text x='60' y='25' font-size='11' font-weight='bold' fill='#ef4444'>1</text><circle cx='180' cy='110' r='4' fill='#2563eb'/><text x='190' y='115' font-size='11' font-weight='bold' fill='#2563eb'>2</text><circle cx='70' cy='110' r='4' fill='#16a34a'/><text x='58' y='122' font-size='11' font-weight='bold' fill='#16a34a'>3</text></svg></div>Nhận xét nào sau đây về dạng các đường biểu diễn trong chu trình là <b>chuẩn xác nhất</b>?", options: ["A. Đoạn (1)-(2) là nhánh hypebol đi xuống, (2)-(3) là đoạn thẳng nằm ngang, (3)-(1) là đoạn thẳng đứng", "B. Ba đoạn thẳng nối liền nhau tạo thành một tam giác vuông", "C. Cả ba đoạn đều là các đường cong hypebol", "D. Đồ thị chu trình là một đường tròn kín"], correct: 0, sol: "Trên hệ $(p, V)$, (1)-(2) dãn đẳng nhiệt là hyperbol đi xuống, (2)-(3) nén đẳng áp là đoạn ngang, (3)-(1) đun đẳng tích là đoạn thẳng đứng." },
-            { id: 6, title: "Câu 6: Một bình kín bằng thép dung tích không đổi chứa một lượng khí lí tưởng. Khi đun nóng bình khí này, nhận định nào sau đây về các thông số và tính chất của chất khí là ĐÚNG?", options: ["A. Áp suất của khí giảm do thể tích tăng", "B. Mật độ phân tử khí tăng lên do phân tử chuyển động nhanh hơn", "C. Áp suất khí tăng tỉ lệ thuận với nhiệt độ tuyệt đối $T$ do tần số và cường độ va chạm phân tử tăng", "D. Động năng trung bình của các phân tử khí giữ nguyên không đổi"], correct: 2, sol: "$V = \\text{const}$, nhiệt độ $T$ tăng làm các phân tử chuyển động nhanh hơn va chạm mạnh và nhiều hơn làm $p \\sim T$ tăng." },
-            { id: 7, title: "Câu 7: Khi xe máy chạy đường dài với tốc độ cao, lốp xe nóng lên làm nhiệt độ không khí bên trong lốp tăng đáng kể. Coi thể tích lốp xe không đổi, áp suất không khí trong lốp tăng lên chủ yếu là do:", options: ["A. Khối lượng không khí trong lốp tự động tăng thêm", "B. Động năng chuyển động nhiệt trung bình của các phân tử không khí tăng lên làm tăng lực va chạm vuông góc vào thành lốp", "C. Thể tích phân tử không khí bị nở ra lớn hơn", "D. Lực hút giữa các phân tử khí tăng lên mạnh mẽ"], correct: 1, sol: "Nhiệt độ $T$ tăng làm động năng trung bình phân tử tăng kéo theo lực va chạm vào thành lốp tăng làm áp suất $p$ tăng." },
-            { id: 8, title: "Câu 8: Nén đẳng nhiệt một khối khí lí tưởng xác định làm thể tích khí giảm đi. Kết luận nào sau đây về đặc điểm vĩ mô và vi mô của khối khí là SAI?", options: ["A. Áp suất khí tăng lên tỉ lệ nghịch với thể tích", "B. Mật độ phân tử khí trong bình tăng lên", "C. Động năng chuyển động nhiệt trung bình của các phân tử khí tăng lên", "D. Tích $p \\cdot V$ giữ nguyên không đổi"], correct: 2, sol: "Quá trình đẳng nhiệt có nhiệt độ $T$ không đổi nên Động năng chuyển động nhiệt trung bình giữ nguyên không đổi, C sai." },
-            { id: 9, title: "Câu 9: Biểu thức tính khối lượng riêng $\\rho$ của khí lí tưởng từ phương trình Clapeyron - Mendeleev là $\\rho = \\frac{p \\cdot M}{R \\cdot T}$. Từ biểu thức này, khẳng định nào sau đây là ĐÚNG?", options: ["A. Ở cùng nhiệt độ và áp suất, khí có khối lượng mol $M$ càng lớn thì khối lượng riêng càng nhỏ", "B. Khi áp suất $p$ tăng và nhiệt độ tuyệt đối $T$ giảm thì khối lượng riêng $\\rho$ tăng lên", "C. Khối lượng riêng $\\rho$ tỉ lệ thuận với nhiệt độ tuyệt đối $T$", "D. Khối lượng riêng của chất khí không phụ thuộc vào áp suất $p$"], correct: 1, sol: "Từ $\\rho = \\frac{p \\cdot M}{R \\cdot T}$: tử số $p$ tăng và mẫu số $T$ giảm đều làm khối lượng riêng $\\rho$ tăng lên." },
-            { id: 10, title: "Câu 10: Khi mở van xả của một bình khí nén kín ở nhiệt độ không đổi, một lượng khí thoát ra ngoài môi trường. Nhận định nào sau đây là ĐÚNG về khối lượng khí còn lại trong bình và áp suất khí trong bình?", options: ["A. Khối lượng khí trong bình giảm làm mật độ phân tử giảm, do đó áp suất khí còn lại trong bình giảm xuống", "B. Khối lượng khí giảm nhưng áp suất trong bình giữ nguyên không đổi", "C. Áp suất khí trong bình tăng lên do khí thoát ra tạo phản lực", "D. Mật độ phân tử khí trong bình không thay đổi do thể tích bình không đổi"], correct: 0, sol: "Khi xả khí, khối lượng $m$ giảm làm mật độ phân tử $\\mu = \\frac{N}{V}$ giảm làm số va chạm vào thành bình giảm $\\implies p$ giảm." },
-            { id: 11, title: "Câu 11: Trong quá trình dùng ống bơm nén không khí vào một quả bóng rổ ở nhiệt độ không đổi, nhận xét nào sau đây là ĐÚNG?", options: ["A. Mỗi lần nén bơm, thể tích bóng giữ không đổi nhưng lượng khí trong bóng tăng lên làm áp suất khí trong bóng tăng", "B. Áp suất khí trong bóng giảm sau mỗi lần nén bơm", "C. Mật độ phân tử khí trong bóng giảm dần sau các lần bơm", "D. Động năng trung bình của các phân tử khí tăng lên sau mỗi lần bơm"], correct: 0, sol: "Thể tích bóng $V$ không đổi, mỗi lần bơm nạp thêm số mol $n$ làm tăng mật độ phân tử và tăng áp suất." },
-            { id: 12, title: "Câu 12: Khảo sát một xi-lanh đặt thẳng đứng có pít-tông khối lượng $m$ đậy kín một lượng khí bên trong. Khi đun nóng xi-lanh từ từ để pít-tông di chuyển đi lên, quá trình biến đổi trạng thái của khối khí là đẳng áp vì:", options: ["A. Áp suất khí luôn cân bằng với tổng áp suất khí quyển phía trên và áp suất do trọng lượng pít-tông gây ra ($p = p_0 + \\frac{mg}{S} = \\text{const}$)", "B. Pít-tông đứng yên không di chuyển", "C. Nhiệt độ khí giữ nguyên không đổi", "D. Thể tích khí bị thu hẹp lại"], correct: 0, sol: "Cân bằng lực trên pit-tông: $p = p_0 + \\frac{mg}{S} = \\text{const} \\implies$ quá trình đun nóng đẩy pit-tông là đẳng áp." },
-            { id: 13, title: "Câu 13: Khái niệm Khí lí tưởng được xây dựng dựa trên mô hình đơn giản hóa chất khí. Khẳng định nào sau đây là SAI khi nói về khí lí tưởng?", options: ["A. Các phân tử khí được coi là các chất điểm có kích thước nhỏ vô cùng so với khoảng cách giữa chúng", "B. Bỏ qua lực tương tác giữa các phân tử khí khi chưa va chạm", "C. Va chạm giữa các phân tử khí với nhau và với thành bình là va chạm hoàn toàn đàn hồi", "D. Thế năng tương tác giữa các phân tử khí đóng vai trò quyết định nội năng của chất khí"], correct: 3, sol: "Khí lí tưởng bỏ qua lực tương tác phân tử nên thế năng tương tác bằng 0, nội năng chỉ gồm tổng động năng phân tử, D sai." },
-            { id: 14, title: "Câu 14: Nối hai bình kín $V_1$ và $V_2$ chứa cùng một loại khí lí tưởng ở áp suất $p_1$ và $p_2$ bằng ống nối có khóa. Khi mở khóa để hai bình thông nhau ở nhiệt độ không đổi, áp suất $p$ của hệ khi đạt trạng thái cân bằng thỏa mãn:", options: ["A. Áp suất cân bằng $p = p_1 + p_2$", "B. Áp suất cân bằng $p$ nằm trong khoảng giữa $p_1$ và $p_2$ (giá trị trung bình trọng số theo thể tích: $p = \\frac{p_1 V_1 + p_2 V_2}{V_1 + V_2}$)", "C. Áp suất cân bằng $p$ luôn bằng 0", "D. Áp suất cân bằng $p$ lớn hơn cả $p_1$ và $p_2$"], correct: 1, sol: "Bảo toàn số mol đẳng nhiệt: $p = \\frac{p_1 V_1 + p_2 V_2}{V_1 + V_2}$, giá trị $p$ luôn nằm giữa $p_1$ và $p_2$." },
-            { id: 15, title: "Câu 15: Vào những ngày trời nắng nóng, nhiệt độ không khí trong một căn phòng tăng lên làm một lượng không khí thoát ra khỏi phòng qua các khe cửa. Nguyên nhân chính khiến không khí thoát ra ngoài là:", options: ["A. Nhiệt độ tăng làm không khí trong phòng dãn nở đẳng áp, mật độ không khí giảm nên phần thể tích dãn nở phải tràn ra ngoài", "B. Áp suất khí quyển bên ngoài phòng giảm xuống bằng 0", "C. Lực hấp dẫn của Trái Đất bị suy giảm khi trời nắng", "D. Các phân tử không khí bị phân hủy do nhiệt độ"], correct: 0, sol: "Phòng thông với bên ngoài nên $p = p_0 = \\text{const}$, đun nóng $T$ tăng làm $V$ dãn nở tràn qua khe cửa ra ngoài." },
-            { id: 16, title: "Câu 16: Một bọt khí nhỏ tích tụ từ đáy hồ nước sâu từ từ nổi lên mặt nước. Coi nhiệt độ nước hồ tăng nhẹ từ đáy lên mặt nước. Kích thước (thể tích) của bọt khí tăng lên khi nổi gần đến mặt nước là do:", options: ["A. Áp suất cột nước tác dụng lên bọt khí giảm dần khi nổi lên cao kết hợp với nhiệt độ tăng làm thể tích dãn nở theo phương trình trạng thái", "B. Áp suất nước phía trên bọt khí tăng lên làm ép bọt khí to ra", "C. Bọt khí bị ngấm thêm nước lỏng vào bên trong", "D. Lực cản của nước đẩy bọt khí dẹt lại"], correct: 0, sol: "Khi nổi lên độ sâu $h$ giảm $\\implies p = p_0 + \\rho gh$ giảm; $T$ tăng $\\implies V$ tăng theo phương trình trạng thái." },
-            { id: 17, title: "Câu 17: Trên hệ tọa độ $(p, T)$, đường đẳng tích của một lượng khí lí tưởng xác định là một đường thẳng kéo dài đi qua gốc tọa độ $O$. Nếu xét hai đường đẳng tích ứng với thể tích $V_1$ và $V_2$ sao cho đường $V_1$ nằm phía trên (độ dốc lớn hơn) đường $V_2$, mối quan hệ giữa hai thể tích là:", options: ["A. $V_1 < V_2$ (vì độ dốc $\\frac{p}{T} = \\frac{nR}{V}$ tỉ lệ nghịch với thể tích $V$)", "B. $V_1 > V_2$", "C. $V_1 = V_2$", "D. Không so sánh được"], correct: 0, sol: "Độ dốc $\\frac{p}{T} = \\frac{nR}{V}$. Độ dốc đường $V_1$ lớn hơn đường $V_2$ chứng tỏ thể tích $V_1 < V_2$." },
-            { id: 18, title: "Câu 18: Một ống thủy tinh hẹp, dài, đặt thẳng đứng đầu dưới kín, đầu trên mở, chứa một cột không khí bị giam bởi một cột thủy ngân phía trên. Khi lộn ngược ống thủy tinh để đầu mở hướng xuống dưới ở nhiệt độ không đổi, cột thủy ngân di chuyển xuống dưới làm cột không khí dãn nở ra. Lực trực tiếp làm cột không khí dãn nở là do:", options: ["A. Trọng lực cột thủy ngân kéo xuống làm giảm áp suất khí trong ống ($p_2 = p_0 - h < p_0$), áp suất giảm làm khí dãn nở theo định luật Boyle", "B. Áp suất khí quyển đẩy thủy ngân đi lên", "C. Nhiệt độ không khí trong ống tăng lên đột ngột", "D. Lực ma sát giữa thủy ngân và thành ống tăng lên"], correct: 0, sol: "Khi lộn ngược, trọng lượng cột Hg hướng xuống làm giảm áp suất khí $p_2 = p_0 - h < p_0 \\implies$ thể tích $l_2$ tăng theo định luật Boyle." }
-        ];
+        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
+        const LESSON_NAME = "Bài 13: Bài tập về khí lí tưởng - Vật lí 12";
 
-        const tfQuestions = [
-            {
-                id: 1, title: "Câu 1: Khảo sát một bình thép kín dung tích không đổi chứa một khối lượng khí lí tưởng xác định. Đun nóng bình từ nhiệt độ $T_1$ đến $T_2$ làm áp suất khí tăng lên. Nếu áp suất vượt quá ngưỡng an toàn $p_{\\text{an toàn}}$, van xả tự động mở ra giữ áp suất không đổi ở $p_{\\text{an toàn}}$.",
-                items: [
-                    { text: "a) Trong giai đoạn đun nóng trước khi van xả mở, quá trình biến đổi trạng thái của khối khí trong bình là quá trình đẳng tích ($V = \\text{const}$).", correct: true },
-                    { text: "b) Khi chưa mở van xả, áp suất chất khí trong bình tỉ lệ thuận với nhiệt độ tuyệt đối $T$ do động năng trung bình của phân tử khí tăng lên.", correct: true },
-                    { text: "c) Ngay tại thời điểm áp suất vừa đạt ngưỡng an toàn $p_{\\text{an toàn}}$ và van vừa chớm mở, khối lượng khí thoát ra ngoài đã chiếm ngay $50\\%$ khối lượng ban đầu.", correct: false },
-                    { text: "d) Khi van xả đang mở và giữ áp suất không đổi ở $p_{\\text{an toàn}}$, nếu tiếp tục đun nóng làm nhiệt độ $T$ tăng lên thì khối lượng khí còn lại trong bình sẽ giảm xuống.", correct: true }
-                ],
-                sol: "a) Đúng. Bình thép kín không biến dạng $\\implies V = \\text{const}$.<br>b) Đúng. $p \\sim T$ khi $V = \\text{const}$.<br>c) Sai. Ngay thời điểm chớm mở chưa kịp xả khí.<br>d) Đúng. $m = \\frac{p \\cdot V \\cdot M}{R \\cdot T}$, khi $T$ tăng thì $m$ còn lại giảm xuống."
-            },
-            {
-                id: 2, title: "Câu 2: Dùng một ống bơm tay để nén không khí vào một quả bóng chuyền có dung tích cố định ở nhiệt độ môi trường không đổi.",
-                items: [
-                    { text: "a) Trong quá trình nén khí vào bóng ở nhiệt độ không đổi, tích $p \\cdot V$ của lượng khí đưa vào tuân theo định luật Boyle.", correct: true },
-                    { text: "b) Số lần nén bơm cần thiết để đạt một áp suất nhất định tỉ lệ thuận với dung tích quả bóng và áp suất cần đạt.", correct: true },
-                    { text: "c) Nếu trước khi bơm, trong bóng đã có sẵn không khí ở áp suất khí quyển thì số lần bơm cần thiết sẽ ít hơn so với trường hợp bóng ban đầu bị xẹp hoàn toàn.", correct: true },
-                    { text: "d) Khi áp suất khí trong bóng tăng gấp 2 lần ở nhiệt độ không đổi, mật độ phân tử khí $\\mu$ trong bóng cũng tăng lên gấp 2 lần.", correct: true }
-                ],
-                sol: "a) Đúng.<br>b) Đúng.<br>c) Đúng.<br>d) Đúng: Mật độ phân tử $\\mu = \\frac{N}{V} = \\frac{p}{k \\cdot T}$, tỉ lệ thuận với $p$."
-            },
-            {
-                id: 3, title: "Câu 3: Khảo sát không khí trong một phòng học kín có các khe cửa thông với môi trường khí quyển bên ngoài ở áp suất $p_0 = \\text{const}$. Khi bật điều hòa sưởi ấm làm nhiệt độ trong phòng tăng lên:",
-                items: [
-                    { text: "a) Quá trình biến đổi của không khí trong phòng là quá trình đẳng áp vì phòng thông với khí quyển bên ngoài ($p = p_0$).", correct: true },
-                    { text: "b) Khi nhiệt độ tuyệt đối trong phòng tăng lên, thể tích của toàn bộ lượng không khí ban đầu bị dãn nở ra.", correct: true },
-                    { text: "c) Phần thể tích dãn nở vượt quá dung tích phòng sẽ tràn qua các khe cửa thoát ra ngoài, làm khối lượng không khí còn lại trong phòng giảm xuống.", correct: true },
-                    { text: "d) Mật độ phân tử không khí trong phòng tăng lên khi nhiệt độ trong phòng tăng lên.", correct: false }
-                ],
-                sol: "a) Đúng.<br>b) Đúng.<br>c) Đúng.<br>d) Sai. Không khí tràn ra ngoài làm mật độ phân tử $\\mu = \\frac{p}{k \\cdot T}$ trong phòng giảm xuống chứ không tăng."
-            },
-            {
-                id: 4, title: "Câu 4: Xét một xi-lanh đặt thẳng đứng có pít-tông khối lượng $m$, diện tích đáy $S$, đậy kín một lượng khí lí tưởng ở nhiệt độ $T_1$. Pít-tông có thể di chuyển không ma sát dọc theo thành xi-lanh.",
-                items: [
-                    { text: "a) Áp suất chất khí giam trong xi-lanh lớn hơn áp suất khí quyển bên ngoài một lượng bằng $\\frac{mg}{S}$.", correct: true },
-                    { text: "b) Khi đun nóng xi-lanh từ từ, lực áp suất khí đẩy pít-tông di chuyển đi lên, quá trình biến đổi trạng thái của khối khí là quá trình đẳng áp.", correct: true },
-                    { text: "c) Độ dịch chuyển đi lên của pít-tông $\\Delta h$ tỉ lệ thuận với độ tăng nhiệt độ tuyệt đối $\\Delta T$ của khối khí.", correct: true },
-                    { text: "d) Chiều di chuyển của pít-tông khi đun nóng ngược chiều với lực do áp suất chất khí tác dụng lên pít-tông.", correct: false }
-                ],
-                sol: "a) Đúng: $p = p_0 + \\frac{mg}{S}$.<br>b) Đúng. Cân bằng lực trên pit-tông $\\implies p = \\text{const}$.<br>c) Đúng: $S \\cdot \\Delta h \\sim \\Delta T$.<br>d) Sai: Lực áp suất khí đẩy pit-tông hướng lên trên cùng chiều di chuyển đi lên của pit-tông."
-            }
-        ];
+        const correctP1 = {
+            1: "D", 2: "A", 3: "A", 4: "B", 5: "A", 6: "C",
+            7: "B", 8: "C", 9: "B", 10: "A", 11: "A", 12: "A",
+            13: "D", 14: "B", 15: "A", 16: "A", 17: "A", 18: "A"
+        };
 
-        const shortQuestions = [
-            { id: 1, title: "Câu 1: Một lốp xe ô tô chứa không khí ở áp suất $2,0\\text{ bar}$ và nhiệt độ $27^\\circ\\text{C}$. Sau khi chạy trên đường cao tốc nắng nóng, áp suất trong lốp tăng lên $2,4\\text{ bar}$. Coi thể tích lốp xe không đổi, tính nhiệt độ không khí trong lốp lúc này theo đơn vị $^\\circ\\text{C}$.", correct: "87", sol: "$T_2 = 300 \\times \\frac{2,4}{2,0} = 360\\text{ K} \\implies t_2 = 360 - 273 = 87^\\circ\\text{C}$." },
-            { id: 2, title: "Câu 2: Dùng ống bơm tay dung tích $125\\text{ cm}^3$ mỗi lần nén để bơm khí vào quả bóng rổ dung tích $2,5\\text{ lít}$ ban đầu chưa có khí. Áp suất khí quyển là $1\\text{ atm}$. Sau bao nhiêu lần bơm thì áp suất trong bóng đạt $2,5\\text{ atm}$? (Nhiệt độ giữ không đổi).", correct: "50", sol: "$1 \\times (125 N) = 2,5 \\times 2500 \\implies N = 50\\text{ lần}$." },
-            { id: 3, title: "Câu 3: Một bình kín dung tích $16,62\\text{ lít}$ chứa khí Oxygen ($\\text{O}_2, M = 32\\text{ g/mol}$) ở nhiệt độ $27^\\circ\\text{C}$ và áp suất $1,5 \\cdot 10^5\\text{ Pa}$. Tính khối lượng khí Oxygen chứa trong bình theo đơn vị gam ($\\text{g}$). Cho $R = 8,31\\text{ J/(mol}\\cdot\\text{K)}$.", correct: "32", sol: "$m = \\frac{1,5 \\cdot 10^5 \\times 0,01662 \\times 32}{8,31 \\times 300} = 32\\text{ g}$." },
-            { id: 4, title: "Câu 4: Nén $12\\text{ lít}$ khí ở áp suất $1\\text{ atm}$ vào bình chứa $3\\text{ lít}$ ở cùng nhiệt độ. Tính áp suất khí trong bình sau khi nén theo đơn vị atm.", correct: "4", sol: "$p_2 = 1 \\times \\frac{12}{3} = 4\\text{ atm}$." },
-            { id: 5, title: "Câu 5: Một căn phòng dung tích $60\\text{ m}^3$ ở $17^\\circ\\text{C}$ và áp suất $10^5\\text{ Pa}$. Khi đun nóng phòng lên $27^\\circ\\text{C}$ ở áp suất $1,02 \\cdot 10^5\\text{ Pa}$, tính khối lượng không khí thoát ra khỏi phòng theo đơn vị kg (làm tròn đến hàng phần mười). Cho $M = 29\\text{ g/mol}, R = 8,31\\text{ J/(mol}\\cdot\\text{K)}$.", correct: "1.0", sol: "$m_1 = 72,2\\text{ kg}, m_2 = 71,2\\text{ kg} \\implies \\Delta m = 1,0\\text{ kg}$." },
-            { id: 6, title: "Câu 6: Một xi-lanh đặt thẳng đứng có pit-tông khối lượng $m = 2\\text{ kg}$, diện tích $S = 20\\text{ cm}^2 = 2 \\cdot 10^{-3}\\text{ m}^2$, giam một cột khí cao $h_1 = 30\\text{ cm}$ ở $27^\\circ\\text{C}$ ($300\\text{ K}$). Khi đun nóng khí đến $87^\\circ\\text{C}$ ($360\\text{ K}$), pit-tông dịch chuyển lên phía trên một đoạn bao nhiêu cm?", correct: "6", sol: "$h_2 = h_1 \\times \\frac{T_2}{T_1} = 30 \\times \\frac{360}{300} = 36\\text{ cm} \\implies \\Delta h = 36 - 30 = 6\\text{ cm}$." }
-        ];
+        const correctP2 = {
+            1: { a: "T", b: "T", c: "F", d: "T" },
+            2: { a: "T", b: "T", c: "T", d: "T" },
+            3: { a: "T", b: "T", c: "T", d: "F" },
+            4: { a: "T", b: "T", c: "T", d: "F" }
+        };
 
-        let userMcq = {};
-        let userTf = {};
-        let userShort = {};
+        const correctP3 = {
+            1: ["87", "87.0", "87,0", "87°C", "87 C"],
+            2: ["50", "50.0", "50,0", "50 lần"],
+            3: ["32", "32.0", "32,0", "32 g", "32g"],
+            4: ["4", "4.0", "4,0", "4 atm", "4atm"],
+            5: ["1.0", "1", "1,0", "1.0 kg", "1 kg", "1,0 kg"],
+            6: ["6", "6.0", "6,0", "6 cm", "6cm"]
+        };
 
-        function renderQuiz() {
-            // Part 1
-            const p1 = document.getElementById('part1Container');
-            p1.innerHTML = '';
-            mcqQuestions.forEach((q, idx) => {
-                let html = `<div class="question-card">
-                    <div class="question-title">${q.title}</div>
-                    <div class="options-grid">`;
-                q.options.forEach((opt, oIdx) => {
-                    html += `<div class="option-card" id="mcq_${q.id}_${oIdx}" onclick="selectMcq(${q.id}, ${oIdx})">
-                        <span class="option-letter">${String.fromCharCode(65+oIdx)}</span>
-                        <span>${opt.substring(3)}</span>
-                    </div>`;
-                });
-                html += `</div>
-                    <div class="solution-box" id="sol_mcq_${q.id}">
-                        <strong>💡 Lời giải chi tiết:</strong> ${q.sol}
-                    </div>
-                </div>`;
-                p1.innerHTML += html;
-            });
+        let timeLeft = 45 * 60; // 45 phút = 2700 giây
+        let timerInterval = null;
+        let isQuizSubmitted = false;
 
-            // Part 2
-            const p2 = document.getElementById('part2Container');
-            p2.innerHTML = '';
-            tfQuestions.forEach((q, idx) => {
-                let html = `<div class="question-card">
-                    <div class="question-title">${q.title}</div>
-                    <div class="tf-grid">`;
-                q.items.forEach((item, iIdx) => {
-                    html += `<div class="tf-item">
-                        <span class="tf-text">${item.text}</span>
-                        <div class="tf-btns">
-                            <button class="btn-tf" id="tf_${q.id}_${iIdx}_true" onclick="selectTf(${q.id}, ${iIdx}, true)">ĐÚNG</button>
-                            <button class="btn-tf" id="tf_${q.id}_${iIdx}_false" onclick="selectTf(${q.id}, ${iIdx}, false)">SAI</button>
-                        </div>
-                    </div>`;
-                });
-                html += `</div>
-                    <div class="solution-box" id="sol_tf_${q.id}">
-                        <strong>💡 Hướng dẫn phân tích Đúng/Sai:</strong><br>${q.sol}
-                    </div>
-                </div>`;
-                p2.innerHTML += html;
-            });
-
-            // Part 3
-            const p3 = document.getElementById('part3Container');
-            p3.innerHTML = '';
-            shortQuestions.forEach((q, idx) => {
-                let html = `<div class="question-card">
-                    <div class="question-title">${q.title}</div>
-                    <input type="text" class="short-input" id="short_${q.id}" onchange="selectShort(${q.id}, this.value)" placeholder="Nhập đáp số...">
-                    <div class="solution-box" id="sol_short_${q.id}">
-                        <strong>💡 Lời giải hướng dẫn:</strong> ${q.sol} (Đáp số chuẩn: <strong>${q.correct}</strong>)
-                    </div>
-                </div>`;
-                p3.innerHTML += html;
-            });
-
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise();
+        function updateTimerDisplay() {
+            const mins = Math.floor(timeLeft / 60);
+            const secs = timeLeft % 60;
+            const formatted = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            const timerEl = document.getElementById("timerCountdown");
+            if (timerEl) {
+                timerEl.innerText = formatted;
+                if (timeLeft <= 180) {
+                    timerEl.style.color = "#ef4444";
+                }
             }
         }
 
-        function startQuiz() {
-            const name = document.getElementById('studentName').value.trim();
+        function startQuizExam() {
+            const nameInput = document.getElementById("studentName");
+            const classInput = document.getElementById("studentClass");
+            const name = nameInput ? nameInput.value.trim() : "";
+            const sClass = (classInput && classInput.value.trim()) ? classInput.value.trim() : "12";
+            
             if (!name) {
-                alert('Vui lòng nhập Họ và tên trước khi bắt đầu làm bài thi!');
-                document.getElementById('studentName').focus();
+                alert("Vui lòng nhập Họ và tên trước khi bắt đầu làm bài!");
+                if (nameInput) nameInput.focus();
                 return;
             }
-            document.getElementById('studentInfoBox').style.display = 'none';
-            document.getElementById('quizContent').style.display = 'block';
-            renderQuiz();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
 
-        function selectMcq(qId, oIdx) {
-            userMcq[qId] = oIdx;
-            for(let i=0; i<4; i++) {
-                const el = document.getElementById(`mcq_${qId}_${i}`);
-                if(el) el.classList.remove('selected');
-            }
-            document.getElementById(`mcq_${qId}_${oIdx}`).classList.add('selected');
-            updateProgress();
-        }
+            const loginCard = document.getElementById("studentLoginCard") || document.getElementById("studentInfoBox");
+            if (loginCard) loginCard.style.display = "none";
 
-        function selectTf(qId, iIdx, val) {
-            if(!userTf[qId]) userTf[qId] = {};
-            userTf[qId][iIdx] = val;
+            const timerBar = document.getElementById("stickyTimerBar");
+            if (timerBar) timerBar.style.display = "block";
+
+            const quizContent = document.getElementById("quizContent");
+            if (quizContent) quizContent.style.display = "block";
+
+            const timerStudent = document.getElementById("timerStudentDisplay");
+            if (timerStudent) timerStudent.innerText = `Thí sinh: ${name} (${sClass})`;
             
-            const btnT = document.getElementById(`tf_${qId}_${iIdx}_true`);
-            const btnF = document.getElementById(`tf_${qId}_${iIdx}_false`);
-            if(val) {
-                btnT.classList.add('selected-true');
-                btnF.classList.remove('selected-false');
-            } else {
-                btnF.classList.add('selected-false');
-                btnT.classList.remove('selected-true');
-            }
-            updateProgress();
-        }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        function selectShort(qId, val) {
-            userShort[qId] = val.trim();
-            updateProgress();
-        }
-
-        function updateProgress() {
-            let count = Object.keys(userMcq).length;
-            mcqQuestions.forEach(q => {
-                if(userTf[q.id]) count += Object.keys(userTf[q.id]).length;
-            });
-            tfQuestions.forEach(q => {
-                if(userTf[q.id]) count += Object.keys(userTf[q.id]).length;
-            });
-            let tfCount = 0;
-            tfQuestions.forEach(q => {
-                if(userTf[q.id]) tfCount += Object.keys(userTf[q.id]).length;
-            });
-            let shortCount = 0;
-            shortQuestions.forEach(q => {
-                if(userShort[q.id] && userShort[q.id] !== '') shortCount++;
-            });
-            let totalAnswered = Object.keys(userMcq).length + tfCount + shortCount;
-            document.getElementById('progressText').innerText = `${totalAnswered} / 28 câu`;
-        }
-
-        function submitQuiz() {
-            if(!confirm("Bạn có chắc chắn muốn nộp bài thi không?")) return;
-
-            let mcqCorrect = 0;
-            mcqQuestions.forEach(q => {
-                const sel = userMcq[q.id];
-                for(let i=0; i<4; i++) {
-                    const el = document.getElementById(`mcq_${q.id}_${i}`);
-                    if(el) {
-                        el.style.pointerEvents = 'none';
-                        if(i === q.correct) el.classList.add('correct');
-                        else if(i === sel) el.classList.add('incorrect');
-                    }
+            // Bắt đầu đếm ngược 45 phút
+            timeLeft = 45 * 60;
+            updateTimerDisplay();
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Hết thời gian làm bài (45 phút)! Hệ thống sẽ tự động nộp bài.");
+                    gradeQuiz();
+                    return;
                 }
-                if(sel === q.correct) mcqCorrect++;
-                document.getElementById(`sol_mcq_${q.id}`).classList.add('show');
+                timeLeft--;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        // Tương thích cả 2 tên hàm
+        function startQuiz() { startQuizExam(); }
+        function submitQuiz() { gradeQuiz(); }
+
+        // Bắt sự kiện phím Enter
+        document.addEventListener("DOMContentLoaded", () => {
+            const nameInput = document.getElementById("studentName");
+            const classInput = document.getElementById("studentClass");
+            [nameInput, classInput].forEach(inp => {
+                if (inp) {
+                    inp.addEventListener("keypress", (e) => {
+                        if (e.key === "Enter") startQuizExam();
+                    });
+                }
             });
+        });
 
-            let tfPoints = 0;
-            tfQuestions.forEach(q => {
-                const uAns = userTf[q.id] || {};
-                let qCorrectCount = 0;
-                q.items.forEach((item, iIdx) => {
-                    const userVal = uAns[iIdx];
-                    const btnT = document.getElementById(`tf_${q.id}_${iIdx}_true`);
-                    const btnF = document.getElementById(`tf_${q.id}_${iIdx}_false`);
-                    if(btnT) btnT.style.pointerEvents = 'none';
-                    if(btnF) btnF.style.pointerEvents = 'none';
+        function gradeQuiz() {
+            if (isQuizSubmitted) return;
+            isQuizSubmitted = true;
+            if (timerInterval) clearInterval(timerInterval);
 
-                    if(userVal === item.correct) {
-                        qCorrectCount++;
-                    }
-                    if(item.correct) {
-                        if(btnT) btnT.style.background = '#dcfce7';
-                    } else {
-                        if(btnF) btnF.style.background = '#dcfce7';
+            // Ẩn thanh timer bar sau khi nộp bài
+            const timerBar = document.getElementById("stickyTimerBar");
+            if (timerBar) timerBar.style.display = "none";
+
+            let p1ScoreVal = 0.0;
+            let p2ScoreVal = 0.0;
+            let p3ScoreVal = 0.0;
+            let totalScore = 0.0;
+            let correctCount = 0;
+
+            // Chấm Phần I (18 câu x 0.25 = 4.5đ)
+            for (let i = 1; i <= 18; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selected && selected.value === correctP1[i]) {
+                    p1ScoreVal += 0.25;
+                    correctCount++;
+                }
+            }
+
+            // Chấm Phần II (4 câu x 1.0 = 4.0đ)
+            for (let j = 1; j <= 4; j++) {
+                let correctSubCount = 0;
+                ['a', 'b', 'c', 'd'].forEach(sub => {
+                    const sel = document.querySelector(`input[name="tf${j}_${sub}"]:checked`);
+                    if (sel && sel.value === correctP2[j][sub]) {
+                        correctSubCount++;
                     }
                 });
-                if(qCorrectCount === 1) tfPoints += 0.1;
-                else if(qCorrectCount === 2) tfPoints += 0.25;
-                else if(qCorrectCount === 3) tfPoints += 0.5;
-                else if(qCorrectCount === 4) tfPoints += 1.0;
 
-                document.getElementById(`sol_tf_${q.id}`).classList.add('show');
-            });
+                let qScore = 0;
+                if (correctSubCount === 4) qScore = 1.0;
+                else if (correctSubCount === 3) qScore = 0.5;
+                else if (correctSubCount === 2) qScore = 0.25;
+                else if (correctSubCount === 1) qScore = 0.1;
+                else qScore = 0.0;
 
-            let shortCorrect = 0;
-            shortQuestions.forEach(q => {
-                const uVal = userShort[q.id] || '';
-                const inputEl = document.getElementById(`short_${q.id}`);
-                if(inputEl) inputEl.disabled = true;
+                p2ScoreVal += qScore;
+                if (correctSubCount === 4) correctCount++;
+            }
 
-                if(uVal === q.correct) {
-                    shortCorrect++;
-                    if(inputEl) inputEl.style.borderColor = '#22c55e';
-                } else {
-                    if(inputEl) inputEl.style.borderColor = '#ef4444';
+            // Chấm Phần III (6 câu x 0.25 = 1.5đ)
+            for (let k = 1; k <= 6; k++) {
+                const inputEl = document.getElementById(`sa${k}`);
+                const inputVal = inputEl ? inputEl.value.trim() : "";
+                if (correctP3[k].includes(inputVal)) {
+                    p3ScoreVal += 0.25;
+                    correctCount++;
                 }
-                document.getElementById(`sol_short_${q.id}`).classList.add('show');
-            });
+            }
 
-            let mcqScore = mcqCorrect * 0.25;
-            let shortScore = shortCorrect * 0.25;
-            let totalScore = mcqScore + tfPoints + shortScore;
+            totalScore = Math.round((p1ScoreVal + p2ScoreVal + p3ScoreVal) * 100) / 100;
 
-            const name = document.getElementById('studentName').value.trim() || 'Học sinh';
-            const cls = document.getElementById('studentClass').value.trim() || 'Vật lí 12';
+            // Ẩn nút nộp bài
+            const btnSubmit = document.getElementById("btnSubmitQuiz");
+            if (btnSubmit) btnSubmit.style.display = "none";
+
+            // Hiển thị tất cả lời giải chi tiết
+            const explanations = document.querySelectorAll('.explanation-box');
+            explanations.forEach(exp => exp.style.display = 'block');
+
+            // Cập nhật thẻ kết quả
+            const nameInput = document.getElementById("studentName");
+            const classInput = document.getElementById("studentClass");
+            const name = nameInput ? nameInput.value.trim() : "Học sinh";
+            const sClass = (classInput && classInput.value.trim()) ? classInput.value.trim() : "12";
             
-            document.getElementById('resultStudentInfo').innerText = `Học sinh: ${name} - Lớp: ${cls}`;
-            document.getElementById('scoreDisplay').innerText = totalScore.toFixed(2);
-            document.getElementById('scoreSummary').innerText = `Đúng: ${mcqCorrect}/18 câu Trắc nghiệm, đạt điểm Đúng/Sai: ${tfPoints.toFixed(2)}/4.0, Đúng: ${shortCorrect}/6 câu Trả lời ngắn.`;
+            const resInfo = document.getElementById("studentResultInfo");
+            if (resInfo) resInfo.innerText = `Thí sinh: ${name} | Lớp: ${sClass}`;
             
-            document.getElementById('resultCard').style.display = 'block';
-            document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth' });
+            const finalDisplay = document.getElementById("finalScoreDisplay");
+            if (finalDisplay) finalDisplay.innerText = totalScore.toFixed(2);
+            
+            const p1Display = document.getElementById("p1Score");
+            if (p1Display) p1Display.innerText = `${p1ScoreVal.toFixed(2)} / 4.5`;
+            
+            const p2Display = document.getElementById("p2Score");
+            if (p2Display) p2Display.innerText = `${p2ScoreVal.toFixed(2)} / 4.0`;
+            
+            const p3Display = document.getElementById("p3Score");
+            if (p3Display) p3Display.innerText = `${p3ScoreVal.toFixed(2)} / 1.5`;
 
-            if(totalScore >= 8.0 && typeof confetti === 'function') {
-                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }
+            let feedback = "";
+            if (totalScore >= 9.0) {
+                feedback = "Xuất sắc! Em đã nắm vững toàn bộ các dạng bài tập về Khí lí tưởng!";
+                if (typeof confetti === 'function') confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+            } else if (totalScore >= 7.0) {
+                feedback = "Rất tốt! Em đã hiểu bài khá sâu, hãy xem lại các câu giải thích để hoàn thiện nhé!";
+                if (typeof confetti === 'function') confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+            } else if (totalScore >= 5.0) {
+                feedback = "Khá! Cần lưu ý kĩ các bài toán ống thủy tinh, đồ thị chu trình và xả khí.";
+            } else {
+                feedback = "Em hãy đọc lại bài học và làm lại bài kiểm tra để củng cố kiến thức nhé!";
+            }
+            
+            const fbText = document.getElementById("feedbackText");
+            if (fbText) fbText.innerText = feedback;
+            
+            const resCard = document.getElementById("resultCard");
+            if (resCard) {
+                resCard.style.display = "block";
+                resCard.scrollIntoView({ behavior: 'smooth' });
+            }
 
-    const name = (typeof localStorage !== 'undefined' && localStorage.getItem('saved_student_name')) || (document.getElementById('studentName') && document.getElementById('studentName').value.trim()) || 'Học sinh';
-    const className = (typeof localStorage !== 'undefined' && localStorage.getItem('saved_student_class')) || (document.getElementById('studentClass') && document.getElementById('studentClass').value.trim()) || 'Lớp';
-    const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
-    if (typeof GOOGLE_SHEETS_URL !== 'undefined' && GOOGLE_SHEETS_URL) {
-        try {
+            // Gửi dữ liệu về Google Sheets theo Rule 9
+            const payload = {
+                name: name,
+                className: sClass,
+                lesson: LESSON_NAME,
+                correct: `${correctCount}/28`,
+                score: totalScore
+            };
+
             fetch(GOOGLE_SHEETS_URL, {
                 method: "POST",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify({
-                    name: name,
-                    className: className,
-                    lesson: (typeof quizData !== 'undefined' && quizData.title) || document.title || "Bài trắc nghiệm online",
-                    correct: (typeof totalCorrectCount !== 'undefined' && typeof totalItems !== 'undefined') ? `${totalCorrectCount}/${totalItems}` : (typeof totalCorrectSub !== 'undefined' ? `${totalCorrectSub}/20` : "Hoàn thành"),
-                    score: (typeof finalGrade !== 'undefined') ? finalGrade : (typeof totalGrade !== 'undefined' ? totalGrade.toFixed(1) : (typeof totalScore !== 'undefined' ? totalScore.toFixed(2) : "10"))
-                }),
-                redirect: "follow"
-            }).catch(function(err){});
-        } catch(err){}
-    }
-);
-            }
-
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise();
-            }
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                console.log("Đã đồng bộ kết quả lên Google Sheets thành công!");
+            }).catch(err => {
+                console.warn("Lỗi khi gửi kết quả về Google Sheets:", err);
+            });
         }
     </script>
 </body>
