@@ -143,15 +143,33 @@
         }
         .option-item:hover { background-color: #f8fafc; border-color: #94a3b8; }
         .option-item.selected { background-color: #eff6ff; border-color: var(--primary); color: #1e40af; font-weight: 600; }
+        .option-item.correct { background-color: #ecfdf5 !important; border-color: #10b981 !important; color: #065f46 !important; font-weight: 700; }
+        .option-item.incorrect { background-color: #fef2f2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
         .option-radio { margin-right: 12px; transform: scale(1.2); accent-color: var(--primary); }
 
         /* BẢNG ĐÚNG SAI PHẦN 2 */
         .tf-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .tf-table th, .tf-table td { padding: 10px 12px; border: 1px solid var(--border); text-align: left; font-size: 0.92rem; }
         .tf-table th { background: #f8fafc; font-weight: 700; color: #334155; }
-        .tf-center { text-align: center; width: 65px; }
-        .tf-label { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; cursor: pointer; }
-        .tf-radio { transform: scale(1.3); cursor: pointer; accent-color: var(--primary); }
+        .tf-center { text-align: center; width: 75px; padding: 0 !important; }
+        .tf-label { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 46px; cursor: pointer; transition: background 0.15s; }
+        .tf-label:hover { background-color: #f1f5f9; }
+        .tf-radio { transform: scale(1.35); cursor: pointer; accent-color: var(--primary); }
+
+        .tf-row-correct { background-color: #f0fdf4 !important; }
+        .tf-row-incorrect { background-color: #fef2f2 !important; }
+        .tf-status-badge {
+            display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px;
+            border-radius: 6px; font-size: 0.78rem; font-weight: 700; margin-left: 8px; vertical-align: middle;
+        }
+        .tf-badge-correct { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+        .tf-badge-wrong { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+        .tf-score-summary {
+            background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 10px;
+            padding: 12px 16px; margin-top: 14px; font-size: 0.92rem; font-weight: 600; color: #334155; display: none;
+        }
+        .tf-score-summary.show { display: block; }
+        .badge-rule { font-size: 0.8rem; color: #64748b; font-weight: 500; display: block; margin-top: 5px; }
 
         /* PHẦN 3: ĐIỀN ĐÁP SỐ */
         .short-ans-input {
@@ -160,6 +178,9 @@
             text-align: center; color: #1e40af;
         }
         .short-ans-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.15); }
+        .short-ans-input.correct { border-color: #10b981 !important; background-color: #ecfdf5 !important; color: #065f46 !important; }
+        .short-ans-input.incorrect { border-color: #ef4444 !important; background-color: #fef2f2 !important; color: #991b1b !important; }
+        .short-ans-feedback { font-size: 0.88rem; font-weight: 700; margin-left: 10px; display: none; }
 
         /* LỜI GIẢI CHI TIẾT */
         .explanation-box {
@@ -406,28 +427,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>a) [NTVL] Gia tốc là đại lượng vật lí đặc trưng cho sự thay đổi nhanh hay chậm của vận tốc theo thời gian.</td>
+                        <tr id="row_tf1_a">
+                            <td id="text_tf1_a">a) [NTVL] Gia tốc là đại lượng vật lí đặc trưng cho sự thay đổi nhanh hay chậm của vận tốc theo thời gian.</td>
                             <td class="tf-center"><label class="tf-label"><input type="radio" name="tf1_a" value="D" class="tf-radio"></label></td>
                             <td class="tf-center"><label class="tf-label"><input type="radio" name="tf1_a" value="S" class="tf-radio"></label></td>
                         </tr>
-                        <tr>
-                            <td>b) [NTVL] Đơn vị chuẩn của gia tốc trong hệ SI là mét trên giây ( $ \text{m/s} $ ).</td>
+                        <tr id="row_tf1_b">
+                            <td id="text_tf1_b">b) [NTVL] Đơn vị chuẩn của gia tốc trong hệ SI là mét trên giây ( $ \text{m/s} $ ).</td>
                             <td class="tf-center"><label class="tf-label"><input type="radio" name="tf1_b" value="D" class="tf-radio"></label></td>
                             <td class="tf-center"><label class="tf-label"><input type="radio" name="tf1_b" value="S" class="tf-radio"></label></td>
                         </tr>
-                        <tr>
-                            <td>c) [THTN] Trong chuyển động thẳng, vectơ gia tốc $ \vec{a} $ luôn cùng hướng với vectơ vận tốc $ \vec{v} $ trong mọi trường hợp.</td>
+                        <tr id="row_tf1_c">
+                            <td id="text_tf1_c">c) [THTN] Trong chuyển động thẳng, vectơ gia tốc $ \vec{a} $ luôn cùng hướng với vectơ vận tốc $ \vec{v} $ trong mọi trường hợp.</td>
                             <td class="tf-center"><label class="tf-label"><input type="radio" name="tf1_c" value="D" class="tf-radio"></label></td>
                             <td class="tf-center"><label class="tf-label"><input type="radio" name="tf1_c" value="S" class="tf-radio"></label></td>
                         </tr>
-                        <tr>
-                            <td>d) [VDKT] Tại thời điểm vật có vận tốc tức thời bằng 0 ( $ v = 0 $ ), gia tốc của vật tại thời điểm đó không nhất thiết phải bằng 0.</td>
+                        <tr id="row_tf1_d">
+                            <td id="text_tf1_d">d) [VDKT] Tại thời điểm vật có vận tốc tức thời bằng 0 ( $ v = 0 $ ), gia tốc của vật tại thời điểm đó không nhất thiết phải bằng 0.</td>
                             <td class="tf-center"><label class="tf-label"><input type="radio" name="tf1_d" value="D" class="tf-radio"></label></td>
                             <td class="tf-center"><label class="tf-label"><input type="radio" name="tf1_d" value="S" class="tf-radio"></label></td>
                         </tr>
                     </tbody>
                 </table>
+                <div class="tf-score-summary" id="summary_tf1"></div>
                 <div class="explanation-box" id="exp_tf1">
                     <div class="exp-header"><i class="fa-solid fa-circle-info"></i> Lời giải chi tiết:</div>
                     <p>• a) <b>Đúng</b>: Định nghĩa chuẩn SGK Vật lí 10.<br>
@@ -495,28 +517,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>a) [NTVL] Trong giai đoạn từ $ 0 $ đến $ 4\text{ s} $ (đoạn $ AB $), chất điểm chuyển động thẳng nhanh dần theo chiều dương.</td>
+                        <tr id="row_tf2_a">
+                            <td id="text_tf2_a">a) [NTVL] Trong giai đoạn từ $ 0 $ đến $ 4\text{ s} $ (đoạn $ AB $), chất điểm chuyển động thẳng nhanh dần theo chiều dương.</td>
                             <td class="tf-center"><label class="tf-label"><input type="radio" name="tf2_a" value="D" class="tf-radio"></label></td>
                             <td class="tf-center"><label class="tf-label"><input type="radio" name="tf2_a" value="S" class="tf-radio"></label></td>
                         </tr>
-                        <tr>
-                            <td>b) [THTN] Trong giai đoạn từ $ 4 $ đến $ 8\text{ s} $ (đoạn $ BC $), gia tốc của chất điểm bằng 0 vì vận tốc không đổi theo thời gian.</td>
+                        <tr id="row_tf2_b">
+                            <td id="text_tf2_b">b) [THTN] Trong giai đoạn từ $ 4 $ đến $ 8\text{ s} $ (đoạn $ BC $), gia tốc của chất điểm bằng 0 vì vận tốc không đổi theo thời gian.</td>
                             <td class="tf-center"><label class="tf-label"><input type="radio" name="tf2_b" value="D" class="tf-radio"></label></td>
                             <td class="tf-center"><label class="tf-label"><input type="radio" name="tf2_b" value="S" class="tf-radio"></label></td>
                         </tr>
-                        <tr>
-                            <td>c) [THTN] Độ lớn gia tốc của chất điểm trong giai đoạn từ $ 0 $ đến $ 4\text{ s} $ lớn hơn độ lớn gia tốc của chất điểm trong giai đoạn từ $ 8 $ đến $ 10\text{ s} $.</td>
+                        <tr id="row_tf2_c">
+                            <td id="text_tf2_c">c) [THTN] Độ lớn gia tốc của chất điểm trong giai đoạn từ $ 0 $ đến $ 4\text{ s} $ lớn hơn độ lớn gia tốc của chất điểm trong giai đoạn từ $ 8 $ đến $ 10\text{ s} $.</td>
                             <td class="tf-center"><label class="tf-label"><input type="radio" name="tf2_c" value="D" class="tf-radio"></label></td>
                             <td class="tf-center"><label class="tf-label"><input type="radio" name="tf2_c" value="S" class="tf-radio"></label></td>
                         </tr>
-                        <tr>
-                            <td>d) [VDKT] Trong giai đoạn từ $ 8 $ đến $ 10\text{ s} $ (đoạn $ CD $), vectơ gia tốc $ \vec{a} $ ngược hướng với vectơ vận tốc $ \vec{v} $.</td>
+                        <tr id="row_tf2_d">
+                            <td id="text_tf2_d">d) [VDKT] Trong giai đoạn từ $ 8 $ đến $ 10\text{ s} $ (đoạn $ CD $), vectơ gia tốc $ \vec{a} $ ngược hướng với vectơ vận tốc $ \vec{v} $.</td>
                             <td class="tf-center"><label class="tf-label"><input type="radio" name="tf2_d" value="D" class="tf-radio"></label></td>
                             <td class="tf-center"><label class="tf-label"><input type="radio" name="tf2_d" value="S" class="tf-radio"></label></td>
                         </tr>
                     </tbody>
                 </table>
+                <div class="tf-score-summary" id="summary_tf2"></div>
                 <div class="explanation-box" id="exp_tf2">
                     <div class="exp-header"><i class="fa-solid fa-circle-info"></i> Lời giải chi tiết:</div>
                     <p>• a) <b>Đúng</b>: Vận tốc tăng đều từ $ 0 $ lên $ 8\text{ m/s} > 0 $ nên chất điểm chuyển động nhanh dần theo chiều dương.<br>
@@ -534,9 +557,10 @@
             <!-- Câu 1 Trả lời ngắn -->
             <div class="question-card" id="card_sa1">
                 <div class="q-title"><span class="q-badge">Câu 1 [THTN]</span> Một ô tô đang chuyển động thẳng với vận tốc $ 10\text{ m/s} $ thì tăng tốc, sau khoảng thời gian $ 5\text{ s} $ vận tốc đạt $ 25\text{ m/s} $. Tính gia tốc của ô tô trong khoảng thời gian này (theo đơn vị $ \text{m/s}^2 $).</div>
-                <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+                <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                     <label style="font-weight: 600;">Đáp số:</label>
                     <input type="text" id="sa1" class="short-ans-input" maxlength="4" placeholder="...">
+                    <span id="feedback_sa1" class="short-ans-feedback"></span>
                 </div>
                 <div class="explanation-box" id="exp_sa1">
                     <div class="exp-header"><i class="fa-solid fa-circle-info"></i> Lời giải chi tiết:</div>
@@ -547,9 +571,10 @@
             <!-- Câu 2 Trả lời ngắn -->
             <div class="question-card" id="card_sa2">
                 <div class="q-title"><span class="q-badge">Câu 2 [THTN]</span> Một đoàn tàu hỏa đang chạy thẳng với vận tốc $ 20\text{ m/s} $ thì hãm phanh chuyển động chậm dần, sau $ 8\text{ s} $ vận tốc giảm xuống còn $ 4\text{ m/s} $. Xác định giá trị đại số của gia tốc đoàn tàu (theo đơn vị $ \text{m/s}^2 $).</div>
-                <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+                <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                     <label style="font-weight: 600;">Đáp số:</label>
                     <input type="text" id="sa2" class="short-ans-input" maxlength="4" placeholder="...">
+                    <span id="feedback_sa2" class="short-ans-feedback"></span>
                 </div>
                 <div class="explanation-box" id="exp_sa2">
                     <div class="exp-header"><i class="fa-solid fa-circle-info"></i> Lời giải chi tiết:</div>
@@ -560,9 +585,10 @@
             <!-- Câu 3 Trả lời ngắn -->
             <div class="question-card" id="card_sa3">
                 <div class="q-title"><span class="q-badge">Câu 3 [VDKT]</span> Một người đi xe máy đang chuyển động thẳng với vận tốc $ 12\text{ m/s} $ thì bóp phanh chuyển động chậm dần đều với gia tốc có độ lớn $ 1,5\text{ m/s}^2 $ cho đến khi dừng lại hẳn. Tính thời gian kể từ lúc hãm phanh đến khi xe máy dừng lại hoàn toàn (theo đơn vị giây $ \text{s} $).</div>
-                <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+                <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                     <label style="font-weight: 600;">Đáp số:</label>
                     <input type="text" id="sa3" class="short-ans-input" maxlength="4" placeholder="...">
+                    <span id="feedback_sa3" class="short-ans-feedback"></span>
                 </div>
                 <div class="explanation-box" id="exp_sa3">
                     <div class="exp-header"><i class="fa-solid fa-circle-info"></i> Lời giải chi tiết:</div>
@@ -597,6 +623,9 @@
                         <div class="stat-label">Phần III (Trả lời ngắn)</div>
                     </div>
                 </div>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 15px; font-style: italic;">
+                    * Lưu ý thang điểm Phần II: Chấm theo quy chế chuẩn của Bộ GD&ĐT (Đúng 4 ý = 2,0đ | Đúng 3 ý = 1,0đ | Đúng 2 ý = 0,5đ | Đúng 1 ý = 0,2đ | Đúng 0 ý = 0đ).
+                </p>
             </div>
 
         </div>
@@ -640,6 +669,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
             startTimer();
+            updateProgress();
         }
 
         function startTimer() {
@@ -658,8 +688,32 @@
             }, 1000);
         }
 
+        function updateProgress() {
+            let answered = 0;
+            // Phần I: 9 câu
+            for (let i = 1; i <= 9; i++) {
+                if (document.querySelector(`input[name="q${i}"]:checked`)) answered++;
+            }
+            // Phần II: 2 câu (8 ý)
+            for (let q = 1; q <= 2; q++) {
+                let subAns = 0;
+                ['a', 'b', 'c', 'd'].forEach(s => {
+                    if (document.querySelector(`input[name="tf${q}_${s}"]:checked`)) subAns++;
+                });
+                if (subAns === 4) answered++;
+            }
+            // Phần III: 3 câu
+            for (let k = 1; k <= 3; k++) {
+                const inp = document.getElementById(`sa${k}`);
+                if (inp && inp.value.trim() !== '') answered++;
+            }
+            const el = document.getElementById("answeredCount");
+            if (el) el.innerText = answered;
+        }
+
         function selectOption(qNum, val) {
             const card = document.getElementById(`card_q${qNum}`);
+            if (!card) return;
             const items = card.querySelectorAll('.option-item');
             items.forEach(it => it.classList.remove('selected'));
             const radio = card.querySelector(`input[value="${val}"]`);
@@ -667,12 +721,25 @@
                 radio.checked = true;
                 radio.closest('.option-item').classList.add('selected');
             }
+            updateProgress();
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('input[type="radio"]').forEach(r => {
+                r.addEventListener('change', updateProgress);
+            });
+            document.querySelectorAll('.short-ans-input').forEach(inp => {
+                inp.addEventListener('input', updateProgress);
+            });
+        });
 
         function gradeQuiz() {
             clearInterval(timerInterval);
-            document.getElementById("btnSubmit").disabled = true;
-            document.getElementById("btnSubmit").style.opacity = "0.5";
+            const btn = document.getElementById("btnSubmit");
+            if (btn) {
+                btn.disabled = true;
+                btn.style.opacity = "0.5";
+            }
 
             let totalScore = 0;
             let p1ScoreVal = 0;
@@ -680,24 +747,54 @@
             let p3ScoreVal = 0;
             let correctQuestionsCount = 0;
 
-            // Chấm Phần I (9 câu x 0.5 = 4.5đ)
+            // 1. Chấm Phần I (9 câu x 0.5 = 4.5đ)
             for (let i = 1; i <= 9; i++) {
-                const selected = document.querySelector(`input[name="q${i}"]:checked`);
-                if (selected && selected.value === correctP1[i]) {
+                const card = document.getElementById(`card_q${i}`);
+                const selected = card.querySelector(`input[name="q${i}"]:checked`);
+                const userVal = selected ? selected.value : null;
+                const correctVal = correctP1[i];
+
+                card.querySelectorAll('.option-item').forEach(item => {
+                    const r = item.querySelector('input[type="radio"]');
+                    if (r) {
+                        if (r.value === correctVal) {
+                            item.classList.add('correct');
+                        } else if (r.value === userVal && userVal !== correctVal) {
+                            item.classList.add('incorrect');
+                        }
+                    }
+                });
+
+                if (userVal === correctVal) {
                     p1ScoreVal += 0.5;
                     correctQuestionsCount++;
                 }
             }
 
-            // Chấm Phần II (2 câu x 2.0 = 4.0đ theo quy tắc GEMINI.md Rule 8)
+            // 2. Chấm Phần II (2 câu x 2.0 = 4.0đ theo quy tắc GEMINI.md Rule 8)
             // Đúng 4 ý = 2.0đ; Đúng 3 ý = 1.0đ; Đúng 2 ý = 0.5đ; Đúng 1 ý = 0.2đ; Đúng 0 ý = 0đ
             for (let q = 1; q <= 2; q++) {
                 let correctSubCount = 0;
                 const subs = ['a', 'b', 'c', 'd'];
                 subs.forEach(s => {
                     const sel = document.querySelector(`input[name="tf${q}_${s}"]:checked`);
-                    if (sel && sel.value === correctP2[q][s]) {
+                    const userVal = sel ? sel.value : null;
+                    const correctVal = correctP2[q][s];
+                    const row = document.getElementById(`row_tf${q}_${s}`);
+                    const textCell = document.getElementById(`text_tf${q}_${s}`);
+
+                    if (userVal === correctVal) {
                         correctSubCount++;
+                        if (row) row.classList.add('tf-row-correct');
+                        if (textCell && !textCell.querySelector('.tf-status-badge')) {
+                            textCell.innerHTML += ` <span class="tf-status-badge tf-badge-correct"><i class="fa-solid fa-check"></i> ĐÚNG</span>`;
+                        }
+                    } else {
+                        if (row) row.classList.add('tf-row-incorrect');
+                        const ansLabel = (correctVal === 'D' ? 'Đúng' : 'Sai');
+                        if (textCell && !textCell.querySelector('.tf-status-badge')) {
+                            textCell.innerHTML += ` <span class="tf-status-badge tf-badge-wrong"><i class="fa-solid fa-xmark"></i> SAI (Đáp án: <b>${ansLabel}</b>)</span>`;
+                        }
                     }
                 });
 
@@ -710,16 +807,51 @@
 
                 p2ScoreVal += qScore;
                 if (correctSubCount === 4) correctQuestionsCount++;
-            }
 
-            // Chấm Phần III (3 câu x 0.5 = 1.5đ)
-            for (let k = 1; k <= 3; k++) {
-                const inputVal = document.getElementById(`sa${k}`).value.trim();
-                if (correctP3[k].includes(inputVal)) {
-                    p3ScoreVal += 0.5;
-                    correctQuestionsCount++;
+                const summaryBox = document.getElementById(`summary_tf${q}`);
+                if (summaryBox) {
+                    summaryBox.className = "tf-score-summary show";
+                    summaryBox.innerHTML = `
+                        <div style="font-size: 0.95rem; color: #0f172a; margin-bottom: 4px;">
+                            <i class="fa-solid fa-calculator" style="color: var(--primary);"></i> <b>Điểm Câu ${q}:</b> Đúng <b>${correctSubCount}/4 ý</b> ➔ Đạt <b>${qScore.toFixed(1)} / 2,0 điểm</b>
+                        </div>
+                        <div class="badge-rule">
+                            <i class="fa-solid fa-circle-info"></i> Thang điểm Bộ GD&ĐT: Đúng 4 ý = 2,0đ | Đúng 3 ý = 1,0đ | Đúng 2 ý = 0,5đ | Đúng 1 ý = 0,2đ | Đúng 0 ý = 0đ.
+                        </div>
+                    `;
                 }
             }
+
+            // 3. Chấm Phần III (3 câu x 0.5 = 1.5đ)
+            for (let k = 1; k <= 3; k++) {
+                const inputEl = document.getElementById(`sa${k}`);
+                const feedbackEl = document.getElementById(`feedback_sa${k}`);
+                const inputVal = inputEl ? inputEl.value.trim() : "";
+                const isCorrect = correctP3[k].includes(inputVal);
+
+                if (isCorrect) {
+                    p3ScoreVal += 0.5;
+                    correctQuestionsCount++;
+                    if (inputEl) inputEl.classList.add('correct');
+                    if (feedbackEl) {
+                        feedbackEl.style.display = "inline-block";
+                        feedbackEl.style.color = "#10b981";
+                        feedbackEl.innerHTML = `<i class="fa-solid fa-check"></i> Đúng (+0,5đ)`;
+                    }
+                } else {
+                    if (inputEl) inputEl.classList.add('incorrect');
+                    if (feedbackEl) {
+                        feedbackEl.style.display = "inline-block";
+                        feedbackEl.style.color = "#ef4444";
+                        feedbackEl.innerHTML = `<i class="fa-solid fa-xmark"></i> Sai (Đáp số: <b>${correctP3[k][0]}</b>)`;
+                    }
+                }
+            }
+
+            // Khóa tất cả các ô chọn sau khi nộp
+            document.querySelectorAll('input').forEach(inp => inp.disabled = true);
+            document.querySelectorAll('.option-item').forEach(it => it.style.pointerEvents = 'none');
+            document.querySelectorAll('.tf-label').forEach(lbl => lbl.style.pointerEvents = 'none');
 
             totalScore = Math.round((p1ScoreVal + p2ScoreVal + p3ScoreVal) * 10) / 10;
 
