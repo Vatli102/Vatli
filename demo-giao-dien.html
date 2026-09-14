@@ -63,33 +63,30 @@
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
 
     <!-- ==================== DEMO INTERACTIVE TOOLBAR ==================== -->
-    <div id="demoControlBar" class="sticky top-0 z-50 bg-slate-950 text-white border-b-2 border-amber-400 shadow-2xl px-4 py-3">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+    <div id="demoControlBar" class="sticky top-0 z-50 bg-slate-950 text-white border-b-2 border-amber-400 shadow-2xl px-4 py-2.5">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
             <div class="flex items-center gap-2.5">
-                <span class="w-7 h-7 rounded-lg bg-amber-400 text-slate-950 flex items-center justify-center font-black text-sm">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span class="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 text-slate-950 flex items-center justify-center font-black text-sm shadow-md">
+                    <i class="fa-solid fa-lightbulb"></i>
                 </span>
                 <div>
                     <div class="text-xs sm:text-sm font-extrabold flex items-center gap-2">
-                        <span>TRẢI NGHIỆM TRỰC QUAN 3 MẪU GIAO DIỆN CHỌN MÔN HỌC</span>
-                        <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded-full font-bold">Thử Nghiệm Trực Tiếp</span>
+                        <span class="text-amber-300">DEMO THEO ĐÚNG Ý TƯỞNG CỦA THẦY/CÔ</span>
+                        <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded-full font-bold">Trải nghiệm ngay</span>
                     </div>
-                    <div class="text-[11px] text-slate-400" id="demoDesc">
-                        Đang xem: <strong>MẪU 1 (Dải Tab "Viên Thuốc" Trượt Ngang)</strong> - Gọn gàng, hiện đại, không choán diện tích.
+                    <div class="text-[11px] text-slate-300">
+                        Thanh Menu ngang hàng gom Lớp 12, 11, 10, Đề thi, Phòng lab vào mục <strong>"Vật Lí ▾"</strong>; các môn khác xếp ngang hàng cùng dòng!
                     </div>
                 </div>
             </div>
 
-            <!-- Switcher Buttons -->
-            <div class="flex items-center gap-1.5 bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs font-bold">
-                <button onclick="switchDemoStyle(1)" id="btnStyle1" class="demo-btn px-3 py-1.5 rounded-lg bg-blue-600 text-white shadow-sm transition-all flex items-center gap-1.5">
-                    <i class="fa-solid fa-table-cells-large"></i> <span>Mẫu 1: Dải Tab Ngang</span>
+            <div class="flex items-center gap-2 text-xs font-bold shrink-0">
+                <span class="text-slate-400 hidden md:inline text-[11px]">Thử đổi kiểu:</span>
+                <button onclick="toggleTeacherMenuMode(true)" id="btnModeTeacher" class="px-3 py-1.5 rounded-lg bg-amber-400 text-slate-950 font-extrabold shadow-sm transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-check-circle"></i> <span>Mẫu Theo Ý Thầy/Cô</span>
                 </button>
-                <button onclick="switchDemoStyle(2)" id="btnStyle2" class="demo-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1.5">
-                    <i class="fa-solid fa-compass"></i> <span>Mẫu 2: Mega Menu Dropdown</span>
-                </button>
-                <button onclick="switchDemoStyle(3)" id="btnStyle3" class="demo-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1.5">
-                    <i class="fa-solid fa-bars-staggered"></i> <span>Mẫu 3: Hộp Chọn Ở Sidebar</span>
+                <button onclick="toggleTeacherMenuMode(false)" id="btnModeOriginal" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-rotate-left"></i> <span>Menu Cũ</span>
                 </button>
             </div>
         </div>
@@ -97,7 +94,7 @@
 
 
     <!-- ==================== 1. HEADER ==================== -->
-    <header class="relative z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
         <!-- Top Bar: Logo, Ô Tìm Kiếm, Đăng Ký -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 gap-4">
@@ -141,97 +138,10 @@
         </div>
 
         <!-- Navigation Menu Bar -->
-        <nav class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white overflow-x-auto custom-scrollbar border-t border-blue-800/50">
+        <nav id="navOriginal" style="display:none;" class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white overflow-x-auto custom-scrollbar border-t border-blue-800/50">
             <div class="max-w-7xl mx-auto px-4 flex items-center gap-1 text-xs font-semibold whitespace-nowrap py-1">
                 <a href="/" class="px-3 py-2 rounded-md bg-blue-600 hover:bg-blue-500 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-house"></i> Trang chủ</a>
                 <a href="#section-monhoc" class="px-3 py-2 rounded-md hover:bg-white/10 transition-colors flex items-center gap-1.5 text-cyan-300 font-bold"><i class="fa-solid fa-layer-group"></i> Chọn Môn Học 📚</a>
-                
-                <!-- [MẪU 2] NÚT MEGA MENU THẢ XUỐNG -->
-                <div class="relative group demo-variant" id="demoStyle2Dropdown">
-                    <button class="px-3.5 py-2 rounded-md bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-900 font-extrabold flex items-center gap-1.5 shadow-sm transition-all">
-                        <i class="fa-solid fa-book-bookmark"></i>
-                        <span>Khám Phá 12 Môn Học</span>
-                        <i class="fa-solid fa-chevron-down text-[10px] group-hover:rotate-180 transition-transform"></i>
-                    </button>
-
-                    <!-- Khung Mega Menu Dropdown -->
-                    <div class="hidden group-hover:block absolute left-0 top-full pt-2 w-[540px] z-50">
-                        <div class="bg-white rounded-2xl p-5 shadow-2xl border border-slate-200 text-slate-800 grid grid-cols-2 gap-4">
-                            <!-- Cột 1: KHTN & Công nghệ -->
-                            <div>
-                                <div class="text-[11px] font-extrabold text-blue-700 uppercase tracking-wider pb-2 border-b border-blue-100 flex items-center gap-1.5">
-                                    <i class="fa-solid fa-atom"></i> Khoa Học Tự Nhiên & Công Nghệ
-                                </div>
-                                <div class="mt-2 space-y-1 text-xs font-semibold">
-                                    <a href="#lop12" class="flex items-center justify-between p-2 rounded-lg bg-blue-50 text-blue-700 font-bold">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-atom text-blue-600"></i> Vật Lí</span>
-                                        <span class="text-[9px] bg-blue-600 text-white px-1.5 py-0.5 rounded">Đã có bài</span>
-                                    </a>
-                                    <a href="toan/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-square-root-variable text-indigo-600"></i> Toán Học</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                    <a href="hoa/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-flask-vial text-purple-600"></i> Hóa Học</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                    <a href="sinh/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-dna text-emerald-600"></i> Sinh Học</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                    <a href="khtn/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-leaf text-teal-600"></i> KHTN (Cấp THCS)</span>
-                                        <span class="text-[9px] text-teal-700 bg-teal-50 px-1 py-0.5 rounded">Lớp 6-9</span>
-                                    </a>
-                                    <a href="tinhoc/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-laptop-code text-cyan-600"></i> Tin Học</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                    <a href="cn-congnghiep/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-gears text-orange-600"></i> CN Công Nghiệp</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                    <a href="cn-nongnghiep/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-seedling text-lime-600"></i> CN Nông Nghiệp</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <!-- Cột 2: KHXH & Định hướng -->
-                            <div>
-                                <div class="text-[11px] font-extrabold text-amber-700 uppercase tracking-wider pb-2 border-b border-amber-100 flex items-center gap-1.5">
-                                    <i class="fa-solid fa-book-open"></i> Khoa Học Xã Hội & Pháp Luật
-                                </div>
-                                <div class="mt-2 space-y-1 text-xs font-semibold">
-                                    <a href="van/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-book-open text-rose-600"></i> Ngữ Văn</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                    <a href="su/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-landmark text-amber-700"></i> Lịch Sử</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                    <a href="dia/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-earth-americas text-sky-600"></i> Địa Lí</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                    <a href="gdktpl/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-scale-balanced text-red-600"></i> GDKT & PL</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                </div>
-
-                                <!-- Box giới thiệu -->
-                                <div class="mt-4 p-3 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl space-y-1.5">
-                                    <div class="text-[10px] font-extrabold text-blue-900 uppercase">Học Liệu GDPT 2018</div>
-                                    <p class="text-[11px] text-slate-600 leading-snug">Áp dụng cho 3 bộ sách mới: Kết nối tri thức, Cánh diều, Chân trời sáng tạo.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <a href="gioi-thieu.html" class="px-3 py-2 rounded-md hover:bg-white/10 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a>
 
                 <button onclick="filterGrade('lop12', this)" class="nav-grade-btn px-3 py-2 rounded-md hover:bg-white/10 transition-colors text-amber-300 font-bold">Lớp 12 (Có bài)</button>
@@ -250,55 +160,107 @@
         </nav>
 
 
-    </header>
+    
+        <!-- Navigation Menu Bar [MẪU THEO Ý TƯỞNG THẦY/CÔ: GOM VẬT LÍ VÀO DROPDOWN & TẤT CẢ MÔN NGANG HÀNG] -->
+        <nav id="navTeacherIdea" class="bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-950 text-white overflow-x-auto custom-scrollbar border-t border-blue-800/50 shadow-inner">
+            <div class="max-w-7xl mx-auto px-4 flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap py-1.5">
+                
+                <!-- 1. Trang chủ -->
+                <a href="/" class="px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-colors flex items-center gap-1.5 shrink-0 font-bold shadow-sm">
+                    <i class="fa-solid fa-house"></i> <span>Trang chủ</span>
+                </a>
 
-    <!-- [MẪU 1] DẢI TAB MÔN HỌC DẠNG PILL TRƯỢT NGANG (GỌN GÀNG 45PX) -->
-    <div id="demoStyle1Container" class="demo-variant bg-white border-b border-slate-200 shadow-sm sticky top-[57px] z-30">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center gap-3">
-            <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 shrink-0 flex items-center gap-1.5">
-                <i class="fa-solid fa-layer-group text-blue-600"></i> Môn học:
-            </span>
-            <div class="flex items-center gap-2 overflow-x-auto custom-scrollbar text-xs font-bold whitespace-nowrap py-0.5 flex-1">
-                <a href="#lop12" class="px-3.5 py-1.5 rounded-full bg-blue-600 text-white shadow-sm flex items-center gap-1.5 border border-blue-600">
-                    <i class="fa-solid fa-atom"></i> <span>Vật Lí (Đang học)</span>
+                <!-- 2. DROPDOWN MÔN VẬT LÍ (GOM LỚP 12, 11, 10, ĐỀ THI, PHÒNG LAB) -->
+                <div class="relative group shrink-0">
+                    <button class="px-3.5 py-2 rounded-lg bg-blue-700/80 hover:bg-blue-600 text-amber-300 font-extrabold flex items-center gap-1.5 transition-all shadow-sm border border-blue-400/40">
+                        <i class="fa-solid fa-atom text-cyan-300"></i>
+                        <span>Vật Lí (Đang xem)</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] group-hover:rotate-180 transition-transform"></i>
+                    </button>
+
+                    <!-- Menu Con Thả Xuống Của Môn Vật Lí -->
+                    <div class="hidden group-hover:block absolute left-0 top-full pt-1.5 w-64 z-50 animate-fadeIn">
+                        <div class="bg-white rounded-2xl p-2.5 shadow-2xl border border-slate-200 text-slate-800 space-y-1">
+                            <div class="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 border-b border-slate-100 flex items-center justify-between">
+                                <span>Phân Môn Vật Lí</span>
+                                <span class="text-emerald-600 font-bold">16 bài & 10 đề</span>
+                            </div>
+                            <button onclick="scrollToGrade('lop12')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-colors flex items-center justify-between text-xs font-bold text-slate-700">
+                                <span class="flex items-center gap-2"><i class="fa-solid fa-graduation-cap text-blue-600"></i> Vật Lí Lớp 12</span>
+                                <span class="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">Có bài</span>
+                            </button>
+                            <button onclick="scrollToGrade('lop11')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-colors flex items-center justify-between text-xs font-bold text-slate-700">
+                                <span class="flex items-center gap-2"><i class="fa-solid fa-wave-square text-indigo-600"></i> Vật Lí Lớp 11</span>
+                                <span class="text-[10px] text-slate-400">7 bài</span>
+                            </button>
+                            <button onclick="scrollToGrade('lop10')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-colors flex items-center justify-between text-xs font-bold text-slate-700">
+                                <span class="flex items-center gap-2"><i class="fa-solid fa-atom text-emerald-600"></i> Vật Lí Lớp 10</span>
+                                <span class="text-[10px] text-slate-400">9 bài</span>
+                            </button>
+                            <div class="border-t border-slate-100 my-1"></div>
+                            <a href="#section-dethi" class="block px-3 py-2 rounded-xl hover:bg-amber-50 hover:text-amber-700 transition-colors text-xs font-bold text-amber-600 flex items-center gap-2">
+                                <i class="fa-solid fa-file-pen"></i> <span>Kho Đề Thi Thử Tốt Nghiệp</span>
+                            </a>
+                            <a href="#section-phonglab" class="block px-3 py-2 rounded-xl hover:bg-cyan-50 hover:text-cyan-700 transition-colors text-xs font-bold text-cyan-700 flex items-center gap-2">
+                                <i class="fa-solid fa-flask"></i> <span>Phòng Lab Mô Phỏng 3D</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <span class="h-4 w-px bg-slate-700 mx-1 shrink-0"></span>
+
+                <!-- 3. CÁC MÔN HỌC KHÁC XẾP NGANG HÀNG TRÊN CÙNG MỘT DÒNG -->
+                <a href="toan/" class="px-3 py-2 rounded-lg hover:bg-white/10 text-slate-200 hover:text-white transition-colors flex items-center gap-1.5 shrink-0">
+                    <i class="fa-solid fa-square-root-variable text-indigo-400"></i> <span>Toán Học</span>
                 </a>
-                <a href="toan/" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-700 transition-colors flex items-center gap-1.5 border border-slate-200">
-                    <i class="fa-solid fa-square-root-variable text-indigo-600"></i> <span>Toán Học</span>
+                <a href="hoa/" class="px-3 py-2 rounded-lg hover:bg-white/10 text-slate-200 hover:text-white transition-colors flex items-center gap-1.5 shrink-0">
+                    <i class="fa-solid fa-flask-vial text-purple-400"></i> <span>Hóa Học</span>
                 </a>
-                <a href="hoa/" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-purple-50 hover:text-purple-600 text-slate-700 transition-colors flex items-center gap-1.5 border border-slate-200">
-                    <i class="fa-solid fa-flask-vial text-purple-600"></i> <span>Hóa Học</span>
+                <a href="sinh/" class="px-3 py-2 rounded-lg hover:bg-white/10 text-slate-200 hover:text-white transition-colors flex items-center gap-1.5 shrink-0">
+                    <i class="fa-solid fa-dna text-emerald-400"></i> <span>Sinh Học</span>
                 </a>
-                <a href="sinh/" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-emerald-50 hover:text-emerald-600 text-slate-700 transition-colors flex items-center gap-1.5 border border-slate-200">
-                    <i class="fa-solid fa-dna text-emerald-600"></i> <span>Sinh Học</span>
+                <a href="khtn/" class="px-3 py-2 rounded-lg hover:bg-white/10 text-teal-300 hover:text-white transition-colors flex items-center gap-1.5 shrink-0 font-bold">
+                    <i class="fa-solid fa-leaf text-teal-400"></i> <span>KHTN (THCS)</span>
                 </a>
-                <a href="khtn/" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-teal-50 hover:text-teal-600 text-slate-700 transition-colors flex items-center gap-1.5 border border-slate-200">
-                    <i class="fa-solid fa-leaf text-teal-600"></i> <span>KHTN (THCS)</span>
+                <a href="van/" class="px-3 py-2 rounded-lg hover:bg-white/10 text-slate-200 hover:text-white transition-colors flex items-center gap-1.5 shrink-0">
+                    <i class="fa-solid fa-book-open text-rose-400"></i> <span>Ngữ Văn</span>
                 </a>
-                <a href="van/" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-700 transition-colors flex items-center gap-1.5 border border-slate-200">
-                    <i class="fa-solid fa-book-open text-rose-600"></i> <span>Ngữ Văn</span>
+                <a href="su/" class="px-3 py-2 rounded-lg hover:bg-white/10 text-slate-200 hover:text-white transition-colors flex items-center gap-1.5 shrink-0">
+                    <i class="fa-solid fa-landmark text-amber-400"></i> <span>Lịch Sử</span>
                 </a>
-                <a href="su/" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-amber-50 hover:text-amber-700 text-slate-700 transition-colors flex items-center gap-1.5 border border-slate-200">
-                    <i class="fa-solid fa-landmark text-amber-700"></i> <span>Lịch Sử</span>
+                <a href="dia/" class="px-3 py-2 rounded-lg hover:bg-white/10 text-slate-200 hover:text-white transition-colors flex items-center gap-1.5 shrink-0">
+                    <i class="fa-solid fa-earth-americas text-sky-400"></i> <span>Địa Lí</span>
                 </a>
-                <a href="dia/" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-sky-50 hover:text-sky-600 text-slate-700 transition-colors flex items-center gap-1.5 border border-slate-200">
-                    <i class="fa-solid fa-earth-americas text-sky-600"></i> <span>Địa Lí</span>
+                <a href="gdktpl/" class="px-3 py-2 rounded-lg hover:bg-white/10 text-slate-200 hover:text-white transition-colors flex items-center gap-1.5 shrink-0">
+                    <i class="fa-solid fa-scale-balanced text-red-400"></i> <span>GDKT & PL</span>
                 </a>
-                <a href="gdktpl/" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-red-50 hover:text-red-600 text-slate-700 transition-colors flex items-center gap-1.5 border border-slate-200">
-                    <i class="fa-solid fa-scale-balanced text-red-600"></i> <span>GDKT & PL</span>
+                <a href="tinhoc/" class="px-3 py-2 rounded-lg hover:bg-white/10 text-slate-200 hover:text-white transition-colors flex items-center gap-1.5 shrink-0">
+                    <i class="fa-solid fa-laptop-code text-cyan-400"></i> <span>Tin Học</span>
                 </a>
-                <a href="tinhoc/" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-cyan-50 hover:text-cyan-600 text-slate-700 transition-colors flex items-center gap-1.5 border border-slate-200">
-                    <i class="fa-solid fa-laptop-code text-cyan-600"></i> <span>Tin Học</span>
+                <a href="cn-congnghiep/" class="px-3 py-2 rounded-lg hover:bg-white/10 text-slate-200 hover:text-white transition-colors flex items-center gap-1.5 shrink-0">
+                    <i class="fa-solid fa-gears text-orange-400"></i> <span>CN Công Nghiệp</span>
                 </a>
-                <a href="cn-congnghiep/" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-orange-50 hover:text-orange-600 text-slate-700 transition-colors flex items-center gap-1.5 border border-slate-200">
-                    <i class="fa-solid fa-gears text-orange-600"></i> <span>CN Công Nghiệp</span>
+                <a href="cn-nongnghiep/" class="px-3 py-2 rounded-lg hover:bg-white/10 text-slate-200 hover:text-white transition-colors flex items-center gap-1.5 shrink-0">
+                    <i class="fa-solid fa-seedling text-lime-400"></i> <span>CN Nông Nghiệp</span>
                 </a>
-                <a href="cn-nongnghiep/" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-lime-50 hover:text-lime-600 text-slate-700 transition-colors flex items-center gap-1.5 border border-slate-200">
-                    <i class="fa-solid fa-seedling text-lime-600"></i> <span>CN Nông Nghiệp</span>
+
+                <span class="h-4 w-px bg-slate-700 mx-1 shrink-0"></span>
+
+                <!-- 4. Tiện ích bổ sung -->
+                <a href="gioi-thieu.html" class="px-3 py-2 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-1.5 shrink-0">
+                    <i class="fa-solid fa-circle-info"></i> <span>Giới thiệu</span>
                 </a>
+                <a href="lien-he.html" class="px-3 py-2 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-1.5 shrink-0">
+                    <i class="fa-solid fa-envelope"></i> <span>Liên hệ</span>
+                </a>
+                <button onclick="toggleAIChatModal()" class="px-3.5 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold transition-all shadow-sm flex items-center gap-1.5 shrink-0 animate-pulse">
+                    <i class="fa-solid fa-robot"></i> <span>Trợ Lý AI 🤖</span>
+                </button>
             </div>
-        </div>
-    </div>
+        </nav>
 
+    </header>
 
     <!-- HERO BANNER -->
     <section class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white py-8 px-4 relative overflow-hidden">
@@ -330,167 +292,6 @@
         </div>
     </section>
 
-    <!-- ==================== HỆ THỐNG MÔN HỌC CHƯƠNG TRÌNH GDPT 2018 ==================== -->
-    <section id="section-monhoc" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-2">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3 mb-5">
-            <div>
-                <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-layer-group text-blue-600"></i> HỆ THỐNG HỌC LIỆU THEO MÔN HỌC (GDPT 2018)
-                </h2>
-                <p class="text-xs text-slate-500 mt-0.5">Lựa chọn môn học để khám phá bài giảng, bài tập trắc nghiệm tự động chấm điểm và đề thi</p>
-            </div>
-            <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 self-start sm:self-auto">
-                <i class="fa-solid fa-book-bookmark"></i> 12 Môn Học Tích Hợp
-            </span>
-        </div>
-
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
-            <!-- 1. Môn Vật Lí (Đang kích hoạt trên trang chủ) -->
-            <a href="#lop12" class="group bg-gradient-to-br from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 border-2 border-blue-500 rounded-2xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center text-base shadow-sm group-hover:scale-110 transition-transform"><i class="fa-solid fa-atom"></i></span>
-                    <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-blue-600 text-white shadow-sm">Đã có bài</span>
-                </div>
-                <div>
-                    <h3 class="font-extrabold text-slate-900 text-sm group-hover:text-blue-600 transition-colors">Vật Lí</h3>
-                    <p class="text-[11px] text-blue-700 font-semibold mt-0.5">Lớp 10, 11, 12</p>
-                </div>
-            </a>
-
-            <!-- 2. Môn Toán Học -->
-            <a href="toan/" class="group bg-white hover:bg-slate-50 border border-slate-200 hover:border-indigo-300 rounded-2xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="w-9 h-9 rounded-xl bg-indigo-50 group-hover:bg-indigo-600 text-indigo-600 group-hover:text-white flex items-center justify-center text-base shadow-sm group-hover:scale-110 transition-all"><i class="fa-solid fa-square-root-variable"></i></span>
-                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">Sắp có</span>
-                </div>
-                <div>
-                    <h3 class="font-extrabold text-slate-900 text-sm group-hover:text-indigo-600 transition-colors">Toán Học</h3>
-                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">Lớp 10, 11, 12</p>
-                </div>
-            </a>
-
-            <!-- 3. Môn Hóa Học -->
-            <a href="hoa/" class="group bg-white hover:bg-slate-50 border border-slate-200 hover:border-purple-300 rounded-2xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="w-9 h-9 rounded-xl bg-purple-50 group-hover:bg-purple-600 text-purple-600 group-hover:text-white flex items-center justify-center text-base shadow-sm group-hover:scale-110 transition-all"><i class="fa-solid fa-flask-vial"></i></span>
-                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">Sắp có</span>
-                </div>
-                <div>
-                    <h3 class="font-extrabold text-slate-900 text-sm group-hover:text-purple-600 transition-colors">Hóa Học</h3>
-                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">Lớp 10, 11, 12</p>
-                </div>
-            </a>
-
-            <!-- 4. Môn Sinh Học -->
-            <a href="sinh/" class="group bg-white hover:bg-slate-50 border border-slate-200 hover:border-emerald-300 rounded-2xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="w-9 h-9 rounded-xl bg-emerald-50 group-hover:bg-emerald-600 text-emerald-600 group-hover:text-white flex items-center justify-center text-base shadow-sm group-hover:scale-110 transition-all"><i class="fa-solid fa-dna"></i></span>
-                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">Sắp có</span>
-                </div>
-                <div>
-                    <h3 class="font-extrabold text-slate-900 text-sm group-hover:text-emerald-600 transition-colors">Sinh Học</h3>
-                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">Lớp 10, 11, 12</p>
-                </div>
-            </a>
-
-            <!-- 5. Khoa Học Tự Nhiên -->
-            <a href="khtn/" class="group bg-white hover:bg-slate-50 border border-slate-200 hover:border-teal-300 rounded-2xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="w-9 h-9 rounded-xl bg-teal-50 group-hover:bg-teal-600 text-teal-600 group-hover:text-white flex items-center justify-center text-base shadow-sm group-hover:scale-110 transition-all"><i class="fa-solid fa-leaf"></i></span>
-                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-teal-100 text-teal-800">Cấp THCS</span>
-                </div>
-                <div>
-                    <h3 class="font-extrabold text-slate-900 text-sm group-hover:text-teal-600 transition-colors">KHTN (THCS)</h3>
-                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">Lớp 6, 7, 8, 9</p>
-                </div>
-            </a>
-
-            <!-- 6. Môn Ngữ Văn -->
-            <a href="van/" class="group bg-white hover:bg-slate-50 border border-slate-200 hover:border-rose-300 rounded-2xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="w-9 h-9 rounded-xl bg-rose-50 group-hover:bg-rose-600 text-rose-600 group-hover:text-white flex items-center justify-center text-base shadow-sm group-hover:scale-110 transition-all"><i class="fa-solid fa-book-open"></i></span>
-                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">Sắp có</span>
-                </div>
-                <div>
-                    <h3 class="font-extrabold text-slate-900 text-sm group-hover:text-rose-600 transition-colors">Ngữ Văn</h3>
-                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">Lớp 10, 11, 12</p>
-                </div>
-            </a>
-
-            <!-- 7. Môn Lịch Sử -->
-            <a href="su/" class="group bg-white hover:bg-slate-50 border border-slate-200 hover:border-amber-300 rounded-2xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="w-9 h-9 rounded-xl bg-amber-50 group-hover:bg-amber-700 text-amber-700 group-hover:text-white flex items-center justify-center text-base shadow-sm group-hover:scale-110 transition-all"><i class="fa-solid fa-landmark"></i></span>
-                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">Sắp có</span>
-                </div>
-                <div>
-                    <h3 class="font-extrabold text-slate-900 text-sm group-hover:text-amber-700 transition-colors">Lịch Sử</h3>
-                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">Lớp 10, 11, 12</p>
-                </div>
-            </a>
-
-            <!-- 8. Môn Địa Lí -->
-            <a href="dia/" class="group bg-white hover:bg-slate-50 border border-slate-200 hover:border-sky-300 rounded-2xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="w-9 h-9 rounded-xl bg-sky-50 group-hover:bg-sky-600 text-sky-600 group-hover:text-white flex items-center justify-center text-base shadow-sm group-hover:scale-110 transition-all"><i class="fa-solid fa-earth-americas"></i></span>
-                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">Sắp có</span>
-                </div>
-                <div>
-                    <h3 class="font-extrabold text-slate-900 text-sm group-hover:text-sky-600 transition-colors">Địa Lí</h3>
-                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">Lớp 10, 11, 12</p>
-                </div>
-            </a>
-
-            <!-- 9. Giáo Dục Kinh Tế & Pháp Luật -->
-            <a href="gdktpl/" class="group bg-white hover:bg-slate-50 border border-slate-200 hover:border-red-300 rounded-2xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="w-9 h-9 rounded-xl bg-red-50 group-hover:bg-red-600 text-red-600 group-hover:text-white flex items-center justify-center text-base shadow-sm group-hover:scale-110 transition-all"><i class="fa-solid fa-scale-balanced"></i></span>
-                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">Sắp có</span>
-                </div>
-                <div>
-                    <h3 class="font-extrabold text-slate-900 text-sm group-hover:text-red-600 transition-colors">GDKT & PL</h3>
-                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">Lớp 10, 11, 12</p>
-                </div>
-            </a>
-
-            <!-- 10. Môn Tin Học -->
-            <a href="tinhoc/" class="group bg-white hover:bg-slate-50 border border-slate-200 hover:border-cyan-300 rounded-2xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="w-9 h-9 rounded-xl bg-cyan-50 group-hover:bg-cyan-600 text-cyan-600 group-hover:text-white flex items-center justify-center text-base shadow-sm group-hover:scale-110 transition-all"><i class="fa-solid fa-laptop-code"></i></span>
-                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">Sắp có</span>
-                </div>
-                <div>
-                    <h3 class="font-extrabold text-slate-900 text-sm group-hover:text-cyan-600 transition-colors">Tin Học</h3>
-                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">Lớp 10, 11, 12</p>
-                </div>
-            </a>
-
-            <!-- 11. Công Nghệ Công Nghiệp -->
-            <a href="cn-congnghiep/" class="group bg-white hover:bg-slate-50 border border-slate-200 hover:border-orange-300 rounded-2xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="w-9 h-9 rounded-xl bg-orange-50 group-hover:bg-orange-600 text-orange-600 group-hover:text-white flex items-center justify-center text-base shadow-sm group-hover:scale-110 transition-all"><i class="fa-solid fa-gears"></i></span>
-                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">Sắp có</span>
-                </div>
-                <div>
-                    <h3 class="font-extrabold text-slate-900 text-sm group-hover:text-orange-600 transition-colors">CN Công Nghiệp</h3>
-                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">Lớp 10, 11, 12</p>
-                </div>
-            </a>
-
-            <!-- 12. Công Nghệ Nông Nghiệp -->
-            <a href="cn-nongnghiep/" class="group bg-white hover:bg-slate-50 border border-slate-200 hover:border-lime-300 rounded-2xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="w-9 h-9 rounded-xl bg-lime-50 group-hover:bg-lime-600 text-lime-600 group-hover:text-white flex items-center justify-center text-base shadow-sm group-hover:scale-110 transition-all"><i class="fa-solid fa-seedling"></i></span>
-                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">Sắp có</span>
-                </div>
-                <div>
-                    <h3 class="font-extrabold text-slate-900 text-sm group-hover:text-lime-600 transition-colors">CN Nông Nghiệp</h3>
-                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">Lớp 10, 11, 12</p>
-                </div>
-            </a>
-        </div>
-    </section>
-
     <!-- ==================== 2. LAYOUT 3 CỘT ==================== -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -502,37 +303,6 @@
                     <h3 class="font-extrabold text-slate-900 text-sm uppercase tracking-wider pb-3 border-b border-slate-100 flex items-center gap-2">
                         <i class="fa-solid fa-list-ul text-blue-600"></i> Danh Mục Bài Học
                     </h3>
-
-                    
-                        <!-- [MẪU 3] HỘP CHỌN MÔN HỌC Ở ĐẦU SIDEBAR (PHONG CÁCH LMS) -->
-                        <div id="demoStyle3Box" class="demo-variant mb-4 p-3.5 bg-gradient-to-r from-blue-900 to-indigo-900 text-white rounded-xl shadow-md space-y-2">
-                            <div class="flex items-center justify-between">
-                                <span class="text-[10px] font-extrabold uppercase tracking-wider text-cyan-300 flex items-center gap-1">
-                                    <i class="fa-solid fa-graduation-cap"></i> Đang Chọn Môn:
-                                </span>
-                                <span class="text-[9px] bg-emerald-400 text-slate-950 font-bold px-1.5 py-0.5 rounded">Hoạt động</span>
-                            </div>
-                            
-                            <!-- Dropdown Selector -->
-                            <div class="relative">
-                                <select onchange="if(this.value && this.value !== '#') window.location.href = this.value" 
-                                    class="w-full px-3 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-xs font-extrabold text-white focus:outline-none focus:ring-2 focus:ring-cyan-400 cursor-pointer transition-all">
-                                    <option value="#" class="text-slate-900 font-bold">⚛️ Môn Vật Lí (Lớp 10, 11, 12)</option>
-                                    <option value="toan/" class="text-slate-900">📐 Môn Toán Học</option>
-                                    <option value="hoa/" class="text-slate-900">🧪 Môn Hóa Học</option>
-                                    <option value="sinh/" class="text-slate-900">🧬 Môn Sinh Học</option>
-                                    <option value="khtn/" class="text-slate-900">🌿 Khoa Học Tự Nhiên (THCS)</option>
-                                    <option value="van/" class="text-slate-900">📖 Môn Ngữ Văn</option>
-                                    <option value="su/" class="text-slate-900">🏛️ Môn Lịch Sử</option>
-                                    <option value="dia/" class="text-slate-900">🌍 Môn Địa Lí</option>
-                                    <option value="gdktpl/" class="text-slate-900">⚖️ Môn GDKT & PL</option>
-                                    <option value="tinhoc/" class="text-slate-900">💻 Môn Tin Học</option>
-                                    <option value="cn-congnghiep/" class="text-slate-900">⚙️ Công Nghệ Công Nghiệp</option>
-                                    <option value="cn-nongnghiep/" class="text-slate-900">🌱 Công Nghệ Nông Nghiệp</option>
-                                </select>
-                            </div>
-                            <p class="text-[10px] text-slate-300">Bấm chọn môn ở trên để chuyển nhanh sang bài học môn khác.</p>
-                        </div>
 
                     <div class="mt-3 space-y-1 text-sm font-medium">
                         <!-- Accordion Lớp 12 (Đã xuất bản bài 1-5) -->
@@ -1458,94 +1228,7 @@
                     <span class="font-extrabold text-lg text-white">Vatli102.com</span>
                 </a>
                 <div class="flex flex-wrap items-center gap-4 text-xs font-semibold">
-                    
-                <!-- [MẪU 2] NÚT MEGA MENU THẢ XUỐNG -->
-                <div class="relative group demo-variant" id="demoStyle2Dropdown">
-                    <button class="px-3.5 py-2 rounded-md bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-900 font-extrabold flex items-center gap-1.5 shadow-sm transition-all">
-                        <i class="fa-solid fa-book-bookmark"></i>
-                        <span>Khám Phá 12 Môn Học</span>
-                        <i class="fa-solid fa-chevron-down text-[10px] group-hover:rotate-180 transition-transform"></i>
-                    </button>
-
-                    <!-- Khung Mega Menu Dropdown -->
-                    <div class="hidden group-hover:block absolute left-0 top-full pt-2 w-[540px] z-50">
-                        <div class="bg-white rounded-2xl p-5 shadow-2xl border border-slate-200 text-slate-800 grid grid-cols-2 gap-4">
-                            <!-- Cột 1: KHTN & Công nghệ -->
-                            <div>
-                                <div class="text-[11px] font-extrabold text-blue-700 uppercase tracking-wider pb-2 border-b border-blue-100 flex items-center gap-1.5">
-                                    <i class="fa-solid fa-atom"></i> Khoa Học Tự Nhiên & Công Nghệ
-                                </div>
-                                <div class="mt-2 space-y-1 text-xs font-semibold">
-                                    <a href="#lop12" class="flex items-center justify-between p-2 rounded-lg bg-blue-50 text-blue-700 font-bold">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-atom text-blue-600"></i> Vật Lí</span>
-                                        <span class="text-[9px] bg-blue-600 text-white px-1.5 py-0.5 rounded">Đã có bài</span>
-                                    </a>
-                                    <a href="toan/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-square-root-variable text-indigo-600"></i> Toán Học</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                    <a href="hoa/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-flask-vial text-purple-600"></i> Hóa Học</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                    <a href="sinh/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-dna text-emerald-600"></i> Sinh Học</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                    <a href="khtn/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-leaf text-teal-600"></i> KHTN (Cấp THCS)</span>
-                                        <span class="text-[9px] text-teal-700 bg-teal-50 px-1 py-0.5 rounded">Lớp 6-9</span>
-                                    </a>
-                                    <a href="tinhoc/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-laptop-code text-cyan-600"></i> Tin Học</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                    <a href="cn-congnghiep/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-gears text-orange-600"></i> CN Công Nghiệp</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                    <a href="cn-nongnghiep/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-seedling text-lime-600"></i> CN Nông Nghiệp</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <!-- Cột 2: KHXH & Định hướng -->
-                            <div>
-                                <div class="text-[11px] font-extrabold text-amber-700 uppercase tracking-wider pb-2 border-b border-amber-100 flex items-center gap-1.5">
-                                    <i class="fa-solid fa-book-open"></i> Khoa Học Xã Hội & Pháp Luật
-                                </div>
-                                <div class="mt-2 space-y-1 text-xs font-semibold">
-                                    <a href="van/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-book-open text-rose-600"></i> Ngữ Văn</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                    <a href="su/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-landmark text-amber-700"></i> Lịch Sử</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                    <a href="dia/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-earth-americas text-sky-600"></i> Địa Lí</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                    <a href="gdktpl/" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 text-slate-700">
-                                        <span class="flex items-center gap-2"><i class="fa-solid fa-scale-balanced text-red-600"></i> GDKT & PL</span>
-                                        <span class="text-[9px] text-amber-600 bg-amber-50 px-1 py-0.5 rounded">Sắp có</span>
-                                    </a>
-                                </div>
-
-                                <!-- Box giới thiệu -->
-                                <div class="mt-4 p-3 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl space-y-1.5">
-                                    <div class="text-[10px] font-extrabold text-blue-900 uppercase">Học Liệu GDPT 2018</div>
-                                    <p class="text-[11px] text-slate-600 leading-snug">Áp dụng cho 3 bộ sách mới: Kết nối tri thức, Cánh diều, Chân trời sáng tạo.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <a href="gioi-thieu.html" class="hover:text-blue-400 transition-colors"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a>
+                    <a href="gioi-thieu.html" class="hover:text-blue-400 transition-colors"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a>
                     <a href="lien-he.html" class="hover:text-blue-400 transition-colors"><i class="fa-solid fa-envelope"></i> Liên hệ</a>
                     <a href="chinh-sach-bao-mat.html" class="hover:text-blue-400 transition-colors"><i class="fa-solid fa-shield-halved"></i> Chính sách bảo mật</a>
                     <a href="dieu-khoan.html" class="hover:text-blue-400 transition-colors"><i class="fa-solid fa-scale-balanced"></i> Điều khoản sử dụng</a>
@@ -1920,54 +1603,36 @@
     </div>
 
     <script>
-        function switchDemoStyle(styleNum) {
-            const btn1 = document.getElementById('btnStyle1');
-            const btn2 = document.getElementById('btnStyle2');
-            const btn3 = document.getElementById('btnStyle3');
-            const desc = document.getElementById('demoDesc');
+        function toggleTeacherMenuMode(isTeacherIdea) {
+            const navTeacher = document.getElementById('navTeacherIdea');
+            const navOriginal = document.getElementById('navOriginal');
+            const btnTeacher = document.getElementById('btnModeTeacher');
+            const btnOrig = document.getElementById('btnModeOriginal');
 
-            const style1 = document.getElementById('demoStyle1Container');
-            const style2 = document.getElementById('demoStyle2Dropdown');
-            const style3 = document.getElementById('demoStyle3Box');
-            const oldGrid = document.getElementById('section-monhoc');
-
-            // Reset buttons
-            [btn1, btn2, btn3].forEach(b => {
-                b.classList.remove('bg-blue-600', 'text-white');
-                b.classList.add('text-slate-400');
-            });
-
-            // Ẩn bảng 12 ô to cũ ở trang chủ
-            if(oldGrid) oldGrid.style.display = 'none';
-
-            if(styleNum === 1) {
-                btn1.classList.add('bg-blue-600', 'text-white');
-                btn1.classList.remove('text-slate-400');
-                if(style1) style1.style.display = 'block';
-                if(style2) style2.style.display = 'none';
-                if(style3) style3.style.display = 'none';
-                desc.innerHTML = 'Đang xem: <strong>MẪU 1 (Dải Tab "Viên Thuốc" Trượt Ngang)</strong> - Chỉ cao 45px, cực kỳ thanh lịch, hiện đại, không chiếm diện tích bài học.';
-            } else if(styleNum === 2) {
-                btn2.classList.add('bg-blue-600', 'text-white');
-                btn2.classList.remove('text-slate-400');
-                if(style1) style1.style.display = 'none';
-                if(style2) style2.style.display = 'block';
-                if(style3) style3.style.display = 'none';
-                desc.innerHTML = 'Đang xem: <strong>MẪU 2 (Mega Menu Thả Xuống Trên Thanh Điều Hướng)</strong> - Rê chuột vào nút "Khám Phá 12 Môn Học" trên thanh menu để mở bảng tra cứu.';
-            } else if(styleNum === 3) {
-                btn3.classList.add('bg-blue-600', 'text-white');
-                btn3.classList.remove('text-slate-400');
-                if(style1) style1.style.display = 'none';
-                if(style2) style2.style.display = 'none';
-                if(style3) style3.style.display = 'block';
-                desc.innerHTML = 'Đang xem: <strong>MẪU 3 (Bộ Chuyển Môn Thông Minh Ở Đầu Sidebar Cột Trái)</strong> - Tinh gọn đúng chuẩn các nền tảng học tập quốc tế (LMS).';
+            if(isTeacherIdea) {
+                if(navTeacher) navTeacher.style.display = 'block';
+                if(navOriginal) navOriginal.style.display = 'none';
+                if(btnTeacher) {
+                    btnTeacher.classList.add('bg-amber-400', 'text-slate-950');
+                    btnTeacher.classList.remove('bg-slate-800', 'text-slate-300');
+                }
+                if(btnOrig) {
+                    btnOrig.classList.remove('bg-amber-400', 'text-slate-950');
+                    btnOrig.classList.add('bg-slate-800', 'text-slate-300');
+                }
+            } else {
+                if(navTeacher) navTeacher.style.display = 'none';
+                if(navOriginal) navOriginal.style.display = 'block';
+                if(btnOrig) {
+                    btnOrig.classList.add('bg-amber-400', 'text-slate-950');
+                    btnOrig.classList.remove('bg-slate-800', 'text-slate-300');
+                }
+                if(btnTeacher) {
+                    btnTeacher.classList.remove('bg-amber-400', 'text-slate-950');
+                    btnTeacher.classList.add('bg-slate-800', 'text-slate-300');
+                }
             }
         }
-
-        // Mặc định khởi động ở Mẫu 1
-        window.addEventListener('DOMContentLoaded', () => {
-            switchDemoStyle(1);
-        });
     </script>
 
 </body>
