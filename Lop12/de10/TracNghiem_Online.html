@@ -221,16 +221,23 @@
         .summary-num { font-size: 1.35rem; font-weight: 800; margin-bottom: 2px; }
         .summary-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
 
+        .header-timer-badge {
+            display: none; font-size: 0.85rem; font-weight: 700;
+            color: #0369a1; background: #e0f2fe; padding: 4px 10px; border-radius: 14px; border: 1px solid #bae6fd;
+        }
         .timer-badge {
             background: #fee2e2; color: #ef4444; padding: 4px 10px; border-radius: 8px;
             font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; gap: 5px;
         }
 
-        footer {
-            background: #0f172a; color: #94a3b8; text-align: center; padding: 25px 15px;
-            font-size: 0.85rem; margin-top: 50px;
+        .site-footer {
+            width: 100%; text-align: center; padding: 25px 15px; background: #ffffff;
+            border-top: 1px solid var(--border); margin-top: 40px; color: #64748b; font-size: 0.88rem;
         }
-        footer a { color: #38bdf8; text-decoration: none; }
+        .footer-container { max-width: 920px; margin: 0 auto; }
+        .footer-links { margin-top: 8px; font-size: 0.82rem; }
+        .footer-links a { color: #4f46e5; text-decoration: none; margin: 0 4px; transition: color 0.2s; }
+        .footer-links a:hover { text-decoration: underline; color: #3730a3; }
     </style>
 </head>
 <body>
@@ -238,14 +245,17 @@
     <header class="sticky-header">
         <div class="header-container">
             <a href="/" class="site-logo">
-                <img src="/favicon.svg" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+                <img src="/favicon.svg" alt="Logo" class="logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%234f46e5\'/><text x=\'50\' y=\'65\' font-size=\'45\' text-anchor=\'middle\' fill=\'white\' font-family=\'sans-serif\' font-weight=\'bold\'>V</text></svg>';">
                 <span class="logo-text">Vatli102.com</span>
             </a>
-            <div class="nav-links">
-                <span id="timerBadge" class="timer-badge" style="display:none;"><i class="fa-regular fa-clock"></i> <span id="timerText">50:00</span></span>
-                <a href="/de-thi/" class="nav-item"><i class="fa-solid fa-list-check"></i> Đề Thi</a>
-                <a href="/" class="nav-item"><i class="fa-solid fa-house"></i> Trang Chủ</a>
+            <div id="headerTimerBadge" class="header-timer-badge">
+                <i class="fa-solid fa-stopwatch"></i> <span id="timerText">50:00</span>
             </div>
+            <nav class="nav-links">
+                <a href="/" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
+                <a href="/gioi-thieu.html" class="nav-item"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a>
+                <a href="/lien-he.html" class="nav-item"><i class="fa-solid fa-envelope"></i> Liên hệ</a>
+            </nav>
         </div>
     </header>
 
@@ -366,9 +376,18 @@
                     <i class="fa-solid fa-list-check"></i> Xem Lời Giải & Chi Tiết Từng Câu
                 </button>
             </div>
+        </div>
+    </div>
 
-    <footer>
-        <p>© 2026 Vatli102.com - Chuyên trang tài liệu & Khảo thí Vật lí GDPT 2018.</p>
+    <footer class="site-footer">
+        <div class="footer-container">
+            <p>© 2026 Vatli102.com - Nền tảng học tập & trắc nghiệm Vật lí trực tuyến chuẩn GDPT 2018.</p>
+            <div class="footer-links">
+                <a href="/">Trang chủ</a> •
+                <a href="/gioi-thieu.html">Giới thiệu</a> •
+                <a href="/lien-he.html">Liên hệ</a>
+            </div>
+        </div>
     </footer>
 
     <script>
@@ -398,7 +417,8 @@
 
             document.getElementById("loginCard").style.display = "none";
             document.getElementById("examWorkspace").style.display = "block";
-            document.getElementById("timerBadge").style.display = "inline-flex";
+            const htb = document.getElementById("headerTimerBadge") || document.getElementById("timerBadge");
+            if (htb) htb.style.display = "inline-flex";
 
             renderQuestions();
             startTimer();
