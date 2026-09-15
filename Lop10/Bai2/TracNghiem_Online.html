@@ -25,7 +25,7 @@
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
-        
+        p { text-align: justify; }
         :root {
             --primary: #4f46e5;
             --primary-hover: #4338ca;
@@ -185,19 +185,6 @@
         .footer-links { margin-top: 8px; font-size: 0.82rem; }
         .footer-links a { color: #4f46e5; text-decoration: none; margin: 0 4px; transition: color 0.2s; }
         .footer-links a:hover { text-decoration: underline; color: #3730a3; }
-    
-        * { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        body { background-color: #f8fafc; color: #1e293b; font-family: 'Plus Jakarta Sans', sans-serif; }
-        h1, h2, h3, h4, h5, h6 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; }
-        p { 
-            text-align: justify; 
-            word-spacing: 0.15em !important; 
-            letter-spacing: 0.01em !important; 
-            line-height: 1.85 !important; 
-        }
-        .leading-relaxed { line-height: 1.85 !important; }
-        .text-justify { text-align: justify !important; word-spacing: 0.15em !important; }
-    
     </style>
 </head>
 <body class="tex2jax_ignore">
@@ -240,7 +227,7 @@
         <button type="button" class="btn-start" id="btnStartQuiz" onclick="startQuizExam()">🚀 BẮT ĐẦU LÀM BÀI THI</button>
     </div>
 
-    <!-- KHUNG BÀI THI TƯƠNG TÁC (ẨN 100% CHO ĐẾN KHI NHẬP TÊN LỚP VA BẤM BẮT ĐẦU) -->
+    <!-- KHUNG BÀI THI TƯƠNG TÁC -->
     <div id="quizContent" class="tex2jax_process" style="display: none;">
         <div class="progress-container">
             <div class="progress-bar-bg">
@@ -261,14 +248,14 @@
         <div class="section-header">📌 PHẦN III. Câu trắc nghiệm trả lời ngắn</div>
         <div id="part3Container"></div>
 
-        <!-- NÚT NỘP BÀI THI CHỈ XUẤT HIỆN Ở CUỐI BÀI THI SAU KHI LÀM XONG -->
+        <!-- NÚT NỘP BÀI THI -->
         <div style="text-align: center; margin-top: 30px;">
             <button type="button" id="btnSubmitQuiz" onclick="gradeQuiz()" style="background: linear-gradient(135deg, #059669, #10b981); color: white; border: none; padding: 14px 40px; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; box-shadow: 0 6px 20px rgba(16,185,129,0.3);">
                 ✅ NỘP BÀI THI & CHẤM ĐIỂM
             </button>
         </div>
 
-        <!-- BẢNG ĐIỂM KẾT QUẢ HIỂN THỊ NGAY DƯỚI NÚT NỘP BÀI KHI BẤM NỘP -->
+        <!-- BẢNG ĐIỂM KẾT QUẢ -->
         <div id="resultsPanel" class="results-panel">
             <div class="score-circle">
                 <span id="scoreCircle">0.0</span>
@@ -315,241 +302,235 @@
     </div>
 </div>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-6 text-center text-slate-500 text-sm mt-12">
-        <div class="max-w-5xl mx-auto px-4">
-            <p>&copy; 2026 Vatli102 (vatli102.com). Bản quyền thuộc về ban quản trị.</p>
-            <div class="mt-2 text-xs space-x-2">
-                <a href="/gioi-thieu.html" class="text-indigo-600 hover:underline">Giới thiệu</a> |
-                <a href="/lien-he.html" class="text-indigo-600 hover:underline">Liên hệ</a> |
-                <a href="/chinh-sach-bao-mat.html" class="text-indigo-600 hover:underline">Chính sách bảo mật</a> |
-                <a href="/dieu-khoan.html" class="text-indigo-600 hover:underline">Điều khoản sử dụng</a>
-            </div>
+<!-- 📜 Site Footer -->
+<footer class="site-footer">
+    <div class="footer-container">
+        <p>&copy; 2026 Vatli102 (vatli102.com). Bản quyền thuộc về ban quản trị.</p>
+        <div class="footer-links">
+            <a href="/gioi-thieu.html">Giới thiệu</a> |
+            <a href="/lien-he.html">Liên hệ</a> |
+            <a href="/chinh-sach-bao-mat.html">Chính sách bảo mật</a> |
+            <a href="/dieu-khoan.html">Điều khoản sử dụng</a>
         </div>
-    </footer>
+    </div>
+</footer>
 
 <script>
 const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
 
 const quizData = {
-    "title": "Vật lí 10 - Bài 2: Các quy tắc an toàn trong phòng thực hành Vật lí",
-    "part1": [
+    title: "📖 Bài 2 Các quy tắc an toàn trong phòng thực hành Vật lí (Vật lí 10)",
+    part1: [
         {
-            "id": 1,
-            "competency": "NTVL",
-            "question": "Để đảm bảo an toàn tuyệt đối về điện khi bắt đầu tiến hành thí nghiệm Vật lí, thao tác đúng quy tắc đầu tiên của học sinh là",
-            "options": {
-                "A": "cắm ngay phích điện vào nguồn lưới 220V để kiểm tra thiết bị.",
-                "B": "kiểm tra xem công tắc nguồn điện đã tắt và núm điều chỉnh điện áp máy biến áp đã đưa về mức 0V hay chưa.",
-                "C": "dùng tay trần chạm vào dây dẫn để thử xem có rò rỉ điện hay không.",
-                "D": "bật tất cả các thiết bị điện trong phòng thí nghiệm cùng một lúc."
+            id: 1,
+            competency: "NTVL",
+            question: "Để đảm bảo an toàn tuyệt đối về điện khi bắt đầu tiến hành thí nghiệm Vật lí, thao tác đúng quy tắc đầu tiên của học sinh là",
+            options: {
+                A: "cắm ngay phích điện vào nguồn lưới 220V để kiểm tra thiết bị.",
+                B: "kiểm tra xem công tắc nguồn điện đã tắt và núm điều chỉnh điện áp máy biến áp đã đưa về mức 0V hay chưa.",
+                C: "dùng tay trần chạm vào dây dẫn để thử xem có rò rỉ điện hay không.",
+                D: "bật tất cả các thiết bị điện trong phòng thí nghiệm cùng một lúc."
             },
-            "answer": "B",
-            "explanation": "Trước khi cắm điện phải đảm bảo tắt công tắc và đưa nguồn máy biến áp về $0\\text{V}$ để tránh quá dòng chập cháy."
+            answer: "B",
+            explanation: "Trước khi cắm điện phải đảm bảo tắt công tắc nguồn và đưa núm điều chỉnh điện áp về $0\\text{ V}$ để tránh hiện tượng quá tải, xung áp gây hỏng thiết bị và mất an toàn."
         },
         {
-            "id": 2,
-            "competency": "NTVL",
-            "question": "Khi thực hiện các thí nghiệm tiếp xúc với hóa chất độc hại hoặc chất dễ bay hơi, trang bị bảo hộ cá nhân bắt buộc nào sau đây học sinh phải sử dụng?",
-            "options": {
-                "A": "Kính bảo hộ, găng tay chống hóa chất và áo khoác phòng thí nghiệm (áo lab).",
-                "B": "Kính râm trang trí và găng tay len.",
-                "C": "Khẩu trang vải thông thường và dép lê.",
-                "D": "Không cần trang bị nếu thao tác nhanh."
+            id: 2,
+            competency: "NTVL",
+            question: "Khi thực hiện các thí nghiệm tiếp xúc với hóa chất độc hại hoặc chất dễ bay hơi, trang bị bảo hộ cá nhân bắt buộc nào sau đây học sinh phải sử dụng?",
+            options: {
+                A: "Kính bảo hộ, găng tay chống hóa chất và áo khoác phòng thí nghiệm (áo lab).",
+                B: "Kính râm trang trí và găng tay len thông thường.",
+                C: "Khẩu trang vải thông thường và đi dép lê.",
+                D: "Không cần trang bị nếu thao tác nhanh chóng."
             },
-            "answer": "A",
-            "explanation": "Thí nghiệm hóa chất cần bảo vệ mắt (kính bảo hộ), da tay (găng tay) và cơ thể (áo lab)."
+            answer: "A",
+            explanation: "Thực hành hóa chất bắt buộc phải đeo kính bảo hộ bảo vệ mắt, mang găng tay chuyên dụng và mặc áo khoác bảo hộ phòng thí nghiệm."
         },
         {
-            "id": 3,
-            "competency": "NTVL",
-            "question": "Để dập tắt một đám cháy nhỏ xảy ra do chập thiết bị điện tại bàn thí nghiệm, dụng cụ chữa cháy nào sau đây là phù hợp và an toàn nhất?",
-            "options": {
-                "A": "Xô nước sạch đặt ở góc phòng thí nghiệm.",
-                "B": "Bình chữa cháy khí CO2 chuyên dụng.",
-                "C": "Bình chữa cháy bọt hóa chất có chứa nước.",
-                "D": "Khăn ướt thấm đẫm nước."
+            id: 3,
+            competency: "NTVL",
+            question: "Để dập tắt một đám cháy nhỏ xảy ra do chập thiết bị điện tại bàn thí nghiệm, dụng cụ chữa cháy nào sau đây là phù hợp và an toàn nhất?",
+            options: {
+                A: "Xô nước sạch đặt ở góc phòng thí nghiệm.",
+                B: "Bình chữa cháy khí CO2 chuyên dụng.",
+                C: "Bình chữa cháy bọt hóa chất có chứa nước.",
+                D: "Khăn ướt thấm đẫm nước."
             },
-            "answer": "B",
-            "explanation": "Đám cháy điện dùng bình $CO_2$ cách điện tốt, không gây hỏng hóc vi mạch và không gây giật."
+            answer: "B",
+            explanation: "Đám cháy điện phải dùng bình khí $CO_2$ vì khí $CO_2$ không dẫn điện, dập tắt lửa nhanh và không làm hỏng vi mạch. Tuyệt đối không dùng nước hay bọt chứa nước vì nước dẫn điện gây nguy cơ giật."
         },
         {
-            "id": 4,
-            "competency": "THTN",
-            "question": "Khi rút phích cắm điện của các thiết bị thí nghiệm ra khỏi ổ cắm trên bàn thực hành, thao tác nào sau đây là **đúng quy chuẩn an toàn**?",
-            "options": {
-                "A": "Cầm dây dẫn điện giật mạnh về phía sau.",
-                "B": "Một tay giữ chặt ổ cắm trên tường/bàn, tay kia nắm chắc phần chuôi cách điện của phích cắm và rút thẳng ra.",
-                "C": "Dùng tay ướt rút phích cắm nếu thao tác dứt khoát.",
-                "D": "Dùng kìm kim loại không bọc cách điện để kẹp rút phích cắm."
+            id: 4,
+            competency: "THTN",
+            question: "Khi rút phích cắm điện của các thiết bị thí nghiệm ra khỏi ổ cắm trên bàn thực hành, thao tác nào sau đây là **đúng quy chuẩn an toàn**?",
+            options: {
+                A: "Cầm dây dẫn điện giật mạnh về phía sau.",
+                B: "Một tay giữ chặt ổ cắm trên tường/bàn, tay kia nắm chắc phần chuôi cách điện của phích cắm và rút thẳng ra.",
+                C: "Dùng tay ướt rút phích cắm nếu thao tác dứt khoát.",
+                D: "Dùng kìm kim loại không bọc cách điện để kẹp rút phích cắm."
             },
-            "answer": "B",
-            "explanation": "Rút phích cắm đúng cách: một tay giữ ổ cắm, tay kia cầm chuôi nhựa phích cắm rút thẳng. Không giật dây."
-        },
-                {
-            "id": 5,
-            "competency": "THTN",
-            "question": "Biển báo có hình tròn viền đỏ, nền trắng và có hình vẽ màu đen kèm một gạch chéo đỏ biểu thị thông điệp nào dưới đây?",
-            "image": "images/bien_bao_cam.svg",
-            "options": {
-                "A": "Biển báo hiệu lệnh bắt buộc phải thực hiện.",
-                "B": "Biển báo cấm thực hiện hành động ghi trong biển.",
-                "C": "Biển báo cảnh báo nguy hiểm.",
-                "D": "Biển chỉ dẫn đường thoát hiểm."
-            },
-            "answer": "B",
-            "explanation": "Hình tròn viền đỏ nền trắng gạch chéo đỏ là biển báo CẤM."
+            answer: "B",
+            explanation: "Rút phích cắm đúng kỹ thuật: một tay giữ cố định ổ cắm, tay còn lại nắm phần chuôi cách điện của phích cắm và rút dứt khoát theo phương thẳng đứng. Tuyệt đối không cầm dây giật."
         },
         {
-            "id": 6,
-            "competency": "THTN",
-            "question": "Nguy cơ mất an toàn nào sau đây liên quan trực tiếp đến việc sử dụng các bình chứa khí nén hoặc thiết bị thí nghiệm áp suất cao?",
-            "options": {
-                "A": "Nguy cơ cháy nổ do phóng điện hồ quang.",
-                "B": "Nguy cơ vỡ nổ cơ học giải phóng mảnh vỡ với động năng lớn gây chấn thương.",
-                "C": "Nguy cơ ngộ độc hơi acid.",
-                "D": "Nguy cơ mù lòa do tia cực tím."
+            id: 5,
+            competency: "THTN",
+            question: "Biển báo có hình tròn viền đỏ, nền trắng và có hình vẽ màu đen kèm một gạch chéo đỏ biểu thị thông điệp nào dưới đây?",
+            image: "images/bien_bao_cam.svg",
+            options: {
+                A: "Biển báo hiệu lệnh bắt buộc phải thực hiện.",
+                B: "Biển báo cấm thực hiện hành động ghi trong biển.",
+                C: "Biển báo cảnh báo nguy hiểm.",
+                D: "Biển chỉ dẫn đường thoát hiểm."
             },
-            "answer": "B",
-            "explanation": "Thiết bị áp suất cao khi nổ sẽ giải phóng mảnh vỡ với động năng lớn gây tổn thương nghiêm trọng."
+            answer: "B",
+            explanation: "Theo quy chuẩn an toàn, biển hình tròn viền đỏ, nền trắng với gạch chéo đỏ là biển báo CẤM (nghiêm cấm thực hiện hành vi hiển thị trong hình vẽ)."
         },
         {
-            "id": 7,
-            "competency": "VDKT",
-            "question": "Một học sinh đang làm thí nghiệm thì bị hóa chất lỏng bắn vào mắt. Hành động sơ cứu đầu tiên và đúng đắn nhất là gì?",
-            "options": {
-                "A": "Dùng khăn khô lau mắt rồi nhỏ thuốc nhỏ mắt thông thường.",
-                "B": "Nhắm chặt mắt lại và chạy ngay về nhà.",
-                "C": "Xả nhẹ nước sạch liên tục vào mắt bị thương dưới vòi nước rửa mắt chuyên dụng trong ít nhất 15 phút, sau đó báo giáo viên và đi y tế.",
-                "D": "Dùng dung dịch kiềm nhẹ để trung hòa hóa chất acid bắn vào mắt."
+            id: 6,
+            competency: "THTN",
+            question: "Nguy cơ mất an toàn nào sau đây liên quan trực tiếp đến việc sử dụng các bình chứa khí nén hoặc thiết bị thí nghiệm áp suất cao?",
+            options: {
+                A: "Nguy cơ phóng điện hồ quang gây bỏng.",
+                B: "Nguy cơ nổ cơ học giải phóng mảnh vỡ với động năng lớn gây chấn thương nghiêm trọng.",
+                C: "Nguy cơ ngộ độc hơi acid bốc khói.",
+                D: "Nguy cơ mù lòa do bức xạ tử ngoại (UV)."
             },
-            "answer": "C",
-            "explanation": "Rửa mắt bằng nước sạch liên tục ít nhất 15 phút để làm loãng hóa chất, sau đó báo y tế."
+            answer: "B",
+            explanation: "Bình khí nén và thiết bị áp suất cao chứa năng lượng cơ học rất lớn, khi xảy ra sự cố vỡ nổ sẽ văng mảnh kim loại với tốc độ cao, có thể gây chấn thương chết người."
         },
         {
-            "id": 8,
-            "competency": "THTN",
-            "question": "Thiết bị nào sau đây thường được lắp đặt trong hệ thống điện của phòng thực hành Vật lí để tự động ngắt nguồn điện ngay lập tức khi xảy ra sự cố quá tải hoặc chập mạch rò điện?",
-            "options": {
-                "A": "Đồng hồ đo điện năng (Công tơ điện).",
-                "B": "Aptomat (Aptomat chống rò/chống quá tải - ELCB/MCB).",
-                "C": "Máy biến áp nguồn.",
-                "D": "Đèn tín hiệu giao thông."
+            id: 7,
+            competency: "VDKT",
+            question: "Một học sinh đang làm thí nghiệm thì bị hóa chất lỏng bắn vào mắt. Hành động sơ cứu đầu tiên và đúng đắn nhất là gì?",
+            options: {
+                A: "Dùng khăn khô lau mắt rồi nhỏ thuốc nhỏ mắt thông thường.",
+                B: "Nhắm chặt mắt lại và đợi hết tiết thực hành rồi về nhà.",
+                C: "Xả nhẹ nước sạch liên tục vào mắt bị tổn thương dưới vòi rửa mắt khẩn cấp ít nhất 15 phút, sau đó báo giáo viên và chuyển tới cơ sở y tế.",
+                D: "Dùng dung dịch xà phòng loãng để rửa trung hòa acid bắn vào mắt."
             },
-            "answer": "B",
-            "explanation": "Aptomat (ELCB/MCB) tự động ngắt điện khi quá tải hoặc ngắn mạch chống cháy nổ."
+            answer: "C",
+            explanation: "Quy trình sơ cứu hóa chất bắn vào mắt: rửa liên tục bằng vòi nước sạch hoặc bồn rửa mắt chuyên dụng trong tối thiểu 15 phút để pha loãng và loại bỏ hóa chất, sau đó lập tức chuyển đến y tế."
         },
         {
-            "id": 9,
-            "competency": "VDKT",
-            "question": "Học sinh phát hiện một dây dẫn điện nối với máy biến áp nguồn bị trầy xước hở lõi đồng bên trong. Hành động nào sau đây là **đúng quy tắc an toàn**?",
-            "options": {
-                "A": "Tiếp tục dùng dây đó làm thí nghiệm nếu điện áp nguồn thấp dưới 12V.",
-                "B": "Dùng băng dính giấy quấn tạm lại và làm thí nghiệm tiếp.",
-                "C": "Ngừng sử dụng ngay lập tức, báo cáo giáo viên hướng dẫn để được đổi dây dẫn mới an toàn.",
-                "D": "Tự ý cắt bỏ đoạn dây hở và dùng tay nối lại."
+            id: 8,
+            competency: "THTN",
+            question: "Thiết bị nào sau đây thường được lắp đặt trong hệ thống điện của phòng thực hành Vật lí để tự động ngắt nguồn điện ngay lập tức khi xảy ra sự cố quá tải hoặc chập mạch rò điện?",
+            options: {
+                A: "Đồng hồ đo điện năng (Công tơ điện).",
+                B: "Aptomat chống quá tải và chống giật (ELCB/MCB).",
+                C: "Máy biến áp nguồn hạ thế.",
+                D: "Biến trở xoay hình trụ tròn."
             },
-            "answer": "C",
-            "explanation": "Dây hở lõi copper cực kỳ nguy hiểm, phải báo giáo viên đổi dây mới ngay lập tức."
+            answer: "B",
+            explanation: "Aptomat (ELCB/MCB) là thiết bị đóng cắt tự động, bảo vệ hệ thống điện và người sử dụng bằng cách tự ngắt nguồn ngay khi dòng điện vượt ngưỡng an toàn hoặc phát hiện rò điện."
         },
         {
-            "id": 10,
-            "competency": "VDKT",
-            "question": "Khi làm thí nghiệm đo quang học sử dụng nguồn phát tia Laser, quy tắc an toàn quan trọng nhất để tránh tổn thương vĩnh viễn cho mắt là",
-            "options": {
-                "A": "nhìn trực diện vào chùm tia laser để kiểm tra độ sáng.",
-                "B": "tuyệt đối không nhìn trực tiếp vào chùm tia laser hoặc chiếu chùm laser vào mắt người khác.",
-                "C": "đeo kính râm thông thường khi làm thí nghiệm laser.",
-                "D": "tăng công suất laser lên mức tối đa để dề quan sát."
+            id: 9,
+            competency: "VDKT",
+            question: "Khi làm thí nghiệm quang học sử dụng nguồn phát chùm tia Laser, quy tắc an toàn quan trọng nhất để tránh tổn thương vĩnh viễn cho mắt là",
+            options: {
+                A: "nhìn trực diện vào đầu phát chùm tia laser để kiểm tra độ sáng.",
+                B: "tuyệt đối không nhìn trực tiếp vào chùm tia laser hoặc chiếu chùm laser vào mắt người khác.",
+                C: "đeo kính râm thời trang khi làm việc với nguồn tia laser.",
+                D: "chỉnh nguồn phát tia laser lên công suất cực đại để quan sát chùm sáng rõ hơn."
             },
-            "answer": "B",
-            "explanation": "Tia Laser có mật độ năng lượng cao, chiếu thẳng vào mắt có thể làm hỏng võng mạc gây mù."
+            answer: "B",
+            explanation: "Tia Laser có tính đơn sắc, độ định hướng cực cao và mật độ năng lượng tập trung lớn. Chiếu thẳng vào mắt có thể phá hủy võng mạc, gây mù vĩnh viễn chỉ trong tích tắc."
         }
     ],
-    "part2": [
+    part2: [
         {
-            "id": 1,
-            "context": "Trong phòng thực hành Vật lí 10, học sinh chuẩn bị tiến hành thí nghiệm khảo sát mạch điện xoay chiều sử dụng máy biến áp nguồn và các hộp điện trở.",
-            "subQuestions": [
+            id: 1,
+            context: "Trong phòng thực hành Vật lí 10, học sinh chuẩn bị tiến hành thí nghiệm khảo sát mạch điện xoay chiều sử dụng máy biến áp nguồn và các hộp điện trở.",
+            subQuestions: [
                 {
-                    "key": "a",
-                    "competency": "NTVL",
-                    "text": "Học sinh được phép tự ý cắm trực tiếp các thiết bị thí nghiệm hoạt động ở điện áp thấp vào ổ điện lưới 220V mà không cần máy biến áp.",
-                    "answer": "S",
-                    "explanation": "Thiết bị hạ áp cắm trực tiếp vào 220V sẽ bị cháy nổ ngay lập tức."
+                    key: "a",
+                    competency: "NTVL",
+                    text: "Học sinh được phép tự ý cắm trực tiếp các thiết bị thí nghiệm hoạt động ở điện áp thấp vào ổ điện lưới 220V mà không cần máy biến áp.",
+                    answer: "S",
+                    explanation: "Thiết bị hạ áp (như 3V, 6V, 12V) nếu cắm trực tiếp vào điện lưới 220V sẽ bị cháy nổ tức thì và gây nguy hiểm đe dọa an toàn."
                 },
                 {
-                    "key": "b",
-                    "competency": "VDKT",
-                    "text": "Trước khi cắm phích điện vào nguồn, học sinh bắt buộc phải xoay núm điều chỉnh điện áp của máy biến áp nguồn về giá trị 0V.",
-                    "answer": "Đ",
-                    "explanation": "Đưa về $0\\text{V}$ giúp tránh dòng điện tăng đột ngột khi vừa đóng mạch."
+                    key: "b",
+                    competency: "VDKT",
+                    text: "Trước khi cắm phích điện vào nguồn, học sinh bắt buộc phải xoay núm điều chỉnh điện áp của máy biến áp nguồn về giá trị 0V.",
+                    answer: "Đ",
+                    explanation: "Đưa điện áp về mức $0\\text{ V}$ trước khi cắm điện giúp triệt tiêu hiện tượng sốc điện áp và quá dòng khởi động đột ngột."
                 },
                 {
-                    "key": "c",
-                    "competency": "NTVL",
-                    "text": "Khi phát hiện vỏ cao su cách điện của dây dẫn bị bong tróc hở lõi đồng, học sinh vẫn có thể dùng bình thường nếu điện áp dưới 12V.",
-                    "answer": "S",
-                    "explanation": "Dây hở lõi đồng có thể gây ngắn mạch hoặc giật điện kể cả ở điện áp thấp."
+                    key: "c",
+                    competency: "NTVL",
+                    text: "Khi phát hiện vỏ cao su cách điện của dây dẫn bị bong tróc hở lõi đồng, học sinh vẫn có thể dùng bình thường nếu điện áp dưới 12V.",
+                    answer: "S",
+                    explanation: "Dây dẫn hở lõi kim loại tuyệt đối không được sử dụng vì có nguy cơ ngắn mạch chập cháy và phát tia lửa điện."
                 },
                 {
-                    "key": "d",
-                    "competency": "VDKT",
-                    "text": "Mọi thao tác thay đổi dây nối, cắm thêm linh kiện vào bảng mạch chỉ được thực hiện sau khi đã ngắt hoàn toàn công tắc nguồn điện.",
-                    "answer": "Đ",
-                    "explanation": "Tắt nguồn điện giúp bảo vệ thiết bị và người thao tác khỏi sự cố chập mạch."
+                    key: "d",
+                    competency: "VDKT",
+                    text: "Mọi thao tác thay đổi dây nối, cắm thêm linh kiện vào bảng mạch chỉ được thực hiện sau khi đã ngắt hoàn toàn công tắc nguồn điện.",
+                    answer: "Đ",
+                    explanation: "Chỉ lắp đặt, ghép nối, thay đổi sơ đồ mạch khi đã ngắt hoàn toàn nguồn điện để phòng ngừa chập chạm và nguy cơ điện giật."
                 }
             ]
         },
         {
-            "id": 2,
-            "context": "Quy trình thực hành an toàn và các biện pháp ứng phó với sự cố ngoài ý muốn trong phòng thí nghiệm.",
-            "subQuestions": [
+            id: 2,
+            context: "Quy trình thực hành an toàn và các biện pháp ứng phó với sự cố ngoài ý muốn trong phòng thực hành Vật lí.",
+            subQuestions: [
                 {
-                    "key": "a",
-                    "competency": "NTVL",
-                    "text": "Khi xảy ra cháy do chập điện, việc đầu tiên cần làm là ngắt ngay cầu dao/aptomat điện tổng của phòng thực hành.",
-                    "answer": "Đ",
-                    "explanation": "Ngắt aptomat điện tổng giúp loại bỏ nguồn nguy hiểm đầu tiên."
+                    key: "a",
+                    competency: "NTVL",
+                    text: "Khi xảy ra sự cố cháy do chập điện, hành động đầu tiên học sinh cần thực hiện là ngắt ngay cầu dao/aptomat điện tổng của phòng thí nghiệm.",
+                    answer: "Đ",
+                    explanation: "Ngắt cầu dao/aptomat tổng là biện pháp cô lập nguồn năng lượng đầu tiên để dập tắt nguy cơ phát sinh thêm lửa và điện giật."
                 },
                 {
-                    "key": "b",
-                    "competency": "THTN",
-                    "text": "Có thể dùng nước dập tắt đám cháy thiết bị điện đang cắm điện lưới 220V.",
-                    "answer": "S",
-                    "explanation": "Dùng nước dập cháy điện đang cắm nguồn sẽ bị điện giật vì nước dẫn điện."
+                    key: "b",
+                    competency: "THTN",
+                    text: "Có thể dùng xô nước để dập tắt đám cháy thiết bị điện khi thiết bị vẫn còn đang cắm vào nguồn điện lưới 220V.",
+                    answer: "S",
+                    explanation: "Nước sinh hoạt dẫn điện; tạt nước vào thiết bị đang mang điện sẽ tạo dòng rò truyền qua dòng nước gây điện giật chết người."
                 },
                 {
-                    "key": "c",
-                    "competency": "THTN",
-                    "text": "Sau khi kết thúc buổi thực hành, học sinh cần dọn dẹp dụng cụ, tắt hết nguồn điện và rửa sạch tay bằng xà phòng trước khi ra về.",
-                    "answer": "Đ",
-                    "explanation": "Quy trình vệ sinh và an toàn sau thực hành."
+                    key: "c",
+                    competency: "THTN",
+                    text: "Sau khi kết thúc buổi thực hành, học sinh cần dọn dẹp dụng cụ, tắt hết nguồn điện và rửa sạch tay bằng xà phòng trước khi ra về.",
+                    answer: "Đ",
+                    explanation: "Đây là quy tắc vệ sinh an toàn chuẩn sau mỗi buổi thí nghiệm để đảm bảo độ bền cho thiết bị và an toàn cá nhân."
                 },
                 {
-                    "key": "d",
-                    "competency": "VDKT",
-                    "text": "Khi bị bỏng nhiệt nhẹ do chạm vào điện trở đang nóng, cần ngâm ngay vết bỏng vào nước sạch mát trong khoảng 15-20 phút.",
-                    "answer": "Đ",
-                    "explanation": "Ngâm nước mát 15-20 phút giúp giảm nhiệt độ vùng da bị bỏng, giảm đau tổn thương sâu."
+                    key: "d",
+                    competency: "VDKT",
+                    text: "Khi bị bỏng nhiệt nhẹ do chạm vào linh kiện đang nóng, cần ngâm ngay vết bỏng vào nước sạch mát trong khoảng 15-20 phút.",
+                    answer: "Đ",
+                    explanation: "Làm mát vùng da bỏng bằng nước sạch mát trong 15-20 phút giúp hạ nhiệt mô tế bào, giảm sưng tấy đau rát và hạn chế tổn thương lớp biểu bì sâu."
                 }
             ]
         }
     ],
-    "part3": [
+    part3: [
         {
-            "id": 1,
-            "competency": "VDKT",
-            "question": "Một cầu chì bảo vệ mạch điện thí nghiệm được thiết kế ngắt mạch khi dòng điện vượt quá $2\\text{ A}$. Nếu cắm vào mạch các thiết bị tiêu thụ dòng điện tổng cộng là $2,5\\text{ A}$, hãy xác định trạng thái của cầu chì (Viết $1$ nếu cầu chì bị nóng chảy ngắt mạch, viết $0$ nếu cầu chì không ngắt).",
-            "answer": "1",
-            "explanation": "Dòng điện $2,5\\text{ A} > 2\\text{ A} \\Rightarrow$ cầu chì bị nóng chảy ngắt mạch (Đáp số: 1)."
+            id: 1,
+            competency: "VDKT",
+            question: "Một cầu chì bảo vệ mạch điện thí nghiệm được thiết kế tự ngắt mạch khi dòng điện vượt quá $2\\text{ A}$. Nếu cắm vào mạch các thiết bị tiêu thụ dòng điện tổng cộng là $2,5\\text{ A}$, hãy xác định trạng thái của cầu chì (Viết $1$ nếu cầu chì bị nóng chảy ngắt mạch, viết $0$ nếu cầu chì không ngắt).",
+            answer: "1",
+            explanation: "Vì dòng điện thực tế qua mạch $I = 2,5\\text{ A} > 2\\text{ A}$ (vượt quá giới hạn chịu tải định mức của cầu chì) nên dây chì sẽ bị quá nhiệt nóng chảy và ngắt mạch để bảo vệ toàn mạch. Đáp số: 1."
         },
         {
-            "id": 2,
-            "competency": "VDKT",
-            "question": "Trong phòng thực hành có 4 loại bình chữa cháy: Bình A (Nước), Bình B ($CO_2$), Bình C (Bọt hóa chất chứa nước), Bình D (Cát khô). Có bao nhiêu loại trong số 4 loại trên có thể sử dụng an toàn để dập đám cháy do chập thiết bị điện đang nối nguồn?",
-            "answer": "2",
-            "explanation": "Có 2 loại an toàn cho cháy điện: Bình B ($CO_2$) và Bình D (Cát khô). (Nước và bọt chứa nước dẫn điện)."
+            id: 2,
+            competency: "VDKT",
+            question: "Trong phòng thực hành có 4 loại phương tiện chữa cháy: Bình 1 (Nước sạch), Bình 2 (Khí $CO_2$), Bình 3 (Bọt tuyết dạng lỏng chứa nước), Bình 4 (Cát khô). Có bao nhiêu phương tiện trong số trên có thể dùng an toàn để chữa đám cháy thiết bị điện đang nối nguồn?",
+            answer: "2",
+            explanation: "Chỉ có 2 phương tiện an toàn cho đám cháy điện là Bình 2 (Khí $CO_2$) và Bình 4 (Cát khô) vì chúng không dẫn điện. Nước sạch và bọt lỏng chứa nước đều dẫn điện nên tuyệt đối cấm dùng. Đáp số: 2."
+        },
+        {
+            id: 3,
+            competency: "VDKT",
+            question: "Một bóng đèn thí nghiệm dùng trên bảng mạch có ghi các thông số định mức là $6\\text{ V} - 3\\text{ W}$. Để bóng đèn hoạt động bình thường đúng công suất thiết kế mà không bị quá tải, cường độ dòng điện định mức chạy qua bóng đèn là bao nhiêu ampe?",
+            answer: "0,5",
+            explanation: "Cường độ dòng điện định mức chạy qua bóng đèn là: $I = \\frac{\\mathcal{P}}{U} = \\frac{3}{6} = 0,5\\text{ A}$. Đáp số: 0,5."
         }
     ]
 };
@@ -627,7 +608,7 @@ function renderQuiz() {
                     `).join('')}
                 </div>
                 <div class="explanation-box" id="part1-q${q.id}-explanation">
-                    💡 <b>Hướng dẫn giải chi tiết:</b><br>${q.explanation ? q.explanation : q.subQuestions.map(sub => `• <b>Ý ${sub.key}) [${sub.answer === 'Đ' ? 'ĐÚNG' : 'SAI'}]:</b> ${sub.explanation || ''}`).join('<br>')}
+                    💡 <b>Hướng dẫn giải chi tiết:</b><br>${q.explanation || ''}
                 </div>
             </div>
         `).join('');
@@ -654,7 +635,7 @@ function renderQuiz() {
                     </div>
                 `}).join('')}
                 <div class="explanation-box" id="part2-q${q.id}-explanation">
-                    💡 <b>Hướng dẫn giải chi tiết:</b><br>${q.explanation ? q.explanation : q.subQuestions.map((sub, sIdx) => {
+                    💡 <b>Hướng dẫn giải chi tiết:</b><br>${q.subQuestions.map((sub, sIdx) => {
                         const subKey = sub.key || ['a','b','c','d'][sIdx];
                         const ansStr = typeof sub.answer === 'boolean' ? (sub.answer ? 'ĐÚNG' : 'SAI') : (sub.answer === 'Đ' ? 'ĐÚNG' : 'SAI');
                         return `• <b>Ý ${subKey}) [${ansStr}]:</b> ${sub.explanation || ''}`;
@@ -677,7 +658,7 @@ function renderQuiz() {
                     <div id="part3-q${q.id}-correct" style="display:none; color:#22c55e; font-weight:700; margin-top:6px; font-size:0.9rem;"></div>
                 </div>
                 <div class="explanation-box" id="part3-q${q.id}-explanation">
-                    💡 <b>Hướng dẫn giải chi tiết:</b><br>${q.explanation ? q.explanation : q.subQuestions.map(sub => `• <b>Ý ${sub.key}) [${sub.answer === 'Đ' ? 'ĐÚNG' : 'SAI'}]:</b> ${sub.explanation || ''}`).join('<br>')}
+                    💡 <b>Hướng dẫn giải chi tiết:</b><br>${q.explanation || ''}
                 </div>
             </div>
         `).join('');
@@ -704,11 +685,14 @@ function selectPart2(qId, subKey, choice) {
     
     const btnT = document.getElementById(`part2-q${qId}-tf-${subKey}-T`);
     const btnF = document.getElementById(`part2-q${qId}-tf-${subKey}-F`);
-    if (btnT) btnT.classList.remove('selected-true', 'selected-false');
-    if (btnF) btnF.classList.remove('selected-true', 'selected-false');
-
-    if (choice === 'Đ' && btnT) btnT.classList.add('selected-true');
-    if (choice === 'S' && btnF) btnF.classList.add('selected-false');
+    if (btnT) {
+        btnT.classList.remove('selected-true', 'selected-false');
+        if (choice === 'Đ') btnT.classList.add('selected-true');
+    }
+    if (btnF) {
+        btnF.classList.remove('selected-true', 'selected-false');
+        if (choice === 'S') btnF.classList.add('selected-false');
+    }
     updateProgress();
 }
 
@@ -727,7 +711,7 @@ function updateProgress() {
         completedCount += Object.keys(userAnswers.part2[qId]).length;
     }
     for (let qId in userAnswers.part3) {
-        if (userAnswers.part3[qId] !== '') completedCount++;
+        if (userAnswers.part3[qId] && userAnswers.part3[qId] !== '') completedCount++;
     }
     const percentage = totalItems > 0 ? Math.min((completedCount / totalItems) * 100, 100) : 0;
     const pb = document.getElementById('progressBar');
@@ -740,11 +724,10 @@ function gradeQuiz() {
     if (isSubmitted) return;
     isSubmitted = true;
 
-    let maxPossibleScore = (quizData.part1 ? quizData.part1.length : 0) + (quizData.part2 ? quizData.part2.length : 0) + (quizData.part3 ? quizData.part3.length : 0);
     let earnedPoints = 0;
     let totalCorrectCount = 0;
 
-    // Grade Part 1
+    // Grade Part 1: 9 câu x 0.5 điểm = 4.5 điểm
     if (quizData.part1) {
         quizData.part1.forEach(q => {
             const userChoice = userAnswers.part1[q.id];
@@ -760,13 +743,14 @@ function gradeQuiz() {
                 }
             });
             if (userChoice === correctOpt) {
-                earnedPoints += 1.0;
+                earnedPoints += 0.5;
                 totalCorrectCount++;
             }
         });
     }
 
-    // Grade Part 2
+    // Grade Part 2: 2 câu x 2.0 điểm = 4.0 điểm
+    // Đúng 4 ý: 2.0đ; Đúng 3 ý: 1.0đ; Đúng 2 ý: 0.5đ; Đúng 1 ý: 0.2đ; Đúng 0 ý: 0đ
     if (quizData.part2) {
         quizData.part2.forEach(q => {
             let correctSubCount = 0;
@@ -787,17 +771,17 @@ function gradeQuiz() {
                 if (correctChoice === 'S' && btnF) btnF.style.border = '2px solid #22c55e';
             });
 
-            if (correctSubCount === 1) earnedPoints += 0.1;
-            else if (correctSubCount === 2) earnedPoints += 0.25;
-            else if (correctSubCount === 3) earnedPoints += 0.5;
-            else if (correctSubCount === 4) earnedPoints += 1.0;
+            if (correctSubCount === 4) earnedPoints += 2.0;
+            else if (correctSubCount === 3) earnedPoints += 1.0;
+            else if (correctSubCount === 2) earnedPoints += 0.5;
+            else if (correctSubCount === 1) earnedPoints += 0.2;
         });
     }
 
-    // Grade Part 3
+    // Grade Part 3: 3 câu x 0.5 điểm = 1.5 điểm
     if (quizData.part3) {
         quizData.part3.forEach(q => {
-            const userChoice = userAnswers.part3[q.id] || "";
+            const userChoice = (userAnswers.part3[q.id] || "").trim();
             const correctAns = String(q.answer).trim();
             const inputEl = document.getElementById(`part3-q${q.id}-input`);
             const correctTextEl = document.getElementById(`part3-q${q.id}-correct`);
@@ -808,8 +792,19 @@ function gradeQuiz() {
             const cleanUser = userChoice.replace(',', '.');
             const cleanCorrect = correctAns.replace(',', '.');
 
-            if (cleanUser && parseFloat(cleanUser) === parseFloat(cleanCorrect)) {
-                earnedPoints += 1.0;
+            let isCorrect = false;
+            if (cleanUser !== "") {
+                if (cleanUser.toLowerCase() === cleanCorrect.toLowerCase()) {
+                    isCorrect = true;
+                } else if (!isNaN(parseFloat(cleanUser)) && !isNaN(parseFloat(cleanCorrect))) {
+                    if (Math.abs(parseFloat(cleanUser) - parseFloat(cleanCorrect)) < 1e-4) {
+                        isCorrect = true;
+                    }
+                }
+            }
+
+            if (isCorrect) {
+                earnedPoints += 0.5;
                 totalCorrectCount++;
                 if (inputEl) inputEl.classList.add('input-correct');
             } else {
@@ -822,7 +817,7 @@ function gradeQuiz() {
         });
     }
 
-    const finalGrade = maxPossibleScore > 0 ? ((earnedPoints / maxPossibleScore) * 10).toFixed(1) : "0.0";
+    const finalGrade = Math.min(10, Math.max(0, earnedPoints)).toFixed(1);
     const totalItems = (quizData.part1 ? quizData.part1.length : 0) + (quizData.part2 ? quizData.part2.reduce((acc, q) => acc + q.subQuestions.length, 0) : 0) + (quizData.part3 ? quizData.part3.length : 0);
 
     const scoreCircle = document.getElementById('scoreCircle');
@@ -835,7 +830,7 @@ function gradeQuiz() {
     if (icEl) icEl.textContent = totalItems - totalCorrectCount;
 
     const gtEl = document.getElementById('gradeText');
-    if (gtEl) gtEl.textContent = `${earnedPoints.toFixed(2)}/${maxPossibleScore}`;
+    if (gtEl) gtEl.textContent = `${finalGrade}/10`;
 
     let titleText = "Cố Gắng Lên!";
     let descText = "Hãy ôn tập lại lý thuyết và xem kĩ lời giải chi tiết bên dưới nhé.";
