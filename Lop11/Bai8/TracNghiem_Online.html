@@ -7,13 +7,13 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bài 8: Mô tả sóng - Trắc Nghiệm Online | Vật lí 11</title>
+    <title>📖 Bài 8: Mô Tả Sóng (Vật lí 11) - Trắc Nghiệm Online | Vatli102.com</title>
     <script>
         if (!window.location.pathname.endsWith('/') && !window.location.pathname.endsWith('.html')) {
             window.history.replaceState(null, '', window.location.pathname + '/' + window.location.search);
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
@@ -39,16 +39,6 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-dark); line-height: 1.6; padding-bottom: 0; }
-
-        /* Đảm bảo công thức MathJax không bao giờ dính chữ */
-        mjx-container {
-            margin: 0 0.35em !important;
-            display: inline-block !important;
-        }
-        mjx-container[display="true"] {
-            margin: 1em 0 !important;
-            display: block !important;
-        }
 
         /* Sticky Header Navigation Bar */
         .sticky-header {
@@ -87,28 +77,9 @@
             padding: 2.2rem 1.5rem; border-radius: 20px; text-align: center; margin-bottom: 20px;
             box-shadow: 0 10px 25px rgba(55,48,163,0.25);
         }
-        .exam-banner h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .badge-exam { display: inline-block; background: rgba(255,255,255,0.2); padding: 5px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 700; margin-top: 6px; }
-
-        /* Sticky Countdown Timer Bar */
-        .sticky-timer-bar {
-            position: sticky; top: 58px; z-index: 990;
-            background: #ffffff; border: 1px solid #c7d2fe; box-shadow: 0 4px 15px rgba(79,70,229,0.1);
-            padding: 10px 18px; margin-bottom: 20px; border-radius: 14px; display: none;
-        }
-        .timer-bar-content {
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
-        }
-        .timer-student-tag {
-            font-weight: 700; font-size: 0.92rem; color: #1e1b4b; display: flex; align-items: center; gap: 6px;
-        }
-        .timer-badge {
-            display: flex; align-items: center; gap: 8px; background: #eef2ff; padding: 6px 16px;
-            border-radius: 20px; border: 1px solid #c7d2fe;
-        }
-        .timer-digits {
-            font-size: 1.25rem; font-weight: 800; color: #dc2626; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.5px;
-        }
+        .exam-banner h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; }
+        .exam-banner p { font-size: 0.95rem; color: #c7d2fe; }
+        .badge-exam { display: inline-block; background: rgba(255,255,255,0.2); padding: 4px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; margin-top: 10px; }
 
         .login-card {
             background: white; border-radius: 16px; padding: 30px 20px; text-align: center;
@@ -131,643 +102,777 @@
 
         .question-card {
             background: white; border-radius: 14px; padding: 20px; margin-bottom: 20px;
-            border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
-        .q-title { font-weight: 700; font-size: 1rem; color: #0f172a; margin-bottom: 15px; }
-        .q-score-badge { float: right; background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; }
+        .question-title { font-weight: 700; font-size: 1.02rem; color: var(--text-dark); margin-bottom: 14px; line-height: 1.65; }
+        .question-img { max-width: 100%; max-height: 380px; border-radius: 10px; margin: 14px auto; display: block; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #cbd5e1; }
 
-        /* Options for Part 1 */
-        .option-list { display: flex; flex-direction: column; gap: 10px; }
-        .option-item {
-            display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px;
-            border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s;
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media (min-width: 600px) { .options-grid { grid-template-columns: 1fr 1fr; } }
+        
+        .option-card {
+            background: #f8fafc; border: 1.5px solid var(--border); padding: 12px 15px; border-radius: 10px;
+            cursor: pointer; font-size: 0.95rem; text-align: left; transition: all 0.15s; display: flex; align-items: center; gap: 10px;
+            color: var(--text-dark);
         }
-        .option-item:hover { background-color: #f1f5f9; border-color: #cbd5e1; }
-        .option-item input[type="radio"] { margin-top: 4px; }
-        .option-label { flex: 1; font-size: 0.95rem; }
+        .option-card:hover { background: #f1f5f9; border-color: rgba(79, 70, 229, 0.4); }
+        .option-card.selected { background: #e0e7ff; border-color: var(--primary); font-weight: 700; color: #3730a3; }
+        .option-card.correct { border-color: #22c55e !important; background: #dcfce7 !important; color: #15803d !important; }
+        .option-card.incorrect { border-color: #ef4444 !important; background: #fee2e2 !important; color: #b91c1c !important; }
 
-        /* True/False Table for Part 2 */
-        .tf-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .tf-table th, .tf-table td { padding: 10px 12px; border: 1px solid var(--border); font-size: 0.92rem; }
-        .tf-table th { background: #f8fafc; font-weight: 700; text-align: center; }
-        .tf-table td:nth-child(2), .tf-table td:nth-child(3) { text-align: center; width: 85px; }
-
-        /* Short Answer for Part 3 */
-        .short-ans-group { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
-        .short-ans-input {
-            width: 140px; padding: 8px 12px; font-size: 1.1rem; font-weight: 700;
-            border: 2px solid #cbd5e1; border-radius: 8px; text-align: center; outline: none;
-            font-family: 'JetBrains Mono', monospace; color: #1e1b4b;
+        .option-letter {
+            background: white; border: 1px solid #cbd5e1; width: 28px; height: 28px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.82rem; flex-shrink: 0;
         }
-        .short-ans-input:focus { border-color: var(--primary); }
+        .option-card.selected .option-letter { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .tf-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 8px; border-bottom: 1px solid var(--border); gap: 10px; line-height: 1.5; }
+        @media (max-width: 600px) {
+            .tf-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .tf-buttons { align-self: flex-end; }
+        }
+        .tf-buttons { display: flex; gap: 8px; flex-shrink: 0; }
+        .tf-btn { padding: 6px 16px; border-radius: 8px; border: 1.5px solid var(--border); background: white; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.15s; }
+        .tf-btn.selected-true { background: #dcfce7; border-color: #22c55e; color: #15803d; }
+        .tf-btn.selected-false { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
+
+        .short-answer-input {
+            width: 100%; max-width: 250px; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.95rem; outline: none;
+        }
+        .short-answer-input.input-correct { border-color: #22c55e !important; background: #f0fdf4 !important; }
+        .short-answer-input.input-incorrect { border-color: #ef4444 !important; background: #fef2f2 !important; }
 
         .explanation-box {
-            background: #f0fdf4; border-left: 4px solid #22c55e; padding: 12px 16px;
-            border-radius: 0 8px 8px 0; margin-top: 15px; font-size: 0.9rem; color: #166534; display: none;
+            background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 14px 16px;
+            margin-top: 15px; font-size: 0.9rem; color: #0369a1; display: none; line-height: 1.6;
         }
 
-        /* Result Card */
-        .result-card {
+        .results-panel {
             background: white; border-radius: 20px; padding: 30px; text-align: center;
-            border: 2px solid #c7d2fe; box-shadow: 0 15px 35px rgba(79,70,229,0.15); margin-top: 30px; display: none;
+            border: 2px solid var(--primary); box-shadow: 0 15px 35px rgba(79,70,229,0.15); margin-top: 30px; display: none;
         }
-        .score-big { font-size: 3.5rem; font-weight: 800; color: #4f46e5; font-family: 'JetBrains Mono', monospace; line-height: 1; }
-        .score-detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 25px 0; }
-        @media (max-width: 600px) { .score-detail-grid { grid-template-columns: 1fr; } }
-        .score-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 15px; }
-        .score-box-num { font-size: 1.5rem; font-weight: 800; color: #0f172a; }
-        .score-box-label { font-size: 0.82rem; color: #64748b; font-weight: 600; margin-top: 4px; }
+        .score-circle {
+            width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            margin: 0 auto 15px auto; box-shadow: 0 8px 20px rgba(79,70,229,0.3);
+            font-size: 2.2rem; font-weight: 800; line-height: 1;
+        }
+        .score-title { font-size: 1.4rem; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
+        .score-desc { font-size: 0.95rem; color: #64748b; margin-bottom: 20px; }
 
-        .btn-submit {
-            background: linear-gradient(135deg, #059669, #10b981); color: white; border: none;
-            padding: 14px 40px; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer;
-            box-shadow: 0 6px 20px rgba(16,185,129,0.3); transition: all 0.2s;
-        }
-        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(16,185,129,0.4); }
+        .details-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 15px; margin-bottom: 20px; }
+        @media (max-width: 480px) { .details-summary { grid-template-columns: 1fr; } }
+        .summary-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+        .summary-num { font-size: 1.4rem; font-weight: 800; margin-bottom: 2px; }
+        .summary-label { font-size: 0.8rem; color: #64748b; }
 
-        .btn-action-quiz {
-            background: #e0e7ff; color: #4338ca; border: 1px solid #c7d2fe; text-decoration: none;
-            padding: 10px 20px; border-radius: 10px; font-weight: 700; display: inline-flex; align-items: center;
-            gap: 6px; font-size: 0.9rem; transition: all 0.2s;
-        }
-        .btn-action-quiz:hover { background: #c7d2fe; }
+        .competency-tag { font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; margin-right: 0.5rem; vertical-align: middle; }
+        .tag-ntvl { background: #e0e7ff; color: #4338ca; border: 1px solid #c7d2fe; }
+        .tag-thtn { background: #ecfeff; color: #0e7490; border: 1px solid #c5f2f7; }
+        .tag-vdkt { background: #d1fae5; color: #047857; border: 1px solid #a7f3d0; }
+
+        .progress-container { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; }
+        .progress-bar-bg { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #4f46e5, #06b6d4); transition: width 0.3s ease; }
+        .progress-text { display: flex; justify-content: space-between; font-size: 0.85rem; color: #64748b; margin-top: 6px; font-weight: 600; }
 
         /* Site Footer */
         .site-footer {
             width: 100%; text-align: center; padding: 25px 15px; background: #ffffff;
-            border-top: 1px solid var(--border); margin-top: 50px; color: #64748b; font-size: 0.88rem;
+            border-top: 1px solid var(--border); margin-top: 40px; color: #64748b; font-size: 0.88rem;
         }
+        .footer-container { max-width: 920px; margin: 0 auto; }
+        .footer-links { margin-top: 8px; font-size: 0.82rem; }
+        .footer-links a { color: #4f46e5; text-decoration: none; margin: 0 4px; transition: color 0.2s; }
+        .footer-links a:hover { text-decoration: underline; color: #3730a3; }
     </style>
 </head>
 <body class="tex2jax_ignore">
 
-    <!-- 🌐 Header Bar -->
-    <header class="sticky-header">
-        <div class="header-container">
-            <a href="/" class="site-logo">
-                <img src="/favicon.svg" alt="Logo" class="logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%234f46e5\'/><text x=\'50\' y=\'65\' font-size=\'45\' text-anchor=\'middle\' fill=\'white\' font-family=\'sans-serif\' font-weight=\'bold\'>V</text></svg>';">
-                <span class="logo-text">Vatli102.com</span>
-            </a>
-            <nav class="nav-links">
-                <a href="/" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
-                <a href="Baigiang.html" class="nav-item"><i class="fa-solid fa-book-open"></i> Đọc bài giảng</a>
-            </nav>
-        </div>
-    </header>
+<!-- 🌐 Sticky Header Navigation Bar -->
+<header class="sticky-header">
+    <div class="header-container">
+        <a href="/" class="site-logo">
+            <img src="/favicon.svg" alt="Logo" class="logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%234f46e5\'/><text x=\'50\' y=\'65\' font-size=\'45\' text-anchor=\'middle\' fill=\'white\' font-family=\'sans-serif\' font-weight=\'bold\'>V</text></svg>';">
+            <span class="logo-text">Vatli102.com</span>
+        </a>
+        <nav class="nav-links">
+            <a href="/" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
+            <a href="/gioi-thieu.html" class="nav-item"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a>
+            <a href="/lien-he.html" class="nav-item"><i class="fa-solid fa-envelope"></i> Liên hệ</a>
+        </nav>
+    </div>
+</header>
 
-    <div class="quiz-container">
-        <div class="exam-banner">
-            <h1>Bài 8: Mô tả sóng - Trắc Nghiệm Online</h1>
-            <span class="badge-exam">⏱ Thời gian: 20 phút | Thang điểm: 10,0</span>
-        </div>
-
-        <!-- Khung đếm ngược thời gian làm bài (Sticky Timer Bar) -->
-        <div id="stickyTimerBar" class="sticky-timer-bar">
-            <div class="timer-bar-content">
-                <div class="timer-student-tag">
-                    <i class="fa-solid fa-user-graduate text-indigo-600"></i>
-                    <span id="timerStudentDisplay">Thí sinh: ---</span>
-                </div>
-                <div class="timer-badge">
-                    <i class="fa-solid fa-clock text-indigo-600"></i>
-                    <span style="font-size: 0.85rem; font-weight: 700; color: #4338ca;">Thời gian còn lại:</span>
-                    <span id="timerCountdown" class="timer-digits">20:00</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Khung nhập thông tin học sinh -->
-        <div id="studentLoginCard" class="login-card">
-            <div style="width: 50px; height: 50px; background: #e0e7ff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 12px auto;">
-                <i class="fa-solid fa-user-graduate"></i>
-            </div>
-            <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; color: #0f172a;">THÔNG TIN HỌC SINH</h2>
-            <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 20px;">Vui lòng nhập đầy đủ Họ tên và Lớp để bắt đầu làm bài và lưu kết quả học tập.</p>
-            
-            <div class="form-group">
-                <label>Họ và tên học sinh <span style="color:red;">*</span></label>
-                <input type="text" id="studentName" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
-            </div>
-            <div class="form-group">
-                <label>Lớp <span style="color:red;">*</span></label>
-                <input type="text" id="studentClass" class="form-control" placeholder="Ví dụ: 11A1" required>
-            </div>
-            <button type="button" class="btn-start" onclick="startQuizExam()">🚀 BẮT ĐẦU LÀM BÀI (20 PHÚT)</button>
-        </div>
-
-        <!-- Khung nội dung bài thi tương tác -->
-        <div id="quizContent" class="tex2jax_process" style="display: none;">
-            
-            <!-- PHẦN I -->
-            <div class="section-header">
-                <i class="fa-solid fa-circle-check"></i> PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn (4,5 điểm)
-            </div>
-            <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 15px;"><i>Thí sinh trả lời từ Câu 1 đến Câu 9. Mỗi câu trả lời đúng được 0,5 điểm.</i></p>
-
-            <!-- Câu 1 -->
-            <div class="question-card">
-                <span class="q-score-badge">0,5 điểm</span>
-                <div class="q-title"><strong>Câu 1:</strong> Sóng cơ là</div>
-                <div class="option-list">
-                    <label class="option-item"><input type="radio" name="q1" value="A"><span class="option-label">A. sự lan truyền vật chất trong không gian theo thời gian.</span></label>
-                    <label class="option-item"><input type="radio" name="q1" value="B"><span class="option-label">B. sự lan truyền dao động cơ trong môi trường vật chất đàn hồi theo thời gian.</span></label>
-                    <label class="option-item"><input type="radio" name="q1" value="C"><span class="option-label">C. chuyển động tịnh tiến của các phần tử môi trường từ nguồn sóng ra xa.</span></label>
-                    <label class="option-item"><input type="radio" name="q1" value="D"><span class="option-label">D. sự lan truyền của dòng điện và điện tích trong môi trường dẫn.</span></label>
-                </div>
-                <div id="exp1" class="explanation-box">
-                    <strong>💡 Lời giải chi tiết:</strong> Sóng cơ là sự lan truyền dao động cơ trong môi trường vật chất đàn hồi theo thời gian. $\Rightarrow$ <strong>Đáp án B</strong>.
-                </div>
-            </div>
-
-            <!-- Câu 2 -->
-            <div class="question-card">
-                <span class="q-score-badge">0,5 điểm</span>
-                <div class="q-title"><strong>Câu 2:</strong> Trong quá trình sóng cơ lan truyền qua một môi trường đàn hồi đồng tính, các phần tử môi trường</div>
-                <div class="option-list">
-                    <label class="option-item"><input type="radio" name="q2" value="A"><span class="option-label">A. chuyển động tịnh tiến theo phương truyền sóng với tốc độ bằng tốc độ truyền sóng.</span></label>
-                    <label class="option-item"><input type="radio" name="q2" value="B"><span class="option-label">B. dao động điều hòa quanh vị trí cân bằng cố định của chúng.</span></label>
-                    <label class="option-item"><input type="radio" name="q2" value="C"><span class="option-label">C. bị cuốn trôi ra xa theo chiều truyền năng lượng của sóng.</span></label>
-                    <label class="option-item"><input type="radio" name="q2" value="D"><span class="option-label">D. chuyển động tròn đều quanh trục truyền sóng.</span></label>
-                </div>
-                <div id="exp2" class="explanation-box">
-                    <strong>💡 Lời giải chi tiết:</strong> Khi sóng truyền qua, các phần tử của môi trường chỉ dao động điều hòa quanh vị trí cân bằng cố định của chúng chứ không chuyển động tịnh tiến cùng sóng. $\Rightarrow$ <strong>Đáp án B</strong>.
-                </div>
-            </div>
-
-            <!-- Câu 3 -->
-            <div class="question-card">
-                <span class="q-score-badge">0,5 điểm</span>
-                <div class="q-title"><strong>Câu 3:</strong> Sóng cơ học có thể lan truyền được trong các môi trường nào sau đây?</div>
-                <div class="option-list">
-                    <label class="option-item"><input type="radio" name="q3" value="A"><span class="option-label">A. Chỉ lan truyền được trong chân không và chất khí.</span></label>
-                    <label class="option-item"><input type="radio" name="q3" value="B"><span class="option-label">B. Lan truyền được trong các môi trường vật chất rắn, lỏng, khí và không truyền được trong chân không.</span></label>
-                    <label class="option-item"><input type="radio" name="q3" value="C"><span class="option-label">C. Chỉ lan truyền được trong chất rắn và chất lỏng, không truyền được trong chất khí.</span></label>
-                    <label class="option-item"><input type="radio" name="q3" value="D"><span class="option-label">D. Lan truyền được trong mọi môi trường kể cả chân không tuyệt đối.</span></label>
-                </div>
-                <div id="exp3" class="explanation-box">
-                    <strong>💡 Lời giải chi tiết:</strong> Sóng cơ cần môi trường vật chất đàn hồi (chất rắn, chất lỏng, chất khí) để truyền dao động giữa các phân tử, do đó sóng cơ không truyền được trong chân không. $\Rightarrow$ <strong>Đáp án B</strong>.
-                </div>
-            </div>
-
-            <!-- Câu 4 -->
-            <div class="question-card">
-                <span class="q-score-badge">0,5 điểm</span>
-                <div class="q-title"><strong>Câu 4:</strong> Khi một sóng cơ hình sin truyền từ môi trường không khí vào môi trường nước, đại lượng nào sau đây của sóng <strong>không</strong> thay đổi?</div>
-                <div class="option-list">
-                    <label class="option-item"><input type="radio" name="q4" value="A"><span class="option-label">A. Tốc độ truyền sóng.</span></label>
-                    <label class="option-item"><input type="radio" name="q4" value="B"><span class="option-label">B. Bước sóng.</span></label>
-                    <label class="option-item"><input type="radio" name="q4" value="C"><span class="option-label">C. Tần số dao động của sóng.</span></label>
-                    <label class="option-item"><input type="radio" name="q4" value="D"><span class="option-label">D. Năng lượng của sóng.</span></label>
-                </div>
-                <div id="exp4" class="explanation-box">
-                    <strong>💡 Lời giải chi tiết:</strong> Tần số $f$ và chu kì $T$ do nguồn phát sóng quyết định nên giữ nguyên không đổi khi sóng truyền qua các môi trường khác nhau. Tốc độ $v$ và bước sóng $\lambda = v/f$ thay đổi. $\Rightarrow$ <strong>Đáp án C</strong>.
-                </div>
-            </div>
-
-            <!-- Câu 5 -->
-            <div class="question-card">
-                <span class="q-score-badge">0,5 điểm</span>
-                <div class="q-title"><strong>Câu 5:</strong> Bước sóng $\lambda$ là</div>
-                <div class="option-list">
-                    <label class="option-item"><input type="radio" name="q5" value="A"><span class="option-label">A. khoảng cách giữa hai điểm bất kì trên cùng một phương truyền sóng dao động cùng pha.</span></label>
-                    <label class="option-item"><input type="radio" name="q5" value="B"><span class="option-label">B. quãng đường mà sóng truyền đi được trong khoảng thời gian bằng một chu kì dao động.</span></label>
-                    <label class="option-item"><input type="radio" name="q5" value="C"><span class="option-label">C. khoảng cách giữa hai điểm gần nhau nhất trên cùng một phương truyền sóng dao động ngược pha.</span></label>
-                    <label class="option-item"><input type="radio" name="q5" value="D"><span class="option-label">D. độ lệch pha giữa hai phần tử môi trường nằm cạnh nhau trên phương truyền sóng.</span></label>
-                </div>
-                <div id="exp5" class="explanation-box">
-                    <strong>💡 Lời giải chi tiết:</strong> Bước sóng $\lambda$ là quãng đường sóng truyền được trong một chu kì dao động: $\lambda = vT = \frac{v}{f}$, đồng thời là khoảng cách ngắn nhất giữa hai điểm trên cùng phương truyền sóng dao động cùng pha. $\Rightarrow$ <strong>Đáp án B</strong>.
-                </div>
-            </div>
-
-            <!-- Câu 6 -->
-            <div class="question-card">
-                <span class="q-score-badge">0,5 điểm</span>
-                <div class="q-title"><strong>Câu 6:</strong> Tốc độ truyền sóng cơ trong một môi trường vật chất đồng tính phụ thuộc chủ yếu vào</div>
-                <div class="option-list">
-                    <label class="option-item"><input type="radio" name="q6" value="A"><span class="option-label">A. biên độ dao động của nguồn sóng.</span></label>
-                    <label class="option-item"><input type="radio" name="q6" value="B"><span class="option-label">B. tần số dao động của nguồn sóng.</span></label>
-                    <label class="option-item"><input type="radio" name="q6" value="C"><span class="option-label">C. bản chất đàn hồi, mật độ vật chất và nhiệt độ của môi trường.</span></label>
-                    <label class="option-item"><input type="radio" name="q6" value="D"><span class="option-label">D. pha ban đầu của nguồn dao động.</span></label>
-                </div>
-                <div id="exp6" class="explanation-box">
-                    <strong>💡 Lời giải chi tiết:</strong> Tốc độ truyền sóng là đặc tính riêng của môi trường, phụ thuộc vào tính đàn hồi, mật độ phân tử và nhiệt độ của môi trường ($v_{\text{rắn}} > v_{\text{lỏng}} > v_{\text{khí}}$), không phụ thuộc vào tần số hay biên độ của sóng. $\Rightarrow$ <strong>Đáp án C</strong>.
-                </div>
-            </div>
-
-            <!-- Câu 7 -->
-            <div class="question-card">
-                <span class="q-score-badge">0,5 điểm</span>
-                <div class="q-title"><strong>Câu 7:</strong> Hai điểm nằm trên cùng một phương truyền sóng cách nhau một đoạn $d$ dao động cùng pha với nhau khi khoảng cách $d$ thỏa mãn điều kiện nào sau đây ($k \in \mathbb{Z}$)?</div>
-                <div class="option-list">
-                    <label class="option-item"><input type="radio" name="q7" value="A"><span class="option-label">A. $d = (k + 0,5)\lambda$</span></label>
-                    <label class="option-item"><input type="radio" name="q7" value="B"><span class="option-label">B. $d = k\lambda$</span></label>
-                    <label class="option-item"><input type="radio" name="q7" value="C"><span class="option-label">C. $d = (2k + 1)\frac{\lambda}{4}$</span></label>
-                    <label class="option-item"><input type="radio" name="q7" value="D"><span class="option-label">D. $d = (2k + 1)\lambda$</span></label>
-                </div>
-                <div id="exp7" class="explanation-box">
-                    <strong>💡 Lời giải chi tiết:</strong> Hai điểm trên cùng phương truyền sóng dao động cùng pha khi độ lệch pha $\Delta \varphi = \frac{2\pi d}{\lambda} = 2k\pi \iff d = k\lambda$ ($k \in \mathbb{Z}$). $\Rightarrow$ <strong>Đáp án B</strong>.
-                </div>
-            </div>
-
-            <!-- Câu 8 -->
-            <div class="question-card">
-                <span class="q-score-badge">0,5 điểm</span>
-                <div class="q-title"><strong>Câu 8:</strong> Đồ thị li độ - khoảng cách $(u - x)$ của một sóng hình sin mô tả</div>
-                <div class="option-list">
-                    <label class="option-item"><input type="radio" name="q8" value="A"><span class="option-label">A. sự biến thiên li độ của một phần tử môi trường duy nhất theo thời gian $t$.</span></label>
-                    <label class="option-item"><input type="radio" name="q8" value="B"><span class="option-label">B. hình dạng tức thời của môi trường truyền sóng tại một thời điểm $t$ xác định trong không gian.</span></label>
-                    <label class="option-item"><input type="radio" name="q8" value="C"><span class="option-label">C. sự phụ thuộc của tốc độ truyền sóng vào khoảng cách đến nguồn phát sóng.</span></label>
-                    <label class="option-item"><input type="radio" name="q8" value="D"><span class="option-label">D. quỹ đạo chuyển động tròn đều của các phân tử môi trường trong không gian 3 chiều.</span></label>
-                </div>
-                <div id="exp8" class="explanation-box">
-                    <strong>💡 Lời giải chi tiết:</strong> Đồ thị $(u - x)$ là ảnh chụp tức thời hình dạng không gian của môi trường truyền sóng tại một thời điểm $t$ cố định, có dạng hình sin tuần hoàn với chu kì không gian chính là bước sóng $\lambda$. $\Rightarrow$ <strong>Đáp án B</strong>.
-                </div>
-            </div>
-
-            <!-- Câu 9 -->
-            <div class="question-card">
-                <span class="q-score-badge">0,5 điểm</span>
-                <div class="q-title"><strong>Câu 9:</strong> Khi sóng cơ lan truyền từ một nguồn điểm ra không gian rộng lớn, biên độ dao động của các phần tử ở càng xa nguồn càng giảm dần chủ yếu là do</div>
-                <div class="option-list">
-                    <label class="option-item"><input type="radio" name="q9" value="A"><span class="option-label">A. tần số dao động của sóng bị giảm dần theo khoảng cách.</span></label>
-                    <label class="option-item"><input type="radio" name="q9" value="B"><span class="option-label">B. năng lượng sóng bị phân bố trên các mặt sóng có diện tích ngày càng lớn và bị môi trường hấp thụ một phần.</span></label>
-                    <label class="option-item"><input type="radio" name="q9" value="C"><span class="option-label">C. tốc độ truyền sóng bị giảm dần khi sóng đi ra xa nguồn.</span></label>
-                    <label class="option-item"><input type="radio" name="q9" value="D"><span class="option-label">D. chu kì dao động của phần tử môi trường tăng lên theo thời gian.</span></label>
-                </div>
-                <div id="exp9" class="explanation-box">
-                    <strong>💡 Lời giải chi tiết:</strong> Khi sóng lan truyền ra không gian rộng, năng lượng sóng từ nguồn trải rộng trên diện tích mặt sóng ngày càng lớn và một phần cơ năng bị môi trường hấp thụ (chuyển thành nhiệt), làm cho năng lượng sóng tại mỗi phần tử giảm dần kéo theo biên độ sóng giảm dần. $\Rightarrow$ <strong>Đáp án B</strong>.
-                </div>
-            </div>
-
-            <!-- PHẦN II -->
-            <div class="section-header">
-                <i class="fa-solid fa-list-check"></i> PHẦN II. Câu trắc nghiệm Đúng / Sai (4,0 điểm)
-            </div>
-            <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 15px;"><i>Thí sinh trả lời từ Câu 1 đến Câu 2. Trong mỗi ý a, b, c, d ở mỗi câu, chọn Đúng hoặc Sai. (Đúng 1 ý: 0,2đ | Đúng 2 ý: 0,5đ | Đúng 3 ý: 1,0đ | Đúng 4 ý: 2,0đ).</i></p>
-
-            <!-- Câu II.1 (Bối cảnh biển và phao) -->
-            <div class="question-card">
-                <span class="q-score-badge">2,0 điểm</span>
-                <div class="q-title"><strong>Câu 1:</strong> Tại một vùng biển ven bờ, một nhóm học sinh quan sát chuyển động của một chiếc phao cứu sinh nhỏ đang nổi bồng bềnh trên mặt nước khi có sóng biển hình sin lan truyền từ ngoài khơi vào bờ:</div>
-                <table class="tf-table">
-                    <thead>
-                        <tr>
-                            <th>Phát biểu</th>
-                            <th>Đúng</th>
-                            <th>Sai</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>a)</strong> Khi sóng truyền qua, chiếc phao chỉ dao động nhấp nhô lên xuống quanh vị trí cân bằng xác định chứ không bị sóng biển cuốn trôi tịnh tiến vào bờ.</td>
-                            <td><input type="radio" name="tf1_a" value="T"></td>
-                            <td><input type="radio" name="tf1_a" value="F"></td>
-                        </tr>
-                        <tr>
-                            <td><strong>b)</strong> Tốc độ lan truyền của gợn sóng trên mặt nước biển luôn bằng đúng tốc độ chuyển động cực đại của chiếc phao khi đi qua vị trí cân bằng.</td>
-                            <td><input type="radio" name="tf1_b" value="T"></td>
-                            <td><input type="radio" name="tf1_b" value="F"></td>
-                        </tr>
-                        <tr>
-                            <td><strong>c)</strong> Khoảng cách giữa hai ngọn sóng nhô cao liên tiếp dọc theo hướng truyền sóng vào bờ chính là độ dài của một bước sóng $\lambda$.</td>
-                            <td><input type="radio" name="tf1_c" value="T"></td>
-                            <td><input type="radio" name="tf1_c" value="F"></td>
-                        </tr>
-                        <tr>
-                            <td><strong>d)</strong> Nếu tần số của nguồn sóng ngoài khơi tăng lên gấp đôi trong khi tốc độ truyền sóng trong vùng nước ven bờ không đổi thì bước sóng của sóng biển sẽ tăng gấp hai lần.</td>
-                            <td><input type="radio" name="tf1_d" value="T"></td>
-                            <td><input type="radio" name="tf1_d" value="F"></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div id="exp_tf1" class="explanation-box">
-                    <strong>💡 Lời giải chi tiết:</strong><br>
-                    • a) <strong>ĐÚNG</strong>: Chiếc phao đóng vai trò như một phần tử môi trường, chỉ dao động nhấp nhô quanh VTCB cố định trên mặt nước, không bị sóng cuốn trôi tịnh tiến theo phương truyền sóng.<br>
-                    • b) <strong>SAI</strong>: Tốc độ truyền sóng $v$ là hằng số đặc trưng cho môi trường, trong khi tốc độ dao động của phao $v_{\text{pt}} = u'(t)$ biến thiên điều hòa theo thời gian và đạt cực đại bằng $\omega A$ khi qua VTCB.<br>
-                    • c) <strong>ĐÚNG</strong>: Khoảng cách giữa hai ngọn sóng (đỉnh sóng) liền kề đo dọc theo phương truyền sóng luôn bằng đúng một bước sóng $\lambda$.<br>
-                    • d) <strong>SAI</strong>: Vì $\lambda = \frac{v}{f}$, khi tốc độ $v$ không đổi và tần số $f$ tăng gấp 2 thì bước sóng $\lambda$ phải giảm đi 2 lần.
-                </div>
-            </div>
-
-            <!-- Câu II.2 (Bối cảnh sóng âm loa sân trường) -->
-            <div class="question-card">
-                <span class="q-score-badge">2,0 điểm</span>
-                <div class="q-title"><strong>Câu 2:</strong> Trong một buổi sinh hoạt dưới cờ tại sân trường phẳng lặng, loa phát thanh đặt ở lễ đài phát ra một âm thanh (sóng âm hình sin) có tần số $f$ xác định lan truyền trong không khí đến hai vị trí học sinh $M$ và $N$ cùng nằm trên đường thẳng nối với loa (sóng truyền từ loa qua $M$ rồi đến $N$, khoảng cách $MN = d$):</div>
-                <table class="tf-table">
-                    <thead>
-                        <tr>
-                            <th>Phát biểu</th>
-                            <th>Đúng</th>
-                            <th>Sai</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>a)</strong> Quá trình sóng âm truyền từ loa đến tai các học sinh là quá trình lan truyền dao động và năng lượng âm trong không khí, các phân tử không khí không chuyển động tịnh tiến từ loa đến tai học sinh.</td>
-                            <td><input type="radio" name="tf2_a" value="T"></td>
-                            <td><input type="radio" name="tf2_a" value="F"></td>
-                        </tr>
-                        <tr>
-                            <td><strong>b)</strong> Khi sóng âm truyền từ vị trí $M$ đến vị trí $N$, dao động của lớp không khí tại $N$ luôn sớm pha hơn dao động của lớp không khí tại $M$ một góc $\Delta \varphi = \frac{2\pi d}{\lambda}$.</td>
-                            <td><input type="radio" name="tf2_b" value="T"></td>
-                            <td><input type="radio" name="tf2_b" value="F"></td>
-                        </tr>
-                        <tr>
-                            <td><strong>c)</strong> Nếu khoảng cách giữa hai học sinh thỏa mãn $MN = 1,5\lambda$ thì tại mọi thời điểm, dao động của lớp không khí tại $M$ và tại $N$ luôn ngược pha nhau.</td>
-                            <td><input type="radio" name="tf2_c" value="T"></td>
-                            <td><input type="radio" name="tf2_c" value="F"></td>
-                        </tr>
-                        <tr>
-                            <td><strong>d)</strong> Khi sóng âm từ sân trường truyền qua cửa kính đóng kín vào bên trong lớp học, tần số của sóng âm bị thay đổi do tốc độ truyền âm trong kính lớn hơn trong không khí.</td>
-                            <td><input type="radio" name="tf2_d" value="T"></td>
-                            <td><input type="radio" name="tf2_d" value="F"></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div id="exp_tf2" class="explanation-box">
-                    <strong>💡 Lời giải chi tiết:</strong><br>
-                    • a) <strong>ĐÚNG</strong>: Quá trình truyền sóng âm là quá trình truyền dao động và năng lượng âm qua môi trường không khí; các phân tử khí chỉ dao động tại chỗ quanh VTCB.<br>
-                    • b) <strong>SAI</strong>: Sóng truyền từ $M$ đến $N$ nên dao động tại $N$ diễn ra muộn hơn dao động tại $M$ một khoảng thời gian $\Delta t = d/v$, do đó dao động tại $N$ trễ pha hơn tại $M$ một góc $\Delta \varphi = \frac{2\pi d}{\lambda}$.<br>
-                    • c) <strong>ĐÚNG</strong>: Khoảng cách $MN = 1,5\lambda = 3\frac{\lambda}{2}$ (số bán nguyên lần bước sóng) nên độ lệch pha $\Delta \varphi = \frac{2\pi \cdot 1,5\lambda}{\lambda} = 3\pi\text{ rad}$ (số lẻ lần $\pi$), do đó hai điểm luôn dao động ngược pha nhau.<br>
-                    • d) <strong>SAI</strong>: Tần số $f$ của sóng âm là đại lượng bất biến do nguồn loa quyết định, không thay đổi khi truyền qua bất kì môi trường nào.
-                </div>
-            </div>
-
-            <!-- PHẦN III -->
-            <div class="section-header">
-                <i class="fa-solid fa-pen-to-square"></i> PHẦN III. Câu trắc nghiệm trả lời ngắn (1,5 điểm)
-            </div>
-            <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 15px;"><i>Thí sinh trả lời từ Câu 1 đến Câu 3. Mỗi câu trả lời đúng được 0,5 điểm. Đáp số tối đa 4 ký tự.</i></p>
-
-            <!-- Câu III.1 -->
-            <div class="question-card">
-                <span class="q-score-badge">0,5 điểm</span>
-                <div class="q-title"><strong>Câu 1:</strong> Một nguồn dao động tạo ra sóng cơ hình sin lan truyền trên một sợi dây dài với chu kì $T = 0,25\text{ s}$. Trong khoảng thời gian $2\text{ s}$, sóng truyền đi được một quãng đường $8\text{ m}$. Tính bước sóng của sóng trên dây theo đơn vị mét (m).</div>
-                <div class="short-ans-group">
-                    <label><strong>Đáp số của bạn:</strong></label>
-                    <input type="text" id="sa1" class="short-ans-input" placeholder="..." maxlength="4">
-                    <span style="font-size: 0.9rem; color: #64748b;">(m)</span>
-                </div>
-                <div id="exp_sa1" class="explanation-box">
-                    <strong>💡 Lời giải chi tiết:</strong> Tốc độ truyền sóng trên dây: $v = \frac{s}{t} = \frac{8}{2} = 4\text{ m/s}$.<br>Bước sóng trên dây: $\lambda = v \cdot T = 4 \cdot 0,25 = 1\text{ m}$. $\Rightarrow$ <strong>Đáp số: 1</strong>.
-                </div>
-            </div>
-
-            <!-- Câu III.2 -->
-            <div class="question-card">
-                <span class="q-score-badge">0,5 điểm</span>
-                <div class="q-title"><strong>Câu 2:</strong> Một sóng cơ hình sin có tần số $f = 50\text{ Hz}$ truyền trên một sợi dây đàn hồi với tốc độ $v = 20\text{ m/s}$. Khoảng cách ngắn nhất giữa hai điểm trên cùng một phương truyền sóng dao động ngược pha nhau bằng bao nhiêu mét (m)?</div>
-                <div class="short-ans-group">
-                    <label><strong>Đáp số của bạn:</strong></label>
-                    <input type="text" id="sa2" class="short-ans-input" placeholder="..." maxlength="4">
-                    <span style="font-size: 0.9rem; color: #64748b;">(m)</span>
-                </div>
-                <div id="exp_sa2" class="explanation-box">
-                    <strong>💡 Lời giải chi tiết:</strong> Bước sóng trên dây: $\lambda = \frac{v}{f} = \frac{20}{50} = 0,4\text{ m}$.<br>Khoảng cách ngắn nhất giữa hai điểm dao động ngược pha trên cùng phương truyền sóng: $d_{\min} = \frac{\lambda}{2} = \frac{0,4}{2} = 0,2\text{ m}$. $\Rightarrow$ <strong>Đáp số: 0,2</strong>.
-                </div>
-            </div>
-
-            <!-- Câu III.3 -->
-            <div class="question-card">
-                <span class="q-score-badge">0,5 điểm</span>
-                <div class="q-title"><strong>Câu 3:</strong> Một người quan sát thấy một chiếc phao trên mặt hồ nhấp nhô lên xuống tại chỗ 10 lần trong khoảng thời gian $18\text{ s}$. Khoảng cách giữa 2 ngọn sóng nhô cao liên tiếp là $4\text{ m}$. Tốc độ truyền sóng trên mặt hồ bằng bao nhiêu mét trên giây (m/s)?</div>
-                <div class="short-ans-group">
-                    <label><strong>Đáp số của bạn:</strong></label>
-                    <input type="text" id="sa3" class="short-ans-input" placeholder="..." maxlength="4">
-                    <span style="font-size: 0.9rem; color: #64748b;">(m/s)</span>
-                </div>
-                <div id="exp_sa3" class="explanation-box">
-                    <strong>💡 Lời giải chi tiết:</strong> Chiếc phao nhô lên 10 lần tương ứng với 9 chu kì dao động: $9T = 18\text{ s} \implies T = 2\text{ s}$.<br>Khoảng cách giữa hai ngọn sóng liên tiếp chính là bước sóng: $\lambda = 4\text{ m}$.<br>Tốc độ truyền sóng trên mặt hồ: $v = \frac{\lambda}{T} = \frac{4}{2} = 2\text{ m/s}$. $\Rightarrow$ <strong>Đáp số: 2</strong>.
-                </div>
-            </div>
-
-            <!-- Nút nộp bài -->
-            <div style="text-align: center; margin: 40px 0;">
-                <button type="button" class="btn-submit" id="btnSubmitQuiz" onclick="gradeQuiz()">
-                    <i class="fa-solid fa-paper-plane"></i> NỘP BÀI THI & XEM ĐIỂM
-                </button>
-            </div>
-
-            <!-- Bảng kết quả bài thi -->
-            <div id="resultCard" class="result-card">
-                <div style="font-size: 1.1rem; font-weight: 700; color: #64748b; margin-bottom: 5px;" id="studentResultInfo"></div>
-                <h2 style="font-size: 1.8rem; font-weight: 800; color: #0f172a; margin-bottom: 15px;">KẾT QUẢ BÀI THI</h2>
-                <div class="score-big" id="finalScoreDisplay">0.0</div>
-                <div style="font-weight: 700; color: #4f46e5; margin-top: 5px; font-size: 1.1rem;">Thang điểm 10,0</div>
-
-                <div class="score-detail-grid">
-                    <div class="score-box">
-                        <div class="score-box-num" id="p1Score" style="color: #0284c7;">0.0 / 4.5</div>
-                        <div class="score-box-label">Phần I (Nhiều lựa chọn)</div>
-                    </div>
-                    <div class="score-box">
-                        <div class="score-box-num" id="p2Score" style="color: #4f46e5;">0.0 / 4.0</div>
-                        <div class="score-box-label">Phần II (Đúng / Sai)</div>
-                    </div>
-                    <div class="score-box">
-                        <div class="score-box-num" id="p3Score" style="color: #059669;">0.0 / 1.5</div>
-                        <div class="score-box-label">Phần III (Trả lời ngắn)</div>
-                    </div>
-                </div>
-
-                <p id="feedbackText" style="font-size: 1.05rem; font-weight: 600; color: #334155; margin-bottom: 25px; text-align: center;"></p>
-
-                <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
-                    <button type="button" class="btn-action-quiz" onclick="location.reload()">
-                        <i class="fa-solid fa-rotate-right"></i> Làm lại bài
-                    </button>
-                    <a href="Baigiang.html" class="btn-action-quiz">
-                        <i class="fa-solid fa-book-open"></i> Đọc lại bài giảng
-                    </a>
-                    <a href="/" class="btn-action-quiz" style="background: #4f46e5; color: white; border-color: #4338ca;">
-                        <i class="fa-solid fa-house"></i> Về Trang chủ
-                    </a>
-                </div>
-            </div>
-
-        </div>
+<div class="quiz-container">
+    <div class="exam-banner">
+        <h1>📖 Bài 8: Mô Tả Sóng (Vật lí 11)</h1>
+        <span class="badge-exam">⏱ Thời gian làm bài: 15 Phút | Trắc Nghiệm Online 3 Phần (Chuẩn 10,0 điểm)</span>
     </div>
 
-    <!-- 📜 Site Footer -->
-    <footer class="site-footer">
-        <div class="footer-container">
-            <p>&copy; 2026 Vatli102 (vatli102.com). Nền tảng học tập Vật lí thông minh GDPT 2018.</p>
+    <!-- KHUNG NHẬP THÔNG TIN HỌC SINH -->
+    <div id="studentLoginCard" class="login-card">
+        <div style="width: 50px; height: 50px; background: #e0e7ff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 12px auto;">📝</div>
+        <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; color: #0f172a;">THÔNG TIN HỌC SINH LÀM BÀI</h2>
+        <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 20px;">Điền Họ tên và Lớp để bắt đầu làm bài thi & tự động lưu điểm số.</p>
+        
+        <div class="form-group">
+            <label>Họ và tên học sinh <span style="color:red;">*</span></label>
+            <input type="text" id="studentName" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
         </div>
-    </footer>
+        <div class="form-group">
+            <label>Lớp <span style="color:red;">*</span></label>
+            <input type="text" id="studentClass" class="form-control" placeholder="Ví dụ: 11A1" required>
+        </div>
+        <button type="button" class="btn-start" id="btnStartQuiz" onclick="startQuizExam()">🚀 BẮT ĐẦU LÀM BÀI THI</button>
+    </div>
 
-    <script>
-        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
-        const LESSON_NAME = "Bài 8: Mô tả sóng - Vật lí 11";
+    <!-- KHUNG BÀI THI TƯƠNG TÁC (ẨN 100% CHO ĐẾN KHI NHẬP TÊN LỚP VA BẤM BẮT ĐẦU) -->
+    <div id="quizContent" class="tex2jax_process" style="display: none;">
+        <div class="progress-container">
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+            <div class="progress-text">
+                <span>Tiến độ làm bài</span>
+                <span id="progressLabel">0/20 ý hoàn thành</span>
+            </div>
+        </div>
 
-        const correctP1 = {
-            1: "B", 2: "B", 3: "B", 4: "C", 5: "B",
-            6: "C", 7: "B", 8: "B", 9: "B"
-        };
+        <div class="section-header">📌 PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn (Suy luận lí thuyết – 9 câu – 4,5 điểm)</div>
+        <div id="part1Container"></div>
 
-        const correctP2 = {
-            1: { a: "T", b: "F", c: "T", d: "F" },
-            2: { a: "T", b: "F", c: "T", d: "F" }
-        };
+        <div class="section-header">📌 PHẦN II. Câu trắc nghiệm Đúng / Sai (Suy luận lí thuyết nâng cao – 2 câu – 4,0 điểm)</div>
+        <div id="part2Container"></div>
 
-        const correctP3 = {
-            1: ["1", "1.0", "1,0", "1 m"],
-            2: ["0,2", "0.2", "0,2m", "0.2m"],
-            3: ["2", "2.0", "2,0", "2 m/s", "2m/s"]
-        };
+        <div class="section-header">📌 PHẦN III. Câu trắc nghiệm trả lời ngắn (Tính toán định lượng – 3 câu – 1,5 điểm)</div>
+        <div id="part3Container"></div>
 
-        let timeLeft = 20 * 60; // 20 phút = 1200 giây
-        let timerInterval = null;
-        let isQuizSubmitted = false;
+        <!-- NÚT NỘP BÀI THI CHỈ XUẤT HIỆN Ở CUỐI BÀI THI SAU KHI LÀM XONG -->
+        <div style="text-align: center; margin-top: 30px;">
+            <button type="button" id="btnSubmitQuiz" onclick="gradeQuiz()" style="background: linear-gradient(135deg, #059669, #10b981); color: white; border: none; padding: 14px 40px; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; box-shadow: 0 6px 20px rgba(16,185,129,0.3);">
+                ✅ NỘP BÀI THI & CHẤM ĐIỂM
+            </button>
+        </div>
 
-        function updateTimerDisplay() {
-            const mins = Math.floor(timeLeft / 60);
-            const secs = timeLeft % 60;
-            const formatted = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-            const timerEl = document.getElementById("timerCountdown");
-            if (timerEl) {
-                timerEl.innerText = formatted;
-                if (timeLeft <= 180) {
-                    timerEl.style.color = "#ef4444";
+        <!-- BẢNG ĐIỂM KẾT QUẢ HIỂN THỊ NGAY DƯỚI NÚT NỘP BÀI KHI BẤM NỘP -->
+        <div id="resultsPanel" class="results-panel">
+            <div class="score-circle">
+                <span id="scoreCircle">0.0</span>
+            </div>
+            <div id="scoreTitle" class="score-title">Kết Quả Bài Làm</div>
+            <div id="scoreDesc" class="score-desc">Chúc mừng bạn đã hoàn thành bài tập trắc nghiệm!</div>
+
+            <div class="details-summary">
+                <div class="summary-card">
+                    <div class="summary-num" id="correctCountText" style="color: #22c55e;">0</div>
+                    <div class="summary-label">Ý Đúng</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-num" id="incorrectCountText" style="color: #ef4444;">0</div>
+                    <div class="summary-label">Ý Sai</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-num" id="gradeText" style="color: #4f46e5;">0.0/10</div>
+                    <div class="summary-label">Điểm Số</div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
+                <button type="button" onclick="location.reload()" style="background: #f1f5f9; color: #4f46e5; border: 1px solid #cbd5e1; padding: 10px 18px; border-radius: 10px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem;">
+                    🔄 Làm Lại Bài Thi
+                </button>
+                <a href="../Bai7/TracNghiem_Online.html" style="background: #fef3c7; color: #b45309; border: 1px solid #fde68a; text-decoration: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem;">
+                    ⬅️ Bài Trước: Bài 7
+                </a>
+                <a href="Baigiang.html" style="background: #e0e7ff; color: #4338ca; border: 1px solid #c7d2fe; text-decoration: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem;">
+                    📖 Đọc Bài Giảng
+                </a>
+                <a href="../Bai9/TracNghiem_Online.html" style="background: linear-gradient(135deg, #06b6d4, #0891b2); color: white; text-decoration: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(6,182,212,0.25);">
+                    ➡️ Bài Tiếp Theo: Bài 9
+                </a>
+                <a href="/" style="background: #4f46e5; color: white; text-decoration: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem;">
+                    🏠 Về Trang Chủ
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 📜 Site Footer -->
+<footer class="site-footer">
+    <div class="footer-container">
+        <p>&copy; 2026 Vatli102 (vatli102.com). Bản quyền thuộc về ban quản trị.</p>
+        <div class="footer-links">
+            <a href="/gioi-thieu.html">Giới thiệu</a> |
+            <a href="/lien-he.html">Liên hệ</a> |
+            <a href="/chinh-sach-bao-mat.html">Chính sách bảo mật</a> |
+            <a href="/dieu-khoan.html">Điều khoản sử dụng</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
+
+const quizData = {
+    title: "Bài 8: Mô Tả Sóng (Vật lí 11)",
+    part1: [
+        {
+            id: 1,
+            competency: "NTVL",
+            question: "Sóng cơ là",
+            options: {
+                A: "sự lan truyền vật chất trong không gian theo thời gian.",
+                B: "sự lan truyền dao động cơ trong môi trường vật chất đàn hồi theo thời gian.",
+                C: "chuyển động tịnh tiến của các phần tử môi trường từ nguồn sóng ra xa.",
+                D: "sự lan truyền của dòng điện và điện tích trong môi trường dẫn."
+            },
+            answer: "B",
+            explanation: "Sóng cơ là quá trình lan truyền dao động cơ trong môi trường vật chất đàn hồi theo thời gian."
+        },
+        {
+            id: 2,
+            competency: "NTVL",
+            question: "Trong quá trình sóng cơ lan truyền qua một môi trường đàn hồi đồng tính, các phần tử môi trường",
+            options: {
+                A: "chuyển động tịnh tiến theo phương truyền sóng với tốc độ bằng tốc độ truyền sóng.",
+                B: "dao động điều hòa quanh vị trí cân bằng cố định của chúng.",
+                C: "bị cuốn trôi ra xa theo chiều truyền năng lượng của sóng.",
+                D: "chuyển động tròn đều quanh trục truyền sóng."
+            },
+            answer: "B",
+            explanation: "Khi sóng truyền qua, các phần tử môi trường chỉ dao động điều hòa quanh vị trí cân bằng cố định của chúng chứ không chuyển động tịnh tiến theo sóng."
+        },
+        {
+            id: 3,
+            competency: "NTVL",
+            question: "Sóng cơ học có thể lan truyền được trong các môi trường nào sau đây?",
+            options: {
+                A: "Chỉ lan truyền được trong chân không và chất khí.",
+                B: "Lan truyền được trong các môi trường vật chất rắn, lỏng, khí và không truyền được trong chân không.",
+                C: "Chỉ lan truyền được trong chất rắn và chất lỏng, không truyền được trong chất khí.",
+                D: "Lan truyền được trong mọi môi trường kể cả chân không tuyệt đối."
+            },
+            answer: "B",
+            explanation: "Sóng cơ cần môi trường vật chất đàn hồi (rắn, lỏng, khí) để liên kết các phần tử truyền dao động, do đó sóng cơ không truyền được trong chân không."
+        },
+        {
+            id: 4,
+            competency: "THTN",
+            question: "Khi một sóng cơ hình sin truyền từ môi trường không khí vào môi trường nước, đại lượng nào sau đây của sóng <b>không</b> thay đổi?",
+            options: {
+                A: "Tốc độ truyền sóng.",
+                B: "Bước sóng.",
+                C: "Tần số dao động của sóng.",
+                D: "Năng lượng của sóng."
+            },
+            answer: "C",
+            explanation: "Tần số dao động của sóng do nguồn phát quyết định nên không thay đổi khi sóng truyền qua các môi trường khác nhau. Tốc độ truyền sóng và bước sóng sẽ thay đổi."
+        },
+        {
+            id: 5,
+            competency: "NTVL",
+            question: "Bước sóng $\\lambda$ là",
+            options: {
+                A: "khoảng cách giữa hai điểm bất kì trên cùng một phương truyền sóng dao động cùng pha.",
+                B: "quãng đường mà sóng truyền đi được trong khoảng thời gian bằng một chu kì dao động.",
+                C: "khoảng cách giữa hai điểm gần nhau nhất trên cùng một phương truyền sóng dao động ngược pha.",
+                D: "độ lệch pha giữa hai phần tử môi trường nằm cạnh nhau trên phương truyền sóng."
+            },
+            answer: "B",
+            explanation: "Bước sóng là quãng đường mà sóng truyền đi được trong khoảng thời gian bằng một chu kì dao động: $\\lambda = vT = \\frac{v}{f}$."
+        },
+        {
+            id: 6,
+            competency: "NTVL",
+            question: "Tốc độ truyền sóng cơ trong một môi trường vật chất đồng tính phụ thuộc chủ yếu vào",
+            options: {
+                A: "biên độ dao động của nguồn sóng.",
+                B: "tần số dao động của nguồn sóng.",
+                C: "bản chất đàn hồi, mật độ vật chất và nhiệt độ của môi trường.",
+                D: "pha ban đầu của nguồn dao động."
+            },
+            answer: "C",
+            explanation: "Tốc độ truyền sóng là đặc tính riêng của môi trường, phụ thuộc vào tính đàn hồi, mật độ vật chất và nhiệt độ môi trường, không phụ thuộc vào tần số hay biên độ của sóng."
+        },
+        {
+            id: 7,
+            competency: "THTN",
+            question: "Hai điểm nằm trên cùng một phương truyền sóng cách nhau một đoạn $d$ dao động cùng pha với nhau khi khoảng cách $d$ thỏa mãn điều kiện nào sau đây ($k \\in \\mathbb{Z}$)?",
+            options: {
+                A: "$d = (k + 0,5)\\lambda$.",
+                B: "$d = k\\lambda$.",
+                C: "$d = (2k + 1)\\frac{\\lambda}{4}$.",
+                D: "$d = (2k + 1)\\lambda$."
+            },
+            answer: "B",
+            explanation: "Hai điểm trên cùng một phương truyền sóng dao động cùng pha khi khoảng cách giữa chúng bằng một số nguyên lần bước sóng: $d = k\\lambda$ ($k = 1, 2, 3...$)."
+        },
+        {
+            id: 8,
+            competency: "THTN",
+            question: "Đồ thị li độ - khoảng cách $(u - x)$ của một sóng hình sin mô tả",
+            options: {
+                A: "sự biến thiên li độ của một phần tử môi trường duy nhất theo thời gian $t$.",
+                B: "hình dạng tức thời của môi trường truyền sóng tại một thời điểm $t$ xác định trong không gian.",
+                C: "sự phụ thuộc của tốc độ truyền sóng vào khoảng cách đến nguồn phát sóng.",
+                D: "quỹ đạo chuyển động tròn đều của các phân tử môi trường trong không gian 3 chiều."
+            },
+            answer: "B",
+            explanation: "Đồ thị $(u - x)$ là ảnh chụp tức thời hình dạng của môi trường truyền sóng tại một thời điểm $t$ xác định trong không gian, tuần hoàn theo khoảng cách với chu kì không gian chính là bước sóng $\\lambda$."
+        },
+        {
+            id: 9,
+            competency: "VDKT",
+            question: "Khi sóng cơ lan truyền từ một nguồn điểm ra không gian rộng lớn, biên độ dao động của các phần tử ở càng xa nguồn càng giảm dần chủ yếu là do",
+            options: {
+                A: "tần số dao động của sóng bị giảm dần theo khoảng cách.",
+                B: "năng lượng sóng bị phân bố trên các mặt sóng có diện tích ngày càng lớn và bị môi trường hấp thụ một phần.",
+                C: "tốc độ truyền sóng bị giảm dần khi sóng đi ra xa nguồn.",
+                D: "chu kì dao động của phần tử môi trường tăng lên theo thời gian."
+            },
+            answer: "B",
+            explanation: "Khi sóng lan rộng ra không gian, năng lượng sóng bị phân bố trên diện tích mặt sóng ngày càng lớn và một phần cơ năng bị môi trường hấp thụ (chuyển thành nhiệt), làm mật độ năng lượng giảm $\\implies$ biên độ sóng giảm dần."
+        }
+    ],
+    part2: [
+        {
+            id: 1,
+            competency: "THTN",
+            context: "Tại một vùng biển ven bờ, một nhóm học sinh quan sát chuyển động của một chiếc phao cứu sinh nhỏ đang nổi bồng bềnh trên mặt nước khi có sóng biển hình sin lan truyền từ ngoài khơi vào bờ:",
+            subQuestions: [
+                {
+                    key: "a",
+                    competency: "NTVL",
+                    text: "Khi sóng truyền qua, chiếc phao chỉ dao động nhấp nhô lên xuống quanh vị trí cân bằng xác định chứ không bị sóng biển cuốn trôi tịnh tiến vào bờ.",
+                    answer: "Đ",
+                    explanation: "Chiếc phao đóng vai trò như một phần tử môi trường, chỉ dao động tại chỗ quanh vị trí cân bằng xác định, không bị sóng cuốn trôi theo phương truyền sóng."
+                },
+                {
+                    key: "b",
+                    competency: "THTN",
+                    text: "Tốc độ lan truyền của gợn sóng trên mặt nước biển luôn bằng đúng tốc độ chuyển động cực đại của chiếc phao khi đi qua vị trí cân bằng.",
+                    answer: "S",
+                    explanation: "Tốc độ truyền sóng $v$ là tốc độ lan truyền pha dao động (không đổi), trong khi tốc độ dao động của phao biến thiên điều hòa theo thời gian và đạt cực đại bằng $\\omega A$ khi qua VTCB; hai đại lượng này hoàn toàn khác nhau."
+                },
+                {
+                    key: "c",
+                    competency: "THTN",
+                    text: "Khoảng cách giữa hai ngọn sóng nhô cao liên tiếp dọc theo hướng truyền sóng vào bờ chính là độ dài của một bước sóng $\\lambda$.",
+                    answer: "Đ",
+                    explanation: "Khoảng cách giữa hai ngọn sóng (đỉnh sóng) liền kề đo dọc theo phương truyền sóng chính là một bước sóng $\\lambda$."
+                },
+                {
+                    key: "d",
+                    competency: "VDKT",
+                    text: "Nếu tần số của nguồn sóng ngoài khơi tăng lên gấp đôi trong khi tốc độ truyền sóng trong vùng nước ven bờ không đổi thì bước sóng của sóng biển sẽ tăng gấp hai lần.",
+                    answer: "S",
+                    explanation: "Vì $\\lambda = \\frac{v}{f}$, khi tốc độ $v$ không đổi mà tần số $f$ tăng gấp 2 lần thì bước sóng $\\lambda$ phải giảm đi 2 lần."
                 }
-            }
+            ]
+        },
+        {
+            id: 2,
+            competency: "THTN",
+            context: "Trong một buổi sinh hoạt dưới cờ tại sân trường phẳng lặng, loa phát thanh đặt ở lễ đài phát ra một âm thanh (sóng âm hình sin) có tần số $f$ xác định lan truyền trong không khí đến hai vị trí học sinh $M$ và $N$ cùng nằm trên đường thẳng nối với loa (sóng truyền từ loa qua $M$ rồi đến $N$, khoảng cách $MN = d$):",
+            subQuestions: [
+                {
+                    key: "a",
+                    competency: "NTVL",
+                    text: "Quá trình sóng âm truyền từ loa đến tai các học sinh là quá trình lan truyền dao động và năng lượng âm trong không khí, các phân tử không khí không chuyển động tịnh tiến từ loa đến tai học sinh.",
+                    answer: "Đ",
+                    explanation: "Truyền sóng âm là truyền dao động và năng lượng âm, các phân tử không khí chỉ dao động quanh vị trí cân bằng của chúng."
+                },
+                {
+                    key: "b",
+                    competency: "THTN",
+                    text: "Khi sóng âm truyền từ vị trí $M$ đến vị trí $N$, dao động của lớp không khí tại $N$ luôn sớm pha hơn dao động của lớp không khí tại $M$ một góc $\\Delta \\varphi = \\frac{2\\pi d}{\\lambda}$.",
+                    answer: "S",
+                    explanation: "Sóng truyền từ $M$ đến $N$ nên dao động tại $N$ diễn ra muộn hơn, do đó dao động tại $N$ phải trễ pha hơn tại $M$ một góc $\\Delta \\varphi = \\frac{2\\pi d}{\\lambda}$."
+                },
+                {
+                    key: "c",
+                    competency: "THTN",
+                    text: "Nếu khoảng cách giữa hai học sinh thỏa mãn $MN = 1,5\\lambda$ thì tại mọi thời điểm, dao động của lớp không khí tại $M$ và tại $N$ luôn ngược pha nhau.",
+                    answer: "Đ",
+                    explanation: "Khoảng cách $d = 1,5\\lambda = 3\\frac{\\lambda}{2}$ (số bán nguyên lần bước sóng) nên độ lệch pha $\\Delta \\varphi = 3\\pi\\text{ rad}$ (số lẻ lần $\\pi$), do đó hai điểm luôn dao động ngược pha."
+                },
+                {
+                    key: "d",
+                    competency: "VDKT",
+                    text: "Khi sóng âm từ sân trường truyền qua cửa kính đóng kín vào bên trong lớp học, tần số của sóng âm bị thay đổi do tốc độ truyền âm trong kính lớn hơn trong không khí.",
+                    answer: "S",
+                    explanation: "Tần số của sóng âm do nguồn loa phát quyết định nên không thay đổi khi truyền qua bất kì môi trường nào."
+                }
+            ]
+        }
+    ],
+    part3: [
+        {
+            id: 1,
+            competency: "VDKT",
+            question: "Một nguồn dao động tạo ra sóng cơ hình sin lan truyền trên một sợi dây dài với chu kì $T = 0,25\\,\\text{s}$. Trong khoảng thời gian $2\\,\\text{s}$, sóng truyền đi được một quãng đường $8\\,\\text{m}$. Tính bước sóng của sóng trên dây theo đơn vị mét ($\\text{m}$).",
+            answer: "1",
+            acceptAnswers: ["1", "1.0", "1,0", "1.00", "1,00"],
+            explanation: "Tốc độ truyền sóng trên dây: $v = \\frac{s}{t} = \\frac{8\\,\\text{m}}{2\\,\\text{s}} = 4\\,\\text{m/s}$.<br>Bước sóng trên dây: $\\lambda = v \\cdot T = 4 \\times 0,25 = \\mathbf{1\\,\\text{m}}$."
+        },
+        {
+            id: 2,
+            competency: "VDKT",
+            question: "Một sóng cơ hình sin có tần số $f = 50\\,\\text{Hz}$ truyền trên một sợi dây đàn hồi với tốc độ $v = 20\\,\\text{m/s}$. Khoảng cách ngắn nhất giữa hai điểm trên cùng một phương truyền sóng dao động ngược pha nhau bằng bao nhiêu mét ($\\text{m}$)?",
+            answer: "0,2",
+            acceptAnswers: ["0,2", "0.2", "0,20", "0.20"],
+            explanation: "Bước sóng: $\\lambda = \\frac{v}{f} = \\frac{20}{50} = 0,4\\,\\text{m}$.<br>Khoảng cách ngắn nhất giữa hai điểm ngược pha trên cùng phương truyền sóng: $d_{\\min} = \\frac{\\lambda}{2} = \\frac{0,4}{2} = \\mathbf{0,2\\,\\text{m}}$."
+        },
+        {
+            id: 3,
+            competency: "VDKT",
+            question: "Một người quan sát thấy một chiếc phao trên mặt hồ nhấp nhô lên xuống tại chỗ 10 lần trong khoảng thời gian $18\\,\\text{s}$. Khoảng cách giữa 2 ngọn sóng nhô cao liên tiếp là $4\\,\\text{m}$. Tốc độ truyền sóng trên mặt hồ bằng bao nhiêu mét trên giây ($\\text{m/s}$)?",
+            answer: "2",
+            acceptAnswers: ["2", "2.0", "2,0", "2.00", "2,00"],
+            explanation: "Phao nhô lên 10 lần tương ứng với 9 chu kì dao động: $9T = 18\\,\\text{s} \\implies T = 2\\,\\text{s}$.<br>Khoảng cách giữa hai ngọn sóng liên tiếp là bước sóng: $\\lambda = 4\\,\\text{m}$.<br>Tốc độ truyền sóng: $v = \\frac{\\lambda}{T} = \\frac{4\\,\\text{m}}{2\\,\\text{s}} = \\mathbf{2\\,\\text{m/s}}$."
+        }
+    ]
+};
+
+let userAnswers = { part1: {}, part2: {}, part3: {} };
+let isSubmitted = false;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const savedName = localStorage.getItem('saved_student_name');
+    const savedClass = localStorage.getItem('saved_student_class');
+    if (savedName) document.getElementById('studentName').value = savedName;
+    if (savedClass) document.getElementById('studentClass').value = savedClass;
+});
+
+function startQuizExam() {
+    try {
+        const nameInput = document.getElementById('studentName');
+        const classInput = document.getElementById('studentClass');
+        const name = nameInput ? nameInput.value.trim() : "";
+        const className = classInput ? classInput.value.trim() : "";
+
+        if (!name || !className) {
+            alert("Vui lòng điền đầy đủ Họ và tên và Lớp để bắt đầu làm bài!");
+            return;
         }
 
-        function startQuizExam() {
-            const name = document.getElementById("studentName").value.trim();
-            const sClass = document.getElementById("studentClass").value.trim();
-            if (!name || !sClass) {
-                alert("Vui lòng nhập đầy đủ Họ tên và Lớp trước khi bắt đầu làm bài!");
-                return;
-            }
-            document.getElementById("studentLoginCard").style.display = "none";
-            document.getElementById("stickyTimerBar").style.display = "block";
-            document.getElementById("quizContent").style.display = "block";
-            document.getElementById("timerStudentDisplay").innerText = `Thí sinh: ${name} (${sClass})`;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        localStorage.setItem('saved_student_name', name);
+        localStorage.setItem('saved_student_class', className);
 
-            // Bắt đầu đếm ngược 20 phút
-            timeLeft = 20 * 60;
-            updateTimerDisplay();
-            if (timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    alert("Hết thời gian làm bài (20 phút)! Hệ thống sẽ tự động nộp bài.");
-                    gradeQuiz();
-                    return;
-                }
-                timeLeft--;
-                updateTimerDisplay();
-            }, 1000);
+        const loginCard = document.getElementById('studentLoginCard');
+        if (loginCard) loginCard.style.display = 'none';
+
+        const quizContent = document.getElementById('quizContent');
+        if (quizContent) quizContent.style.display = 'block';
+
+        renderQuiz();
+        updateProgress();
+
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            window.MathJax.typesetPromise();
         }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+        console.error("Lỗi startQuizExam:", err);
+        const loginCard = document.getElementById('studentLoginCard');
+        if (loginCard) loginCard.style.display = 'none';
+        const quizContent = document.getElementById('quizContent');
+        if (quizContent) quizContent.style.display = 'block';
+    }
+}
+window.startBloggerQuiz = startQuizExam;
 
-        function gradeQuiz() {
-            if (isQuizSubmitted) return;
-            isQuizSubmitted = true;
-            if (timerInterval) clearInterval(timerInterval);
+function getCompTag(comp) {
+    if (comp === "NTVL") return `<span class="competency-tag tag-ntvl">Nhận thức Vật lí</span>`;
+    if (comp === "THTN") return `<span class="competency-tag tag-thtn">Tìm hiểu Tự nhiên</span>`;
+    if (comp === "VDKT") return `<span class="competency-tag tag-vdkt">Vận dụng kiến thức</span>`;
+    return '';
+}
 
-            // Ẩn thanh timer bar sau khi nộp bài
-            document.getElementById("stickyTimerBar").style.display = "none";
+function renderQuiz() {
+    const p1 = document.getElementById('part1Container');
+    if (p1 && quizData.part1) {
+        p1.innerHTML = quizData.part1.map((q, idx) => `
+            <div class="question-card" id="part1-q${q.id}">
+                <div class="question-title">
+                    <span class="question-num">Câu ${idx + 1}:</span> ${getCompTag(q.competency)}${q.question || ""}
+                </div>
+                ${q.image ? `<img src="${q.image}" class="question-img" alt="Hình vẽ câu ${idx + 1}">` : ''}
+                <div class="options-grid">
+                    ${['A','B','C','D'].map(opt => `
+                        <div class="option-card" id="part1-q${q.id}-opt${opt}" onclick="selectPart1(${q.id}, '${opt}')">
+                            <div class="option-letter">${opt}</div>
+                            <div>${q.options ? (q.options[opt] || '') : ''}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="explanation-box" id="part1-q${q.id}-explanation">
+                    💡 <b>Hướng dẫn giải chi tiết:</b><br>${q.explanation || ''}
+                </div>
+            </div>
+        `).join('');
+    }
 
-            let p1ScoreVal = 0.0;
-            let p2ScoreVal = 0.0;
-            let p3ScoreVal = 0.0;
-            let totalScore = 0.0;
-            let correctQuestionsCount = 0;
+    const p2 = document.getElementById('part2Container');
+    if (p2 && quizData.part2) {
+        p2.innerHTML = quizData.part2.map((q, idx) => `
+            <div class="question-card" id="part2-q${q.id}">
+                <div class="question-title">
+                    <span class="question-num">Câu ${idx + 1}:</span> ${getCompTag(q.competency)}${q.context || ''}
+                </div>
+                ${q.image ? `<img src="${q.image}" class="question-img" alt="Hình vẽ câu ${idx + 1}">` : ''}
+                ${q.subQuestions.map((sub, sIdx) => {
+                    const subKey = sub.key || ['a','b','c','d'][sIdx];
+                    const cleanText = (sub.text || '').replace(/^[a-d][\.\)]\s*/, '');
+                    return `
+                    <div class="tf-row" id="part2-q${q.id}-tf-${subKey}">
+                        <div><b>${subKey})</b> ${getCompTag(sub.competency)}${cleanText}</div>
+                        <div class="tf-buttons">
+                            <button type="button" class="btn-tf tf-btn" id="part2-q${q.id}-tf-${subKey}-T" onclick="selectPart2(${q.id}, '${subKey}', 'Đ')">ĐÚNG</button>
+                            <button type="button" class="btn-tf tf-btn" id="part2-q${q.id}-tf-${subKey}-F" onclick="selectPart2(${q.id}, '${subKey}', 'S')">SAI</button>
+                        </div>
+                    </div>
+                `}).join('')}
+                <div class="explanation-box" id="part2-q${q.id}-explanation">
+                    💡 <b>Hướng dẫn giải chi tiết:</b><br>${q.subQuestions.map((sub, sIdx) => {
+                        const subKey = sub.key || ['a','b','c','d'][sIdx];
+                        const ansStr = sub.answer === 'Đ' ? 'ĐÚNG' : 'SAI';
+                        return `• <b>Ý ${subKey}) [${ansStr}]:</b> ${sub.explanation || ''}`;
+                    }).join('<br>')}
+                </div>
+            </div>
+        `).join('');
+    }
 
-            // Chấm Phần I (9 câu x 0.5 = 4.5đ)
-            for (let i = 1; i <= 9; i++) {
-                const selected = document.querySelector(`input[name="q${i}"]:checked`);
-                if (selected && selected.value === correctP1[i]) {
-                    p1ScoreVal += 0.5;
-                    correctQuestionsCount++;
+    const p3 = document.getElementById('part3Container');
+    if (p3 && quizData.part3) {
+        p3.innerHTML = quizData.part3.map((q, idx) => `
+            <div class="question-card" id="part3-q${q.id}">
+                <div class="question-title">
+                    <span class="question-num">Câu ${idx + 1}:</span> ${getCompTag(q.competency)}${q.question || ""}
+                </div>
+                ${q.image ? `<img src="${q.image}" class="question-img" alt="Hình vẽ câu ${idx + 1}">` : ''}
+                <div style="margin-top: 10px;">
+                    <input type="text" class="short-answer-input" id="part3-q${q.id}-input" placeholder="Nhập đáp số..." onchange="inputShort(${q.id}, this.value)">
+                    <div id="part3-q${q.id}-correct" style="display:none; color:#22c55e; font-weight:700; margin-top:6px; font-size:0.9rem;"></div>
+                </div>
+                <div class="explanation-box" id="part3-q${q.id}-explanation">
+                    💡 <b>Hướng dẫn giải chi tiết:</b><br>${q.explanation || ''}
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
+function selectPart1(qId, choice) {
+    if (isSubmitted) return;
+    userAnswers.part1[qId] = choice;
+    const cards = ['A','B','C','D'];
+    cards.forEach(c => {
+        const el = document.getElementById(`part1-q${qId}-opt${c}`);
+        if (el) el.classList.remove('selected');
+    });
+    const selectedEl = document.getElementById(`part1-q${qId}-opt${choice}`);
+    if (selectedEl) selectedEl.classList.add('selected');
+    updateProgress();
+}
+
+function selectPart2(qId, subKey, choice) {
+    if (isSubmitted) return;
+    if (!userAnswers.part2[qId]) userAnswers.part2[qId] = {};
+    userAnswers.part2[qId][subKey] = choice;
+    
+    const btnT = document.getElementById(`part2-q${qId}-tf-${subKey}-T`);
+    const btnF = document.getElementById(`part2-q${qId}-tf-${subKey}-F`);
+    if (btnT) btnT.classList.remove('selected-true', 'selected-false');
+    if (btnF) btnF.classList.remove('selected-true', 'selected-false');
+
+    if (choice === 'Đ' && btnT) btnT.classList.add('selected-true');
+    if (choice === 'S' && btnF) btnF.classList.add('selected-false');
+    updateProgress();
+}
+
+function inputShort(qId, val) {
+    if (isSubmitted) return;
+    userAnswers.part3[qId] = val.trim();
+    updateProgress();
+}
+
+function updateProgress() {
+    let totalItems = 9 + (2 * 4) + 3; // 20 ý tổng cộng
+    let completedCount = Object.keys(userAnswers.part1).length;
+    for (let qId in userAnswers.part2) {
+        completedCount += Object.keys(userAnswers.part2[qId]).length;
+    }
+    for (let qId in userAnswers.part3) {
+        if (userAnswers.part3[qId] !== '') completedCount++;
+    }
+    const percentage = totalItems > 0 ? Math.min((completedCount / totalItems) * 100, 100) : 0;
+    const pb = document.getElementById('progressBar');
+    if (pb) pb.style.width = `${percentage}%`;
+    const pl = document.getElementById('progressLabel');
+    if (pl) pl.textContent = `${completedCount}/${totalItems} ý hoàn thành`;
+}
+
+function gradeQuiz() {
+    if (isSubmitted) return;
+    isSubmitted = true;
+
+    let scorePart1 = 0;
+    let scorePart2 = 0;
+    let scorePart3 = 0;
+    let totalCorrectSub = 0;
+
+    // 1. Chấm Phần I (9 câu x 0.5đ = 4.5đ)
+    if (quizData.part1) {
+        quizData.part1.forEach(q => {
+            const userChoice = userAnswers.part1[q.id];
+            const correctOpt = q.answer;
+            const exp = document.getElementById(`part1-q${q.id}-explanation`);
+            if (exp) exp.style.display = 'block';
+
+            ['A','B','C','D'].forEach(o => {
+                const el = document.getElementById(`part1-q${q.id}-opt${o}`);
+                if (el) {
+                    if (o === correctOpt) el.classList.add('correct');
+                    else if (userChoice === o && userChoice !== correctOpt) el.classList.add('incorrect');
                 }
+            });
+            if (userChoice === correctOpt) {
+                scorePart1 += 0.50;
+                totalCorrectSub++;
             }
+        });
+    }
 
-            // Chấm Phần II (2 câu x 2.0 = 4.0đ theo Rule 8)
-            for (let j = 1; j <= 2; j++) {
-                let correctSubCount = 0;
-                ['a', 'b', 'c', 'd'].forEach(sub => {
-                    const sel = document.querySelector(`input[name="tf${j}_${sub}"]:checked`);
-                    if (sel && sel.value === correctP2[j][sub]) {
-                        correctSubCount++;
-                    }
-                });
+    // 2. Chấm Phần II (2 câu x 2.0đ = 4.0đ)
+    // Quy tắc: Đúng 4 ý = 2.0đ; Đúng 3 ý = 1.0đ; Đúng 2 ý = 0.5đ; Đúng 1 ý = 0.2đ; Đúng 0 ý = 0đ
+    if (quizData.part2) {
+        quizData.part2.forEach(q => {
+            let correctSubInQ = 0;
+            const exp = document.getElementById(`part2-q${q.id}-explanation`);
+            if (exp) exp.style.display = 'block';
 
-                let qScore = 0;
-                if (correctSubCount === 4) qScore = 2.0;
-                else if (correctSubCount === 3) qScore = 1.0;
-                else if (correctSubCount === 2) qScore = 0.5;
-                else if (correctSubCount === 1) qScore = 0.2;
-                else qScore = 0.0;
+            q.subQuestions.forEach(sub => {
+                const userChoice = userAnswers.part2[q.id] ? userAnswers.part2[q.id][sub.key] : null;
+                const correctChoice = sub.answer;
+                const btnT = document.getElementById(`part2-q${q.id}-tf-${sub.key}-T`);
+                const btnF = document.getElementById(`part2-q${q.id}-tf-${sub.key}-F`);
 
-                p2ScoreVal += qScore;
-                if (correctSubCount === 4) correctQuestionsCount++;
-            }
-
-            // Chấm Phần III (3 câu x 0.5 = 1.5đ)
-            for (let k = 1; k <= 3; k++) {
-                const inputVal = document.getElementById(`sa${k}`).value.trim();
-                if (correctP3[k].includes(inputVal)) {
-                    p3ScoreVal += 0.5;
-                    correctQuestionsCount++;
+                if (userChoice === correctChoice) {
+                    correctSubInQ++;
+                    totalCorrectSub++;
                 }
-            }
+                if (correctChoice === 'Đ' && btnT) btnT.style.border = '2px solid #22c55e';
+                if (correctChoice === 'S' && btnF) btnF.style.border = '2px solid #22c55e';
+            });
 
-            totalScore = Math.round((p1ScoreVal + p2ScoreVal + p3ScoreVal) * 10) / 10;
+            if (correctSubInQ === 4) scorePart2 += 2.0;
+            else if (correctSubInQ === 3) scorePart2 += 1.0;
+            else if (correctSubInQ === 2) scorePart2 += 0.5;
+            else if (correctSubInQ === 1) scorePart2 += 0.2;
+        });
+    }
 
-            // Ẩn nút nộp bài
-            document.getElementById("btnSubmitQuiz").style.display = "none";
+    // 3. Chấm Phần III (3 câu x 0.5đ = 1.5đ)
+    if (quizData.part3) {
+        quizData.part3.forEach(q => {
+            const userChoice = (userAnswers.part3[q.id] || "").trim();
+            const inputEl = document.getElementById(`part3-q${q.id}-input`);
+            const correctTextEl = document.getElementById(`part3-q${q.id}-correct`);
+            const exp = document.getElementById(`part3-q${q.id}-explanation`);
+            if (exp) exp.style.display = 'block';
+            if (inputEl) inputEl.disabled = true;
 
-            // Hiển thị tất cả lời giải chi tiết
-            const explanations = document.querySelectorAll('.explanation-box');
-            explanations.forEach(exp => exp.style.display = 'block');
+            const isCorrect = q.acceptAnswers ? q.acceptAnswers.some(ans => ans.toLowerCase() === userChoice.toLowerCase()) : (userChoice === q.answer);
 
-            // Cập nhật thẻ kết quả
-            const name = document.getElementById("studentName").value.trim();
-            const sClass = document.getElementById("studentClass").value.trim();
-            document.getElementById("studentResultInfo").innerText = `Thí sinh: ${name} | Lớp: ${sClass}`;
-            document.getElementById("finalScoreDisplay").innerText = totalScore.toFixed(1);
-            document.getElementById("p1Score").innerText = `${p1ScoreVal.toFixed(1)} / 4.5`;
-            document.getElementById("p2Score").innerText = `${p2ScoreVal.toFixed(1)} / 4.0`;
-            document.getElementById("p3Score").innerText = `${p3ScoreVal.toFixed(1)} / 1.5`;
-
-            let feedback = "";
-            if (totalScore >= 9.0) {
-                feedback = "Xuất sắc! Em đã nắm vững toàn bộ kiến thức Bài 8 Mô tả sóng!";
-                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
-            } else if (totalScore >= 7.0) {
-                feedback = "Rất tốt! Em đã hiểu bài khá sâu, hãy xem lại các câu giải thích để hoàn thiện nhé!";
-                confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
-            } else if (totalScore >= 5.0) {
-                feedback = "Khá! Cần chú ý thêm về các đại lượng đặc trưng của sóng và độ lệch pha.";
+            if (isCorrect) {
+                scorePart3 += 0.50;
+                totalCorrectSub++;
+                if (inputEl) inputEl.classList.add('input-correct');
             } else {
-                feedback = "Em hãy đọc lại bài học và làm lại bài kiểm tra để củng cố kiến thức nhé!";
+                if (inputEl) inputEl.classList.add('input-incorrect');
+                if (correctTextEl) {
+                    correctTextEl.innerHTML = `💡 Đáp án đúng: <strong>${q.answer}</strong>`;
+                    correctTextEl.style.display = 'block';
+                }
             }
-            document.getElementById("feedbackText").innerText = feedback;
-            document.getElementById("resultCard").style.display = "block";
-            document.getElementById("resultCard").scrollIntoView({ behavior: 'smooth' });
+        });
+    }
 
-            // Gửi dữ liệu về Google Sheets theo Rule 9
-            const payload = {
-                name: name,
-                className: sClass,
-                lesson: LESSON_NAME,
-                correct: `${correctQuestionsCount}/14`,
-                score: totalScore
-            };
+    const totalGrade = Math.round((scorePart1 + scorePart2 + scorePart3) * 10) / 10;
+    const totalItems = 9 + (2 * 4) + 3; // 20 ý tổng cộng
+    const totalIncorrect = totalItems - totalCorrectSub;
 
+    // Lấy thông tin học sinh
+    const studentName = localStorage.getItem('saved_student_name') || 'Học sinh';
+    const studentClass = localStorage.getItem('saved_student_class') || '11';
+
+    // Cập nhật Bảng Điểm Kết Quả
+    const resultsPanel = document.getElementById('resultsPanel');
+    const scoreCircle = document.getElementById('scoreCircle');
+    const correctCountText = document.getElementById('correctCountText');
+    const incorrectCountText = document.getElementById('incorrectCountText');
+    const gradeText = document.getElementById('gradeText');
+    const scoreTitle = document.getElementById('scoreTitle');
+    const scoreDesc = document.getElementById('scoreDesc');
+
+    if (scoreCircle) scoreCircle.textContent = totalGrade.toFixed(1);
+    if (correctCountText) correctCountText.textContent = totalCorrectSub;
+    if (incorrectCountText) incorrectCountText.textContent = totalIncorrect;
+    if (gradeText) gradeText.textContent = `${totalGrade.toFixed(1)}/10`;
+
+    if (totalGrade >= 8.5) {
+        if (scoreTitle) scoreTitle.textContent = "Xuất Sắc! 🎉";
+        if (scoreDesc) scoreDesc.textContent = `Chúc mừng bạn ${studentName}! Bạn đã nắm rất vững kiến thức bài học mô tả sóng!`;
+    } else if (totalGrade >= 6.5) {
+        if (scoreTitle) scoreTitle.textContent = "Khá Tốt! 👍";
+        if (scoreDesc) scoreDesc.textContent = `Bạn ${studentName} làm bài tốt! Hãy xem lại hướng dẫn giải chi tiết để đạt điểm tuyệt đối nhé.`;
+    } else {
+        if (scoreTitle) scoreTitle.textContent = "Cố Gắng Lên! 💪";
+        if (scoreDesc) scoreDesc.textContent = `Bạn ${studentName} hãy ôn lại lý thuyết và làm lại bài thi để cải thiện điểm số nhé.`;
+    }
+
+    if (resultsPanel) resultsPanel.style.display = 'block';
+
+    // Ẩn nút nộp bài sau khi nộp
+    const btnSubmit = document.getElementById('btnSubmitQuiz');
+    if (btnSubmit) btnSubmit.style.display = 'none';
+
+    // Hiệu ứng pháo hoa khi điểm cao
+    if (totalGrade >= 7.0 && typeof confetti === 'function') {
+        confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+    }
+
+    if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise();
+    }
+
+    // Tự động gửi kết quả về Google Sheets
+    if (typeof GOOGLE_SHEETS_URL !== 'undefined' && GOOGLE_SHEETS_URL) {
+        try {
             fetch(GOOGLE_SHEETS_URL, {
                 method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            }).then(() => {
-                console.log("Đã đồng bộ kết quả lên Google Sheets thành công!");
-            }).catch(err => {
-                console.warn("Lỗi khi gửi kết quả về Google Sheets:", err);
-            });
-        }
-    </script>
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({
+                    name: studentName,
+                    className: studentClass,
+                    lesson: quizData.title || "Bài 8: Mô Tả Sóng (Vật lí 11)",
+                    correct: `${totalCorrectSub}/${totalItems}`,
+                    score: totalGrade.toFixed(1)
+                }),
+                redirect: "follow"
+            }).catch(function(err){});
+        } catch(err){}
+    }
+
+    // Cuộn mượt đến bảng điểm kết quả
+    setTimeout(() => {
+        resultsPanel.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+}
+</script>
 </body>
 </html>
