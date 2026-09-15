@@ -377,20 +377,228 @@
 
 
 
-    <!-- ==================== HEADER NAVBAR CHI TIẾT BÀI VIẾT ==================== -->
-    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm mb-6">
-        <div class="max-w-4xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
-            <a href="/" class="flex items-center gap-2 group text-decoration-none">
-                <img src="/favicon.svg" alt="Vatli102.com" class="w-8 h-8 rounded-lg shadow-sm">
-                <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-600 bg-clip-text text-transparent">Vatli102.com</span>
-            </a>
-            <ul class="flex items-center gap-4 text-xs sm:text-sm font-semibold text-slate-600 list-none m-0 p-0">
-                <li><a href="/" class="hover:text-blue-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
-                <li><a href="/gioi-thieu.html" class="hover:text-blue-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a></li>
-                <li><a href="/lien-he.html" class="hover:text-blue-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-envelope"></i> Liên hệ</a></li>
-            </ul>
+<!-- 🌐 Sticky Header Navigation Bar -->
+
+<header class="sticky-header">
+
+    <div class="header-container">
+
+        <a href="/" class="site-logo">
+
+            <img src="/favicon.svg" alt="Logo" class="logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%234f46e5\'/><text x=\'50\' y=\'65\' font-size=\'45\' text-anchor=\'middle\' fill=\'white\' font-family=\'sans-serif\' font-weight=\'bold\'>V</text></svg>';">
+
+            <span class="logo-text">Vatli102.com</span>
+
+        </a>
+
+        <nav class="nav-links">
+
+            <a href="/" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
+
+            <a href="/gioi-thieu.html" class="nav-item"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a>
+
+            <a href="/lien-he.html" class="nav-item"><i class="fa-solid fa-envelope"></i> Liên hệ</a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+
+<div class="quiz-container">
+
+    <div class="exam-banner">
+
+        <h1>📖 Bài 3 Thực hành tính sai số trong phép đo. Ghi kết quả đo (Vật lí 10)</h1>
+
+        <span class="badge-exam">⏱ Thời gian làm bài: 15 Phút | Trắc Nghiệm Online 3 Phần</span>
+
+    </div>
+
+
+
+    <!-- KHUNG NHẬP THÔNG TIN HỌC SINH -->
+
+    <div id="studentLoginCard" class="login-card">
+
+        <div style="width: 50px; height: 50px; background: #e0e7ff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 12px auto;">📝</div>
+
+        <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; color: #0f172a;">THÔNG TIN HỌC SINH LÀM BÀI</h2>
+
+        <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 20px;">Điền Họ tên và Lớp để bắt đầu làm bài thi & tự động lưu điểm số.</p>
+
+        
+
+        <div class="form-group">
+
+            <label>Họ và tên học sinh <span style="color:red;">*</span></label>
+
+            <input type="text" id="studentName" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
+
         </div>
-    </header>
+
+        <div class="form-group">
+
+            <label>Lớp <span style="color:red;">*</span></label>
+
+            <input type="text" id="studentClass" class="form-control" placeholder="Ví dụ: 10A1" required>
+
+        </div>
+
+        <button type="button" class="btn-start" id="btnStartQuiz" onclick="startQuizExam()">🚀 BẮT ĐẦU LÀM BÀI THI</button>
+
+    </div>
+
+
+
+    <!-- KHUNG BÀI THI TƯƠNG TÁC (ẨN 100% CHO ĐẾN KHI NHẬP TÊN LỚP VA BẤM BẮT ĐẦU) -->
+
+    <div id="quizContent" class="tex2jax_process" style="display: none;">
+
+        <div class="progress-container">
+
+            <div class="progress-bar-bg">
+
+                <div class="progress-bar-fill" id="progressBar"></div>
+
+            </div>
+
+            <div class="progress-text">
+
+                <span>Tiến độ làm bài</span>
+
+                <span id="progressLabel">0/0 ý hoàn thành</span>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="section-header">📌 PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn</div>
+
+        <div id="part1Container"></div>
+
+
+
+        <div class="section-header">📌 PHẦN II. Câu trắc nghiệm Đúng / Sai</div>
+
+        <div id="part2Container"></div>
+
+
+
+        <div class="section-header">📌 PHẦN III. Câu trắc nghiệm trả lời ngắn</div>
+
+        <div id="part3Container"></div>
+
+
+
+        <!-- NÚT NỘP BÀI THI CHỈ XUẤT HIỆN Ở CUỐI BÀI THI SAU KHI LÀM XONG -->
+
+        <div style="text-align: center; margin-top: 30px;">
+
+            <button type="button" id="btnSubmitQuiz" onclick="gradeQuiz()" style="background: linear-gradient(135deg, #059669, #10b981); color: white; border: none; padding: 14px 40px; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; box-shadow: 0 6px 20px rgba(16,185,129,0.3);">
+
+                ✅ NỘP BÀI THI & CHẤM ĐIỂM
+
+            </button>
+
+        </div>
+
+
+
+        <!-- BẢNG ĐIỂM KẾT QUẢ HIỂN THỊ NGAY DƯỚI NÚT NỘP BÀI KHI BẤM NỘP -->
+
+        <div id="resultsPanel" class="results-panel">
+
+            <div class="score-circle">
+
+                <span id="scoreCircle">0.0</span>
+
+            </div>
+
+            <div id="scoreTitle" class="score-title">Kết Quả Bài Làm</div>
+
+            <div id="scoreDesc" class="score-desc">Chúc mừng bạn đã hoàn thành bài tập trắc nghiệm!</div>
+
+
+
+            <div class="details-summary">
+
+                <div class="summary-card">
+
+                    <div class="summary-num" id="correctCountText" style="color: #22c55e;">0</div>
+
+                    <div class="summary-label">Ý Đúng</div>
+
+                </div>
+
+                <div class="summary-card">
+
+                    <div class="summary-num" id="incorrectCountText" style="color: #ef4444;">0</div>
+        .progress-bar-bg { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+
+        .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #4f46e5, #06b6d4); transition: width 0.3s ease; }
+
+        .progress-text { display: flex; justify-content: space-between; font-size: 0.85rem; color: #64748b; margin-top: 6px; font-weight: 600; }
+
+
+
+        /* Site Footer */
+
+        .site-footer {
+
+            width: 100%; text-align: center; padding: 25px 15px; background: #ffffff;
+
+            border-top: 1px solid var(--border); margin-top: 40px; color: #64748b; font-size: 0.88rem;
+
+        }
+
+        .footer-container { max-width: 920px; margin: 0 auto; }
+
+        .footer-links { margin-top: 8px; font-size: 0.82rem; }
+
+        .footer-links a { color: #4f46e5; text-decoration: none; margin: 0 4px; transition: color 0.2s; }
+
+        .footer-links a:hover { text-decoration: underline; color: #3730a3; }
+
+    </style>
+
+</head>
+
+<body class="tex2jax_ignore">
+
+
+
+<!-- 🌐 Sticky Header Navigation Bar -->
+
+<header class="sticky-header">
+
+    <div class="header-container">
+
+        <a href="/" class="site-logo">
+
+            <img src="/favicon.svg" alt="Logo" class="logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%234f46e5\'/><text x=\'50\' y=\'65\' font-size=\'45\' text-anchor=\'middle\' fill=\'white\' font-family=\'sans-serif\' font-weight=\'bold\'>V</text></svg>';">
+
+            <span class="logo-text">Vatli102.com</span>
+
+        </a>
+
+        <nav class="nav-links">
+
+            <a href="/" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
+
+            <a href="/gioi-thieu.html" class="nav-item"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a>
+
+            <a href="/lien-he.html" class="nav-item"><i class="fa-solid fa-envelope"></i> Liên hệ</a>
+
+        </nav>
+
+    </div>
+
+</header>
 
 
 
@@ -556,15 +764,9 @@
 
                 </a>
 
-                <a href="index.html" style="background: #e0e7ff; color: #4338ca; border: 1px solid #c7d2fe; text-decoration: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem;">
+                <a href="Baigiang.html" style="background: #e0e7ff; color: #4338ca; border: 1px solid #c7d2fe; text-decoration: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem;">
 
                     📖 Đọc Bài Giảng
-
-                </a>
-
-                <a href="index.html#video" target="_blank" style="background: #ff0000; color: #ffffff; border: 1px solid #cc0000; text-decoration: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(255,0,0,0.25);">
-
-                    <i class="fa-brands fa-youtube" style="font-size: 1.15rem; margin-right: 3px;"></i> Xem Bài Giảng
 
                 </a>
 
@@ -591,6 +793,7 @@
 
 
 <!-- 📜 Site Footer -->
+
 <footer class="site-footer">
     <div class="footer-container">
         <p>&copy; 2026 Vatli102 (vatli102.com). Bản quyền thuộc về ban quản trị.</p>
