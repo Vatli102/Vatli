@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bài 9: Sóng ngang, sóng dọc, sự truyền năng lượng của sóng cơ - Vật lí 11 | Vatli102.com</title>
-    <meta name="description" content="Bài giảng Vật lí 11 Bài 9: Sóng ngang, sóng dọc, sự truyền năng lượng của sóng cơ. Giải thích cơ chế biến dạng vi mô, so sánh sóng ngang - sóng dọc, cường độ sóng và ứng dụng sóng địa chấn P, S.">
+    <meta name="description" content="Bài giảng Vật lí 11 Bài 9: Sóng ngang, sóng dọc, sự truyền năng lượng của sóng cơ. Tích hợp thí nghiệm ảo sóng ngang, sóng dọc trên lò xo, hình ảnh 3D sóng địa chấn và ứng dụng thực tế.">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,7 +57,7 @@
             color: #1e293b;
             line-height: 1.8;
             font-size: 1.05rem;
-            max-width: 900px;
+            max-width: 920px;
             margin: 0 auto;
             padding: 25px 20px;
         }
@@ -189,13 +189,119 @@
             transform: translateX(4px);
         }
 
-        .visual-demo-box {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
+        .sim-container {
+            background: #0f172a;
+            border: 2px solid #334155;
             border-radius: 16px;
-            padding: 20px;
+            padding: 18px;
             margin: 24px 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            color: #f8fafc;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        }
+
+        .sim-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 12px;
+            margin-bottom: 14px;
+            gap: 10px;
+        }
+
+        .sim-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sim-canvas {
+            width: 100%;
+            height: 240px;
+            background: #020617;
+            border-radius: 12px;
+            border: 1px solid #1e293b;
+            display: block;
+        }
+
+        .sim-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-top: 15px;
+            background: #1e293b;
+            padding: 14px;
+            border-radius: 12px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .control-group label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #94a3b8;
+        }
+
+        .control-group input[type="range"] {
+            accent-color: #38bdf8;
+            cursor: pointer;
+        }
+
+        .sim-btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            justify-content: flex-start;
+        }
+
+        .btn-sim {
+            background: #334155;
+            color: white;
+            border: 1px solid #475569;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-sim:hover {
+            background: #475569;
+            border-color: #38bdf8;
+            color: #38bdf8;
+        }
+
+        .btn-sim.active {
+            background: #0284c7;
+            border-color: #38bdf8;
+            color: white;
+        }
+
+        .sim-stats {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            font-size: 0.82rem;
+            color: #cbd5e1;
+            font-family: 'JetBrains Mono', monospace;
+            background: #090d16;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #1e293b;
         }
 
         .example-box {
@@ -273,6 +379,35 @@
         .badge-solid { background: #e0e7ff; color: #3730a3; }
         .badge-liquid { background: #dbeafe; color: #1e40af; }
         .badge-gas { background: #e0f2fe; color: #0369a1; }
+
+        .real-img-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+            margin: 22px 0;
+            transition: all 0.3s ease;
+        }
+        .real-img-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.1);
+        }
+        .real-img-card img {
+            width: 100%;
+            height: auto;
+            max-height: 440px;
+            object-fit: cover;
+            display: block;
+        }
+        .real-img-caption {
+            padding: 14px 18px;
+            background: #ffffff;
+            border-top: 1px solid #f1f5f9;
+            font-size: 0.9rem;
+            color: #475569;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
@@ -327,12 +462,12 @@
                 <i class="fa-solid fa-list-check text-indigo-600"></i> Mục lục bài học
             </div>
             <div class="toc-list">
-                <a href="#muc1"><i class="fa-solid fa-angles-right text-xs text-indigo-400"></i> 1. Sóng ngang & Cơ chế biến dạng</a>
-                <a href="#muc2"><i class="fa-solid fa-angles-right text-xs text-indigo-400"></i> 2. Sóng dọc & Cơ chế biến dạng</a>
+                <a href="#muc1"><i class="fa-solid fa-angles-right text-xs text-indigo-400"></i> 1. Sóng ngang & Thí nghiệm ảo tương tác</a>
+                <a href="#muc2"><i class="fa-solid fa-angles-right text-xs text-indigo-400"></i> 2. Sóng dọc & Thí nghiệm ảo lò xo</a>
                 <a href="#muc3"><i class="fa-solid fa-angles-right text-xs text-indigo-400"></i> 3. Bảng so sánh sóng ngang và sóng dọc</a>
                 <a href="#muc4"><i class="fa-solid fa-angles-right text-xs text-indigo-400"></i> 4. Quá trình truyền năng lượng & Cường độ sóng</a>
-                <a href="#muc5"><i class="fa-solid fa-angles-right text-xs text-indigo-400"></i> 5. Sóng địa chấn P và S: Khám phá lòng Trái Đất</a>
-                <a href="#muc6"><i class="fa-solid fa-angles-right text-xs text-indigo-400"></i> 6. Ứng dụng thực tiễn trong kĩ thuật & đời sống</a>
+                <a href="#muc5"><i class="fa-solid fa-angles-right text-xs text-indigo-400"></i> 5. Sóng địa chấn P và S (Mô hình 3D thực tế)</a>
+                <a href="#muc6"><i class="fa-solid fa-angles-right text-xs text-indigo-400"></i> 6. Ứng dụng 3D thực tiễn trong kĩ thuật & y khoa</a>
                 <a href="#muc7"><i class="fa-solid fa-angles-right text-xs text-indigo-400"></i> 7. Các dạng bài tập & Ví dụ mẫu</a>
                 <a href="#muc8"><i class="fa-solid fa-angles-right text-xs text-indigo-400"></i> 8. Ghi nhớ cốt lõi</a>
             </div>
@@ -353,23 +488,50 @@
             <li><strong>Sóng trên mặt nước:</strong> Khi ném một viên sỏi xuống mặt nước phẳng lặng, các gợn sóng hình tròn lan tỏa rộng ra xa theo phương ngang. Một chiếc lá khô hoặc chiếc phao nổi trên mặt nước chỉ dao động nhấp nhô lên xuống theo phương thẳng đứng.</li>
         </ul>
 
-        <!-- Visual mô phỏng sóng ngang -->
-        <div class="visual-demo-box">
-            <div class="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-2">Mô hình hình học sóng ngang</div>
-            <div class="p-4 bg-slate-900 rounded-xl text-white flex flex-col md:flex-row items-center justify-around gap-4 text-center">
-                <div class="flex flex-col items-center">
-                    <span class="text-sm font-bold text-indigo-300 mb-1">Phương dao động của phần tử</span>
-                    <i class="fa-solid fa-up-down text-3xl text-yellow-400 animate-bounce"></i>
-                    <span class="text-xs text-slate-400 mt-1">Dao động thẳng đứng ($y$)</span>
+        <!-- THÍ NGHIỆM ẢO 1: SÓNG NGANG TRÊN DÂY / MẶT NƯỚC -->
+        <div class="sim-container">
+            <div class="sim-header">
+                <div class="sim-title">
+                    <i class="fa-solid fa-flask-vial"></i> THÍ NGHIỆM ẢO: QUAN SÁT SÓNG NGANG TRÊN DÂY & MẶT NƯỚC
                 </div>
-                <div class="text-2xl font-black text-indigo-400">⟂ (Vuông góc)</div>
-                <div class="flex flex-col items-center">
-                    <span class="text-sm font-bold text-indigo-300 mb-1">Phương truyền sóng</span>
-                    <i class="fa-solid fa-right-long text-3xl text-emerald-400"></i>
-                    <span class="text-xs text-slate-400 mt-1">Lan truyền nằm ngang ($x$)</span>
+                <div class="flex gap-2">
+                    <button class="btn-sim active" id="btnModeRope" onclick="setTransverseMode('rope')"><i class="fa-solid fa-bezier-curve"></i> Sợi dây đàn hồi</button>
+                    <button class="btn-sim" id="btnModeWater" onclick="setTransverseMode('water')"><i class="fa-solid fa-water"></i> Gợn sóng nước</button>
                 </div>
             </div>
-            <p class="text-xs text-slate-500 mt-2 text-center italic">Phương dao động của các phần tử môi trường luôn vuông góc với phương truyền sóng.</p>
+
+            <canvas id="transverseCanvas" class="sim-canvas" width="860" height="240"></canvas>
+
+            <div class="sim-stats">
+                <span>• Tần số: <strong id="tStatsF" class="text-sky-400">1.50 Hz</strong></span>
+                <span>• Biên độ: <strong id="tStatsA" class="text-yellow-400">30 mm</strong></span>
+                <span>• Bước sóng: <strong id="tStatsL" class="text-emerald-400">200 mm</strong></span>
+                <span>• Tốc độ: <strong id="tStatsV" class="text-purple-400">300 mm/s</strong></span>
+                <span>• Chu kì: <strong id="tStatsT" class="text-pink-400">0.67 s</strong></span>
+            </div>
+
+            <div class="sim-controls">
+                <div class="control-group">
+                    <label>Biên độ dao động $A$: <span id="lblTransA" class="text-yellow-400 font-bold">30 mm</span></label>
+                    <input type="range" id="rngTransA" min="10" max="50" value="30" oninput="updateTransverseParams()">
+                </div>
+                <div class="control-group">
+                    <label>Tần số sóng $f$: <span id="lblTransF" class="text-sky-400 font-bold">1.5 Hz</span></label>
+                    <input type="range" id="rngTransF" min="0.5" max="3.0" step="0.1" value="1.5" oninput="updateTransverseParams()">
+                </div>
+                <div class="control-group">
+                    <label>Tốc độ truyền sóng $v$: <span id="lblTransV" class="text-purple-400 font-bold">300 mm/s</span></label>
+                    <input type="range" id="rngTransV" min="150" max="500" step="10" value="300" oninput="updateTransverseParams()">
+                </div>
+            </div>
+
+            <div class="sim-btn-group">
+                <button class="btn-sim" id="btnPlayPauseTrans" onclick="togglePlayTransverse()"><i class="fa-solid fa-pause"></i> Tạm dừng</button>
+                <button class="btn-sim" onclick="resetTransverse()"><i class="fa-solid fa-rotate-left"></i> Đặt lại</button>
+                <button class="btn-sim" id="btnSlowTrans" onclick="toggleSlowTransverse()"><i class="fa-solid fa-gauge"></i> Chuyển động chậm (0.5x)</button>
+                <button class="btn-sim active" id="btnVectorsTrans" onclick="toggleVectorsTransverse()"><i class="fa-solid fa-arrows-up-down"></i> Hiện Vectơ vận tốc $\vec{v}_y$</button>
+            </div>
+            <p class="text-xs text-slate-400 mt-2 mb-0 italic">Quan sát: <strong>Hạt màu đỏ</strong> chỉ dao động thẳng đứng tại chỗ quanh vị trí cân bằng cố định (trục thẳng đứng nét đứt màu đỏ), không hề bị sóng cuốn trôi theo phương ngang!</p>
         </div>
 
         <h3>b) Cơ chế biến dạng đàn hồi vi mô và môi trường lan truyền</h3>
@@ -405,23 +567,50 @@
             <li><strong>Sóng âm trong không khí:</strong> Màng loa chuyển động tới lui dọc theo trục loa, ép các lớp không khí phía trước lại rồi dãn ra liên tiếp, tạo thành các đợt sóng áp suất dọc lan truyền qua không khí đến tai người nghe.</li>
         </ul>
 
-        <!-- Visual mô phỏng sóng dọc -->
-        <div class="visual-demo-box">
-            <div class="text-xs font-bold uppercase tracking-wider text-indigo-600 mb-2">Mô hình hình học sóng dọc</div>
-            <div class="p-4 bg-slate-900 rounded-xl text-white flex flex-col md:flex-row items-center justify-around gap-4 text-center">
-                <div class="flex flex-col items-center">
-                    <span class="text-sm font-bold text-indigo-300 mb-1">Phương dao động của phần tử</span>
-                    <i class="fa-solid fa-left-right text-3xl text-yellow-400"></i>
-                    <span class="text-xs text-slate-400 mt-1">Dao động dọc theo trục ($x$)</span>
+        <!-- THÍ NGHIỆM ẢO 2: SÓNG DỌC TRÊN LÒ XO MỀM DÀI -->
+        <div class="sim-container">
+            <div class="sim-header">
+                <div class="sim-title">
+                    <i class="fa-solid fa-flask-vial"></i> THÍ NGHIỆM ẢO: QUAN SÁT SÓNG DỌC TRÊN LÒ XO ỐNG MỀM DÀI
                 </div>
-                <div class="text-2xl font-black text-indigo-400">∥ (Trùng / Song song)</div>
-                <div class="flex flex-col items-center">
-                    <span class="text-sm font-bold text-indigo-300 mb-1">Phương truyền sóng</span>
-                    <i class="fa-solid fa-right-long text-3xl text-emerald-400"></i>
-                    <span class="text-xs text-slate-400 mt-1">Lan truyền nằm ngang ($x$)</span>
+                <div class="flex gap-2">
+                    <button class="btn-sim active" id="btnModeSpring" onclick="setLongitudinalMode('spring')"><i class="fa-solid fa-ring"></i> Lò xo mềm</button>
+                    <button class="btn-sim" id="btnModeAir" onclick="setLongitudinalMode('air')"><i class="fa-solid fa-wind"></i> Phân tử sóng âm</button>
                 </div>
             </div>
-            <p class="text-xs text-slate-500 mt-2 text-center italic">Phương dao động của các phần tử môi trường trùng hoặc song song với phương truyền sóng.</p>
+
+            <canvas id="longitudinalCanvas" class="sim-canvas" width="860" height="240"></canvas>
+
+            <div class="sim-stats">
+                <span>• Tần số: <strong id="lStatsF" class="text-sky-400">1.20 Hz</strong></span>
+                <span>• Biên độ nén dãn: <strong id="lStatsA" class="text-yellow-400">25 mm</strong></span>
+                <span>• Bước sóng: <strong id="lStatsL" class="text-emerald-400">220 mm</strong></span>
+                <span>• Tốc độ: <strong id="lStatsV" class="text-purple-400">264 mm/s</strong></span>
+                <span>• Vùng nén: <strong class="text-rose-400">Mật độ dày (áp suất cao)</strong></span>
+            </div>
+
+            <div class="sim-controls">
+                <div class="control-group">
+                    <label>Biên độ nén dãn $A$: <span id="lblLongA" class="text-yellow-400 font-bold">25 mm</span></label>
+                    <input type="range" id="rngLongA" min="10" max="40" value="25" oninput="updateLongitudinalParams()">
+                </div>
+                <div class="control-group">
+                    <label>Tần số dao động $f$: <span id="lblLongF" class="text-sky-400 font-bold">1.2 Hz</span></label>
+                    <input type="range" id="rngLongF" min="0.5" max="2.5" step="0.1" value="1.2" oninput="updateLongitudinalParams()">
+                </div>
+                <div class="control-group">
+                    <label>Tốc độ truyền sóng $v$: <span id="lblLongV" class="text-purple-400 font-bold">260 mm/s</span></label>
+                    <input type="range" id="rngLongV" min="150" max="450" step="10" value="260" oninput="updateLongitudinalParams()">
+                </div>
+            </div>
+
+            <div class="sim-btn-group">
+                <button class="btn-sim" id="btnPlayPauseLong" onclick="togglePlayLongitudinal()"><i class="fa-solid fa-pause"></i> Tạm dừng</button>
+                <button class="btn-sim" onclick="resetLongitudinal()"><i class="fa-solid fa-rotate-left"></i> Đặt lại</button>
+                <button class="btn-sim" id="btnSlowLong" onclick="toggleSlowLongitudinal()"><i class="fa-solid fa-gauge"></i> Chuyển động chậm (0.5x)</button>
+                <button class="btn-sim active" id="btnLabelsLong" onclick="toggleLabelsLongitudinal()"><i class="fa-solid fa-tags"></i> Hiện nhãn Nén / Dãn</button>
+            </div>
+            <p class="text-xs text-slate-400 mt-2 mb-0 italic">Quan sát: <strong>Vòng lò xo màu đỏ</strong> chỉ dao động qua lại dọc theo trục nằm ngang quanh vị trí cân bằng cố định (trùng phương truyền sóng), trong khi các vùng nén và vùng dãn di chuyển liên tục sang phải!</p>
         </div>
 
         <h3>b) Cơ chế biến dạng đàn hồi vi mô và môi trường lan truyền</h3>
@@ -538,6 +727,14 @@
 
         <p>Động đất sinh ra các chấn động cơ học khổng lồ lan truyền qua các tầng địa chất dưới dạng các sóng địa chấn. Việc phân tích thời gian và quỹ đạo truyền của hai loại sóng sơ cấp và thứ cấp đã giúp nhân loại giải mã cấu trúc sâu kín bên trong lòng Trái Đất:</p>
 
+        <!-- ẢNH 3D REAL MINH HỌA SÓNG ĐỊA CHẤN P VÀ S QUA CÁC TẦNG TRÁI ĐẤT -->
+        <div class="real-img-card">
+            <img src="seismic_earth_3d.jpg" alt="Mô hình 3D thực tế sóng địa chấn P và S xuyên qua các tầng cấu trúc Trái Đất">
+            <div class="real-img-caption">
+                <strong><i class="fa-solid fa-cube text-indigo-600"></i> Hình 9.1 (Mô phỏng 3D thực tế):</strong> Đường truyền của sóng địa chấn trong lòng Trái Đất. Sóng sơ cấp $P$ (sóng dọc) truyền qua cả lớp Vỏ, Manti, Lõi ngoài dạng lỏng và Lõi trong rắn. Sóng thứ cấp $S$ (sóng ngang) bị chặn hoàn toàn tại ranh giới Lõi ngoài dạng lỏng, tạo ra <em>Vùng bóng mờ của sóng S (S-wave shadow zone)</em> ở phía đối diện tâm chấn.
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
             <div class="border border-indigo-200 bg-white rounded-xl p-4 shadow-sm">
                 <div class="text-indigo-800 font-extrabold text-base flex items-center gap-2 mb-2">
@@ -576,26 +773,53 @@
         <!-- MỤC 6 -->
         <h2 id="muc6"><i class="fa-solid fa-stethoscope"></i> 6. Ứng dụng thực tiễn của sóng cơ trong kĩ thuật & đời sống</h2>
 
-        <div class="space-y-4 my-4">
-            <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
-                <div class="font-bold text-indigo-900 text-base mb-1 flex items-center gap-2">
-                    <i class="fa-solid fa-hospital-user text-indigo-600"></i> Siêu âm chẩn đoán hình ảnh y khoa
+        <div class="space-y-6 my-4">
+            <!-- Ứng dụng 1 -->
+            <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                <div class="p-5">
+                    <div class="font-bold text-indigo-900 text-lg mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-hospital-user text-indigo-600"></i> 1. Siêu âm chẩn đoán hình ảnh y khoa
+                    </div>
+                    <p class="text-sm text-slate-700 mb-4">Thiết bị siêu âm phát chùm sóng âm tần số cao (sóng dọc, $f > 20\text{ kHz}$) truyền qua các mô mềm cơ thể. Do các mô, cơ, dịch và xương có mật độ và tốc độ truyền sóng khác nhau, các xung sóng phản xạ trở lại đầu dò tại các mặt phân cách, cho phép máy tính tái tạo hình ảnh cấu trúc nội tạng, tim mạch và thai nhi với độ an toàn cao.</p>
                 </div>
-                <p class="text-sm text-slate-700 mb-0">Thiết bị siêu âm phát chùm sóng âm tần số cao (sóng dọc, $f > 20\text{ kHz}$) truyền qua các mô mềm cơ thể. Do các mô, cơ, dịch và xương có mật độ và tốc độ truyền sóng khác nhau, các xung sóng phản xạ trở lại đầu dò tại các mặt phân cách, cho phép máy vi tính tái tạo hình ảnh cấu trúc nội tạng, mạch máu và thai nhi với độ an toàn cao.</p>
+                <div class="real-img-card m-0 rounded-none border-x-0 border-b-0">
+                    <img src="ultrasound_medical_3d.jpg" alt="Hình ảnh 3D thực tế chẩn đoán siêu âm y khoa">
+                    <div class="real-img-caption">
+                        <strong><i class="fa-solid fa-cube text-indigo-600"></i> Hình 9.2:</strong> Đầu dò phát sóng siêu âm dọc lan truyền qua các lớp mô, thu nhận xung phản xạ tái tạo hình ảnh 3D/4D giải phẫu y khoa theo thời gian thực.
+                    </div>
+                </div>
             </div>
 
-            <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
-                <div class="font-bold text-sky-900 text-base mb-1 flex items-center gap-2">
-                    <i class="fa-solid fa-ship text-sky-600"></i> Hệ thống định vị thủy âm SONAR dưới đại dương
+            <!-- Ứng dụng 2 -->
+            <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                <div class="p-5">
+                    <div class="font-bold text-sky-900 text-lg mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-ship text-sky-600"></i> 2. Hệ thống định vị thủy âm SONAR dưới đại dương
+                    </div>
+                    <p class="text-sm text-slate-700 mb-4">Vì sóng điện từ bị nước biển hấp thụ rất mạnh, sóng âm (sóng dọc) là phương tiện truyền dẫn tín hiệu chủ yếu dưới nước. Tàu ngầm và tàu khảo sát sử dụng hệ thống SONAR phát các xung sóng âm xuống đáy biển và thu sóng phản xạ để đo độ sâu đáy biển, dò tìm luồng cá, lập bản đồ địa hình và định vị chướng ngại vật ngầm.</p>
                 </div>
-                <p class="text-sm text-slate-700 mb-0">Vì sóng điện từ bị nước biển hấp thụ rất mạnh, sóng âm (sóng dọc) là phương tiện truyền dẫn tín hiệu chủ yếu dưới nước. Tàu ngầm và tàu thủy sử dụng SONAR phát xung sóng âm xuống đáy biển và thu sóng phản xạ để đo độ sâu đáy biển, dò tìm luồng cá, lập bản đồ địa hình và định vị chướng ngại vật ngầm.</p>
+                <div class="real-img-card m-0 rounded-none border-x-0 border-b-0">
+                    <img src="sonar_ocean_3d.jpg" alt="Hình ảnh 3D thực tế hệ thống định vị thủy âm SONAR tàu ngầm">
+                    <div class="real-img-caption">
+                        <strong><i class="fa-solid fa-cube text-sky-600"></i> Hình 9.3:</strong> Tàu ngầm phát các xung sóng âm SONAR (sóng dọc) lan tỏa xuống đáy đại dương, sóng phản xạ từ đáy biển giúp xây dựng bản đồ địa hình 3D chính xác.
+                    </div>
+                </div>
             </div>
 
-            <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
-                <div class="font-bold text-emerald-900 text-base mb-1 flex items-center gap-2">
-                    <i class="fa-solid fa-magnifying-glass-chart text-emerald-600"></i> Kiểm tra khuyết tật vật liệu không phá hủy (NDT)
+            <!-- Ứng dụng 3 -->
+            <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                <div class="p-5">
+                    <div class="font-bold text-emerald-900 text-lg mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass-chart text-emerald-600"></i> 3. Kiểm tra khuyết tật vật liệu không phá hủy (NDT)
+                    </div>
+                    <p class="text-sm text-slate-700 mb-4">Sóng siêu âm được truyền vào các thanh ray xe lửa, đường ống dẫn khí áp suất cao, hoặc kết cấu kim loại máy bay. Nếu bên trong chi tiết có vết nứt tế vi hoặc bọt khí, một phần sóng siêu âm sẽ bị phản xạ sớm trước khi chạm đến đáy vật thể, giúp các kĩ sư phát hiện khuyết tật bên trong mà không cần tháo dỡ hay phá hủy kết cấu.</p>
                 </div>
-                <p class="text-sm text-slate-700 mb-0">Sóng siêu âm được truyền vào các thanh ray xe lửa, đường ống dẫn khí áp suất cao, hoặc kết cấu kim loại máy bay. Nếu bên trong chi tiết có vết nứt tế vi hoặc bọt khí, một phần sóng siêu âm sẽ bị phản xạ sớm trước khi chạm đến đáy vật thể, giúp các kĩ sư phát hiện khuyết tật bên trong mà không cần tháo dỡ hay phá hủy kết cấu.</p>
+                <div class="real-img-card m-0 rounded-none border-x-0 border-b-0">
+                    <img src="ndt_testing_3d.jpg" alt="Hình ảnh 3D thực tế kiểm tra khuyết tật vật liệu không phá hủy NDT">
+                    <div class="real-img-caption">
+                        <strong><i class="fa-solid fa-cube text-emerald-600"></i> Hình 9.4:</strong> Đầu dò siêu âm NDT đặt trên thanh ray đường sắt phát sóng cơ vào khối thép, xung sóng phản xạ từ vết nứt vi mô bên trong hiển thị thành đỉnh sóng khuyết tật trên màn hình đo.
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -681,5 +905,547 @@
             <p>&copy; 2026 Vatli102.com. Nền tảng học tập Vật lí thông minh GDPT 2018.</p>
         </div>
     </footer>
+
+    <!-- INTERACTIVE SIMULATION JAVASCRIPT LOGIC -->
+    <script>
+    // ==========================================
+    // 1. THÍ NGHIỆM ẢO SÓNG NGANG (TRANSVERSE)
+    // ==========================================
+    let transCanvas, transCtx;
+    let transMode = 'rope'; // 'rope' or 'water'
+    let transPlaying = true;
+    let transSlow = false;
+    let transShowVectors = true;
+    let transA = 30; // px
+    let transF = 1.5; // Hz
+    let transV = 300; // px/s
+    let transTime = 0;
+    let transLastTimestamp = 0;
+
+    function initTransverseSim() {
+        transCanvas = document.getElementById('transverseCanvas');
+        if (!transCanvas) return;
+        transCtx = transCanvas.getContext('2d');
+        requestAnimationFrame(drawTransverseFrame);
+    }
+
+    function updateTransverseParams() {
+        transA = parseFloat(document.getElementById('rngTransA').value);
+        transF = parseFloat(document.getElementById('rngTransF').value);
+        transV = parseFloat(document.getElementById('rngTransV').value);
+
+        document.getElementById('lblTransA').innerText = transA + ' mm';
+        document.getElementById('lblTransF').innerText = transF.toFixed(1) + ' Hz';
+        document.getElementById('lblTransV').innerText = transV + ' mm/s';
+
+        let lambda = transV / transF;
+        let T = 1 / transF;
+
+        document.getElementById('tStatsA').innerText = transA + ' mm';
+        document.getElementById('tStatsF').innerText = transF.toFixed(2) + ' Hz';
+        document.getElementById('tStatsL').innerText = lambda.toFixed(1) + ' mm';
+        document.getElementById('tStatsV').innerText = transV + ' mm/s';
+        document.getElementById('tStatsT').innerText = T.toFixed(2) + ' s';
+    }
+
+    function setTransverseMode(mode) {
+        transMode = mode;
+        document.getElementById('btnModeRope').classList.toggle('active', mode === 'rope');
+        document.getElementById('btnModeWater').classList.toggle('active', mode === 'water');
+    }
+
+    function togglePlayTransverse() {
+        transPlaying = !transPlaying;
+        const btn = document.getElementById('btnPlayPauseTrans');
+        btn.innerHTML = transPlaying ? '<i class="fa-solid fa-pause"></i> Tạm dừng' : '<i class="fa-solid fa-play"></i> Tiếp tục';
+    }
+
+    function resetTransverse() {
+        transTime = 0;
+    }
+
+    function toggleSlowTransverse() {
+        transSlow = !transSlow;
+        const btn = document.getElementById('btnSlowTrans');
+        btn.classList.toggle('active', transSlow);
+        btn.innerHTML = transSlow ? '<i class="fa-solid fa-gauge-high"></i> Tốc độ chuẩn (1.0x)' : '<i class="fa-solid fa-gauge"></i> Chuyển động chậm (0.5x)';
+    }
+
+    function toggleVectorsTransverse() {
+        transShowVectors = !transShowVectors;
+        document.getElementById('btnVectorsTrans').classList.toggle('active', transShowVectors);
+    }
+
+    function drawTransverseFrame(timestamp) {
+        if (!transLastTimestamp) transLastTimestamp = timestamp;
+        let dt = (timestamp - transLastTimestamp) / 1000;
+        transLastTimestamp = timestamp;
+
+        if (transPlaying) {
+            let speedFactor = transSlow ? 0.4 : 1.0;
+            transTime += dt * speedFactor;
+        }
+
+        if (transCtx && transCanvas) {
+            const w = transCanvas.width;
+            const h = transCanvas.height;
+            const cy = h / 2;
+
+            transCtx.clearRect(0, 0, w, h);
+
+            // Background Grid lines
+            transCtx.strokeStyle = '#1e293b';
+            transCtx.lineWidth = 1;
+            for (let x = 0; x < w; x += 40) {
+                transCtx.beginPath();
+                transCtx.moveTo(x, 0);
+                transCtx.lineTo(x, h);
+                transCtx.stroke();
+            }
+            for (let y = 0; y < h; y += 40) {
+                transCtx.beginPath();
+                transCtx.moveTo(0, y);
+                transCtx.lineTo(w, y);
+                transCtx.stroke();
+            }
+
+            // Equilibrium line
+            transCtx.strokeStyle = '#475569';
+            transCtx.setLineDash([4, 4]);
+            transCtx.beginPath();
+            transCtx.moveTo(0, cy);
+            transCtx.lineTo(w, cy);
+            transCtx.stroke();
+            transCtx.setLineDash([]);
+
+            let lambda = transV / transF;
+            let omega = 2 * Math.PI * transF;
+            let k = 2 * Math.PI / lambda;
+
+            // Draw wave
+            if (transMode === 'water') {
+                // Gradient water fill under wave
+                transCtx.beginPath();
+                transCtx.moveTo(0, h);
+                for (let x = 0; x <= w; x += 3) {
+                    let y = cy + transA * Math.sin(k * x - omega * transTime);
+                    transCtx.lineTo(x, y);
+                }
+                transCtx.lineTo(w, h);
+                transCtx.closePath();
+                let grad = transCtx.createLinearGradient(0, cy - transA, 0, h);
+                grad.addColorStop(0, 'rgba(6, 182, 212, 0.4)');
+                grad.addColorStop(1, 'rgba(15, 23, 42, 0.9)');
+                transCtx.fillStyle = grad;
+                transCtx.fill();
+
+                // Surface stroke
+                transCtx.beginPath();
+                for (let x = 0; x <= w; x += 3) {
+                    let y = cy + transA * Math.sin(k * x - omega * transTime);
+                    if (x === 0) transCtx.moveTo(x, y);
+                    else transCtx.lineTo(x, y);
+                }
+                transCtx.strokeStyle = '#38bdf8';
+                transCtx.lineWidth = 3;
+                transCtx.stroke();
+
+                // Water molecules
+                for (let x = 20; x < w; x += 25) {
+                    let y = cy + transA * Math.sin(k * x - omega * transTime);
+                    transCtx.beginPath();
+                    transCtx.arc(x, y, 4, 0, Math.PI * 2);
+                    transCtx.fillStyle = '#0284c7';
+                    transCtx.fill();
+                }
+            } else {
+                // Rope Mode: interconnected beads
+                transCtx.beginPath();
+                for (let x = 0; x <= w; x += 4) {
+                    let y = cy + transA * Math.sin(k * x - omega * transTime);
+                    if (x === 0) transCtx.moveTo(x, y);
+                    else transCtx.lineTo(x, y);
+                }
+                transCtx.strokeStyle = '#6366f1';
+                transCtx.lineWidth = 4;
+                transCtx.stroke();
+
+                // Beads on rope
+                for (let x = 15; x < w; x += 20) {
+                    let y = cy + transA * Math.sin(k * x - omega * transTime);
+                    transCtx.beginPath();
+                    transCtx.arc(x, y, 4.5, 0, Math.PI * 2);
+                    transCtx.fillStyle = '#a5b4fc';
+                    transCtx.fill();
+                }
+            }
+
+            // RED MARKER PARTICLE at x = 240
+            let markerX = 240;
+            let markerY = cy + transA * Math.sin(k * markerX - omega * transTime);
+            let vy = -transA * omega * Math.cos(k * markerX - omega * transTime); // px/s
+
+            // Vertical oscillation path line
+            transCtx.strokeStyle = 'rgba(239, 68, 68, 0.4)';
+            transCtx.setLineDash([3, 3]);
+            transCtx.beginPath();
+            transCtx.moveTo(markerX, cy - transA - 20);
+            transCtx.lineTo(markerX, cy + transA + 20);
+            transCtx.stroke();
+            transCtx.setLineDash([]);
+
+            // Marker particle
+            transCtx.beginPath();
+            transCtx.arc(markerX, markerY, 8, 0, Math.PI * 2);
+            transCtx.fillStyle = '#ef4444';
+            transCtx.fill();
+            transCtx.strokeStyle = '#ffffff';
+            transCtx.lineWidth = 2;
+            transCtx.stroke();
+
+            // Particle label
+            transCtx.fillStyle = '#fca5a5';
+            transCtx.font = 'bold 11px sans-serif';
+            transCtx.fillText('Phần tử dao động quanh VTCB', markerX + 12, markerY - 4);
+
+            // Vector arrow for particle velocity vy
+            if (transShowVectors) {
+                let vecLen = vy * 0.15;
+                if (Math.abs(vecLen) > 3) {
+                    transCtx.strokeStyle = '#fbbf24';
+                    transCtx.lineWidth = 2.5;
+                    transCtx.beginPath();
+                    transCtx.moveTo(markerX, markerY);
+                    transCtx.lineTo(markerX, markerY + vecLen);
+                    transCtx.stroke();
+
+                    // Arrowhead
+                    let arrowDir = vecLen > 0 ? 1 : -1;
+                    transCtx.fillStyle = '#fbbf24';
+                    transCtx.beginPath();
+                    transCtx.moveTo(markerX, markerY + vecLen);
+                    transCtx.lineTo(markerX - 4, markerY + vecLen - arrowDir * 6);
+                    transCtx.lineTo(markerX + 4, markerY + vecLen - arrowDir * 6);
+                    transCtx.closePath();
+                    transCtx.fill();
+
+                    transCtx.fillStyle = '#fef08a';
+                    transCtx.font = 'bold 10px monospace';
+                    transCtx.fillText('v_y', markerX - 25, markerY + vecLen / 2);
+                }
+            }
+
+            // Direction of wave propagation arrow at top right
+            transCtx.strokeStyle = '#10b981';
+            transCtx.lineWidth = 3;
+            transCtx.beginPath();
+            transCtx.moveTo(w - 180, 30);
+            transCtx.lineTo(w - 40, 30);
+            transCtx.stroke();
+            // Arrowhead
+            transCtx.fillStyle = '#10b981';
+            transCtx.beginPath();
+            transCtx.moveTo(w - 40, 30);
+            transCtx.lineTo(w - 52, 24);
+            transCtx.lineTo(w - 52, 36);
+            transCtx.closePath();
+            transCtx.fill();
+
+            transCtx.fillStyle = '#34d399';
+            transCtx.font = 'bold 11px sans-serif';
+            transCtx.fillText('Phương truyền sóng v', w - 180, 20);
+
+            // Wavelength bracket indicator
+            let waveStart = 380;
+            let waveEnd = waveStart + lambda;
+            if (waveEnd < w - 20) {
+                transCtx.strokeStyle = '#a78bfa';
+                transCtx.lineWidth = 1.5;
+                transCtx.beginPath();
+                transCtx.moveTo(waveStart, cy + transA + 25);
+                transCtx.lineTo(waveStart, cy + transA + 35);
+                transCtx.lineTo(waveEnd, cy + transA + 35);
+                transCtx.lineTo(waveEnd, cy + transA + 25);
+                transCtx.stroke();
+
+                transCtx.fillStyle = '#c4b5fd';
+                transCtx.font = 'bold 11px sans-serif';
+                transCtx.fillText(`Bước sóng λ = ${lambda.toFixed(0)} mm`, waveStart + (lambda / 2) - 55, cy + transA + 50);
+            }
+        }
+
+        requestAnimationFrame(drawTransverseFrame);
+    }
+
+    // ==========================================
+    // 2. THÍ NGHIỆM ẢO SÓNG DỌC (LONGITUDINAL)
+    // ==========================================
+    let longCanvas, longCtx;
+    let longMode = 'spring'; // 'spring' or 'air'
+    let longPlaying = true;
+    let longSlow = false;
+    let longShowLabels = true;
+    let longA = 25; // px
+    let longF = 1.2; // Hz
+    let longV = 260; // px/s
+    let longTime = 0;
+    let longLastTimestamp = 0;
+
+    function initLongitudinalSim() {
+        longCanvas = document.getElementById('longitudinalCanvas');
+        if (!longCanvas) return;
+        longCtx = longCanvas.getContext('2d');
+        requestAnimationFrame(drawLongitudinalFrame);
+    }
+
+    function updateLongitudinalParams() {
+        longA = parseFloat(document.getElementById('rngLongA').value);
+        longF = parseFloat(document.getElementById('rngLongF').value);
+        longV = parseFloat(document.getElementById('rngLongV').value);
+
+        document.getElementById('lblLongA').innerText = longA + ' mm';
+        document.getElementById('lblLongF').innerText = longF.toFixed(1) + ' Hz';
+        document.getElementById('lblLongV').innerText = longV + ' mm/s';
+
+        let lambda = longV / longF;
+
+        document.getElementById('lStatsA').innerText = longA + ' mm';
+        document.getElementById('lStatsF').innerText = longF.toFixed(2) + ' Hz';
+        document.getElementById('lStatsL').innerText = lambda.toFixed(1) + ' mm';
+        document.getElementById('lStatsV').innerText = longV + ' mm/s';
+    }
+
+    function setLongitudinalMode(mode) {
+        longMode = mode;
+        document.getElementById('btnModeSpring').classList.toggle('active', mode === 'spring');
+        document.getElementById('btnModeAir').classList.toggle('active', mode === 'air');
+    }
+
+    function togglePlayLongitudinal() {
+        longPlaying = !longPlaying;
+        const btn = document.getElementById('btnPlayPauseLong');
+        btn.innerHTML = longPlaying ? '<i class="fa-solid fa-pause"></i> Tạm dừng' : '<i class="fa-solid fa-play"></i> Tiếp tục';
+    }
+
+    function resetLongitudinal() {
+        longTime = 0;
+    }
+
+    function toggleSlowLongitudinal() {
+        longSlow = !longSlow;
+        const btn = document.getElementById('btnSlowLong');
+        btn.classList.toggle('active', longSlow);
+        btn.innerHTML = longSlow ? '<i class="fa-solid fa-gauge-high"></i> Tốc độ chuẩn (1.0x)' : '<i class="fa-solid fa-gauge"></i> Chuyển động chậm (0.5x)';
+    }
+
+    function toggleLabelsLongitudinal() {
+        longShowLabels = !longShowLabels;
+        document.getElementById('btnLabelsLong').classList.toggle('active', longShowLabels);
+    }
+
+    function drawLongitudinalFrame(timestamp) {
+        if (!longLastTimestamp) longLastTimestamp = timestamp;
+        let dt = (timestamp - longLastTimestamp) / 1000;
+        longLastTimestamp = timestamp;
+
+        if (longPlaying) {
+            let speedFactor = longSlow ? 0.4 : 1.0;
+            longTime += dt * speedFactor;
+        }
+
+        if (longCtx && longCanvas) {
+            const w = longCanvas.width;
+            const h = longCanvas.height;
+            const cy = h / 2 - 10;
+
+            longCtx.clearRect(0, 0, w, h);
+
+            // Background Grid lines
+            longCtx.strokeStyle = '#1e293b';
+            longCtx.lineWidth = 1;
+            for (let x = 0; x < w; x += 40) {
+                longCtx.beginPath();
+                longCtx.moveTo(x, 0);
+                longCtx.lineTo(x, h);
+                longCtx.stroke();
+            }
+
+            let lambda = longV / longF;
+            let omega = 2 * Math.PI * longF;
+            let k = 2 * Math.PI / lambda;
+
+            // Number of coils or particle slices
+            const numElements = 70;
+            const restSpacing = (w - 60) / numElements;
+
+            if (longMode === 'spring') {
+                // Spring coils rendering
+                const springRadius = 38;
+                let redIndex = 25; // Index of red marker coil
+
+                // Equilibrium baseline
+                longCtx.strokeStyle = '#334155';
+                longCtx.setLineDash([3, 3]);
+                longCtx.beginPath();
+                longCtx.moveTo(30, cy);
+                longCtx.lineTo(w - 30, cy);
+                longCtx.stroke();
+                longCtx.setLineDash([]);
+
+                let coilPositions = [];
+
+                for (let i = 0; i <= numElements; i++) {
+                    let restX = 30 + i * restSpacing;
+                    let dx = longA * Math.sin(k * restX - omega * longTime);
+                    let currentX = restX + dx;
+                    coilPositions.push({ restX, currentX, dx });
+                }
+
+                // Draw continuous spring coils
+                longCtx.beginPath();
+                for (let i = 0; i < coilPositions.length; i++) {
+                    let x = coilPositions[i].currentX;
+                    let yOffset = (i % 2 === 0) ? -springRadius : springRadius;
+                    if (i === 0) longCtx.moveTo(x, cy + yOffset);
+                    else longCtx.lineTo(x, cy + yOffset);
+                }
+                longCtx.strokeStyle = '#38bdf8';
+                longCtx.lineWidth = 2.5;
+                longCtx.stroke();
+
+                // Draw coil rings for 3D illusion
+                for (let i = 0; i < coilPositions.length; i++) {
+                    let p = coilPositions[i];
+                    longCtx.beginPath();
+                    longCtx.ellipse(p.currentX, cy, 3, springRadius, 0, 0, Math.PI * 2);
+                    if (i === redIndex) {
+                        longCtx.fillStyle = '#ef4444';
+                        longCtx.strokeStyle = '#ffffff';
+                        longCtx.lineWidth = 2.5;
+                        longCtx.fill();
+                        longCtx.stroke();
+                    } else {
+                        longCtx.fillStyle = '#0284c7';
+                        longCtx.strokeStyle = '#38bdf8';
+                        longCtx.lineWidth = 1;
+                        longCtx.fill();
+                        longCtx.stroke();
+                    }
+                }
+
+                // Highlight Red Marker Coil
+                let redCoil = coilPositions[redIndex];
+                // VTCB indicator
+                longCtx.strokeStyle = 'rgba(239, 68, 68, 0.4)';
+                longCtx.setLineDash([3, 3]);
+                longCtx.beginPath();
+                longCtx.moveTo(redCoil.restX, cy - springRadius - 20);
+                longCtx.lineTo(redCoil.restX, cy + springRadius + 20);
+                longCtx.stroke();
+                longCtx.setLineDash([]);
+
+                longCtx.fillStyle = '#fca5a5';
+                longCtx.font = 'bold 11px sans-serif';
+                longCtx.fillText('VTCB', redCoil.restX - 14, cy - springRadius - 25);
+                longCtx.fillText('Vòng lò xo dao động qua lại theo trục x', redCoil.currentX - 70, cy + springRadius + 30);
+
+                // Velocity vector for red coil vx
+                let vx = -longA * omega * Math.cos(k * redCoil.restX - omega * longTime);
+                let vecLen = vx * 0.2;
+                if (Math.abs(vecLen) > 3) {
+                    longCtx.strokeStyle = '#fbbf24';
+                    longCtx.lineWidth = 3;
+                    longCtx.beginPath();
+                    longCtx.moveTo(redCoil.currentX, cy);
+                    longCtx.lineTo(redCoil.currentX + vecLen, cy);
+                    longCtx.stroke();
+
+                    // Arrowhead
+                    let arrowDir = vecLen > 0 ? 1 : -1;
+                    longCtx.fillStyle = '#fbbf24';
+                    longCtx.beginPath();
+                    longCtx.moveTo(redCoil.currentX + vecLen, cy);
+                    longCtx.lineTo(redCoil.currentX + vecLen - arrowDir * 6, cy - 4);
+                    longCtx.lineTo(redCoil.currentX + vecLen - arrowDir * 6, cy + 4);
+                    longCtx.closePath();
+                    longCtx.fill();
+                }
+            } else {
+                // Air Molecules mode: 2D particle grid
+                for (let i = 0; i <= numElements; i++) {
+                    let restX = 30 + i * restSpacing;
+                    let dx = longA * Math.sin(k * restX - omega * longTime);
+                    let currentX = restX + dx;
+
+                    for (let row = 0; row < 7; row++) {
+                        let y = cy - 45 + row * 15;
+                        longCtx.beginPath();
+                        longCtx.arc(currentX + (row % 2) * 3, y, 3, 0, Math.PI * 2);
+                        if (i === 25 && row === 3) {
+                            longCtx.fillStyle = '#ef4444';
+                            longCtx.arc(currentX, y, 6, 0, Math.PI * 2);
+                        } else {
+                            longCtx.fillStyle = '#94a3b8';
+                        }
+                        longCtx.fill();
+                    }
+                }
+            }
+
+            // Labels: Compression & Rarefaction
+            if (longShowLabels) {
+                // Find compressions (where cos(kx - wt) is minimum/derivative negative or dx/dx is minimum)
+                // Compression occurs at kx - wt = (2m + 1/2) * pi approx
+                for (let x = 60; x < w - 60; x += 15) {
+                    let phase = (k * x - omega * longTime) % (2 * Math.PI);
+                    if (phase < 0) phase += 2 * Math.PI;
+
+                    // Compression peak around phase = 3pi/2 (270 deg)
+                    if (Math.abs(phase - (3 * Math.PI / 2)) < 0.15) {
+                        longCtx.fillStyle = '#f43f5e';
+                        longCtx.font = 'bold 11px sans-serif';
+                        longCtx.fillText('▼ VÙNG NÉN', x - 30, cy - 48);
+                    }
+                    // Rarefaction peak around phase = pi/2 (90 deg)
+                    if (Math.abs(phase - (Math.PI / 2)) < 0.15) {
+                        longCtx.fillStyle = '#38bdf8';
+                        longCtx.font = 'bold 11px sans-serif';
+                        longCtx.fillText('▼ VÙNG DÃN', x - 30, cy - 48);
+                    }
+                }
+            }
+
+            // Direction of wave propagation arrow at top right
+            longCtx.strokeStyle = '#10b981';
+            longCtx.lineWidth = 3;
+            longCtx.beginPath();
+            longCtx.moveTo(w - 180, 25);
+            longCtx.lineTo(w - 40, 25);
+            longCtx.stroke();
+            // Arrowhead
+            longCtx.fillStyle = '#10b981';
+            longCtx.beginPath();
+            longCtx.moveTo(w - 40, 25);
+            longCtx.lineTo(w - 52, 19);
+            longCtx.lineTo(w - 52, 31);
+            longCtx.closePath();
+            longCtx.fill();
+
+            longCtx.fillStyle = '#34d399';
+            longCtx.font = 'bold 11px sans-serif';
+            longCtx.fillText('Phương truyền sóng v', w - 180, 16);
+        }
+
+        requestAnimationFrame(drawLongitudinalFrame);
+    }
+
+    // Start simulations when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        initTransverseSim();
+        initLongitudinalSim();
+        updateTransverseParams();
+        updateLongitudinalParams();
+    });
+    </script>
 </body>
 </html>
