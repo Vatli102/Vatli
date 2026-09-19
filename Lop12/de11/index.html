@@ -75,6 +75,21 @@
             .nav-item { font-size: 0.8rem; }
         }
 
+        .header-timer-badge {
+            display: none; font-size: 0.85rem; font-weight: 700;
+            color: #0369a1; background: #e0f2fe; padding: 4px 10px; border-radius: 14px; border: 1px solid #bae6fd;
+        }
+        .timer-warning {
+            color: #b91c1c !important;
+            border-color: #fca5a5 !important;
+            background: #fef2f2 !important;
+            animation: pulseTimer 1s infinite;
+        }
+        @keyframes pulseTimer {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
         .quiz-container { max-width: 920px; margin: 20px auto; padding: 0 15px; min-height: 80vh; }
 
         .exam-banner {
@@ -193,36 +208,31 @@
         .input-correct { border-color: #10b981 !important; background: #f0fdf4 !important; color: #15803d !important; }
         .input-incorrect { border-color: #ef4444 !important; background: #fef2f2 !important; color: #b91c1c !important; }
 
-        .footer-main {
-            background: #0f172a; color: #94a3b8; padding: 40px 15px 20px 15px; margin-top: 60px;
-            font-size: 0.88rem; border-top: 1px solid #1e293b;
+        .site-footer {
+            width: 100%; text-align: center; padding: 25px 15px; background: #ffffff;
+            border-top: 1px solid var(--border); margin-top: 40px; color: #64748b; font-size: 0.88rem;
         }
         .footer-container { max-width: 920px; margin: 0 auto; }
-        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 30px; margin-bottom: 30px; }
-        .footer-brand h3 { color: white; font-size: 1.15rem; font-weight: 800; margin-bottom: 10px; }
-        .footer-brand p { font-size: 0.85rem; line-height: 1.6; color: #64748b; }
-        .footer-col h4 { color: white; font-size: 0.95rem; font-weight: 700; margin-bottom: 12px; }
-        .footer-links { list-style: none; }
-        .footer-links li { margin-bottom: 8px; }
-        .footer-links a { color: #94a3b8; text-decoration: none; transition: color 0.2s; }
-        .footer-links a:hover { color: #38bdf8; }
-        .footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid #1e293b; font-size: 0.8rem; color: #475569; }
-        @media (max-width: 640px) {
-            .footer-grid { grid-template-columns: 1fr; gap: 20px; }
-        }
+        .footer-links { margin-top: 8px; font-size: 0.82rem; }
+        .footer-links a { color: #4f46e5; text-decoration: none; margin: 0 4px; transition: color 0.2s; }
+        .footer-links a:hover { text-decoration: underline; color: #3730a3; }
     </style>
 </head>
-<body>
+<body class="tex2jax_ignore">
 
     <header class="sticky-header">
         <div class="header-container">
             <a href="/" class="site-logo">
-                <img src="/favicon.svg" class="logo-img" alt="Logo">
-                <span class="logo-text">Vật Lí 102</span>
+                <img src="/favicon.svg" alt="Logo" class="logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%234f46e5\'/><text x=\'50\' y=\'65\' font-size=\'45\' text-anchor=\'middle\' fill=\'white\' font-family=\'sans-serif\' font-weight=\'bold\'>V</text></svg>';">
+                <span class="logo-text">Vatli102.com</span>
             </a>
+            <div id="headerTimerBadge" class="header-timer-badge">
+                <i class="fa-solid fa-stopwatch"></i> <span id="timerText">50:00</span>
+            </div>
             <nav class="nav-links">
-                <a href="/Lop12/" class="nav-item"><i class="fa-solid fa-graduation-cap"></i> <span>Lớp 12</span></a>
-                <a href="/" class="nav-item"><i class="fa-solid fa-house"></i> <span>Trang Chủ</span></a>
+                <a href="/" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
+                <a href="/gioi-thieu.html" class="nav-item"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a>
+                <a href="/lien-he.html" class="nav-item"><i class="fa-solid fa-envelope"></i> Liên hệ</a>
             </nav>
         </div>
     </header>
@@ -250,8 +260,8 @@
 
         <div id="examContent" style="display: none;">
             <div class="student-info-bar">
-                <div><i class="fa-solid fa-id-badge" style="color: var(--primary);"></i> Thí sinh: <span id="displayStudentName" style="color: #0f172a;"></span> (<span id="displayStudentClass"></span>)</div>
-                <div><i class="fa-regular fa-clock" style="color: #ef4444;"></i> Thời gian: <span id="timerText" style="color: #ef4444; font-weight: 800;">50:00</span></div>
+                <div><i class="fa-solid fa-id-badge" style="color: var(--primary);"></i> Thí sinh: <strong id="displayStudentName" style="color: #0f172a;"></strong> (<span id="displayStudentClass"></span>)</div>
+                <div><i class="fa-regular fa-clock" style="color: #ef4444;"></i> Thời gian còn lại: <strong id="timerDisplay" style="color: #ef4444; font-weight: 800; font-family: monospace; font-size: 1.05rem;">50:00</strong></div>
             </div>
 
             <div class="progress-container">
@@ -343,33 +353,13 @@
         </div>
     </main>
 
-    <footer class="footer-main">
+    <footer class="site-footer">
         <div class="footer-container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <h3>VẬT LÍ 102 - HỆ THỐNG ÔN THI TRỰC TUYẾN</h3>
-                    <p>Hệ thống tự học và thi thử trực tuyến môn Vật lí theo Chương trình GDPT 2018. Chuẩn hóa ma trận, ngân hàng câu hỏi phân tích bản chất vật lí và tình huống thực tiễn sinh động.</p>
-                </div>
-                <div class="footer-col">
-                    <h4>CHƯƠNG TRÌNH</h4>
-                    <ul class="footer-links">
-                        <li><a href="/Lop10/">Vật lí 10</a></li>
-                        <li><a href="/Lop11/">Vật lí 11</a></li>
-                        <li><a href="/Lop12/">Vật lí 12</a></li>
-                        <li><a href="/de-thi-tot-nghiep/">Đề thi Tốt nghiệp THPT</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>LIÊN KẾT</h4>
-                    <ul class="footer-links">
-                        <li><a href="/">Trang chủ</a></li>
-                        <li><a href="/about/">Giới thiệu</a></li>
-                        <li><a href="/huong-dan/">Hướng dẫn ôn tập</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                &copy; 2026 Vatli102.com. All rights reserved. Nền tảng ôn thi trắc nghiệm Vật lí chuyên sâu.
+            <p>© 2026 Vatli102.com - Nền tảng học tập & trắc nghiệm Vật lí trực tuyến chuẩn GDPT 2018.</p>
+            <div class="footer-links">
+                <a href="/">Trang chủ</a> •
+                <a href="/gioi-thieu.html">Giới thiệu</a> •
+                <a href="/lien-he.html">Liên hệ</a>
             </div>
         </div>
     </footer>
@@ -403,6 +393,8 @@
 
             document.getElementById("loginCard").style.display = "none";
             document.getElementById("examContent").style.display = "block";
+            const hdrTimer = document.getElementById("headerTimerBadge");
+            if (hdrTimer) hdrTimer.style.display = "inline-flex";
 
             renderPart1();
             renderPart2();
@@ -426,7 +418,15 @@
                 totalSeconds--;
                 const min = Math.floor(totalSeconds / 60);
                 const sec = totalSeconds % 60;
-                document.getElementById("timerText").innerText = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+                const formatted = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+                const tHeader = document.getElementById("timerText");
+                if (tHeader) tHeader.innerText = formatted;
+                const tDisp = document.getElementById("timerDisplay");
+                if (tDisp) tDisp.innerText = formatted;
+                if (totalSeconds <= 300) {
+                    const hb = document.getElementById("headerTimerBadge");
+                    if (hb) hb.classList.add("timer-warning");
+                }
             }, 1000);
         }
 
@@ -583,6 +583,10 @@
 
             isSubmitted = true;
             if (timerInterval) clearInterval(timerInterval);
+            const tHeader = document.getElementById("timerText");
+            if (tHeader) tHeader.innerText = "Đã nộp";
+            const tDisp = document.getElementById("timerDisplay");
+            if (tDisp) tDisp.innerText = "Đã nộp";
 
             const timeSpentSec = 3000 - Math.max(0, totalSeconds);
             const timeMin = Math.floor(timeSpentSec / 60);
