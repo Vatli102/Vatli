@@ -467,10 +467,6 @@
                         </div>
                         <div class="pt-2 border-t border-slate-700/60 space-y-1.5">
                             <label class="flex items-center gap-2 cursor-pointer text-slate-300 hover:text-white">
-                                <input id="chk1Field" type="checkbox" checked class="accent-indigo-500 rounded">
-                                <span>Hiện từ trường $\vec{B}$ của nam châm</span>
-                            </label>
-                            <label class="flex items-center gap-2 cursor-pointer text-slate-300 hover:text-white">
                                 <input id="chk1Electrons" type="checkbox" checked class="accent-cyan-500 rounded">
                                 <span>Hiện dòng hạt electron dao động</span>
                             </label>
@@ -739,10 +735,7 @@
                     const genCenterX = showGraph ? 240 : 420;
                     const genCenterY = 230;
 
-                    // 1. Draw Magnetic Field Lines (if enabled)
-                    if (showField && magStrength > 0) {
-                        drawMagneticField(genCenterX, genCenterY, rotorAngle, magStrength);
-                    }
+                    
 
                     // 2. Draw Stator Coils (Top & Bottom iron core poles with copper turns)
                     drawStatorPoles(genCenterX, genCenterY, turnsCount);
@@ -761,26 +754,7 @@
                     requestAnimationFrame(animate);
                 }
 
-                // Helper: Draw Magnetic Field Lines streaming from Rotor N to S
-                function drawMagneticField(cx, cy, angle, strength) {
-                    ctx.save();
-                    ctx.translate(cx, cy);
-                    ctx.rotate(angle);
-
-                    ctx.strokeStyle = `rgba(56, 189, 248, ${0.25 * strength})`;
-                    ctx.lineWidth = 1.5;
-                    ctx.setLineDash([4, 4]);
-
-                    // Oval field lines around the magnet
-                    for (let r = 50; r <= 130; r += 22) {
-                        ctx.beginPath();
-                        ctx.ellipse(0, 0, r * 0.65, r, 0, 0, Math.PI * 2);
-                        ctx.stroke();
-                    }
-
-                    ctx.setLineDash([]);
-                    ctx.restore();
-                }
+                
 
                 // Helper: Draw Stator Coils (Left & Right or Top & Bottom)
                 function drawStatorPoles(cx, cy, turns) {
@@ -794,14 +768,12 @@
                     // Right Coil Core (Stato Cực Phải)
                     drawSinglePole(cx + poleOffset, cy, -Math.PI / 2, turns, 'Cuộn Stato 2');
 
-                    // Central Stator Stator Frame circle (dotted guide)
+                    // Central Stator Frame circle
                     ctx.beginPath();
                     ctx.arc(cx, cy, 100, 0, Math.PI * 2);
-                    ctx.strokeStyle = 'rgba(71, 85, 105, 0.4)';
-                    ctx.lineWidth = 2;
-                    ctx.setLineDash([5, 5]);
+                    ctx.strokeStyle = 'rgba(71, 85, 105, 0.25)';
+                    ctx.lineWidth = 1.5;
                     ctx.stroke();
-                    ctx.setLineDash([]);
 
                     ctx.restore();
                 }
@@ -1554,10 +1526,6 @@
                             </button>
                         </div>
                         <div class="pt-2 border-t border-slate-700/60 space-y-1.5">
-                            <label class="flex items-center gap-2 cursor-pointer text-slate-300 hover:text-white">
-                                <input id="chk3Field" type="checkbox" checked class="accent-emerald-500 rounded">
-                                <span>Hiện từ trường quay ($\vec{B}$)</span>
-                            </label>
                             <label class="flex items-center gap-2 cursor-pointer text-slate-300 hover:text-white">
                                 <input id="chk3Electrons" type="checkbox" checked class="accent-cyan-500 rounded">
                                 <span>Hiện dòng hạt electron 3 pha</span>
