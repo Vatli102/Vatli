@@ -15,7 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
         window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+            tex: { inlineMath: [['$', '$'], ['\(', '\)']], displayMath: [['$$', '$$'], ['\[', '\]']], processEscapes: true },
             options: { ignoreHtmlClass: 'tex2jax_ignore', processHtmlClass: 'tex2jax_process' }
         };
     </script>
@@ -116,68 +116,129 @@
         .btn-start:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(79,70,229,0.4); }
 
         .student-info-bar {
-            background: #f1f5f9; padding: 10px 16px; border-radius: 10px; margin-bottom: 20px;
+            background: #f1f5f9; padding: 10px 16px; border-radius: 10px; margin-bottom: 15px;
             display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; font-weight: 600;
         }
 
-        .progress-container { margin-bottom: 25px; }
+        .progress-container { margin-bottom: 18px; }
         .progress-bar-bg { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
         .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #4f46e5, #06b6d4); transition: width 0.3s; }
         .progress-text { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--text-muted); margin-top: 5px; }
 
-        .section-header {
-            background: #eef2ff; color: #3730a3; padding: 12px 18px; border-radius: 12px;
-            font-weight: 800; font-size: 1.05rem; margin: 30px 0 15px 0; border-left: 5px solid #4f46e5;
+        /* PALETTE STYLES */
+        .palette-card {
+            background: white; border: 1px solid var(--border); border-radius: 16px;
+            padding: 15px 18px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
+        .palette-header {
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+            margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #f1f5f9;
+        }
+        .palette-title { font-weight: 800; font-size: 0.92rem; color: #1e293b; display: flex; align-items: center; gap: 6px; }
+        .palette-legend { display: flex; gap: 12px; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); align-items: center; }
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+        .legend-dot.active { background: var(--primary); }
+        .legend-dot.answered { background: #818cf8; }
+        .legend-dot.unread { background: #e2e8f0; }
 
-        .question-card {
-            background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
-            padding: 18px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-            transition: border-color 0.2s;
+        .palette-sections { display: flex; flex-direction: column; gap: 8px; }
+        .palette-section { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .palette-section-label { font-size: 0.8rem; font-weight: 700; color: #475569; min-width: 140px; }
+        .palette-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+
+        .palette-btn {
+            width: 32px; height: 32px; border-radius: 8px; font-size: 0.82rem; font-weight: 700;
+            border: 1.5px solid var(--border); background: #ffffff; color: #475569;
+            display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s;
         }
-        .question-card:hover { border-color: #cbd5e1; }
+        .palette-btn:hover { border-color: var(--primary); color: var(--primary); background: #f8fafc; }
+        .palette-btn.answered { background: #e0e7ff; color: #3730a3; border-color: #818cf8; }
+        .palette-btn.active {
+            background: var(--primary) !important; color: white !important; border-color: var(--primary) !important;
+            transform: scale(1.08); box-shadow: 0 3px 10px rgba(79,70,229,0.35); font-weight: 800;
+        }
+        .palette-btn.is-correct { background: #ecfdf5 !important; color: #065f46 !important; border-color: #10b981 !important; }
+        .palette-btn.is-wrong { background: #fef2f2 !important; color: #991b1b !important; border-color: #ef4444 !important; }
+        .palette-btn.is-partial { background: #fef3c7 !important; color: #92400e !important; border-color: #f59e0b !important; }
+
+        /* SINGLE QUESTION CARD */
+        .single-question-card {
+            background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 16px;
+            padding: 22px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 20px;
+            transition: border-color 0.2s; min-height: 280px;
+        }
+        .single-question-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
+            padding-bottom: 10px; border-bottom: 1px solid #f1f5f9; flex-wrap: wrap; gap: 8px;
+        }
+        .badge-section-pill {
+            display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px;
+            border-radius: 20px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase;
+        }
+        .badge-p1 { background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe; }
+        .badge-p2 { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+        .badge-p3 { background: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; }
+
         .question-num { font-weight: 800; color: var(--primary); margin-right: 6px; }
-        .question-title { font-size: 0.98rem; font-weight: 600; margin-bottom: 12px; color: #1e293b; }
+        .question-title { font-size: 1.02rem; font-weight: 600; margin-bottom: 14px; color: #1e293b; line-height: 1.7; }
 
         .question-image-box { text-align: center; margin: 12px 0 16px 0; }
         .question-img { max-width: 320px; width: 100%; height: auto; border-radius: 10px; border: 1px solid #e2e8f0; background: white; padding: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
 
-        .options-grid { display: flex; flex-direction: column; gap: 8px; }
+        .options-grid { display: flex; flex-direction: column; gap: 10px; }
         .option-item {
-            display: flex; align-items: center; gap: 10px; padding: 10px 14px;
-            border: 1px solid var(--border); border-radius: 8px; cursor: pointer;
-            transition: all 0.15s; font-size: 0.92rem;
+            display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+            border: 1.5px solid var(--border); border-radius: 10px; cursor: pointer;
+            transition: all 0.15s; font-size: 0.95rem; background: white;
         }
         .option-item:hover { background: #f8fafc; border-color: #94a3b8; }
         .option-item.selected { background: #eef2ff; border-color: var(--primary); color: #3730a3; font-weight: 600; }
-        .option-label { font-weight: 700; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #f1f5f9; font-size: 0.8rem; flex-shrink: 0; }
+        .option-label { font-weight: 800; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #f1f5f9; font-size: 0.85rem; flex-shrink: 0; }
         .option-item.selected .option-label { background: var(--primary); color: white; }
 
         .tf-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .tf-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-bottom: 1px solid #f1f5f9; gap: 10px; }
-        .tf-row:last-child { border-bottom: none; }
-        .tf-btns { display: flex; gap: 6px; flex-shrink: 0; }
+        .tf-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-bottom: 1px solid #f1f5f9; gap: 12px; background: white; border-radius: 8px; margin-bottom: 6px; }
+        .tf-btns { display: flex; gap: 8px; flex-shrink: 0; }
         .tf-btn {
-            padding: 5px 14px; border: 1px solid var(--border); border-radius: 6px;
-            background: white; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.15s;
+            padding: 7px 18px; border: 1.5px solid var(--border); border-radius: 8px;
+            background: white; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.15s;
         }
-        .tf-btn.active-true { background: #10b981; border-color: #10b981; color: white; }
-        .tf-btn.active-false { background: #ef4444; border-color: #ef4444; color: white; }
+        .tf-btn:hover { background: #f8fafc; border-color: #94a3b8; }
+        .tf-btn.active-true { background: #10b981 !important; border-color: #10b981 !important; color: white !important; }
+        .tf-btn.active-false { background: #ef4444 !important; border-color: #ef4444 !important; color: white !important; }
 
-        .short-input-group { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+        .short-input-group { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
         .short-input {
-            padding: 10px 16px; border: 2px solid var(--border); border-radius: 8px;
-            font-size: 1rem; font-weight: 700; width: 160px; outline: none; transition: border-color 0.2s;
+            padding: 12px 18px; border: 2px solid var(--border); border-radius: 10px;
+            font-size: 1.05rem; font-weight: 700; width: 180px; outline: none; transition: border-color 0.2s;
         }
         .short-input:focus { border-color: var(--primary); }
 
-        .btn-submit-exam {
-            display: block; width: 100%; max-width: 360px; margin: 40px auto 20px auto;
-            padding: 15px; font-size: 1.1rem; font-weight: 800; border: none; border-radius: 12px;
-            background: linear-gradient(135deg, #10b981, #059669); color: white; cursor: pointer;
-            box-shadow: 0 6px 20px rgba(16,185,129,0.35); transition: all 0.2s;
+        /* STEPPER NAVIGATION */
+        .stepper-nav {
+            display: flex; justify-content: space-between; align-items: center; gap: 10px;
+            padding: 14px 18px; background: white; border: 1px solid var(--border); border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02); flex-wrap: wrap; margin-bottom: 25px;
         }
-        .btn-submit-exam:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(16,185,129,0.45); }
+        .btn-nav {
+            display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px;
+            border-radius: 10px; font-size: 0.92rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+            border: 1px solid var(--border); background: #ffffff; color: #334155;
+        }
+        .btn-nav:hover:not(:disabled) { background: #f1f5f9; border-color: #94a3b8; }
+        .btn-nav:disabled { opacity: 0.35; cursor: not-allowed; }
+        .btn-nav-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; border: none;
+            box-shadow: 0 3px 10px rgba(79,70,229,0.25);
+        }
+        .btn-nav-primary:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(79,70,229,0.35); }
+        .btn-submit-nav {
+            background: linear-gradient(135deg, #10b981, #059669); color: white; border: none;
+            box-shadow: 0 3px 10px rgba(16,185,129,0.25); padding: 10px 22px;
+        }
+        .btn-submit-nav:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(16,185,129,0.35); }
+        .stepper-indicator { font-weight: 800; font-size: 0.95rem; color: #1e293b; }
 
         .results-panel {
             display: none; background: white; border-radius: 18px; padding: 25px;
@@ -198,8 +259,8 @@
 
         .explanation-box {
             background: #f8fafc; border-left: 4px solid var(--primary);
-            padding: 12px 16px; border-radius: 0 8px 8px 0; margin-top: 12px;
-            font-size: 0.9rem; line-height: 1.6; display: none;
+            padding: 14px 18px; border-radius: 0 10px 10px 0; margin-top: 16px;
+            font-size: 0.92rem; line-height: 1.65; display: none;
         }
         .explanation-box.show { display: block; }
 
@@ -216,6 +277,16 @@
         .footer-links { margin-top: 8px; font-size: 0.82rem; }
         .footer-links a { color: #4f46e5; text-decoration: none; margin: 0 4px; transition: color 0.2s; }
         .footer-links a:hover { text-decoration: underline; color: #3730a3; }
+
+        .section-header {
+            background: #eef2ff; color: #3730a3; padding: 12px 18px; border-radius: 12px;
+            font-weight: 800; font-size: 1.05rem; margin: 30px 0 15px 0; border-left: 5px solid #4f46e5;
+        }
+        .question-card {
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
+            padding: 18px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: border-color 0.2s;
+        }
     </style>
 </head>
 <body class="tex2jax_ignore">
@@ -223,7 +294,7 @@
     <header class="sticky-header">
         <div class="header-container">
             <a href="/" class="site-logo">
-                <img src="/favicon.svg" alt="Logo" class="logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%234f46e5\'/><text x=\'50\' y=\'65\' font-size=\'45\' text-anchor=\'middle\' fill=\'white\' font-family=\'sans-serif\' font-weight=\'bold\'>V</text></svg>';">
+                <img src="/favicon.svg" alt="Logo" class="logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%234f46e5'/><text x='50' y='65' font-size='45' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>V</text></svg>';">
                 <span class="logo-text">Vatli102.com</span>
             </a>
             <div id="headerTimerBadge" class="header-timer-badge">
@@ -259,49 +330,62 @@
         </div>
 
         <div id="examContent" style="display: none;">
+            <!-- Student Info Bar -->
             <div class="student-info-bar">
                 <div><i class="fa-solid fa-id-badge" style="color: var(--primary);"></i> Thí sinh: <strong id="displayStudentName" style="color: #0f172a;"></strong> (<span id="displayStudentClass"></span>)</div>
                 <div><i class="fa-regular fa-clock" style="color: #ef4444;"></i> Thời gian còn lại: <strong id="timerDisplay" style="color: #ef4444; font-weight: 800; font-family: monospace; font-size: 1.05rem;">50:00</strong></div>
             </div>
 
+            <!-- Progress Bar -->
             <div class="progress-container">
                 <div class="progress-bar-bg">
                     <div class="progress-bar-fill" id="progressBarFill"></div>
                 </div>
                 <div class="progress-text">
-                    <span>Tiến độ hoàn thành</span>
+                    <span>Tiến độ làm bài</span>
                     <span id="progressText">0 / 28 câu</span>
                 </div>
             </div>
 
-            <!-- PHẦN I -->
-            <div class="section-header">
-                <i class="fa-solid fa-list-check"></i> PHẦN I. CÂU TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN (4,5 ĐIỂM)
+            <!-- Question Palette -->
+            <div class="palette-card">
+                <div class="palette-header">
+                    <div class="palette-title"><i class="fa-solid fa-table-cells-large"></i> BẢNG CÂU HỎI (28 CÂU)</div>
+                    <div class="palette-legend">
+                        <span class="legend-item"><span class="legend-dot active"></span> Đang làm</span>
+                        <span class="legend-item"><span class="legend-dot answered"></span> Đã trả lời</span>
+                        <span class="legend-item"><span class="legend-dot unread"></span> Chưa làm</span>
+                    </div>
+                </div>
+                
+                <div class="palette-sections">
+                    <div class="palette-section">
+                        <div class="palette-section-label">Phần I (Trắc nghiệm):</div>
+                        <div class="palette-grid" id="palettePart1"></div>
+                    </div>
+                    <div class="palette-section">
+                        <div class="palette-section-label">Phần II (Đúng/Sai):</div>
+                        <div class="palette-grid" id="palettePart2"></div>
+                    </div>
+                    <div class="palette-section">
+                        <div class="palette-section-label">Phần III (Điền số):</div>
+                        <div class="palette-grid" id="palettePart3"></div>
+                    </div>
+                </div>
             </div>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px; font-style: italic;">
-                Thí sinh trả lời từ Câu 1 đến Câu 18. Mỗi câu hỏi chỉ chọn 01 phương án. Mỗi câu đúng được 0,25 điểm.
-            </p>
-            <div id="part1Container"></div>
 
-            <!-- PHẦN II -->
-            <div class="section-header" style="background: #ecfdf5; color: #065f46; border-left-color: #10b981; margin-top: 35px;">
-                <i class="fa-solid fa-square-check"></i> PHẦN II. CÂU TRẮC NGHIỆM ĐÚNG / SAI (4,0 ĐIỂM)
+            <!-- Single Question Display Box -->
+            <div id="singleQuestionContainer">
+                <div id="currentQuestionBox" class="single-question-card"></div>
+
+                <!-- Stepper Navigation -->
+                <div class="stepper-nav">
+                    <button type="button" class="btn-nav" id="btnPrevQ" onclick="prevQuestion()"><i class="fa-solid fa-chevron-left"></i> Câu trước</button>
+                    <div class="stepper-indicator" id="stepperIndicator">Câu 1 / 28</div>
+                    <button type="button" class="btn-nav btn-nav-primary" id="btnNextQ" onclick="nextQuestion()">Câu tiếp theo <i class="fa-solid fa-chevron-right"></i></button>
+                    <button type="button" class="btn-nav btn-submit-nav" onclick="submitExam()"><i class="fa-solid fa-paper-plane"></i> Nộp bài</button>
+                </div>
             </div>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px; font-style: italic;">
-                Thí sinh trả lời từ Câu 1 đến Câu 4. Trong mỗi ý a, b, c, d ở mỗi câu, thí sinh chọn Đúng hoặc Sai. (Đúng 1 ý: 0,1đ; Đúng 2 ý: 0,25đ; Đúng 3 ý: 0,5đ; Đúng 4 ý: 1,0đ).
-            </p>
-            <div id="part2Container"></div>
-
-            <!-- PHẦN III -->
-            <div class="section-header" style="background: #fff7ed; color: #9a3412; border-left-color: #f97316; margin-top: 35px;">
-                <i class="fa-solid fa-pen-to-square"></i> PHẦN III. CÂU TRẮC NGHIỆM TRẢ LỜI NGẮN (1,5 ĐIỂM)
-            </div>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px; font-style: italic;">
-                Thí sinh trả lời từ Câu 1 đến Câu 6. Mỗi câu đúng được 0,25 điểm. Điền số ngắn gọn tối đa 4 ký tự.
-            </p>
-            <div id="part3Container"></div>
-
-            <button class="btn-submit-exam" id="btnSubmit" onclick="submitExam()"><i class="fa-solid fa-paper-plane"></i> NỘP BÀI THI & XEM ĐIỂM</button>
 
             <!-- RESULTS PANEL -->
             <div class="results-panel" id="resultsPanel">
@@ -349,6 +433,28 @@
                         <span id="p3CorrectBreakdown" style="color: var(--text-muted); font-size: 0.8rem;">0/6 câu</span>
                     </div>
                 </div>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <button type="button" class="btn-nav btn-nav-primary" onclick="toggleAllReviewMode()" id="btnToggleAllReview" style="padding: 12px 25px; font-size: 1rem;">
+                        <i class="fa-solid fa-list-ol"></i> Xem toàn bộ 28 câu & Lời giải chi tiết
+                    </button>
+                </div>
+            </div>
+
+            <!-- All Questions Container for Full Review Mode -->
+            <div id="allQuestionsReviewContainer" style="display: none; margin-top: 30px;">
+                <div class="section-header"><i class="fa-solid fa-list-check"></i> PHẦN I. CÂU TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN (4,5 ĐIỂM)</div>
+                <div id="allPart1Container"></div>
+
+                <div class="section-header" style="background: #ecfdf5; color: #065f46; border-left-color: #10b981; margin-top: 35px;">
+                    <i class="fa-solid fa-square-check"></i> PHẦN II. CÂU TRẮC NGHIỆM ĐÚNG / SAI (4,0 ĐIỂM)
+                </div>
+                <div id="allPart2Container"></div>
+
+                <div class="section-header" style="background: #fff7ed; color: #9a3412; border-left-color: #f97316; margin-top: 35px;">
+                    <i class="fa-solid fa-pen-to-square"></i> PHẦN III. CÂU TRẮC NGHIỆM TRẢ LỜI NGẮN (1,5 ĐIỂM)
+                </div>
+                <div id="allPart3Container"></div>
             </div>
         </div>
     </main>
@@ -374,9 +480,12 @@
         let studentInfo = { name: "", className: "" };
         let userAnswersP1 = {};
         let userAnswersP2 = {};
+        let userAnswersP3 = {};
         let totalSeconds = 3000;
         let timerInterval = null;
         let isSubmitted = false;
+        let currentQuestionIndex = 0; // 0 to 27
+        let isAllReviewMode = false;
 
         function startExam() {
             const name = document.getElementById("studentName").value.trim();
@@ -396,15 +505,10 @@
             const hdrTimer = document.getElementById("headerTimerBadge");
             if (hdrTimer) hdrTimer.style.display = "inline-flex";
 
-            renderPart1();
-            renderPart2();
-            renderPart3();
+            renderPalette();
+            goToQuestion(0);
 
             startTimer();
-
-            if (window.MathJax && MathJax.typesetPromise) {
-                MathJax.typesetPromise();
-            }
         }
 
         function startTimer() {
@@ -430,14 +534,129 @@
             }, 1000);
         }
 
-        function renderPart1() {
-            const container = document.getElementById("part1Container");
-            container.innerHTML = "";
+        function renderPalette() {
+            // Part 1: 18 buttons
+            const p1Container = document.getElementById("palettePart1");
+            p1Container.innerHTML = "";
+            for (let i = 0; i < 18; i++) {
+                const q = part1Data[i];
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "palette-btn";
+                btn.id = `palette_btn_${i}`;
+                btn.innerText = i + 1;
+                btn.onclick = () => goToQuestion(i);
 
-            part1Data.forEach(q => {
-                const card = document.createElement("div");
-                card.className = "question-card";
-                card.id = `card_p1_${q.id}`;
+                if (i === currentQuestionIndex) btn.classList.add("active");
+                if (userAnswersP1[q.id]) btn.classList.add("answered");
+
+                if (isSubmitted) {
+                    const isCorrect = (userAnswersP1[q.id] === q.answer);
+                    btn.classList.add(isCorrect ? "is-correct" : "is-wrong");
+                }
+                p1Container.appendChild(btn);
+            }
+
+            // Part 2: 4 buttons (19..22)
+            const p2Container = document.getElementById("palettePart2");
+            p2Container.innerHTML = "";
+            for (let i = 0; i < 4; i++) {
+                const q = part2Data[i];
+                const qIdx = 18 + i;
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "palette-btn";
+                btn.id = `palette_btn_${qIdx}`;
+                btn.innerText = qIdx + 1;
+                btn.onclick = () => goToQuestion(qIdx);
+
+                if (qIdx === currentQuestionIndex) btn.classList.add("active");
+                if (userAnswersP2[q.id] && Object.keys(userAnswersP2[q.id]).length > 0) {
+                    btn.classList.add("answered");
+                }
+
+                if (isSubmitted) {
+                    const uObj = userAnswersP2[q.id] || {};
+                    let subCorrect = 0;
+                    q.items.forEach(it => {
+                        if (uObj[it.sub] === it.answer) subCorrect++;
+                    });
+                    if (subCorrect === 4) btn.classList.add("is-correct");
+                    else if (subCorrect > 0) btn.classList.add("is-partial");
+                    else btn.classList.add("is-wrong");
+                }
+                p2Container.appendChild(btn);
+            }
+
+            // Part 3: 6 buttons (23..28)
+            const p3Container = document.getElementById("palettePart3");
+            p3Container.innerHTML = "";
+            for (let i = 0; i < 6; i++) {
+                const q = part3Data[i];
+                const qIdx = 22 + i;
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "palette-btn";
+                btn.id = `palette_btn_${qIdx}`;
+                btn.innerText = qIdx + 1;
+                btn.onclick = () => goToQuestion(qIdx);
+
+                if (qIdx === currentQuestionIndex) btn.classList.add("active");
+                if (userAnswersP3[q.id] && userAnswersP3[q.id].trim().length > 0) {
+                    btn.classList.add("answered");
+                }
+
+                if (isSubmitted) {
+                    const uVal = (userAnswersP3[q.id] || "").trim().replace(',', '.');
+                    const cVal = q.answer.trim().replace(',', '.');
+                    let isCorrect = (uVal === cVal && uVal !== "");
+                    if (!isCorrect && !isNaN(parseFloat(uVal)) && !isNaN(parseFloat(cVal)) && uVal !== "") {
+                        if (Math.abs(parseFloat(uVal) - parseFloat(cVal)) < 1e-4) isCorrect = true;
+                    }
+                    btn.classList.add(isCorrect ? "is-correct" : "is-wrong");
+                }
+                p3Container.appendChild(btn);
+            }
+        }
+
+        function goToQuestion(index) {
+            if (index < 0 || index >= 28) return;
+            currentQuestionIndex = index;
+            renderPalette();
+            renderCurrentQuestion();
+
+            // Update stepper navigation
+            document.getElementById("btnPrevQ").disabled = (index === 0);
+            document.getElementById("btnNextQ").disabled = (index === 27);
+            document.getElementById("stepperIndicator").innerText = `Câu ${index + 1} / 28`;
+
+            // Auto-scroll question box into view smoothly on mobile
+            const box = document.getElementById("singleQuestionContainer");
+            if (box && window.innerWidth < 768) {
+                box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < 27) {
+                goToQuestion(currentQuestionIndex + 1);
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                goToQuestion(currentQuestionIndex - 1);
+            }
+        }
+
+        function renderCurrentQuestion() {
+            const box = document.getElementById("currentQuestionBox");
+            const idx = currentQuestionIndex;
+
+            if (idx < 18) {
+                // Part 1: MCQ (id = idx + 1)
+                const q = part1Data[idx];
+                const uAns = userAnswersP1[q.id];
 
                 let imgHtml = "";
                 if (q.image) {
@@ -446,107 +665,198 @@
 
                 let optHtml = "";
                 for (const [key, val] of Object.entries(q.options)) {
+                    let optClass = "option-item";
+                    if (uAns === key) optClass += " selected";
+                    if (isSubmitted) {
+                        if (key === q.answer) optClass += " correct-ans";
+                        else if (uAns === key && uAns !== q.answer) optClass += " wrong-ans";
+                    }
+
                     optHtml += `
-                        <div class="option-item" id="opt_p1_${q.id}_${key}" onclick="selectOptionP1(${q.id}, '${key}')">
+                        <div class="${optClass}" id="opt_sq_${key}" onclick="selectOptionSingleP1(${q.id}, '${key}')">
                             <div class="option-label">${key}</div>
                             <div style="flex: 1;">${val}</div>
                         </div>
                     `;
                 }
 
-                card.innerHTML = `
+                let expHtml = "";
+                if (isSubmitted) {
+                    const isCorrect = (uAns === q.answer);
+                    expHtml = `
+                        <div class="explanation-box show">
+                            <div style="margin-bottom: 6px;">
+                                ${isCorrect ? 
+                                    '<span style="background: #f0fdf4; color: #166534; padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 0.85rem;">✔ Bạn đã chọn đúng (+0,25đ)</span>' : 
+                                    `<span style="background: #fef2f2; color: #991b1b; padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 0.85rem;">✖ Bạn đã chọn: ${'phương án ' + (uAns || 'Trống')} (Đáp án đúng: ${'phương án ' + q.answer})</span>`
+                                }
+                            </div>
+                            <div><strong>💡 Hướng dẫn giải chi tiết:</strong> ${q.explanation}</div>
+                        </div>
+                    `;
+                }
+
+                box.innerHTML = `
+                    <div class="single-question-header">
+                        <span class="badge-section-pill badge-p1"><i class="fa-solid fa-list-check"></i> PHẦN I: TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN (0,25đ)</span>
+                        <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Câu hỏi ${idx + 1} / 28</span>
+                    </div>
                     <div class="question-title"><span class="question-num">Câu ${q.id}:</span> ${q.question}</div>
                     ${imgHtml}
                     <div class="options-grid">${optHtml}</div>
-                    <div class="explanation-box" id="exp_p1_${q.id}"></div>
+                    ${expHtml}
                 `;
-                container.appendChild(card);
-            });
-        }
 
-        function selectOptionP1(qId, optKey) {
-            if (isSubmitted) return;
-            userAnswersP1[qId] = optKey;
-
-            ['A', 'B', 'C', 'D'].forEach(k => {
-                const el = document.getElementById(`opt_p1_${qId}_${k}`);
-                if (el) el.classList.remove("selected");
-            });
-
-            const cur = document.getElementById(`opt_p1_${qId}_${optKey}`);
-            if (cur) cur.classList.add("selected");
-            updateProgress();
-        }
-
-        function renderPart2() {
-            const container = document.getElementById("part2Container");
-            container.innerHTML = "";
-
-            part2Data.forEach(q => {
-                const card = document.createElement("div");
-                card.className = "question-card";
-                card.id = `card_p2_${q.id}`;
+            } else if (idx < 22) {
+                // Part 2: True/False (qIdx = idx - 18)
+                const q = part2Data[idx - 18];
+                const uObj = userAnswersP2[q.id] || {};
 
                 let rowsHtml = "";
                 q.items.forEach(it => {
+                    const uVal = uObj[it.sub];
+                    let btnTClass = "tf-btn";
+                    let btnFClass = "tf-btn";
+                    if (uVal === true) btnTClass += " active-true";
+                    if (uVal === false) btnFClass += " active-false";
+
+                    let statusStyleT = "";
+                    let statusStyleF = "";
+                    if (isSubmitted) {
+                        if (it.answer === true) statusStyleT = "border: 2px solid #059669; font-weight: 800;";
+                        else statusStyleF = "border: 2px solid #dc2626; font-weight: 800;";
+                    }
+
                     rowsHtml += `
                         <div class="tf-row">
                             <div><strong>${it.sub})</strong> ${it.text}</div>
                             <div class="tf-btns">
-                                <button type="button" class="tf-btn" id="btn_tf_${q.id}_${it.sub}_true" onclick="selectTF(${q.id}, '${it.sub}', true)">Đúng</button>
-                                <button type="button" class="tf-btn" id="btn_tf_${q.id}_${it.sub}_false" onclick="selectTF(${q.id}, '${it.sub}', false)">Sai</button>
+                                <button type="button" class="${btnTClass}" style="${statusStyleT}" onclick="selectTFSingle(${q.id}, '${it.sub}', true)">Đúng</button>
+                                <button type="button" class="${btnFClass}" style="${statusStyleF}" onclick="selectTFSingle(${q.id}, '${it.sub}', false)">Sai</button>
                             </div>
                         </div>
                     `;
                 });
 
-                card.innerHTML = `
+                let expHtml = "";
+                if (isSubmitted) {
+                    let subCorrect = 0;
+                    let expItems = "";
+                    q.items.forEach(it => {
+                        const isRight = (uObj[it.sub] === it.answer);
+                        if (isRight) subCorrect++;
+                        expItems += `
+                            <div style="margin-top: 6px; padding: 6px 10px; border-radius: 6px; background: ${isRight ? '#f0fdf4' : '#fef2f2'};">
+                                <strong>Ý ${it.sub}) [${it.answer ? 'ĐÚNG' : 'SAI'}]:</strong> ${it.explanation}
+                            </div>
+                        `;
+                    });
+                    let qScore = (subCorrect === 4 ? 1.0 : (subCorrect === 3 ? 0.5 : (subCorrect === 2 ? 0.25 : (subCorrect === 1 ? 0.1 : 0))));
+
+                    expHtml = `
+                        <div class="explanation-box show">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #e2e8f0;">
+                                <span style="font-weight: 800; color: #0f172a; font-size: 0.95rem;">💡 LỜI GIẢI CHI TIẾT CÂU ${q.id}:</span>
+                                <span style="font-weight: 800; font-size: 0.9rem; color: ${subCorrect === 4 ? '#059669' : '#d97706'};">Đúng ${subCorrect}/4 ý (+${qScore.toFixed(2)}đ)</span>
+                            </div>
+                            ${expItems}
+                        </div>
+                    `;
+                }
+
+                box.innerHTML = `
+                    <div class="single-question-header">
+                        <span class="badge-section-pill badge-p2"><i class="fa-solid fa-square-check"></i> PHẦN II: TRẮC NGHIỆM ĐÚNG / SAI (1,0đ/câu)</span>
+                        <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Câu hỏi ${idx + 1} / 28</span>
+                    </div>
                     <div class="question-title"><span class="question-num">Câu ${q.id}:</span> ${q.title}</div>
                     <div class="tf-table">${rowsHtml}</div>
-                    <div class="explanation-box" id="exp_p2_${q.id}"></div>
+                    ${expHtml}
                 `;
-                container.appendChild(card);
-            });
+
+            } else {
+                // Part 3: Short Answer (qIdx = idx - 22)
+                const q = part3Data[idx - 22];
+                const uVal = userAnswersP3[q.id] || "";
+
+                let inputClass = "short-input";
+                let ansBadgeHtml = "";
+                let expHtml = "";
+
+                if (isSubmitted) {
+                    const uValNorm = uVal.trim().replace(',', '.');
+                    const cValNorm = q.answer.trim().replace(',', '.');
+                    let isCorrect = (uValNorm === cValNorm && uValNorm !== "");
+                    if (!isCorrect && !isNaN(parseFloat(uValNorm)) && !isNaN(parseFloat(cValNorm)) && uValNorm !== "") {
+                        if (Math.abs(parseFloat(uValNorm) - parseFloat(cValNorm)) < 1e-4) isCorrect = true;
+                    }
+
+                    inputClass += (isCorrect ? " input-correct" : " input-incorrect");
+
+                    ansBadgeHtml = `
+                        <div style="display: inline-flex; align-items: center; gap: 6px; background: #dcfce7; color: #15803d; border: 1.5px solid #86efac; padding: 6px 14px; border-radius: 8px; font-weight: 800; font-size: 0.95rem;">
+                            <i class="fa-solid fa-circle-check"></i> ĐÁP ÁN ĐÚNG: <strong style="color: #047857; font-size: 1.05rem;">${q.answer}</strong>
+                        </div>
+                    `;
+
+                    expHtml = `
+                        <div class="explanation-box show">
+                            <div style="margin-bottom: 6px;">
+                                ${isCorrect ? 
+                                    '<span style="background: #f0fdf4; color: #166534; padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 0.85rem;">✔ Bạn đã trả lời chính xác (+0,25đ)</span>' : 
+                                    `<span style="background: #fef2f2; color: #991b1b; padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 0.85rem;">✖ Bạn đã điền: "${uVal || 'Trống'}"</span>`
+                                }
+                            </div>
+                            <div><strong>💡 Hướng dẫn giải chi tiết:</strong> ${q.explanation}</div>
+                        </div>
+                    `;
+                }
+
+                box.innerHTML = `
+                    <div class="single-question-header">
+                        <span class="badge-section-pill badge-p3"><i class="fa-solid fa-pen-to-square"></i> PHẦN III: TRẮC NGHIỆM TRẢ LỜI NGẮN (0,25đ)</span>
+                        <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Câu hỏi ${idx + 1} / 28</span>
+                    </div>
+                    <div class="question-title"><span class="question-num">Câu ${q.id}:</span> ${q.question}</div>
+                    <div class="short-input-group">
+                        <label style="font-weight: 700; font-size: 0.95rem; color: #475569;">Đáp số:</label>
+                        <input type="text" class="${inputClass}" id="short_sq_input" maxlength="6" placeholder="Nhập số..." value="${uVal}" ${isSubmitted ? "readonly" : ""} oninput="inputSingleP3(${q.id}, this.value)">
+                        ${ansBadgeHtml}
+                    </div>
+                    ${expHtml}
+                `;
+            }
+
+            if (window.MathJax && MathJax.typesetPromise) {
+                MathJax.typesetPromise([box]);
+            }
         }
 
-        function selectTF(qId, sub, val) {
+        function selectOptionSingleP1(qId, optKey) {
             if (isSubmitted) return;
-            if (!userAnswersP2[qId]) userAnswersP2[qId] = {};
-            userAnswersP2[qId][sub] = val;
-
-            const btnT = document.getElementById(`btn_tf_${qId}_${sub}_true`);
-            const btnF = document.getElementById(`btn_tf_${qId}_${sub}_false`);
-
-            if (val === true) {
-                btnT.classList.add("active-true");
-                btnF.classList.remove("active-false");
-            } else {
-                btnF.classList.add("active-false");
-                btnT.classList.remove("active-true");
-            }
+            userAnswersP1[qId] = optKey;
+            ['A', 'B', 'C', 'D'].forEach(k => {
+                const el = document.getElementById(`opt_sq_${k}`);
+                if (el) {
+                    if (k === optKey) el.classList.add("selected");
+                    else el.classList.remove("selected");
+                }
+            });
             updateProgress();
         }
 
-        function renderPart3() {
-            const container = document.getElementById("part3Container");
-            container.innerHTML = "";
+        function selectTFSingle(qId, sub, val) {
+            if (isSubmitted) return;
+            if (!userAnswersP2[qId]) userAnswersP2[qId] = {};
+            userAnswersP2[qId][sub] = val;
+            renderCurrentQuestion();
+            updateProgress();
+        }
 
-            part3Data.forEach(q => {
-                const card = document.createElement("div");
-                card.className = "question-card";
-                card.id = `card_p3_${q.id}`;
-
-                card.innerHTML = `
-                    <div class="question-title"><span class="question-num">Câu ${q.id}:</span> ${q.question}</div>
-                    <div class="short-input-group">
-                        <label style="font-weight: 700; font-size: 0.9rem; color: #475569;">Đáp số:</label>
-                        <input type="text" class="short-input" id="short_${q.id}" maxlength="6" placeholder="Nhập số..." oninput="updateProgress()">
-                        <div id="ans_badge_p3_${q.id}" style="display: none;"></div>
-                    </div>
-                    <div class="explanation-box" id="exp_p3_${q.id}"></div>
-                `;
-                container.appendChild(card);
-            });
+        function inputSingleP3(qId, val) {
+            if (isSubmitted) return;
+            userAnswersP3[qId] = val.trim();
+            updateProgress();
         }
 
         function updateProgress() {
@@ -564,13 +874,14 @@
 
             // Part 3: 6 questions
             part3Data.forEach(q => {
-                const inp = document.getElementById(`short_${q.id}`);
-                if (inp && inp.value.trim().length > 0) answeredCount++;
+                if (userAnswersP3[q.id] && userAnswersP3[q.id].trim().length > 0) answeredCount++;
             });
 
             const pct = Math.round((answeredCount / 28) * 100);
             document.getElementById("progressBarFill").style.width = `${pct}%`;
             document.getElementById("progressText").innerText = `${answeredCount} / 28 câu`;
+
+            renderPalette();
         }
 
         function submitExam() {
@@ -598,38 +909,9 @@
             let correctP1 = 0;
             part1Data.forEach(q => {
                 const uAns = userAnswersP1[q.id];
-                const isCorrect = (uAns === q.answer);
-                if (isCorrect) {
+                if (uAns === q.answer) {
                     scoreP1 += 0.25;
                     correctP1++;
-                }
-
-                const card = document.getElementById(`card_p1_${q.id}`);
-                const exp = document.getElementById(`exp_p1_${q.id}`);
-
-                ['A', 'B', 'C', 'D'].forEach(k => {
-                    const el = document.getElementById(`opt_p1_${q.id}_${k}`);
-                    if (el) {
-                        if (k === q.answer) el.classList.add("correct-ans");
-                        else if (k === uAns && !isCorrect) el.classList.add("wrong-ans");
-                    }
-                });
-
-                if (card) {
-                    card.style.borderColor = isCorrect ? "#10b981" : "#ef4444";
-                }
-
-                if (exp) {
-                    exp.innerHTML = `
-                        <div style="margin-bottom: 6px;">
-                            ${isCorrect ? 
-                                '<span style="background: #f0fdf4; color: #166534; padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 0.85rem;">✔ Bạn đã chọn đúng (+0,25đ)</span>' : 
-                                `<span style="background: #fef2f2; color: #991b1b; padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 0.85rem;">✖ Bạn đã chọn: ${'phương án ' + (uAns || 'Trống')} (Đáp án đúng: ${'phương án ' + q.answer})</span>`
-                            }
-                        </div>
-                        <div><strong>💡 Hướng dẫn giải chi tiết:</strong> ${q.explanation}</div>
-                    `;
-                    exp.classList.add("show");
                 }
             });
 
@@ -639,33 +921,11 @@
             part2Data.forEach(q => {
                 const uObj = userAnswersP2[q.id] || {};
                 let subCorrect = 0;
-                let expHtml = "";
-
                 q.items.forEach(it => {
-                    const uVal = uObj[it.sub];
-                    const isRight = (uVal === it.answer);
-                    if (isRight) {
+                    if (uObj[it.sub] === it.answer) {
                         subCorrect++;
                         correctP2Items++;
                     }
-
-                    const btnT = document.getElementById(`btn_tf_${q.id}_${it.sub}_true`);
-                    const btnF = document.getElementById(`btn_tf_${q.id}_${it.sub}_false`);
-                    if (btnT && btnF) {
-                        if (it.answer === true) {
-                            btnT.style.border = "2px solid #059669";
-                            btnT.style.fontWeight = "800";
-                        } else {
-                            btnF.style.border = "2px solid #dc2626";
-                            btnF.style.fontWeight = "800";
-                        }
-                    }
-
-                    expHtml += `
-                        <div style="margin-top: 6px; padding: 6px 10px; border-radius: 6px; background: ${isRight ? '#f0fdf4' : '#fef2f2'};">
-                            <strong>Ý ${it.sub}) [${it.answer ? 'ĐÚNG' : 'SAI'}]:</strong> ${it.explanation}
-                        </div>
-                    `;
                 });
 
                 let qScore = 0;
@@ -674,33 +934,13 @@
                 else if (subCorrect === 3) qScore = 0.5;
                 else if (subCorrect === 4) qScore = 1.0;
                 scoreP2 += qScore;
-
-                const card = document.getElementById(`card_p2_${q.id}`);
-                const exp = document.getElementById(`exp_p2_${q.id}`);
-                if (card) {
-                    card.style.borderColor = (subCorrect === 4) ? "#10b981" : (subCorrect >= 2 ? "#f59e0b" : "#ef4444");
-                }
-                if (exp) {
-                    exp.innerHTML = `
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #e2e8f0;">
-                            <span style="font-weight: 800; color: #0f172a; font-size: 0.95rem;">💡 LỜI GIẢI CHI TIẾT CÂU ${q.id}:</span>
-                            <span style="font-weight: 800; font-size: 0.9rem; color: ${subCorrect === 4 ? '#059669' : '#d97706'};">Đúng ${subCorrect}/4 ý (+${qScore.toFixed(2)}đ)</span>
-                        </div>
-                        ${expHtml}
-                    `;
-                    exp.classList.add("show");
-                }
             });
 
             // Chấm Phần III: 6 câu * 0.25đ = 1.5đ
             let scoreP3 = 0;
             let correctP3 = 0;
             part3Data.forEach(q => {
-                const inp = document.getElementById(`short_${q.id}`);
-                const exp = document.getElementById(`exp_p3_${q.id}`);
-                const card = document.getElementById(`card_p3_${q.id}`);
-                const ansBadge = document.getElementById(`ans_badge_p3_${q.id}`);
-                const uVal = inp ? inp.value.trim().replace(',', '.') : "";
+                const uVal = (userAnswersP3[q.id] || "").trim().replace(',', '.');
                 const cVal = q.answer.trim().replace(',', '.');
 
                 let isCorrect = false;
@@ -709,43 +949,9 @@
                     if (Math.abs(parseFloat(uVal) - parseFloat(cVal)) < 1e-4) isCorrect = true;
                 }
 
-                if (inp) inp.readOnly = true;
-
                 if (isCorrect) {
                     scoreP3 += 0.25;
                     correctP3++;
-                    if (card) card.style.borderColor = "#10b981";
-                    if (inp) inp.classList.add("input-correct");
-                } else {
-                    if (card) card.style.borderColor = "#ef4444";
-                    if (inp) inp.classList.add("input-incorrect");
-                }
-
-                if (ansBadge) {
-                    ansBadge.style.display = "inline-flex";
-                    ansBadge.style.alignItems = "center";
-                    ansBadge.style.gap = "6px";
-                    ansBadge.style.background = "#dcfce7";
-                    ansBadge.style.color = "#15803d";
-                    ansBadge.style.border = "1.5px solid #86efac";
-                    ansBadge.style.padding = "5px 12px";
-                    ansBadge.style.borderRadius = "8px";
-                    ansBadge.style.fontWeight = "800";
-                    ansBadge.style.fontSize = "0.95rem";
-                    ansBadge.innerHTML = `<i class="fa-solid fa-circle-check"></i> ĐÁP ÁN ĐÚNG: <strong style="color: #047857; font-size: 1.05rem;">${q.answer}</strong>`;
-                }
-
-                if (exp) {
-                    exp.innerHTML = `
-                        <div style="margin-bottom: 6px;">
-                            ${isCorrect ? 
-                                '<span style="background: #f0fdf4; color: #166534; padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 0.85rem;">✔ Bạn đã trả lời chính xác (+0,25đ)</span>' : 
-                                `<span style="background: #fef2f2; color: #991b1b; padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 0.85rem;">✖ Bạn đã điền: "${uVal || 'Trống'}"</span>`
-                            }
-                        </div>
-                        <div><strong>💡 Hướng dẫn giải chi tiết:</strong> ${q.explanation}</div>
-                    `;
-                    exp.classList.add("show");
                 }
             });
 
@@ -789,10 +995,8 @@
             resPanel.style.display = "block";
             resPanel.scrollIntoView({ behavior: "smooth" });
 
-            const btnSub = document.getElementById("btnSubmit");
-            btnSub.disabled = true;
-            btnSub.innerHTML = '<i class="fa-solid fa-check"></i> ĐÃ NỘP BÀI THI THÀNH CÔNG';
-            btnSub.style.background = "#64748b";
+            renderPalette();
+            renderCurrentQuestion();
 
             // Đồng bộ dữ liệu Google Sheets
             fetch(GOOGLE_SHEETS_URL, {
@@ -808,9 +1012,133 @@
                 })
             }).then(() => console.log("Data synced with Google Sheets"))
               .catch(err => console.error("Sync error:", err));
+        }
+
+        function toggleAllReviewMode() {
+            const container = document.getElementById("allQuestionsReviewContainer");
+            const btn = document.getElementById("btnToggleAllReview");
+            isAllReviewMode = !isAllReviewMode;
+
+            if (isAllReviewMode) {
+                renderAllQuestionsReview();
+                container.style.display = "block";
+                btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Ẩn chế độ xem toàn bộ (Quay lại từng câu)';
+                container.scrollIntoView({ behavior: "smooth" });
+            } else {
+                container.style.display = "none";
+                btn.innerHTML = '<i class="fa-solid fa-list-ol"></i> Xem toàn bộ 28 câu & Lời giải chi tiết';
+            }
+        }
+
+        function renderAllQuestionsReview() {
+            // Part 1
+            const c1 = document.getElementById("allPart1Container");
+            c1.innerHTML = "";
+            part1Data.forEach(q => {
+                const uAns = userAnswersP1[q.id];
+                const isCorrect = (uAns === q.answer);
+                let imgHtml = q.image ? `<div class="question-image-box"><img src="${q.image}" class="question-img" alt="Đồ thị"></div>` : "";
+                let optHtml = "";
+                for (const [key, val] of Object.entries(q.options)) {
+                    let oCls = "option-item";
+                    if (key === q.answer) oCls += " correct-ans";
+                    else if (uAns === key && !isCorrect) oCls += " wrong-ans";
+                    optHtml += `
+                        <div class="${oCls}">
+                            <div class="option-label">${key}</div>
+                            <div style="flex: 1;">${val}</div>
+                        </div>
+                    `;
+                }
+                c1.innerHTML += `
+                    <div class="question-card" style="border-color: ${isCorrect ? '#10b981' : '#ef4444'};">
+                        <div class="question-title"><span class="question-num">Câu ${q.id}:</span> ${q.question}</div>
+                        ${imgHtml}
+                        <div class="options-grid">${optHtml}</div>
+                        <div class="explanation-box show">
+                            <div style="margin-bottom: 6px;">
+                                ${isCorrect ? '<span style="color: #166534; font-weight: 700;">✔ Bạn đã chọn đúng (+0,25đ)</span>' : `<span style="color: #991b1b; font-weight: 700;">✖ Bạn đã chọn: ${uAns || 'Trống'} (Đáp án đúng: ${q.answer})</span>`}
+                            </div>
+                            <div><strong>💡 Hướng dẫn giải:</strong> ${q.explanation}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Part 2
+            const c2 = document.getElementById("allPart2Container");
+            c2.innerHTML = "";
+            part2Data.forEach(q => {
+                const uObj = userAnswersP2[q.id] || {};
+                let subCorrect = 0;
+                let rows = "";
+                let expItems = "";
+                q.items.forEach(it => {
+                    const isRight = (uObj[it.sub] === it.answer);
+                    if (isRight) subCorrect++;
+                    rows += `
+                        <div class="tf-row">
+                            <div><strong>${it.sub})</strong> ${it.text}</div>
+                            <div class="tf-btns">
+                                <span class="tf-btn ${uObj[it.sub] === true ? 'active-true' : ''}" style="${it.answer === true ? 'border: 2px solid #059669; font-weight: 800;' : ''}">Đúng</span>
+                                <span class="tf-btn ${uObj[it.sub] === false ? 'active-false' : ''}" style="${it.answer === false ? 'border: 2px solid #dc2626; font-weight: 800;' : ''}">Sai</span>
+                            </div>
+                        </div>
+                    `;
+                    expItems += `
+                        <div style="margin-top: 6px; padding: 6px 10px; border-radius: 6px; background: ${isRight ? '#f0fdf4' : '#fef2f2'};">
+                            <strong>Ý ${it.sub}) [${it.answer ? 'ĐÚNG' : 'SAI'}]:</strong> ${it.explanation}
+                        </div>
+                    `;
+                });
+                let qScore = (subCorrect === 4 ? 1.0 : (subCorrect === 3 ? 0.5 : (subCorrect === 2 ? 0.25 : (subCorrect === 1 ? 0.1 : 0))));
+                c2.innerHTML += `
+                    <div class="question-card" style="border-color: ${subCorrect === 4 ? '#10b981' : (subCorrect >= 2 ? '#f59e0b' : '#ef4444')};">
+                        <div class="question-title"><span class="question-num">Câu ${q.id}:</span> ${q.title}</div>
+                        <div class="tf-table">${rows}</div>
+                        <div class="explanation-box show">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span style="font-weight: 800; color: #0f172a;">💡 LỜI GIẢI CHI TIẾT:</span>
+                                <span style="font-weight: 800; color: ${subCorrect === 4 ? '#059669' : '#d97706'};">Đúng ${subCorrect}/4 ý (+${qScore.toFixed(2)}đ)</span>
+                            </div>
+                            ${expItems}
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Part 3
+            const c3 = document.getElementById("allPart3Container");
+            c3.innerHTML = "";
+            part3Data.forEach(q => {
+                const uVal = (userAnswersP3[q.id] || "").trim().replace(',', '.');
+                const cVal = q.answer.trim().replace(',', '.');
+                let isCorrect = (uVal === cVal && uVal !== "");
+                if (!isCorrect && !isNaN(parseFloat(uVal)) && !isNaN(parseFloat(cVal)) && uVal !== "") {
+                    if (Math.abs(parseFloat(uVal) - parseFloat(cVal)) < 1e-4) isCorrect = true;
+                }
+                c3.innerHTML += `
+                    <div class="question-card" style="border-color: ${isCorrect ? '#10b981' : '#ef4444'};">
+                        <div class="question-title"><span class="question-num">Câu ${q.id}:</span> ${q.question}</div>
+                        <div class="short-input-group">
+                            <label style="font-weight: 700; color: #475569;">Đáp số:</label>
+                            <input type="text" class="short-input ${isCorrect ? 'input-correct' : 'input-incorrect'}" value="${uVal}" readonly>
+                            <div style="display: inline-flex; align-items: center; gap: 6px; background: #dcfce7; color: #15803d; border: 1.5px solid #86efac; padding: 6px 14px; border-radius: 8px; font-weight: 800; font-size: 0.95rem;">
+                                <i class="fa-solid fa-circle-check"></i> ĐÁP ÁN ĐÚNG: <strong style="color: #047857;">${q.answer}</strong>
+                            </div>
+                        </div>
+                        <div class="explanation-box show">
+                            <div style="margin-bottom: 6px;">
+                                ${isCorrect ? '<span style="color: #166534; font-weight: 700;">✔ Bạn đã trả lời chính xác (+0,25đ)</span>' : `<span style="color: #991b1b; font-weight: 700;">✖ Bạn đã điền: "${uVal || 'Trống'}"</span>`}
+                            </div>
+                            <div><strong>💡 Hướng dẫn giải:</strong> ${q.explanation}</div>
+                        </div>
+                    </div>
+                `;
+            });
 
             if (window.MathJax && MathJax.typesetPromise) {
-                MathJax.typesetPromise();
+                MathJax.typesetPromise([c1, c2, c3]);
             }
         }
     </script>
