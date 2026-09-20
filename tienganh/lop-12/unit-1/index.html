@@ -1504,6 +1504,11 @@
             return;
         }
 
+        try {
+            localStorage.setItem('saved_student_name', sName);
+            localStorage.setItem('saved_student_class', sClass);
+        } catch(e){}
+
         document.getElementById('displayStudentName').innerText = sName;
         document.getElementById('displayStudentClass').innerText = sClass;
 
@@ -1515,6 +1520,16 @@
         renderQuestion(currentQ);
         startTimer();
     }
+
+    // Auto-fill student info from localStorage on load
+    window.addEventListener('DOMContentLoaded', () => {
+        try {
+            const savedName = localStorage.getItem('saved_student_name');
+            const savedClass = localStorage.getItem('saved_student_class');
+            if (savedName && document.getElementById('studentName')) document.getElementById('studentName').value = savedName;
+            if (savedClass && document.getElementById('studentClass')) document.getElementById('studentClass').value = savedClass;
+        } catch(e){}
+    });
 
     // TIMER LOGIC
     function startTimer() {
@@ -1680,7 +1695,7 @@
         drawer.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // SUBMIT EXAM
+    // SUBMIT EXAM & LOG TO GOOGLE SHEETS
     function submitExam() {
         if (isSubmitted) return;
 
@@ -1731,6 +1746,30 @@
             document.getElementById('scoreFeedback').innerText = '👍 KHÁ TỐT! HÃY XEM LẠI CÁC CÂU CHƯA ĐÚNG!';
         } else {
             document.getElementById('scoreFeedback').innerText = '💪 CẦN CỐ GẮNG ÔN TẬP THÊM LÝ THUYẾT!';
+        }
+
+        // GỬI DỮ LIỆU VỀ GOOGLE SHEETS
+        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
+        if (GOOGLE_SHEETS_URL) {
+            try {
+                const finalStudentName = sName || (typeof localStorage !== 'undefined' && localStorage.getItem('saved_student_name')) || 'Ẩn danh';
+                const finalStudentClass = sClass || (typeof localStorage !== 'undefined' && localStorage.getItem('saved_student_class')) || 'Chưa rõ';
+                fetch(GOOGLE_SHEETS_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({
+                        name: finalStudentName,
+                        className: finalStudentClass,
+                        lesson: "Test 1 - Unit 1 - Life Stories We Admire (Tiếng Anh 12)",
+                        correct: `${correct}/40`,
+                        score: score,
+                        timeSpent: `${mSpent} phút ${sSpent} giây`
+                    })
+                }).catch(err => console.error("Error logging to Google Sheets:", err));
+            } catch(err) {
+                console.error("Error logging to Google Sheets:", err);
+            }
         }
 
         // Render full review list
