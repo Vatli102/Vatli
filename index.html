@@ -1411,6 +1411,7 @@
         function handleSubscribe(e) {
             e.preventDefault();
             const name = document.getElementById('subName').value;
+            const contact = document.getElementById('subContact').value;
             const subject = document.getElementById('subSubject') ? document.getElementById('subSubject').value : "Tất cả các môn";
             const subs = JSON.parse(localStorage.getItem('user_subscriptions') || '[]');
             subs.push({ name, contact, subject, date: new Date().toISOString() });
@@ -1420,6 +1421,7 @@
                 try {
                     fetch(GOOGLE_SHEETS_URL, {
                         method: "POST",
+                        mode: "no-cors",
                         headers: { "Content-Type": "text/plain;charset=utf-8" },
                         body: JSON.stringify({
                             name: name,
@@ -1428,8 +1430,7 @@
                             correct: contact,
                             subject: subject,
                             score: "Đăng ký"
-                        }),
-                        redirect: "follow"
+                        })
                     }).catch(err => console.error(err));
                 } catch(err){}
             }
