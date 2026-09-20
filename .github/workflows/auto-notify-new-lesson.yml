@@ -1,0 +1,35 @@
+name: Auto Notify Students On New Lesson Push
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Lop10/**'
+      - 'Lop11/**'
+      - 'Lop12/**'
+      - 'van/**'
+      - 'toan/**'
+      - 'hoa/**'
+      - 'sinh/**'
+      - 'khtn/**'
+      - 'tienganh/**'
+      - 'su/**'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Run Auto Notifier
+        run: |
+          python scripts/notify_new_lesson.py
