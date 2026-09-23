@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 18: Ứng Dụng Hiện Tượng Cảm Ứng Điện Từ - Vật Lí 12</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #3b82f6;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.65;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Sticky Header */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .site-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
+        .logo-text {
+            font-size: 1.22rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #475569;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            color: #4f46e5;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0.4rem;
+            background: #f1f5f9;
+            padding: 0.25rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #475569;
+            padding: 0.45rem 0.9rem;
+            font-weight: 700;
+            font-size: 0.88rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: inherit;
+        }
+
+        .nav-btn.active {
+            background: #4f46e5;
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 8px 12px;
+                flex-direction: column;
+                gap: 8px;
+            }
+            .logo-text {
+                font-size: 1.1rem;
+            }
+            .nav-links {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        .main-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+            flex: 1;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* ==================== THEORY TAB STYLING ==================== */
+        .theory-wrapper {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2.25rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #0891b2 100%);
+            border-radius: 0.85rem;
+            padding: 1.85rem 2rem;
+            color: white;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(30, 27, 75, 0.3);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .hero-desc {
+            font-size: 0.95rem;
+            color: #e0e7ff;
+            line-height: 1.6;
+        }
+
+        .theory-card {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .theory-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .theory-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: #e0e7ff;
+            color: #4338ca;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+            flex-shrink: 0;
+        }
+
+        .theory-title {
+            font-size: 1.18rem;
+            font-weight: 800;
+            color: #1e1b4b;
+        }
+
+        .theory-body {
+            text-align: justify;
+            font-size: 0.98rem;
+            line-height: 1.7;
+            color: #334155;
+        }
+
+        .theory-body p {
+            margin-bottom: 10px;
+        }
+
+        .formula-box {
+            background: #f0fdf4;
+            border: 1.5px solid #86efac;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin: 12px 0;
+            color: #166534;
+            font-size: 0.98rem;
+        }
+
+        .svg-container {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            margin: 14px 0;
+            text-align: center;
+        }
+
+        .svg-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .svg-caption {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .jump-btn-container {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px dashed var(--border);
+        }
+
+        .jump-btn {
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            color: white;
+            font-size: 1.08rem;
+            font-weight: 800;
+            padding: 1rem 2.5rem;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.35);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .jump-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(79, 70, 229, 0.45);
+        }
+
+        /* ==================== CBT EXAM TAB STYLING ==================== */
+        .exam-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .exam-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .exam-panel {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .exam-meta-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge-topic {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+        }
+
+        .question-title {
+            font-size: 1.12rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+            line-height: 1.65;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .opt-label {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.95rem 1.2rem;
+            background: white;
+            border: 1.5px solid var(--border);
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: justify;
+        }
+
+        .opt-label:hover {
+            border-color: var(--primary);
+            background: #f8fafc;
+        }
+
+        .opt-label.selected {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .opt-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #64748b;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .opt-label.selected .opt-circle {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .opt-text {
+            font-size: 0.98rem;
+            color: #1e293b;
+        }
+
+        /* True / False Interactive Rows */
+        .tf-table-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tf-card-row {
+            background: #f8fafc;
+            border: 1.5px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .tf-card-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        .tf-text {
+            font-size: 0.95rem;
+            color: #334155;
+            text-align: justify;
+            line-height: 1.55;
+        }
+
+        .tf-btn-wrap {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .tf-choice-btn {
+            padding: 7px 16px;
+            border-radius: 6px;
+            border: 1.5px solid var(--border);
+            background: white;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+
+        .tf-choice-btn.active-true {
+            background: #10b981;
+            border-color: #059669;
+            color: white;
+        }
+
+        .tf-choice-btn.active-false {
+            background: #ef4444;
+            border-color: #dc2626;
+            color: white;
+        }
+
+        /* Short answer input */
+        .short-wrap {
+            background: #f8fafc;
+            border: 1.5px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .short-input-box {
+            width: 220px;
+            padding: 0.85rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1.25rem;
+            font-weight: 800;
+            font-family: monospace;
+            text-align: center;
+            outline: none;
+            color: #0f172a;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .short-input-box:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .question-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .ctrl-btn {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: inherit;
+        }
+
+        .ctrl-btn-prev {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .ctrl-btn-prev:hover {
+            background: #e2e8f0;
+        }
+
+        .ctrl-btn-next {
+            background: var(--primary);
+            color: white;
+        }
+
+        .ctrl-btn-next:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Sidebar Palette */
+        .palette-panel {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            position: sticky;
+            top: 5.5rem;
+        }
+
+        .timer-card {
+            background: #0f172a;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .timer-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            margin-bottom: 0.25rem;
+        }
+
+        .timer-val {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+
+        .user-info-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .progress-wrap {
+            margin-bottom: 1.25rem;
+        }
+
+        .progress-bar-bg {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0.4rem;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #06b6d4);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .palette-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pal-btn {
+            height: 38px;
+            border-radius: 0.375rem;
+            border: 1.5px solid var(--border);
+            background: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+
+        .pal-btn:hover {
+            border-color: var(--primary);
+        }
+
+        .pal-btn.answered {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary-dark);
+        }
+
+        .pal-btn.current {
+            border-color: #0f172a;
+            box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.2);
+            font-weight: 800;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            font-weight: 700;
+            padding: 0.875rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+            transition: all 0.2s;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-1px);
+        }
+
+        /* Modal Dialogs */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-card {
+            background: white;
+            border-radius: 1rem;
+            max-width: 480px;
+            width: 100%;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .modal-input-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .modal-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 0.375rem;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        .modal-input:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .modal-notes {
+            background: #fffbeb;
+            border-left: 4px solid var(--accent);
+            padding: 0.75rem 1rem;
+            border-radius: 0 0.375rem 0.375rem 0;
+            font-size: 0.825rem;
+            color: #92400e;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        .modal-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            padding: 0.875rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        /* Results Display */
+        .result-view {
+            background: white;
+            border-radius: 1rem;
+            padding: 2.25rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .score-banner {
+            text-align: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .score-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.5);
+        }
+
+        .score-val {
+            font-size: 2.4rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .score-max {
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
+
+        .review-item {
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            background: #fafafa;
+        }
+
+        .review-item.correct {
+            border-left: 5px solid var(--success);
+        }
+
+        .review-item.incorrect {
+            border-left: 5px solid var(--danger);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .review-expl {
+            margin-top: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: #eff6ff;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            color: #1e3a8a;
+            border: 1px solid #bfdbfe;
+        }
+
+        /* Site Footer */
+        .site-footer {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 2rem 1rem;
+            text-align: center;
+            font-size: 0.88rem;
+            border-top: 1px solid #1e293b;
+            margin-top: 3rem;
+        }
+
+        .site-footer a {
+            color: #38bdf8;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- STICKY HEADER -->
+    <header class="sticky-header">
+        <div class="header-container">
+            <a href="/" class="site-logo">
+                <div class="logo-img"><i class="fa-solid fa-bolt"></i></div>
+                <span class="logo-text">Vatli102</span>
+            </a>
+
+            <!-- NAV TABS -->
+            <div class="nav-tabs">
+                <button class="nav-btn active" id="tabBtnTheory" onclick="switchNavTab('theory')">
+                    <i class="fa-solid fa-book-open"></i> Lí Thuyết Bài Học
+                </button>
+                <button class="nav-btn" id="tabBtnExam" onclick="switchNavTab('exam')">
+                    <i class="fa-solid fa-pen-to-square"></i> Đề Kiểm Tra (14 Câu)
+                </button>
+            </div>
+
+            <!-- QUICK LINKS -->
+            <div class="nav-links">
+                <a href="../Bài 17 Máy phát điện xoay chiều/index.html" class="nav-item">
+                    <i class="fa-solid fa-chevron-left"></i> Bài 17
+                </a>
+                <a href="../Bài 19 Điện từ trường. Mô hình sóng điện từ/index.html" class="nav-item">
+                    Bài 19 <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="main-container">
+
+        <!-- ==================== TAB 1: THEORY ==================== -->
+        <div id="theoryTab" class="tab-pane active">
+            <div class="theory-wrapper">
+
+                <!-- HERO BANNER -->
+                <div class="hero-banner">
+                    <span class="hero-badge">Vật Lí 12 • Chương 3: Từ Trường & Cảm Ứng Điện Từ</span>
+                    <h1 class="hero-title">BÀI 18: ỨNG DỤNG HIỆN TƯỢNG CẢM ỨNG ĐIỆN TỪ</h1>
+                    <p class="hero-desc">
+                        Tổng hợp toàn diện kiến thức cốt lõi và các ứng dụng thực tiễn của hiện tượng cảm ứng điện từ: Máy biến áp, Truyền tải điện năng đi xa, Đàn ghi-ta điện, Sạc không dây, Bếp từ và Phanh điện từ theo chuẩn SGK GDPT 2018.
+                    </p>
+                </div>
+
+                <!-- CARD 1: MÁY BIẾN ÁP -->
+                <div class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-bolt-lightning"></i></div>
+                        <div class="theory-title">1. Máy Biến Áp (Transformer)</div>
+                    </div>
+                    <div class="theory-body">
+                        <p>
+                            <strong>a) Định nghĩa:</strong> Máy biến áp là thiết bị có khả năng <em>biến đổi điện áp xoay chiều</em> nhưng <strong>giữ nguyên hoàn toàn tần số</strong> của dòng điện.
+                        </p>
+                        <p>
+                            <strong>b) Cấu tạo:</strong> Gồm hai bộ phận chính:
+                        </p>
+                        <ul style="margin-left: 20px; margin-bottom: 12px;">
+                            <li><strong>Lõi thép khép kín:</strong> Ghép từ nhiều lá thép mỏng kỹ thuật điện (thép silicon) có phủ sơn cách điện để triệt tiêu hao phí do dòng điện xoáy Foucault.</li>
+                            <li><strong>Hai cuộn dây dẫn:</strong> Cuộn sơ cấp ($N_1$ vòng) nối với nguồn điện xoay chiều đầu vào; Cuộn thứ cấp ($N_2$ vòng) nối với tải tiêu thụ đầu ra.</li>
+                        </ul>
+
+                        <div class="svg-container">
+                            <img src="./so_do_may_bien_ap.svg" alt="Sơ đồ máy biến áp">
+                            <div class="svg-caption">Hình 18.1: Sơ đồ cấu tạo và nguyên lí hoạt động của máy biến áp xoay chiều.</div>
+                        </div>
+
+                        <p>
+                            <strong>c) Nguyên tắc hoạt động:</strong> Dựa trên <strong>hiện tượng cảm ứng điện từ</strong>. Dòng điện xoay chiều ở cuộn sơ cấp tạo ra từ thông biến thiên trong lõi thép, từ thông này xuyên qua cuộn thứ cấp cảm ứng sinh ra suất điện động xoay chiều $e_2(t)$.
+                        </p>
+
+                        <div class="formula-box">
+                            <strong>Hệ thức máy biến áp lí tưởng (Hiệu suất $H \approx 100\%$):</strong>
+                            $$\frac{U_2}{U_1} \approx \frac{E_2}{E_1} = \frac{N_2}{N_1} = \frac{I_1}{I_2} = k$$
+                        </div>
+                        <p>
+                            • <strong>Máy tăng áp:</strong> $N_2 > N_1 \Rightarrow U_2 > U_1$ (Điện áp tăng, dòng điện giảm $I_2 < I_1$).<br>
+                            • <strong>Máy hạ áp:</strong> $N_2 < N_1 \Rightarrow U_2 < U_1$ (Điện áp giảm, dòng điện tăng $I_2 > I_1$).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- CARD 2: TRUYỀN TẢI ĐIỆN NĂNG -->
+                <div class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-tower-broadcast"></i></div>
+                        <div class="theory-title">2. Truyền Tải Điện Năng Đi Xa</div>
+                    </div>
+                    <div class="theory-body">
+                        <p>
+                            Trong quá trình truyền tải điện năng từ nhà máy đến nơi tiêu thụ, một phần năng lượng bị hao phí do tỏa nhiệt Joule–Lenz trên đường dây dẫn điện trở $R$:
+                        </p>
+                        <div class="formula-box">
+                            <strong>Công thức tính công suất hao phí:</strong>
+                            $$\Delta P = I^2 \cdot R = \frac{P^2 \cdot R}{U^2 \cdot \cos^2\varphi}$$
+                        </div>
+
+                        <div class="svg-container">
+                            <img src="./so_do_truyen_tai_dien_nang.svg" alt="Sơ đồ truyền tải điện năng đi xa">
+                            <div class="svg-caption">Hình 18.2: Hệ thống truyền tải điện năng sử dụng máy tăng áp ở nguồn phát và máy hạ áp ở nơi tiêu thụ.</div>
+                        </div>
+
+                        <p>
+                            <strong>Biện pháp giảm hao phí tối ưu nhất:</strong> Vì $\Delta P \sim \frac{1}{U^2}$, nên <strong>tăng điện áp hiệu dụng $U$ trước khi truyền tải</strong> là phương án hiệu quả và kinh tế nhất. Tăng điện áp lên $n$ lần thì hao phí giảm đi $n^2$ lần.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- CARD 3: ĐÀN GHI-TA ĐIỆN -->
+                <div class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-guitar"></i></div>
+                        <div class="theory-title">3. Bộ Cảm Âm (Pickup) Đàn Ghi-ta Điện</div>
+                    </div>
+                    <div class="theory-body">
+                        <p>
+                            <strong>a) Cấu tạo:</strong> Gồm một thanh nam châm vĩnh cửu đặt bên trong một cuộn dây đồng quấn nhiều vòng gắn cố định dưới dây đàn.
+                        </p>
+                        <p>
+                            <strong>b) Nguyên lí hoạt động:</strong> Dây đàn bắt buộc phải làm bằng <strong>vật liệu nhiễm từ (thép)</strong>. Khi bị từ hóa, dây đàn dao động làm <strong>từ thông qua cuộn dây Pickup biến thiên tuần hoàn</strong> $\rightarrow$ sinh ra dòng điện cảm ứng xoay chiều có cùng tần số dao động âm thanh $\rightarrow$ truyền qua bộ khuếch đại (Ampli) phát ra loa.
+                        </p>
+
+                        <div class="svg-container">
+                            <img src="./so_do_pickup_dan_guitar.svg" alt="Sơ đồ bộ Pickup đàn ghi-ta điện">
+                            <div class="svg-caption">Hình 18.3: Cấu tạo và nguyên lí cảm ứng điện từ của Pickup đàn ghi-ta điện.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 4: SẠC KHÔNG DÂY -->
+                <div class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                        <div class="theory-title">4. Công Nghệ Sạc Không Dây (Wireless Charging)</div>
+                    </div>
+                    <div class="theory-body">
+                        <p>
+                            <strong>a) Cấu tạo:</strong> Gồm <em>cuộn phát</em> trong đế sạc và <em>cuộn thu</em> gắn bên trong điện thoại di động.
+                        </p>
+                        <p>
+                            <strong>b) Nguyên lí:</strong> Cuộn phát được cấp dòng điện xoay chiều tần số cao sinh ra <strong>từ trường biến thiên</strong> trong không gian. Từ trường này xuyên qua cuộn thu của điện thoại $\rightarrow$ cảm ứng sinh ra <strong>dòng điện xoay chiều</strong> $\rightarrow$ mạch chỉnh lưu nạp pin cho điện thoại.
+                        </p>
+
+                        <div class="svg-container">
+                            <img src="./so_do_sac_khong_day.svg" alt="Sơ đồ sạc không dây">
+                            <div class="svg-caption">Hình 18.4: Cơ chế truyền năng lượng không dây nhờ cảm ứng điện từ.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 5: BẾP TỪ -->
+                <div class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-fire-burner"></i></div>
+                        <div class="theory-title">5. Bếp Điện Từ (Induction Cooker)</div>
+                    </div>
+                    <div class="theory-body">
+                        <p>
+                            <strong>a) Cấu tạo:</strong> Mâm nhiệt gồm cuộn dây đồng đặt bên dưới mặt kính cách điện và cách nhiệt.
+                        </p>
+                        <p>
+                            <strong>b) Nguyên lí:</strong> Dòng điện xoay chiều tần số cao ($20\text{ kHz} - 50\text{ kHz}$) chạy qua cuộn dây sinh ra từ trường biến thiên xuyên qua đáy nồi làm bằng <strong>vật liệu nhiễm từ (sắt, inox hít từ)</strong> $\rightarrow$ sinh ra <strong>dòng điện xoáy Foucault cực mạnh trong đáy nồi</strong> $\rightarrow$ làm đáy nồi tự nóng lên nhanh chóng theo định luật Joule–Lenz để nấu chín thức ăn.
+                        </p>
+
+                        <div class="svg-container">
+                            <img src="./so_do_bep_tu.svg" alt="Sơ đồ bếp từ">
+                            <div class="svg-caption">Hình 18.5: Dòng điện Foucault sinh nhiệt trực tiếp tại đáy nồi nhiễm từ.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 6: PHANH ĐIỆN TỪ -->
+                <div class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-circle-stop"></i></div>
+                        <div class="theory-title">6. Phanh Điện Từ (Electromagnetic Brake)</div>
+                    </div>
+                    <div class="theory-body">
+                        <p>
+                            <strong>a) Cấu tạo:</strong> Đĩa kim loại gắn đồng trục với bánh xe quay và hệ thống nam châm điện cố định trên khung xe.
+                        </p>
+                        <p>
+                            <strong>b) Nguyên lí:</strong> Khi hãm phanh, từ trường mạnh xuyên qua đĩa kim loại đang quay $\rightarrow$ sinh ra <strong>dòng điện Foucault</strong> trong đĩa. Theo <strong>Định luật Lenz</strong>, lực từ tác dụng lên dòng Foucault luôn cản trở chuyển động quay của đĩa $\rightarrow$ hãm xe dừng lại êm ái mà <em>không bị mài mòn cơ học</em> hay gây nóng má phanh.
+                        </p>
+
+                        <div class="svg-container">
+                            <img src="./so_do_phanh_dien_tu.svg" alt="Sơ đồ phanh điện từ">
+                            <div class="svg-caption">Hình 18.6: Ứng dụng dòng điện Foucault trong hệ thống phanh điện từ của tàu cao tốc và xe tải lớn.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- JUMP BUTTON -->
+                <div class="jump-btn-container">
+                    <button class="jump-btn" onclick="switchNavTab('exam')">
+                        <i class="fa-solid fa-pen-nib"></i> BẮT ĐẦU LÀM BÀI KIỂM TRA TRẮC NGHIỆM (14 CÂU)
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ==================== TAB 2: CBT EXAM ==================== -->
+        <div id="examTab" class="tab-pane">
+            <div class="exam-grid">
+
+                <!-- LEFT MAIN EXAM PANEL -->
+                <div class="exam-panel" id="examMainArea">
+                    <div class="exam-meta-bar">
+                        <span class="badge-topic" id="qTopicBadge">Phần I: Trắc Nghiệm Nhiều Lựa Chọn</span>
+                        <span style="font-size: 0.9rem; font-weight: 700; color: #64748b;" id="qCounterText">Câu 1 / 14</span>
+                    </div>
+
+                    <!-- QUESTION RENDER CONTAINER -->
+                    <div id="questionContainer" class="tex2jax_process">
+                        <!-- Dynamic rendered question content -->
+                    </div>
+
+                    <!-- CONTROLS FOOTER -->
+                    <div class="question-footer">
+                        <button class="ctrl-btn ctrl-btn-prev" id="btnPrev" onclick="navQuestion(-1)">
+                            <i class="fa-solid fa-arrow-left"></i> Câu Trước
+                        </button>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="ctrl-btn ctrl-btn-next" id="btnNext" onclick="navQuestion(1)">
+                                Câu Tiếp <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT SIDEBAR PALETTE -->
+                <aside class="palette-panel">
+                    <div class="timer-card">
+                        <div class="timer-label">Thời Gian Làm Bài</div>
+                        <div class="timer-val" id="timerDisplay">15:00</div>
+                    </div>
+
+                    <div class="user-info-card">
+                        <div><strong>Thí sinh:</strong> <span id="dispUserName">Chưa nhập</span></div>
+                        <div><strong>Lớp:</strong> <span id="dispUserClass">Chưa nhập</span></div>
+                    </div>
+
+                    <div class="progress-wrap">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="paletteProgressBar"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>Tiến độ</span>
+                            <span id="paletteProgressText">0/14 câu</span>
+                        </div>
+                    </div>
+
+                    <div class="palette-title">
+                        <span>Danh Sách Câu Hỏi</span>
+                        <span style="font-size: 0.8rem; color: #94a3b8;">14 Câu</span>
+                    </div>
+
+                    <div class="palette-grid" id="paletteGrid">
+                        <!-- 14 Question Palette Buttons -->
+                    </div>
+
+                    <button class="submit-btn" onclick="confirmSubmitExam()">
+                        <i class="fa-solid fa-paper-plane"></i> NỘP BÀI THI
+                    </button>
+                </aside>
+
+            </div>
+        </div>
+
+        <!-- ==================== RESULT VIEW CONTAINER ==================== -->
+        <div id="resultContainer" class="tab-pane">
+            <div class="result-view">
+                <div class="score-banner">
+                    <div class="score-circle">
+                        <div class="score-val" id="finalScoreVal">0.0</div>
+                        <div class="score-max">/ 10.0</div>
+                    </div>
+                    <h2 style="font-size: 1.5rem; font-weight: 800; color: #0f172a; margin-bottom: 0.4rem;" id="scoreFeedbackTitle">
+                        Kết Quả Bài Kiểm Tra
+                    </h2>
+                    <p style="color: #64748b; font-size: 0.95rem;" id="scoreFeedbackDesc">
+                        Chúc mừng bạn đã hoàn thành bài kiểm tra 14 câu Bài 18 Vật lí 12!
+                    </p>
+                </div>
+
+                <h3 style="font-size: 1.15rem; font-weight: 700; color: #1e293b; margin-bottom: 1.25rem;">
+                    <i class="fa-solid fa-clipboard-check"></i> Xem Lại Chi Tiết Từng Câu Hỏi
+                </h3>
+
+                <div id="reviewQuestionsList" class="tex2jax_process">
+                    <!-- Dynamic review items with full explanations -->
+                </div>
+
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="jump-btn" onclick="retakeExam()">
+                        <i class="fa-solid fa-rotate-right"></i> LÀM LẠI BÀI THI
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- START EXAM MODAL -->
+    <div class="modal-overlay" id="startModal" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div style="width: 48px; height: 48px; border-radius: 50%; background: #dbeafe; color: #2563eb; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-size: 1.3rem;">
+                    <i class="fa-solid fa-user-pen"></i>
+                </div>
+                <h3 class="modal-title">Bắt Đầu Làm Bài Thi</h3>
+                <p style="font-size: 0.88rem; color: #64748b; margin-top: 4px;">
+                    Bài 18: Ứng dụng hiện tượng cảm ứng điện từ (Vật lí 12)
+                </p>
+            </div>
+
+            <div class="modal-input-group">
+                <label class="modal-label">Họ và Tên Thí Sinh <span style="color: red;">*</span></label>
+                <input type="text" id="modalStudentName" class="modal-input" placeholder="Ví dụ: Nguyễn Văn An" required>
+            </div>
+
+            <div class="modal-input-group">
+                <label class="modal-label">Lớp Học <span style="color: red;">*</span></label>
+                <input type="text" id="modalStudentClass" class="modal-input" placeholder="Ví dụ: 12A1" required>
+            </div>
+
+            <div class="modal-notes">
+                <strong>📌 Cấu trúc đề thi (Thang điểm 10,0):</strong><br>
+                • <strong>Phần I:</strong> 9 câu trắc nghiệm nhiều lựa chọn (4,5 điểm).<br>
+                • <strong>Phần II:</strong> 2 câu trắc nghiệm Đúng/Sai (4,0 điểm).<br>
+                • <strong>Phần III:</strong> 3 câu trắc nghiệm trả lời ngắn (1,5 điểm).
+            </div>
+
+            <button class="modal-btn" onclick="startExam()">
+                <i class="fa-solid fa-play"></i> VÀO THI NGAY
+            </button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <p style="margin-bottom: 4px; font-weight: 700; color: #f8fafc;">
+            Vatli102.com • Hệ Thống Học Tập & Đánh Giá Năng Lực Vật Lí Chuẩn GDPT 2018
+        </p>
+        <p style="margin: 0; font-size: 0.8rem; color: #64748b;">
+            Bản quyền thuộc về ban quản trị Vatli102. Bài 18: Ứng dụng hiện tượng cảm ứng điện từ.
+        </p>
+    </footer>
+
+    <!-- JAVASCRIPT CBT ENGINE -->
+    <script>
+        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbycB2ttbYIyAElV-YSkBiEKCv1UI3uzoQ4db5qi9DdgLWiZc90vHiSaejPaO0mBhYro/exec";
+
+        // 14 Questions Database (9 Part I + 2 Part II + 3 Part III)
+        const EXAM_DATA = [
+            // PART I (Q1 - Q9)
+            {
+                id: 1,
+                part: 1,
+                topic: "Phần I: Trắc Nghiệm Nhiều Lựa Chọn",
+                competency: "NTVL",
+                question: "Máy biến áp là thiết bị có khả năng thực hiện chức năng nào sau đây đối với dòng điện xoay chiều?",
+                options: {
+                    A: "Biến đổi tần số của dòng điện mà không làm thay đổi điện áp hiệu dụng.",
+                    B: "Biến đổi điện áp của dòng điện mà không làm thay đổi tần số.",
+                    C: "Chuyển dòng điện xoay chiều thành dòng điện một chiều không đổi.",
+                    D: "Tích lũy điện năng dưới dạng hóa năng để dự phòng khi mất nguồn."
+                },
+                answer: "B",
+                explanation: "Máy biến áp có khả năng biến đổi điện áp của dòng điện xoay chiều nhưng giữ nguyên hoàn toàn tần số của dòng điện."
+            },
+            {
+                id: 2,
+                part: 1,
+                topic: "Phần I: Trắc Nghiệm Nhiều Lựa Chọn",
+                competency: "NTVL",
+                question: "Trong cấu tạo cơ bản của máy biến áp, cuộn dây được đấu nối trực tiếp với nguồn điện xoay chiều cấp vào được gọi là",
+                options: {
+                    A: "cuộn thứ cấp.",
+                    B: "cuộn sơ cấp.",
+                    C: "lõi dẫn từ.",
+                    D: "cuộn cảm ứng."
+                },
+                answer: "B",
+                explanation: "Cuộn dây nối với nguồn điện xoay chiều cấp vào là cuộn sơ cấp (N₁ vòng). Cuộn nối tải ra tiêu thụ là cuộn thứ cấp (N₂ vòng)."
+            },
+            {
+                id: 3,
+                part: 1,
+                topic: "Phần I: Trắc Nghiệm Nhiều Lựa Chọn",
+                competency: "NTVL",
+                question: "Để giảm thiểu hao phí năng lượng do tỏa nhiệt bởi dòng điện xoáy Foucault chạy trong lõi sắt máy biến áp, người ta thường thực hiện giải pháp cấu tạo nào?",
+                options: {
+                    A: "Làm lõi sắt từ một khối thép đặc dày nguyên khối đúc kín.",
+                    B: "Ghép lõi sắt từ nhiều lá thép silicon mỏng sơn cách điện với nhau.",
+                    C: "Thay thế lõi sắt bằng một ống nhựa rỗng chứa không khí bên trong.",
+                    D: "Quấn các vòng dây sơ cấp đè chồng trực tiếp lên cuộn thứ cấp."
+                },
+                answer: "B",
+                explanation: "Lõi sắt được ghép từ nhiều lá thép mỏng kỹ thuật điện (silicon) có sơn cách điện để ngắt mạch kín của dòng Foucault, giảm tỏa nhiệt."
+            },
+            {
+                id: 4,
+                part: 1,
+                topic: "Phần I: Trắc Nghiệm Nhiều Lựa Chọn",
+                competency: "NTVL",
+                question: "Một máy biến áp lí tưởng có số vòng dây cuộn thứ cấp lớn hơn số vòng dây cuộn sơ cấp ($N_2 > N_1$). Máy này có tác dụng",
+                options: {
+                    A: "tăng điện áp hiệu dụng và tăng cường độ dòng điện hiệu dụng.",
+                    B: "tăng điện áp hiệu dụng và giảm cường độ dòng điện hiệu dụng.",
+                    C: "giảm điện áp hiệu dụng và tăng cường độ dòng điện hiệu dụng.",
+                    D: "giảm điện áp hiệu dụng và giảm tần số của dòng điện xoay chiều."
+                },
+                answer: "B",
+                explanation: "Với máy biến áp lí tưởng: U₂/U₁ = N₂/N₁ = I₁/I₂. Khi N₂ > N₁ thì U₂ > U₁ (tăng áp) và I₂ < I₁ (giảm cường độ dòng điện)."
+            },
+            {
+                id: 5,
+                part: 1,
+                topic: "Phần I: Trắc Nghiệm Nhiều Lựa Chọn",
+                competency: "NTVL",
+                question: "Khi truyền tải điện năng đi xa từ nhà máy điện đến nơi tiêu thụ, người ta đặt máy tăng áp ở trạm phát đầu nguồn nhằm mục đích chính là",
+                options: {
+                    A: "tăng tần số dòng điện để tăng tốc độ truyền tải điện lượng.",
+                    B: "tăng điện áp hiệu dụng để giảm hao phí tỏa nhiệt trên đường dây dẫn.",
+                    C: "giảm điện áp truyền tải để đảm bảo an toàn tuyệt đối cho đường dây.",
+                    D: "tăng công suất của nhà máy phát điện lên nhiều lần."
+                },
+                answer: "B",
+                explanation: "Công suất hao phí trên đường dây: ΔP = P²R / (U²cos²φ). Tăng U trước khi truyền tải giúp giảm mạnh hao phí tỏa nhiệt trên đường dây."
+            },
+            {
+                id: 6,
+                part: 1,
+                topic: "Phần I: Trắc Nghiệm Nhiều Lựa Chọn",
+                competency: "NTVL",
+                question: "Bộ Pickup (bộ cảm âm) gắn dưới các dây đàn của đàn ghi-ta điện hoạt động dựa trên ứng dụng của hiện tượng vật lí nào?",
+                options: {
+                    A: "Hiện tượng tự cảm trong mạch điện kín.",
+                    B: "Hiện tượng cảm ứng điện từ.",
+                    C: "Hiện tượng cộng hưởng âm thanh trong không khí.",
+                    D: "Hiện tượng quang điện trong chất bán dẫn."
+                },
+                answer: "B",
+                explanation: "Dây đàn thép dao động làm từ thông qua cuộn dây Pickup biến thiên, sinh ra dòng điện cảm ứng xoay chiều có cùng tần số âm thanh."
+            },
+            {
+                id: 7,
+                part: 1,
+                topic: "Phần I: Trắc Nghiệm Nhiều Lựa Chọn",
+                competency: "NTVL",
+                question: "Dây đàn của đàn ghi-ta điện bắt buộc phải làm bằng vật liệu nhiễm từ (như thép) vì lý do nào sau đây?",
+                options: {
+                    A: "Để dây đàn dẫn dòng điện từ Pickup chạy thẳng ra loa khuếch đại.",
+                    B: "Để dây đàn bị từ hóa, khi dao động làm từ thông qua cuộn dây Pickup biến thiên.",
+                    C: "Để dây đàn có độ bền cơ học cao không bị đứt khi gảy mạnh.",
+                    D: "Để dây đàn phát ra âm thanh tự nhiên rất to mà không cần dùng ampli."
+                },
+                answer: "B",
+                explanation: "Dây thép nhiễm từ bị nam châm của Pickup từ hóa. Khi dây dao động, từ trường biến thiên sinh ra dòng cảm ứng trong cuộn dây Pickup."
+            },
+            {
+                id: 8,
+                part: 1,
+                topic: "Phần I: Trắc Nghiệm Nhiều Lựa Chọn",
+                competency: "NTVL",
+                question: "Trong công nghệ sạc không dây cho điện thoại di động, năng lượng điện từ đế sạc được truyền sang điện thoại nhờ",
+                options: {
+                    A: "sóng âm thanh tần số siêu cao truyền qua lớp vỏ điện thoại.",
+                    B: "từ trường biến thiên sinh ra từ cuộn phát cảm ứng dòng điện trong cuộn thu.",
+                    C: "sự truyền nhiệt trực tiếp từ bề mặt đế sạc sang pin điện thoại.",
+                    D: "sự phóng điện tia lửa điện vi mô qua khe hở không khí."
+                },
+                answer: "B",
+                explanation: "Năng lượng truyền qua từ trường biến thiên giữa cuộn phát và cuộn thu theo hiện tượng cảm ứng điện từ."
+            },
+            {
+                id: 9,
+                part: 1,
+                topic: "Phần I: Trắc Nghiệm Nhiều Lựa Chọn",
+                competency: "NTVL",
+                question: "Bếp điện từ hoạt động đun nước sôi nhanh chóng là nhờ hiện tượng nào sau đây?",
+                options: {
+                    A: "Bức xạ hồng ngoại phát ra từ mặt kính bếp truyền trực tiếp vào nước.",
+                    B: "Dòng điện Foucault sinh ra trực tiếp ở đáy nồi bằng vật liệu nhiễm từ tỏa nhiệt mạnh.",
+                    C: "Dây mayso điện trở bên trong bếp bị đốt nóng đỏ rực truyền nhiệt qua mặt kính.",
+                    D: "Hiện tượng cộng hưởng sóng điện từ vi ba làm dao động các phân tử nước."
+                },
+                answer: "B",
+                explanation: "Bếp từ sinh từ trường xoay chiều tần số cao xuyên qua đáy nồi nhiễm từ, tạo ra dòng điện Foucault sinh nhiệt trực tiếp tại đáy nồi."
+            },
+
+            // PART II (Q10, Q11)
+            {
+                id: 10,
+                part: 2,
+                topic: "Phần II: Trắc Nghiệm Đúng / Sai",
+                competency: "THTN",
+                question: "Xét cấu tạo và nguyên lý hoạt động của máy biến áp và quá trình truyền tải điện năng đi xa:",
+                subItems: [
+                    { id: "a", text: "Máy biến áp chỉ hoạt động với dòng điện xoay chiều, không có tác dụng biến đổi điện áp của dòng điện một chiều không đổi.", answer: true, explanation: "Dòng một chiều không đổi không tạo ra từ thông biến thiên nên không sinh ra suất điện động cảm ứng ở cuộn thứ cấp." },
+                    { id: "b", text: "Khi một máy biến áp lí tưởng làm tăng điện áp hiệu dụng lên $k$ lần ($k > 1$) thì cường độ dòng điện hiệu dụng trong cuộn thứ cấp cũng tăng lên $k$ lần.", answer: false, explanation: "Vì P₁ ≈ P₂ nên U₂ tăng k lần thì I₂ phải giảm k lần (I₂ = I₁ / k)." },
+                    { id: "c", text: "Trên đường dây truyền tải điện năng đi xa, nếu tăng điện áp hiệu dụng ở trạm phát lên $10$ lần thì công suất hao phí tỏa nhiệt trên đường dây giảm đi $100$ lần.", answer: true, explanation: "Công suất hao phí ΔP tỉ lệ nghịch với U². U tăng 10 lần thì ΔP giảm 10² = 100 lần." },
+                    { id: "d", text: "Lõi thép của máy biến áp đóng vai trò dẫn từ thông biến thiên từ cuộn sơ cấp truyền trọn vẹn sang cảm ứng cuộn thứ cấp.", answer: true, explanation: "Lõi thép khép kín có độ từ thẩm lớn giúp khép kín mạch dẫn từ, truyền toàn bộ từ thông từ sơ cấp sang thứ cấp." }
+                ]
+            },
+            {
+                id: 11,
+                part: 2,
+                topic: "Phần II: Trắc Nghiệm Đúng / Sai",
+                competency: "VDKT",
+                question: "Xét các ứng dụng thực tế của hiện tượng cảm ứng điện từ trong đời sống và kỹ thuật:",
+                subItems: [
+                    { id: "a", text: "Đàn ghi-ta điện có thể sử dụng dây đàn làm bằng sợi nylon tổng hợp mà vẫn thu được tín hiệu âm thanh tốt qua bộ cảm âm Pickup.", answer: false, explanation: "Dây nylon không có tính từ nên không bị nam châm từ hóa, khi dao động không làm biến thiên từ thông qua cuộn dây Pickup." },
+                    { id: "b", text: "Đế sạc điện thoại không dây sử dụng dòng điện xoay chiều tần số cao ở cuộn phát để tạo ra từ trường biến thiên truyền năng lượng sang cuộn thu ở điện thoại.", answer: true, explanation: "Đây là nguyên tắc truyền năng lượng không dây nhờ hiện tượng cảm ứng điện từ." },
+                    { id: "c", text: "Bếp điện từ làm nóng trực tiếp đáy nồi nhiễm từ nhờ tác dụng nhiệt của dòng điện xoáy Foucault sinh ra bên trong lòng kim loại của đáy nồi.", answer: true, explanation: "Dòng điện Foucault sinh nhiệt trực tiếp trong kim loại đáy nồi, mặt kính của bếp chỉ cách điện và cách nhiệt." },
+                    { id: "d", text: "Phanh điện từ hoạt động dựa trên tác dụng của lực từ cản trở chuyển động quay tác dụng lên đĩa kim loại do dòng điện Foucault sinh ra theo Định luật Lenz.", answer: true, explanation: "Theo Định luật Lenz, lực từ tác dụng lên dòng Foucault luôn chống lại chuyển động của đĩa quay, giúp hãm phanh êm ái không ma sát cơ học." }
+                ]
+            },
+
+            // PART III (Q12 - Q14)
+            {
+                id: 12,
+                part: 3,
+                topic: "Phần III: Trắc Nghiệm Trả Lời Ngắn",
+                competency: "VDKT",
+                question: "Một máy biến áp lí tưởng có số vòng dây cuộn sơ cấp $N_1 = 1200$ vòng và cuộn thứ cấp $N_2 = 600$ vòng. Khi đặt điện áp hiệu dụng $U_1 = 220\\text{ V}$ vào cuộn sơ cấp, điện áp hiệu dụng ở hai đầu cuộn thứ cấp $U_2$ bằng bao nhiêu Vôn ($\\text{V}$)?",
+                acceptedAnswers: ["110"],
+                explanation: "Áp dụng công thức máy biến áp lí tưởng: $U_2 = U_1 \\cdot (N_2 / N_1) = 220 \\cdot (600 / 1200) = 110\\text{ V}$."
+            },
+            {
+                id: 13,
+                part: 3,
+                topic: "Phần III: Trắc Nghiệm Trả Lời Ngắn",
+                competency: "VDKT",
+                question: "Trong quá trình truyền tải điện năng đi xa, để công suất hao phí do tỏa nhiệt trên đường dây giảm đi $40000$ lần thì người ta dùng máy tăng áp nâng điện áp hiệu dụng ở trạm phát đầu nguồn lên bao nhiêu lần?",
+                acceptedAnswers: ["200"],
+                explanation: "Công suất hao phí tỉ lệ nghịch với $U^2$. Để $\\Delta P$ giảm 40000 lần thì $U$ phải tăng $\\sqrt{40000} = 200$ lần."
+            },
+            {
+                id: 14,
+                part: 3,
+                topic: "Phần III: Trắc Nghiệm Trả Lời Ngắn",
+                competency: "VDKT",
+                question: "Một máy biến áp hạ áp lí tưởng có cuộn sơ cấp quấn $2000$ vòng. Máy biến áp này biến đổi điện áp hiệu dụng từ $220\\text{ V}$ xuống còn $11\\text{ V}$ cấp cho thiết bị điện tử. Tính số vòng dây cần quấn ở cuộn thứ cấp.",
+                acceptedAnswers: ["100"],
+                explanation: "Áp dụng công thức máy biến áp lí tưởng: $N_2 = N_1 \\cdot (U_2 / U_1) = 2000 \\cdot (11 / 220) = 100\\text{ vòng}$."
+            }
+        ];
+
+        // Runtime State
+        let currentQIndex = 0; // 0 to 13
+        let userState = {
+            part1: {}, // {1: 'A', 2: 'B', ...}
+            part2: { 10: {}, 11: {} }, // {10: {a: true, b: false}}
+            part3: {}  // {12: "110", ...}
+        };
+        let studentInfo = { name: "", className: "" };
+        let examTimeLeft = 15 * 60; // 15 mins
+        let timerInterval = null;
+        let isExamFinished = false;
+
+        // Navigation Tab Switcher
+        function switchNavTab(tab) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            document.getElementById('tabBtnTheory').classList.remove('active');
+            document.getElementById('tabBtnExam').classList.remove('active');
+
+            if (tab === 'theory') {
+                document.getElementById('theoryTab').classList.add('active');
+                document.getElementById('tabBtnTheory').classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else if (tab === 'exam') {
+                document.getElementById('tabBtnExam').classList.add('active');
+                if (!studentInfo.name) {
+                    document.getElementById('startModal').style.display = 'flex';
+                } else if (isExamFinished) {
+                    document.getElementById('resultContainer').classList.add('active');
+                } else {
+                    document.getElementById('examTab').classList.add('active');
+                    renderCurrentQuestion();
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Start Exam Modal Submission
+        function startExam() {
+            const nameInp = document.getElementById('modalStudentName').value.trim();
+            const classInp = document.getElementById('modalStudentClass').value.trim();
+
+            if (!nameInp || !classInp) {
+                alert("Vui lòng nhập đầy đủ Họ tên và Lớp để bắt đầu!");
+                return;
+            }
+
+            studentInfo.name = nameInp;
+            studentInfo.className = classInp;
+            localStorage.setItem('saved_student_name', nameInp);
+            localStorage.setItem('saved_student_class', classInp);
+
+            document.getElementById('dispUserName').textContent = nameInp;
+            document.getElementById('dispUserClass').textContent = classInp;
+
+            document.getElementById('startModal').style.display = 'none';
+            document.getElementById('examTab').classList.add('active');
+
+            initPalette();
+            renderCurrentQuestion();
+            startTimer();
+            if (window.MathJax) MathJax.typesetPromise();
+        }
+
+        // Initialize Palette
+        function initPalette() {
+            const grid = document.getElementById('paletteGrid');
+            grid.innerHTML = '';
+            for (let i = 1; i <= 14; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'pal-btn';
+                btn.id = `pal_btn_${i}`;
+                btn.textContent = i;
+                btn.onclick = () => jumpToQuestion(i - 1);
+                grid.appendChild(btn);
+            }
+            updatePalette();
+        }
+
+        // Update Palette States
+        function updatePalette() {
+            for (let i = 1; i <= 14; i++) {
+                const btn = document.getElementById(`pal_btn_${i}`);
+                if (!btn) continue;
+                btn.classList.remove('current', 'answered');
+
+                if (i - 1 === currentQIndex) {
+                    btn.classList.add('current');
+                }
+
+                // Check answered
+                if (i <= 9) {
+                    if (userState.part1[i]) btn.classList.add('answered');
+                } else if (i === 10 || i === 11) {
+                    const sub = userState.part2[i];
+                    if (sub && Object.keys(sub).length === 4) btn.classList.add('answered');
+                } else {
+                    if (userState.part3[i] && userState.part3[i].trim() !== '') btn.classList.add('answered');
+                }
+            }
+
+            // Progress Bar
+            let answeredCount = 0;
+            answeredCount += Object.keys(userState.part1).length;
+            if (userState.part2[10] && Object.keys(userState.part2[10]).length === 4) answeredCount++;
+            if (userState.part2[11] && Object.keys(userState.part2[11]).length === 4) answeredCount++;
+            for (let q = 12; q <= 14; q++) {
+                if (userState.part3[q] && userState.part3[q].trim() !== '') answeredCount++;
+            }
+
+            const pct = (answeredCount / 14) * 100;
+            document.getElementById('paletteProgressBar').style.width = `${pct}%`;
+            document.getElementById('paletteProgressText').textContent = `${answeredCount}/14 câu`;
+        }
+
+        // Render Current Question (One question view)
+        function renderCurrentQuestion() {
+            const q = EXAM_DATA[currentQIndex];
+            document.getElementById('qTopicBadge').textContent = q.topic;
+            document.getElementById('qCounterText').textContent = `Câu ${q.id} / 14`;
+
+            const container = document.getElementById('questionContainer');
+            container.innerHTML = '';
+
+            const titleEl = document.createElement('div');
+            titleEl.className = 'question-title';
+            titleEl.innerHTML = `<strong>Câu ${q.id}:</strong> ${q.question}`;
+            container.appendChild(titleEl);
+
+            if (q.part === 1) {
+                // Multiple Choice Options
+                const optList = document.createElement('div');
+                optList.className = 'options-list';
+                Object.entries(q.options).forEach(([k, v]) => {
+                    const label = document.createElement('div');
+                    label.className = 'opt-label' + (userState.part1[q.id] === k ? ' selected' : '');
+                    label.onclick = () => selectPart1(q.id, k);
+                    label.innerHTML = `
+                        <div class="opt-circle">${k}</div>
+                        <div class="opt-text">${v}</div>
+                    `;
+                    optList.appendChild(label);
+                });
+                container.appendChild(optList);
+            } else if (q.part === 2) {
+                // True / False Table
+                const tfWrap = document.createElement('div');
+                tfWrap.className = 'tf-table-wrap';
+                q.subItems.forEach(sub => {
+                    const row = document.createElement('div');
+                    row.className = 'tf-card-row';
+                    const currentVal = userState.part2[q.id] ? userState.part2[q.id][sub.id] : null;
+
+                    row.innerHTML = `
+                        <div class="tf-text"><strong>${sub.id})</strong> ${sub.text}</div>
+                        <div class="tf-btn-wrap">
+                            <button type="button" class="tf-choice-btn ${currentVal === true ? 'active-true' : ''}" onclick="selectPart2(${q.id}, '${sub.id}', true)">Đúng</button>
+                            <button type="button" class="tf-choice-btn ${currentVal === false ? 'active-false' : ''}" onclick="selectPart2(${q.id}, '${sub.id}', false)">Sai</button>
+                        </div>
+                    `;
+                    tfWrap.appendChild(row);
+                });
+                container.appendChild(tfWrap);
+            } else if (q.part === 3) {
+                // Short Answer Input
+                const shortWrap = document.createElement('div');
+                shortWrap.className = 'short-wrap';
+                const currentVal = userState.part3[q.id] || '';
+                shortWrap.innerHTML = `
+                    <div style="font-weight: 700; color: #475569; margin-bottom: 8px;">Nhập đáp số (tối đa 4 ký tự):</div>
+                    <input type="text" maxlength="4" class="short-input-box" id="inp_short_${q.id}" value="${currentVal}" placeholder="Đáp số..." oninput="inputPart3(${q.id}, this.value)">
+                    <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 6px;">Ví dụ: 110, 200, 100, 0.5...</div>
+                `;
+                container.appendChild(shortWrap);
+            }
+
+            // Update Control Buttons
+            document.getElementById('btnPrev').style.visibility = currentQIndex === 0 ? 'hidden' : 'visible';
+            document.getElementById('btnNext').textContent = currentQIndex === 13 ? 'Xem Lại' : 'Câu Tiếp';
+
+            updatePalette();
+            if (window.MathJax) MathJax.typesetPromise();
+        }
+
+        // Option selection handlers
+        function selectPart1(qId, key) {
+            userState.part1[qId] = key;
+            renderCurrentQuestion();
+        }
+
+        function selectPart2(qId, subId, val) {
+            if (!userState.part2[qId]) userState.part2[qId] = {};
+            userState.part2[qId][subId] = val;
+            renderCurrentQuestion();
+        }
+
+        function inputPart3(qId, val) {
+            userState.part3[qId] = val.trim();
+            updatePalette();
+        }
+
+        // Navigation
+        function navQuestion(dir) {
+            currentQIndex += dir;
+            if (currentQIndex < 0) currentQIndex = 0;
+            if (currentQIndex > 13) currentQIndex = 13;
+            renderCurrentQuestion();
+        }
+
+        function jumpToQuestion(idx) {
+            currentQIndex = idx;
+            renderCurrentQuestion();
+        }
+
+        // Timer
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (examTimeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Đã hết thời gian làm bài! Hệ thống tự động nộp bài.");
+                    gradeAndShowResult();
+                    return;
+                }
+                examTimeLeft--;
+                const mins = String(Math.floor(examTimeLeft / 60)).padStart(2, '0');
+                const secs = String(examTimeLeft % 60).padStart(2, '0');
+                document.getElementById('timerDisplay').textContent = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function confirmSubmitExam() {
+            if (confirm("Bạn có chắc chắn muốn nộp bài thi ngay bây giờ?")) {
+                clearInterval(timerInterval);
+                gradeAndShowResult();
+            }
+        }
+
+        // Grading Engine (Strict Rule 8 & Rule 9)
+        function gradeAndShowResult() {
+            isExamFinished = true;
+            let totalScore = 0.0;
+            let correctPart1 = 0;
+            let correctPart2 = 0;
+            let correctPart3 = 0;
+            let totalItemsCorrect = 0;
+
+            const reviewContainer = document.getElementById('reviewQuestionsList');
+            reviewContainer.innerHTML = '';
+
+            // 1. Grade Part I (9 questions, 0.5 each = 4.5 pts)
+            for (let i = 0; i < 9; i++) {
+                const q = EXAM_DATA[i];
+                const uAns = userState.part1[q.id];
+                const isCorrect = (uAns === q.answer);
+
+                if (isCorrect) {
+                    totalScore += 0.5;
+                    correctPart1++;
+                    totalItemsCorrect++;
+                }
+
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'review-item ' + (isCorrect ? 'correct' : 'incorrect');
+                itemDiv.innerHTML = `
+                    <div class="review-header">
+                        <span>Câu ${q.id} [${q.competency}]</span>
+                        <span style="color: ${isCorrect ? '#10b981' : '#ef4444'};">${isCorrect ? '+0,5 Điểm' : '0 Điểm'}</span>
+                    </div>
+                    <div style="margin-bottom: 8px;">${q.question}</div>
+                    <div><strong>Lựa chọn của bạn:</strong> <code>${uAns || '(Chưa chọn)'}</code> | <strong>Đáp án đúng:</strong> <span style="color: #10b981; font-weight: 700;">${q.answer}</span></div>
+                    <div class="review-expl">💡 ${q.explanation}</div>
+                `;
+                reviewContainer.appendChild(itemDiv);
+            }
+
+            // 2. Grade Part II (2 questions, 2.0 each = 4.0 pts, Rule 8)
+            // 4 true: 2.0 | 3 true: 1.0 | 2 true: 0.5 | 1 true: 0.2 | 0 true: 0.0
+            for (let i = 9; i < 11; i++) {
+                const q = EXAM_DATA[i];
+                const uSub = userState.part2[q.id] || {};
+                let rightSubCount = 0;
+
+                q.subItems.forEach(sub => {
+                    if (uSub[sub.id] === sub.answer) rightSubCount++;
+                });
+
+                let qScore = 0.0;
+                if (rightSubCount === 4) { qScore = 2.0; correctPart2++; totalItemsCorrect++; }
+                else if (rightSubCount === 3) qScore = 1.0;
+                else if (rightSubCount === 2) qScore = 0.5;
+                else if (rightSubCount === 1) qScore = 0.2;
+                else qScore = 0.0;
+
+                totalScore += qScore;
+
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'review-item ' + (rightSubCount === 4 ? 'correct' : (rightSubCount >= 2 ? '' : 'incorrect'));
+                let subReviewHtml = q.subItems.map(sub => {
+                    const uChoice = uSub[sub.id];
+                    const isSubRight = (uChoice === sub.answer);
+                    return `<div>• <strong>${sub.id})</strong> ${sub.text} &rarr; Bạn chọn: <code>${uChoice === true ? 'Đúng' : (uChoice === false ? 'Sai' : 'Chưa chọn')}</code> | Đáp án: <strong style="color: #10b981;">${sub.answer ? 'Đúng' : 'Sai'}</strong> (${sub.explanation})</div>`;
+                }).join('');
+
+                itemDiv.innerHTML = `
+                    <div class="review-header">
+                        <span>Câu ${q.id} (Trắc nghiệm Đúng/Sai)</span>
+                        <span style="color: ${qScore >= 1.0 ? '#10b981' : '#ef4444'};">+${qScore.toFixed(1)} / 2,0 Điểm (Đúng ${rightSubCount}/4 ý)</span>
+                    </div>
+                    <div style="margin-bottom: 8px;">${q.question}</div>
+                    <div style="font-size: 0.9rem; line-height: 1.6;">${subReviewHtml}</div>
+                `;
+                reviewContainer.appendChild(itemDiv);
+            }
+
+            // 3. Grade Part III (3 questions, 0.5 each = 1.5 pts)
+            for (let i = 11; i < 14; i++) {
+                const q = EXAM_DATA[i];
+                const uVal = (userState.part3[q.id] || "").replace(',', '.');
+                const isCorrect = q.acceptedAnswers.some(v => parseFloat(v) === parseFloat(uVal));
+
+                if (isCorrect) {
+                    totalScore += 0.5;
+                    correctPart3++;
+                    totalItemsCorrect++;
+                }
+
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'review-item ' + (isCorrect ? 'correct' : 'incorrect');
+                itemDiv.innerHTML = `
+                    <div class="review-header">
+                        <span>Câu ${q.id} (Trả lời ngắn)</span>
+                        <span style="color: ${isCorrect ? '#10b981' : '#ef4444'};">${isCorrect ? '+0,5 Điểm' : '0 Điểm'}</span>
+                    </div>
+                    <div style="margin-bottom: 8px;">${q.question}</div>
+                    <div><strong>Đáp số bạn nhập:</strong> <code>${uVal || '(Trống)'}</code> | <strong>Đáp số chuẩn:</strong> <span style="color: #10b981; font-weight: 700;">${q.acceptedAnswers[0]}</span></div>
+                    <div class="review-expl">💡 ${q.explanation}</div>
+                `;
+                reviewContainer.appendChild(itemDiv);
+            }
+
+            // Final score formatted
+            const finalGrade = Math.min(10.0, Math.max(0.0, totalScore)).toFixed(1);
+            document.getElementById('finalScoreVal').textContent = finalGrade;
+
+            // Switch to result view
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            document.getElementById('resultContainer').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Confetti
+            if (finalGrade >= 7.0 && typeof confetti === 'function') {
+                confetti({
+                    particleCount: 120,
+                    spread: 80,
+                    origin: { y: 0.6 }
+                });
+            }
+
+            // Auto-sync to Google Sheets (Rule 9)
+            if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL.startsWith("http")) {
+                try {
+                    fetch(GOOGLE_SHEETS_URL, {
+                        method: "POST",
+                        mode: "no-cors",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            name: studentInfo.name,
+                            className: studentInfo.className,
+                            lesson: "Bài 18: Ứng dụng hiện tượng cảm ứng điện từ (Vật lí 12)",
+                            correct: `${totalItemsCorrect}/14`,
+                            score: parseFloat(finalGrade)
+                        })
+                    }).catch(err => console.log("Google Sheets sync completed"));
+                } catch (e) {}
+            }
+
+            if (window.MathJax) MathJax.typesetPromise();
+        }
+
+        // Retake Exam
+        function retakeExam() {
+            isExamFinished = false;
+            currentQIndex = 0;
+            examTimeLeft = 15 * 60;
+            userState = {
+                part1: {},
+                part2: { 10: {}, 11: {} },
+                part3: {}
+            };
+            switchNavTab('exam');
+        }
+
+        // Init on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedName = localStorage.getItem('saved_student_name');
+            const savedClass = localStorage.getItem('saved_student_class');
+            if (savedName) document.getElementById('modalStudentName').value = savedName;
+            if (savedClass) document.getElementById('modalStudentClass').value = savedClass;
+        });
+    </script>
+</body>
+</html>
