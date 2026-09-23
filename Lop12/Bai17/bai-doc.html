@@ -1559,6 +1559,10 @@
                         </div>
                         <div class="pt-2 border-t border-slate-700/60 space-y-1.5">
                             <label class="flex items-center gap-2 cursor-pointer text-slate-300 hover:text-white">
+                                <input id="chk3Field" type="checkbox" checked class="accent-emerald-500 rounded">
+                                <span>Hiện từ trường & Trục 120°</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer text-slate-300 hover:text-white">
                                 <input id="chk3Electrons" type="checkbox" checked class="accent-cyan-500 rounded">
                                 <span>Hiện dòng hạt electron 3 pha</span>
                             </label>
@@ -1623,80 +1627,100 @@
                 const chk3Electrons = document.getElementById('chk3Electrons');
                 const chk3Graph = document.getElementById('chk3Graph');
 
-                // Event Listeners
-                slider3RPM.addEventListener('input', (e) => {
-                    targetRPM = parseFloat(e.target.value);
-                    txt3RPM.textContent = targetRPM + ' RPM';
-                });
+                // Event Listeners with Safe Guards
+                if (slider3RPM) {
+                    slider3RPM.addEventListener('input', (e) => {
+                        targetRPM = parseFloat(e.target.value);
+                        if (txt3RPM) txt3RPM.textContent = targetRPM + ' RPM';
+                    });
+                }
 
-                slider3Mag.addEventListener('input', (e) => {
-                    const val = parseFloat(e.target.value);
-                    magStrength = val / 100;
-                    txt3Mag.textContent = val + '%';
-                });
+                if (slider3Mag) {
+                    slider3Mag.addEventListener('input', (e) => {
+                        const val = parseFloat(e.target.value);
+                        magStrength = val / 100;
+                        if (txt3Mag) txt3Mag.textContent = val + '%';
+                    });
+                }
 
-                btn3Stop.addEventListener('click', () => {
-                    targetRPM = 0;
-                    slider3RPM.value = 0;
-                    txt3RPM.textContent = '0 RPM';
-                });
+                if (btn3Stop) {
+                    btn3Stop.addEventListener('click', () => {
+                        targetRPM = 0;
+                        if (slider3RPM) slider3RPM.value = 0;
+                        if (txt3RPM) txt3RPM.textContent = '0 RPM';
+                    });
+                }
 
-                btn3Max.addEventListener('click', () => {
-                    targetRPM = 120;
-                    slider3RPM.value = 120;
-                    txt3RPM.textContent = '120 RPM';
-                });
+                if (btn3Max) {
+                    btn3Max.addEventListener('click', () => {
+                        targetRPM = 120;
+                        if (slider3RPM) slider3RPM.value = 120;
+                        if (txt3RPM) txt3RPM.textContent = '120 RPM';
+                    });
+                }
 
-                btn3Dir.addEventListener('click', () => {
-                    rotationDir = -rotationDir;
-                });
+                if (btn3Dir) {
+                    btn3Dir.addEventListener('click', () => {
+                        rotationDir = -rotationDir;
+                    });
+                }
 
-                btn3Pause.addEventListener('click', () => {
-                    isRunning = !isRunning;
-                    btn3Pause.innerHTML = isRunning 
-                        ? '<i class="fa-solid fa-pause"></i> <span>Tạm dừng</span>' 
-                        : '<i class="fa-solid fa-play"></i> <span>Tiếp tục</span>';
-                });
+                if (btn3Pause) {
+                    btn3Pause.addEventListener('click', () => {
+                        isRunning = !isRunning;
+                        btn3Pause.innerHTML = isRunning 
+                            ? '<i class="fa-solid fa-pause"></i> <span>Tạm dừng</span>' 
+                            : '<i class="fa-solid fa-play"></i> <span>Tiếp tục</span>';
+                    });
+                }
 
-                btn3Reset.addEventListener('click', () => {
-                    targetRPM = 60;
-                    rotationDir = 1;
-                    slider3RPM.value = 60;
-                    txt3RPM.textContent = '60 RPM';
-                    magStrength = 1.0;
-                    slider3Mag.value = 100;
-                    txt3Mag.textContent = '100%';
-                    loadType = 'bulb';
-                    updateLoadButtons();
-                    waveHistory1.length = 0;
-                    waveHistory2.length = 0;
-                    waveHistory3.length = 0;
-                    rotorAngle = 0;
-                });
+                if (btn3Reset) {
+                    btn3Reset.addEventListener('click', () => {
+                        targetRPM = 60;
+                        rotationDir = 1;
+                        if (slider3RPM) slider3RPM.value = 60;
+                        if (txt3RPM) txt3RPM.textContent = '60 RPM';
+                        magStrength = 1.0;
+                        if (slider3Mag) slider3Mag.value = 100;
+                        if (txt3Mag) txt3Mag.textContent = '100%';
+                        loadType = 'bulb';
+                        updateLoadButtons();
+                        waveHistory1.length = 0;
+                        waveHistory2.length = 0;
+                        waveHistory3.length = 0;
+                        rotorAngle = 0;
+                    });
+                }
 
-                btn3LoadBulb.addEventListener('click', () => {
-                    loadType = 'bulb';
-                    updateLoadButtons();
-                });
+                if (btn3LoadBulb) {
+                    btn3LoadBulb.addEventListener('click', () => {
+                        loadType = 'bulb';
+                        updateLoadButtons();
+                    });
+                }
 
-                btn3LoadMeter.addEventListener('click', () => {
-                    loadType = 'meter';
-                    updateLoadButtons();
-                });
+                if (btn3LoadMeter) {
+                    btn3LoadMeter.addEventListener('click', () => {
+                        loadType = 'meter';
+                        updateLoadButtons();
+                    });
+                }
 
                 function updateLoadButtons() {
-                    if (loadType === 'bulb') {
-                        btn3LoadBulb.className = 'py-1.5 rounded-lg font-bold border transition bg-amber-600 border-amber-400 text-white flex items-center justify-center gap-1.5';
-                        btn3LoadMeter.className = 'py-1.5 rounded-lg font-bold border transition bg-slate-700 border-slate-600 text-slate-300 hover:text-white flex items-center justify-center gap-1.5';
-                    } else {
-                        btn3LoadMeter.className = 'py-1.5 rounded-lg font-bold border transition bg-cyan-600 border-cyan-400 text-white flex items-center justify-center gap-1.5';
-                        btn3LoadBulb.className = 'py-1.5 rounded-lg font-bold border transition bg-slate-700 border-slate-600 text-slate-300 hover:text-white flex items-center justify-center gap-1.5';
+                    if (btn3LoadBulb && btn3LoadMeter) {
+                        if (loadType === 'bulb') {
+                            btn3LoadBulb.className = 'py-1.5 rounded-lg font-bold border transition bg-amber-600 border-amber-400 text-white flex items-center justify-center gap-1.5';
+                            btn3LoadMeter.className = 'py-1.5 rounded-lg font-bold border transition bg-slate-700 border-slate-600 text-slate-300 hover:text-white flex items-center justify-center gap-1.5';
+                        } else {
+                            btn3LoadMeter.className = 'py-1.5 rounded-lg font-bold border transition bg-cyan-600 border-cyan-400 text-white flex items-center justify-center gap-1.5';
+                            btn3LoadBulb.className = 'py-1.5 rounded-lg font-bold border transition bg-slate-700 border-slate-600 text-slate-300 hover:text-white flex items-center justify-center gap-1.5';
+                        }
                     }
                 }
 
-                chk3Field.addEventListener('change', (e) => showField = e.target.checked);
-                chk3Electrons.addEventListener('change', (e) => showElectrons = e.target.checked);
-                chk3Graph.addEventListener('change', (e) => showGraph = e.target.checked);
+                if (chk3Field) chk3Field.addEventListener('change', (e) => showField = e.target.checked);
+                if (chk3Electrons) chk3Electrons.addEventListener('change', (e) => showElectrons = e.target.checked);
+                if (chk3Graph) chk3Graph.addEventListener('change', (e) => showGraph = e.target.checked);
 
                 // Render Loop
                 function render() {
