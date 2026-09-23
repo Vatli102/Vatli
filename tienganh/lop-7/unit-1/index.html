@@ -1,51 +1,60 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📝 Unit 1: Hobbies - Tiếng Anh 7 (Global Success) | vatli102.com</title>
-    <script>
-        if (!window.location.pathname.endsWith('/') && !window.location.pathname.endsWith('.html')) {
-            window.history.replaceState(null, '', window.location.pathname + '/' + window.location.search);
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Unit 1: Hobbies - Tiếng Anh 7 (Global Success)</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
             --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --secondary: #06b6d4;
+            --primary-dark: #4338ca;
+            --primary-light: #e0e7ff;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
             --bg-body: #f8fafc;
             --card-bg: #ffffff;
-            --text-dark: #0f172a;
+            --text-main: #1e293b;
             --text-muted: #64748b;
             --border: #e2e8f0;
+            --border-focus: #4f46e5;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-body);
-            color: var(--text-dark);
-            line-height: 1.65;
-            padding-bottom: 0;
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        p, .question-title, .explanation-box, .score-desc, .form-group label {
-            text-align: justify;
-        }
-
+        /* Sticky Header */
         .sticky-header {
             position: sticky; top: 0; z-index: 1000;
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
         }
         .header-container {
-            max-width: 920px; margin: 0 auto; padding: 10px 15px;
+            max-width: 1200px; margin: 0 auto; padding: 10px 15px;
             display: flex; justify-content: space-between; align-items: center;
         }
         .site-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
@@ -55,1328 +64,1346 @@
             background: linear-gradient(135deg, #4f46e5, #06b6d4);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .nav-links { display: flex; gap: 18px; align-items: center; }
+        .nav-links { display: flex; gap: 14px; align-items: center; }
         .nav-item {
             text-decoration: none; color: #475569; font-weight: 600; font-size: 0.9rem;
             display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s;
         }
         .nav-item:hover { color: #4f46e5; }
-        @media (max-width: 480px) {
-            .header-container { padding: 8px 12px; }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 0.4rem;
+            background: #f1f5f9;
+            padding: 0.25rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #475569;
+            padding: 0.45rem 0.9rem;
+            font-weight: 700;
+            font-size: 0.88rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn.active {
+            background: #4f46e5;
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        @media (max-width: 768px) {
+            .header-container { padding: 8px 12px; flex-direction: column; gap: 8px; }
             .logo-text { font-size: 1.1rem; }
-            .nav-links { gap: 10px; }
-            .nav-item { font-size: 0.8rem; }
+            .nav-links { width: 100%; justify-content: space-between; }
         }
 
-        .quiz-container { max-width: 920px; margin: 20px auto; padding: 0 15px; min-height: 80vh; }
-
-        .exam-banner {
-            background: linear-gradient(135deg, #1e1b4b, #3730a3); color: white;
-            padding: 2.2rem 1.5rem; border-radius: 20px; text-align: center; margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(55,48,163,0.25);
-        }
-        .exam-banner h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; }
-        .exam-banner p { font-size: 0.95rem; color: #c7d2fe; text-align: center; }
-        .badge-exam { display: inline-block; background: rgba(255,255,255,0.2); padding: 4px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; margin-top: 10px; }
-
-        .login-card {
-            background: white; border-radius: 16px; padding: 30px 20px; text-align: center;
-            border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 30px;
-        }
-        .form-group { margin-bottom: 15px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
-        .form-group label { display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 5px; color: #334155; }
-        .form-control { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; outline: none; box-sizing: border-box; }
-        .btn-start {
-            background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; border: none;
-            padding: 12px 30px; border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer;
-            box-shadow: 0 4px 14px rgba(79,70,229,0.3); transition: all 0.2s; width: 100%; max-width: 400px; margin-top: 10px;
-        }
-        .btn-start:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(79,70,229,0.4); }
-
-        .section-header {
-            background: linear-gradient(135deg, #e0e7ff, #c7d2fe); color: #3730a3; padding: 12px 18px;
-            border-radius: 12px; font-weight: 800; font-size: 1.05rem; margin: 30px 0 15px 0; border-left: 5px solid var(--primary);
-        }
-        .section-desc {
-            font-size: 0.9rem; font-style: italic; color: #475569; margin: -5px 0 15px 4px;
+        .main-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+            flex: 1;
         }
 
-        .question-card {
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Theory Tab Styling */
+        .theory-wrapper {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2.25rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .theory-content {
+            text-align: justify;
+            line-height: 1.7;
+        }
+
+        .theory-card {
             background: white; border-radius: 14px; padding: 20px; margin-bottom: 20px;
-            border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
-        .question-title { font-weight: 700; font-size: 1.02rem; color: var(--text-dark); margin-bottom: 14px; line-height: 1.65; }
-        .question-num { color: var(--primary); font-weight: 800; }
+        .theory-card-header {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        .theory-icon {
+            width: 36px; height: 36px; border-radius: 8px; background: #e0e7ff; color: #4338ca;
+            display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;
+        }
+        .theory-title { font-size: 1.15rem; font-weight: 800; color: #1e1b4b; }
+        .theory-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+        .vocab-item {
+            background: #f8fafc; border-left: 4px solid var(--primary); padding: 10px 14px; border-radius: 8px;
+        }
+        .vocab-word { font-weight: 700; color: #1e293b; font-size: 0.95rem; margin-bottom: 2px; }
+        .vocab-meaning { font-size: 0.88rem; color: #475569; margin-top: 2px; }
+        .vocab-example { font-size: 0.82rem; color: #0284c7; font-style: italic; margin-top: 4px; }
+
+        .jump-btn-container {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .jump-btn {
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            padding: 0.875rem 2rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .jump-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+        }
+
+        /* CBT 2-Column Quiz Layout */
+        .exam-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .exam-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .exam-panel {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .exam-meta-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge-topic {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+        }
 
         .audio-box {
-            background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 14px 16px;
-            margin-bottom: 16px; display: flex; flex-direction: column; gap: 10px;
-        }
-        .audio-header {
-            display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 0.88rem; color: #1e293b;
-        }
-        .audio-script-btn {
-            background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; padding: 4px 10px;
-            border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer;
-        }
-        .audio-script-content {
-            display: none; background: white; border: 1px dashed #cbd5e1; padding: 10px 12px;
-            border-radius: 8px; font-size: 0.84rem; color: #475569; white-space: pre-line; line-height: 1.55;
+            background: #eef2ff;
+            border: 1.5px solid #c7d2fe;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1.25rem;
         }
 
         .passage-box {
-            background: #fdfbf7; border: 1.5px solid #fed7aa; border-radius: 12px; padding: 16px;
-            margin-bottom: 18px; font-size: 0.93rem; color: #334155; line-height: 1.75; white-space: pre-line;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            text-align: justify;
+            max-height: 280px;
+            overflow-y: auto;
+            line-height: 1.7;
         }
+
         .passage-title {
-            font-weight: 800; color: #9a3412; font-size: 0.95rem; margin-bottom: 8px; text-transform: uppercase;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
         }
 
-        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-        @media (min-width: 600px) { .options-grid { grid-template-columns: 1fr 1fr; } }
-        
-        .option-card {
-            background: #f8fafc; border: 1.5px solid var(--border); padding: 12px 15px; border-radius: 10px;
-            cursor: pointer; font-size: 0.95rem; text-align: justify; transition: all 0.15s; display: flex; align-items: flex-start; gap: 10px;
-            color: var(--text-dark); line-height: 1.55;
-        }
-        .option-card:hover { background: #f1f5f9; border-color: rgba(79, 70, 229, 0.4); }
-        .option-card.selected { background: #e0e7ff; border-color: var(--primary); font-weight: 700; color: #3730a3; }
-        .option-card.correct { border-color: #22c55e !important; background: #dcfce7 !important; color: #15803d !important; }
-        .option-card.incorrect { border-color: #ef4444 !important; background: #fee2e2 !important; color: #b91c1c !important; }
-
-        .option-letter {
-            background: white; border: 1px solid #cbd5e1; width: 28px; height: 28px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.82rem; flex-shrink: 0; margin-top: 2px;
-        }
-        .option-card.selected .option-letter { background: var(--primary); color: white; border-color: var(--primary); }
-
-        .explanation-box {
-            background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 14px 16px;
-            margin-top: 15px; font-size: 0.9rem; color: #0369a1; display: none; line-height: 1.65; text-align: justify;
+        .question-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+            line-height: 1.6;
         }
 
-        .results-panel {
-            background: white; border-radius: 20px; padding: 30px; text-align: center;
-            border: 2px solid var(--primary); box-shadow: 0 15px 35px rgba(79,70,229,0.15); margin-top: 30px; display: none;
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
         }
+
+        .opt-label {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            background: white;
+            border: 1.5px solid var(--border);
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: justify;
+        }
+
+        .opt-label:hover {
+            border-color: var(--primary);
+            background: #f8fafc;
+        }
+
+        .opt-label.selected {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .opt-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #64748b;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .opt-label.selected .opt-circle {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .opt-text {
+            font-size: 1rem;
+            color: #1e293b;
+        }
+
+        .question-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .ctrl-btn {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ctrl-btn-prev {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .ctrl-btn-prev:hover {
+            background: #e2e8f0;
+        }
+
+        .ctrl-btn-next {
+            background: var(--primary);
+            color: white;
+        }
+
+        .ctrl-btn-next:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Sidebar Palette */
+        .palette-panel {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            position: sticky;
+            top: 5.5rem;
+        }
+
+        .timer-card {
+            background: #0f172a;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .timer-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            margin-bottom: 0.25rem;
+        }
+
+        .timer-val {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+
+        .user-info-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.85rem;
+        }
+
+        .progress-wrap {
+            margin-bottom: 1.25rem;
+        }
+
+        .progress-bar-bg {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0.4rem;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4f46e5, #06b6d4);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .palette-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .palette-btn {
+            aspect-ratio: 1;
+            border: 1.5px solid var(--border);
+            background: white;
+            border-radius: 0.375rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .palette-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .palette-btn.current {
+            border-color: var(--primary);
+            background: #eff6ff;
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        .palette-btn.answered {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .palette-btn.answered.current {
+            box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--primary);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            font-weight: 700;
+            padding: 0.875rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Modal Login */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-card {
+            background: white;
+            border-radius: 1rem;
+            max-width: 480px;
+            width: 100%;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .modal-input-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .modal-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 0.375rem;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .modal-input:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        .modal-notes {
+            background: #fffbeb;
+            border-left: 4px solid var(--accent);
+            padding: 0.75rem 1rem;
+            border-radius: 0 0.375rem 0.375rem 0;
+            font-size: 0.825rem;
+            color: #92400e;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            padding: 0.875rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* Results Display */
+        .result-view {
+            background: white;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .score-banner {
+            text-align: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
         .score-circle {
-            width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            margin: 0 auto 15px auto; box-shadow: 0 8px 20px rgba(79,70,229,0.3);
-            font-size: 2.2rem; font-weight: 800; line-height: 1;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.5);
         }
-        .score-title { font-size: 1.4rem; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
-        .score-desc { font-size: 0.95rem; color: #64748b; margin-bottom: 20px; text-align: center; }
 
-        .details-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 15px; margin-bottom: 20px; }
-        @media (max-width: 600px) { .details-summary { grid-template-columns: repeat(2, 1fr); } }
-        .summary-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
-        .summary-num { font-size: 1.4rem; font-weight: 800; margin-bottom: 2px; }
-        .summary-label { font-size: 0.8rem; color: #64748b; }
+        .score-val {
+            font-size: 2.4rem;
+            font-weight: 800;
+            line-height: 1;
+        }
 
-        .progress-container { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; }
-        .progress-bar-bg { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #4f46e5, #06b6d4); transition: width 0.3s ease; }
-        .progress-text { display: flex; justify-content: space-between; font-size: 0.85rem; color: #64748b; margin-top: 6px; font-weight: 600; }
+        .score-max {
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
 
-        /* Question Navigation Grid / Palette */
-        .qnav-card {
-            background: white; border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 20px;
+        .review-item {
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            background: #fafafa;
         }
-        .qnav-title { font-size: 0.85rem; font-weight: 700; color: #334155; margin-bottom: 10px; display: flex; justify-content: space-between; }
-        .qnav-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 6px;
+
+        .review-item.correct {
+            border-left: 5px solid var(--success);
         }
-        .qnav-item {
-            height: 34px; display: flex; align-items: center; justify-content: center;
-            border-radius: 8px; font-weight: 700; font-size: 0.82rem; border: 1px solid #cbd5e1;
-            background: #f8fafc; color: #475569; text-decoration: none; transition: all 0.15s;
+
+        .review-item.incorrect {
+            border-left: 5px solid var(--danger);
         }
-        .qnav-item:hover { background: #e2e8f0; }
-        .qnav-item.done { background: #e0e7ff; border-color: #818cf8; color: #4338ca; }
-        .qnav-item.ans-correct { background: #dcfce7 !important; border-color: #22c55e !important; color: #15803d !important; }
-        .qnav-item.ans-wrong { background: #fee2e2 !important; border-color: #ef4444 !important; color: #b91c1c !important; }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .review-exp {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background: #f1f5f9;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            color: #1e293b;
+            line-height: 1.5;
+        }
 
         /* Site Footer */
         .site-footer {
             width: 100%; text-align: center; padding: 25px 15px; background: #ffffff;
             border-top: 1px solid var(--border); margin-top: 40px; color: #64748b; font-size: 0.88rem;
         }
-        .footer-container { max-width: 920px; margin: 0 auto; }
+        .footer-container { max-width: 1200px; margin: 0 auto; }
         .footer-links { margin-top: 8px; font-size: 0.82rem; }
         .footer-links a { color: #4f46e5; text-decoration: none; margin: 0 4px; transition: color 0.2s; }
         .footer-links a:hover { text-decoration: underline; color: #3730a3; }
-
-        /* Countdown Timer & Student Bar */
-        .header-timer-badge {
-            display: none;
-            align-items: center;
-            gap: 6px;
-            background: #eff6ff;
-            color: #1d4ed8;
-            border: 1.5px solid #93c5fd;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.88rem;
-            font-weight: 700;
-            font-family: monospace;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-        }
-        .student-info-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px 18px;
-            margin-bottom: 18px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-        }
-        .student-info-name {
-            font-weight: 700;
-            color: #1e293b;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .floating-timer {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #f8fafc;
-            color: #4338ca;
-            border: 2px solid #818cf8;
-            padding: 6px 14px;
-            border-radius: 9999px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
-        .timer-warning {
-            border-color: #f59e0b !important;
-            color: #b45309 !important;
-            background: #fffbeb !important;
-        }
-        .timer-danger {
-            border-color: #ef4444 !important;
-            color: #b91c1c !important;
-            background: #fef2f2 !important;
-            animation: pulseTimer 1s infinite;
-        }
-        @keyframes pulseTimer {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.03); }
-        }
     </style>
 </head>
-<body>
-
-<header class="sticky-header">
-    <div class="header-container">
-        <a href="/" class="site-logo">
-            <img src="/favicon.svg" alt="Logo" class="logo-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%234f46e5\'/><text x=\'50\' y=\'65\' font-size=\'45\' text-anchor=\'middle\' fill=\'white\' font-family=\'sans-serif\' font-weight=\'bold\'>V</text></svg>';">
-            <span class="logo-text">Vatli102.com</span>
-        </a>
-        <div id="headerTimerBadge" class="header-timer-badge">
-            <i class="fa-solid fa-stopwatch"></i> <span id="timerText">45:00</span>
+<body oncontextmenu="return false;">
+    <!-- Sticky Header with Home, About, Contact & Nav Tabs -->
+    <header class="sticky-header">
+        <div class="header-container">
+            <a href="https://vatli102.com" class="site-logo">
+                <img src="favicon.svg" alt="Logo" class="logo-img">
+                <span class="logo-text">vatli102.com</span>
+            </a>
+            <div class="nav-links">
+                <a href="https://vatli102.com" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
+                <a href="https://vatli102.com/gioi-thieu.html" class="nav-item"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a>
+                <a href="https://vatli102.com/lien-he.html" class="nav-item"><i class="fa-solid fa-envelope"></i> Liên hệ</a>
+                <div class="nav-tabs">
+                    <button class="nav-btn active" id="btn-tab-theory" onclick="switchTab('theory')">
+                        <i class="fa-solid fa-book-open"></i> Lý thuyết trọng tâm
+                    </button>
+                    <button class="nav-btn" id="btn-tab-quiz" onclick="switchTab('quiz')">
+                        <i class="fa-solid fa-pen-to-square"></i> Làm bài tập củng cố
+                    </button>
+                </div>
+            </div>
         </div>
-        <nav class="nav-links">
-            <a href="/" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
-            <a href="/tienganh/" class="nav-item"><i class="fa-solid fa-language text-violet-600"></i> Tiếng Anh</a>
-            <a href="/gioi-thieu.html" class="nav-item"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a>
-            <a href="/lien-he.html" class="nav-item"><i class="fa-solid fa-envelope"></i> Liên hệ</a>
-        </nav>
-    </div>
-</header>
+    </header>
 
-<div class="quiz-container">
-    <div class="exam-banner">
-        <h1>📖 Unit 1: Hobbies (Tiếng Anh 7)</h1>
-        <p>Kiến thức trọng tâm: Hobbies & Thì Hiện tại đơn, Like/Love/Enjoy + V-ing (Chuẩn GDPT 2018 - Global Success 7)</p>
-        <span class="badge-exam">⏱ Thời gian làm bài: 45 Phút | 100% Trắc nghiệm ABCD | Tích hợp Audio bài nghe</span>
-    </div>
+    <div class="main-container">
+        <!-- TAB 1: LÝ THUYẾT TRỌNG TÂM -->
+        <div id="tab-theory" class="tab-pane active">
+            <div class="theory-wrapper">
+                <div class="theory-content">
+                    <div class="theory-card">
+                        <h2 style="font-size: 1.3rem; font-weight: 800; color: #1e1b4b; margin-bottom: 10px;">
+                            Tóm tắt Lý thuyết: Unit 1 - Hobbies (Tiếng Anh 7 Global Success)
+                        </h2>
+                        <p style="font-size: 0.95rem; color: #334155; line-height: 1.75; margin-bottom: 12px;">
+                            Trong Unit 1, học sinh cần nắm vững hệ thống từ vựng về sở thích và các hoạt động giải trí, dạng từ liên quan, phân biệt động từ đi với thể thao (<i>Play / Do / Go</i>), cách dùng thì <i>Hiện tại đơn (Present Simple)</i> và <i>Động từ chỉ sự yêu/ghét + V-ing</i>, cùng quy tắc phát âm hai âm <b>/ə/</b> và <b>/ɜː/</b>.
+                        </p>
+                    </div>
 
-    <div id="studentLoginCard" class="login-card">
-        <div style="width: 50px; height: 50px; background: #e0e7ff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 12px auto;">📝</div>
-        <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; color: #0f172a;">THÔNG TIN HỌC SINH LÀM BÀI</h2>
-        <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 20px; text-align: center;">Điền Họ tên và Lớp để bắt đầu làm bài thi & tự động lưu điểm số.</p>
+                    
+        <div class="theory-card">
+            <div class="theory-card-header">
+                <div class="theory-icon"><i class="fa-solid fa-book-bookmark"></i></div>
+                <div class="theory-title">1. Từ vựng & Cụm từ trọng tâm (Vocabulary & Collocations)</div>
+            </div>
+            <div class="theory-grid">
+                
+            <div class="vocab-item">
+                <div class="vocab-word">arrange flowers (v)</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> /əˈreɪndʒ ˈflaʊəz/</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> cắm hoa / nghệ thuật cắm hoa</div>
+                <div class="vocab-example"><b>Ví dụ:</b> My mother loves arranging flowers in the living room every Sunday.</div>
+            </div>
+            
+            <div class="vocab-item">
+                <div class="vocab-word">bird-watching (n)</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> /ˈbɜːd wɒtʃɪŋ/</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> ngắm chim hoang dã</div>
+                <div class="vocab-example"><b>Ví dụ:</b> Bird-watching helps me relax and get closer to nature.</div>
+            </div>
+            
+            <div class="vocab-item">
+                <div class="vocab-word">build dollhouses (v)</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> /bɪld ˈdɒlhaʊsɪz/</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> xây/làm nhà búp bê</div>
+                <div class="vocab-example"><b>Ví dụ:</b> She spends hours building dollhouses from cardboard and glue.</div>
+            </div>
+            
+            <div class="vocab-item">
+                <div class="vocab-word">collect coins / stamps (v)</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> /kəˈlekt/</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> sưu tầm tiền xu / tem</div>
+                <div class="vocab-example"><b>Ví dụ:</b> He has collected rare stamps for more than three years.</div>
+            </div>
+            
+            <div class="vocab-item">
+                <div class="vocab-word">do yoga / judo (v)</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> /duː ˈjəʊɡə/</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> tập yoga / võ judo</div>
+                <div class="vocab-example"><b>Ví dụ:</b> Doing yoga every morning keeps her healthy and flexible.</div>
+            </div>
+            
+            <div class="vocab-item">
+                <div class="vocab-word">gardening (n)</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> /ˈɡɑːdnɪŋ/</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> làm vườn</div>
+                <div class="vocab-example"><b>Ví dụ:</b> Gardening teaches children patience and responsibility.</div>
+            </div>
+            
+            <div class="vocab-item">
+                <div class="vocab-word">horse-riding (n)</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> /ˈhɔːs raɪdɪŋ/</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> cưỡi ngựa</div>
+                <div class="vocab-example"><b>Ví dụ:</b> Horse-riding is an exciting outdoor hobby.</div>
+            </div>
+            
+            <div class="vocab-item">
+                <div class="vocab-word">make models (v)</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> /meɪk ˈmɒdlz/</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> lắp ráp mô hình</div>
+                <div class="vocab-example"><b>Ví dụ:</b> My brother enjoys making scale airplane models.</div>
+            </div>
+            
+            <div class="vocab-item">
+                <div class="vocab-word">take up (phr.v)</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> /teɪk ʌp/</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> bắt đầu một sở thích mới</div>
+                <div class="vocab-example"><b>Ví dụ:</b> I am thinking of taking up photography this summer.</div>
+            </div>
+            
+            <div class="vocab-item">
+                <div class="vocab-word">look after (phr.v)</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> /lʊk ˈɑːftə/</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> chăm sóc (= take care of)</div>
+                <div class="vocab-example"><b>Ví dụ:</b> He looks after his bonsai trees very carefully.</div>
+            </div>
+            
+            </div>
+        </div>
         
-        <div class="form-group">
-            <label>Họ và tên học sinh <span style="color:red;">*</span></label>
-            <input type="text" id="studentName" class="form-control" placeholder="Ví dụ: Nguyễn Hoàng Nam" required>
-        </div>
-        <div class="form-group">
-            <label>Lớp <span style="color:red;">*</span></label>
-            <input type="text" id="studentClass" class="form-control" placeholder="Ví dụ: 7A1" required>
-        </div>
-        <button type="button" class="btn-start" id="btnStartQuiz" onclick="startQuizExam()">🚀 BẮT ĐẦU LÀM BÀI THI</button>
-    </div>
-
-    <div id="quizContent" style="display: none;">
-        <div class="student-info-bar">
-            <div class="student-info-name">
-                <i class="fa-solid fa-user-graduate text-indigo-600"></i>
-                <span id="displayStudentInfo">Thí sinh: <strong>---</strong> &nbsp;|&nbsp; Lớp: <strong>---</strong></span>
+        <div class="theory-card">
+            <div class="theory-card-header">
+                <div class="theory-icon"><i class="fa-solid fa-sitemap"></i></div>
+                <div class="theory-title">2. Cấu tạo từ / Dạng của từ (Word Formation)</div>
             </div>
-            <div class="floating-timer" id="mainTimerBox">
-                <i class="fa-solid fa-clock"></i>
-                <span>Thời gian còn lại: <strong id="timerDisplay" style="font-family: monospace; font-size: 1.05rem;">45:00</strong></span>
+            <div class="theory-grid">
+                
+            <div class="vocab-item">
+                <div class="vocab-word">collect (v) → collection (n) → collector (n)</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> /kəˈlekt/ - /kəˈlekʃn/ - /kəˈlektə/</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> sưu tầm → bộ sưu tập → nhà sưu tầm</div>
+                <div class="vocab-example"><b>Ví dụ:</b> The collector showed us his precious coin collection.</div>
+            </div>
+            
+            <div class="vocab-item">
+                <div class="vocab-word">create (v) → creative (adj) → creativity (n)</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> /kriˈeɪt/ - /kriˈeɪtɪv/ - /ˌkriːeɪˈtɪvəti/</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> sáng tạo (v) → có tính sáng tạo (adj) → óc sáng tạo (n)</div>
+                <div class="vocab-example"><b>Ví dụ:</b> Painting requires high creativity and patience.</div>
+            </div>
+            
+            <div class="vocab-item">
+                <div class="vocab-word">relax (v) → relaxing (adj) → relaxed (adj) → relaxation (n)</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> /rɪˈlæks/ - /rɪˈlæksɪŋ/ - /rɪˈlækst/ - /ˌriːlækˈseɪʃn/</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> thư giãn → mang tính thư giãn → cảm thấy thư thái → sự thư giãn</div>
+                <div class="vocab-example"><b>Ví dụ:</b> Listening to instrumental music is very relaxing.</div>
+            </div>
+            
+            <div class="vocab-item">
+                <div class="vocab-word">differ (v) → difference (n) → different (adj)</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> /ˈdɪfə/ - /ˈdɪfrəns/ - /ˈdɪfrənt/</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> khác biệt (v) → sự khác biệt (n) → khác nhau (adj)</div>
+                <div class="vocab-example"><b>Ví dụ:</b> There are many differences between indoor and outdoor hobbies.</div>
+            </div>
+            
+            <div class="vocab-item">
+                <div class="vocab-word">patient (adj) → patience (n) → patiently (adv)</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> /ˈpeɪʃnt/ - /ˈpeɪʃns/ - /ˈpeɪʃntli/</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> kiên nhẫn (adj) → lòng kiên nhẫn (n) → một cách kiên nhẫn (adv)</div>
+                <div class="vocab-example"><b>Ví dụ:</b> You need a lot of patience to finish this complex jigsaw puzzle.</div>
+            </div>
+            
             </div>
         </div>
-
-        <div class="progress-container">
-            <div class="progress-bar-bg">
-                <div class="progress-bar-fill" id="progressBar"></div>
+        
+        <div class="theory-card">
+            <div class="theory-card-header">
+                <div class="theory-icon"><i class="fa-solid fa-arrows-split-up-and-left"></i></div>
+                <div class="theory-title">3. Phân biệt các từ dễ gây nhầm lẫn (Confusing Words)</div>
             </div>
-            <div class="progress-text">
-                <span>Tiến độ làm bài</span>
-                <span id="progressLabel">0/40 câu hoàn thành</span>
+            <div class="theory-grid">
+                
+            <div class="vocab-item">
+                <div class="vocab-word">PLAY vs. DO vs. GO với thể thao & sở thích</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> Collocation Rules</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> • PLAY: Đi với môn thể thao đồng đội, có luật chơi hoặc dùng bóng (play football, play chess, play badminton).<br>• DO: Đi với hoạt động cá nhân, võ thuật rèn luyện thân thể không dùng bóng (do yoga, do judo, do aerobics, do puzzles).<br>• GO: Đi với hoạt động kết thúc bằng đuôi -ing (go swimming, go cycling, go fishing, go camping).</div>
+                <div class="vocab-example"><b>Ví dụ:</b> We play badminton, do yoga, and go jogging every week.</div>
+            </div>
+            
+            <div class="vocab-item">
+                <div class="vocab-word">FUN vs. FUNNY</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> /fʌn/ vs. /ˈfʌni/</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> • FUN (n / adj): Niềm vui, sự thích thú, mang lại cảm giác vui vẻ, hào hứng.<br>• FUNNY (adj): Hài hước, buồn cười, khiến người khác phải bật cười (hoặc kì lạ).</div>
+                <div class="vocab-example"><b>Ví dụ:</b> Going camping is great fun! / The comedy was really funny.</div>
+            </div>
+            
+            <div class="vocab-item">
+                <div class="vocab-word">HOBBY vs. INTEREST vs. PASTIME</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> /ˈhɒbi/ - /ˈɪntrəst/ - /ˈpɑːstaɪm/</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> • HOBBY: Sở thích thực hiện đều đặn trong thời gian rảnh.<br>• INTEREST: Mối quan tâm, điều mình muốn tìm hiểu.<br>• PASTIME: Trò tiêu khiển nhằm mục đích giải trí, giết thời gian.</div>
+                <div class="vocab-example"><b>Ví dụ:</b> Stamp collecting has been his main hobby since childhood.</div>
+            </div>
+            
             </div>
         </div>
-
-        <!-- Bảng điều hướng câu hỏi nhanh -->
-        <div class="qnav-card">
-            <div class="qnav-title">
-                <span><i class="fa-solid fa-list-ol"></i> Bảng chuyển nhanh câu hỏi</span>
-                <span style="font-weight: 500; font-size: 0.8rem; color: #64748b;">(Click để cuộn tới câu)</span>
+        
+        <div class="theory-card">
+            <div class="theory-card-header">
+                <div class="theory-icon"><i class="fa-solid fa-code-branch"></i></div>
+                <div class="theory-title">4. Ngữ pháp: Hiện tại đơn & Động từ chỉ sự yêu/ghét</div>
             </div>
-            <div class="qnav-grid" id="questionNavGrid"></div>
-        </div>
-
-        <div id="questionsContainer"></div>
-
-        <div style="text-align: center; margin-top: 30px;">
-            <button type="button" id="btnSubmitQuiz" onclick="confirmSubmitQuiz()" style="background: linear-gradient(135deg, #059669, #10b981); color: white; border: none; padding: 14px 40px; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; box-shadow: 0 6px 20px rgba(16,185,129,0.3); transition: all 0.2s;">
-                ✅ NỘP BÀI THI & CHẤM ĐIỂM
-            </button>
-        </div>
-
-        <div id="resultsPanel" class="results-panel">
-            <div class="score-circle">
-                <span id="scoreCircle">0.0</span>
+            <div class="theory-grid">
+                
+            <div class="vocab-item">
+                <div class="vocab-word">A. Thì Hiện tại đơn (Present Simple Tense)</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> Diễn tả thói quen, sở thích, sự thật hiển nhiên hoặc thời gian biểu</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> • Khẳng định: S + V(s/es) (He collects stamps / They do yoga).<br>• Phủ định: S + do/does + not + V_inf (She doesn't like cooking).<br>• Nghi vấn: Do/Does + S + V_inf? → Yes, S + do/does. / No, S + don't/doesn't.<br>• Dấu hiệu nhận biết: always, usually, often, sometimes, rarely, never, every day/week, once a week...</div>
+                <div class="vocab-example"><b>Ví dụ:</b> My father usually waters his flowers after work every afternoon.</div>
             </div>
-            <div class="score-title" id="scoreTitle">Hoàn Thành Bài Thi!</div>
-            <div class="score-desc" id="scoreDesc">Xem lại hướng dẫn giải chi tiết cho từng câu hỏi bên dưới.</div>
-
-            <div class="details-summary">
-                <div class="summary-card">
-                    <div class="summary-num" style="color: #22c55e;" id="correctCountText">0</div>
-                    <div class="summary-label">Số câu đúng</div>
+            
+            <div class="vocab-item">
+                <div class="vocab-word">B. Động từ chỉ sự yêu/ghét (Verbs of liking & disliking)</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> like, love, enjoy, fancy, adore, prefer, hate, dislike, detest + V-ing</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> • Yêu thích: love / adore / fancy / like / enjoy + V-ing (hoặc to V với like/love).<br>• Ghét / Không thích: dislike / hate / detest + V-ing.<br>• Lưu ý: 'fancy' và 'detest' luôn đi kèm với V-ing (không dùng to V).</div>
+                <div class="vocab-example"><b>Ví dụ:</b> Minh fancies making paper models. / Mai detests waking up early on Sundays.</div>
+            </div>
+            
+            </div>
+        </div>
+        
+        <div class="theory-card">
+            <div class="theory-card-header">
+                <div class="theory-icon"><i class="fa-solid fa-headphones"></i></div>
+                <div class="theory-title">5. Ngữ âm: Phát âm /ə/ và /ɜː/</div>
+            </div>
+            <div class="theory-grid">
+                
+            <div class="vocab-item">
+                <div class="vocab-word">Âm /ə/ (Schwa - âm ngắn, nhẹ)</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> /ə/</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> Xuất hiện ở các âm tiết không mang trọng âm: a, o, e, er, or...</div>
+                <div class="vocab-example"><b>Ví dụ:</b> away /əˈweɪ/, doctor /ˈdɒktə/, camera /ˈkæmərə/, cinema /ˈsɪnəmə/, famous /ˈfeɪməs/.</div>
+            </div>
+            
+            <div class="vocab-item">
+                <div class="vocab-word">Âm /ɜː/ (Âm dài, mở nhẹ môi và kéo dài)</div>
+                <div class="vocab-meaning"><b>Phát âm:</b> /ɜː/</div>
+                <div class="vocab-meaning"><b>Nghĩa:</b> Xuất hiện ở các âm tiết mang trọng âm: ir, ur, er, ear, or...</div>
+                <div class="vocab-example"><b>Ví dụ:</b> bird /bɜːd/, burn /bɜːn/, girl /ɡɜːl/, learn /lɜːn/, work /wɜːk/, shirt /ʃɜːt/, hurt /hɜːt/.</div>
+            </div>
+            
+            </div>
+        </div>
+        
                 </div>
-                <div class="summary-card">
-                    <div class="summary-num" style="color: #ef4444;" id="incorrectCountText">0</div>
-                    <div class="summary-label">Số câu sai</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-num" style="color: #0284c7;" id="timeSpentText">0 phút</div>
-                    <div class="summary-label">Thời gian làm bài</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-num" style="color: #4f46e5;" id="gradeText">0.0 / 10</div>
-                    <div class="summary-label">Điểm số hệ 10</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<footer class="site-footer">
-    <div class="footer-container">
-        <p>© 2026 Vatli102.com - Cổng học liệu số & thi trắc nghiệm trực tuyến chuẩn GDPT 2018.</p>
-        <div class="footer-links">
-            <a href="/">Trang chủ</a> •
-            <a href="/tienganh/">Môn Tiếng Anh</a> •
-            <a href="/gioi-thieu.html">Giới thiệu</a> •
-            <a href="/lien-he.html">Liên hệ</a>
-        </div>
-    </div>
-</footer>
-
-<script>
-const questions = [
-  {
-    "id": 1,
-    "part": 1,
-    "section": "PART 1: LISTENING",
-    "instruction": "Listen to a conversation between Nick and Elena about her hobby and choose the correct answer (A, B, C, or D).",
-    "audio_title": "Recording 1: Conversation between Nick and Elena (Building dollhouses)",
-    "audio_text": "Nick: Elena, what is your favourite hobby?\nElena: My favourite hobby is building dollhouses. I started this hobby three years ago on my eleventh birthday when my father bought me a small dollhouse.\nNick: Really? Is it difficult to build a dollhouse?\nElena: Well, it takes a lot of patience and creativity. I usually use cardboard, glue, and wood to make the rooms and furniture.\nNick: Do you build them alone?\nElena: No, my cousin Mi helps me with the painting and making small decorations. We often spend our weekends doing it together.\nNick: That sounds amazing!",
-    "question": "When did Elena start her hobby of building dollhouses?",
-    "options": [
-      "Three years ago.",
-      "Two years ago.",
-      "Last month.",
-      "When she was seven years old."
-    ],
-    "answer": "A",
-    "explanation": "Dựa vào đoạn hội thoại: 'I started this hobby three years ago on my eleventh birthday...' -> Elena bắt đầu sở thích này 3 năm trước."
-  },
-  {
-    "id": 2,
-    "part": 1,
-    "section": "PART 1: LISTENING",
-    "instruction": "Listen to a conversation between Nick and Elena about her hobby and choose the correct answer (A, B, C, or D).",
-    "audio_title": "Recording 1: Conversation between Nick and Elena (Building dollhouses)",
-    "question": "Who bought Elena her first dollhouse?",
-    "options": [
-      "Her mother.",
-      "Her father.",
-      "Her cousin Mi.",
-      "Her friend Nick."
-    ],
-    "answer": "B",
-    "explanation": "Dựa vào câu: '...when my father bought me a small dollhouse.' -> Bố của Elena là người đã mua cho cô ấy ngôi nhà búp bê đầu tiên."
-  },
-  {
-    "id": 3,
-    "part": 1,
-    "section": "PART 1: LISTENING",
-    "instruction": "Listen to a conversation between Nick and Elena about her hobby and choose the correct answer (A, B, C, or D).",
-    "audio_title": "Recording 1: Conversation between Nick and Elena (Building dollhouses)",
-    "question": "What materials does Elena usually use to make the rooms and furniture?",
-    "options": [
-      "Plastic, glass, and metal.",
-      "Cardboard, glue, and wood.",
-      "Paper, cloth, and clay.",
-      "Bricks, cement, and paint."
-    ],
-    "answer": "B",
-    "explanation": "Dựa vào câu: 'I usually use cardboard, glue, and wood to make the rooms and furniture.' -> Vật liệu là bìa cứng (cardboard), keo (glue) và gỗ (wood)."
-  },
-  {
-    "id": 4,
-    "part": 1,
-    "section": "PART 1: LISTENING",
-    "instruction": "Listen to a conversation between Nick and Elena about her hobby and choose the correct answer (A, B, C, or D).",
-    "audio_title": "Recording 1: Conversation between Nick and Elena (Building dollhouses)",
-    "question": "Who helps Elena with painting and making small decorations?",
-    "options": [
-      "Her brother.",
-      "Her classmate.",
-      "Her cousin Mi.",
-      "Her art teacher."
-    ],
-    "answer": "C",
-    "explanation": "Dựa vào câu: 'No, my cousin Mi helps me with the painting and making small decorations.' -> Chị/em họ Mi giúp Elena sơn và trang trí."
-  },
-  {
-    "id": 5,
-    "part": 1,
-    "section": "PART 1: LISTENING",
-    "instruction": "Listen to a short talk about the benefits of gardening and choose the correct answer (A, B, C, or D).",
-    "audio_title": "Recording 2: The benefits of Gardening as a hobby",
-    "audio_text": "Speaker: Gardening is one of the most popular outdoor hobbies in the world. First, it helps people stay physically healthy because you have to water plants, dig the soil, and do physical work in the fresh air. Second, gardening teaches people patience and responsibility. It takes time for flowers and vegetables to grow. Finally, seeing your flowers bloom or eating fresh vegetables from your own garden brings great happiness and reduces stress after a long working day.",
-    "question": "What is gardening considered according to the speaker?",
-    "options": [
-      "An expensive indoor hobby.",
-      "A boring leisure activity.",
-      "One of the most popular outdoor hobbies.",
-      "A dangerous sport."
-    ],
-    "answer": "C",
-    "explanation": "Dựa vào câu đầu bài nghe: 'Gardening is one of the most popular outdoor hobbies in the world.'"
-  },
-  {
-    "id": 6,
-    "part": 1,
-    "section": "PART 1: LISTENING",
-    "instruction": "Listen to a short talk about the benefits of gardening and choose the correct answer (A, B, C, or D).",
-    "audio_title": "Recording 2: The benefits of Gardening as a hobby",
-    "question": "Why does gardening help people stay physically healthy?",
-    "options": [
-      "Because people need to stay inside quietly.",
-      "Because people water plants, dig the soil, and work in the fresh air.",
-      "Because people buy expensive fitness tools.",
-      "Because it replaces going to the hospital."
-    ],
-    "answer": "B",
-    "explanation": "Dựa vào câu: '...because you have to water plants, dig the soil, and do physical work in the fresh air.'"
-  },
-  {
-    "id": 7,
-    "part": 1,
-    "section": "PART 1: LISTENING",
-    "instruction": "Listen to a short talk about the benefits of gardening and choose the correct answer (A, B, C, or D).",
-    "audio_title": "Recording 2: The benefits of Gardening as a hobby",
-    "question": "What valuable lessons does gardening teach people?",
-    "options": [
-      "How to drive a tractor.",
-      "Patience and responsibility.",
-      "How to cook complex meals.",
-      "Speed and competitive skills."
-    ],
-    "answer": "B",
-    "explanation": "Dựa vào câu: 'Second, gardening teaches people patience and responsibility.'"
-  },
-  {
-    "id": 8,
-    "part": 1,
-    "section": "PART 1: LISTENING",
-    "instruction": "Listen to a short talk about the benefits of gardening and choose the correct answer (A, B, C, or D).",
-    "audio_title": "Recording 2: The benefits of Gardening as a hobby",
-    "question": "How do people feel when they see their flowers bloom or eat vegetables from their garden?",
-    "options": [
-      "They feel happy and reduce stress.",
-      "They feel exhausted and bored.",
-      "They feel nervous and anxious.",
-      "They regret spending their time."
-    ],
-    "answer": "A",
-    "explanation": "Dựa vào câu cuối: '...brings great happiness and reduces stress after a long working day.'"
-  },
-  {
-    "id": 9,
-    "part": 2,
-    "section": "PART 2: PHONETICS",
-    "instruction": "Choose the word whose underlined part is pronounced differently from that of the others.",
-    "question": "Which word has the underlined part pronounced differently?",
-    "options": [
-      "<u>a</u>way",
-      "doct<u>o</u>r",
-      "b<u>ir</u>d",
-      "teach<u>e</u>r"
-    ],
-    "answer": "C",
-    "explanation": "Phần gạch chân: away /əˈweɪ/ (/ə/), doctor /ˈdɒktə/ (/ə/), bird /bɜːd/ (/ɜː/), teacher /ˈtiːtʃə/ (/ə/). Từ bird phát âm /ɜː/ khác các từ còn lại."
-  },
-  {
-    "id": 10,
-    "part": 2,
-    "section": "PART 2: PHONETICS",
-    "instruction": "Choose the word whose underlined part is pronounced differently from that of the others.",
-    "question": "Which word has the underlined part pronounced differently?",
-    "options": [
-      "g<u>ir</u>l",
-      "sk<u>ir</u>t",
-      "h<u>ur</u>t",
-      "banan<u>a</u>"
-    ],
-    "answer": "D",
-    "explanation": "Phần gạch chân: girl /ɡɜːl/ (/ɜː/), skirt /skɜːt/ (/ɜː/), hurt /hɜːt/ (/ɜː/), banana /bəˈnɑːnə/ (/ə/). Từ banana chứa âm /ə/ khác 3 từ còn lại (/ɜː/)."
-  },
-  {
-    "id": 11,
-    "part": 2,
-    "section": "PART 2: PHONETICS",
-    "instruction": "Choose the word that differs from the other three in the position of primary stress.",
-    "question": "Which word has a different stress position?",
-    "options": [
-      "hobby",
-      "garden",
-      "collect",
-      "patient"
-    ],
-    "answer": "C",
-    "explanation": "Trọng âm: 'hobby (âm 1), 'garden (âm 1), col'lect (âm 2), 'patient (âm 1). Do đó collect có trọng âm rơi vào âm 2."
-  },
-  {
-    "id": 12,
-    "part": 2,
-    "section": "PART 2: PHONETICS",
-    "instruction": "Choose the word that differs from the other three in the position of primary stress.",
-    "question": "Which word has a different stress position?",
-    "options": [
-      "model",
-      "enjoy",
-      "difficult",
-      "photo"
-    ],
-    "answer": "B",
-    "explanation": "Trọng âm: 'model (âm 1), en'joy (âm 2), 'difficult (âm 1), 'photo (âm 1). Do đó enjoy có trọng âm rơi vào âm 2."
-  },
-  {
-    "id": 13,
-    "part": 3,
-    "section": "PART 3: VOCABULARY & GRAMMAR",
-    "instruction": "Choose the best option (A, B, C, or D) to complete each of the following sentences.",
-    "question": "My sister loves ________ old coins and stamps from different foreign countries.",
-    "options": [
-      "making",
-      "collecting",
-      "doing",
-      "playing"
-    ],
-    "answer": "B",
-    "explanation": "Cụm từ cố định chỉ sở thích: 'collect coins / stamps' (sưu tầm tiền xu / tem). Love + V-ing -> collecting."
-  },
-  {
-    "id": 14,
-    "part": 3,
-    "section": "PART 3: VOCABULARY & GRAMMAR",
-    "instruction": "Choose the best option (A, B, C, or D) to complete each of the following sentences.",
-    "question": "Look at those delicate artworks! He is very skillful at ________ eggshells.",
-    "options": [
-      "carving",
-      "building",
-      "painting",
-      "taking"
-    ],
-    "answer": "A",
-    "explanation": "Từ vựng Unit 1: 'carving eggshells' (khắc vỏ trứng). Cấu trúc: be skillful at + V-ing."
-  },
-  {
-    "id": 15,
-    "part": 3,
-    "section": "PART 3: VOCABULARY & GRAMMAR",
-    "instruction": "Choose the best option (A, B, C, or D) to complete each of the following sentences.",
-    "question": "Nick doesn't like ________ judo because he thinks it is dangerous.",
-    "options": [
-      "making",
-      "doing",
-      "having",
-      "playing"
-    ],
-    "answer": "B",
-    "explanation": "Động từ đi với võ thuật / thể dục: 'do judo / do karate / do yoga' -> doing judo."
-  },
-  {
-    "id": 16,
-    "part": 3,
-    "section": "PART 3: VOCABULARY & GRAMMAR",
-    "instruction": "Choose the best option (A, B, C, or D) to complete each of the following sentences.",
-    "question": "My father ________ jogging in the park every morning to keep fit.",
-    "options": [
-      "goes",
-      "go",
-      "is going",
-      "went"
-    ],
-    "answer": "A",
-    "explanation": "Thì hiện tại đơn diễn tả thói quen lặp lại có dấu hiệu 'every morning'. Chủ ngữ số ít 'My father' -> goes."
-  },
-  {
-    "id": 17,
-    "part": 3,
-    "section": "PART 3: VOCABULARY & GRAMMAR",
-    "instruction": "Choose the best option (A, B, C, or D) to complete each of the following sentences.",
-    "question": "Minh and Lan ________ keen on building dollhouses in their free time.",
-    "options": [
-      "is",
-      "are",
-      "do",
-      "does"
-    ],
-    "answer": "B",
-    "explanation": "Cấu trúc 'be keen on + V-ing'. Chủ ngữ số nhiều 'Minh and Lan' đi với to be 'are'."
-  },
-  {
-    "id": 18,
-    "part": 3,
-    "section": "PART 3: VOCABULARY & GRAMMAR",
-    "instruction": "Choose the best option (A, B, C, or D) to complete each of the following sentences.",
-    "question": "I hate ________ in front of the TV all day; I prefer playing outdoor sports.",
-    "options": [
-      "sit",
-      "to sitting",
-      "sitting",
-      "sat"
-    ],
-    "answer": "C",
-    "explanation": "Động từ chỉ sự yêu/ghét 'hate + V-ing' -> sitting (gấp đôi phụ âm t khi thêm -ing: sit -> sitting)."
-  },
-  {
-    "id": 19,
-    "part": 3,
-    "section": "PART 3: VOCABULARY & GRAMMAR",
-    "instruction": "Choose the best option (A, B, C, or D) to complete each of the following sentences.",
-    "question": "________ your brother enjoy arranging flowers on weekends?",
-    "options": [
-      "Is",
-      "Do",
-      "Does",
-      "Are"
-    ],
-    "answer": "C",
-    "explanation": "Câu hỏi thì hiện tại đơn với động từ thường 'enjoy' và chủ ngữ số ít 'your brother' -> dùng trợ động từ 'Does'."
-  },
-  {
-    "id": 20,
-    "part": 3,
-    "section": "PART 3: VOCABULARY & GRAMMAR",
-    "instruction": "Choose the best option (A, B, C, or D) to complete each of the following sentences.",
-    "question": "Making paper models and origami requires a lot of ________ and creativity.",
-    "options": [
-      "patience",
-      "patient",
-      "patiently",
-      "impatient"
-    ],
-    "answer": "A",
-    "explanation": "Sau 'a lot of' cần một danh từ: 'patience' (sự kiên nhẫn)."
-  },
-  {
-    "id": 21,
-    "part": 3,
-    "section": "PART 3: VOCABULARY & GRAMMAR",
-    "instruction": "Choose the best option (A, B, C, or D) to complete each of the following sentences.",
-    "question": "We often go ________ in the winter when the lake in our town freezes over.",
-    "options": [
-      "ice-skating",
-      "gardening",
-      "swimming",
-      "jogging"
-    ],
-    "answer": "A",
-    "explanation": "Khi mặt hồ đóng băng vào mùa đông ('lake freezes over'), hoạt động phù hợp là trượt băng: 'go ice-skating'."
-  },
-  {
-    "id": 22,
-    "part": 3,
-    "section": "PART 3: VOCABULARY & GRAMMAR",
-    "instruction": "Choose the best option (A, B, C, or D) to complete each of the following sentences.",
-    "question": "My grandmother is interested ________ planting yellow roses in the garden.",
-    "options": [
-      "on",
-      "at",
-      "in",
-      "with"
-    ],
-    "answer": "C",
-    "explanation": "Cấu trúc quen thuộc: 'be interested in + V-ing/N' (hứng thú, quan tâm đến việc gì)."
-  },
-  {
-    "id": 23,
-    "part": 3,
-    "section": "PART 3: VOCABULARY & GRAMMAR",
-    "instruction": "Choose the best option (A, B, C, or D) to complete each of the following sentences.",
-    "question": "The Sun always ________ in the east and sets in the west.",
-    "options": [
-      "rises",
-      "rise",
-      "rising",
-      "is rising"
-    ],
-    "answer": "A",
-    "explanation": "Chân lý, sự thật hiển nhiên luôn chia ở thì hiện tại đơn. Chủ ngữ 'The Sun' ngôi thứ 3 số ít -> rises."
-  },
-  {
-    "id": 24,
-    "part": 3,
-    "section": "PART 3: VOCABULARY & GRAMMAR",
-    "instruction": "Choose the best option (A, B, C, or D) to complete each of the following sentences.",
-    "question": "I find swimming ________ because it helps me relax after a stressful school day.",
-    "options": [
-      "bored",
-      "boring",
-      "useful",
-      "difficult"
-    ],
-    "answer": "C",
-    "explanation": "Cấu trúc: 'find + V-ing + Adj'. Vế sau 'helps me relax' (giúp thư giãn) nên chọn tính từ tích cực 'useful' (bổ ích, hữu ích)."
-  },
-  {
-    "id": 25,
-    "part": 4,
-    "section": "PART 4: CONVERSATIONAL EXCHANGES",
-    "instruction": "Choose the best response (A, B, C, or D) to complete each of the following exchanges.",
-    "question": "Tom: \"Would you like to go to the judo club with me this Saturday morning?\"\nPeter: \"________. What time does it start?\"",
-    "options": [
-      "Yes, I'd love to",
-      "No, thanks, I am busy",
-      "I dislike judo",
-      "You're welcome"
-    ],
-    "answer": "A",
-    "explanation": "Đáp lại lời mời 'Would you like to...?' và hỏi tiếp thời gian bắt đầu -> câu trả lời đồng ý lịch sự là 'Yes, I'd love to'."
-  },
-  {
-    "id": 26,
-    "part": 4,
-    "section": "PART 4: CONVERSATIONAL EXCHANGES",
-    "instruction": "Choose the best response (A, B, C, or D) to complete each of the following exchanges.",
-    "question": "Mary: \"What do you like doing in your spare time, Anna?\"\nAnna: \"________\"",
-    "options": [
-      "I usually do my homework at school.",
-      "I enjoy taking photos of nature.",
-      "It is very expensive to buy.",
-      "Yes, I like it very much."
-    ],
-    "answer": "B",
-    "explanation": "Câu hỏi về sở thích lúc rảnh rỗi ('What do you like doing in your spare time?'), câu trả lời phù hợp nhất là 'I enjoy taking photos of nature'."
-  },
-  {
-    "id": 27,
-    "part": 5,
-    "section": "PART 5: READING",
-    "instruction": "Read the passage and choose the best word (A, B, C, or D) for each space.",
-    "reading_title": "Passage 1: Why Hobbies are Important for Teenagers",
-    "reading_passage": "Having a hobby is very important for teenagers. First of all, hobbies give you a chance to relax after (27)______ school hours. For example, listening to music or reading books can reduce stress. Secondly, hobbies help you develop new (28)______. When you do gardening or make models, you learn to be patient and careful. Moreover, participating in group hobbies like sports or volunteering helps you make new friends who share the same (29)______. In conclusion, everyone should (30)______ at least one hobby to enjoy life fully.",
-    "question": "Choose the best word for space (27):",
-    "options": [
-      "hard",
-      "easily",
-      "lazy",
-      "boredom"
-    ],
-    "answer": "A",
-    "explanation": "Cụm từ 'hard school hours' (những giờ học tập vất vả, căng thẳng). 'hard' là tính từ bổ nghĩa cho danh từ 'school hours'."
-  },
-  {
-    "id": 28,
-    "part": 5,
-    "section": "PART 5: READING",
-    "instruction": "Read the passage and choose the best word (A, B, C, or D) for each space.",
-    "reading_title": "Passage 1: Why Hobbies are Important for Teenagers",
-    "question": "Choose the best word for space (28):",
-    "options": [
-      "skills",
-      "foods",
-      "tools",
-      "money"
-    ],
-    "answer": "A",
-    "explanation": "Ngữ cảnh: 'develop new skills' (phát triển các kỹ năng mới)."
-  },
-  {
-    "id": 29,
-    "part": 5,
-    "section": "PART 5: READING",
-    "instruction": "Read the passage and choose the best word (A, B, C, or D) for each space.",
-    "reading_title": "Passage 1: Why Hobbies are Important for Teenagers",
-    "question": "Choose the best word for space (29):",
-    "options": [
-      "lessons",
-      "interests",
-      "subjects",
-      "homework"
-    ],
-    "answer": "B",
-    "explanation": "Cụm từ 'share the same interests' (chia sẻ cùng sở thích/mối quan tâm)."
-  },
-  {
-    "id": 30,
-    "part": 5,
-    "section": "PART 5: READING",
-    "instruction": "Read the passage and choose the best word (A, B, C, or D) for each space.",
-    "reading_title": "Passage 1: Why Hobbies are Important for Teenagers",
-    "question": "Choose the best word for space (30):",
-    "options": [
-      "take up",
-      "take off",
-      "take in",
-      "take after"
-    ],
-    "answer": "A",
-    "explanation": "Cụm động từ trong Unit 1: 'take up a hobby' (bắt đầu theo đuổi một sở thích mới)."
-  },
-  {
-    "id": 31,
-    "part": 5,
-    "section": "PART 5: READING",
-    "instruction": "Read the following passage and choose the correct answer (A, B, C, or D) for each question.",
-    "reading_title": "Passage 2: Mark's Creative and Eco-Friendly Hobby",
-    "reading_passage": "Mark is a 13-year-old student living in Da Nang. Unlike many of his classmates who enjoy playing online video games, Mark has a very unique and creative hobby: making models from recycled materials. He started this hobby two years ago when his school launched an environmental campaign called \"Green School, Green Life\".\n\nMark collects discarded cardboard boxes, plastic bottles, old newspapers, and soda cans from his home and neighbourhood. After cleaning them carefully, he uses glue, scissors, and colourful paint to turn them into miniature cars, robotic figures, airplanes, and dream houses. Mark says that making each model usually takes him from three to five hours, depending on how detailed it is.\n\nNot only does this hobby help Mark develop his artistic creativity and concentration, but it also helps protect the environment by reducing household waste. Last month, Mark organized a small exhibition at his school and sold his recycled models to raise funds for poor children in his village.",
-    "question": "What is Mark's unique hobby?",
-    "options": [
-      "Playing online video games with classmates.",
-      "Making models from recycled materials.",
-      "Painting nature landscapes on canvas.",
-      "Collecting old newspapers to sell for money."
-    ],
-    "answer": "B",
-    "explanation": "Dựa vào đoạn 1: '...Mark has a very unique and creative hobby: making models from recycled materials.'"
-  },
-  {
-    "id": 32,
-    "part": 5,
-    "section": "PART 5: READING",
-    "instruction": "Read the following passage and choose the correct answer (A, B, C, or D) for each question.",
-    "reading_title": "Passage 2: Mark's Creative and Eco-Friendly Hobby",
-    "question": "When did Mark begin this hobby?",
-    "options": [
-      "Last month.",
-      "Three years ago.",
-      "Two years ago.",
-      "When he entered primary school."
-    ],
-    "answer": "C",
-    "explanation": "Dựa vào đoạn 1: 'He started this hobby two years ago when his school launched an environmental campaign...'"
-  },
-  {
-    "id": 33,
-    "part": 5,
-    "section": "PART 5: READING",
-    "instruction": "Read the following passage and choose the correct answer (A, B, C, or D) for each question.",
-    "reading_title": "Passage 2: Mark's Creative and Eco-Friendly Hobby",
-    "question": "How long does it usually take Mark to make a model?",
-    "options": [
-      "From three to five hours.",
-      "Only thirty minutes.",
-      "Over two weeks.",
-      "An entire month."
-    ],
-    "answer": "A",
-    "explanation": "Dựa vào đoạn 2: 'Mark says that making each model usually takes him from three to five hours...'"
-  },
-  {
-    "id": 34,
-    "part": 5,
-    "section": "PART 5: READING",
-    "instruction": "Read the following passage and choose the correct answer (A, B, C, or D) for each question.",
-    "reading_title": "Passage 2: Mark's Creative and Eco-Friendly Hobby",
-    "question": "What did Mark do with the money earned from selling his models last month?",
-    "options": [
-      "He bought new online video games.",
-      "He kept it to purchase expensive art supplies.",
-      "He raised funds for poor children in his village.",
-      "He gave all of it to his school principal."
-    ],
-    "answer": "C",
-    "explanation": "Dựa vào câu cuối: '...and sold his recycled models to raise funds for poor children in his village.'"
-  },
-  {
-    "id": 35,
-    "part": 6,
-    "section": "PART 6: WRITING & SENTENCE TRANSFORMATION",
-    "instruction": "Choose the sentence (A, B, C, or D) that is closest in meaning to the given sentence.",
-    "question": "\"My sister enjoys collecting foreign stamps in her spare time.\"",
-    "options": [
-      "My sister is interested in collecting foreign stamps in her spare time.",
-      "My sister hates collecting foreign stamps in her spare time.",
-      "Collecting foreign stamps is boring for my sister.",
-      "My sister avoids collecting foreign stamps in her spare time."
-    ],
-    "answer": "A",
-    "explanation": "Cấu trúc tương đương: 'enjoy + V-ing' = 'be interested in + V-ing' (thích/hứng thú với việc gì)."
-  },
-  {
-    "id": 36,
-    "part": 6,
-    "section": "PART 6: WRITING & SENTENCE TRANSFORMATION",
-    "instruction": "Choose the sentence (A, B, C, or D) that is closest in meaning to the given sentence.",
-    "question": "\"Nam likes playing table tennis more than playing badminton.\"",
-    "options": [
-      "Nam prefers playing table tennis to playing badminton.",
-      "Nam prefers playing badminton to playing table tennis.",
-      "Nam dislikes playing table tennis.",
-      "Badminton is more enjoyable than table tennis for Nam."
-    ],
-    "answer": "A",
-    "explanation": "Cấu trúc tương đương: 'like X more than Y' = 'prefer X to Y' (thích X hơn Y)."
-  },
-  {
-    "id": 37,
-    "part": 6,
-    "section": "PART 6: WRITING & SENTENCE TRANSFORMATION",
-    "instruction": "Choose the sentence (A, B, C, or D) that is closest in meaning to the given sentence.",
-    "question": "\"It takes her two hours every day to water the flowers in the garden.\"",
-    "options": [
-      "She spends two hours every day watering the flowers in the garden.",
-      "She spends two hours every day to watering the flowers in the garden.",
-      "She took two hours every day watering the flowers in the garden.",
-      "Watering the flowers took her two hours every day."
-    ],
-    "answer": "A",
-    "explanation": "Cấu trúc chuyển đổi giữa take và spend: 'It takes sb + time + to V' = 'Sb spends + time + V-ing'."
-  },
-  {
-    "id": 38,
-    "part": 6,
-    "section": "PART 6: WRITING & SENTENCE TRANSFORMATION",
-    "instruction": "Choose the sentence (A, B, C, or D) that is closest in meaning to the given sentence.",
-    "question": "\"Ba loves carving eggshells because he finds it creative.\"",
-    "options": [
-      "Ba loves carving eggshells; however, it is creative.",
-      "Ba finds carving eggshells creative, so he loves it.",
-      "Although carving eggshells is creative, Ba hates it.",
-      "Ba loves carving eggshells but it is boring."
-    ],
-    "answer": "B",
-    "explanation": "Chuyển đổi liên từ nguyên nhân - kết quả: 'Clause 1 because Clause 2' = 'Clause 2, so Clause 1'."
-  },
-  {
-    "id": 39,
-    "part": 6,
-    "section": "PART 6: WRITING & SENTENCE TRANSFORMATION",
-    "instruction": "Choose the best sentence (A, B, C, or D) that is correctly combined from the two given sentences.",
-    "question": "\"Tom is fond of doing origami. It helps him concentrate better.\"",
-    "options": [
-      "Tom is fond of doing origami because it helps him concentrate better.",
-      "Tom is fond of doing origami, so it helps him concentrate better.",
-      "Although doing origami helps Tom concentrate better, he dislikes it.",
-      "Tom does origami, but it cannot help him concentrate better."
-    ],
-    "answer": "A",
-    "explanation": "Việc giúp tập trung là lý do/nguyên nhân Tom yêu thích gấp giấy -> dùng liên từ 'because'."
-  },
-  {
-    "id": 40,
-    "part": 6,
-    "section": "PART 6: WRITING & SENTENCE TRANSFORMATION",
-    "instruction": "Choose the correct sentence (A, B, C, or D) that is rearranged from the given words.",
-    "question": "Rearrange: \"brother / my / dislikes / in / up / early / mornings / waking / the .\"",
-    "options": [
-      "My brother dislikes waking up early in the mornings.",
-      "My brother waking up early dislikes in the mornings.",
-      "Dislikes waking up early in the mornings my brother.",
-      "My brother dislikes in the mornings early waking up."
-    ],
-    "answer": "A",
-    "explanation": "Cấu trúc câu hoàn chỉnh: S (My brother) + V (dislikes) + V-ing (waking up) + Adv (early) + Prep phrase (in the mornings)."
-  }
-];
-
-let userAnswers = {};
-let isSubmitted = false;
-const EXAM_DURATION_SECONDS = 45 * 60; // 45 phút = 2700 giây
-let timeRemaining = EXAM_DURATION_SECONDS;
-let examTimerInterval = null;
-
-document.addEventListener('DOMContentLoaded', () => {
-    const savedName = localStorage.getItem('saved_student_name');
-    const savedClass = localStorage.getItem('saved_student_class');
-    if (savedName) document.getElementById('studentName').value = savedName;
-    if (savedClass) document.getElementById('studentClass').value = savedClass;
-});
-
-function startQuizExam() {
-    try {
-        const nameInput = document.getElementById('studentName');
-        const classInput = document.getElementById('studentClass');
-        const name = nameInput ? nameInput.value.trim() : "";
-        const className = classInput ? classInput.value.trim() : "";
-
-        if (!name || !className) {
-            alert("Vui lòng điền đầy đủ Họ và tên và Lớp để bắt đầu làm bài!");
-            return;
-        }
-
-        localStorage.setItem('saved_student_name', name);
-        localStorage.setItem('saved_student_class', className);
-
-        const infoEl = document.getElementById('displayStudentInfo');
-        if (infoEl) infoEl.innerHTML = `Thí sinh: <strong style="color: #1e40af;">${name}</strong> &nbsp;|&nbsp; Lớp: <strong style="color: #1e40af;">${className}</strong>`;
-
-        const loginCard = document.getElementById('studentLoginCard');
-        if (loginCard) loginCard.style.display = 'none';
-
-        const quizContent = document.getElementById('quizContent');
-        if (quizContent) quizContent.style.display = 'block';
-
-        const headerTimer = document.getElementById('headerTimerBadge');
-        if (headerTimer) headerTimer.style.display = 'flex';
-
-        renderQuizQuestions();
-        renderNavGrid();
-        updateProgress();
-
-        // Bắt đầu đếm ngược 45 phút
-        startTimerCountdown();
-    } catch (e) {
-        console.error("Lỗi khởi động bài thi:", e);
-    }
-}
-
-function startTimerCountdown() {
-    if (examTimerInterval) clearInterval(examTimerInterval);
-    updateTimerDisplays(timeRemaining);
-
-    examTimerInterval = setInterval(() => {
-        if (isSubmitted) {
-            clearInterval(examTimerInterval);
-            return;
-        }
-
-        timeRemaining--;
-
-        if (timeRemaining <= 0) {
-            clearInterval(examTimerInterval);
-            timeRemaining = 0;
-            updateTimerDisplays(0);
-            alert("⏰ HẾT THỜI GIAN LÀM BÀI (45 phút)!\n\nHệ thống đang tự động thu bài và chấm điểm của bạn.");
-            gradeQuiz(true);
-        } else {
-            updateTimerDisplays(timeRemaining);
-        }
-    }, 1000);
-}
-
-function updateTimerDisplays(seconds) {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    const timeStr = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-
-    const tDisplay = document.getElementById('timerDisplay');
-    if (tDisplay) tDisplay.textContent = timeStr;
-
-    const tHeader = document.getElementById('timerText');
-    if (tHeader) tHeader.textContent = timeStr;
-
-    const timerBox = document.getElementById('mainTimerBox');
-    const headerBox = document.getElementById('headerTimerBadge');
-
-    if (seconds <= 60) {
-        if (timerBox) timerBox.className = 'floating-timer timer-danger';
-        if (headerBox) headerBox.className = 'header-timer-badge timer-danger';
-    } else if (seconds <= 300) {
-        if (timerBox) timerBox.className = 'floating-timer timer-warning';
-        if (headerBox) headerBox.className = 'header-timer-badge timer-warning';
-    } else {
-        if (timerBox) timerBox.className = 'floating-timer';
-        if (headerBox) headerBox.className = 'header-timer-badge';
-    }
-}
-
-function renderNavGrid() {
-    const grid = document.getElementById('questionNavGrid');
-    if (!grid) return;
-    grid.innerHTML = questions.map(q => `
-        <a href="#question-card-${q.id}" id="navBtn_${q.id}" class="qnav-item">
-            ${q.id}
-        </a>
-    `).join('');
-}
-
-function toggleAudioScript(boxId) {
-    const el = document.getElementById(boxId);
-    if (el) {
-        el.style.display = (el.style.display === 'block') ? 'none' : 'block';
-    }
-}
-
-function renderQuizQuestions() {
-    const container = document.getElementById('questionsContainer');
-    if (!container) return;
-
-    let html = '';
-    let currentPart = 0;
-
-    questions.forEach((q, idx) => {
-        // Section Header if part changes
-        if (q.part !== currentPart) {
-            currentPart = q.part;
-            html += `<div class="section-header">📌 ${q.section}</div>`;
-            if (q.instruction) {
-                html += `<div class="section-desc">${q.instruction}</div>`;
-            }
-        }
-
-        html += `<div class="question-card" id="question-card-${q.id}">`;
-
-        // Audio Box if applicable (Part 1 Listening)
-        if (q.id === 1) {
-            html += `
-            <div class="audio-box">
-                <div class="audio-header">
-                    <span><i class="fa-solid fa-headphones text-indigo-600"></i> ${q.audio_title || "Recording 1: Conversation between Nick and Elena"}</span>
-                    <button type="button" class="audio-script-btn" onclick="toggleAudioScript('audioScript_1')">
-                        <i class="fa-solid fa-file-lines"></i> Xem lời thoại (Script)
+                <div class="jump-btn-container">
+                    <button class="jump-btn" onclick="switchTab('quiz')">
+                        <i class="fa-solid fa-pen-to-square"></i> Làm bài tập củng cố
                     </button>
                 </div>
-                <audio controls style="width: 100%; max-width: 520px; height: 38px;" src="Test 1 - Unit 1 - Recording 1 (Dialogue Nick & Elena).mp3" preload="auto"></audio>
-                <div id="audioScript_1" class="audio-script-content">${q.audio_text || ""}</div>
-            </div>`;
-        } else if (q.id === 5) {
-            html += `
-            <div class="audio-box">
-                <div class="audio-header">
-                    <span><i class="fa-solid fa-headphones text-indigo-600"></i> ${q.audio_title || "Recording 2: The Wonderful Benefits of Gardening"}</span>
-                    <button type="button" class="audio-script-btn" onclick="toggleAudioScript('audioScript_2')">
-                        <i class="fa-solid fa-file-lines"></i> Xem lời thoại (Script)
+            </div>
+        </div>
+
+        <!-- TAB 2: LÀM BÀI TẬP CỦNG CỐ (CBT 2-COLUMN LAYOUT) -->
+        <div id="tab-quiz" class="tab-pane">
+            <!-- Modal Login / Start Prompt -->
+            <div id="modal-start" class="modal-overlay">
+                <div class="modal-card">
+                    <div class="modal-header">
+                        <div style="width: 50px; height: 50px; background: #eff6ff; color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 10px;">
+                            <i class="fa-solid fa-user-graduate"></i>
+                        </div>
+                        <h3 class="modal-title">THÔNG TIN HỌC SINH</h3>
+                        <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.25rem;">Unit 1: Hobbies (40 câu / 45 phút - Có Bài Nghe Listening)</p>
+                    </div>
+                    <div class="modal-input-group">
+                        <label class="modal-label">Họ và tên của bạn (*)</label>
+                        <input type="text" id="inp-name" class="modal-input" placeholder="Ví dụ: Nguyễn Văn An">
+                    </div>
+                    <div class="modal-input-group">
+                        <label class="modal-label">Lớp / Trường (*)</label>
+                        <input type="text" id="inp-class" class="modal-input" placeholder="Ví dụ: 7A1 - THCS Chu Văn An">
+                    </div>
+                    <div class="modal-notes">
+                        <b><i class="fa-solid fa-shield-halved"></i> QUY ĐỊNH BẢO MẬT & CHỐNG GIAN LẬN:</b><br>
+                        • Khóa copy, chuột phải và phím tắt F12.<br>
+                        • Rời tab quá 3 lần hệ thống sẽ tự động thu bài!
+                    </div>
+                    <button class="modal-btn" onclick="startExam()">BẮT ĐẦU LÀM BÀI</button>
+                </div>
+            </div>
+
+            <!-- Active Exam Screen -->
+            <div id="exam-screen" class="exam-grid" style="display: none;">
+                <!-- Left: Question Panel -->
+                <div class="exam-panel">
+                    <div class="exam-meta-bar">
+                        <span class="badge-topic" id="q-topic">Chủ điểm kiến thức</span>
+                        <span style="font-weight: 700; color: var(--primary-dark);" id="q-progress">Câu 1 / 40</span>
+                    </div>
+
+                    <!-- Audio Player Box for Listening Questions -->
+                    <div id="audio-container" class="audio-box" style="display: none;">
+                        <div style="font-weight: 700; color: #4338ca; font-size: 0.9rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-headphones"></i> BÀI NGHE (AUDIO LISTENING):
+                        </div>
+                        <audio id="audio-player" controls style="width: 100%; border-radius: 8px;">
+                            <source src="Test 1 - Unit 1 - Full Audio Listening.mp3" type="audio/mpeg">
+                            Trình duyệt của bạn không hỗ trợ phát âm thanh.
+                        </audio>
+                    </div>
+
+                    <!-- Reading / Cloze Passage if any -->
+                    <div id="passage-container" class="passage-box" style="display: none;">
+                        <div class="passage-title" id="passage-title">ĐOẠN VĂN ĐỌC HIỂU / ĐIỀN TỪ</div>
+                        <div id="passage-body"></div>
+                    </div>
+
+                    <!-- Question Prompt -->
+                    <div class="question-title" id="q-title">Nội dung câu hỏi đang được tải...</div>
+
+                    <!-- Options List -->
+                    <div class="options-list" id="opt-container"></div>
+
+                    <!-- Navigation Controls -->
+                    <div class="question-footer">
+                        <button class="ctrl-btn ctrl-btn-prev" id="btn-prev" onclick="prevQuestion()">
+                            <i class="fa-solid fa-arrow-left"></i> Câu trước
+                        </button>
+                        <button class="ctrl-btn ctrl-btn-next" id="btn-next" onclick="nextQuestion()">
+                            Câu tiếp theo <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right: Sticky Sidebar Palette -->
+                <div class="palette-panel">
+                    <div class="timer-card">
+                        <div class="timer-label"><i class="fa-regular fa-clock"></i> THỜI GIAN CÒN LẠI</div>
+                        <div class="timer-val" id="timer-display">45:00</div>
+                    </div>
+
+                    <div class="user-info-card">
+                        <div style="font-weight: 700; color: #1e293b;" id="user-display-name">Học sinh: ---</div>
+                        <div style="color: #64748b; font-size: 0.8rem;" id="user-display-class">Lớp: ---</div>
+                    </div>
+
+                    <div class="progress-wrap">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="progress-bar"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>Tiến độ làm bài</span>
+                            <span id="progress-percent">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="palette-title">
+                        <span>Bảng câu hỏi (40 câu)</span>
+                        <span style="font-size: 0.8rem; font-weight: 500; color: var(--primary);" id="answered-count">0/40</span>
+                    </div>
+
+                    <div class="palette-grid" id="palette-grid"></div>
+
+                    <button class="submit-btn" onclick="confirmSubmit()">
+                        <i class="fa-solid fa-paper-plane"></i> NỘP BÀI THI
                     </button>
                 </div>
-                <audio controls style="width: 100%; max-width: 520px; height: 38px;" src="Test 1 - Unit 1 - Recording 2 (Benefits of Gardening).mp3" preload="auto"></audio>
-                <div id="audioScript_2" class="audio-script-content">${q.audio_text || ""}</div>
-            </div>`;
-        }
+            </div>
 
-        // Reading Passage 1 (Cloze Reading, questions 27-30)
-        if (q.id === 27 && q.reading_passage) {
-            html += `
-            <div class="passage-box">
-                <div class="passage-title"><i class="fa-solid fa-book-open"></i> ${q.reading_title || "Passage 1: Why Hobbies are Important for Teenagers"}</div>
-                <div>${q.reading_passage}</div>
-            </div>`;
-        }
-        // Reading Passage 2 (Reading Comprehension, questions 31-34)
-        else if (q.id === 31 && q.reading_passage) {
-            html += `
-            <div class="passage-box">
-                <div class="passage-title"><i class="fa-solid fa-book-open"></i> ${q.reading_title || "Passage 2: Mark's Creative and Eco-Friendly Hobby"}</div>
-                <div>${q.reading_passage}</div>
-            </div>`;
-        }
+            <!-- Result Screen -->
+            <div id="result-screen" class="result-view" style="display: none;">
+                <div class="score-banner">
+                    <div class="score-circle">
+                        <span class="score-val" id="final-score">0.0</span>
+                        <span class="score-max">/ 10 ĐIỂM</span>
+                    </div>
+                    <h2 style="font-size: 1.5rem; color: #0f172a; margin-bottom: 0.5rem;" id="result-feedback">KẾT QUẢ BÀI LÀM CỦA BẠN</h2>
+                    <p style="color: #64748b;" id="result-detail">Thí sinh: --- | Lớp: ---</p>
+                </div>
 
-        // Question Title
-        html += `
-        <div class="question-title">
-            <span class="question-num">Câu ${q.id}:</span> ${q.question}
-        </div>`;
+                <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+                    <h3 style="font-size: 1.1rem; color: #1e293b;">BẢNG ĐÁP ÁN & LỜI GIẢI CHI TIẾT</h3>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('all')" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Tất cả</button>
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('wrong')" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; color: var(--danger);">Chỉ câu sai</button>
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('correct')" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; color: var(--success);">Chỉ câu đúng</button>
+                    </div>
+                </div>
 
-        // Options Grid (4 options: A, B, C, D)
-        const optLetters = ['A', 'B', 'C', 'D'];
-        html += `<div class="options-grid">`;
-        q.options.forEach((optText, optIdx) => {
-            const letter = optLetters[optIdx];
-            html += `
-            <div class="option-card" id="q_${q.id}_opt_${letter}" onclick="selectOption(${q.id}, '${letter}')">
-                <div class="option-letter">${letter}</div>
-                <div>${optText}</div>
-            </div>`;
+                <div id="review-list"></div>
+
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="ctrl-btn ctrl-btn-next" onclick="location.reload()" style="margin: 0 auto;">
+                        <i class="fa-solid fa-rotate-right"></i> Làm lại bài thi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <p>© 2026 VATLI102.COM - Hệ thống Học tập & Đánh giá Năng lực Tiếng Anh THCS Chuẩn GDPT 2018.</p>
+            <div class="footer-links">
+                <a href="https://vatli102.com">Trang chủ</a> • 
+                <a href="https://vatli102.com/tieng-anh/lop-7">Tiếng Anh 7</a> • 
+                <a href="https://vatli102.com/de-thi">Ngân hàng đề thi</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC ENGINE -->
+    <script>
+        const LESSON_TITLE = "Unit 1: Hobbies";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
+        
+        const QUESTIONS = [{"num": 1, "topic": "Listening: Hội thoại giữa Nick và Elena về làm nhà búp bê", "audio_file": "Test 1 - Unit 1 - Full Audio Listening.mp3", "passage": null, "title": "What is Elena doing with cardboard boxes and glue?", "options": {"A": "Making paper airplanes", "B": "Building a miniature dollhouse", "C": "Painting landscape pictures", "D": "Recycling old school books"}, "correct": "B", "exp": "<b>Đáp án B</b>. Trong bài nghe, Elena nói: <i>'I'm building a miniature dollhouse. It's my favorite hobby!'</i> (Mình đang làm nhà búp bê thu nhỏ. Đó là sở thích yêu thích của mình!)."}, {"num": 2, "topic": "Listening: Hội thoại giữa Nick và Elena về làm nhà búp bê", "audio_file": "Test 1 - Unit 1 - Full Audio Listening.mp3", "passage": null, "title": "When did Elena start her hobby of building dollhouses?", "options": {"A": "When she was ten years old", "B": "Last month", "C": "When she started grade 7", "D": "Five years ago"}, "correct": "A", "exp": "<b>Đáp án A</b>. Elena chia sẻ: <i>'I started three years ago when I was ten.'</i> (Mình bắt đầu cách đây 3 năm khi mình 10 tuổi)."}, {"num": 3, "topic": "Listening: Hội thoại giữa Nick và Elena về làm nhà búp bê", "audio_file": "Test 1 - Unit 1 - Full Audio Listening.mp3", "passage": null, "title": "Where does Elena get the furniture for her dollhouses?", "options": {"A": "She buys ready-made furniture from toy stores.", "B": "Her grandmother sends them from abroad.", "C": "She crafts them from discarded cardboard, cloth, and plastic bottles.", "D": "Her brother makes them with a 3D printer."}, "correct": "C", "exp": "<b>Đáp án C</b>. Elena giải thích: <i>'I collect discarded cardboard, cloth scraps, and plastic bottles to make everything myself...'</i> (Mình nhặt bìa các-tông, vải vụn và chai nhựa để tự làm mọi thứ)."}, {"num": 4, "topic": "Listening: Hội thoại giữa Nick và Elena về làm nhà búp bê", "audio_file": "Test 1 - Unit 1 - Full Audio Listening.mp3", "passage": null, "title": "How does building dollhouses help Elena?", "options": {"A": "It helps her earn a lot of money.", "B": "It makes her more imaginative and helps her relax.", "C": "It helps her win school sports competitions.", "D": "It makes her study mathematics better."}, "correct": "B", "exp": "<b>Đáp án B</b>. Elena cho biết: <i>'It makes me more imaginative, and I feel so relaxed after hours of studying.'</i>"}, {"num": 5, "topic": "Listening: Bài nói về lợi ích của làm vườn", "audio_file": "Test 1 - Unit 1 - Full Audio Listening.mp3", "passage": null, "title": "According to the speaker, why does gardening provide good physical exercise?", "options": {"A": "Because you have to run very fast in the garden.", "B": "Because you dig soil, plant seeds, and move your body in fresh air.", "C": "Because you lift heavy machinery every morning.", "D": "Because you cycle while watering plants."}, "correct": "B", "exp": "<b>Đáp án B</b>. Người nói giải thích: <i>'When you dig the soil, plant seeds, and water flowers, you move your body and burn calories in the fresh air.'</i>"}, {"num": 6, "topic": "Listening: Bài nói về lợi ích của làm vườn", "audio_file": "Test 1 - Unit 1 - Full Audio Listening.mp3", "passage": null, "title": "What valuable life lessons does gardening teach children?", "options": {"A": "Speed and competition", "B": "Patience and responsibility", "C": "Drawing and designing", "D": "Foreign language skills"}, "correct": "B", "exp": "<b>Đáp án B</b>. Thông tin bài nghe: <i>'Secondly, it teaches children valuable life lessons about patience and responsibility.'</i>"}, {"num": 7, "topic": "Listening: Bài nói về lợi ích của làm vườn", "audio_file": "Test 1 - Unit 1 - Full Audio Listening.mp3", "passage": null, "title": "What benefit does growing your own vegetables and herbs bring?", "options": {"A": "It provides clean, nutritious food for the family.", "B": "It helps you sell flowers at high prices.", "C": "It makes you sleep all day.", "D": "It replaces drinking water."}, "correct": "A", "exp": "<b>Đáp án A</b>. Người nói nêu rõ: <i>'...growing your own vegetables and herbs gives you clean, nutritious food for your family...'</i>"}, {"num": 8, "topic": "Listening: Bài nói về lợi ích của làm vườn", "audio_file": "Test 1 - Unit 1 - Full Audio Listening.mp3", "passage": null, "title": "What is the overall message of the talk about gardening?", "options": {"A": "Gardening is too tiring for young people.", "B": "Gardening is an expensive hobby that requires huge land.", "C": "Gardening is a rewarding hobby bringing physical, mental, and practical benefits.", "D": "People should only grow flowers instead of vegetables."}, "correct": "C", "exp": "<b>Đáp án C</b>. Bài nói khẳng định làm vườn là sở thích bổ ích (rewarding hobby) mang lại sức khỏe, tính kiên nhẫn và nguồn thực phẩm sạch."}, {"num": 9, "topic": "Ngữ âm: Phát âm /ə/ và /ɜː/", "passage": null, "title": "Mark the letter A, B, C, or D to indicate the word whose underlined part differs from the other three in pronunciation:", "options": {"A": "bird", "B": "girl", "C": "doctor", "D": "burn"}, "correct": "C", "exp": "Đáp án <b>C (doctor)</b> phát âm phần gạch chân là âm ngắn <b>/ə/</b> (/ˈdɒktə/). Các từ còn lại phát âm là âm dài <b>/ɜː/</b>: <i>bird</i> /bɜːd/, <i>girl</i> /ɡɜːl/, <i>burn</i> /bɜːn/."}, {"num": 10, "topic": "Ngữ âm: Phát âm /ə/ và /ɜː/", "passage": null, "title": "Mark the letter A, B, C, or D to indicate the word whose underlined part differs from the other three in pronunciation:", "options": {"A": "away", "B": "learn", "C": "fur", "D": "heard"}, "correct": "A", "exp": "Đáp án <b>A (away)</b> có phần gạch chân phát âm là <b>/ə/</b> (/əˈweɪ/). Các đáp án B, C, D đều phát âm là <b>/ɜː/</b>: <i>learn</i> /lɜːn/, <i>fur</i> /fɜː/, <i>heard</i> /hɜːd/."}, {"num": 11, "topic": "Ngữ âm: Trọng âm 2 âm tiết", "passage": null, "title": "Mark the letter A, B, C, or D to indicate the word that differs from the other three in the position of primary stress:", "options": {"A": "hobby", "B": "collect", "C": "model", "D": "patient"}, "correct": "B", "exp": "Đáp án <b>B (collect)</b> có trọng âm rơi vào âm tiết thứ 2 (/kəˈlekt/). Các từ còn lại có trọng âm rơi vào âm tiết thứ 1: <i>hobby</i> /ˈhɒbi/, <i>model</i> /ˈmɒdl/, <i>patient</i> /ˈpeɪʃnt/."}, {"num": 12, "topic": "Ngữ âm: Trọng âm 3 âm tiết", "passage": null, "title": "Mark the letter A, B, C, or D to indicate the word that differs from the other three in the position of primary stress:", "options": {"A": "creative", "B": "unusual", "C": "expensive", "D": "regular"}, "correct": "D", "exp": "Đáp án <b>D (regular)</b> có trọng âm rơi vào âm tiết thứ 1 (/ˈreɡjələ/). Các từ còn lại rơi vào âm tiết thứ 2: <i>creative</i> /kriˈeɪtɪv/, <i>unusual</i> /ʌnˈjuːʒuəl/, <i>expensive</i> /ɪkˈspensɪv/."}, {"num": 13, "topic": "Từ vựng: Cụm từ cố định (Collocation)", "passage": null, "title": "My sister loves flowers, so she often ________ flowers to decorate our living room on weekends.", "options": {"A": "makes", "B": "arranges", "C": "builds", "D": "does"}, "correct": "B", "exp": "Cụm từ cố định: <b>arrange flowers</b> có nghĩa là cắm hoa."}, {"num": 14, "topic": "Cấu tạo từ (Word Formation)", "passage": null, "title": "My grandfather is a stamp ________. He has more than two thousand rare stamps from different countries.", "options": {"A": "collection", "B": "collect", "C": "collector", "D": "collective"}, "correct": "C", "exp": "Vị trí cần một danh từ chỉ người sau mạo từ 'a' và danh từ 'stamp'. <b>stamp collector</b> nghĩa là người sưu tầm tem."}, {"num": 15, "topic": "Phân biệt Động từ: Play / Do / Go", "passage": null, "title": "My cousin enjoys ________ judo twice a week to keep fit and strong.", "options": {"A": "playing", "B": "going", "C": "doing", "D": "taking"}, "correct": "C", "exp": "Đi với môn võ thuật hoặc rèn luyện thể chất cá nhân không dùng bóng (judo, karate, yoga) ta dùng động từ <b>do</b>: <b>doing judo</b>."}, {"num": 16, "topic": "Ngữ pháp: Thì Hiện tại đơn", "passage": null, "title": "Lan and Mai ________ badminton every afternoon after finishing their homework.", "options": {"A": "plays", "B": "play", "C": "are playing", "D": "played"}, "correct": "B", "exp": "Thì Hiện tại đơn diễn tả thói quen lặp đi lặp lại (<i>every afternoon</i>). Chủ ngữ 'Lan and Mai' là danh từ số nhiều nên động từ <b>play</b> giữ nguyên thể."}, {"num": 17, "topic": "Ngữ pháp: Verbs of liking + V-ing", "passage": null, "title": "Do you fancy ________ cardboard models of famous buildings in your free time?", "options": {"A": "make", "B": "to make", "C": "making", "D": "made"}, "correct": "C", "exp": "Cấu trúc với động từ chỉ sự yêu thích: <b>fancy + V-ing</b> (thích làm gì). Do đó ta chọn <b>making</b>."}, {"num": 18, "topic": "Ngữ pháp: Verbs of liking + V-ing", "passage": null, "title": "He hates ________ early in the cold winter mornings because he feels very sleepy.", "options": {"A": "get up", "B": "getting up", "C": "gets up", "D": "got up"}, "correct": "B", "exp": "Động từ <b>hate</b> đi kèm danh động từ <b>V-ing</b>: <b>hate getting up</b>."}, {"num": 19, "topic": "Cấu tạo từ (Word Formation)", "passage": null, "title": "Gardening gives children a lot of ________ because they can watch seeds grow into beautiful plants.", "options": {"A": "patience", "B": "patient", "C": "patiently", "D": "impatience"}, "correct": "A", "exp": "Sau cụm 'a lot of' ta cần một danh từ. <b>patience</b> (n): lòng kiên nhẫn."}, {"num": 20, "topic": "Cụm động từ (Phrasal Verbs)", "passage": null, "title": "My brother ________ up horse-riding last month, and now he goes to the riding club every Saturday.", "options": {"A": "took", "B": "made", "C": "gave", "D": "looked"}, "correct": "A", "exp": "Cụm động từ <b>take up a hobby</b> có nghĩa là bắt đầu một sở thích mới. Quá khứ đơn: <b>took up</b>."}, {"num": 21, "topic": "Cấu tạo từ (Word Formation)", "passage": null, "title": "Making eggshell carvings requires a high level of ________ and delicate hands.", "options": {"A": "create", "B": "creative", "C": "creativity", "D": "creatively"}, "correct": "C", "exp": "Sau giới từ 'of' ta cần một danh từ: <b>creativity</b> (n) óc sáng tạo."}, {"num": 22, "topic": "Ngữ pháp: Thì Hiện tại đơn (Câu hỏi)", "passage": null, "title": "________ your mother usually ________ jogging in the park near your house?", "options": {"A": "Is - go", "B": "Do - goes", "C": "Does - go", "D": "Does - goes"}, "correct": "C", "exp": "Câu hỏi thì Hiện tại đơn với chủ ngữ số ít: <b>Does + S + V_nguyên thể ('go')</b>."}, {"num": 23, "topic": "Từ vựng: Tính từ miêu tả sở thích", "passage": null, "title": "Building dollhouses is a very ________ hobby; you can design everything the way you like.", "options": {"A": "bored", "B": "creative", "C": "painful", "D": "dangerous"}, "correct": "B", "exp": "Dựa vào ngữ cảnh tự tay thiết kế mọi thứ theo ý mình, đây là sở thích đầy tính sáng tạo (<b>creative</b>)."}, {"num": 24, "topic": "Ngữ pháp: Verbs of liking + V-ing", "passage": null, "title": "Nick detests ________ computer games all day because it harms his eyesight.", "options": {"A": "play", "B": "played", "C": "playing", "D": "to play"}, "correct": "C", "exp": "Động từ <b>detest</b> luôn đi kèm với danh động từ <b>V-ing</b>: <b>detest playing</b>."}, {"num": 25, "topic": "Giao tiếp xã hội (Conversational Exchange)", "passage": null, "title": "Tom: 'What do you like doing in your free time, Minh?'\nMinh: '________'", "options": {"A": "I usually do it at weekends.", "B": "I love collecting old coins and reading books.", "C": "My hobby is very expensive.", "D": "It takes me two hours to get there."}, "correct": "B", "exp": "Câu trả lời thích hợp nhất cho câu hỏi về sở thích là <b>I love collecting old coins and reading books</b>."}, {"num": 26, "topic": "Giao tiếp xã hội (Conversational Exchange)", "passage": null, "title": "Elena: 'Do you think gardening is a difficult hobby?'\nNick: '________. You only need some seeds, water, and patience.'", "options": {"A": "Not at all", "B": "Yes, absolutely", "C": "I'm afraid so", "D": "I disagree with gardening"}, "correct": "A", "exp": "<b>Not at all</b> (Không hề khó chút nào) phù hợp hoàn hảo với vế giải thích sau."}, {"num": 27, "topic": "Từ đồng nghĩa (Closest in Meaning)", "passage": null, "title": "Doing yoga is very <u>relaxing</u> and helps reduce stress after hard study hours.", "options": {"A": "stressful", "B": "calming", "C": "tiring", "D": "boring"}, "correct": "B", "exp": "<b>relaxing</b> (thư thái, thoải mái) đồng nghĩa với <b>calming</b> (làm dịu êm, đem lại bình yên)."}, {"num": 28, "topic": "Từ trái nghĩa (Opposite in Meaning)", "passage": null, "title": "Collecting antique clocks is an <u>unusual</u> hobby among teenagers nowadays.", "options": {"A": "strange", "B": "common", "C": "rare", "D": "special"}, "correct": "B", "exp": "<b>unusual</b> (hiếm gặp, khác thường) trái nghĩa với <b>common</b> (phổ biến, thông thường)."}, {"num": 29, "topic": "Tìm lỗi sai (Error Identification)", "passage": null, "title": "Find the underlined part that needs correction: My brother (A) <u>enjoys</u> (B) <u>to make</u> paper flowers (C) <u>with</u> his classmates in (D) <u>his</u> free time.", "options": {"A": "enjoys", "B": "to make", "C": "with", "D": "his"}, "correct": "B", "exp": "Sau động từ <b>enjoy</b> phải đi kèm danh động từ <b>V-ing</b> ('making'). Sửa <b>to make</b> thành <b>making</b>."}, {"num": 30, "topic": "Tìm lỗi sai (Error Identification)", "passage": null, "title": "Find the underlined part that needs correction: She (A) <u>don't like</u> (B) <u>doing</u> yoga because (C) <u>she thinks</u> it is too (D) <u>boring</u>.", "options": {"A": "don't like", "B": "doing", "C": "she thinks", "D": "boring"}, "correct": "A", "exp": "Chủ ngữ 'She' là ngôi thứ ba số ít, câu phủ định thì Hiện tại đơn phải dùng <b>doesn't like</b>. Sửa <b>don't like</b> thành <b>doesn't like</b>."}, {"num": 31, "topic": "Đọc điền từ (Cloze Test)", "passage": "Having a hobby is extremely important for young people today. First of all, hobbies bring you (31)________ and help you reduce stress after long hours of studying at school. When you are interested in an activity like painting or making models, you (32)________ your worries. Secondly, many hobbies help you develop useful life skills. For instance, gardening teaches you (33)________ because you have to wait patiently for plants to bloom. Building dollhouses helps you become more creative and careful. Finally, hobbies can connect you with people who share the same interests. You can join clubs, share your (34)________, and make new friends. Therefore, everyone (35)________ choose at least one suitable hobby to enrich their daily life.", "title": "Choose the correct word to fill in blank (31):", "options": {"A": "pleasure", "B": "sadness", "C": "tiredness", "D": "difficulty"}, "correct": "A", "exp": "Dựa vào ngữ cảnh tích cực 'bring you pleasure and help you reduce stress'. <b>pleasure</b> (niềm vui, sự thỏa mãn)."}, {"num": 32, "topic": "Đọc điền từ (Cloze Test)", "passage": "Having a hobby is extremely important for young people today. First of all, hobbies bring you (31)________ and help you reduce stress after long hours of studying at school. When you are interested in an activity like painting or making models, you (32)________ your worries. Secondly, many hobbies help you develop useful life skills. For instance, gardening teaches you (33)________ because you have to wait patiently for plants to bloom. Building dollhouses helps you become more creative and careful. Finally, hobbies can connect you with people who share the same interests. You can join clubs, share your (34)________, and make new friends. Therefore, everyone (35)________ choose at least one suitable hobby to enrich their daily life.", "title": "Choose the correct word to fill in blank (32):", "options": {"A": "remember", "B": "forget", "C": "cause", "D": "create"}, "correct": "B", "exp": "Khi bạn đam mê một hoạt động, bạn sẽ tạm quên đi những âu lo (<b>forget your worries</b>)."}, {"num": 33, "topic": "Đọc điền từ (Cloze Test)", "passage": "Having a hobby is extremely important for young people today. First of all, hobbies bring you (31)________ and help you reduce stress after long hours of studying at school. When you are interested in an activity like painting or making models, you (32)________ your worries. Secondly, many hobbies help you develop useful life skills. For instance, gardening teaches you (33)________ because you have to wait patiently for plants to bloom. Building dollhouses helps you become more creative and careful. Finally, hobbies can connect you with people who share the same interests. You can join clubs, share your (34)________, and make new friends. Therefore, everyone (35)________ choose at least one suitable hobby to enrich their daily life.", "title": "Choose the correct word to fill in blank (33):", "options": {"A": "patient", "B": "patience", "C": "patiently", "D": "impatience"}, "correct": "B", "exp": "Cấu trúc: <b>teach somebody + noun</b>. <b>patience</b> (n) là lòng kiên nhẫn."}, {"num": 34, "topic": "Đọc điền từ (Cloze Test)", "passage": "Having a hobby is extremely important for young people today. First of all, hobbies bring you (31)________ and help you reduce stress after long hours of studying at school. When you are interested in an activity like painting or making models, you (32)________ your worries. Secondly, many hobbies help you develop useful life skills. For instance, gardening teaches you (33)________ because you have to wait patiently for plants to bloom. Building dollhouses helps you become more creative and careful. Finally, hobbies can connect you with people who share the same interests. You can join clubs, share your (34)________, and make new friends. Therefore, everyone (35)________ choose at least one suitable hobby to enrich their daily life.", "title": "Choose the correct word to fill in blank (34):", "options": {"A": "collections", "B": "homework", "C": "mistakes", "D": "grades"}, "correct": "A", "exp": "Tham gia câu lạc bộ, bạn có thể chia sẻ những bộ sưu tập (<b>collections</b>) của mình."}, {"num": 35, "topic": "Đọc điền từ (Cloze Test)", "passage": "Having a hobby is extremely important for young people today. First of all, hobbies bring you (31)________ and help you reduce stress after long hours of studying at school. When you are interested in an activity like painting or making models, you (32)________ your worries. Secondly, many hobbies help you develop useful life skills. For instance, gardening teaches you (33)________ because you have to wait patiently for plants to bloom. Building dollhouses helps you become more creative and careful. Finally, hobbies can connect you with people who share the same interests. You can join clubs, share your (34)________, and make new friends. Therefore, everyone (35)________ choose at least one suitable hobby to enrich their daily life.", "title": "Choose the correct word to fill in blank (35):", "options": {"A": "should", "B": "can't", "C": "must not", "D": "will not"}, "correct": "A", "exp": "<b>should</b> (nên) dùng để đưa ra lời khuyên thiết thực."}, {"num": 36, "topic": "Đọc hiểu: Chủ đề chính của bài đọc", "passage": "Elena and Nick are classmates, but they have quite different hobbies. Elena is a creative girl who loves making miniature dollhouses. She started this hobby when she was ten years old after receiving a small dollhouse as a birthday present from her grandmother. Instead of buying ready-made furniture from toy stores, Elena collects discarded cardboard boxes, cloth scraps, and plastic bottles to craft tiny beds, tables, and lamps. She says making dollhouses helps her become more patient and imaginative.\n\nOn the other hand, Nick prefers outdoor activities, and his favorite pastime is bird-watching. Every weekend, Nick and his father wake up early in the morning, take their binoculars, and head to the national park near their city. Nick keeps a small notebook where he records the names, colors, and sounds of different bird species they spot. So far, he has spotted over forty kinds of birds. Nick believes that bird-watching not only keeps him active and healthy but also inspires his love for nature and wildlife conservation.", "title": "What is the main topic of the passage?", "options": {"A": "How to build dollhouses from recycled materials.", "B": "The interesting hobbies of Elena and Nick.", "C": "Why teenagers should protect wild birds.", "D": "The history of dollhouses and bird-watching."}, "correct": "B", "exp": "Bài đọc giới thiệu và so sánh hai sở thích thú vị của Elena (làm nhà búp bê) và Nick (ngắm chim hoang dã)."}, {"num": 37, "topic": "Đọc hiểu: Chi tiết bài đọc", "passage": "Elena and Nick are classmates, but they have quite different hobbies. Elena is a creative girl who loves making miniature dollhouses. She started this hobby when she was ten years old after receiving a small dollhouse as a birthday present from her grandmother. Instead of buying ready-made furniture from toy stores, Elena collects discarded cardboard boxes, cloth scraps, and plastic bottles to craft tiny beds, tables, and lamps. She says making dollhouses helps her become more patient and imaginative.\n\nOn the other hand, Nick prefers outdoor activities, and his favorite pastime is bird-watching. Every weekend, Nick and his father wake up early in the morning, take their binoculars, and head to the national park near their city. Nick keeps a small notebook where he records the names, colors, and sounds of different bird species they spot. So far, he has spotted over forty kinds of birds. Nick believes that bird-watching not only keeps him active and healthy but also inspires his love for nature and wildlife conservation.", "title": "When did Elena start making dollhouses?", "options": {"A": "When she was in grade 7.", "B": "When she was ten years old.", "C": "Three months ago.", "D": "When she bought a new toy store."}, "correct": "B", "exp": "Thông tin đoạn 1: <i>'She started this hobby when she was ten years old...'</i>"}, {"num": 38, "topic": "Đọc hiểu: Từ vựng trong ngữ cảnh", "passage": "Elena and Nick are classmates, but they have quite different hobbies. Elena is a creative girl who loves making miniature dollhouses. She started this hobby when she was ten years old after receiving a small dollhouse as a birthday present from her grandmother. Instead of buying ready-made furniture from toy stores, Elena collects discarded cardboard boxes, cloth scraps, and plastic bottles to craft tiny beds, tables, and lamps. She says making dollhouses helps her become more patient and imaginative.\n\nOn the other hand, Nick prefers outdoor activities, and his favorite pastime is bird-watching. Every weekend, Nick and his father wake up early in the morning, take their binoculars, and head to the national park near their city. Nick keeps a small notebook where he records the names, colors, and sounds of different bird species they spot. So far, he has spotted over forty kinds of birds. Nick believes that bird-watching not only keeps him active and healthy but also inspires his love for nature and wildlife conservation.", "title": "What does the word 'craft' in paragraph 1 closest in meaning to?", "options": {"A": "buy", "B": "break", "C": "make", "D": "sell"}, "correct": "C", "exp": "Từ <b>craft</b> có nghĩa là tự tay chế tác, làm ra (= <b>make</b> / create)."}, {"num": 39, "topic": "Đọc hiểu: Chi tiết bài đọc", "passage": "Elena and Nick are classmates, but they have quite different hobbies. Elena is a creative girl who loves making miniature dollhouses. She started this hobby when she was ten years old after receiving a small dollhouse as a birthday present from her grandmother. Instead of buying ready-made furniture from toy stores, Elena collects discarded cardboard boxes, cloth scraps, and plastic bottles to craft tiny beds, tables, and lamps. She says making dollhouses helps her become more patient and imaginative.\n\nOn the other hand, Nick prefers outdoor activities, and his favorite pastime is bird-watching. Every weekend, Nick and his father wake up early in the morning, take their binoculars, and head to the national park near their city. Nick keeps a small notebook where he records the names, colors, and sounds of different bird species they spot. So far, he has spotted over forty kinds of birds. Nick believes that bird-watching not only keeps him active and healthy but also inspires his love for nature and wildlife conservation.", "title": "What does Nick use his small notebook for?", "options": {"A": "To write English essays.", "B": "To record details of bird species he spots.", "C": "To calculate the price of binoculars.", "D": "To draw maps of the national park."}, "correct": "B", "exp": "Thông tin đoạn 2: <i>'Nick keeps a small notebook where he records the names, colors, and sounds of different bird species they spot.'</i>"}, {"num": 40, "topic": "Đọc hiểu: Câu hỏi thông tin không đúng (NOT True)", "passage": "Elena and Nick are classmates, but they have quite different hobbies. Elena is a creative girl who loves making miniature dollhouses. She started this hobby when she was ten years old after receiving a small dollhouse as a birthday present from her grandmother. Instead of buying ready-made furniture from toy stores, Elena collects discarded cardboard boxes, cloth scraps, and plastic bottles to craft tiny beds, tables, and lamps. She says making dollhouses helps her become more patient and imaginative.\n\nOn the other hand, Nick prefers outdoor activities, and his favorite pastime is bird-watching. Every weekend, Nick and his father wake up early in the morning, take their binoculars, and head to the national park near their city. Nick keeps a small notebook where he records the names, colors, and sounds of different bird species they spot. So far, he has spotted over forty kinds of birds. Nick believes that bird-watching not only keeps him active and healthy but also inspires his love for nature and wildlife conservation.", "title": "Which of the following is NOT TRUE according to the passage?", "options": {"A": "Elena buys all her dollhouse furniture from toy stores.", "B": "Nick goes bird-watching with his father at weekends.", "C": "Nick has spotted more than 40 bird species so far.", "D": "Making dollhouses helps Elena improve her patience and imagination."}, "correct": "A", "exp": "A sai vì bài viết nêu rõ: Elena tự nhặt các vật liệu tái chế để làm đồ đạc chứ không mua từ cửa hàng đồ chơi."}];
+
+        let currentIdx = 0;
+        let userAnswers = new Array(QUESTIONS.length).fill(null);
+        let studentName = "";
+        let studentClass = "";
+        let timeLeft = 45 * 60;
+        let timerInterval = null;
+        let tabSwitchCount = 0;
+        let examActive = false;
+        let examSubmitted = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedName = localStorage.getItem('v102_student_name');
+            const savedClass = localStorage.getItem('v102_student_class');
+            if (savedName) document.getElementById('inp-name').value = savedName;
+            if (savedClass) document.getElementById('inp-class').value = savedClass;
+
+            buildPaletteGrid();
+            setupSecurity();
         });
-        html += `</div>`;
 
-        // Explanation Box (hidden until submit)
-        html += `
-        <div class="explanation-box" id="exp_${q.id}">
-            <div style="font-weight: 700; margin-bottom: 4px; color: #075985;">
-                <i class="fa-solid fa-circle-check"></i> Đáp án đúng: <strong>${q.answer}</strong>
-            </div>
-            <div>${q.explanation}</div>
-        </div>`;
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
 
-        html += `</div>`;
-    });
-
-    container.innerHTML = html;
-}
-
-function selectOption(qId, letter) {
-    if (isSubmitted) return;
-
-    userAnswers[qId] = letter;
-
-    const optLetters = ['A', 'B', 'C', 'D'];
-    optLetters.forEach(l => {
-        const el = document.getElementById(`q_${qId}_opt_${l}`);
-        if (el) {
-            if (l === letter) {
-                el.classList.add('selected');
+            if (tabId === 'theory') {
+                document.getElementById('tab-theory').classList.add('active');
+                document.getElementById('btn-tab-theory').classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
-                el.classList.remove('selected');
-            }
-        }
-    });
-
-    const navBtn = document.getElementById(`navBtn_${qId}`);
-    if (navBtn) {
-        navBtn.classList.add('done');
-    }
-
-    updateProgress();
-}
-
-function updateProgress() {
-    const answeredCount = Object.keys(userAnswers).length;
-    const totalCount = questions.length;
-    const pct = ((answeredCount / totalCount) * 100).toFixed(0);
-
-    const bar = document.getElementById('progressBar');
-    if (bar) bar.style.width = `${pct}%`;
-
-    const label = document.getElementById('progressLabel');
-    if (label) label.textContent = `${answeredCount}/${totalCount} câu hoàn thành (${pct}%)`;
-}
-
-function confirmSubmitQuiz() {
-    if (isSubmitted) return;
-
-    const answeredCount = Object.keys(userAnswers).length;
-    const totalCount = questions.length;
-
-    let msg = "Bạn có chắc chắn muốn nộp bài thi và kết thúc không?";
-    if (answeredCount < totalCount) {
-        msg = `Bạn mới hoàn thành ${answeredCount}/${totalCount} câu hỏi.\n\nBạn có chắc chắn muốn nộp bài thi ngay bây giờ không?`;
-    }
-
-    if (confirm(msg)) {
-        gradeQuiz(false);
-    }
-}
-
-function gradeQuiz(isAutoSubmit) {
-    if (isSubmitted) return;
-    isSubmitted = true;
-
-    if (examTimerInterval) clearInterval(examTimerInterval);
-
-    let correctCount = 0;
-
-    questions.forEach(q => {
-        const userChoice = userAnswers[q.id];
-        const isCorrect = (userChoice === q.answer);
-
-        if (isCorrect) correctCount++;
-
-        const optLetters = ['A', 'B', 'C', 'D'];
-        optLetters.forEach(l => {
-            const optEl = document.getElementById(`q_${q.id}_opt_${l}`);
-            if (optEl) {
-                optEl.classList.remove('selected');
-                if (l === q.answer) {
-                    optEl.classList.add('correct');
-                } else if (l === userChoice && !isCorrect) {
-                    optEl.classList.add('incorrect');
+                document.getElementById('tab-quiz').classList.add('active');
+                document.getElementById('btn-tab-quiz').classList.add('active');
+                if (!examActive && !examSubmitted) {
+                    document.getElementById('modal-start').style.display = 'flex';
                 }
             }
-        });
-
-        const expEl = document.getElementById(`exp_${q.id}`);
-        if (expEl) expEl.style.display = 'block';
-
-        const navBtn = document.getElementById(`navBtn_${q.id}`);
-        if (navBtn) {
-            navBtn.classList.remove('done');
-            navBtn.classList.add(isCorrect ? 'ans-correct' : 'ans-wrong');
         }
-    });
 
-    const score = ((correctCount / questions.length) * 10).toFixed(1);
-    const timeSpentSec = EXAM_DURATION_SECONDS - Math.max(0, timeRemaining);
-    const mSpent = Math.floor(timeSpentSec / 60);
-    const sSpent = timeSpentSec % 60;
-    const timeSpentStr = `${mSpent} phút ${sSpent} giây`;
+        function setupSecurity() {
+            window.addEventListener('blur', () => {
+                if (examActive && !examSubmitted) {
+                    tabSwitchCount++;
+                    if (tabSwitchCount < 3) {
+                        alert(`CẢNH BÁO (${tabSwitchCount}/3): Bạn vừa chuyển tab hoặc rời khỏi cửa sổ làm bài!`);
+                    } else {
+                        alert("BẠN ĐÃ RỜI TAB QUÁ 3 LẦN! Hệ thống tự động thu bài.");
+                        submitExam();
+                    }
+                }
+            });
 
-    document.getElementById('scoreCircle').textContent = score;
-    document.getElementById('correctCountText').textContent = `${correctCount} / ${questions.length}`;
-    document.getElementById('incorrectCountText').textContent = `${questions.length - correctCount}`;
-    document.getElementById('gradeText').textContent = `${score} / 10`;
-    document.getElementById('timeSpentText').textContent = timeSpentStr;
+            document.addEventListener('keydown', (e) => {
+                if (examActive) {
+                    if (e.ctrlKey && ['c', 'v', 'u', 'a', 's'].includes(e.key.toLowerCase())) {
+                        e.preventDefault();
+                    }
+                    if (e.key === 'F12') e.preventDefault();
+                }
+            });
+        }
 
-    const btnSubmit = document.getElementById('btnSubmitQuiz');
-    if (btnSubmit) btnSubmit.style.display = 'none';
+        function buildPaletteGrid() {
+            const grid = document.getElementById('palette-grid');
+            grid.innerHTML = "";
+            QUESTIONS.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "palette-btn";
+                btn.id = `pal-${idx}`;
+                btn.innerText = idx + 1;
+                btn.onclick = () => jumpQuestion(idx);
+                grid.appendChild(btn);
+            });
+        }
 
-    const resPanel = document.getElementById('resultsPanel');
-    if (resPanel) resPanel.style.display = 'block';
+        function updatePalette() {
+            QUESTIONS.forEach((q, idx) => {
+                const btn = document.getElementById(`pal-${idx}`);
+                if (!btn) return;
+                btn.className = "palette-btn";
+                if (userAnswers[idx] !== null) btn.classList.add('answered');
+                if (idx === currentIdx) btn.classList.add('current');
+            });
 
-    const bar = document.getElementById('progressBar');
-    if (bar) bar.style.width = '100%';
+            const answered = userAnswers.filter(a => a !== null).length;
+            document.getElementById('answered-count').innerText = `${answered}/${QUESTIONS.length}`;
+            const pct = Math.round((answered / QUESTIONS.length) * 100);
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+            document.getElementById('progress-percent').innerText = `${pct}%`;
+        }
 
-    const label = document.getElementById('progressLabel');
-    if (label) label.textContent = `Đã chấm điểm: ${correctCount}/${questions.length} câu đúng`;
+        function startExam() {
+            const nameInp = document.getElementById('inp-name').value.trim();
+            const classInp = document.getElementById('inp-class').value.trim();
 
-    if (parseFloat(score) >= 8.0 && typeof confetti === 'function') {
-        confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
-    }
+            if (!nameInp || !classInp) {
+                alert("Vui lòng điền đầy đủ Họ tên và Lớp của bạn!");
+                return;
+            }
 
-    // Logging to Google Sheets
-    const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
-    if (typeof GOOGLE_SHEETS_URL !== 'undefined' && GOOGLE_SHEETS_URL) {
-        try {
-            const sName = localStorage.getItem('saved_student_name') || 'Ẩn danh';
-            const sClass = localStorage.getItem('saved_student_class') || 'Chưa rõ';
-            fetch(GOOGLE_SHEETS_URL, {
-                method: "POST",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify({
-                    name: sName,
-                    className: sClass,
-                    lesson: "Unit 1: Hobbies (Tiếng Anh 7)",
-                    correct: `${correctCount}/${questions.length}`,
-                    score: score
-                }),
-                redirect: "follow"
-            }).catch(err => console.error("Sheet log error:", err));
-        } catch (err) {}
-    }
+            studentName = nameInp;
+            studentClass = classInp;
+            localStorage.setItem('v102_student_name', studentName);
+            localStorage.setItem('v102_student_class', studentClass);
 
-    resPanel.scrollIntoView({ behavior: 'smooth' });
-}
-</script>
+            document.getElementById('user-display-name').innerText = `Học sinh: ${studentName}`;
+            document.getElementById('user-display-class').innerText = `Lớp: ${studentClass}`;
+
+            document.getElementById('modal-start').style.display = 'none';
+            document.getElementById('exam-screen').style.display = 'grid';
+
+            examActive = true;
+            renderQuestion(0);
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Hết giờ làm bài! Hệ thống tự động nộp bài.");
+                    submitExam();
+                    return;
+                }
+                timeLeft--;
+                const min = Math.floor(timeLeft / 60);
+                const sec = timeLeft % 60;
+                document.getElementById('timer-display').innerText = 
+                    `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function jumpQuestion(idx) {
+            renderQuestion(idx);
+        }
+
+        function renderQuestion(idx) {
+            if (idx < 0 || idx >= QUESTIONS.length) return;
+            currentIdx = idx;
+            const q = QUESTIONS[idx];
+
+            document.getElementById('q-topic').innerText = q.topic || "Câu hỏi trắc nghiệm";
+            document.getElementById('q-progress').innerText = `Câu ${idx + 1} / ${QUESTIONS.length}`;
+            document.getElementById('q-title').innerHTML = q.title;
+
+            // Audio Player for Listening questions (Q1 to Q8)
+            const audioContainer = document.getElementById('audio-container');
+            if (q.audio_file) {
+                audioContainer.style.display = "block";
+            } else {
+                audioContainer.style.display = "none";
+            }
+
+            const passCont = document.getElementById('passage-container');
+            if (q.passage) {
+                passCont.style.display = 'block';
+                document.getElementById('passage-body').innerHTML = q.passage.replace(/\n/g, '<br><br>');
+            } else {
+                passCont.style.display = 'none';
+            }
+
+            const optCont = document.getElementById('opt-container');
+            optCont.innerHTML = "";
+            ['A', 'B', 'C', 'D'].forEach(letter => {
+                if (q.options && q.options[letter] !== undefined) {
+                    const label = document.createElement('label');
+                    label.className = `opt-label ${userAnswers[idx] === letter ? 'selected' : ''}`;
+                    label.onclick = () => selectOption(letter);
+                    label.innerHTML = `
+                        <div class="opt-circle">${letter}</div>
+                        <div class="opt-text">${q.options[letter]}</div>
+                    `;
+                    optCont.appendChild(label);
+                }
+            });
+
+            document.getElementById('btn-prev').disabled = idx === 0;
+            document.getElementById('btn-next').innerHTML = idx === QUESTIONS.length - 1 
+                ? 'Đến bảng nộp bài <i class="fa-solid fa-check-double"></i>' 
+                : 'Câu tiếp theo <i class="fa-solid fa-arrow-right"></i>';
+
+            updatePalette();
+        }
+
+        function selectOption(letter) {
+            if (examSubmitted) return;
+            userAnswers[currentIdx] = letter;
+            renderQuestion(currentIdx);
+        }
+
+        function prevQuestion() {
+            if (currentIdx > 0) renderQuestion(currentIdx - 1);
+        }
+
+        function nextQuestion() {
+            if (currentIdx < QUESTIONS.length - 1) {
+                renderQuestion(currentIdx + 1);
+            } else {
+                confirmSubmit();
+            }
+        }
+
+        function confirmSubmit() {
+            const unans = userAnswers.filter(a => a === null).length;
+            let msg = "Bạn có chắc chắn muốn nộp bài?";
+            if (unans > 0) msg = `Bạn còn ${unans} câu chưa chọn đáp án. Bạn vẫn muốn nộp bài?`;
+            if (confirm(msg)) {
+                submitExam();
+            }
+        }
+
+        function submitExam() {
+            if (examSubmitted) return;
+            examSubmitted = true;
+            examActive = false;
+            clearInterval(timerInterval);
+
+            // Pause audio if playing
+            const aud = document.getElementById("audio-player");
+            if (aud) aud.pause();
+
+            let correctCount = 0;
+            QUESTIONS.forEach((q, idx) => {
+                if (userAnswers[idx] === q.correct) correctCount++;
+            });
+
+            const score = (correctCount * (10 / QUESTIONS.length)).toFixed(2);
+            const timeSpentSec = (45 * 60) - timeLeft;
+            const min = Math.floor(timeSpentSec / 60);
+            const sec = timeSpentSec % 60;
+            const timeStr = `${min} phút ${sec} giây`;
+
+            document.getElementById('exam-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('result-detail').innerText = 
+                `Thí sinh: ${studentName} | Lớp: ${studentClass} | Đúng: ${correctCount}/${QUESTIONS.length} câu | Thời gian: ${timeStr}`;
+
+            if (parseFloat(score) >= 7.0 && window.confetti) {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+
+            renderReview('all');
+
+            // Send to Google Sheets (Dual mode: POST JSON + Query Params fallback for 100% delivery)
+            if (SCRIPT_URL && SCRIPT_URL.startsWith("http")) {
+                const payload = {
+                    name: studentName,
+                    className: studentClass,
+                    lesson: LESSON_TITLE,
+                    correct: `${correctCount}/${QUESTIONS.length}`,
+                    score: score,
+                    timeSpent: timeStr,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Method 1: POST text/plain (Delivers raw JSON in e.postData.contents without CORS preflight block)
+                fetch(SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify(payload)
+                }).catch(e => console.warn("POST sync note:", e));
+
+                // Method 2: GET URL Parameters fallback (Guarantees delivery for Apps Scripts using e.parameter)
+                try {
+                    const params = new URLSearchParams({
+                        name: studentName,
+                        className: studentClass,
+                        lesson: LESSON_TITLE,
+                        score: score,
+                        correct: `${correctCount}/${QUESTIONS.length}`,
+                        timeSpent: timeStr
+                    });
+                    const getUrl = SCRIPT_URL + (SCRIPT_URL.includes("?") ? "&" : "?") + params.toString();
+                    if (navigator.sendBeacon) {
+                        navigator.sendBeacon(getUrl);
+                    } else {
+                        fetch(getUrl, { mode: "no-cors" }).catch(e => console.warn("GET sync note:", e));
+                    }
+                } catch(err) {
+                    console.warn("Fallback sync note:", err);
+                }
+            }
+        }
+
+        function renderReview(filter) {
+            const revList = document.getElementById('review-list');
+            revList.innerHTML = "";
+            QUESTIONS.forEach((q, idx) => {
+                const isCor = userAnswers[idx] === q.correct;
+                if (filter === 'wrong' && isCor) return;
+                if (filter === 'correct' && !isCor) return;
+
+                const item = document.createElement('div');
+                item.className = `review-item ${isCor ? 'correct' : 'incorrect'}`;
+                item.innerHTML = `
+                    <div class="review-header">
+                        <span>Câu ${idx + 1}: ${q.topic || ''}</span>
+                        <span style="color: ${isCor ? 'var(--success)' : 'var(--danger)'};">
+                            ${isCor ? '✔ Đúng' : '✖ Sai'} (Đã chọn: ${userAnswers[idx] || 'Chưa chọn'} | Đáp án: ${q.correct})
+                        </span>
+                    </div>
+                    <div style="text-align: justify; margin-bottom: 0.5rem; font-weight: 500;">${q.title}</div>
+                    <div class="review-exp">${q.exp}</div>
+                `;
+                revList.appendChild(item);
+            });
+        }
+
+        function filterReview(type) {
+            renderReview(type);
+        }
+    </script>
 </body>
 </html>
