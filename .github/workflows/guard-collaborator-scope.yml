@@ -1,0 +1,83 @@
+name: "Vệ Sĩ Tự Động - Kiểm Soát Quyền Hạn Bộ Môn (Guard Scope)"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-permission-scope:
+    name: Kiểm tra quyền hạn phạm vi môn học
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout mã nguồn
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Kiểm tra phạm vi thư mục được phép
+        id: check_scope
+        run: |
+          ACTOR="${{ github.actor }}"
+          OWNER="${{ github.repository_owner }}"
+          
+          echo "========================================================"
+          echo "🛡️ VỆ SĨ TỰ ĐỘNG VATLI102 ĐANG KIỂM TRA PHẠM VI PUSH BÀI"
+          echo "Người thực hiện (Actor): $ACTOR"
+          echo "Chủ sở hữu (Owner): $OWNER"
+          echo "========================================================"
+
+          # Nếu là Chủ sở hữu (Thầy) -> Luôn có toàn quyền quản trị
+          if [ "$ACTOR" = "$OWNER" ] || [ "$ACTOR" = "Vatli102" ]; then
+            echo "✅ XÁC NHẬN: Chủ sở hữu quản trị ($ACTOR). Cho phép cập nhật toàn bộ hệ thống."
+            exit 0
+          fi
+
+          # Nếu là Cộng tác viên (Cô giáo hoặc tài khoản khác) -> Chỉ được phép sửa thư mục toan/ và hoa/
+          echo "🔍 Phát hiện tài khoản cộng tác viên: $ACTOR. Bắt đầu kiểm tra danh sách file chỉnh sửa..."
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }} HEAD)
+          else
+            BEFORE="${{ github.event.before }}"
+            if [ "$BEFORE" = "0000000000000000000000000000000000000000" ] || [ -z "$BEFORE" ]; then
+              CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+            else
+              CHANGED_FILES=$(git diff --name-only $BEFORE ${{ github.sha }})
+            fi
+          fi
+
+          echo "Danh sách các file bị chỉnh sửa/thêm mới trong đợt push này:"
+          echo "$CHANGED_FILES"
+          echo "--------------------------------------------------------"
+
+          VIOLATIONS=0
+          VIOLATED_FILES=""
+
+          while IFS= read -r file; do
+            if [ -z "$file" ]; then
+              continue
+            fi
+            # Kiểm tra xem file có thuộc thư mục toan/ hoặc hoa/ không
+            if [[ "$file" != toan/* ]] && [[ "$file" != hoa/* ]]; then
+              VIOLATIONS=$((VIOLATIONS + 1))
+              VIOLATED_FILES="$VIOLATED_FILES\n- $file"
+            fi
+          done <<< "$CHANGED_FILES"
+
+          if [ $VIOLATIONS -gt 0 ]; then
+            echo "::error::❌ CẢNH BÁO VI PHẠM QUYỀN HẠN: Tài khoản $ACTOR chỉ được phép chỉnh sửa trong thư mục 'toan/' và 'hoa/'!"
+            echo "========================================================"
+            echo "❌ CÁC FILE NẰM NGOÀI PHẠM VI QUYỀN HẠN BỊ PHÁT HIỆN:"
+            echo -e "$VIOLATED_FILES"
+            echo "========================================================"
+            echo "Vui lòng chỉ chỉnh sửa và push các file thuộc môn Toán (toan/) và Hóa (hoa/)."
+            exit 1
+          else
+            echo "✅ HỢP LỆ: Toàn bộ file chỉnh sửa đều nằm trong phạm vi cho phép (toan/ và hoa/)."
+          fi
