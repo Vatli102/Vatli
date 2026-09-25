@@ -6,9 +6,8 @@
 
 // -----------------------------------------------------------------------------------------
 // CẤU HÌNH LIÊN KẾT GOOGLE SHEET CỦA CÔ GIÁO (MÔN TOÁN & HÓA)
-// Dán ID Sheet của Cô giáo vào trong dấu ngoặc kép bên dưới (Nếu để trống sẽ lưu về Sheet của Thầy)
 // -----------------------------------------------------------------------------------------
-const MATH_CHEM_SPREADSHEET_ID = "DÁN_ID_SHEET_CỦA_CÔ_VÀO_ĐÂY";
+const MATH_CHEM_SPREADSHEET_ID = "13b99GLqtaW5HKVbBNykWvOG7Uq6Vk1L00ZSUHH1WxSk";
 
 // Tên các Sheet quản lý
 const SHEET_NAMES = {
