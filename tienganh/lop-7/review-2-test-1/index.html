@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review 2 (Units 4 - 5 - 6) - Test 1 | Tiếng Anh 7 Global Success</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            text-align: justify;
+        }
+        .palette-btn.active {
+            border-color: #4f46e5;
+            background-color: #4f46e5;
+            color: #ffffff;
+        }
+        .palette-btn.answered {
+            background-color: #e0e7ff;
+            color: #3730a3;
+            border-color: #c7d2fe;
+        }
+        .palette-btn.wrong {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-color: #fca5a5;
+        }
+        .palette-btn.correct {
+            background-color: #dcfce7;
+            color: #166534;
+            border-color: #86efac;
+        }
+        .tab-btn.active {
+            border-bottom: 3px solid #4f46e5;
+            color: #4f46e5;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between">
+
+    <!-- Modal Nhập Họ Tên Trước Khi Làm Bài -->
+    <div id="modal-start" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 space-y-6 border border-slate-100 transform transition-all text-left">
+            <div class="text-center space-y-2">
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 text-2xl font-black mb-1">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-black text-slate-900">THÔNG TIN HỌC SINH</h3>
+                <p class="text-xs text-slate-500">Đề kiểm tra: <b>Review 2 (Units 4-5-6) — Test 1 (Tiếng Anh 7)</b></p>
+            </div>
+            <div class="space-y-4 text-xs font-semibold">
+                <div>
+                    <label class="block text-slate-700 mb-1.5 font-bold">Họ và tên học sinh <span class="text-rose-500">*</span></label>
+                    <input type="text" id="input-fullname" placeholder="Ví dụ: Lê Bảo Minh" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium">
+                </div>
+                <div>
+                    <label class="block text-slate-700 mb-1.5 font-bold">Lớp học <span class="text-rose-500">*</span></label>
+                    <input type="text" id="input-class" placeholder="Ví dụ: 7A3" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium">
+                </div>
+            </div>
+            <div class="pt-2">
+                <button onclick="startExam()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-indigo-200 transition-all flex items-center justify-center gap-2">
+                    <span>BẮT ĐẦU LÀM BÀI THI</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="/tienganh/" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-chevron-left text-sm"></i>
+                </a>
+                <div>
+                    <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-indigo-100 text-indigo-800">Review 2 • Test 1</span>
+                    <h1 class="text-sm sm:text-base font-extrabold text-slate-900 leading-tight">Tiếng Anh 7: Tổng ôn Units 4 - 5 - 6</h1>
+                </div>
+            </div>
+
+            <!-- Tab Switcher -->
+            <div class="flex items-center gap-2 sm:gap-6 border-b sm:border-0 border-slate-100 text-xs sm:text-sm font-bold">
+                <button id="tab-btn-theory" onclick="switchTab('theory')" class="tab-btn py-4 px-2 text-slate-500 hover:text-slate-800 transition-all">
+                    <i class="fa-solid fa-book-open mr-1 text-indigo-500"></i> Lý thuyết trọng tâm
+                </button>
+                <button id="tab-btn-quiz" onclick="switchTab('quiz')" class="tab-btn active py-4 px-2 text-indigo-600 transition-all">
+                    <i class="fa-solid fa-pen-to-square mr-1 text-indigo-500"></i> Làm bài tập củng cố
+                </button>
+            </div>
+
+            <!-- Timer / Profile pill -->
+            <div class="hidden sm:flex items-center gap-3">
+                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-black">
+                    <i class="fa-solid fa-clock text-indigo-600"></i>
+                    <span id="timer-display">45:00</span>
+                </div>
+                <div class="text-right">
+                    <div id="header-student-name" class="text-xs font-extrabold text-slate-800">Thí sinh</div>
+                    <div id="header-student-class" class="text-[10px] font-semibold text-slate-500">Lớp 7</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full flex-1">
+        
+        <!-- Tab 1: Lý Thuyết Trọng Tâm -->
+        <section id="tab-theory" class="hidden max-w-5xl mx-auto">
+            
+<div class="theory-container space-y-8 text-slate-800">
+    <div class="bg-gradient-to-r from-indigo-900 via-blue-900 to-slate-900 text-white p-6 rounded-2xl shadow-md">
+        <div class="inline-block px-3 py-1 bg-indigo-500/30 border border-indigo-400/40 rounded-full text-xs font-extrabold uppercase tracking-wider text-indigo-300 mb-2">
+            GLOBAL SUCCESS 7 • TỔNG ÔN TRỌNG TÂM REVIEW 2 (UNITS 4 - 5 - 6)
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black tracking-tight">Lý Thuyết Trọng Tâm: Review 2</h2>
+        <p class="text-indigo-200 text-sm mt-1">Tổng hợp toàn diện kiến thức từ vựng, ngữ pháp, ngữ âm và kỹ năng thực hành của Unit 4 (Music and Arts), Unit 5 (Food and Drink) và Unit 6 (A Visit to a School).</p>
+    </div>
+
+    <!-- 1. TỪ VỰNG & CỤM TỪ TRỌNG TÂM -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">1</span>
+            <h3 class="text-lg font-black text-slate-900">Từ vựng & Cụm từ (Vocabulary & Collocations)</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <h4 class="font-extrabold text-indigo-700 text-sm flex items-center gap-1.5"><i class="fa-solid fa-masks-theater"></i> Unit 4: Music and Arts</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>art gallery</b>: phòng trưng bày mỹ thuật</li>
+                    <li>• <b>concert hall</b>: nhà hát hòa nhạc</li>
+                    <li>• <b>water puppet show</b>: múa rối nước</li>
+                    <li>• <b>composer</b>: nhà soạn nhạc, nhạc sĩ</li>
+                    <li>• <b>musical instrument</b>: nhạc cụ</li>
+                    <li>• <b>portrait</b>: tranh chân dung</li>
+                    <li>• <b>take photos / painted by</b>: chụp ảnh / được vẽ bởi</li>
+                </ul>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <h4 class="font-extrabold text-emerald-700 text-sm flex items-center gap-1.5"><i class="fa-solid fa-utensils"></i> Unit 5: Food and Drink</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>ingredients</b>: các nguyên liệu nấu ăn</li>
+                    <li>• <b>recipe</b>: công thức nấu ăn</li>
+                    <li>• <b>beef noodle soup (Pho)</b>: phở bò</li>
+                    <li>• <b>spring rolls</b>: nem rán / gỏi cuốn</li>
+                    <li>• <b>turmeric</b>: bột nghệ</li>
+                    <li>• <b>fragrant broth</b>: nước dùng thơm phức</li>
+                    <li>• <b>pour / heat / fold / serve</b>: rót / làm nóng / gập / dọn ra đĩa</li>
+                </ul>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <h4 class="font-extrabold text-amber-700 text-sm flex items-center gap-1.5"><i class="fa-solid fa-school"></i> Unit 6: A Visit to a School</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>school facilities</b>: cơ sở vật chất nhà trường</li>
+                    <li>• <b>science laboratory</b>: phòng thí nghiệm khoa học</li>
+                    <li>• <b>well-equipped library</b>: thư viện trang bị hiện đại</li>
+                    <li>• <b>entrance examination</b>: kỳ thi tuyển sinh</li>
+                    <li>• <b>talented / gifted students</b>: học sinh tài năng, trường chuyên</li>
+                    <li>• <b>take place</b>: diễn ra</li>
+                    <li>• <b>located in / on</b>: tọa lạc tại</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. CẤU TẠO TỪ -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">2</span>
+            <h3 class="text-lg font-black text-slate-900">Cấu tạo từ / Dạng của từ (Word Formation)</h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left text-slate-700 border-collapse">
+                <thead class="bg-indigo-50 text-indigo-900 font-extrabold">
+                    <tr>
+                        <th class="p-2.5 border border-indigo-100">Động từ (Verb)</th>
+                        <th class="p-2.5 border border-indigo-100">Danh từ (Noun)</th>
+                        <th class="p-2.5 border border-indigo-100">Tính từ (Adjective)</th>
+                        <th class="p-2.5 border border-indigo-100">Trạng từ (Adverb)</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    <tr>
+                        <td class="p-2.5 border border-slate-100 font-bold">—</td>
+                        <td class="p-2.5 border border-slate-100"><b>music</b> / <b>musician</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>musical</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>musically</b></td>
+                    </tr>
+                    <tr class="bg-slate-50/50">
+                        <td class="p-2.5 border border-slate-100 font-bold">—</td>
+                        <td class="p-2.5 border border-slate-100"><b>art</b> / <b>artist</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>artistic</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>artistically</b></td>
+                    </tr>
+                    <tr>
+                        <td class="p-2.5 border border-slate-100 font-bold"><b>perform</b> (biểu diễn)</td>
+                        <td class="p-2.5 border border-slate-100"><b>performance</b> / <b>performer</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>performing</b></td>
+                        <td class="p-2.5 border border-slate-100">—</td>
+                    </tr>
+                    <tr class="bg-slate-50/50">
+                        <td class="p-2.5 border border-slate-100 font-bold"><b>taste</b> (nếm)</td>
+                        <td class="p-2.5 border border-slate-100"><b>taste</b> (vị giác)</td>
+                        <td class="p-2.5 border border-slate-100"><b>tasty</b> (ngon) / <b>tasteless</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>tastefully</b></td>
+                    </tr>
+                    <tr>
+                        <td class="p-2.5 border border-slate-100 font-bold"><b>educate</b> (giáo dục)</td>
+                        <td class="p-2.5 border border-slate-100"><b>education</b> / <b>educator</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>educational</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>educationally</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 3. PHÂN BIỆT TỪ DỄ NHẦM LẪN -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">3</span>
+            <h3 class="text-lg font-black text-slate-900">Phân biệt các từ dễ gây nhầm lẫn (Confusing Words)</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200 space-y-1.5">
+                <h4 class="font-extrabold text-amber-900">1. Recipe vs. Menu vs. Ingredient</h4>
+                <p>• <b>Recipe</b>: Công thức nấu ăn chi tiết từng bước (<i>a recipe for spring rolls</i>).</p>
+                <p>• <b>Menu</b>: Thực đơn danh sách các món ăn/thức uống tại nhà hàng để khách gọi món.</p>
+                <p>• <b>Ingredient</b>: Một thành phần/nguyên liệu trong món ăn (<i>sugar, salt, flour</i>).</p>
+            </div>
+            <div class="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200 space-y-1.5">
+                <h4 class="font-extrabold text-emerald-900">2. Like vs. As vs. The same as</h4>
+                <p>• <b>Like + Noun</b>: Giống như (<i>He sings like a professional singer.</i>)</p>
+                <p>• <b>as + adj + as</b>: So sánh ngang bằng (<i>She is as tall as her sister.</i>)</p>
+                <p>• <b>the same as</b>: Hoàn toàn giống như (<i>My bag is the same as yours.</i>)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. NGỮ PHÁP TRỌNG TÂM -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">4</span>
+            <h3 class="text-lg font-black text-slate-900">Ngữ pháp trọng tâm (Grammar Focus)</h3>
+        </div>
+        <div class="space-y-4 text-xs">
+            <!-- Grammar 1 -->
+            <div class="p-4 rounded-xl bg-indigo-50/50 border border-indigo-100 space-y-2">
+                <h4 class="font-black text-indigo-900 text-sm">A. Cấu trúc so sánh: (not) as... as, the same as, different from</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>as + adj/adv + as</b>: So sánh bằng (<i>Classical music is as interesting as pop music.</i>)</li>
+                    <li>• <b>not as + adj/adv + as</b>: So sánh không bằng (<i>This painting is not as colorful as that one.</i>)</li>
+                    <li>• <b>the same as</b>: Giống như (<i>His uniform is the same as mine.</i>)</li>
+                    <li>• <b>different from</b>: Khác với (<i>Pho in Hanoi is different from Pho in Saigon.</i>)</li>
+                </ul>
+            </div>
+
+            <!-- Grammar 2 -->
+            <div class="p-4 rounded-xl bg-blue-50/50 border border-blue-100 space-y-2">
+                <h4 class="font-black text-blue-900 text-sm">B. Danh từ đếm được / không đếm được & Từ chỉ số lượng (some, any, a lot of, how much/many)</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="p-3 bg-white rounded-lg border border-blue-200">
+                        <div class="font-bold text-blue-900 mb-1">How many + N(đếm được số nhiều)</div>
+                        <div class="text-[11px] text-slate-600">• <i>How many apples are there on the table?</i></div>
+                        <div class="text-[11px] text-slate-600">• Dùng <i>some</i> trong câu khẳng định, <i>any</i> trong phủ định/nghi vấn.</div>
+                    </div>
+                    <div class="p-3 bg-white rounded-lg border border-blue-200">
+                        <div class="font-bold text-blue-900 mb-1">How much + N(không đếm được)</div>
+                        <div class="text-[11px] text-slate-600">• <i>How much water / sugar / milk do you need?</i></div>
+                        <div class="text-[11px] text-slate-600">• Dùng <i>a lot of / lots of</i> cho cả đếm được và không đếm được.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grammar 3 -->
+            <div class="p-4 rounded-xl bg-purple-50/50 border border-purple-100 space-y-2">
+                <h4 class="font-black text-purple-900 text-sm">C. Giới từ chỉ thời gian và nơi chốn (Prepositions: at, on, in)</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>at</b>: Thời điểm cụ thể (<i>at 7:00 a.m., at noon, at night</i>) / Địa điểm cụ thể (<i>at school, at the entrance</i>).</li>
+                    <li>• <b>on</b>: Ngày trong tuần, ngày tháng (<i>on Monday, on May 19th</i>) / Bề mặt, tầng lầu (<i>on the table, on the second floor</i>).</li>
+                    <li>• <b>in</b>: Tháng, năm, mùa, thế kỷ (<i>in June, in 2024, in summer</i>) / Không gian kín, địa danh lớn (<i>in the classroom, in Hanoi</i>).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. NGỮ ÂM -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">5</span>
+            <h3 class="text-lg font-black text-slate-900">Ngữ âm: Quy tắc phát âm trọng tâm Units 4 - 6</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                <h4 class="font-bold text-slate-900 mb-1">Âm /ʃ/ & /ʒ/ (Unit 4)</h4>
+                <p>• <b>/ʃ/</b>: <i><u>sh</u>ow, musi<u>ci</u>an, deli<u>ci</u>ous</i></p>
+                <p>• <b>/ʒ/</b>: <i>plea<u>s</u>ure, televi<u>si</u>on, mea<u>s</u>ure</i></p>
+            </div>
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                <h4 class="font-bold text-slate-900 mb-1">Âm /ɒ/ & /ɔː/ (Unit 5)</h4>
+                <p>• <b>/ɒ/</b>: <i>p<u>o</u>t, b<u>o</u>ttle, h<u>o</u>t</i></p>
+                <p>• <b>/ɔː/</b>: <i>p<u>or</u>k, s<u>au</u>ce, w<u>a</u>ter</i></p>
+            </div>
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                <h4 class="font-bold text-slate-900 mb-1">Âm /tʃ/ & /dʒ/ (Unit 6)</h4>
+                <p>• <b>/tʃ/</b>: <i><u>ch</u>ildren, tea<u>ch</u>er, lun<u>ch</u></i></p>
+                <p>• <b>/dʒ/</b>: <i>oran<u>ge</u>, villa<u>ge</u>, <u>j</u>acket</i></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nút làm bài tập -->
+    <div class="text-center pt-4 pb-2">
+        <button onclick="switchTab('quiz')" class="px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-extrabold text-sm rounded-xl shadow-md shadow-indigo-200 transition-all transform hover:-translate-y-0.5 inline-flex items-center gap-2">
+            <span>Làm bài tập củng cố</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </button>
+    </div>
+</div>
+
+        </section>
+
+        <!-- Tab 2: Làm Bài Tập Củng Cố (CBT 2-Column Mode) -->
+        <section id="tab-quiz" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Left Column: Single Question Card & Passage Area (8 cols) -->
+            <div class="lg:col-span-8 space-y-4">
+                
+                <!-- Audio Player Widget -->
+                <div id="audio-player-card" class="bg-gradient-to-r from-indigo-900 to-blue-900 text-white rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-cyan-300 text-lg shrink-0">
+                            <i class="fa-solid fa-headphones"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-cyan-300 uppercase tracking-wider">Audio Bài Nghe (Questions 1 - 8)</div>
+                            <div class="text-xs text-slate-200">Listening Part 1 & Part 2 — Voice Chuẩn Bản Ngữ</div>
+                        </div>
+                    </div>
+                    <audio id="exam-audio" controls class="w-full sm:w-72 h-9 rounded-lg outline-none">
+                        <source src="Test 1 - Review 2 - Full Audio Listening.mp3" type="audio/mpeg">
+                        Trình duyệt của bạn không hỗ trợ phát âm thanh.
+                    </audio>
+                </div>
+
+                <!-- Main Question Card -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6 min-h-[420px] flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <div class="flex items-center gap-2">
+                                <span id="q-badge" class="px-3 py-1 rounded-full text-xs font-black bg-indigo-100 text-indigo-800">Câu 1 / 40</span>
+                                <span id="q-topic" class="text-xs font-bold text-slate-500">Listening Part 1</span>
+                            </div>
+                            <span class="text-xs font-extrabold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-100">0.25 điểm</span>
+                        </div>
+
+                        <!-- Passage Box if applicable -->
+                        <div id="q-passage-container" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs sm:text-sm leading-relaxed text-slate-700 max-h-60 overflow-y-auto">
+                            <div id="q-passage-content"></div>
+                        </div>
+
+                        <!-- Question Title -->
+                        <div id="q-title" class="text-sm sm:text-base font-extrabold text-slate-900 leading-relaxed pt-1">
+                            Loading question...
+                        </div>
+
+                        <!-- Options List -->
+                        <div id="q-options" class="space-y-2.5 pt-2">
+                            <!-- Injected by JS -->
+                        </div>
+
+                        <!-- Explanation Area -->
+                        <div id="q-explanation-box" class="hidden bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-xs leading-relaxed text-emerald-950 space-y-1">
+                            <div class="font-bold text-emerald-800 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-check"></i> Lời giải chi tiết:
+                            </div>
+                            <div id="q-explanation-text"></div>
+                        </div>
+                    </div>
+
+                    <!-- Question Navigation Controls -->
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+                        <button onclick="prevQuestion()" id="btn-prev" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-50 transition-colors flex items-center gap-1.5">
+                            <i class="fa-solid fa-arrow-left"></i> <span>Câu trước</span>
+                        </button>
+
+                        <div class="text-xs font-bold text-slate-400">
+                            Tiến độ: <span id="progress-text" class="text-indigo-600 font-black">0/40</span>
+                        </div>
+
+                        <button onclick="nextQuestion()" id="btn-next" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition-colors flex items-center gap-1.5 shadow-sm shadow-indigo-200">
+                            <span>Câu tiếp theo</span> <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Sidebar (Palette & Actions) (4 cols) -->
+            <div class="lg:col-span-4 space-y-4">
+                
+                <!-- Student Card & Submit Button -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Học sinh dự thi</div>
+                            <div id="sidebar-student-name" class="text-sm font-black text-slate-900">Lê Bảo Minh</div>
+                            <div id="sidebar-student-class" class="text-xs font-semibold text-slate-500">Lớp 7A3</div>
+                        </div>
+                        <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-black text-sm">
+                            7
+                        </div>
+                    </div>
+
+                    <!-- Progress bar -->
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between text-[11px] font-bold text-slate-500">
+                            <span>Đã hoàn thành</span>
+                            <span id="percent-text">0%</span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div id="progress-bar-fill" class="h-full bg-indigo-600 transition-all duration-300 w-0"></div>
+                        </div>
+                    </div>
+
+                    <button onclick="confirmSubmit()" id="btn-submit-exam" class="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-emerald-200 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>NỘP BÀI THI</span>
+                    </button>
+                </div>
+
+                <!-- Palette Grid (40 Questions) -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider">Bảng 40 Câu Hỏi</h4>
+                        <span class="text-[10px] text-slate-400 font-bold">Nhấn số để chuyển câu</span>
+                    </div>
+
+                    <div id="palette-grid" class="grid grid-cols-5 sm:grid-cols-8 lg:grid-cols-5 gap-2 pt-1">
+                        <!-- 40 buttons injected by JS -->
+                    </div>
+
+                    <!-- Review Filter -->
+                    <div id="review-filter-box" class="hidden pt-3 border-t border-slate-100 space-y-2">
+                        <div class="text-[11px] font-bold text-slate-500">Lọc xem kết quả:</div>
+                        <div class="grid grid-cols-3 gap-1.5 text-[10px] font-bold">
+                            <button onclick="filterReview('all')" class="py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">Tất cả</button>
+                            <button onclick="filterReview('wrong')" class="py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 transition-colors">Chỉ câu sai</button>
+                            <button onclick="filterReview('correct')" class="py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 transition-colors">Chỉ câu đúng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Báo Cáo Kết Quả Sau Khi Nộp -->
+    <div id="modal-result" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 space-y-6 border border-slate-100 text-center transform transition-all">
+            <div class="space-y-2">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 text-3xl font-black mb-1">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h3 class="text-2xl font-black text-slate-900">KẾT QUẢ BÀI THI</h3>
+                <p class="text-xs text-slate-500">Review 2 (Units 4-5-6) — Test 1 (Tiếng Anh 7 Global Success)</p>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-indigo-50 border border-indigo-100 space-y-3">
+                <div class="text-4xl sm:text-5xl font-black text-indigo-700" id="result-score">
+                    0.0 <span class="text-lg font-bold text-slate-400">/ 10</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs font-bold text-slate-700 pt-2 border-t border-indigo-200/60">
+                    <div>Số câu đúng: <span id="result-correct-count" class="text-emerald-600 font-extrabold text-sm">0/40</span></div>
+                    <div>Thời gian: <span id="result-time-spent" class="text-indigo-600 font-extrabold text-sm">00:00</span></div>
+                </div>
+            </div>
+
+            <p id="result-feedback" class="text-xs font-semibold text-slate-600">
+                Chúc mừng bạn đã hoàn thành bài kiểm tra! Toàn bộ lời giải chi tiết đã được mở khóa.
+            </p>
+
+            <div class="flex gap-3">
+                <button onclick="closeResultModal()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-indigo-200 transition-all">
+                    XEM LỜI GIẢI CHI TIẾT
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Logic -->
+    <script>
+        const QUESTIONS = [
+  {
+    "num": 1,
+    "topic": "Listening Part 1: Art Exhibition",
+    "audio_file": "Test 1 - Review 2 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "How many oil paintings will Sarah's art club exhibit in the main hall?",
+    "options": {
+      "A": "13 paintings",
+      "B": "30 paintings",
+      "C": "50 paintings",
+      "D": "100 paintings"
+    },
+    "correct": "B",
+    "exp": "Trong bài nghe, Sarah nói: <i>'Our art club will exhibit thirty oil paintings in the main hall.'</i> (30 bức tranh sơn dầu)."
+  },
+  {
+    "num": 2,
+    "topic": "Listening Part 1: Traditional Food",
+    "audio_file": "Test 1 - Review 2 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What traditional dishes is Minh's class preparing for the food stall?",
+    "options": {
+      "A": "Beef noodle soup and fresh spring rolls",
+      "B": "Pork chops and fried chicken",
+      "C": "Pizza and spaghetti",
+      "D": "Sandwiches and ice cream"
+    },
+    "correct": "A",
+    "exp": "Minh nói: <i>'We will cook beef noodle soup and fresh spring rolls.'</i> (Phở bò và gỏi cuốn tươi)."
+  },
+  {
+    "num": 3,
+    "topic": "Listening Part 1: Broth Preparation",
+    "audio_file": "Test 1 - Review 2 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "How long does Minh's team simmer the broth to make it fragrant and sweet?",
+    "options": {
+      "A": "For thirty minutes",
+      "B": "For over two hours",
+      "C": "For over five hours",
+      "D": "For ten hours"
+    },
+    "correct": "C",
+    "exp": "Minh giải thích: <i>'We simmer the broth for over five hours to make it fragrant and naturally sweet.'</i> (Hơn 5 tiếng đồng hồ)."
+  },
+  {
+    "num": 4,
+    "topic": "Listening Part 1: Activity Schedule",
+    "audio_file": "Test 1 - Review 2 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "When will Sarah join Minh's class to practice making spring rolls?",
+    "options": {
+      "A": "On Wednesday morning",
+      "B": "On Thursday afternoon",
+      "C": "On Friday evening",
+      "D": "On Saturday night"
+    },
+    "correct": "B",
+    "exp": "Minh mời: <i>'Would you like to try making fresh spring rolls with us on Thursday afternoon?'</i> và Sarah hào hứng đồng ý."
+  },
+  {
+    "num": 5,
+    "topic": "Listening Part 2: Historical Landmark",
+    "audio_file": "Test 1 - Review 2 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "When was the Temple of Literature (Van Mieu) founded?",
+    "options": {
+      "A": "In 1010",
+      "B": "In 1070",
+      "C": "In 1076",
+      "D": "In 1225"
+    },
+    "correct": "B",
+    "exp": "Người nói cho biết: <i>'Founded in 1070 during the Ly dynasty...'</i> (Năm 1070 dưới triều Lý)."
+  },
+  {
+    "num": 6,
+    "topic": "Listening Part 2: First University",
+    "audio_file": "Test 1 - Review 2 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What was established within the complex in 1076 as Vietnam's first imperial university?",
+    "options": {
+      "A": "Quoc Tu Giam",
+      "B": "Chu Van An High School",
+      "C": "Hanoi University",
+      "D": "Dong Kinh Nghia Thuc"
+    },
+    "correct": "A",
+    "exp": "Trong bài nghe: <i>'In 1076, Quoc Tu Giam, Vietnam's very first imperial university, was established within its grounds...'</i>"
+  },
+  {
+    "num": 7,
+    "topic": "Listening Part 2: Architecture & Layout",
+    "audio_file": "Test 1 - Review 2 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "How many peaceful courtyards does the Temple of Literature complex consist of?",
+    "options": {
+      "A": "Three courtyards",
+      "B": "Four courtyards",
+      "C": "Five courtyards",
+      "D": "Seven courtyards"
+    },
+    "correct": "C",
+    "exp": "Người nói nêu rõ: <i>'Today, the complex consists of five peaceful courtyards...'</i> (5 khoảng sân thanh tịnh)."
+  },
+  {
+    "num": 8,
+    "topic": "Listening Part 2: Student Tradition",
+    "audio_file": "Test 1 - Review 2 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "Why do thousands of students visit the Temple before major national exams?",
+    "options": {
+      "A": "To wish for good luck, academic excellence, and success",
+      "B": "To take the final university test inside",
+      "C": "To buy modern computers and tablets",
+      "D": "To play soccer with their classmates"
+    },
+    "correct": "A",
+    "exp": "Người nói nêu rõ: <i>'Before major national examinations, thousands of students visit the Temple to wish for good luck, academic excellence, and success in their studies.'</i>"
+  },
+  {
+    "num": 9,
+    "topic": "Pronunciation: Sound /ʃ/ vs /ʒ/",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose underlined part is pronounced differently from the others.",
+    "options": {
+      "A": "<u>sh</u>ow",
+      "B": "musi<u>ci</u>an",
+      "C": "deli<u>ci</u>ous",
+      "D": "mea<u>s</u>ure"
+    },
+    "correct": "D",
+    "exp": "<b>measure</b> có âm /ʒ/ (/ˈmeʒə/). Các từ <b>show</b>, <b>musician</b>, <b>delicious</b> đều có âm /ʃ/ (/ʃəʊ/, /mjuːˈzɪʃn/, /dɪˈlɪʃəs/)."
+  },
+  {
+    "num": 10,
+    "topic": "Pronunciation: Sound /ɒ/ vs /ɔː/",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose underlined part is pronounced differently from the others.",
+    "options": {
+      "A": "p<u>o</u>t",
+      "B": "b<u>o</u>ttle",
+      "C": "p<u>or</u>k",
+      "D": "h<u>o</u>t"
+    },
+    "correct": "C",
+    "exp": "<b>pork</b> phát âm là âm /ɔː/ dài (/pɔːk/). Các từ <b>pot</b>, <b>bottle</b>, <b>hot</b> đều có âm /ɒ/ ngắn (/pɒt/, /ˈbɒtl/, /hɒt/)."
+  },
+  {
+    "num": 11,
+    "topic": "Pronunciation: Sound /tʃ/ vs /dʒ/",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose underlined part is pronounced differently from the others.",
+    "options": {
+      "A": "<u>ch</u>ildren",
+      "B": "tea<u>ch</u>er",
+      "C": "oran<u>ge</u>",
+      "D": "lun<u>ch</u>"
+    },
+    "correct": "C",
+    "exp": "<b>orange</b> có âm đuôi là /dʒ/ (/ˈɒrɪndʒ/). Các từ <b>children</b>, <b>teacher</b>, <b>lunch</b> đều chứa âm /tʃ/."
+  },
+  {
+    "num": 12,
+    "topic": "Word Stress: Two-syllable Words",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose primary stress is positioned differently from the others.",
+    "options": {
+      "A": "gallery",
+      "B": "perform",
+      "C": "mineral",
+      "D": "curriculum"
+    },
+    "correct": "B",
+    "exp": "<b>perform</b> là động từ 2 âm tiết có trọng âm rơi vào âm tiết thứ 2 (/pəˈfɔːm/). Từ <b>gallery</b> (/ˈɡæləri/) và <b>mineral</b> (/ˈmɪnərəl/) có trọng âm rơi vào âm tiết 1."
+  },
+  {
+    "num": 13,
+    "topic": "Grammar: Comparison with (not) as... as",
+    "audio_file": null,
+    "passage": null,
+    "title": "Classical music is not as lively ________ modern pop music, but it is deeply relaxing.",
+    "options": {
+      "A": "as",
+      "B": "like",
+      "C": "from",
+      "D": "than"
+    },
+    "correct": "A",
+    "exp": "Cấu trúc so sánh bằng/không bằng: <i>(not) as + adj + as</i>. Do đó cần điền <b>as</b>."
+  },
+  {
+    "num": 14,
+    "topic": "Grammar: Comparison with Different from",
+    "audio_file": null,
+    "passage": null,
+    "title": "Traditional water puppet shows are quite different ________ modern theatrical performances.",
+    "options": {
+      "A": "from",
+      "B": "to",
+      "C": "with",
+      "D": "as"
+    },
+    "correct": "A",
+    "exp": "Cụm so sánh khác biệt cố định: <b>different from</b> (khác biệt so với cái gì)."
+  },
+  {
+    "num": 15,
+    "topic": "Grammar: Quantifiers with Uncountable Nouns (How much vs How many)",
+    "audio_file": null,
+    "passage": null,
+    "title": "________ mineral water do you drink every day to maintain good hydration?",
+    "options": {
+      "A": "How many",
+      "B": "How much",
+      "C": "How long",
+      "D": "How often"
+    },
+    "correct": "B",
+    "exp": "<i>mineral water</i> (nước khoáng) là danh từ không đếm được -> dùng từ để hỏi lượng: <b>How much</b>."
+  },
+  {
+    "num": 16,
+    "topic": "Grammar: Some vs Any",
+    "audio_file": null,
+    "passage": null,
+    "title": "Is there ________ butter left in the fridge to make an omelette?",
+    "options": {
+      "A": "some",
+      "B": "any",
+      "C": "many",
+      "D": "a"
+    },
+    "correct": "B",
+    "exp": "Trong câu nghi vấn (hỏi) với danh từ không đếm được <i>butter</i>, ta dùng <b>any</b>."
+  },
+  {
+    "num": 17,
+    "topic": "Grammar: Prepositions of Place (at / on / in)",
+    "audio_file": null,
+    "passage": null,
+    "title": "Our science laboratory is located ________ the second floor of the main school building.",
+    "options": {
+      "A": "on",
+      "B": "in",
+      "C": "at",
+      "D": "under"
+    },
+    "correct": "A",
+    "exp": "Chỉ vị trí tầng lầu của tòa nhà dùng giới từ <b>on</b>: <i>on the second floor</i> (ở tầng hai)."
+  },
+  {
+    "num": 18,
+    "topic": "Grammar: Prepositions of Time (at / on / in)",
+    "audio_file": null,
+    "passage": null,
+    "title": "The annual school entrance examination will take place ________ June 15th.",
+    "options": {
+      "A": "in",
+      "B": "on",
+      "C": "at",
+      "D": "for"
+    },
+    "correct": "B",
+    "exp": "Trước ngày tháng cụ thể (June 15th) dùng giới từ <b>on</b>: <i>on June 15th</i>."
+  },
+  {
+    "num": 19,
+    "topic": "Confusing Words: Recipe vs Menu vs Ingredient",
+    "audio_file": null,
+    "passage": null,
+    "title": "Can you give me the step-by-step ________ for making traditional Hanoi beef noodle soup?",
+    "options": {
+      "A": "menu",
+      "B": "recipe",
+      "C": "ingredient",
+      "D": "gallery"
+    },
+    "correct": "B",
+    "exp": "<b>recipe</b> là công thức nấu ăn hướng dẫn từng bước (*step-by-step*), khác với <i>menu</i> (thực đơn gọi món) hay <i>ingredient</i> (nguyên liệu đơn lẻ)."
+  },
+  {
+    "num": 20,
+    "topic": "Word Formation: Music (n) -> Musician (n)",
+    "audio_file": null,
+    "passage": null,
+    "title": "Van Cao was a remarkably talented Vietnamese ________ who composed the national anthem Tien Quan Ca.",
+    "options": {
+      "A": "music",
+      "B": "musician",
+      "C": "musical",
+      "D": "musically"
+    },
+    "correct": "B",
+    "exp": "Vị trí chỉ danh từ chỉ người làm âm nhạc: <b>musician</b> (nhạc sĩ)."
+  },
+  {
+    "num": 21,
+    "topic": "Vocabulary: Food & Cooking Verbs",
+    "audio_file": null,
+    "passage": null,
+    "title": "First, beat the eggs in a small bowl, then ________ the mixture gently into the heated frying pan.",
+    "options": {
+      "A": "pour",
+      "B": "fold",
+      "C": "serve",
+      "D": "exhibit"
+    },
+    "correct": "A",
+    "exp": "Động từ nấu ăn: <b>pour</b> (rót, đổ chất lỏng vào chảo)."
+  },
+  {
+    "num": 22,
+    "topic": "Vocabulary: School Facilities",
+    "audio_file": null,
+    "passage": null,
+    "title": "Our school has modern science ________ where students conduct biology and chemistry experiments.",
+    "options": {
+      "A": "laboratories",
+      "B": "ingredients",
+      "C": "broths",
+      "D": "steles"
+    },
+    "correct": "A",
+    "exp": "Từ vựng Unit 6: <b>laboratories</b> (phòng thí nghiệm khoa học)."
+  },
+  {
+    "num": 23,
+    "topic": "Communication: Ordering Food at Canteen",
+    "audio_file": null,
+    "passage": null,
+    "title": "Canteen Staff: 'What would you like to have for lunch today?' - Student: '________'",
+    "options": {
+      "A": "I'd like a bowl of beef noodle soup and a bottle of mineral water, please.",
+      "B": "Yes, I can play the guitar very well.",
+      "C": "I think the library is on the third floor.",
+      "D": "It was founded in 1070."
+    },
+    "correct": "A",
+    "exp": "Mẫu câu gọi món ăn lịch sự tại căn tin trường học: <i>'I'd like a bowl of beef noodle soup and a bottle of mineral water, please.'</i>"
+  },
+  {
+    "num": 24,
+    "topic": "Communication: Giving Opinion on Music",
+    "audio_file": null,
+    "passage": null,
+    "title": "Nick: 'What do you think of traditional folk music?' - Mai: '________'",
+    "options": {
+      "A": "In my opinion, it is very melodic and full of cultural heritage.",
+      "B": "It costs fifty thousand dong.",
+      "C": "You should turn off your mobile phone.",
+      "D": "I usually wake up at six o'clock."
+    },
+    "correct": "A",
+    "exp": "Bày tỏ quan điểm cá nhân về âm nhạc dân tộc: <i>'In my opinion, it is very melodic and full of cultural heritage.'</i>"
+  },
+  {
+    "num": 25,
+    "topic": "Public Notice: School Art Exhibition Rules",
+    "audio_file": null,
+    "passage": null,
+    "title": "What are visitors strictly forbidden to do at this exhibition?<br><div style='background:#fefce8; border:2px dashed #ca8a04; padding:10px; border-radius:8px; margin:8px 0; font-family:sans-serif;'><b>STUDENT ART GALLERY NOTICE</b><br>Please do not touch the paintings or use camera flash. Food and sugary drinks are not allowed inside.</div>",
+    "options": {
+      "A": "Visitors must not touch paintings, use flash, or bring food and sweet drinks inside.",
+      "B": "Visitors must draw their own paintings before entering.",
+      "C": "Visitors are allowed to eat snacks near the artwork.",
+      "D": "The exhibition only opens on Sundays."
+    },
+    "correct": "A",
+    "exp": "Nội quy phòng trưng bày mỹ thuật cấm chạm vào tranh (*do not touch*), cấm đèn flash (*no camera flash*) và không mang thức ăn đồ uống vào trong."
+  },
+  {
+    "num": 26,
+    "topic": "Public Sign: Science Lab Safety Rules",
+    "audio_file": null,
+    "passage": null,
+    "title": "What does this safety warning sign mean in the school lab?<br><div style='background:#fef2f2; border:2px solid #dc2626; padding:10px; border-radius:8px; margin:8px 0; font-family:sans-serif; text-align:center;'><b>DANGER: CHEMICAL HAZARD — WEAR SAFETY GOGGLES & LAB COAT AT ALL TIMES</b></div>",
+    "options": {
+      "A": "Students must wear protective eye goggles and lab coats for safety when in the lab.",
+      "B": "Anyone can drink the chemical liquids in the test tubes.",
+      "C": "Safety goggles are sold here.",
+      "D": "Students can run and play games in the laboratory."
+    },
+    "correct": "A",
+    "exp": "Biển báo an toàn phòng thí nghiệm bắt buộc đeo kính bảo hộ (*safety goggles*) và mặc áo choàng phòng lab (*lab coat*) để tránh hóa chất độc hại."
+  },
+  {
+    "num": 27,
+    "topic": "Guided Cloze: Water Puppetry Art",
+    "audio_file": null,
+    "passage": "Water puppetry (Mua roi nuoc) is a uniquely charming traditional Vietnamese art form that originated in the Red River Delta in the eleventh century. In this unique performance, the stage is actually the surface of a liquid (27)________. The puppeteers stand behind a bamboo screen in waist-deep water and (28)________ the wooden puppets using long submerged bamboo rods and string mechanisms. The puppets are carved from light fig wood and painted with glossy waterproof lacquer. The show is always accompanied by live traditional (29)________ music played on drums, wooden bells, horns, and the monochord (Dan Bau). The stories presented in the puppet shows depict rural life, agricultural labor, (30)________ ancient national legends such as King Le Loi returning the magic sword to the Golden Turtle. Today, water puppetry is widely (31)________ as a masterpiece of Vietnamese intangible cultural heritage, attracting millions of local (32)________ and international tourists every year.",
+    "title": "Choose the best option for blank (27):",
+    "options": {
+      "A": "pool",
+      "B": "desert",
+      "C": "kitchen",
+      "D": "stadium"
+    },
+    "correct": "A",
+    "exp": "Sân khấu của múa rối nước là mặt hồ nước/bể nước: <b>liquid pool</b>."
+  },
+  {
+    "num": 28,
+    "topic": "Guided Cloze: Blank (28)",
+    "audio_file": null,
+    "passage": "Water puppetry (Mua roi nuoc) is a uniquely charming traditional Vietnamese art form that originated in the Red River Delta in the eleventh century. In this unique performance, the stage is actually the surface of a liquid (27)________. The puppeteers stand behind a bamboo screen in waist-deep water and (28)________ the wooden puppets using long submerged bamboo rods and string mechanisms. The puppets are carved from light fig wood and painted with glossy waterproof lacquer. The show is always accompanied by live traditional (29)________ music played on drums, wooden bells, horns, and the monochord (Dan Bau). The stories presented in the puppet shows depict rural life, agricultural labor, (30)________ ancient national legends such as King Le Loi returning the magic sword to the Golden Turtle. Today, water puppetry is widely (31)________ as a masterpiece of Vietnamese intangible cultural heritage, attracting millions of local (32)________ and international tourists every year.",
+    "title": "Choose the best option for blank (28):",
+    "options": {
+      "A": "control",
+      "B": "damage",
+      "C": "eat",
+      "D": "forget"
+    },
+    "correct": "A",
+    "exp": "Nghệ nhân điều khiển con rối gỗ: <b>control the wooden puppets</b>."
+  },
+  {
+    "num": 29,
+    "topic": "Guided Cloze: Blank (29)",
+    "audio_file": null,
+    "passage": "Water puppetry (Mua roi nuoc) is a uniquely charming traditional Vietnamese art form that originated in the Red River Delta in the eleventh century. In this unique performance, the stage is actually the surface of a liquid (27)________. The puppeteers stand behind a bamboo screen in waist-deep water and (28)________ the wooden puppets using long submerged bamboo rods and string mechanisms. The puppets are carved from light fig wood and painted with glossy waterproof lacquer. The show is always accompanied by live traditional (29)________ music played on drums, wooden bells, horns, and the monochord (Dan Bau). The stories presented in the puppet shows depict rural life, agricultural labor, (30)________ ancient national legends such as King Le Loi returning the magic sword to the Golden Turtle. Today, water puppetry is widely (31)________ as a masterpiece of Vietnamese intangible cultural heritage, attracting millions of local (32)________ and international tourists every year.",
+    "title": "Choose the best option for blank (29):",
+    "options": {
+      "A": "folk",
+      "B": "rock",
+      "C": "heavy",
+      "D": "electric"
+    },
+    "correct": "A",
+    "exp": "Âm nhạc dân gian truyền thống: <b>traditional folk music</b>."
+  },
+  {
+    "num": 30,
+    "topic": "Guided Cloze: Blank (30)",
+    "audio_file": null,
+    "passage": "Water puppetry (Mua roi nuoc) is a uniquely charming traditional Vietnamese art form that originated in the Red River Delta in the eleventh century. In this unique performance, the stage is actually the surface of a liquid (27)________. The puppeteers stand behind a bamboo screen in waist-deep water and (28)________ the wooden puppets using long submerged bamboo rods and string mechanisms. The puppets are carved from light fig wood and painted with glossy waterproof lacquer. The show is always accompanied by live traditional (29)________ music played on drums, wooden bells, horns, and the monochord (Dan Bau). The stories presented in the puppet shows depict rural life, agricultural labor, (30)________ ancient national legends such as King Le Loi returning the magic sword to the Golden Turtle. Today, water puppetry is widely (31)________ as a masterpiece of Vietnamese intangible cultural heritage, attracting millions of local (32)________ and international tourists every year.",
+    "title": "Choose the best option for blank (30):",
+    "options": {
+      "A": "and",
+      "B": "but",
+      "C": "or",
+      "D": "so"
+    },
+    "correct": "A",
+    "exp": "Liên từ kết hợp bổ sung danh sách: đời sống nông thôn, lao động nông nghiệp <i>và</i> các truyền thuyết dân tộc: <b>and</b>."
+  },
+  {
+    "num": 31,
+    "topic": "Guided Cloze: Blank (31)",
+    "audio_file": null,
+    "passage": "Water puppetry (Mua roi nuoc) is a uniquely charming traditional Vietnamese art form that originated in the Red River Delta in the eleventh century. In this unique performance, the stage is actually the surface of a liquid (27)________. The puppeteers stand behind a bamboo screen in waist-deep water and (28)________ the wooden puppets using long submerged bamboo rods and string mechanisms. The puppets are carved from light fig wood and painted with glossy waterproof lacquer. The show is always accompanied by live traditional (29)________ music played on drums, wooden bells, horns, and the monochord (Dan Bau). The stories presented in the puppet shows depict rural life, agricultural labor, (30)________ ancient national legends such as King Le Loi returning the magic sword to the Golden Turtle. Today, water puppetry is widely (31)________ as a masterpiece of Vietnamese intangible cultural heritage, attracting millions of local (32)________ and international tourists every year.",
+    "title": "Choose the best option for blank (31):",
+    "options": {
+      "A": "recognized",
+      "B": "refused",
+      "C": "hidden",
+      "D": "destroyed"
+    },
+    "correct": "A",
+    "exp": "Được công nhận rộng rãi: <b>widely recognized as...</b>"
+  },
+  {
+    "num": 32,
+    "topic": "Guided Cloze: Blank (32)",
+    "audio_file": null,
+    "passage": "Water puppetry (Mua roi nuoc) is a uniquely charming traditional Vietnamese art form that originated in the Red River Delta in the eleventh century. In this unique performance, the stage is actually the surface of a liquid (27)________. The puppeteers stand behind a bamboo screen in waist-deep water and (28)________ the wooden puppets using long submerged bamboo rods and string mechanisms. The puppets are carved from light fig wood and painted with glossy waterproof lacquer. The show is always accompanied by live traditional (29)________ music played on drums, wooden bells, horns, and the monochord (Dan Bau). The stories presented in the puppet shows depict rural life, agricultural labor, (30)________ ancient national legends such as King Le Loi returning the magic sword to the Golden Turtle. Today, water puppetry is widely (31)________ as a masterpiece of Vietnamese intangible cultural heritage, attracting millions of local (32)________ and international tourists every year.",
+    "title": "Choose the best option for blank (32):",
+    "options": {
+      "A": "audiences",
+      "B": "enemies",
+      "C": "cooks",
+      "D": "doctors"
+    },
+    "correct": "A",
+    "exp": "Khán giả địa phương: <b>local audiences and international tourists</b>."
+  },
+  {
+    "num": 33,
+    "topic": "Reading Comprehension: Main Idea",
+    "audio_file": null,
+    "passage": "Last week, seventh-grade students from Sunflower Secondary School took part in an exciting experiential field trip to an organic farm and culinary learning center located in the suburbs of Hanoi.<br><br>The primary aim of this educational trip was to provide students with hands-on experience in agricultural science and traditional cooking. In the morning, students visited the vegetable greenhouses where agricultural experts explained the process of growing organic tomatoes, lettuce, and herbs without using harmful chemical fertilizers. Under the guidance of farmers, each student planted five vegetable seeds and learned how drip irrigation systems save water.<br><br>In the afternoon, the students participated in a traditional culinary competition in the farm's open-air kitchen. Divided into groups of five, they used fresh vegetables harvested directly from the garden to cook Vietnamese spring rolls and sweet corn soup. A professional chef tasted each dish and graded the teams based on presentation, taste, and kitchen hygiene.<br><br>This unforgettable field trip not only broadened students' scientific knowledge about sustainable food production but also nurtured teamwork, cooking skills, and a genuine appreciation for the hard work of farmers.",
+    "title": "What is the main topic of the passage?",
+    "options": {
+      "A": "A school experiential field trip combining organic farming and traditional cooking",
+      "B": "How to become a professional chef in luxury hotels",
+      "C": "The history of drip irrigation technology in Europe",
+      "D": "The prices of organic vegetables in Hanoi supermarkets"
+    },
+    "correct": "A",
+    "exp": "Bài đọc kể về chuyến trải nghiệm thực tế bổ ích của học sinh Lớp 7 kết hợp giữa nông nghiệp hữu cơ và kỹ năng nấu ăn truyền thống."
+  },
+  {
+    "num": 34,
+    "topic": "Reading Comprehension: Detail Retrieval",
+    "audio_file": null,
+    "passage": "Last week, seventh-grade students from Sunflower Secondary School took part in an exciting experiential field trip to an organic farm and culinary learning center located in the suburbs of Hanoi.<br><br>The primary aim of this educational trip was to provide students with hands-on experience in agricultural science and traditional cooking. In the morning, students visited the vegetable greenhouses where agricultural experts explained the process of growing organic tomatoes, lettuce, and herbs without using harmful chemical fertilizers. Under the guidance of farmers, each student planted five vegetable seeds and learned how drip irrigation systems save water.<br><br>In the afternoon, the students participated in a traditional culinary competition in the farm's open-air kitchen. Divided into groups of five, they used fresh vegetables harvested directly from the garden to cook Vietnamese spring rolls and sweet corn soup. A professional chef tasted each dish and graded the teams based on presentation, taste, and kitchen hygiene.<br><br>This unforgettable field trip not only broadened students' scientific knowledge about sustainable food production but also nurtured teamwork, cooking skills, and a genuine appreciation for the hard work of farmers.",
+    "title": "What did students do during their morning activity at the organic farm?",
+    "options": {
+      "A": "Planted vegetable seeds and learned about organic farming and drip irrigation",
+      "B": "Painted oil pictures on canvas",
+      "C": "Watched television in the hotel",
+      "D": "Played computer games inside the bus"
+    },
+    "correct": "A",
+    "exp": "Đoạn 2: <i>'...each student planted five vegetable seeds and learned how drip irrigation systems save water.'</i>"
+  },
+  {
+    "num": 35,
+    "topic": "Reading Comprehension: Detail Retrieval",
+    "audio_file": null,
+    "passage": "Last week, seventh-grade students from Sunflower Secondary School took part in an exciting experiential field trip to an organic farm and culinary learning center located in the suburbs of Hanoi.<br><br>The primary aim of this educational trip was to provide students with hands-on experience in agricultural science and traditional cooking. In the morning, students visited the vegetable greenhouses where agricultural experts explained the process of growing organic tomatoes, lettuce, and herbs without using harmful chemical fertilizers. Under the guidance of farmers, each student planted five vegetable seeds and learned how drip irrigation systems save water.<br><br>In the afternoon, the students participated in a traditional culinary competition in the farm's open-air kitchen. Divided into groups of five, they used fresh vegetables harvested directly from the garden to cook Vietnamese spring rolls and sweet corn soup. A professional chef tasted each dish and graded the teams based on presentation, taste, and kitchen hygiene.<br><br>This unforgettable field trip not only broadened students' scientific knowledge about sustainable food production but also nurtured teamwork, cooking skills, and a genuine appreciation for the hard work of farmers.",
+    "title": "What dishes did the student groups cook during the afternoon competition?",
+    "options": {
+      "A": "Vietnamese spring rolls and sweet corn soup",
+      "B": "Hamburgers and fried chips",
+      "C": "Pizza and tomato pasta",
+      "D": "Roast chicken and chocolate cake"
+    },
+    "correct": "A",
+    "exp": "Đoạn 3 chỉ rõ: <i>'...they used fresh vegetables harvested directly from the garden to cook Vietnamese spring rolls and sweet corn soup.'</i>"
+  },
+  {
+    "num": 36,
+    "topic": "Reading Comprehension: Vocabulary in Context",
+    "audio_file": null,
+    "passage": "Last week, seventh-grade students from Sunflower Secondary School took part in an exciting experiential field trip to an organic farm and culinary learning center located in the suburbs of Hanoi.<br><br>The primary aim of this educational trip was to provide students with hands-on experience in agricultural science and traditional cooking. In the morning, students visited the vegetable greenhouses where agricultural experts explained the process of growing organic tomatoes, lettuce, and herbs without using harmful chemical fertilizers. Under the guidance of farmers, each student planted five vegetable seeds and learned how drip irrigation systems save water.<br><br>In the afternoon, the students participated in a traditional culinary competition in the farm's open-air kitchen. Divided into groups of five, they used fresh vegetables harvested directly from the garden to cook Vietnamese spring rolls and sweet corn soup. A professional chef tasted each dish and graded the teams based on presentation, taste, and kitchen hygiene.<br><br>This unforgettable field trip not only broadened students' scientific knowledge about sustainable food production but also nurtured teamwork, cooking skills, and a genuine appreciation for the hard work of farmers.",
+    "title": "The word <b>'culinary'</b> in paragraph 2 is closest in meaning to:",
+    "options": {
+      "A": "connected with cooking and food preparation",
+      "B": "related to mathematics and geometry",
+      "C": "connected with building houses",
+      "D": "related to driving vehicles"
+    },
+    "correct": "A",
+    "exp": "<b>culinary</b> là tính từ thuộc về nấu nướng, ẩm thực: <b>connected with cooking and food preparation</b>."
+  },
+  {
+    "num": 37,
+    "topic": "Reading Comprehension: Criteria for Grading",
+    "audio_file": null,
+    "passage": "Last week, seventh-grade students from Sunflower Secondary School took part in an exciting experiential field trip to an organic farm and culinary learning center located in the suburbs of Hanoi.<br><br>The primary aim of this educational trip was to provide students with hands-on experience in agricultural science and traditional cooking. In the morning, students visited the vegetable greenhouses where agricultural experts explained the process of growing organic tomatoes, lettuce, and herbs without using harmful chemical fertilizers. Under the guidance of farmers, each student planted five vegetable seeds and learned how drip irrigation systems save water.<br><br>In the afternoon, the students participated in a traditional culinary competition in the farm's open-air kitchen. Divided into groups of five, they used fresh vegetables harvested directly from the garden to cook Vietnamese spring rolls and sweet corn soup. A professional chef tasted each dish and graded the teams based on presentation, taste, and kitchen hygiene.<br><br>This unforgettable field trip not only broadened students' scientific knowledge about sustainable food production but also nurtured teamwork, cooking skills, and a genuine appreciation for the hard work of farmers.",
+    "title": "On what criteria did the professional chef grade the cooking teams?",
+    "options": {
+      "A": "Presentation, taste, and kitchen hygiene",
+      "B": "How loudly they sang songs",
+      "C": "The price of the cooking pots",
+      "D": "The number of smartphone photos taken"
+    },
+    "correct": "A",
+    "exp": "Đoạn 3 nêu rõ tiêu chí chấm thi: <i>'...graded the teams based on presentation, taste, and kitchen hygiene.'</i> (Cách trình bày, hương vị và vệ sinh gian bếp)."
+  },
+  {
+    "num": 38,
+    "topic": "Reading Comprehension: Reference Word",
+    "audio_file": null,
+    "passage": "Last week, seventh-grade students from Sunflower Secondary School took part in an exciting experiential field trip to an organic farm and culinary learning center located in the suburbs of Hanoi.<br><br>The primary aim of this educational trip was to provide students with hands-on experience in agricultural science and traditional cooking. In the morning, students visited the vegetable greenhouses where agricultural experts explained the process of growing organic tomatoes, lettuce, and herbs without using harmful chemical fertilizers. Under the guidance of farmers, each student planted five vegetable seeds and learned how drip irrigation systems save water.<br><br>In the afternoon, the students participated in a traditional culinary competition in the farm's open-air kitchen. Divided into groups of five, they used fresh vegetables harvested directly from the garden to cook Vietnamese spring rolls and sweet corn soup. A professional chef tasted each dish and graded the teams based on presentation, taste, and kitchen hygiene.<br><br>This unforgettable field trip not only broadened students' scientific knowledge about sustainable food production but also nurtured teamwork, cooking skills, and a genuine appreciation for the hard work of farmers.",
+    "title": "The word <b>'they'</b> in paragraph 3 refers to:",
+    "options": {
+      "A": "The students in groups of five",
+      "B": "The greenhouse tomatoes",
+      "C": "The chemical fertilizers",
+      "D": "The bus drivers"
+    },
+    "correct": "A",
+    "exp": "Từ <b>'they'</b> trong <i>'Divided into groups of five, they used fresh vegetables...'</i> thay thế cho các nhóm học sinh (*The students in groups of five*)."
+  },
+  {
+    "num": 39,
+    "topic": "Reading Comprehension: Educational Values",
+    "audio_file": null,
+    "passage": "Last week, seventh-grade students from Sunflower Secondary School took part in an exciting experiential field trip to an organic farm and culinary learning center located in the suburbs of Hanoi.<br><br>The primary aim of this educational trip was to provide students with hands-on experience in agricultural science and traditional cooking. In the morning, students visited the vegetable greenhouses where agricultural experts explained the process of growing organic tomatoes, lettuce, and herbs without using harmful chemical fertilizers. Under the guidance of farmers, each student planted five vegetable seeds and learned how drip irrigation systems save water.<br><br>In the afternoon, the students participated in a traditional culinary competition in the farm's open-air kitchen. Divided into groups of five, they used fresh vegetables harvested directly from the garden to cook Vietnamese spring rolls and sweet corn soup. A professional chef tasted each dish and graded the teams based on presentation, taste, and kitchen hygiene.<br><br>This unforgettable field trip not only broadened students' scientific knowledge about sustainable food production but also nurtured teamwork, cooking skills, and a genuine appreciation for the hard work of farmers.",
+    "title": "According to the last paragraph, what positive attitude did students develop after the trip?",
+    "options": {
+      "A": "A genuine appreciation for the hard work of farmers",
+      "B": "A desire to stop eating fresh vegetables",
+      "C": "A refusal to work in groups",
+      "D": "A belief that chemical fertilizers are always best"
+    },
+    "correct": "A",
+    "exp": "Đoạn 4: <i>'...nurtured teamwork, cooking skills, and a genuine appreciation for the hard work of farmers.'</i> (Sự trân trọng chân thành đối với nỗi vất vả của người nông dân)."
+  },
+  {
+    "num": 40,
+    "topic": "Reading Comprehension: Inference",
+    "audio_file": null,
+    "passage": "Last week, seventh-grade students from Sunflower Secondary School took part in an exciting experiential field trip to an organic farm and culinary learning center located in the suburbs of Hanoi.<br><br>The primary aim of this educational trip was to provide students with hands-on experience in agricultural science and traditional cooking. In the morning, students visited the vegetable greenhouses where agricultural experts explained the process of growing organic tomatoes, lettuce, and herbs without using harmful chemical fertilizers. Under the guidance of farmers, each student planted five vegetable seeds and learned how drip irrigation systems save water.<br><br>In the afternoon, the students participated in a traditional culinary competition in the farm's open-air kitchen. Divided into groups of five, they used fresh vegetables harvested directly from the garden to cook Vietnamese spring rolls and sweet corn soup. A professional chef tasted each dish and graded the teams based on presentation, taste, and kitchen hygiene.<br><br>This unforgettable field trip not only broadened students' scientific knowledge about sustainable food production but also nurtured teamwork, cooking skills, and a genuine appreciation for the hard work of farmers.",
+    "title": "What can be concluded about practical experiential field trips?",
+    "options": {
+      "A": "They effectively connect classroom theory with real-life skills and environmental awareness.",
+      "B": "They are only suitable for university professors.",
+      "C": "They are a waste of school time and provide no educational benefit.",
+      "D": "They prevent students from making friends."
+    },
+    "correct": "A",
+    "exp": "Các chuyến đi trải nghiệm thực tế giúp kết nối kiến thức lý thuyết trên lớp với kỹ năng sống và nâng cao ý thức trân trọng môi trường."
+  }
+];
+
+        let currentQIndex = 0;
+        let userAnswers = new Array(QUESTIONS.length).fill(null);
+        let isSubmitted = false;
+        let timerInterval = null;
+        let secondsLeft = 45 * 60;
+        let secondsSpent = 0;
+        let cheatWarnings = 0;
+
+        // Init on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedName = localStorage.getItem('ta7_fullname') || '';
+            const savedClass = localStorage.getItem('ta7_class') || '';
+            if (savedName) document.getElementById('input-fullname').value = savedName;
+            if (savedClass) document.getElementById('input-class').value = savedClass;
+            
+            initPalette();
+            renderQuestion(0);
+        });
+
+        // Anti-Cheat Protection
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if ((e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'u' || e.key === 'a')) || e.key === 'F12') {
+                e.preventDefault();
+            }
+        });
+
+        window.addEventListener('blur', () => {
+            if (!isSubmitted && document.getElementById('modal-start').classList.contains('hidden')) {
+                cheatWarnings++;
+                if (cheatWarnings < 3) {
+                    alert(`CẢNH BÁO GIAN LẬN (${cheatWarnings}/3): Bạn vừa rời khỏi màn hình làm bài! Lần thứ 3 hệ thống sẽ tự động nộp bài.`);
+                } else if (cheatWarnings === 3) {
+                    alert('HỆ THỐNG TỰ ĐỘNG NỘP BÀI: Bạn đã rời khỏi màn hình quá 3 lần quy định!');
+                    submitExam();
+                }
+            }
+        });
+
+        function startExam() {
+            const name = document.getElementById('input-fullname').value.trim();
+            const cls = document.getElementById('input-class').value.trim();
+            if (!name || !cls) {
+                alert('Vui lòng nhập đầy đủ Họ và tên cùng Lớp học!');
+                return;
+            }
+            localStorage.setItem('ta7_fullname', name);
+            localStorage.setItem('ta7_class', cls);
+            
+            document.getElementById('header-student-name').innerText = name;
+            document.getElementById('header-student-class').innerText = cls;
+            document.getElementById('sidebar-student-name').innerText = name;
+            document.getElementById('sidebar-student-class').innerText = cls;
+
+            document.getElementById('modal-start').classList.add('hidden');
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (secondsLeft > 0) {
+                    secondsLeft--;
+                    secondsSpent++;
+                    const m = Math.floor(secondsLeft / 60).toString().padStart(2, '0');
+                    const s = (secondsLeft % 60).toString().padStart(2, '0');
+                    document.getElementById('timer-display').innerText = `${m}:${s}`;
+                } else {
+                    clearInterval(timerInterval);
+                    alert('Hết thời gian làm bài! Hệ thống đang tự động nộp bài...');
+                    submitExam();
+                }
+            }, 1000);
+        }
+
+        function initPalette() {
+            const container = document.getElementById('palette-grid');
+            container.innerHTML = '';
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const btn = document.createElement('button');
+                btn.id = `palette-btn-${i}`;
+                btn.className = 'palette-btn h-8 rounded-lg border border-slate-200 text-xs font-black text-slate-700 hover:bg-slate-100 transition-all';
+                btn.innerText = i + 1;
+                btn.onclick = () => renderQuestion(i);
+                container.appendChild(btn);
+            }
+        }
+
+        function renderQuestion(index) {
+            // Audio Player Visibility (Only show for Listening Questions 1 to 8)
+            const audioCard = document.getElementById('audio-player-card');
+            const audioEl = document.getElementById('exam-audio');
+            if (audioCard) {
+                if (index < 8) {
+                    audioCard.classList.remove('hidden');
+                } else {
+                    audioCard.classList.add('hidden');
+                    if (audioEl && !audioEl.paused) {
+                        audioEl.pause();
+                    }
+                }
+            }
+            currentQIndex = index;
+            const q = QUESTIONS[index];
+
+            // Badge & Topic
+            document.getElementById('q-badge').innerText = `Câu ${q.num} / ${QUESTIONS.length}`;
+            document.getElementById('q-topic').innerText = q.topic;
+
+            // Passage
+            const passContainer = document.getElementById('q-passage-container');
+            if (q.passage) {
+                passContainer.classList.remove('hidden');
+                document.getElementById('q-passage-content').innerHTML = q.passage;
+            } else {
+                passContainer.classList.add('hidden');
+            }
+
+            // Title
+            document.getElementById('q-title').innerHTML = q.title;
+
+            // Options
+            const optsContainer = document.getElementById('q-options');
+            optsContainer.innerHTML = '';
+            
+            const letters = ['A', 'B', 'C', 'D'];
+            letters.forEach(letter => {
+                const optText = q.options[letter];
+                const optBtn = document.createElement('div');
+                optBtn.className = `p-3.5 rounded-xl border text-xs sm:text-sm font-semibold cursor-pointer transition-all flex items-center gap-3 ${
+                    userAnswers[index] === letter 
+                        ? 'border-indigo-600 bg-indigo-50/70 text-indigo-950 ring-2 ring-indigo-500/20' 
+                        : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-800'
+                }`;
+                
+                if (isSubmitted) {
+                    optBtn.classList.remove('cursor-pointer', 'hover:bg-slate-50');
+                    if (letter === q.correct) {
+                        optBtn.className = 'p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-950 text-xs sm:text-sm font-bold flex items-center gap-3';
+                    } else if (userAnswers[index] === letter && letter !== q.correct) {
+                        optBtn.className = 'p-3.5 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-950 text-xs sm:text-sm font-bold flex items-center gap-3';
+                    }
+                } else {
+                    optBtn.onclick = () => selectOption(letter);
+                }
+
+                optBtn.innerHTML = `
+                    <span class="w-6 h-6 rounded-lg ${
+                        userAnswers[index] === letter ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700'
+                    } flex items-center justify-center font-black text-xs shrink-0">${letter}</span>
+                    <span class="flex-1">${optText}</span>
+                `;
+                optsContainer.appendChild(optBtn);
+            });
+
+            // Explanation
+            const expBox = document.getElementById('q-explanation-box');
+            if (isSubmitted) {
+                expBox.classList.remove('hidden');
+                document.getElementById('q-explanation-text').innerHTML = q.exp;
+            } else {
+                expBox.classList.add('hidden');
+            }
+
+            // Palette Active update
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const pBtn = document.getElementById(`palette-btn-${i}`);
+                if (pBtn) {
+                    if (i === index) pBtn.classList.add('ring-2', 'ring-indigo-600');
+                    else pBtn.classList.remove('ring-2', 'ring-indigo-600');
+                }
+            }
+
+            // Prev/Next buttons
+            document.getElementById('btn-prev').disabled = (index === 0);
+            document.getElementById('btn-prev').classList.toggle('opacity-40', index === 0);
+            document.getElementById('btn-next').disabled = (index === QUESTIONS.length - 1);
+            document.getElementById('btn-next').classList.toggle('opacity-40', index === QUESTIONS.length - 1);
+        }
+
+        function selectOption(letter) {
+            if (isSubmitted) return;
+            userAnswers[currentQIndex] = letter;
+            
+            // Update Palette
+            const pBtn = document.getElementById(`palette-btn-${currentQIndex}`);
+            if (pBtn) pBtn.classList.add('answered');
+
+            // Update Progress
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            document.getElementById('progress-text').innerText = `${answeredCount}/${QUESTIONS.length}`;
+            const pct = Math.round((answeredCount / QUESTIONS.length) * 100);
+            document.getElementById('percent-text').innerText = `${pct}%`;
+            document.getElementById('progress-bar-fill').style.width = `${pct}%`;
+
+            renderQuestion(currentQIndex);
+        }
+
+        function prevQuestion() {
+            if (currentQIndex > 0) renderQuestion(currentQIndex - 1);
+        }
+
+        function nextQuestion() {
+            if (currentQIndex < QUESTIONS.length - 1) renderQuestion(currentQIndex + 1);
+        }
+
+        function switchTab(tab) {
+            if (tab === 'theory') {
+                document.getElementById('tab-theory').classList.remove('hidden');
+                document.getElementById('tab-quiz').classList.add('hidden');
+                document.getElementById('tab-btn-theory').classList.add('active');
+                document.getElementById('tab-btn-quiz').classList.remove('active');
+            } else {
+                document.getElementById('tab-theory').classList.add('hidden');
+                document.getElementById('tab-quiz').classList.remove('hidden');
+                document.getElementById('tab-btn-theory').classList.remove('active');
+                document.getElementById('tab-btn-quiz').classList.add('active');
+            }
+        }
+
+        function confirmSubmit() {
+            if (isSubmitted) return;
+            const unanswered = userAnswers.filter(a => a === null).length;
+            if (unanswered > 0) {
+                if (!confirm(`Bạn còn ${unanswered} câu chưa hoàn thành. Bạn có chắc chắn muốn nộp bài ngay không?`)) {
+                    return;
+                }
+            } else {
+                if (!confirm('Bạn đã hoàn thành 40/40 câu hỏi. Bạn có chắc chắn muốn nộp bài để xem kết quả?')) {
+                    return;
+                }
+            }
+            submitExam();
+        }
+
+        function submitExam() {
+            if (isSubmitted) return;
+            isSubmitted = true;
+            clearInterval(timerInterval);
+
+            // Calculate Score
+            let correctCount = 0;
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const pBtn = document.getElementById(`palette-btn-${i}`);
+                if (userAnswers[i] === QUESTIONS[i].correct) {
+                    correctCount++;
+                    if (pBtn) {
+                        pBtn.className = 'palette-btn correct h-8 rounded-lg border text-xs font-black';
+                    }
+                } else {
+                    if (pBtn) {
+                        pBtn.className = 'palette-btn wrong h-8 rounded-lg border text-xs font-black';
+                    }
+                }
+            }
+
+            const rawScore = (correctCount * 10) / QUESTIONS.length;
+            const finalScore = rawScore.toFixed(2);
+
+            const mSpent = Math.floor(secondsSpent / 60).toString().padStart(2, '0');
+            const sSpent = (secondsSpent % 60).toString().padStart(2, '0');
+
+            document.getElementById('result-score').innerHTML = `${finalScore} <span class="text-lg font-bold text-slate-400">/ 10</span>`;
+            document.getElementById('result-correct-count').innerText = `${correctCount} / ${QUESTIONS.length}`;
+            document.getElementById('result-time-spent').innerText = `${mSpent}:${sSpent}`;
+
+            document.getElementById('btn-submit-exam').classList.add('hidden');
+            document.getElementById('review-filter-box').classList.remove('hidden');
+            document.getElementById('modal-result').classList.remove('hidden');
+
+            if (rawScore >= 8.0) {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+
+            // Sync to Google Sheets
+            syncGoogleSheets(finalScore, correctCount, `${mSpent}:${sSpent}`);
+            renderQuestion(currentQIndex);
+        }
+
+        function closeResultModal() {
+            document.getElementById('modal-result').classList.add('hidden');
+        }
+
+        function filterReview(type) {
+            if (type === 'all') {
+                renderQuestion(0);
+            } else if (type === 'wrong') {
+                const wrongIdx = userAnswers.findIndex((ans, idx) => ans !== QUESTIONS[idx].correct);
+                if (wrongIdx !== -1) renderQuestion(wrongIdx);
+                else alert('Chúc mừng! Bạn không làm sai câu nào.');
+            } else if (type === 'correct') {
+                const corrIdx = userAnswers.findIndex((ans, idx) => ans === QUESTIONS[idx].correct);
+                if (corrIdx !== -1) renderQuestion(corrIdx);
+            }
+        }
+
+        function syncGoogleSheets(score, correct, time) {
+            const name = localStorage.getItem('ta7_fullname') || 'Ẩn danh';
+            const cls = localStorage.getItem('ta7_class') || '7';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec';
+
+            const payload = {
+                ho_ten: name,
+                lop: cls,
+                mon_hoc: 'Tiếng Anh 7',
+                ten_bai: 'Review 2 (Units 4-5-6) - Test 1',
+                diem: score,
+                so_cau_dung: `${correct}/${QUESTIONS.length}`,
+                thoi_gian: time,
+                timestamp: new Date().toISOString()
+            };
+
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).catch(err => console.log('Sync note:', err));
+        }
+    </script>
+</body>
+</html>

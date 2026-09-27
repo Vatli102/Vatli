@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review 3 (Units 7 - 8 - 9) - Test 2 | Tiếng Anh 7 Global Success</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            text-align: justify;
+        }
+        .palette-btn.active {
+            border-color: #4f46e5;
+            background-color: #4f46e5;
+            color: #ffffff;
+        }
+        .palette-btn.answered {
+            background-color: #e0e7ff;
+            color: #3730a3;
+            border-color: #c7d2fe;
+        }
+        .palette-btn.wrong {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-color: #fca5a5;
+        }
+        .palette-btn.correct {
+            background-color: #dcfce7;
+            color: #166534;
+            border-color: #86efac;
+        }
+        .tab-btn.active {
+            border-bottom: 3px solid #4f46e5;
+            color: #4f46e5;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between">
+
+    <!-- Modal Nhập Họ Tên Trước Khi Làm Bài -->
+    <div id="modal-start" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 space-y-6 border border-slate-100 transform transition-all text-left">
+            <div class="text-center space-y-2">
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 text-2xl font-black mb-1">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-black text-slate-900">THÔNG TIN HỌC SINH</h3>
+                <p class="text-xs text-slate-500">Đề kiểm tra: <b>Review 3 (Units 7-8-9) — Test 2 (Tiếng Anh 7)</b></p>
+            </div>
+            <div class="space-y-4 text-xs font-semibold">
+                <div>
+                    <label class="block text-slate-700 mb-1.5 font-bold">Họ và tên học sinh <span class="text-rose-500">*</span></label>
+                    <input type="text" id="input-fullname" placeholder="Ví dụ: Vũ Hoàng Long" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium">
+                </div>
+                <div>
+                    <label class="block text-slate-700 mb-1.5 font-bold">Lớp học <span class="text-rose-500">*</span></label>
+                    <input type="text" id="input-class" placeholder="Ví dụ: 7A6" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium">
+                </div>
+            </div>
+            <div class="pt-2">
+                <button onclick="startExam()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-indigo-200 transition-all flex items-center justify-center gap-2">
+                    <span>BẮT ĐẦU LÀM BÀI THI</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="/tienganh/" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-chevron-left text-sm"></i>
+                </a>
+                <div>
+                    <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-indigo-100 text-indigo-800">Review 3 • Test 2</span>
+                    <h1 class="text-sm sm:text-base font-extrabold text-slate-900 leading-tight">Tiếng Anh 7: Tổng ôn Units 7 - 8 - 9</h1>
+                </div>
+            </div>
+
+            <!-- Tab Switcher -->
+            <div class="flex items-center gap-2 sm:gap-6 border-b sm:border-0 border-slate-100 text-xs sm:text-sm font-bold">
+                <button id="tab-btn-theory" onclick="switchTab('theory')" class="tab-btn py-4 px-2 text-slate-500 hover:text-slate-800 transition-all">
+                    <i class="fa-solid fa-book-open mr-1 text-indigo-500"></i> Lý thuyết trọng tâm
+                </button>
+                <button id="tab-btn-quiz" onclick="switchTab('quiz')" class="tab-btn active py-4 px-2 text-indigo-600 transition-all">
+                    <i class="fa-solid fa-pen-to-square mr-1 text-indigo-500"></i> Làm bài tập củng cố
+                </button>
+            </div>
+
+            <!-- Timer / Profile pill -->
+            <div class="hidden sm:flex items-center gap-3">
+                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-black">
+                    <i class="fa-solid fa-clock text-indigo-600"></i>
+                    <span id="timer-display">45:00</span>
+                </div>
+                <div class="text-right">
+                    <div id="header-student-name" class="text-xs font-extrabold text-slate-800">Thí sinh</div>
+                    <div id="header-student-class" class="text-[10px] font-semibold text-slate-500">Lớp 7</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full flex-1">
+        
+        <!-- Tab 1: Lý Thuyết Trọng Tâm -->
+        <section id="tab-theory" class="hidden max-w-5xl mx-auto">
+            
+<div class="theory-container space-y-8 text-slate-800">
+    <div class="bg-gradient-to-r from-indigo-900 via-blue-900 to-slate-900 text-white p-6 rounded-2xl shadow-md">
+        <div class="inline-block px-3 py-1 bg-indigo-500/30 border border-indigo-400/40 rounded-full text-xs font-extrabold uppercase tracking-wider text-indigo-300 mb-2">
+            GLOBAL SUCCESS 7 • TỔNG ÔN TRỌNG TÂM REVIEW 3 (UNITS 7 - 8 - 9)
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black tracking-tight">Lý Thuyết Trọng Tâm: Review 3</h2>
+        <p class="text-indigo-200 text-sm mt-1">Tổng hợp toàn diện kiến thức từ vựng, ngữ pháp, ngữ âm và kỹ năng thực hành của Unit 7 (Traffic), Unit 8 (Films) và Unit 9 (Festivals around the World).</p>
+    </div>
+
+    <!-- 1. TỪ VỰNG & CỤM TỪ TRỌNG TÂM -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">1</span>
+            <h3 class="text-lg font-black text-slate-900">Từ vựng & Cụm từ (Vocabulary & Collocations)</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <h4 class="font-extrabold text-indigo-700 text-sm flex items-center gap-1.5"><i class="fa-solid fa-traffic-light"></i> Unit 7: Traffic</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>traffic jam / congestion</b>: ùn tắc giao thông</li>
+                    <li>• <b>pedestrian</b>: người đi bộ</li>
+                    <li>• <b>zebra crossing</b>: vạch kẻ đường cho người đi bộ</li>
+                    <li>• <b>fasten seatbelt</b>: thắt dây an toàn</li>
+                    <li>• <b>wear a helmet</b>: đội mũ bảo hiểm</li>
+                    <li>• <b>obey traffic rules</b>: tuân thủ luật giao thông</li>
+                    <li>• <b>rush hour</b>: giờ cao điểm</li>
+                </ul>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <h4 class="font-extrabold text-emerald-700 text-sm flex items-center gap-1.5"><i class="fa-solid fa-film"></i> Unit 8: Films</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>documentary / comedy / sci-fi</b>: phim tài liệu / hài / viễn tưởng</li>
+                    <li>• <b>gripping / thrilling</b>: hấp dẫn, lôi cuốn, kịch tính</li>
+                    <li>• <b>hilarious</b>: cực kỳ hài hước, vui nhộn</li>
+                    <li>• <b>terrifying</b>: kinh hãi, đáng sợ (phim kinh dị)</li>
+                    <li>• <b>film critic / review</b>: nhà phê bình / bài đánh giá phim</li>
+                    <li>• <b>director / star in</b>: đạo diễn / đóng vai chính</li>
+                    <li>• <b>box office hit</b>: phim bom tấn phá vỡ phòng vé</li>
+                </ul>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <h4 class="font-extrabold text-amber-700 text-sm flex items-center gap-1.5"><i class="fa-solid fa-champagne-glasses"></i> Unit 9: Festivals</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>take place</b>: diễn ra, được tổ chức</li>
+                    <li>• <b>parade / carnival</b>: diễu hành / lễ hội đường phố</li>
+                    <li>• <b>water fight (Songkran)</b>: lễ hội té nước</li>
+                    <li>• <b>tomato fight (La Tomatina)</b>: lễ hội ném cà chua</li>
+                    <li>• <b>Mid-Autumn Festival</b>: Tết Trung thu (rước đèn, múa lân)</li>
+                    <li>• <b>costume</b>: trang phục lễ hội hóa trang</li>
+                    <li>• <b>feast</b>: bữa tiệc thịnh soạn</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. CẤU TẠO TỪ -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">2</span>
+            <h3 class="text-lg font-black text-slate-900">Cấu tạo từ / Dạng của từ (Word Formation)</h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left text-slate-700 border-collapse">
+                <thead class="bg-indigo-50 text-indigo-900 font-extrabold">
+                    <tr>
+                        <th class="p-2.5 border border-indigo-100">Động từ (Verb)</th>
+                        <th class="p-2.5 border border-indigo-100">Danh từ (Noun)</th>
+                        <th class="p-2.5 border border-indigo-100">Tính từ (Adjective)</th>
+                        <th class="p-2.5 border border-indigo-100">Trạng từ (Adverb)</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    <tr>
+                        <td class="p-2.5 border border-slate-100 font-bold">—</td>
+                        <td class="p-2.5 border border-slate-100"><b>safety</b> (sự an toàn)</td>
+                        <td class="p-2.5 border border-slate-100"><b>safe</b> / <b>unsafe</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>safely</b></td>
+                    </tr>
+                    <tr class="bg-slate-50/50">
+                        <td class="p-2.5 border border-slate-100 font-bold"><b>direct</b> (đạo diễn)</td>
+                        <td class="p-2.5 border border-slate-100"><b>director</b> / <b>direction</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>direct</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>directly</b></td>
+                    </tr>
+                    <tr>
+                        <td class="p-2.5 border border-slate-100 font-bold"><b>perform</b> (biểu diễn)</td>
+                        <td class="p-2.5 border border-slate-100"><b>performance</b> / <b>performer</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>performing</b></td>
+                        <td class="p-2.5 border border-slate-100">—</td>
+                    </tr>
+                    <tr class="bg-slate-50/50">
+                        <td class="p-2.5 border border-slate-100 font-bold"><b>celebrate</b> (kỷ niệm)</td>
+                        <td class="p-2.5 border border-slate-100"><b>celebration</b> / <b>celebrity</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>celebratory</b></td>
+                        <td class="p-2.5 border border-slate-100">—</td>
+                    </tr>
+                    <tr>
+                        <td class="p-2.5 border border-slate-100 font-bold">—</td>
+                        <td class="p-2.5 border border-slate-100"><b>tradition</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>traditional</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>traditionally</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 3. PHÂN BIỆT TỪ DỄ NHẦM LẪN -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">3</span>
+            <h3 class="text-lg font-black text-slate-900">Phân biệt các từ dễ gây nhầm lẫn (Confusing Words)</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200 space-y-1.5">
+                <h4 class="font-extrabold text-amber-900">1. Although / Though vs. However</h4>
+                <p>• <b>Although / Though + Mệnh đề (S + V)</b>: Không có dấu phẩy ngay sau liên từ (<i>Although it rained, we went out.</i>)</p>
+                <p>• <b>However</b>: Thường đứng đầu câu hoặc giữa 2 mệnh đề, luôn đi kèm dấu phẩy (<i>It rained heavily. However, we went out.</i>)</p>
+            </div>
+            <div class="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200 space-y-1.5">
+                <h4 class="font-extrabold text-emerald-900">2. Pedestrian vs. Passenger vs. Driver</h4>
+                <p>• <b>Pedestrian</b>: Người đi bộ trên vỉa hè, qua vạch sang đường.</p>
+                <p>• <b>Passenger</b>: Hành khách đi trên phương tiện giao thông (không trực tiếp điều khiển xe).</p>
+                <p>• <b>Driver / Cyclist</b>: Người trực tiếp điều khiển phương tiện (ô tô, xe máy, xe đạp).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. NGỮ PHÁP TRỌNG TÂM -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">4</span>
+            <h3 class="text-lg font-black text-slate-900">Ngữ pháp trọng tâm (Grammar Focus)</h3>
+        </div>
+        <div class="space-y-4 text-xs">
+            <!-- Grammar 1 -->
+            <div class="p-4 rounded-xl bg-indigo-50/50 border border-indigo-100 space-y-2">
+                <h4 class="font-black text-indigo-900 text-sm">A. Cấu trúc chỉ khoảng cách với "It" & Động từ khuyết thiếu "Should / Shouldn't"</h4>
+                <div class="p-3 bg-white rounded-lg border border-indigo-200 font-mono text-indigo-950 font-bold">
+                    It is about + [Khoảng cách: 2 km / 50 meters] + from [A] to [B].<br>
+                    S + should / shouldn't + V_inf (Khuyên nên / không nên làm gì)
+                </div>
+                <p class="text-slate-600"><i>Ví dụ:</i> <b>It is about</b> 5 kilometers from my home to the cinema. You <b>should wear</b> a helmet when cycling.</p>
+            </div>
+
+            <!-- Grammar 2 -->
+            <div class="p-4 rounded-xl bg-blue-50/50 border border-blue-100 space-y-2">
+                <h4 class="font-black text-blue-900 text-sm">B. Từ nối chỉ sự tương phản (Connectors of Contrast: Although, Though, However)</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>Although / Though / Even though + S + V, S + V</b> (<i>Although he was tired, he finished the film review.</i>)</li>
+                    <li>• <b>S + V. However, S + V</b> (<i>The tickets were expensive. However, the cinema was fully booked.</i>)</li>
+                </ul>
+            </div>
+
+            <!-- Grammar 3 -->
+            <div class="p-4 rounded-xl bg-purple-50/50 border border-purple-100 space-y-2">
+                <h4 class="font-black text-purple-900 text-sm">C. Cấu trúc câu hỏi Yes/No và Wh-questions</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>Yes/No Questions</b>: Trợ động từ (Do/Does/Did/Will/Can) + S + V_inf?</li>
+                    <li>• <b>Wh-questions</b>: Wh-word + Trợ động từ + S + V...? (<i>When does the festival take place? How far is it?</i>)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. NGỮ ÂM -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">5</span>
+            <h3 class="text-lg font-black text-slate-900">Ngữ âm: Quy tắc phát âm trọng tâm Units 7 - 9</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                <h4 class="font-bold text-slate-900 mb-1">Âm /e/ & /eɪ/ (Unit 7)</h4>
+                <p>• <b>/e/</b>: <i>s<u>e</u>atbelt, r<u>e</u>d, h<u>e</u>lmet</i></p>
+                <p>• <b>/eɪ/</b>: <i>p<u>a</u>vement, tr<u>ai</u>n, s<u>a</u>fety</i></p>
+            </div>
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                <h4 class="font-bold text-slate-900 mb-1">Âm /ɪə/ & /eə/ (Unit 8)</h4>
+                <p>• <b>/ɪə/</b>: <i>cl<u>ear</u>, h<u>ear</u>, n<u>ear</u></i></p>
+                <p>• <b>/eə/</b>: <i>c<u>are</u>, sh<u>are</u>, st<u>air</u></i></p>
+            </div>
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                <h4 class="font-bold text-slate-900 mb-1">Trọng âm từ 2 âm tiết (Unit 9)</h4>
+                <p>• <b>Âm tiết 1 (Danh từ / Tính từ)</b>: <i><u>cos</u>tume, <u>hel</u>met, <u>cri</u>tic</i></p>
+                <p>• <b>Âm tiết 2 (Động từ)</b>: <i>pa<u>rade</u>, di<u>rect</u>, o<u>bey</u></i></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nút làm bài tập -->
+    <div class="text-center pt-4 pb-2">
+        <button onclick="switchTab('quiz')" class="px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-extrabold text-sm rounded-xl shadow-md shadow-indigo-200 transition-all transform hover:-translate-y-0.5 inline-flex items-center gap-2">
+            <span>Làm bài tập củng cố</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </button>
+    </div>
+</div>
+
+        </section>
+
+        <!-- Tab 2: Làm Bài Tập Củng Cố (CBT 2-Column Mode) -->
+        <section id="tab-quiz" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Left Column: Single Question Card & Passage Area (8 cols) -->
+            <div class="lg:col-span-8 space-y-4">
+                
+                <!-- Audio Player Widget -->
+                <div id="audio-player-card" class="bg-gradient-to-r from-indigo-900 to-blue-900 text-white rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-cyan-300 text-lg shrink-0">
+                            <i class="fa-solid fa-headphones"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-cyan-300 uppercase tracking-wider">Audio Bài Nghe (Questions 1 - 8)</div>
+                            <div class="text-xs text-slate-200">Listening Part 1 & Part 2 — Voice Chuẩn Bản Ngữ</div>
+                        </div>
+                    </div>
+                    <audio id="exam-audio" controls class="w-full sm:w-72 h-9 rounded-lg outline-none">
+                        <source src="Test 2 - Review 3 - Full Audio Listening.mp3" type="audio/mpeg">
+                        Trình duyệt của bạn không hỗ trợ phát âm thanh.
+                    </audio>
+                </div>
+
+                <!-- Main Question Card -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6 min-h-[420px] flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <div class="flex items-center gap-2">
+                                <span id="q-badge" class="px-3 py-1 rounded-full text-xs font-black bg-indigo-100 text-indigo-800">Câu 1 / 40</span>
+                                <span id="q-topic" class="text-xs font-bold text-slate-500">Listening Part 1</span>
+                            </div>
+                            <span class="text-xs font-extrabold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-100">0.25 điểm</span>
+                        </div>
+
+                        <!-- Passage Box if applicable -->
+                        <div id="q-passage-container" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs sm:text-sm leading-relaxed text-slate-700 max-h-60 overflow-y-auto">
+                            <div id="q-passage-content"></div>
+                        </div>
+
+                        <!-- Question Title -->
+                        <div id="q-title" class="text-sm sm:text-base font-extrabold text-slate-900 leading-relaxed pt-1">
+                            Loading question...
+                        </div>
+
+                        <!-- Options List -->
+                        <div id="q-options" class="space-y-2.5 pt-2">
+                            <!-- Injected by JS -->
+                        </div>
+
+                        <!-- Explanation Area -->
+                        <div id="q-explanation-box" class="hidden bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-xs leading-relaxed text-emerald-950 space-y-1">
+                            <div class="font-bold text-emerald-800 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-check"></i> Lời giải chi tiết:
+                            </div>
+                            <div id="q-explanation-text"></div>
+                        </div>
+                    </div>
+
+                    <!-- Question Navigation Controls -->
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+                        <button onclick="prevQuestion()" id="btn-prev" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-50 transition-colors flex items-center gap-1.5">
+                            <i class="fa-solid fa-arrow-left"></i> <span>Câu trước</span>
+                        </button>
+
+                        <div class="text-xs font-bold text-slate-400">
+                            Tiến độ: <span id="progress-text" class="text-indigo-600 font-black">0/40</span>
+                        </div>
+
+                        <button onclick="nextQuestion()" id="btn-next" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition-colors flex items-center gap-1.5 shadow-sm shadow-indigo-200">
+                            <span>Câu tiếp theo</span> <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Sidebar (Palette & Actions) (4 cols) -->
+            <div class="lg:col-span-4 space-y-4">
+                
+                <!-- Student Card & Submit Button -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Học sinh dự thi</div>
+                            <div id="sidebar-student-name" class="text-sm font-black text-slate-900">Vũ Hoàng Long</div>
+                            <div id="sidebar-student-class" class="text-xs font-semibold text-slate-500">Lớp 7A6</div>
+                        </div>
+                        <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-black text-sm">
+                            7
+                        </div>
+                    </div>
+
+                    <!-- Progress bar -->
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between text-[11px] font-bold text-slate-500">
+                            <span>Đã hoàn thành</span>
+                            <span id="percent-text">0%</span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div id="progress-bar-fill" class="h-full bg-indigo-600 transition-all duration-300 w-0"></div>
+                        </div>
+                    </div>
+
+                    <button onclick="confirmSubmit()" id="btn-submit-exam" class="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-emerald-200 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>NỘP BÀI THI</span>
+                    </button>
+                </div>
+
+                <!-- Palette Grid (40 Questions) -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider">Bảng 40 Câu Hỏi</h4>
+                        <span class="text-[10px] text-slate-400 font-bold">Nhấn số để chuyển câu</span>
+                    </div>
+
+                    <div id="palette-grid" class="grid grid-cols-5 sm:grid-cols-8 lg:grid-cols-5 gap-2 pt-1">
+                        <!-- 40 buttons injected by JS -->
+                    </div>
+
+                    <!-- Review Filter -->
+                    <div id="review-filter-box" class="hidden pt-3 border-t border-slate-100 space-y-2">
+                        <div class="text-[11px] font-bold text-slate-500">Lọc xem kết quả:</div>
+                        <div class="grid grid-cols-3 gap-1.5 text-[10px] font-bold">
+                            <button onclick="filterReview('all')" class="py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">Tất cả</button>
+                            <button onclick="filterReview('wrong')" class="py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 transition-colors">Chỉ câu sai</button>
+                            <button onclick="filterReview('correct')" class="py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 transition-colors">Chỉ câu đúng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Báo Cáo Kết Quả Sau Khi Nộp -->
+    <div id="modal-result" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 space-y-6 border border-slate-100 text-center transform transition-all">
+            <div class="space-y-2">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 text-3xl font-black mb-1">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h3 class="text-2xl font-black text-slate-900">KẾT QUẢ BÀI THI</h3>
+                <p class="text-xs text-slate-500">Review 3 (Units 7-8-9) — Test 2 (Tiếng Anh 7 Global Success)</p>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-indigo-50 border border-indigo-100 space-y-3">
+                <div class="text-4xl sm:text-5xl font-black text-indigo-700" id="result-score">
+                    0.0 <span class="text-lg font-bold text-slate-400">/ 10</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs font-bold text-slate-700 pt-2 border-t border-indigo-200/60">
+                    <div>Số câu đúng: <span id="result-correct-count" class="text-emerald-600 font-extrabold text-sm">0/40</span></div>
+                    <div>Thời gian: <span id="result-time-spent" class="text-indigo-600 font-extrabold text-sm">00:00</span></div>
+                </div>
+            </div>
+
+            <p id="result-feedback" class="text-xs font-semibold text-slate-600">
+                Chúc mừng bạn đã hoàn thành bài kiểm tra! Toàn bộ lời giải chi tiết đã được mở khóa.
+            </p>
+
+            <div class="flex gap-3">
+                <button onclick="closeResultModal()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-indigo-200 transition-all">
+                    XEM LỜI GIẢI CHI TIẾT
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Logic -->
+    <script>
+        const QUESTIONS = [
+  {
+    "num": 1,
+    "topic": "Listening Part 1: Traffic Safety Workshop",
+    "audio_file": "Test 2 - Review 3 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What did the traffic police officer remind students to do when riding electric bikes?",
+    "options": {
+      "A": "Wear standard helmets",
+      "B": "Listen to music through headphones",
+      "C": "Ride on the left side of the road",
+      "D": "Carry three passengers"
+    },
+    "correct": "A",
+    "exp": "Trong bài nghe, Phong nói: <i>'He reminded us that all students must wear standard helmets when riding electric bikes.'</i> (Đội mũ bảo hiểm đạt chuẩn)."
+  },
+  {
+    "num": 2,
+    "topic": "Listening Part 1: Road Safety Rules",
+    "audio_file": "Test 2 - Review 3 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What dangerous traffic behavior does Emma warn students to avoid?",
+    "options": {
+      "A": "Riding abreast or crossing busy streets carelessly",
+      "B": "Walking on pedestrian pavements",
+      "C": "Stopping at red traffic lights",
+      "D": "Wearing bright clothes at night"
+    },
+    "correct": "A",
+    "exp": "Emma nhắc nhở: <i>'We should also never ride abreast or cross busy streets carelessly.'</i> (Không đi xe hàng ngang hoặc qua đường bất cẩn)."
+  },
+  {
+    "num": 3,
+    "topic": "Listening Part 1: Festival Lantern",
+    "audio_file": "Test 2 - Review 3 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What kind of lantern did Phong's younger sister make for the parade?",
+    "options": {
+      "A": "A star lantern",
+      "B": "A huge dragon lantern",
+      "C": "A fish lantern",
+      "D": "A flower lantern"
+    },
+    "correct": "B",
+    "exp": "Phong chia sẻ: <i>'My younger sister made a huge dragon lantern with colored paper and bamboo sticks.'</i> (Đèn rồng khổng lồ)."
+  },
+  {
+    "num": 4,
+    "topic": "Listening Part 1: Performance Schedule",
+    "audio_file": "Test 2 - Review 3 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What time will the lion dance performance begin in the central square?",
+    "options": {
+      "A": "At six o'clock",
+      "B": "At seven o'clock",
+      "C": "At eight o'clock",
+      "D": "At nine o'clock"
+    },
+    "correct": "B",
+    "exp": "Phong nêu rõ: <i>'The lion dance and folk drum performance will begin at seven o'clock in the central square.'</i> (Lúc 7 giờ tối)."
+  },
+  {
+    "num": 5,
+    "topic": "Listening Part 2: Documentary Title & Director",
+    "audio_file": "Test 2 - Review 3 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "Who directed the documentary 'Guardians of the Deep Blue'?",
+    "options": {
+      "A": "Marine biologist Robert Davies",
+      "B": "Walt Disney",
+      "C": "James Cameron",
+      "D": "Steven Spielberg"
+    },
+    "correct": "A",
+    "exp": "Người nói giới thiệu: <i>'...directed by famous marine biologist Robert Davies.'</i>"
+  },
+  {
+    "num": 6,
+    "topic": "Listening Part 2: Film Production",
+    "audio_file": "Test 2 - Review 3 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "How long did it take the production crew to film the documentary across five oceans?",
+    "options": {
+      "A": "Six months",
+      "B": "One year",
+      "C": "Three years",
+      "D": "Five years"
+    },
+    "correct": "C",
+    "exp": "Trong bài nghe: <i>'Filmed across five oceans over three years...'</i> (Ghi hình qua 5 đại dương trong hơn 3 năm)."
+  },
+  {
+    "num": 7,
+    "topic": "Listening Part 2: Environmental Threats",
+    "audio_file": "Test 2 - Review 3 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What serious threats to coral reefs does the film reveal?",
+    "options": {
+      "A": "Plastic pollution and illegal fishing",
+      "B": "Forest fires and air pollution",
+      "C": "Space debris and meteors",
+      "D": "Heavy snowstorms"
+    },
+    "correct": "A",
+    "exp": "Người nói chỉ rõ: <i>'...the serious threats posed by plastic pollution and illegal fishing.'</i> (Ô nhiễm rác thải nhựa và đánh bắt trái phép)."
+  },
+  {
+    "num": 8,
+    "topic": "Listening Part 2: Film Evaluation",
+    "audio_file": "Test 2 - Review 3 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "How is the documentary evaluated by audiences and film critics?",
+    "options": {
+      "A": "As a must-see documentary with an urgent message and stunning cinematography",
+      "B": "As a boring commercial movie with bad acting",
+      "C": "As too terrifying for anyone to watch",
+      "D": "As an outdated black-and-white film"
+    },
+    "correct": "A",
+    "exp": "Người nói kết luận: <i>'It is truly a must-see documentary for audiences of all ages.'</i>"
+  },
+  {
+    "num": 9,
+    "topic": "Pronunciation: Sound /e/ vs /eɪ/",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose underlined part is pronounced differently from the others.",
+    "options": {
+      "A": "st<u>a</u>tion",
+      "B": "p<u>a</u>vement",
+      "C": "h<u>e</u>lmet",
+      "D": "w<u>a</u>y"
+    },
+    "correct": "C",
+    "exp": "<b>helmet</b> có âm /e/ (/ˈhelmɪt/). Các từ <b>station</b>, <b>pavement</b>, <b>way</b> đều chứa nguyên âm đôi /eɪ/ (/ˈsteɪʃn/, /ˈpeɪvmənt/, /weɪ/)."
+  },
+  {
+    "num": 10,
+    "topic": "Pronunciation: Sound /ɪə/ vs /eə/",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose underlined part is pronounced differently from the others.",
+    "options": {
+      "A": "sh<u>are</u>",
+      "B": "st<u>air</u>",
+      "C": "f<u>air</u>",
+      "D": "y<u>ear</u>"
+    },
+    "correct": "D",
+    "exp": "<b>year</b> phát âm là âm /ɪə/ (/jɪə/). Các từ <b>share</b>, <b>stair</b>, <b>fair</b> đều phát âm là âm /eə/ (/ʃeə/, /steə/, /feə/)."
+  },
+  {
+    "num": 11,
+    "topic": "Word Stress: Two-syllable Words",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose primary stress is positioned differently from the others.",
+    "options": {
+      "A": "review",
+      "B": "traffic",
+      "C": "ending",
+      "D": "pumpkin"
+    },
+    "correct": "A",
+    "exp": "<b>review</b> có trọng âm rơi vào âm tiết 2 (/rɪˈvjuː/). Các từ <b>traffic</b> (/ˈtræfɪk/), <b>ending</b> (/ˈendɪŋ/), <b>pumpkin</b> (/ˈpʌmpkɪn/) đều có trọng âm rơi vào âm tiết 1."
+  },
+  {
+    "num": 12,
+    "topic": "Word Stress: Verb vs Noun Pattern",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose primary stress is positioned differently from the others.",
+    "options": {
+      "A": "celebrate",
+      "B": "documentary",
+      "C": "parade",
+      "D": "passenger"
+    },
+    "correct": "C",
+    "exp": "<b>parade</b> có trọng âm rơi vào âm tiết thứ 2 (/pəˈreɪd/). Các từ <b>celebrate</b> (/ˈselɪbreɪt/) và <b>passenger</b> (/ˈpæsɪndʒə/) đều có trọng âm rơi vào âm tiết 1."
+  },
+  {
+    "num": 13,
+    "topic": "Grammar: It indicating distance",
+    "audio_file": null,
+    "passage": null,
+    "title": "How far is ________ from your apartment to the city cinema?",
+    "options": {
+      "A": "it",
+      "B": "there",
+      "C": "this",
+      "D": "that"
+    },
+    "correct": "A",
+    "exp": "Mẫu câu hỏi khoảng cách chuẩn: <i>How far is it from A to B?</i>. Do đó chọn <b>it</b>."
+  },
+  {
+    "num": 14,
+    "topic": "Grammar: Modal verb Should / Shouldn't for advice",
+    "audio_file": null,
+    "passage": null,
+    "title": "Pedestrians ________ always look both ways carefully before stepping off the pavement.",
+    "options": {
+      "A": "should",
+      "B": "shouldn't",
+      "C": "mustn't",
+      "D": "cannot"
+    },
+    "correct": "A",
+    "exp": "Lời khuyên an toàn: Người đi bộ <i>nên</i> nhìn cả hai phía cẩn thận trước khi bước xuống lòng đường: <b>should</b>."
+  },
+  {
+    "num": 15,
+    "topic": "Grammar: Connector of contrast (Although)",
+    "audio_file": null,
+    "passage": null,
+    "title": "________ the horror movie was terrifying, my friends and I enjoyed every minute of it.",
+    "options": {
+      "A": "Although",
+      "B": "However",
+      "C": "Because",
+      "D": "Despite of"
+    },
+    "correct": "A",
+    "exp": "Liên từ chỉ sự nhượng bộ đứng trước mệnh đề S + V: <b>Although</b> (Mặc dù bộ phim kinh dị rất đáng sợ...)."
+  },
+  {
+    "num": 16,
+    "topic": "Grammar: Connector of contrast (However)",
+    "audio_file": null,
+    "passage": null,
+    "title": "The festival was crowded with thousands of tourists. ________, the organizers maintained excellent public order.",
+    "options": {
+      "A": "However",
+      "B": "Although",
+      "C": "Because",
+      "D": "So"
+    },
+    "correct": "A",
+    "exp": "Trạng từ liên kết đứng sau dấu chấm và trước dấu phẩy: <b>However</b> (Tuy nhiên, ban tổ chức vẫn duy trì trật tự công cộng rất tốt)."
+  },
+  {
+    "num": 17,
+    "topic": "Grammar: Wh-question Formation",
+    "audio_file": null,
+    "passage": null,
+    "title": "— '________ does the Cannes Film Festival take place every year?' — 'In May.'",
+    "options": {
+      "A": "When",
+      "B": "Where",
+      "C": "How",
+      "D": "Why"
+    },
+    "correct": "A",
+    "exp": "Câu trả lời chỉ thời gian (In May) -> câu hỏi dùng từ để hỏi: <b>When</b>."
+  },
+  {
+    "num": 18,
+    "topic": "Vocabulary: Traffic Collocations",
+    "audio_file": null,
+    "passage": null,
+    "title": "During morning rush hour, severe traffic ________ often occur along major ring roads.",
+    "options": {
+      "A": "jams",
+      "B": "helmets",
+      "C": "critics",
+      "D": "lanterns"
+    },
+    "correct": "A",
+    "exp": "Cụm danh từ Unit 7: <b>traffic jams / congestions</b> (ùn tắc giao thông vào giờ cao điểm)."
+  },
+  {
+    "num": 19,
+    "topic": "Confusing Words: Costume vs Custom vs Habit",
+    "audio_file": null,
+    "passage": null,
+    "title": "Dancers in the carnival parade wore dazzling colorful ________ with feathers and sparkling glitter.",
+    "options": {
+      "A": "costumes",
+      "B": "customs",
+      "C": "habits",
+      "D": "helmets"
+    },
+    "correct": "A",
+    "exp": "<b>costume</b> (trang phục lễ hội, quần áo hóa trang), khác với <i>custom</i> (phong tục tập quán) hay <i>habit</i> (thói quen cá nhân)."
+  },
+  {
+    "num": 20,
+    "topic": "Word Formation: Celebrate (v) -> Celebration (n)",
+    "audio_file": null,
+    "passage": null,
+    "title": "The annual Mid-Autumn ________ brings endless joy, sweet mooncakes, and laughter to children.",
+    "options": {
+      "A": "celebration",
+      "B": "celebrate",
+      "C": "celebrated",
+      "D": "celebratory"
+    },
+    "correct": "A",
+    "exp": "Vị trí sau cụm danh từ cần danh từ chỉ sự kỷ niệm / lễ kỷ niệm: <b>celebration</b>."
+  },
+  {
+    "num": 21,
+    "topic": "Vocabulary: Film Industry",
+    "audio_file": null,
+    "passage": null,
+    "title": "The leading actor gave a breathtaking performance and received a standing ovation at the film's ________.",
+    "options": {
+      "A": "premiere",
+      "B": "pavement",
+      "C": "seatbelt",
+      "D": "pedestrian"
+    },
+    "correct": "A",
+    "exp": "Thuật ngữ điện ảnh: <b>film premiere</b> (buổi công chiếu ra mắt đầu tiên của bộ phim)."
+  },
+  {
+    "num": 22,
+    "topic": "Vocabulary: Road Safety Signs",
+    "audio_file": null,
+    "passage": null,
+    "title": "Motorists who run red lights or exceed the speed limit will face heavy financial ________.",
+    "options": {
+      "A": "fines",
+      "B": "parades",
+      "C": "critics",
+      "D": "lanterns"
+    },
+    "correct": "A",
+    "exp": "Từ vựng Unit 7: <b>financial fines</b> (các khoản tiền phạt vi phạm giao thông)."
+  },
+  {
+    "num": 23,
+    "topic": "Communication: Expressing Film Preference",
+    "audio_file": null,
+    "passage": null,
+    "title": "Jenny: 'What genre of movies do you prefer watching?' - Tom: '________'",
+    "options": {
+      "A": "I really love science-fiction films because they depict futuristic space technologies.",
+      "B": "You should wear a helmet when cycling.",
+      "C": "It is about three kilometers from here.",
+      "D": "Turn right at the zebra crossing."
+    },
+    "correct": "A",
+    "exp": "Mẫu câu bày tỏ sở thích thể loại phim: <i>'I really love science-fiction films because they depict futuristic space technologies.'</i>"
+  },
+  {
+    "num": 24,
+    "topic": "Communication: Asking for Festival Information",
+    "audio_file": null,
+    "passage": null,
+    "title": "Tourist: 'Excuse me, where can I watch the dragon boat race tomorrow?' - Local: '________'",
+    "options": {
+      "A": "The race will take place along the Huong River starting at 8:00 a.m.",
+      "B": "I like eating sweet mooncakes.",
+      "C": "The animated film is 90 minutes long.",
+      "D": "Always obey traffic police instructions."
+    },
+    "correct": "A",
+    "exp": "Chỉ dẫn địa điểm và thời gian diễn ra lễ hội một cách lịch sự, chính xác: <i>'The race will take place along the Huong River starting at 8:00 a.m.'</i>"
+  },
+  {
+    "num": 25,
+    "topic": "Public Notice: Road Work Ahead Notice",
+    "audio_file": null,
+    "passage": null,
+    "title": "What does this traffic warning notice mean?<br><div style='background:#fefce8; border:2px dashed #ca8a04; padding:10px; border-radius:8px; margin:8px 0; font-family:sans-serif;'><b>ATTENTION MOTORISTS: ROAD RESURFACING IN PROGRESS</b><br>Single lane traffic only. Maximum speed limit 20 km/h. Expect minor delays.</div>",
+    "options": {
+      "A": "Drivers must slow down to 20 km/h and use a single lane due to road repairs.",
+      "B": "The road is completely closed for all vehicles permanently.",
+      "C": "Motorists can drive at 100 km/h.",
+      "D": "Pedestrians must run across the road."
+    },
+    "correct": "A",
+    "exp": "Thông báo thi công mặt đường yêu cầu giảm tốc độ tối đa 20 km/h và chỉ đi một làn đường."
+  },
+  {
+    "num": 26,
+    "topic": "Public Sign: Compulsory Helmet Road Sign",
+    "audio_file": null,
+    "passage": null,
+    "title": "What is the mandatory requirement indicated by this road sign?<br><div style='background:#eff6ff; border:2px solid #2563eb; padding:10px; border-radius:8px; margin:8px 0; font-family:sans-serif; text-align:center;'><b>MANDATORY: MOTORBIKE & E-BIKE RIDERS MUST WEAR SAFETY HELMETS</b></div>",
+    "options": {
+      "A": "All motorbike and electric bicycle riders must wear helmets by law.",
+      "B": "Riders are free to choose whether to wear a helmet or not.",
+      "C": "Helmets are being given away for free here.",
+      "D": "Only cars are allowed to enter this street."
+    },
+    "correct": "A",
+    "exp": "Biển báo quy định bắt buộc (*mandatory*) người đi xe máy và xe đạp điện phải đội mũ bảo hiểm theo luật định."
+  },
+  {
+    "num": 27,
+    "topic": "Guided Cloze: Promoting Safe and Green Transport",
+    "audio_file": null,
+    "passage": "In many modern urban cities, traffic congestion and road accidents are significant challenges. To tackle these issues, local governments are actively promoting green transport (27)________ among secondary school students. Riding bicycles or walking to school not only reduces greenhouse gas emissions but also helps teenagers (28)________ fit and healthy. However, road safety must always be the top (29)________. Students must strictly (30)________ traffic lights and always cross busy streets at designated zebra crossings. When riding bicycles, they should wear protective helmets and install reflective lights for night riding. Furthermore, teenagers (31)________ never use mobile phones while cycling. By practicing responsible road habits, young citizens (32)________ contribute to building safer and greener cities for everyone.",
+    "title": "Choose the best option for blank (27):",
+    "options": {
+      "A": "habits",
+      "B": "critics",
+      "C": "reviews",
+      "D": "plots"
+    },
+    "correct": "A",
+    "exp": "Thói quen di chuyển xanh: <b>green transport habits</b>."
+  },
+  {
+    "num": 28,
+    "topic": "Guided Cloze: Blank (28)",
+    "audio_file": null,
+    "passage": "In many modern urban cities, traffic congestion and road accidents are significant challenges. To tackle these issues, local governments are actively promoting green transport (27)________ among secondary school students. Riding bicycles or walking to school not only reduces greenhouse gas emissions but also helps teenagers (28)________ fit and healthy. However, road safety must always be the top (29)________. Students must strictly (30)________ traffic lights and always cross busy streets at designated zebra crossings. When riding bicycles, they should wear protective helmets and install reflective lights for night riding. Furthermore, teenagers (31)________ never use mobile phones while cycling. By practicing responsible road habits, young citizens (32)________ contribute to building safer and greener cities for everyone.",
+    "title": "Choose the best option for blank (28):",
+    "options": {
+      "A": "stay",
+      "B": "break",
+      "C": "lose",
+      "D": "damage"
+    },
+    "correct": "A",
+    "exp": "Cụm từ: <b>stay fit and healthy</b> (giữ thể lực săn chắc và khỏe mạnh)."
+  },
+  {
+    "num": 29,
+    "topic": "Guided Cloze: Blank (29)",
+    "audio_file": null,
+    "passage": "In many modern urban cities, traffic congestion and road accidents are significant challenges. To tackle these issues, local governments are actively promoting green transport (27)________ among secondary school students. Riding bicycles or walking to school not only reduces greenhouse gas emissions but also helps teenagers (28)________ fit and healthy. However, road safety must always be the top (29)________. Students must strictly (30)________ traffic lights and always cross busy streets at designated zebra crossings. When riding bicycles, they should wear protective helmets and install reflective lights for night riding. Furthermore, teenagers (31)________ never use mobile phones while cycling. By practicing responsible road habits, young citizens (32)________ contribute to building safer and greener cities for everyone.",
+    "title": "Choose the best option for blank (29):",
+    "options": {
+      "A": "priority",
+      "B": "danger",
+      "C": "threat",
+      "D": "fine"
+    },
+    "correct": "A",
+    "exp": "Cụm danh từ: <b>top priority</b> (ưu tiên hàng đầu)."
+  },
+  {
+    "num": 30,
+    "topic": "Guided Cloze: Blank (30)",
+    "audio_file": null,
+    "passage": "In many modern urban cities, traffic congestion and road accidents are significant challenges. To tackle these issues, local governments are actively promoting green transport (27)________ among secondary school students. Riding bicycles or walking to school not only reduces greenhouse gas emissions but also helps teenagers (28)________ fit and healthy. However, road safety must always be the top (29)________. Students must strictly (30)________ traffic lights and always cross busy streets at designated zebra crossings. When riding bicycles, they should wear protective helmets and install reflective lights for night riding. Furthermore, teenagers (31)________ never use mobile phones while cycling. By practicing responsible road habits, young citizens (32)________ contribute to building safer and greener cities for everyone.",
+    "title": "Choose the best option for blank (30):",
+    "options": {
+      "A": "obey",
+      "B": "break",
+      "C": "ignore",
+      "D": "refuse"
+    },
+    "correct": "A",
+    "exp": "Tuân thủ tín hiệu đèn giao thông: <b>strictly obey traffic lights</b>."
+  },
+  {
+    "num": 31,
+    "topic": "Guided Cloze: Blank (31)",
+    "audio_file": null,
+    "passage": "In many modern urban cities, traffic congestion and road accidents are significant challenges. To tackle these issues, local governments are actively promoting green transport (27)________ among secondary school students. Riding bicycles or walking to school not only reduces greenhouse gas emissions but also helps teenagers (28)________ fit and healthy. However, road safety must always be the top (29)________. Students must strictly (30)________ traffic lights and always cross busy streets at designated zebra crossings. When riding bicycles, they should wear protective helmets and install reflective lights for night riding. Furthermore, teenagers (31)________ never use mobile phones while cycling. By practicing responsible road habits, young citizens (32)________ contribute to building safer and greener cities for everyone.",
+    "title": "Choose the best option for blank (31):",
+    "options": {
+      "A": "should",
+      "B": "shouldn't",
+      "C": "mustn't",
+      "D": "cannot"
+    },
+    "correct": "A",
+    "exp": "Cấu trúc với <i>never</i> mang nghĩa phủ định: <i>should never use mobile phones</i> (tuyệt đối không bao giờ nên dùng điện thoại khi lái xe)."
+  },
+  {
+    "num": 32,
+    "topic": "Guided Cloze: Blank (32)",
+    "audio_file": null,
+    "passage": "In many modern urban cities, traffic congestion and road accidents are significant challenges. To tackle these issues, local governments are actively promoting green transport (27)________ among secondary school students. Riding bicycles or walking to school not only reduces greenhouse gas emissions but also helps teenagers (28)________ fit and healthy. However, road safety must always be the top (29)________. Students must strictly (30)________ traffic lights and always cross busy streets at designated zebra crossings. When riding bicycles, they should wear protective helmets and install reflective lights for night riding. Furthermore, teenagers (31)________ never use mobile phones while cycling. By practicing responsible road habits, young citizens (32)________ contribute to building safer and greener cities for everyone.",
+    "title": "Choose the best option for blank (32):",
+    "options": {
+      "A": "can",
+      "B": "must not",
+      "C": "should not",
+      "D": "cannot"
+    },
+    "correct": "A",
+    "exp": "Động từ khuyết thiếu diễn tả khả năng tích cực: <b>can contribute to...</b> (có thể đóng góp vào việc xây dựng thành phố an toàn và xanh hơn)."
+  },
+  {
+    "num": 33,
+    "topic": "Reading Comprehension: Main Idea",
+    "audio_file": null,
+    "passage": "The Rio Carnival in Rio de Janeiro, Brazil, is universally acclaimed as the most spectacular and vibrant cultural festival on the planet. Held annually before the Christian period of Lent, this five-day festival attracts over two million revelers per day onto the sun-drenched streets of Rio.<br><br>The absolute pinnacle of the celebration takes place inside the Sambadrome, a purpose-built stadium designed by famed architect Oscar Niemeyer. Here, top samba schools compete in grandiose parades featuring colossal themed floats, thousands of dancers in dazzling sequined costumes, and electrifying percussion ensembles called 'baterias'. Each samba school spends up to an entire year preparing its original theme song, choreography, and elaborate costumes to impress strict panel judges.<br><br>Beyond the Sambadrome, hundreds of spontaneous street parties known as 'blocos' fill every neighborhood. People of all backgrounds dance the samba, sing festive anthems, and share traditional Brazilian street foods like coxinha and grilled cheese.<br><br>The Rio Carnival is much more than mere merrymaking; it represents a magnificent fusion of Afro-Brazilian cultural heritage, community solidarity, and creative artistic expression.",
+    "title": "What is the main topic of the passage?",
+    "options": {
+      "A": "The grandeur, cultural heritage, and vibrant traditions of the Rio Carnival",
+      "B": "The architectural history of stadium design in Brazil",
+      "C": "How to make traditional coxinha pastries",
+      "D": "The rules of percussion drumming in music schools"
+    },
+    "correct": "A",
+    "exp": "Bài đọc giới thiệu toàn diện sự hoành tráng, nét đẹp di sản văn hóa và các hoạt động diễu hành rực rỡ của lễ hội Rio Carnival tại Brazil."
+  },
+  {
+    "num": 34,
+    "topic": "Reading Comprehension: Detail Retrieval",
+    "audio_file": null,
+    "passage": "The Rio Carnival in Rio de Janeiro, Brazil, is universally acclaimed as the most spectacular and vibrant cultural festival on the planet. Held annually before the Christian period of Lent, this five-day festival attracts over two million revelers per day onto the sun-drenched streets of Rio.<br><br>The absolute pinnacle of the celebration takes place inside the Sambadrome, a purpose-built stadium designed by famed architect Oscar Niemeyer. Here, top samba schools compete in grandiose parades featuring colossal themed floats, thousands of dancers in dazzling sequined costumes, and electrifying percussion ensembles called 'baterias'. Each samba school spends up to an entire year preparing its original theme song, choreography, and elaborate costumes to impress strict panel judges.<br><br>Beyond the Sambadrome, hundreds of spontaneous street parties known as 'blocos' fill every neighborhood. People of all backgrounds dance the samba, sing festive anthems, and share traditional Brazilian street foods like coxinha and grilled cheese.<br><br>The Rio Carnival is much more than mere merrymaking; it represents a magnificent fusion of Afro-Brazilian cultural heritage, community solidarity, and creative artistic expression.",
+    "title": "Where does the main samba school competition take place during the carnival?",
+    "options": {
+      "A": "Inside the Sambadrome stadium",
+      "B": "In an underground railway station",
+      "C": "Inside a cinema theatre",
+      "D": "In a hospital courtyard"
+    },
+    "correct": "A",
+    "exp": "Đoạn 2 chỉ rõ: <i>'The absolute pinnacle of the celebration takes place inside the Sambadrome...'</i>"
+  },
+  {
+    "num": 35,
+    "topic": "Reading Comprehension: Detail Retrieval",
+    "audio_file": null,
+    "passage": "The Rio Carnival in Rio de Janeiro, Brazil, is universally acclaimed as the most spectacular and vibrant cultural festival on the planet. Held annually before the Christian period of Lent, this five-day festival attracts over two million revelers per day onto the sun-drenched streets of Rio.<br><br>The absolute pinnacle of the celebration takes place inside the Sambadrome, a purpose-built stadium designed by famed architect Oscar Niemeyer. Here, top samba schools compete in grandiose parades featuring colossal themed floats, thousands of dancers in dazzling sequined costumes, and electrifying percussion ensembles called 'baterias'. Each samba school spends up to an entire year preparing its original theme song, choreography, and elaborate costumes to impress strict panel judges.<br><br>Beyond the Sambadrome, hundreds of spontaneous street parties known as 'blocos' fill every neighborhood. People of all backgrounds dance the samba, sing festive anthems, and share traditional Brazilian street foods like coxinha and grilled cheese.<br><br>The Rio Carnival is much more than mere merrymaking; it represents a magnificent fusion of Afro-Brazilian cultural heritage, community solidarity, and creative artistic expression.",
+    "title": "How long does each samba school spend preparing for the annual carnival parade?",
+    "options": {
+      "A": "Two days",
+      "B": "One month",
+      "C": "Up to an entire year",
+      "D": "Ten years"
+    },
+    "correct": "C",
+    "exp": "Đoạn 2: <i>'Each samba school spends up to an entire year preparing its original theme song...'</i> (Lên đến cả một năm trời)."
+  },
+  {
+    "num": 36,
+    "topic": "Reading Comprehension: Vocabulary in Context",
+    "audio_file": null,
+    "passage": "The Rio Carnival in Rio de Janeiro, Brazil, is universally acclaimed as the most spectacular and vibrant cultural festival on the planet. Held annually before the Christian period of Lent, this five-day festival attracts over two million revelers per day onto the sun-drenched streets of Rio.<br><br>The absolute pinnacle of the celebration takes place inside the Sambadrome, a purpose-built stadium designed by famed architect Oscar Niemeyer. Here, top samba schools compete in grandiose parades featuring colossal themed floats, thousands of dancers in dazzling sequined costumes, and electrifying percussion ensembles called 'baterias'. Each samba school spends up to an entire year preparing its original theme song, choreography, and elaborate costumes to impress strict panel judges.<br><br>Beyond the Sambadrome, hundreds of spontaneous street parties known as 'blocos' fill every neighborhood. People of all backgrounds dance the samba, sing festive anthems, and share traditional Brazilian street foods like coxinha and grilled cheese.<br><br>The Rio Carnival is much more than mere merrymaking; it represents a magnificent fusion of Afro-Brazilian cultural heritage, community solidarity, and creative artistic expression.",
+    "title": "The word <b>'colossal'</b> in paragraph 2 is closest in meaning to:",
+    "options": {
+      "A": "extremely huge and impressive",
+      "B": "tiny and microscopic",
+      "C": "broken and dangerous",
+      "D": "silent and dark"
+    },
+    "correct": "A",
+    "exp": "<b>colossal</b> mang nghĩa khổng lồ, đồ sộ và kỳ vĩ: <b>extremely huge and impressive</b>."
+  },
+  {
+    "num": 37,
+    "topic": "Reading Comprehension: Street Parties",
+    "audio_file": null,
+    "passage": "The Rio Carnival in Rio de Janeiro, Brazil, is universally acclaimed as the most spectacular and vibrant cultural festival on the planet. Held annually before the Christian period of Lent, this five-day festival attracts over two million revelers per day onto the sun-drenched streets of Rio.<br><br>The absolute pinnacle of the celebration takes place inside the Sambadrome, a purpose-built stadium designed by famed architect Oscar Niemeyer. Here, top samba schools compete in grandiose parades featuring colossal themed floats, thousands of dancers in dazzling sequined costumes, and electrifying percussion ensembles called 'baterias'. Each samba school spends up to an entire year preparing its original theme song, choreography, and elaborate costumes to impress strict panel judges.<br><br>Beyond the Sambadrome, hundreds of spontaneous street parties known as 'blocos' fill every neighborhood. People of all backgrounds dance the samba, sing festive anthems, and share traditional Brazilian street foods like coxinha and grilled cheese.<br><br>The Rio Carnival is much more than mere merrymaking; it represents a magnificent fusion of Afro-Brazilian cultural heritage, community solidarity, and creative artistic expression.",
+    "title": "What are the spontaneous neighborhood street parties in Rio called?",
+    "options": {
+      "A": "Blocos",
+      "B": "Baterias",
+      "C": "Sambadromes",
+      "D": "Celluloids"
+    },
+    "correct": "A",
+    "exp": "Đoạn 3 chỉ rõ: <i>'Beyond the Sambadrome, hundreds of spontaneous street parties known as \"blocos\" fill every neighborhood.'</i>"
+  },
+  {
+    "num": 38,
+    "topic": "Reading Comprehension: Reference Word",
+    "audio_file": null,
+    "passage": "The Rio Carnival in Rio de Janeiro, Brazil, is universally acclaimed as the most spectacular and vibrant cultural festival on the planet. Held annually before the Christian period of Lent, this five-day festival attracts over two million revelers per day onto the sun-drenched streets of Rio.<br><br>The absolute pinnacle of the celebration takes place inside the Sambadrome, a purpose-built stadium designed by famed architect Oscar Niemeyer. Here, top samba schools compete in grandiose parades featuring colossal themed floats, thousands of dancers in dazzling sequined costumes, and electrifying percussion ensembles called 'baterias'. Each samba school spends up to an entire year preparing its original theme song, choreography, and elaborate costumes to impress strict panel judges.<br><br>Beyond the Sambadrome, hundreds of spontaneous street parties known as 'blocos' fill every neighborhood. People of all backgrounds dance the samba, sing festive anthems, and share traditional Brazilian street foods like coxinha and grilled cheese.<br><br>The Rio Carnival is much more than mere merrymaking; it represents a magnificent fusion of Afro-Brazilian cultural heritage, community solidarity, and creative artistic expression.",
+    "title": "The word <b>'its'</b> in paragraph 2 refers to:",
+    "options": {
+      "A": "Each samba school",
+      "B": "The stadium",
+      "C": "The percussion drum",
+      "D": "The judge"
+    },
+    "correct": "A",
+    "exp": "Từ <b>'its'</b> trong <i>'preparing its original theme song...'</i> thay thế cho <b>Each samba school</b> (từng trường dạy nhảy samba)."
+  },
+  {
+    "num": 39,
+    "topic": "Reading Comprehension: Cultural Meaning",
+    "audio_file": null,
+    "passage": "The Rio Carnival in Rio de Janeiro, Brazil, is universally acclaimed as the most spectacular and vibrant cultural festival on the planet. Held annually before the Christian period of Lent, this five-day festival attracts over two million revelers per day onto the sun-drenched streets of Rio.<br><br>The absolute pinnacle of the celebration takes place inside the Sambadrome, a purpose-built stadium designed by famed architect Oscar Niemeyer. Here, top samba schools compete in grandiose parades featuring colossal themed floats, thousands of dancers in dazzling sequined costumes, and electrifying percussion ensembles called 'baterias'. Each samba school spends up to an entire year preparing its original theme song, choreography, and elaborate costumes to impress strict panel judges.<br><br>Beyond the Sambadrome, hundreds of spontaneous street parties known as 'blocos' fill every neighborhood. People of all backgrounds dance the samba, sing festive anthems, and share traditional Brazilian street foods like coxinha and grilled cheese.<br><br>The Rio Carnival is much more than mere merrymaking; it represents a magnificent fusion of Afro-Brazilian cultural heritage, community solidarity, and creative artistic expression.",
+    "title": "According to the final paragraph, what does Rio Carnival represent beyond entertainment?",
+    "options": {
+      "A": "A fusion of Afro-Brazilian cultural heritage, community solidarity, and artistic expression",
+      "B": "A commercial car exhibition",
+      "C": "A competition for computer programmers",
+      "D": "A sports match between two football teams"
+    },
+    "correct": "A",
+    "exp": "Đoạn 4 nêu rõ: <i>'...it represents a magnificent fusion of Afro-Brazilian cultural heritage, community solidarity, and creative artistic expression.'</i>"
+  },
+  {
+    "num": 40,
+    "topic": "Reading Comprehension: Inference",
+    "audio_file": null,
+    "passage": "The Rio Carnival in Rio de Janeiro, Brazil, is universally acclaimed as the most spectacular and vibrant cultural festival on the planet. Held annually before the Christian period of Lent, this five-day festival attracts over two million revelers per day onto the sun-drenched streets of Rio.<br><br>The absolute pinnacle of the celebration takes place inside the Sambadrome, a purpose-built stadium designed by famed architect Oscar Niemeyer. Here, top samba schools compete in grandiose parades featuring colossal themed floats, thousands of dancers in dazzling sequined costumes, and electrifying percussion ensembles called 'baterias'. Each samba school spends up to an entire year preparing its original theme song, choreography, and elaborate costumes to impress strict panel judges.<br><br>Beyond the Sambadrome, hundreds of spontaneous street parties known as 'blocos' fill every neighborhood. People of all backgrounds dance the samba, sing festive anthems, and share traditional Brazilian street foods like coxinha and grilled cheese.<br><br>The Rio Carnival is much more than mere merrymaking; it represents a magnificent fusion of Afro-Brazilian cultural heritage, community solidarity, and creative artistic expression.",
+    "title": "What can be inferred about the spirit of the Rio Carnival?",
+    "options": {
+      "A": "It brings diverse communities together through joyful music, dance, and cultural unity.",
+      "B": "It only allows professional dancers to celebrate.",
+      "C": "It is an indoor academic examination for students.",
+      "D": "It discourages tourists from visiting Brazil."
+    },
+    "correct": "A",
+    "exp": "Lễ hội Rio Carnival gắn kết các tầng lớp xã hội và cộng đồng đa dạng lại với nhau thông qua âm nhạc, điệu nhảy và tinh thần đoàn kết văn hóa."
+  }
+];
+
+        let currentQIndex = 0;
+        let userAnswers = new Array(QUESTIONS.length).fill(null);
+        let isSubmitted = false;
+        let timerInterval = null;
+        let secondsLeft = 45 * 60;
+        let secondsSpent = 0;
+        let cheatWarnings = 0;
+
+        // Init on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedName = localStorage.getItem('ta7_fullname') || '';
+            const savedClass = localStorage.getItem('ta7_class') || '';
+            if (savedName) document.getElementById('input-fullname').value = savedName;
+            if (savedClass) document.getElementById('input-class').value = savedClass;
+            
+            initPalette();
+            renderQuestion(0);
+        });
+
+        // Anti-Cheat Protection
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if ((e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'u' || e.key === 'a')) || e.key === 'F12') {
+                e.preventDefault();
+            }
+        });
+
+        window.addEventListener('blur', () => {
+            if (!isSubmitted && document.getElementById('modal-start').classList.contains('hidden')) {
+                cheatWarnings++;
+                if (cheatWarnings < 3) {
+                    alert(`CẢNH BÁO GIAN LẬN (${cheatWarnings}/3): Bạn vừa rời khỏi màn hình làm bài! Lần thứ 3 hệ thống sẽ tự động nộp bài.`);
+                } else if (cheatWarnings === 3) {
+                    alert('HỆ THỐNG TỰ ĐỘNG NỘP BÀI: Bạn đã rời khỏi màn hình quá 3 lần quy định!');
+                    submitExam();
+                }
+            }
+        });
+
+        function startExam() {
+            const name = document.getElementById('input-fullname').value.trim();
+            const cls = document.getElementById('input-class').value.trim();
+            if (!name || !cls) {
+                alert('Vui lòng nhập đầy đủ Họ và tên cùng Lớp học!');
+                return;
+            }
+            localStorage.setItem('ta7_fullname', name);
+            localStorage.setItem('ta7_class', cls);
+            
+            document.getElementById('header-student-name').innerText = name;
+            document.getElementById('header-student-class').innerText = cls;
+            document.getElementById('sidebar-student-name').innerText = name;
+            document.getElementById('sidebar-student-class').innerText = cls;
+
+            document.getElementById('modal-start').classList.add('hidden');
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (secondsLeft > 0) {
+                    secondsLeft--;
+                    secondsSpent++;
+                    const m = Math.floor(secondsLeft / 60).toString().padStart(2, '0');
+                    const s = (secondsLeft % 60).toString().padStart(2, '0');
+                    document.getElementById('timer-display').innerText = `${m}:${s}`;
+                } else {
+                    clearInterval(timerInterval);
+                    alert('Hết thời gian làm bài! Hệ thống đang tự động nộp bài...');
+                    submitExam();
+                }
+            }, 1000);
+        }
+
+        function initPalette() {
+            const container = document.getElementById('palette-grid');
+            container.innerHTML = '';
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const btn = document.createElement('button');
+                btn.id = `palette-btn-${i}`;
+                btn.className = 'palette-btn h-8 rounded-lg border border-slate-200 text-xs font-black text-slate-700 hover:bg-slate-100 transition-all';
+                btn.innerText = i + 1;
+                btn.onclick = () => renderQuestion(i);
+                container.appendChild(btn);
+            }
+        }
+
+        function renderQuestion(index) {
+            // Audio Player Visibility (Only show for Listening Questions 1 to 8)
+            const audioCard = document.getElementById('audio-player-card');
+            const audioEl = document.getElementById('exam-audio');
+            if (audioCard) {
+                if (index < 8) {
+                    audioCard.classList.remove('hidden');
+                } else {
+                    audioCard.classList.add('hidden');
+                    if (audioEl && !audioEl.paused) {
+                        audioEl.pause();
+                    }
+                }
+            }
+            currentQIndex = index;
+            const q = QUESTIONS[index];
+
+            // Badge & Topic
+            document.getElementById('q-badge').innerText = `Câu ${q.num} / ${QUESTIONS.length}`;
+            document.getElementById('q-topic').innerText = q.topic;
+
+            // Passage
+            const passContainer = document.getElementById('q-passage-container');
+            if (q.passage) {
+                passContainer.classList.remove('hidden');
+                document.getElementById('q-passage-content').innerHTML = q.passage;
+            } else {
+                passContainer.classList.add('hidden');
+            }
+
+            // Title
+            document.getElementById('q-title').innerHTML = q.title;
+
+            // Options
+            const optsContainer = document.getElementById('q-options');
+            optsContainer.innerHTML = '';
+            
+            const letters = ['A', 'B', 'C', 'D'];
+            letters.forEach(letter => {
+                const optText = q.options[letter];
+                const optBtn = document.createElement('div');
+                optBtn.className = `p-3.5 rounded-xl border text-xs sm:text-sm font-semibold cursor-pointer transition-all flex items-center gap-3 ${
+                    userAnswers[index] === letter 
+                        ? 'border-indigo-600 bg-indigo-50/70 text-indigo-950 ring-2 ring-indigo-500/20' 
+                        : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-800'
+                }`;
+                
+                if (isSubmitted) {
+                    optBtn.classList.remove('cursor-pointer', 'hover:bg-slate-50');
+                    if (letter === q.correct) {
+                        optBtn.className = 'p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-950 text-xs sm:text-sm font-bold flex items-center gap-3';
+                    } else if (userAnswers[index] === letter && letter !== q.correct) {
+                        optBtn.className = 'p-3.5 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-950 text-xs sm:text-sm font-bold flex items-center gap-3';
+                    }
+                } else {
+                    optBtn.onclick = () => selectOption(letter);
+                }
+
+                optBtn.innerHTML = `
+                    <span class="w-6 h-6 rounded-lg ${
+                        userAnswers[index] === letter ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700'
+                    } flex items-center justify-center font-black text-xs shrink-0">${letter}</span>
+                    <span class="flex-1">${optText}</span>
+                `;
+                optsContainer.appendChild(optBtn);
+            });
+
+            // Explanation
+            const expBox = document.getElementById('q-explanation-box');
+            if (isSubmitted) {
+                expBox.classList.remove('hidden');
+                document.getElementById('q-explanation-text').innerHTML = q.exp;
+            } else {
+                expBox.classList.add('hidden');
+            }
+
+            // Palette Active update
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const pBtn = document.getElementById(`palette-btn-${i}`);
+                if (pBtn) {
+                    if (i === index) pBtn.classList.add('ring-2', 'ring-indigo-600');
+                    else pBtn.classList.remove('ring-2', 'ring-indigo-600');
+                }
+            }
+
+            // Prev/Next buttons
+            document.getElementById('btn-prev').disabled = (index === 0);
+            document.getElementById('btn-prev').classList.toggle('opacity-40', index === 0);
+            document.getElementById('btn-next').disabled = (index === QUESTIONS.length - 1);
+            document.getElementById('btn-next').classList.toggle('opacity-40', index === QUESTIONS.length - 1);
+        }
+
+        function selectOption(letter) {
+            if (isSubmitted) return;
+            userAnswers[currentQIndex] = letter;
+            
+            // Update Palette
+            const pBtn = document.getElementById(`palette-btn-${currentQIndex}`);
+            if (pBtn) pBtn.classList.add('answered');
+
+            // Update Progress
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            document.getElementById('progress-text').innerText = `${answeredCount}/${QUESTIONS.length}`;
+            const pct = Math.round((answeredCount / QUESTIONS.length) * 100);
+            document.getElementById('percent-text').innerText = `${pct}%`;
+            document.getElementById('progress-bar-fill').style.width = `${pct}%`;
+
+            renderQuestion(currentQIndex);
+        }
+
+        function prevQuestion() {
+            if (currentQIndex > 0) renderQuestion(currentQIndex - 1);
+        }
+
+        function nextQuestion() {
+            if (currentQIndex < QUESTIONS.length - 1) renderQuestion(currentQIndex + 1);
+        }
+
+        function switchTab(tab) {
+            if (tab === 'theory') {
+                document.getElementById('tab-theory').classList.remove('hidden');
+                document.getElementById('tab-quiz').classList.add('hidden');
+                document.getElementById('tab-btn-theory').classList.add('active');
+                document.getElementById('tab-btn-quiz').classList.remove('active');
+            } else {
+                document.getElementById('tab-theory').classList.add('hidden');
+                document.getElementById('tab-quiz').classList.remove('hidden');
+                document.getElementById('tab-btn-theory').classList.remove('active');
+                document.getElementById('tab-btn-quiz').classList.add('active');
+            }
+        }
+
+        function confirmSubmit() {
+            if (isSubmitted) return;
+            const unanswered = userAnswers.filter(a => a === null).length;
+            if (unanswered > 0) {
+                if (!confirm(`Bạn còn ${unanswered} câu chưa hoàn thành. Bạn có chắc chắn muốn nộp bài ngay không?`)) {
+                    return;
+                }
+            } else {
+                if (!confirm('Bạn đã hoàn thành 40/40 câu hỏi. Bạn có chắc chắn muốn nộp bài để xem kết quả?')) {
+                    return;
+                }
+            }
+            submitExam();
+        }
+
+        function submitExam() {
+            if (isSubmitted) return;
+            isSubmitted = true;
+            clearInterval(timerInterval);
+
+            // Calculate Score
+            let correctCount = 0;
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const pBtn = document.getElementById(`palette-btn-${i}`);
+                if (userAnswers[i] === QUESTIONS[i].correct) {
+                    correctCount++;
+                    if (pBtn) {
+                        pBtn.className = 'palette-btn correct h-8 rounded-lg border text-xs font-black';
+                    }
+                } else {
+                    if (pBtn) {
+                        pBtn.className = 'palette-btn wrong h-8 rounded-lg border text-xs font-black';
+                    }
+                }
+            }
+
+            const rawScore = (correctCount * 10) / QUESTIONS.length;
+            const finalScore = rawScore.toFixed(2);
+
+            const mSpent = Math.floor(secondsSpent / 60).toString().padStart(2, '0');
+            const sSpent = (secondsSpent % 60).toString().padStart(2, '0');
+
+            document.getElementById('result-score').innerHTML = `${finalScore} <span class="text-lg font-bold text-slate-400">/ 10</span>`;
+            document.getElementById('result-correct-count').innerText = `${correctCount} / ${QUESTIONS.length}`;
+            document.getElementById('result-time-spent').innerText = `${mSpent}:${sSpent}`;
+
+            document.getElementById('btn-submit-exam').classList.add('hidden');
+            document.getElementById('review-filter-box').classList.remove('hidden');
+            document.getElementById('modal-result').classList.remove('hidden');
+
+            if (rawScore >= 8.0) {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+
+            // Sync to Google Sheets
+            syncGoogleSheets(finalScore, correctCount, `${mSpent}:${sSpent}`);
+            renderQuestion(currentQIndex);
+        }
+
+        function closeResultModal() {
+            document.getElementById('modal-result').classList.add('hidden');
+        }
+
+        function filterReview(type) {
+            if (type === 'all') {
+                renderQuestion(0);
+            } else if (type === 'wrong') {
+                const wrongIdx = userAnswers.findIndex((ans, idx) => ans !== QUESTIONS[idx].correct);
+                if (wrongIdx !== -1) renderQuestion(wrongIdx);
+                else alert('Chúc mừng! Bạn không làm sai câu nào.');
+            } else if (type === 'correct') {
+                const corrIdx = userAnswers.findIndex((ans, idx) => ans === QUESTIONS[idx].correct);
+                if (corrIdx !== -1) renderQuestion(corrIdx);
+            }
+        }
+
+        function syncGoogleSheets(score, correct, time) {
+            const name = localStorage.getItem('ta7_fullname') || 'Ẩn danh';
+            const cls = localStorage.getItem('ta7_class') || '7';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec';
+
+            const payload = {
+                ho_ten: name,
+                lop: cls,
+                mon_hoc: 'Tiếng Anh 7',
+                ten_bai: 'Review 3 (Units 7-8-9) - Test 2',
+                diem: score,
+                so_cau_dung: `${correct}/${QUESTIONS.length}`,
+                thoi_gian: time,
+                timestamp: new Date().toISOString()
+            };
+
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).catch(err => console.log('Sync note:', err));
+        }
+    </script>
+</body>
+</html>

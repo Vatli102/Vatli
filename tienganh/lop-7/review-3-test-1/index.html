@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review 3 (Units 7 - 8 - 9) - Test 1 | Tiếng Anh 7 Global Success</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            text-align: justify;
+        }
+        .palette-btn.active {
+            border-color: #4f46e5;
+            background-color: #4f46e5;
+            color: #ffffff;
+        }
+        .palette-btn.answered {
+            background-color: #e0e7ff;
+            color: #3730a3;
+            border-color: #c7d2fe;
+        }
+        .palette-btn.wrong {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-color: #fca5a5;
+        }
+        .palette-btn.correct {
+            background-color: #dcfce7;
+            color: #166534;
+            border-color: #86efac;
+        }
+        .tab-btn.active {
+            border-bottom: 3px solid #4f46e5;
+            color: #4f46e5;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between">
+
+    <!-- Modal Nhập Họ Tên Trước Khi Làm Bài -->
+    <div id="modal-start" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 space-y-6 border border-slate-100 transform transition-all text-left">
+            <div class="text-center space-y-2">
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 text-2xl font-black mb-1">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-black text-slate-900">THÔNG TIN HỌC SINH</h3>
+                <p class="text-xs text-slate-500">Đề kiểm tra: <b>Review 3 (Units 7-8-9) — Test 1 (Tiếng Anh 7)</b></p>
+            </div>
+            <div class="space-y-4 text-xs font-semibold">
+                <div>
+                    <label class="block text-slate-700 mb-1.5 font-bold">Họ và tên học sinh <span class="text-rose-500">*</span></label>
+                    <input type="text" id="input-fullname" placeholder="Ví dụ: Đỗ Gia Huy" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium">
+                </div>
+                <div>
+                    <label class="block text-slate-700 mb-1.5 font-bold">Lớp học <span class="text-rose-500">*</span></label>
+                    <input type="text" id="input-class" placeholder="Ví dụ: 7A5" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium">
+                </div>
+            </div>
+            <div class="pt-2">
+                <button onclick="startExam()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-indigo-200 transition-all flex items-center justify-center gap-2">
+                    <span>BẮT ĐẦU LÀM BÀI THI</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="/tienganh/" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-chevron-left text-sm"></i>
+                </a>
+                <div>
+                    <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-indigo-100 text-indigo-800">Review 3 • Test 1</span>
+                    <h1 class="text-sm sm:text-base font-extrabold text-slate-900 leading-tight">Tiếng Anh 7: Tổng ôn Units 7 - 8 - 9</h1>
+                </div>
+            </div>
+
+            <!-- Tab Switcher -->
+            <div class="flex items-center gap-2 sm:gap-6 border-b sm:border-0 border-slate-100 text-xs sm:text-sm font-bold">
+                <button id="tab-btn-theory" onclick="switchTab('theory')" class="tab-btn py-4 px-2 text-slate-500 hover:text-slate-800 transition-all">
+                    <i class="fa-solid fa-book-open mr-1 text-indigo-500"></i> Lý thuyết trọng tâm
+                </button>
+                <button id="tab-btn-quiz" onclick="switchTab('quiz')" class="tab-btn active py-4 px-2 text-indigo-600 transition-all">
+                    <i class="fa-solid fa-pen-to-square mr-1 text-indigo-500"></i> Làm bài tập củng cố
+                </button>
+            </div>
+
+            <!-- Timer / Profile pill -->
+            <div class="hidden sm:flex items-center gap-3">
+                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-black">
+                    <i class="fa-solid fa-clock text-indigo-600"></i>
+                    <span id="timer-display">45:00</span>
+                </div>
+                <div class="text-right">
+                    <div id="header-student-name" class="text-xs font-extrabold text-slate-800">Thí sinh</div>
+                    <div id="header-student-class" class="text-[10px] font-semibold text-slate-500">Lớp 7</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full flex-1">
+        
+        <!-- Tab 1: Lý Thuyết Trọng Tâm -->
+        <section id="tab-theory" class="hidden max-w-5xl mx-auto">
+            
+<div class="theory-container space-y-8 text-slate-800">
+    <div class="bg-gradient-to-r from-indigo-900 via-blue-900 to-slate-900 text-white p-6 rounded-2xl shadow-md">
+        <div class="inline-block px-3 py-1 bg-indigo-500/30 border border-indigo-400/40 rounded-full text-xs font-extrabold uppercase tracking-wider text-indigo-300 mb-2">
+            GLOBAL SUCCESS 7 • TỔNG ÔN TRỌNG TÂM REVIEW 3 (UNITS 7 - 8 - 9)
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black tracking-tight">Lý Thuyết Trọng Tâm: Review 3</h2>
+        <p class="text-indigo-200 text-sm mt-1">Tổng hợp toàn diện kiến thức từ vựng, ngữ pháp, ngữ âm và kỹ năng thực hành của Unit 7 (Traffic), Unit 8 (Films) và Unit 9 (Festivals around the World).</p>
+    </div>
+
+    <!-- 1. TỪ VỰNG & CỤM TỪ TRỌNG TÂM -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">1</span>
+            <h3 class="text-lg font-black text-slate-900">Từ vựng & Cụm từ (Vocabulary & Collocations)</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <h4 class="font-extrabold text-indigo-700 text-sm flex items-center gap-1.5"><i class="fa-solid fa-traffic-light"></i> Unit 7: Traffic</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>traffic jam / congestion</b>: ùn tắc giao thông</li>
+                    <li>• <b>pedestrian</b>: người đi bộ</li>
+                    <li>• <b>zebra crossing</b>: vạch kẻ đường cho người đi bộ</li>
+                    <li>• <b>fasten seatbelt</b>: thắt dây an toàn</li>
+                    <li>• <b>wear a helmet</b>: đội mũ bảo hiểm</li>
+                    <li>• <b>obey traffic rules</b>: tuân thủ luật giao thông</li>
+                    <li>• <b>rush hour</b>: giờ cao điểm</li>
+                </ul>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <h4 class="font-extrabold text-emerald-700 text-sm flex items-center gap-1.5"><i class="fa-solid fa-film"></i> Unit 8: Films</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>documentary / comedy / sci-fi</b>: phim tài liệu / hài / viễn tưởng</li>
+                    <li>• <b>gripping / thrilling</b>: hấp dẫn, lôi cuốn, kịch tính</li>
+                    <li>• <b>hilarious</b>: cực kỳ hài hước, vui nhộn</li>
+                    <li>• <b>terrifying</b>: kinh hãi, đáng sợ (phim kinh dị)</li>
+                    <li>• <b>film critic / review</b>: nhà phê bình / bài đánh giá phim</li>
+                    <li>• <b>director / star in</b>: đạo diễn / đóng vai chính</li>
+                    <li>• <b>box office hit</b>: phim bom tấn phá vỡ phòng vé</li>
+                </ul>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <h4 class="font-extrabold text-amber-700 text-sm flex items-center gap-1.5"><i class="fa-solid fa-champagne-glasses"></i> Unit 9: Festivals</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>take place</b>: diễn ra, được tổ chức</li>
+                    <li>• <b>parade / carnival</b>: diễu hành / lễ hội đường phố</li>
+                    <li>• <b>water fight (Songkran)</b>: lễ hội té nước</li>
+                    <li>• <b>tomato fight (La Tomatina)</b>: lễ hội ném cà chua</li>
+                    <li>• <b>Mid-Autumn Festival</b>: Tết Trung thu (rước đèn, múa lân)</li>
+                    <li>• <b>costume</b>: trang phục lễ hội hóa trang</li>
+                    <li>• <b>feast</b>: bữa tiệc thịnh soạn</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. CẤU TẠO TỪ -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">2</span>
+            <h3 class="text-lg font-black text-slate-900">Cấu tạo từ / Dạng của từ (Word Formation)</h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left text-slate-700 border-collapse">
+                <thead class="bg-indigo-50 text-indigo-900 font-extrabold">
+                    <tr>
+                        <th class="p-2.5 border border-indigo-100">Động từ (Verb)</th>
+                        <th class="p-2.5 border border-indigo-100">Danh từ (Noun)</th>
+                        <th class="p-2.5 border border-indigo-100">Tính từ (Adjective)</th>
+                        <th class="p-2.5 border border-indigo-100">Trạng từ (Adverb)</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    <tr>
+                        <td class="p-2.5 border border-slate-100 font-bold">—</td>
+                        <td class="p-2.5 border border-slate-100"><b>safety</b> (sự an toàn)</td>
+                        <td class="p-2.5 border border-slate-100"><b>safe</b> / <b>unsafe</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>safely</b></td>
+                    </tr>
+                    <tr class="bg-slate-50/50">
+                        <td class="p-2.5 border border-slate-100 font-bold"><b>direct</b> (đạo diễn)</td>
+                        <td class="p-2.5 border border-slate-100"><b>director</b> / <b>direction</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>direct</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>directly</b></td>
+                    </tr>
+                    <tr>
+                        <td class="p-2.5 border border-slate-100 font-bold"><b>perform</b> (biểu diễn)</td>
+                        <td class="p-2.5 border border-slate-100"><b>performance</b> / <b>performer</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>performing</b></td>
+                        <td class="p-2.5 border border-slate-100">—</td>
+                    </tr>
+                    <tr class="bg-slate-50/50">
+                        <td class="p-2.5 border border-slate-100 font-bold"><b>celebrate</b> (kỷ niệm)</td>
+                        <td class="p-2.5 border border-slate-100"><b>celebration</b> / <b>celebrity</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>celebratory</b></td>
+                        <td class="p-2.5 border border-slate-100">—</td>
+                    </tr>
+                    <tr>
+                        <td class="p-2.5 border border-slate-100 font-bold">—</td>
+                        <td class="p-2.5 border border-slate-100"><b>tradition</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>traditional</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>traditionally</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 3. PHÂN BIỆT TỪ DỄ NHẦM LẪN -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">3</span>
+            <h3 class="text-lg font-black text-slate-900">Phân biệt các từ dễ gây nhầm lẫn (Confusing Words)</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200 space-y-1.5">
+                <h4 class="font-extrabold text-amber-900">1. Although / Though vs. However</h4>
+                <p>• <b>Although / Though + Mệnh đề (S + V)</b>: Không có dấu phẩy ngay sau liên từ (<i>Although it rained, we went out.</i>)</p>
+                <p>• <b>However</b>: Thường đứng đầu câu hoặc giữa 2 mệnh đề, luôn đi kèm dấu phẩy (<i>It rained heavily. However, we went out.</i>)</p>
+            </div>
+            <div class="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200 space-y-1.5">
+                <h4 class="font-extrabold text-emerald-900">2. Pedestrian vs. Passenger vs. Driver</h4>
+                <p>• <b>Pedestrian</b>: Người đi bộ trên vỉa hè, qua vạch sang đường.</p>
+                <p>• <b>Passenger</b>: Hành khách đi trên phương tiện giao thông (không trực tiếp điều khiển xe).</p>
+                <p>• <b>Driver / Cyclist</b>: Người trực tiếp điều khiển phương tiện (ô tô, xe máy, xe đạp).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. NGỮ PHÁP TRỌNG TÂM -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">4</span>
+            <h3 class="text-lg font-black text-slate-900">Ngữ pháp trọng tâm (Grammar Focus)</h3>
+        </div>
+        <div class="space-y-4 text-xs">
+            <!-- Grammar 1 -->
+            <div class="p-4 rounded-xl bg-indigo-50/50 border border-indigo-100 space-y-2">
+                <h4 class="font-black text-indigo-900 text-sm">A. Cấu trúc chỉ khoảng cách với "It" & Động từ khuyết thiếu "Should / Shouldn't"</h4>
+                <div class="p-3 bg-white rounded-lg border border-indigo-200 font-mono text-indigo-950 font-bold">
+                    It is about + [Khoảng cách: 2 km / 50 meters] + from [A] to [B].<br>
+                    S + should / shouldn't + V_inf (Khuyên nên / không nên làm gì)
+                </div>
+                <p class="text-slate-600"><i>Ví dụ:</i> <b>It is about</b> 5 kilometers from my home to the cinema. You <b>should wear</b> a helmet when cycling.</p>
+            </div>
+
+            <!-- Grammar 2 -->
+            <div class="p-4 rounded-xl bg-blue-50/50 border border-blue-100 space-y-2">
+                <h4 class="font-black text-blue-900 text-sm">B. Từ nối chỉ sự tương phản (Connectors of Contrast: Although, Though, However)</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>Although / Though / Even though + S + V, S + V</b> (<i>Although he was tired, he finished the film review.</i>)</li>
+                    <li>• <b>S + V. However, S + V</b> (<i>The tickets were expensive. However, the cinema was fully booked.</i>)</li>
+                </ul>
+            </div>
+
+            <!-- Grammar 3 -->
+            <div class="p-4 rounded-xl bg-purple-50/50 border border-purple-100 space-y-2">
+                <h4 class="font-black text-purple-900 text-sm">C. Cấu trúc câu hỏi Yes/No và Wh-questions</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>Yes/No Questions</b>: Trợ động từ (Do/Does/Did/Will/Can) + S + V_inf?</li>
+                    <li>• <b>Wh-questions</b>: Wh-word + Trợ động từ + S + V...? (<i>When does the festival take place? How far is it?</i>)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. NGỮ ÂM -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">5</span>
+            <h3 class="text-lg font-black text-slate-900">Ngữ âm: Quy tắc phát âm trọng tâm Units 7 - 9</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                <h4 class="font-bold text-slate-900 mb-1">Âm /e/ & /eɪ/ (Unit 7)</h4>
+                <p>• <b>/e/</b>: <i>s<u>e</u>atbelt, r<u>e</u>d, h<u>e</u>lmet</i></p>
+                <p>• <b>/eɪ/</b>: <i>p<u>a</u>vement, tr<u>ai</u>n, s<u>a</u>fety</i></p>
+            </div>
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                <h4 class="font-bold text-slate-900 mb-1">Âm /ɪə/ & /eə/ (Unit 8)</h4>
+                <p>• <b>/ɪə/</b>: <i>cl<u>ear</u>, h<u>ear</u>, n<u>ear</u></i></p>
+                <p>• <b>/eə/</b>: <i>c<u>are</u>, sh<u>are</u>, st<u>air</u></i></p>
+            </div>
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                <h4 class="font-bold text-slate-900 mb-1">Trọng âm từ 2 âm tiết (Unit 9)</h4>
+                <p>• <b>Âm tiết 1 (Danh từ / Tính từ)</b>: <i><u>cos</u>tume, <u>hel</u>met, <u>cri</u>tic</i></p>
+                <p>• <b>Âm tiết 2 (Động từ)</b>: <i>pa<u>rade</u>, di<u>rect</u>, o<u>bey</u></i></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nút làm bài tập -->
+    <div class="text-center pt-4 pb-2">
+        <button onclick="switchTab('quiz')" class="px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-extrabold text-sm rounded-xl shadow-md shadow-indigo-200 transition-all transform hover:-translate-y-0.5 inline-flex items-center gap-2">
+            <span>Làm bài tập củng cố</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </button>
+    </div>
+</div>
+
+        </section>
+
+        <!-- Tab 2: Làm Bài Tập Củng Cố (CBT 2-Column Mode) -->
+        <section id="tab-quiz" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Left Column: Single Question Card & Passage Area (8 cols) -->
+            <div class="lg:col-span-8 space-y-4">
+                
+                <!-- Audio Player Widget -->
+                <div id="audio-player-card" class="bg-gradient-to-r from-indigo-900 to-blue-900 text-white rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-cyan-300 text-lg shrink-0">
+                            <i class="fa-solid fa-headphones"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-cyan-300 uppercase tracking-wider">Audio Bài Nghe (Questions 1 - 8)</div>
+                            <div class="text-xs text-slate-200">Listening Part 1 & Part 2 — Voice Chuẩn Bản Ngữ</div>
+                        </div>
+                    </div>
+                    <audio id="exam-audio" controls class="w-full sm:w-72 h-9 rounded-lg outline-none">
+                        <source src="Test 1 - Review 3 - Full Audio Listening.mp3" type="audio/mpeg">
+                        Trình duyệt của bạn không hỗ trợ phát âm thanh.
+                    </audio>
+                </div>
+
+                <!-- Main Question Card -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6 min-h-[420px] flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <div class="flex items-center gap-2">
+                                <span id="q-badge" class="px-3 py-1 rounded-full text-xs font-black bg-indigo-100 text-indigo-800">Câu 1 / 40</span>
+                                <span id="q-topic" class="text-xs font-bold text-slate-500">Listening Part 1</span>
+                            </div>
+                            <span class="text-xs font-extrabold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-100">0.25 điểm</span>
+                        </div>
+
+                        <!-- Passage Box if applicable -->
+                        <div id="q-passage-container" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs sm:text-sm leading-relaxed text-slate-700 max-h-60 overflow-y-auto">
+                            <div id="q-passage-content"></div>
+                        </div>
+
+                        <!-- Question Title -->
+                        <div id="q-title" class="text-sm sm:text-base font-extrabold text-slate-900 leading-relaxed pt-1">
+                            Loading question...
+                        </div>
+
+                        <!-- Options List -->
+                        <div id="q-options" class="space-y-2.5 pt-2">
+                            <!-- Injected by JS -->
+                        </div>
+
+                        <!-- Explanation Area -->
+                        <div id="q-explanation-box" class="hidden bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-xs leading-relaxed text-emerald-950 space-y-1">
+                            <div class="font-bold text-emerald-800 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-check"></i> Lời giải chi tiết:
+                            </div>
+                            <div id="q-explanation-text"></div>
+                        </div>
+                    </div>
+
+                    <!-- Question Navigation Controls -->
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+                        <button onclick="prevQuestion()" id="btn-prev" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-50 transition-colors flex items-center gap-1.5">
+                            <i class="fa-solid fa-arrow-left"></i> <span>Câu trước</span>
+                        </button>
+
+                        <div class="text-xs font-bold text-slate-400">
+                            Tiến độ: <span id="progress-text" class="text-indigo-600 font-black">0/40</span>
+                        </div>
+
+                        <button onclick="nextQuestion()" id="btn-next" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition-colors flex items-center gap-1.5 shadow-sm shadow-indigo-200">
+                            <span>Câu tiếp theo</span> <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Sidebar (Palette & Actions) (4 cols) -->
+            <div class="lg:col-span-4 space-y-4">
+                
+                <!-- Student Card & Submit Button -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Học sinh dự thi</div>
+                            <div id="sidebar-student-name" class="text-sm font-black text-slate-900">Đỗ Gia Huy</div>
+                            <div id="sidebar-student-class" class="text-xs font-semibold text-slate-500">Lớp 7A5</div>
+                        </div>
+                        <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-black text-sm">
+                            7
+                        </div>
+                    </div>
+
+                    <!-- Progress bar -->
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between text-[11px] font-bold text-slate-500">
+                            <span>Đã hoàn thành</span>
+                            <span id="percent-text">0%</span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div id="progress-bar-fill" class="h-full bg-indigo-600 transition-all duration-300 w-0"></div>
+                        </div>
+                    </div>
+
+                    <button onclick="confirmSubmit()" id="btn-submit-exam" class="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-emerald-200 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>NỘP BÀI THI</span>
+                    </button>
+                </div>
+
+                <!-- Palette Grid (40 Questions) -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider">Bảng 40 Câu Hỏi</h4>
+                        <span class="text-[10px] text-slate-400 font-bold">Nhấn số để chuyển câu</span>
+                    </div>
+
+                    <div id="palette-grid" class="grid grid-cols-5 sm:grid-cols-8 lg:grid-cols-5 gap-2 pt-1">
+                        <!-- 40 buttons injected by JS -->
+                    </div>
+
+                    <!-- Review Filter -->
+                    <div id="review-filter-box" class="hidden pt-3 border-t border-slate-100 space-y-2">
+                        <div class="text-[11px] font-bold text-slate-500">Lọc xem kết quả:</div>
+                        <div class="grid grid-cols-3 gap-1.5 text-[10px] font-bold">
+                            <button onclick="filterReview('all')" class="py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">Tất cả</button>
+                            <button onclick="filterReview('wrong')" class="py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 transition-colors">Chỉ câu sai</button>
+                            <button onclick="filterReview('correct')" class="py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 transition-colors">Chỉ câu đúng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Báo Cáo Kết Quả Sau Khi Nộp -->
+    <div id="modal-result" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 space-y-6 border border-slate-100 text-center transform transition-all">
+            <div class="space-y-2">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 text-3xl font-black mb-1">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h3 class="text-2xl font-black text-slate-900">KẾT QUẢ BÀI THI</h3>
+                <p class="text-xs text-slate-500">Review 3 (Units 7-8-9) — Test 1 (Tiếng Anh 7 Global Success)</p>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-indigo-50 border border-indigo-100 space-y-3">
+                <div class="text-4xl sm:text-5xl font-black text-indigo-700" id="result-score">
+                    0.0 <span class="text-lg font-bold text-slate-400">/ 10</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs font-bold text-slate-700 pt-2 border-t border-indigo-200/60">
+                    <div>Số câu đúng: <span id="result-correct-count" class="text-emerald-600 font-extrabold text-sm">0/40</span></div>
+                    <div>Thời gian: <span id="result-time-spent" class="text-indigo-600 font-extrabold text-sm">00:00</span></div>
+                </div>
+            </div>
+
+            <p id="result-feedback" class="text-xs font-semibold text-slate-600">
+                Chúc mừng bạn đã hoàn thành bài kiểm tra! Toàn bộ lời giải chi tiết đã được mở khóa.
+            </p>
+
+            <div class="flex gap-3">
+                <button onclick="closeResultModal()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-indigo-200 transition-all">
+                    XEM LỜI GIẢI CHI TIẾT
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Logic -->
+    <script>
+        const QUESTIONS = [
+  {
+    "num": 1,
+    "topic": "Listening Part 1: Distance & Transport",
+    "audio_file": "Test 1 - Review 3 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "How far is it from An's house to her school?",
+    "options": {
+      "A": "About one kilometer",
+      "B": "About two kilometers",
+      "C": "About five kilometers",
+      "D": "About ten kilometers"
+    },
+    "correct": "B",
+    "exp": "Trong bài nghe, An trả lời: <i>'I usually ride my bicycle. It is about two kilometers from my house to school.'</i> (Khoảng 2 km)."
+  },
+  {
+    "num": 2,
+    "topic": "Listening Part 1: Road Safety Rules",
+    "audio_file": "Test 1 - Review 3 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What road safety habits does An follow when riding her bicycle?",
+    "options": {
+      "A": "Wears a helmet, uses the cycle lane, and stops at red lights",
+      "B": "Listens to loud music and rides with one hand",
+      "C": "Rides on the pedestrian pavement",
+      "D": "Crosses the road without looking"
+    },
+    "correct": "A",
+    "exp": "An nêu rõ: Đội mũ bảo hiểm (*wear a helmet*), đi đúng làn xe đạp (*dedicated cycle lane*) và dừng khi đèn đỏ (*stop when traffic light turns red*)."
+  },
+  {
+    "num": 3,
+    "topic": "Listening Part 1: Film Genre & Plot",
+    "audio_file": "Test 1 - Review 3 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What is the new animated adventure movie about?",
+    "options": {
+      "A": "A car race in modern cities",
+      "B": "An intelligent robot rescuing endangered animals",
+      "C": "A cooking competition in Paris",
+      "D": "A historical king building temples"
+    },
+    "correct": "B",
+    "exp": "Liam tóm tắt nội dung: <i>'It tells the story of an intelligent robot travelling across mysterious islands to rescue endangered animals.'</i>"
+  },
+  {
+    "num": 4,
+    "topic": "Listening Part 1: Meeting Time",
+    "audio_file": "Test 1 - Review 3 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What time will Liam and An meet at the cinema entrance on Saturday?",
+    "options": {
+      "A": "At 5:30",
+      "B": "At 6:00",
+      "C": "At 6:30",
+      "D": "At 7:30"
+    },
+    "correct": "C",
+    "exp": "An đề xuất: <i>'Let us meet at the cinema entrance at six thirty.'</i> (Lúc 6 giờ 30)."
+  },
+  {
+    "num": 5,
+    "topic": "Listening Part 2: Festival Timing",
+    "audio_file": "Test 1 - Review 3 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "When is the Songkran Water Festival celebrated in Thailand every year?",
+    "options": {
+      "A": "In mid-January",
+      "B": "In mid-April",
+      "C": "In late August",
+      "D": "In late December"
+    },
+    "correct": "B",
+    "exp": "Người nói cho biết: <i>'Every year in mid-April, Thailand celebrates Songkran, the traditional Thai New Year.'</i> (Giữa tháng 4 hàng năm)."
+  },
+  {
+    "num": 6,
+    "topic": "Listening Part 2: Original Tradition",
+    "audio_file": "Test 1 - Review 3 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What did people originally do during Songkran to show respect?",
+    "options": {
+      "A": "Sprinkled fragrant water over Buddha statues and onto elders' hands",
+      "B": "Threw tomatoes at each other in the street",
+      "C": "Burned paper lanterns in the sky",
+      "D": "Carved pumpkin faces with candles"
+    },
+    "correct": "A",
+    "exp": "Trong bài nghe: <i>'Originally... people gently sprinkled fragrant water over Buddha statues and onto the hands of elders to show respect.'</i>"
+  },
+  {
+    "num": 7,
+    "topic": "Listening Part 2: Modern Activities",
+    "audio_file": "Test 1 - Review 3 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What tools do millions of people use in the massive three-day street water fight?",
+    "options": {
+      "A": "Paint brushes and oil colors",
+      "B": "Colorful water guns, buckets, and water hoses",
+      "C": "Sticks and drums",
+      "D": "Paper kites and lanterns"
+    },
+    "correct": "B",
+    "exp": "Người nói nêu rõ: <i>'...take to the streets with colorful water guns, buckets, and water hoses.'</i> (Súng nước nhiều màu, xô chậu và vòi phun nước)."
+  },
+  {
+    "num": 8,
+    "topic": "Listening Part 2: Cultural Symbolism",
+    "audio_file": "Test 1 - Review 3 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What does splashing water represent in Thai cultural tradition?",
+    "options": {
+      "A": "Washing away bad luck and welcoming happiness and prosperity",
+      "B": "Cooling down heated motorbikes",
+      "C": "Testing waterproof cameras",
+      "D": "Making the road cleaner for buses"
+    },
+    "correct": "A",
+    "exp": "Người nói giải thích: <i>'Splashing water represents washing away bad luck, misfortunes, and sins from the previous year, welcoming good health, happiness, and prosperity...'</i>"
+  },
+  {
+    "num": 9,
+    "topic": "Pronunciation: Sound /e/ vs /eɪ/",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose underlined part is pronounced differently from the others.",
+    "options": {
+      "A": "s<u>e</u>atbelt",
+      "B": "p<u>a</u>vement",
+      "C": "tr<u>ai</u>n",
+      "D": "s<u>a</u>fety"
+    },
+    "correct": "A",
+    "exp": "<b>seatbelt</b> có âm /e/ (/ˈsiːtbelt/). Các từ <b>pavement</b>, <b>train</b>, <b>safety</b> đều chứa nguyên âm đôi /eɪ/ (/ˈpeɪvmənt/, /treɪn/, /ˈseɪfti/)."
+  },
+  {
+    "num": 10,
+    "topic": "Pronunciation: Sound /ɪə/ vs /eə/",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose underlined part is pronounced differently from the others.",
+    "options": {
+      "A": "cl<u>ear</u>",
+      "B": "h<u>ear</u>",
+      "C": "n<u>ear</u>",
+      "D": "c<u>are</u>"
+    },
+    "correct": "D",
+    "exp": "<b>care</b> phát âm là âm /eə/ (/keə/). Các từ <b>clear</b>, <b>hear</b>, <b>near</b> đều phát âm là âm /ɪə/ (/klɪə/, /hɪə/, /nɪə/)."
+  },
+  {
+    "num": 11,
+    "topic": "Word Stress: Two-syllable Words",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose primary stress is positioned differently from the others.",
+    "options": {
+      "A": "parade",
+      "B": "costume",
+      "C": "helmet",
+      "D": "critic"
+    },
+    "correct": "A",
+    "exp": "<b>parade</b> có trọng âm rơi vào âm tiết thứ 2 (/pəˈreɪd/). Các từ <b>costume</b> (/ˈkɒstjuːm/), <b>helmet</b> (/ˈhelmɪt/), <b>critic</b> (/ˈkrɪtɪk/) đều có trọng âm rơi vào âm tiết thứ 1."
+  },
+  {
+    "num": 12,
+    "topic": "Word Stress: Noun vs Verb Stress Pattern",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose primary stress is positioned differently from the others.",
+    "options": {
+      "A": "direct",
+      "B": "perform",
+      "C": "obey",
+      "D": "pavement"
+    },
+    "correct": "D",
+    "exp": "<b>pavement</b> có trọng âm rơi vào âm tiết 1 (/ˈpeɪvmənt/). Các động từ <b>direct</b> (/daɪˈrekt/), <b>perform</b> (/pəˈfɔːm/), <b>obey</b> (/əˈbeɪ/) đều có trọng âm rơi vào âm tiết 2."
+  },
+  {
+    "num": 13,
+    "topic": "Grammar: It indicating distance",
+    "audio_file": null,
+    "passage": null,
+    "title": "________ is about 300 kilometers from Hanoi to Ha Giang.",
+    "options": {
+      "A": "It",
+      "B": "There",
+      "C": "This",
+      "D": "That"
+    },
+    "correct": "A",
+    "exp": "Cấu trúc chỉ khoảng cách tiêu chuẩn trong Tiếng Anh: <i>It is about + khoảng cách + from A to B</i>. Do đó chọn <b>It</b>."
+  },
+  {
+    "num": 14,
+    "topic": "Grammar: Modal verb Should / Shouldn't for advice",
+    "audio_file": null,
+    "passage": null,
+    "title": "You ________ ride your bicycle with only one hand or carry heavy bags on handlebars.",
+    "options": {
+      "A": "shouldn't",
+      "B": "should",
+      "C": "must",
+      "D": "might"
+    },
+    "correct": "A",
+    "exp": "Lời khuyên an toàn giao thông: Bạn <i>không nên</i> đi xe đạp một tay hoặc chở đồ cồng kềnh trên ghi đông: <b>shouldn't</b>."
+  },
+  {
+    "num": 15,
+    "topic": "Grammar: Connector of contrast (Although vs However)",
+    "audio_file": null,
+    "passage": null,
+    "title": "________ the film had an enormous production budget, it received negative reviews from critics.",
+    "options": {
+      "A": "Although",
+      "B": "However",
+      "C": "Because",
+      "D": "Despite of"
+    },
+    "correct": "A",
+    "exp": "Liên từ chỉ sự tương phản đứng đầu mệnh đề có S + V: <b>Although</b> (Mặc dù bộ phim có kinh phí sản xuất khổng lồ...)."
+  },
+  {
+    "num": 16,
+    "topic": "Grammar: Connector of contrast (However with punctuation)",
+    "audio_file": null,
+    "passage": null,
+    "title": "He spent weeks rehearsing for the traditional dance. ________, he felt quite nervous on stage.",
+    "options": {
+      "A": "However",
+      "B": "Although",
+      "C": "Because",
+      "D": "So"
+    },
+    "correct": "A",
+    "exp": "Trạng từ liên kết đứng sau dấu chấm và trước dấu phẩy diễn tả sự đối lập: <b>However</b> (Tuy nhiên, anh ấy vẫn khá hồi hộp trên sân khấu)."
+  },
+  {
+    "num": 17,
+    "topic": "Grammar: Wh-question Formation",
+    "audio_file": null,
+    "passage": null,
+    "title": "— '________ did they travel to Hue to attend the Festival?' — 'By express train.'",
+    "options": {
+      "A": "How",
+      "B": "Why",
+      "C": "When",
+      "D": "What"
+    },
+    "correct": "A",
+    "exp": "Hỏi về phương tiện di chuyển (By express train) dùng từ để hỏi: <b>How</b>."
+  },
+  {
+    "num": 18,
+    "topic": "Vocabulary: Traffic Collocations",
+    "audio_file": null,
+    "passage": null,
+    "title": "All drivers and front-seat passengers must fasten their ________ whenever the car is moving.",
+    "options": {
+      "A": "seatbelts",
+      "B": "helmets",
+      "C": "lanterns",
+      "D": "critics"
+    },
+    "correct": "A",
+    "exp": "Cụm từ cố định trong Unit 7: <b>fasten their seatbelts</b> (thắt dây an toàn khi đi ô tô)."
+  },
+  {
+    "num": 19,
+    "topic": "Confusing Words: Pedestrian vs Passenger vs Driver",
+    "audio_file": null,
+    "passage": null,
+    "title": "Drivers must strictly yield to ________ who are walking across the zebra crossing.",
+    "options": {
+      "A": "pedestrians",
+      "B": "passengers",
+      "C": "pilots",
+      "D": "directors"
+    },
+    "correct": "A",
+    "exp": "<b>pedestrian</b> (người đi bộ trên đường), khác với <i>passenger</i> (hành khách đi trên xe/máy bay) hay <i>driver</i> (tài xế lái xe)."
+  },
+  {
+    "num": 20,
+    "topic": "Word Formation: Direct (v) -> Director (n)",
+    "audio_file": null,
+    "passage": null,
+    "title": "James Cameron is a world-renowned film ________ who created legendary cinematic blockbusters.",
+    "options": {
+      "A": "director",
+      "B": "direct",
+      "C": "direction",
+      "D": "directly"
+    },
+    "correct": "A",
+    "exp": "Vị trí chỉ danh từ người đạo diễn phim: <b>director</b> (đạo diễn điện ảnh)."
+  },
+  {
+    "num": 21,
+    "topic": "Vocabulary: Film Adjectives",
+    "audio_file": null,
+    "passage": null,
+    "title": "The comedy show was so ________ that the whole audience laughed non-stop from beginning to end.",
+    "options": {
+      "A": "hilarious",
+      "B": "terrifying",
+      "C": "boring",
+      "D": "violent"
+    },
+    "correct": "A",
+    "exp": "Tính từ Unit 8 mang nghĩa cực kỳ hài hước, vui nhộn làm khán giả cười không ngớt: <b>hilarious</b>."
+  },
+  {
+    "num": 22,
+    "topic": "Vocabulary: Festival Traditions",
+    "audio_file": null,
+    "passage": null,
+    "title": "During the Mid-Autumn Festival, children carry colorful star ________ and enjoy vibrant lion dance performances.",
+    "options": {
+      "A": "lanterns",
+      "B": "helmets",
+      "C": "seatbelts",
+      "D": "critics"
+    },
+    "correct": "A",
+    "exp": "Truyền thống Tết Trung thu: rước đèn ông sao (*star lanterns*) và xem múa lân (*lion dance*)."
+  },
+  {
+    "num": 23,
+    "topic": "Communication: Giving Traffic Safety Advice",
+    "audio_file": null,
+    "passage": null,
+    "title": "Binh: 'I often listen to loud music with earphones while riding my electric scooter.' - Phong: '________'",
+    "options": {
+      "A": "You shouldn't do that because it prevents you from hearing warning car horns!",
+      "B": "That sounds like a wonderful animated movie.",
+      "C": "I usually celebrate Songkran in April.",
+      "D": "It is about five kilometers from here."
+    },
+    "correct": "A",
+    "exp": "Lời khuyên an toàn giao thông thiết thực: Không nên đeo tai nghe khi lái xe vì sẽ không nghe được tiếng còi xe cảnh báo nguy hiểm."
+  },
+  {
+    "num": 24,
+    "topic": "Communication: Asking for Film Recommendation",
+    "audio_file": null,
+    "passage": null,
+    "title": "Lucy: 'Can you recommend a good movie to watch this weekend?' - Minh: '________'",
+    "options": {
+      "A": "You should definitely watch 'Inside Out 2'; it is both hilarious and touching.",
+      "B": "Always cross the road at the zebra crossing.",
+      "C": "Turn left at the traffic light.",
+      "D": "The festival takes place in Spain."
+    },
+    "correct": "A",
+    "exp": "Mẫu câu gợi ý phim chuẩn xác và tự nhiên: <i>'You should definitely watch \"Inside Out 2\"; it is both hilarious and touching.'</i>"
+  },
+  {
+    "num": 25,
+    "topic": "Public Notice: Cinema Age Rating Classification",
+    "audio_file": null,
+    "passage": null,
+    "title": "What does this cinema notice indicate?<br><div style='background:#fef2f2; border:2px dashed #ef4444; padding:10px; border-radius:8px; margin:8px 0; font-family:sans-serif;'><b>CINEMA NOTICE: RATED T16</b><br>This horror film contains intense terrifying scenes. Suitable only for viewers aged 16 and above. Identification card required.</div>",
+    "options": {
+      "A": "Children under 16 years old are not permitted to watch this horror movie.",
+      "B": "Anyone of any age can enter without showing an ID card.",
+      "C": "Movie tickets are free for teenagers on Mondays.",
+      "D": "The film is an animated comedy for kindergarten children."
+    },
+    "correct": "A",
+    "exp": "Phân loại độ tuổi T16 quy định phim kinh dị chỉ dành cho người từ 16 tuổi trở lên và cần xuất trình thẻ căn cước."
+  },
+  {
+    "num": 26,
+    "topic": "Public Sign: Road Safety Warning Sign",
+    "audio_file": null,
+    "passage": null,
+    "title": "What does this road sign mean to motorists?<br><div style='background:#eff6ff; border:2px solid #2563eb; padding:10px; border-radius:8px; margin:8px 0; font-family:sans-serif; text-align:center;'><b>PEDESTRIAN CROSSING AHEAD — REDUCE SPEED AND YIELD</b></div>",
+    "options": {
+      "A": "Drivers must slow down and give way to pedestrians crossing the street ahead.",
+      "B": "Pedestrians are not allowed to walk on this road.",
+      "C": "Motorists can accelerate to maximum speed.",
+      "D": "The road is under construction."
+    },
+    "correct": "A",
+    "exp": "Biển báo giao thông cảnh báo có vạch sang đường cho người đi bộ phía trước: Giảm tốc độ và nhường đường."
+  },
+  {
+    "num": 27,
+    "topic": "Guided Cloze: La Tomatina Festival",
+    "audio_file": null,
+    "passage": "La Tomatina is one of the world's most unique and eccentric festivals. It (27)________ place on the last Wednesday of August in the small town of Bunol, Spain. Thousands of cheerful participants gather in the town square to engage in a gigantic, hour-long (28)________ fight. Tons of over-ripe tomatoes are delivered into the streets by large trucks. Before the fight begins, an unusual tradition takes place: participants attempt to climb a greased wooden pole to retrieve a Spanish ham. As soon as the first tomato is crushed and thrown, the square turns into a sea of red puree. To ensure safety, participants (29)________ squash the tomatoes before throwing them to avoid injuring others, and wearing protective (30)________ is strongly advised. Although the festival is extremely messy, everyone finds it (31)________ fun. Afterward, fire trucks hose down the streets with water, leaving the ancient cobblestones surprisingly (32)________ due to the natural acidity of tomatoes.",
+    "title": "Choose the best option for blank (27):",
+    "options": {
+      "A": "takes",
+      "B": "makes",
+      "C": "gives",
+      "D": "does"
+    },
+    "correct": "A",
+    "exp": "Cụm động từ: <b>take place</b> (diễn ra vào ngày thứ Tư cuối cùng của tháng 8)."
+  },
+  {
+    "num": 28,
+    "topic": "Guided Cloze: Blank (28)",
+    "audio_file": null,
+    "passage": "La Tomatina is one of the world's most unique and eccentric festivals. It (27)________ place on the last Wednesday of August in the small town of Bunol, Spain. Thousands of cheerful participants gather in the town square to engage in a gigantic, hour-long (28)________ fight. Tons of over-ripe tomatoes are delivered into the streets by large trucks. Before the fight begins, an unusual tradition takes place: participants attempt to climb a greased wooden pole to retrieve a Spanish ham. As soon as the first tomato is crushed and thrown, the square turns into a sea of red puree. To ensure safety, participants (29)________ squash the tomatoes before throwing them to avoid injuring others, and wearing protective (30)________ is strongly advised. Although the festival is extremely messy, everyone finds it (31)________ fun. Afterward, fire trucks hose down the streets with water, leaving the ancient cobblestones surprisingly (32)________ due to the natural acidity of tomatoes.",
+    "title": "Choose the best option for blank (28):",
+    "options": {
+      "A": "tomato",
+      "B": "water",
+      "C": "egg",
+      "D": "flour"
+    },
+    "correct": "A",
+    "exp": "Trận chiến ném cà chua khổng lồ tại lễ hội La Tomatina: <b>tomato fight</b>."
+  },
+  {
+    "num": 29,
+    "topic": "Guided Cloze: Blank (29)",
+    "audio_file": null,
+    "passage": "La Tomatina is one of the world's most unique and eccentric festivals. It (27)________ place on the last Wednesday of August in the small town of Bunol, Spain. Thousands of cheerful participants gather in the town square to engage in a gigantic, hour-long (28)________ fight. Tons of over-ripe tomatoes are delivered into the streets by large trucks. Before the fight begins, an unusual tradition takes place: participants attempt to climb a greased wooden pole to retrieve a Spanish ham. As soon as the first tomato is crushed and thrown, the square turns into a sea of red puree. To ensure safety, participants (29)________ squash the tomatoes before throwing them to avoid injuring others, and wearing protective (30)________ is strongly advised. Although the festival is extremely messy, everyone finds it (31)________ fun. Afterward, fire trucks hose down the streets with water, leaving the ancient cobblestones surprisingly (32)________ due to the natural acidity of tomatoes.",
+    "title": "Choose the best option for blank (29):",
+    "options": {
+      "A": "must",
+      "B": "shouldn't",
+      "C": "cannot",
+      "D": "might not"
+    },
+    "correct": "A",
+    "exp": "Quy tắc an toàn bắt buộc: Người tham gia <i>phải</i> bóp nát quả cà chua trước khi ném để tránh gây thương tích: <b>must</b>."
+  },
+  {
+    "num": 30,
+    "topic": "Guided Cloze: Blank (30)",
+    "audio_file": null,
+    "passage": "La Tomatina is one of the world's most unique and eccentric festivals. It (27)________ place on the last Wednesday of August in the small town of Bunol, Spain. Thousands of cheerful participants gather in the town square to engage in a gigantic, hour-long (28)________ fight. Tons of over-ripe tomatoes are delivered into the streets by large trucks. Before the fight begins, an unusual tradition takes place: participants attempt to climb a greased wooden pole to retrieve a Spanish ham. As soon as the first tomato is crushed and thrown, the square turns into a sea of red puree. To ensure safety, participants (29)________ squash the tomatoes before throwing them to avoid injuring others, and wearing protective (30)________ is strongly advised. Although the festival is extremely messy, everyone finds it (31)________ fun. Afterward, fire trucks hose down the streets with water, leaving the ancient cobblestones surprisingly (32)________ due to the natural acidity of tomatoes.",
+    "title": "Choose the best option for blank (30):",
+    "options": {
+      "A": "goggles",
+      "B": "seatbelts",
+      "C": "lanterns",
+      "D": "flutes"
+    },
+    "correct": "A",
+    "exp": "Đeo kính bảo vệ mắt để tránh nước cà chua bắn vào: <b>protective goggles</b>."
+  },
+  {
+    "num": 31,
+    "topic": "Guided Cloze: Blank (31)",
+    "audio_file": null,
+    "passage": "La Tomatina is one of the world's most unique and eccentric festivals. It (27)________ place on the last Wednesday of August in the small town of Bunol, Spain. Thousands of cheerful participants gather in the town square to engage in a gigantic, hour-long (28)________ fight. Tons of over-ripe tomatoes are delivered into the streets by large trucks. Before the fight begins, an unusual tradition takes place: participants attempt to climb a greased wooden pole to retrieve a Spanish ham. As soon as the first tomato is crushed and thrown, the square turns into a sea of red puree. To ensure safety, participants (29)________ squash the tomatoes before throwing them to avoid injuring others, and wearing protective (30)________ is strongly advised. Although the festival is extremely messy, everyone finds it (31)________ fun. Afterward, fire trucks hose down the streets with water, leaving the ancient cobblestones surprisingly (32)________ due to the natural acidity of tomatoes.",
+    "title": "Choose the best option for blank (31):",
+    "options": {
+      "A": "hilariously",
+      "B": "dangerously",
+      "C": "sadly",
+      "D": "angrily"
+    },
+    "correct": "A",
+    "exp": "Trạng từ bổ nghĩa cho tính từ fun mang nghĩa vui nhộn tột độ: <b>hilariously fun</b>."
+  },
+  {
+    "num": 32,
+    "topic": "Guided Cloze: Blank (32)",
+    "audio_file": null,
+    "passage": "La Tomatina is one of the world's most unique and eccentric festivals. It (27)________ place on the last Wednesday of August in the small town of Bunol, Spain. Thousands of cheerful participants gather in the town square to engage in a gigantic, hour-long (28)________ fight. Tons of over-ripe tomatoes are delivered into the streets by large trucks. Before the fight begins, an unusual tradition takes place: participants attempt to climb a greased wooden pole to retrieve a Spanish ham. As soon as the first tomato is crushed and thrown, the square turns into a sea of red puree. To ensure safety, participants (29)________ squash the tomatoes before throwing them to avoid injuring others, and wearing protective (30)________ is strongly advised. Although the festival is extremely messy, everyone finds it (31)________ fun. Afterward, fire trucks hose down the streets with water, leaving the ancient cobblestones surprisingly (32)________ due to the natural acidity of tomatoes.",
+    "title": "Choose the best option for blank (32):",
+    "options": {
+      "A": "clean",
+      "B": "dirty",
+      "C": "broken",
+      "D": "rough"
+    },
+    "correct": "A",
+    "exp": "Axit tự nhiên trong cà chua giúp làm sạch mặt đường đá cuội sau khi phun nước: <b>surprisingly clean</b>."
+  },
+  {
+    "num": 33,
+    "topic": "Reading Comprehension: Main Idea",
+    "audio_file": null,
+    "passage": "Over the past century, the animation film industry has undergone extraordinary technological transformations. In the early twentieth century, animators had to draw and paint thousands of individual frames by hand on transparent celluloid sheets. It often took hundreds of artists several years of painstaking labor to complete a single full-length animated movie such as Walt Disney's 'Snow White and the Seven Dwarfs'.<br><br>The revolution in animation occurred with the development of Computer-Generated Imagery (CGI) in the late twentieth century. In 1995, Pixar Animation Studios released 'Toy Story', the world's very first feature-length film created entirely using computer software. Computer animation allowed directors to create realistic lighting, complex camera movements, and lifelike physical textures that were impossible with traditional drawing.<br><br>Today, modern animated films not only boast breathtaking visual effects but also deliver profound storytelling. Masterpieces like 'Coco', 'Inside Out', and 'Spirited Away' address universal human themes, including family bonds, mental health, emotional growth, and cultural heritage. Animation is no longer regarded as mere entertainment for young children; it has become a sophisticated art form appreciated by audiences of all generations worldwide.",
+    "title": "What is the primary topic of the passage?",
+    "options": {
+      "A": "The technological evolution and artistic maturity of animated cinema",
+      "B": "How to buy Disney tickets at discounted prices",
+      "C": "The chemical composition of transparent celluloid sheets",
+      "D": "The life biography of Walt Disney"
+    },
+    "correct": "A",
+    "exp": "Bài đọc trình bày về sự phát triển vượt bậc về mặt công nghệ và chiều sâu nghệ thuật của ngành điện ảnh hoạt hình từ vẽ tay đến CGI hiện đại."
+  },
+  {
+    "num": 34,
+    "topic": "Reading Comprehension: Detail Retrieval",
+    "audio_file": null,
+    "passage": "Over the past century, the animation film industry has undergone extraordinary technological transformations. In the early twentieth century, animators had to draw and paint thousands of individual frames by hand on transparent celluloid sheets. It often took hundreds of artists several years of painstaking labor to complete a single full-length animated movie such as Walt Disney's 'Snow White and the Seven Dwarfs'.<br><br>The revolution in animation occurred with the development of Computer-Generated Imagery (CGI) in the late twentieth century. In 1995, Pixar Animation Studios released 'Toy Story', the world's very first feature-length film created entirely using computer software. Computer animation allowed directors to create realistic lighting, complex camera movements, and lifelike physical textures that were impossible with traditional drawing.<br><br>Today, modern animated films not only boast breathtaking visual effects but also deliver profound storytelling. Masterpieces like 'Coco', 'Inside Out', and 'Spirited Away' address universal human themes, including family bonds, mental health, emotional growth, and cultural heritage. Animation is no longer regarded as mere entertainment for young children; it has become a sophisticated art form appreciated by audiences of all generations worldwide.",
+    "title": "How were animated movies created in the early twentieth century?",
+    "options": {
+      "A": "By drawing and painting thousands of individual frames by hand on transparent sheets",
+      "B": "By taking photos with digital smartphones",
+      "C": "By using artificial intelligence prompts",
+      "D": "By recording live actors in computer laboratories"
+    },
+    "correct": "A",
+    "exp": "Đoạn 1 chỉ rõ: <i>'...animators had to draw and paint thousands of individual frames by hand on transparent celluloid sheets.'</i>"
+  },
+  {
+    "num": 35,
+    "topic": "Reading Comprehension: Landmark Film",
+    "audio_file": null,
+    "passage": "Over the past century, the animation film industry has undergone extraordinary technological transformations. In the early twentieth century, animators had to draw and paint thousands of individual frames by hand on transparent celluloid sheets. It often took hundreds of artists several years of painstaking labor to complete a single full-length animated movie such as Walt Disney's 'Snow White and the Seven Dwarfs'.<br><br>The revolution in animation occurred with the development of Computer-Generated Imagery (CGI) in the late twentieth century. In 1995, Pixar Animation Studios released 'Toy Story', the world's very first feature-length film created entirely using computer software. Computer animation allowed directors to create realistic lighting, complex camera movements, and lifelike physical textures that were impossible with traditional drawing.<br><br>Today, modern animated films not only boast breathtaking visual effects but also deliver profound storytelling. Masterpieces like 'Coco', 'Inside Out', and 'Spirited Away' address universal human themes, including family bonds, mental health, emotional growth, and cultural heritage. Animation is no longer regarded as mere entertainment for young children; it has become a sophisticated art form appreciated by audiences of all generations worldwide.",
+    "title": "What historical milestone was achieved by Pixar's 'Toy Story' in 1995?",
+    "options": {
+      "A": "It was the world's first feature-length film created entirely using computer software",
+      "B": "It was the first black-and-white silent movie",
+      "C": "It was the only movie to win zero film awards",
+      "D": "It was painted by one single artist in two weeks"
+    },
+    "correct": "A",
+    "exp": "Đoạn 2: <i>'In 1995, Pixar Animation Studios released \"Toy Story\", the world's very first feature-length film created entirely using computer software.'</i>"
+  },
+  {
+    "num": 36,
+    "topic": "Reading Comprehension: Vocabulary in Context",
+    "audio_file": null,
+    "passage": "Over the past century, the animation film industry has undergone extraordinary technological transformations. In the early twentieth century, animators had to draw and paint thousands of individual frames by hand on transparent celluloid sheets. It often took hundreds of artists several years of painstaking labor to complete a single full-length animated movie such as Walt Disney's 'Snow White and the Seven Dwarfs'.<br><br>The revolution in animation occurred with the development of Computer-Generated Imagery (CGI) in the late twentieth century. In 1995, Pixar Animation Studios released 'Toy Story', the world's very first feature-length film created entirely using computer software. Computer animation allowed directors to create realistic lighting, complex camera movements, and lifelike physical textures that were impossible with traditional drawing.<br><br>Today, modern animated films not only boast breathtaking visual effects but also deliver profound storytelling. Masterpieces like 'Coco', 'Inside Out', and 'Spirited Away' address universal human themes, including family bonds, mental health, emotional growth, and cultural heritage. Animation is no longer regarded as mere entertainment for young children; it has become a sophisticated art form appreciated by audiences of all generations worldwide.",
+    "title": "The word <b>'painstaking'</b> in paragraph 1 is closest in meaning to:",
+    "options": {
+      "A": "extremely careful and thorough",
+      "B": "lazy and careless",
+      "C": "quick and effortless",
+      "D": "violent and dangerous"
+    },
+    "correct": "A",
+    "exp": "<b>painstaking</b> mang nghĩa công phu, tỉ mỉ, đòi hỏi sự kiên nhẫn và cẩn trọng tột bậc: <b>extremely careful and thorough</b>."
+  },
+  {
+    "num": 37,
+    "topic": "Reading Comprehension: Themes of Modern Animation",
+    "audio_file": null,
+    "passage": "Over the past century, the animation film industry has undergone extraordinary technological transformations. In the early twentieth century, animators had to draw and paint thousands of individual frames by hand on transparent celluloid sheets. It often took hundreds of artists several years of painstaking labor to complete a single full-length animated movie such as Walt Disney's 'Snow White and the Seven Dwarfs'.<br><br>The revolution in animation occurred with the development of Computer-Generated Imagery (CGI) in the late twentieth century. In 1995, Pixar Animation Studios released 'Toy Story', the world's very first feature-length film created entirely using computer software. Computer animation allowed directors to create realistic lighting, complex camera movements, and lifelike physical textures that were impossible with traditional drawing.<br><br>Today, modern animated films not only boast breathtaking visual effects but also deliver profound storytelling. Masterpieces like 'Coco', 'Inside Out', and 'Spirited Away' address universal human themes, including family bonds, mental health, emotional growth, and cultural heritage. Animation is no longer regarded as mere entertainment for young children; it has become a sophisticated art form appreciated by audiences of all generations worldwide.",
+    "title": "What universal human themes do modern animated masterpieces address?",
+    "options": {
+      "A": "Family bonds, mental health, emotional growth, and cultural heritage",
+      "B": "How to repair bicycle flat tires",
+      "C": "Traffic laws and speeding fines",
+      "D": "Baking recipes for pizza crusts"
+    },
+    "correct": "A",
+    "exp": "Đoạn 3 nêu rõ: <i>'...address universal human themes, including family bonds, mental health, emotional growth, and cultural heritage.'</i>"
+  },
+  {
+    "num": 38,
+    "topic": "Reading Comprehension: Reference Word",
+    "audio_file": null,
+    "passage": "Over the past century, the animation film industry has undergone extraordinary technological transformations. In the early twentieth century, animators had to draw and paint thousands of individual frames by hand on transparent celluloid sheets. It often took hundreds of artists several years of painstaking labor to complete a single full-length animated movie such as Walt Disney's 'Snow White and the Seven Dwarfs'.<br><br>The revolution in animation occurred with the development of Computer-Generated Imagery (CGI) in the late twentieth century. In 1995, Pixar Animation Studios released 'Toy Story', the world's very first feature-length film created entirely using computer software. Computer animation allowed directors to create realistic lighting, complex camera movements, and lifelike physical textures that were impossible with traditional drawing.<br><br>Today, modern animated films not only boast breathtaking visual effects but also deliver profound storytelling. Masterpieces like 'Coco', 'Inside Out', and 'Spirited Away' address universal human themes, including family bonds, mental health, emotional growth, and cultural heritage. Animation is no longer regarded as mere entertainment for young children; it has become a sophisticated art form appreciated by audiences of all generations worldwide.",
+    "title": "The word <b>'it'</b> in paragraph 3 refers to:",
+    "options": {
+      "A": "Animation",
+      "B": "The celluloid sheet",
+      "C": "The camera movement",
+      "D": "A young child"
+    },
+    "correct": "A",
+    "exp": "Từ <b>'it'</b> trong <i>'it has become a sophisticated art form...'</i> thay thế cho <b>Animation</b> (nghệ thuật hoạt hình)."
+  },
+  {
+    "num": 39,
+    "topic": "Reading Comprehension: Audience of Modern Animation",
+    "audio_file": null,
+    "passage": "Over the past century, the animation film industry has undergone extraordinary technological transformations. In the early twentieth century, animators had to draw and paint thousands of individual frames by hand on transparent celluloid sheets. It often took hundreds of artists several years of painstaking labor to complete a single full-length animated movie such as Walt Disney's 'Snow White and the Seven Dwarfs'.<br><br>The revolution in animation occurred with the development of Computer-Generated Imagery (CGI) in the late twentieth century. In 1995, Pixar Animation Studios released 'Toy Story', the world's very first feature-length film created entirely using computer software. Computer animation allowed directors to create realistic lighting, complex camera movements, and lifelike physical textures that were impossible with traditional drawing.<br><br>Today, modern animated films not only boast breathtaking visual effects but also deliver profound storytelling. Masterpieces like 'Coco', 'Inside Out', and 'Spirited Away' address universal human themes, including family bonds, mental health, emotional growth, and cultural heritage. Animation is no longer regarded as mere entertainment for young children; it has become a sophisticated art form appreciated by audiences of all generations worldwide.",
+    "title": "According to the final sentence, how is animation perceived today?",
+    "options": {
+      "A": "As a sophisticated art form appreciated by audiences of all generations",
+      "B": "As outdated and forgotten entertainment",
+      "C": "As something only meant for babies",
+      "D": "As an expensive hobby for millionaires"
+    },
+    "correct": "A",
+    "exp": "Đoạn cuối: <i>'...it has become a sophisticated art form appreciated by audiences of all generations worldwide.'</i>"
+  },
+  {
+    "num": 40,
+    "topic": "Reading Comprehension: Inference",
+    "audio_file": null,
+    "passage": "Over the past century, the animation film industry has undergone extraordinary technological transformations. In the early twentieth century, animators had to draw and paint thousands of individual frames by hand on transparent celluloid sheets. It often took hundreds of artists several years of painstaking labor to complete a single full-length animated movie such as Walt Disney's 'Snow White and the Seven Dwarfs'.<br><br>The revolution in animation occurred with the development of Computer-Generated Imagery (CGI) in the late twentieth century. In 1995, Pixar Animation Studios released 'Toy Story', the world's very first feature-length film created entirely using computer software. Computer animation allowed directors to create realistic lighting, complex camera movements, and lifelike physical textures that were impossible with traditional drawing.<br><br>Today, modern animated films not only boast breathtaking visual effects but also deliver profound storytelling. Masterpieces like 'Coco', 'Inside Out', and 'Spirited Away' address universal human themes, including family bonds, mental health, emotional growth, and cultural heritage. Animation is no longer regarded as mere entertainment for young children; it has become a sophisticated art form appreciated by audiences of all generations worldwide.",
+    "title": "What can be inferred about the future of animation filmmaking?",
+    "options": {
+      "A": "Technological advancements will continue to enhance visual storytelling and emotional depth.",
+      "B": "Computers will be banned in all future animation studios.",
+      "C": "Animators will stop telling meaningful stories.",
+      "D": "Audiences will no longer watch animated movies in cinemas."
+    },
+    "correct": "A",
+    "exp": "Sự phát triển công nghệ đồ họa kết hợp với nghệ thuật kể chuyện sâu sắc sẽ tiếp tục nâng tầm điện ảnh hoạt hình trong tương lai."
+  }
+];
+
+        let currentQIndex = 0;
+        let userAnswers = new Array(QUESTIONS.length).fill(null);
+        let isSubmitted = false;
+        let timerInterval = null;
+        let secondsLeft = 45 * 60;
+        let secondsSpent = 0;
+        let cheatWarnings = 0;
+
+        // Init on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedName = localStorage.getItem('ta7_fullname') || '';
+            const savedClass = localStorage.getItem('ta7_class') || '';
+            if (savedName) document.getElementById('input-fullname').value = savedName;
+            if (savedClass) document.getElementById('input-class').value = savedClass;
+            
+            initPalette();
+            renderQuestion(0);
+        });
+
+        // Anti-Cheat Protection
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if ((e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'u' || e.key === 'a')) || e.key === 'F12') {
+                e.preventDefault();
+            }
+        });
+
+        window.addEventListener('blur', () => {
+            if (!isSubmitted && document.getElementById('modal-start').classList.contains('hidden')) {
+                cheatWarnings++;
+                if (cheatWarnings < 3) {
+                    alert(`CẢNH BÁO GIAN LẬN (${cheatWarnings}/3): Bạn vừa rời khỏi màn hình làm bài! Lần thứ 3 hệ thống sẽ tự động nộp bài.`);
+                } else if (cheatWarnings === 3) {
+                    alert('HỆ THỐNG TỰ ĐỘNG NỘP BÀI: Bạn đã rời khỏi màn hình quá 3 lần quy định!');
+                    submitExam();
+                }
+            }
+        });
+
+        function startExam() {
+            const name = document.getElementById('input-fullname').value.trim();
+            const cls = document.getElementById('input-class').value.trim();
+            if (!name || !cls) {
+                alert('Vui lòng nhập đầy đủ Họ và tên cùng Lớp học!');
+                return;
+            }
+            localStorage.setItem('ta7_fullname', name);
+            localStorage.setItem('ta7_class', cls);
+            
+            document.getElementById('header-student-name').innerText = name;
+            document.getElementById('header-student-class').innerText = cls;
+            document.getElementById('sidebar-student-name').innerText = name;
+            document.getElementById('sidebar-student-class').innerText = cls;
+
+            document.getElementById('modal-start').classList.add('hidden');
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (secondsLeft > 0) {
+                    secondsLeft--;
+                    secondsSpent++;
+                    const m = Math.floor(secondsLeft / 60).toString().padStart(2, '0');
+                    const s = (secondsLeft % 60).toString().padStart(2, '0');
+                    document.getElementById('timer-display').innerText = `${m}:${s}`;
+                } else {
+                    clearInterval(timerInterval);
+                    alert('Hết thời gian làm bài! Hệ thống đang tự động nộp bài...');
+                    submitExam();
+                }
+            }, 1000);
+        }
+
+        function initPalette() {
+            const container = document.getElementById('palette-grid');
+            container.innerHTML = '';
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const btn = document.createElement('button');
+                btn.id = `palette-btn-${i}`;
+                btn.className = 'palette-btn h-8 rounded-lg border border-slate-200 text-xs font-black text-slate-700 hover:bg-slate-100 transition-all';
+                btn.innerText = i + 1;
+                btn.onclick = () => renderQuestion(i);
+                container.appendChild(btn);
+            }
+        }
+
+        function renderQuestion(index) {
+            // Audio Player Visibility (Only show for Listening Questions 1 to 8)
+            const audioCard = document.getElementById('audio-player-card');
+            const audioEl = document.getElementById('exam-audio');
+            if (audioCard) {
+                if (index < 8) {
+                    audioCard.classList.remove('hidden');
+                } else {
+                    audioCard.classList.add('hidden');
+                    if (audioEl && !audioEl.paused) {
+                        audioEl.pause();
+                    }
+                }
+            }
+            currentQIndex = index;
+            const q = QUESTIONS[index];
+
+            // Badge & Topic
+            document.getElementById('q-badge').innerText = `Câu ${q.num} / ${QUESTIONS.length}`;
+            document.getElementById('q-topic').innerText = q.topic;
+
+            // Passage
+            const passContainer = document.getElementById('q-passage-container');
+            if (q.passage) {
+                passContainer.classList.remove('hidden');
+                document.getElementById('q-passage-content').innerHTML = q.passage;
+            } else {
+                passContainer.classList.add('hidden');
+            }
+
+            // Title
+            document.getElementById('q-title').innerHTML = q.title;
+
+            // Options
+            const optsContainer = document.getElementById('q-options');
+            optsContainer.innerHTML = '';
+            
+            const letters = ['A', 'B', 'C', 'D'];
+            letters.forEach(letter => {
+                const optText = q.options[letter];
+                const optBtn = document.createElement('div');
+                optBtn.className = `p-3.5 rounded-xl border text-xs sm:text-sm font-semibold cursor-pointer transition-all flex items-center gap-3 ${
+                    userAnswers[index] === letter 
+                        ? 'border-indigo-600 bg-indigo-50/70 text-indigo-950 ring-2 ring-indigo-500/20' 
+                        : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-800'
+                }`;
+                
+                if (isSubmitted) {
+                    optBtn.classList.remove('cursor-pointer', 'hover:bg-slate-50');
+                    if (letter === q.correct) {
+                        optBtn.className = 'p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-950 text-xs sm:text-sm font-bold flex items-center gap-3';
+                    } else if (userAnswers[index] === letter && letter !== q.correct) {
+                        optBtn.className = 'p-3.5 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-950 text-xs sm:text-sm font-bold flex items-center gap-3';
+                    }
+                } else {
+                    optBtn.onclick = () => selectOption(letter);
+                }
+
+                optBtn.innerHTML = `
+                    <span class="w-6 h-6 rounded-lg ${
+                        userAnswers[index] === letter ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700'
+                    } flex items-center justify-center font-black text-xs shrink-0">${letter}</span>
+                    <span class="flex-1">${optText}</span>
+                `;
+                optsContainer.appendChild(optBtn);
+            });
+
+            // Explanation
+            const expBox = document.getElementById('q-explanation-box');
+            if (isSubmitted) {
+                expBox.classList.remove('hidden');
+                document.getElementById('q-explanation-text').innerHTML = q.exp;
+            } else {
+                expBox.classList.add('hidden');
+            }
+
+            // Palette Active update
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const pBtn = document.getElementById(`palette-btn-${i}`);
+                if (pBtn) {
+                    if (i === index) pBtn.classList.add('ring-2', 'ring-indigo-600');
+                    else pBtn.classList.remove('ring-2', 'ring-indigo-600');
+                }
+            }
+
+            // Prev/Next buttons
+            document.getElementById('btn-prev').disabled = (index === 0);
+            document.getElementById('btn-prev').classList.toggle('opacity-40', index === 0);
+            document.getElementById('btn-next').disabled = (index === QUESTIONS.length - 1);
+            document.getElementById('btn-next').classList.toggle('opacity-40', index === QUESTIONS.length - 1);
+        }
+
+        function selectOption(letter) {
+            if (isSubmitted) return;
+            userAnswers[currentQIndex] = letter;
+            
+            // Update Palette
+            const pBtn = document.getElementById(`palette-btn-${currentQIndex}`);
+            if (pBtn) pBtn.classList.add('answered');
+
+            // Update Progress
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            document.getElementById('progress-text').innerText = `${answeredCount}/${QUESTIONS.length}`;
+            const pct = Math.round((answeredCount / QUESTIONS.length) * 100);
+            document.getElementById('percent-text').innerText = `${pct}%`;
+            document.getElementById('progress-bar-fill').style.width = `${pct}%`;
+
+            renderQuestion(currentQIndex);
+        }
+
+        function prevQuestion() {
+            if (currentQIndex > 0) renderQuestion(currentQIndex - 1);
+        }
+
+        function nextQuestion() {
+            if (currentQIndex < QUESTIONS.length - 1) renderQuestion(currentQIndex + 1);
+        }
+
+        function switchTab(tab) {
+            if (tab === 'theory') {
+                document.getElementById('tab-theory').classList.remove('hidden');
+                document.getElementById('tab-quiz').classList.add('hidden');
+                document.getElementById('tab-btn-theory').classList.add('active');
+                document.getElementById('tab-btn-quiz').classList.remove('active');
+            } else {
+                document.getElementById('tab-theory').classList.add('hidden');
+                document.getElementById('tab-quiz').classList.remove('hidden');
+                document.getElementById('tab-btn-theory').classList.remove('active');
+                document.getElementById('tab-btn-quiz').classList.add('active');
+            }
+        }
+
+        function confirmSubmit() {
+            if (isSubmitted) return;
+            const unanswered = userAnswers.filter(a => a === null).length;
+            if (unanswered > 0) {
+                if (!confirm(`Bạn còn ${unanswered} câu chưa hoàn thành. Bạn có chắc chắn muốn nộp bài ngay không?`)) {
+                    return;
+                }
+            } else {
+                if (!confirm('Bạn đã hoàn thành 40/40 câu hỏi. Bạn có chắc chắn muốn nộp bài để xem kết quả?')) {
+                    return;
+                }
+            }
+            submitExam();
+        }
+
+        function submitExam() {
+            if (isSubmitted) return;
+            isSubmitted = true;
+            clearInterval(timerInterval);
+
+            // Calculate Score
+            let correctCount = 0;
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const pBtn = document.getElementById(`palette-btn-${i}`);
+                if (userAnswers[i] === QUESTIONS[i].correct) {
+                    correctCount++;
+                    if (pBtn) {
+                        pBtn.className = 'palette-btn correct h-8 rounded-lg border text-xs font-black';
+                    }
+                } else {
+                    if (pBtn) {
+                        pBtn.className = 'palette-btn wrong h-8 rounded-lg border text-xs font-black';
+                    }
+                }
+            }
+
+            const rawScore = (correctCount * 10) / QUESTIONS.length;
+            const finalScore = rawScore.toFixed(2);
+
+            const mSpent = Math.floor(secondsSpent / 60).toString().padStart(2, '0');
+            const sSpent = (secondsSpent % 60).toString().padStart(2, '0');
+
+            document.getElementById('result-score').innerHTML = `${finalScore} <span class="text-lg font-bold text-slate-400">/ 10</span>`;
+            document.getElementById('result-correct-count').innerText = `${correctCount} / ${QUESTIONS.length}`;
+            document.getElementById('result-time-spent').innerText = `${mSpent}:${sSpent}`;
+
+            document.getElementById('btn-submit-exam').classList.add('hidden');
+            document.getElementById('review-filter-box').classList.remove('hidden');
+            document.getElementById('modal-result').classList.remove('hidden');
+
+            if (rawScore >= 8.0) {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+
+            // Sync to Google Sheets
+            syncGoogleSheets(finalScore, correctCount, `${mSpent}:${sSpent}`);
+            renderQuestion(currentQIndex);
+        }
+
+        function closeResultModal() {
+            document.getElementById('modal-result').classList.add('hidden');
+        }
+
+        function filterReview(type) {
+            if (type === 'all') {
+                renderQuestion(0);
+            } else if (type === 'wrong') {
+                const wrongIdx = userAnswers.findIndex((ans, idx) => ans !== QUESTIONS[idx].correct);
+                if (wrongIdx !== -1) renderQuestion(wrongIdx);
+                else alert('Chúc mừng! Bạn không làm sai câu nào.');
+            } else if (type === 'correct') {
+                const corrIdx = userAnswers.findIndex((ans, idx) => ans === QUESTIONS[idx].correct);
+                if (corrIdx !== -1) renderQuestion(corrIdx);
+            }
+        }
+
+        function syncGoogleSheets(score, correct, time) {
+            const name = localStorage.getItem('ta7_fullname') || 'Ẩn danh';
+            const cls = localStorage.getItem('ta7_class') || '7';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec';
+
+            const payload = {
+                ho_ten: name,
+                lop: cls,
+                mon_hoc: 'Tiếng Anh 7',
+                ten_bai: 'Review 3 (Units 7-8-9) - Test 1',
+                diem: score,
+                so_cau_dung: `${correct}/${QUESTIONS.length}`,
+                thoi_gian: time,
+                timestamp: new Date().toISOString()
+            };
+
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).catch(err => console.log('Sync note:', err));
+        }
+    </script>
+</body>
+</html>

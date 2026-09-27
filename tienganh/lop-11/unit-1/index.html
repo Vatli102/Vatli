@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 1: A Long and Healthy Life - Tiếng Anh 11 (Global Success)</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #059669;
+            --primary-dark: #047857;
+            --primary-light: #d1fae5;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #10b981;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Sticky Header */
+        .sticky-header {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        }
+        .header-container {
+            max-width: 1200px; margin: 0 auto; padding: 10px 15px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .site-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .logo-img { width: 32px; height: 32px; border-radius: 8px; object-fit: contain; }
+        .logo-text {
+            font-size: 1.25rem; font-weight: 800;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .nav-links { display: flex; gap: 14px; align-items: center; }
+        .nav-item {
+            text-decoration: none; color: #475569; font-weight: 600; font-size: 0.9rem;
+            display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s;
+        }
+        .nav-item:hover { color: #4f46e5; }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 0.4rem;
+            background: #f1f5f9;
+            padding: 0.25rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #475569;
+            padding: 0.45rem 0.9rem;
+            font-weight: 700;
+            font-size: 0.88rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn.active {
+            background: #4f46e5;
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        @media (max-width: 768px) {
+            .header-container { padding: 8px 12px; flex-direction: column; gap: 8px; }
+            .logo-text { font-size: 1.1rem; }
+            .nav-links { width: 100%; justify-content: space-between; }
+        }
+
+        .main-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+            flex: 1;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Theory Tab Styling */
+        .theory-wrapper {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2.25rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .theory-content {
+            text-align: justify;
+            line-height: 1.7;
+        }
+
+        .theory-card {
+            background: white; border-radius: 14px; padding: 20px; margin-bottom: 20px;
+            border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .theory-card-header {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        .theory-icon {
+            width: 36px; height: 36px; border-radius: 8px; background: #e0e7ff; color: #4338ca;
+            display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;
+        }
+        .theory-title { font-size: 1.15rem; font-weight: 800; color: #1e1b4b; }
+        .vocab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 10px; }
+        .vocab-card, .vocab-item {
+            background: #f8fafc; border-left: 4px solid var(--primary); padding: 10px 14px; border-radius: 8px;
+        }
+        .vocab-word { font-weight: 700; color: #1e293b; font-size: 0.95rem; }
+        .vocab-pos { font-size: 0.8rem; color: #64748b; font-style: italic; }
+        .vocab-meaning { font-size: 0.88rem; color: #475569; margin-top: 2px; }
+        .vocab-example { font-size: 0.82rem; color: #0284c7; font-style: italic; margin-top: 4px; }
+        
+        .grammar-box, .grammar-rule {
+            background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 14px 16px; margin-top: 12px;
+        }
+        .rule-title { font-weight: 700; color: #166534; font-size: 0.92rem; margin-bottom: 6px; }
+        .rule-formula {
+            background: white; padding: 8px 12px; border-radius: 6px; font-family: monospace;
+            font-weight: 700; color: #0f172a; border: 1px solid #bbf7d0; margin: 4px 0; font-size: 0.9rem;
+        }
+
+        .jump-btn-container {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px dashed var(--border);
+        }
+
+        .jump-btn {
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 800;
+            padding: 1rem 2.5rem;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.35);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .jump-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(79, 70, 229, 0.45);
+        }
+
+        /* CBT / Exam Tab Styling */
+        .exam-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .exam-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .exam-panel {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .exam-meta-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge-topic {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+        }
+
+        /* Audio Player Card */
+        .audio-player-card {
+            background: #f0fdf4;
+            border: 1.5px solid #86efac;
+            border-radius: 0.75rem;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .audio-label {
+            font-size: 0.9rem;
+            color: #166534;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .audio-player-card audio {
+            width: 100%;
+            height: 40px;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .passage-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            text-align: justify;
+            max-height: 280px;
+            overflow-y: auto;
+            line-height: 1.7;
+        }
+
+        .passage-title {
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .question-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+            line-height: 1.6;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .opt-label {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            background: white;
+            border: 1.5px solid var(--border);
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: justify;
+        }
+
+        .opt-label:hover {
+            border-color: var(--primary);
+            background: #f8fafc;
+        }
+
+        .opt-label.selected {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .opt-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #64748b;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .opt-label.selected .opt-circle {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .opt-text {
+            font-size: 1rem;
+            color: #1e293b;
+        }
+
+        .question-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .ctrl-btn {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ctrl-btn-prev {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .ctrl-btn-prev:hover {
+            background: #e2e8f0;
+        }
+
+        .ctrl-btn-next {
+            background: var(--primary);
+            color: white;
+        }
+
+        .ctrl-btn-next:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Sidebar Palette */
+        .palette-panel {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            position: sticky;
+            top: 5.5rem;
+        }
+
+        .timer-card {
+            background: #0f172a;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .timer-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            margin-bottom: 0.25rem;
+        }
+
+        .timer-val {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+
+        .user-info-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.85rem;
+        }
+
+        .progress-wrap {
+            margin-bottom: 1.25rem;
+        }
+
+        .progress-bar-bg {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0.4rem;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #06b6d4);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .palette-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pal-btn {
+            height: 38px;
+            border-radius: 0.375rem;
+            border: 1.5px solid var(--border);
+            background: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .pal-btn:hover {
+            border-color: var(--primary);
+        }
+
+        .pal-btn.answered {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary-dark);
+        }
+
+        .pal-btn.current {
+            border-color: #0f172a;
+            box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.2);
+            font-weight: 800;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            font-weight: 700;
+            padding: 0.875rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-1px);
+        }
+
+        /* Modal Dialogs */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-card {
+            background: white;
+            border-radius: 1rem;
+            max-width: 480px;
+            width: 100%;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .modal-input-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .modal-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 0.375rem;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .modal-input:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+
+        .modal-notes {
+            background: #fffbeb;
+            border-left: 4px solid var(--accent);
+            padding: 0.75rem 1rem;
+            border-radius: 0 0.375rem 0.375rem 0;
+            font-size: 0.825rem;
+            color: #92400e;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            padding: 0.875rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* Results Display */
+        .result-view {
+            background: white;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .score-banner {
+            text-align: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .score-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.5);
+        }
+
+        .score-val {
+            font-size: 2.4rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .score-max {
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
+
+        .review-item {
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            background: #fafafa;
+        }
+
+        .review-item.correct {
+            border-left: 5px solid var(--success);
+        }
+
+        .review-item.incorrect {
+            border-left: 5px solid var(--danger);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .review-exp {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background: #f1f5f9;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            color: #1e293b;
+            line-height: 1.5;
+        }
+
+        /* Site Footer */
+        .site-footer {
+            width: 100%; text-align: center; padding: 25px 15px; background: #ffffff;
+            border-top: 1px solid var(--border); margin-top: 40px; color: #64748b; font-size: 0.88rem;
+        }
+        .footer-container { max-width: 1200px; margin: 0 auto; }
+        .footer-links { margin-top: 8px; font-size: 0.82rem; }
+        .footer-links a { color: #4f46e5; text-decoration: none; margin: 0 4px; transition: color 0.2s; }
+        .footer-links a:hover { text-decoration: underline; color: #3730a3; }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+    <!-- Sticky Header -->
+    <header class="sticky-header">
+        <div class="header-container">
+            <a href="https://vatli102.com" class="site-logo">
+                <img src="favicon.svg" alt="Logo" class="logo-img">
+                <span class="logo-text">vatli102.com</span>
+            </a>
+            <div class="nav-links">
+                <a href="https://vatli102.com" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
+                <a href="https://vatli102.com/gioi-thieu.html" class="nav-item"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a>
+                <a href="https://vatli102.com/lien-he.html" class="nav-item"><i class="fa-solid fa-envelope"></i> Liên hệ</a>
+                <div class="nav-tabs">
+                    <button class="nav-btn active" id="btn-tab-theory" onclick="switchTab('theory')">
+                        <i class="fa-solid fa-book-open"></i> Lý thuyết trọng tâm
+                    </button>
+                    <button class="nav-btn" id="btn-tab-quiz" onclick="switchTab('quiz')">
+                        <i class="fa-solid fa-pen-to-square"></i> Làm bài tập củng cố
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- TAB 1: LÝ THUYẾT TRỌNG TÂM -->
+        <div id="tab-theory" class="tab-pane active">
+            <div class="theory-wrapper">
+                <div class="theory-content">
+                    
+            <article class="theory-wrapper">
+                <header style="margin-bottom: 25px; border-bottom: 2px solid var(--border); padding-bottom: 15px;">
+                    <h1 style="color: var(--primary-dark); font-size: 1.8rem; font-weight: 800; margin-bottom: 8px;">
+                        TỔNG HỢP KIẾN THỨC TRỌNG TÂM: UNIT 1 - A LONG AND HEALTHY LIFE
+                    </h1>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">
+                        Chương trình Tiếng Anh 11 Global Success - Khung GDPT 2018 | Hệ thống toàn diện Từ vựng, Cụm từ, Cấu tạo từ, Từ dễ nhầm lẫn, Ngữ pháp Quá khứ đơn vs. Hiện tại hoàn thành và Ngữ âm trợ động từ.
+                    </p>
+                </header>
+
+                <!-- SECTION 1: VOCABULARY & COLLOCATIONS -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-book-medical"></i></div>
+                        <div class="theory-title">1. Từ vựng & Cụm từ trọng tâm (Vocabulary & Collocations)</div>
+                    </div>
+                    <p style="margin-bottom: 14px; font-size: 0.93rem; color: #334155;">
+                        Chủ đề <i>A Long and Healthy Life</i> cung cấp vốn từ vựng học thuật phong phú về sức khỏe sinh học, hệ miễn dịch, chế độ dinh dưỡng và các thói quen kéo dài tuổi thọ:
+                    </p>
+                    <div class="vocab-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-word">bacteria <span class="vocab-pos">/bækˈtɪəriə/ (n. pl.)</span></div>
+                            <div class="vocab-meaning">vi khuẩn (số nhiều; danh từ số ít là <i>bacterium</i>)</div>
+                            <div class="vocab-example">Antibiotics are specifically prescribed to destroy harmful bacteria inside the body.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">antibiotic <span class="vocab-pos">/ˌæntibaɪˈɒtɪk/ (n)</span></div>
+                            <div class="vocab-meaning">thuốc kháng sinh (đặc trị nhiễm trùng vi khuẩn)</div>
+                            <div class="vocab-example">Overusing antibiotics can cause bacteria to develop dangerous drug resistance.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">immune system <span class="vocab-pos">/ɪˈmjuːn ˌsɪstəm/ (n)</span></div>
+                            <div class="vocab-meaning">hệ thống miễn dịch của cơ thể</div>
+                            <div class="vocab-example">Consuming citrus fruits loaded with vitamin C helps boost your natural immune system.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">life expectancy <span class="vocab-pos">/ˌlaɪf ɪkˈspektənsi/ (n)</span></div>
+                            <div class="vocab-meaning">tuổi thọ trung bình dự kiến (theo thống kê quần thể)</div>
+                            <div class="vocab-example">Improvements in public sanitation and modern medicine have significantly raised global life expectancy.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">longevity <span class="vocab-pos">/lɒnˈdʒevəti/ (n)</span></div>
+                            <div class="vocab-meaning">sự trường thọ, tuổi thọ cao</div>
+                            <div class="vocab-example">The remarkable longevity of Okinawa residents is attributed to their wholesome, plant-based diet.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">balanced diet <span class="vocab-pos">/ˈbælənst ˈdaɪət/ (n)</span></div>
+                            <div class="vocab-meaning">chế độ ăn uống cân bằng, lành mạnh</div>
+                            <div class="vocab-example">Adhering to a balanced diet rich in whole grains and fresh greens maintains physical vitality.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">workout routine <span class="vocab-pos">/ˈwɜːkaʊt ruːˈtiːn/ (n)</span></div>
+                            <div class="vocab-meaning">thói quen / lịch trình rèn luyện thể chất</div>
+                            <div class="vocab-example">He established an effective daily workout routine comprising brisk walking and swimming.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">cut down on <span class="vocab-pos">/kʌt daʊn ɒn/ (phr v)</span></div>
+                            <div class="vocab-meaning">cắt giảm (tiêu thụ thực phẩm, đồ uống, chi tiêu)</div>
+                            <div class="vocab-example">Doctors strongly urge teenagers to cut down on sugary soft drinks and processed snacks.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 2: WORD FORMATION -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-diagram-project"></i></div>
+                        <div class="theory-title">2. Cấu tạo từ / Dạng của từ (Word Formation)</div>
+                    </div>
+                    <p style="margin-bottom: 12px; font-size: 0.93rem; color: #334155;">
+                        Nắm vững các họ từ (Word Families) giúp học sinh làm chủ dạng bài biến đổi từ và điền khuyết trong đề thi THPT:
+                    </p>
+                    <div class="vocab-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-word">infect &rarr; infection &rarr; infectious &rarr; disinfect</div>
+                            <div class="vocab-meaning">
+                                - <b>infect (v):</b> lây nhiễm, làm nhiễm trùng.<br>
+                                - <b>infection (n):</b> sự nhiễm trùng, căn bệnh lây.<br>
+                                - <b>infectious (adj):</b> có tính lây truyền (infectious disease).<br>
+                                - <b>disinfect (v):</b> khử trùng, sát khuẩn.
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">nutrition &rarr; nutrient &rarr; nutritious &rarr; nutritionist</div>
+                            <div class="vocab-meaning">
+                                - <b>nutrition (n):</b> dinh dưỡng học, chế độ dinh dưỡng.<br>
+                                - <b>nutrient (n):</b> chất dinh dưỡng (protein, vitamin...).<br>
+                                - <b>nutritious (adj):</b> bổ dưỡng, giàu chất bổ.<br>
+                                - <b>nutritionist (n):</b> chuyên gia dinh dưỡng.
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">live &rarr; life &rarr; longevity &rarr; lifelong</div>
+                            <div class="vocab-meaning">
+                                - <b>live (v):</b> sống, sinh sống.<br>
+                                - <b>life (n):</b> sự sống, cuộc sống.<br>
+                                - <b>longevity (n):</b> sự sống lâu, trường thọ.<br>
+                                - <b>lifelong (adj):</b> suốt đời (lifelong learning).
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">treat &rarr; treatment &rarr; treatable &rarr; untreatable</div>
+                            <div class="vocab-meaning">
+                                - <b>treat (v):</b> điều trị, chữa trị.<br>
+                                - <b>treatment (n):</b> liệu trình, phương pháp điều trị.<br>
+                                - <b>treatable (adj):</b> có thể điều trị khỏi.<br>
+                                - <b>untreatable (adj):</b> vô phương cứu chữa.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 3: CONFUSING WORDS -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-arrows-split-up-and-left"></i></div>
+                        <div class="theory-title">3. Phân biệt các từ dễ gây nhầm lẫn (Confusing Words)</div>
+                    </div>
+                    <div class="vocab-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-word">Disease vs. Illness vs. Sickness</div>
+                            <div class="vocab-meaning">
+                                <b>- Disease:</b> Bệnh tật cụ thể có chẩn đoán y khoa, do mầm bệnh virus/vi khuẩn gây nên (ví dụ: <i>heart disease, infectious disease</i>).<br>
+                                <b>- Illness:</b> Trạng thái đau ốm, cảm giác suy nhược sức khỏe nói chung.<br>
+                                <b>- Sickness:</b> Cơn buồn nôn, chứng say tàu xe (<i>car sickness</i>) hoặc giai đoạn ốm ngắn ngày.
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">Cure vs. Treat vs. Heal</div>
+                            <div class="vocab-meaning">
+                                <b>- Cure:</b> Chữa khỏi dứt điểm một căn bệnh (<i>cure the infection</i>).<br>
+                                <b>- Treat:</b> Tiến hành điều trị y tế (kê đơn, chăm sóc) nhưng chưa khẳng định khỏi hẳn (<i>treat a patient</i>).<br>
+                                <b>- Heal:</b> Vết thương, vết bỏng ngoài da hoặc vết thương tâm lý tự liền miệng, hồi phục (<i>the wound healed completely</i>).
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">Prescription vs. Recipe</div>
+                            <div class="vocab-meaning">
+                                <b>- Prescription:</b> Đơn thuốc do bác sĩ kê theo chỉ định y tế.<br>
+                                <b>- Recipe:</b> Công thức và hướng dẫn nấu món ăn.
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">Diet vs. Meal</div>
+                            <div class="vocab-meaning">
+                                <b>- Diet:</b> Chế độ ăn uống tổng thể thường ngày (<i>a balanced diet</i>, <i>a vegan diet</i>).<br>
+                                <b>- Meal:</b> Bữa ăn cụ thể trong ngày (<i>breakfast, lunch, dinner</i>).
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 4: GRAMMAR -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-spell-check"></i></div>
+                        <div class="theory-title">4. Ngữ pháp: Quá khứ đơn (Past Simple) vs. Hiện tại hoàn thành (Present Perfect)</div>
+                    </div>
+                    
+                    <div class="grammar-box">
+                        <div class="rule-title">A. Thì Quá khứ đơn (Past Simple Tense)</div>
+                        <p>Dùng để diễn tả hành động, sự việc đã xảy ra và kết thúc hoàn toàn tại một thời điểm xác định trong quá khứ.</p>
+                        <div class="rule-formula">Khẳng định: S + V2/ed | Phủ định: S + did not + V-inf | Nghi vấn: Did + S + V-inf?</div>
+                        <p style="margin-top: 6px; font-size: 0.88rem;"><b>Dấu hiệu nhận biết:</b> <i>yesterday, last night/week/month/year, in 2020, ago, when I was a child...</i></p>
+                        <p style="font-size: 0.85rem; color: #166534; font-style: italic; margin-top: 3px;">Ví dụ: Dr. Davis <b>examined</b> thirty patients yesterday afternoon.</p>
+                    </div>
+
+                    <div class="grammar-box" style="margin-top: 14px; background: #eff6ff; border-color: #93c5fd;">
+                        <div class="rule-title" style="color: #1e40af;">B. Thì Hiện tại hoàn thành (Present Perfect Tense)</div>
+                        <p>Dùng để diễn tả hành động bắt đầu trong quá khứ kéo dài đến hiện tại, hoặc hành động vừa mới xảy ra để lại kết quả ở hiện tại, hoặc trải nghiệm tính đến thời điểm nói.</p>
+                        <div class="rule-formula" style="border-color: #bfdbfe;">Khẳng định: S + have / has + V3/ed | Phủ định: S + haven't / hasn't + V3/ed | Nghi vấn: Have/Has + S + V3/ed?</div>
+                        <p style="margin-top: 6px; font-size: 0.88rem;"><b>Dấu hiệu nhận biết:</b> <i>since + mốc thời gian, for + khoảng thời gian, already, yet, just, recently, so far, ever, never, several times...</i></p>
+                        <p style="font-size: 0.85rem; color: #1e40af; font-style: italic; margin-top: 3px;">Ví dụ: Linda <b>has followed</b> a strict organic diet for six months.</p>
+                    </div>
+
+                    <div class="grammar-box" style="margin-top: 14px; background: #fffbeb; border-color: #fde68a;">
+                        <div class="rule-title" style="color: #b45309;">C. Các mẫu câu chuyển đổi thì kinh điển trong đề thi THPT</div>
+                        <p style="font-size: 0.88rem; color: #334155;">
+                            1. <code>S + last + V2/ed + time + ago</code> &hArr; <code>S + haven't/hasn't + V3/ed + for + time</code><br>
+                            2. <code>It is + time + since + S + started + V-ing</code> &hArr; <code>S + have/has + V3/ed + for + time</code><br>
+                            3. <code>This is the first time + S + have/has + V3/ed</code> &hArr; <code>S + have/has + never + V3/ed + before</code>
+                        </p>
+                    </div>
+                </section>
+
+                <!-- SECTION 5: PRONUNCIATION -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-volume-high"></i></div>
+                        <div class="theory-title">5. Ngữ âm: Dạng mạnh & dạng yếu của Trợ động từ (Strong and Weak Forms)</div>
+                    </div>
+                    <div class="vocab-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-word">Dạng yếu (Weak Form)</div>
+                            <div class="vocab-meaning">
+                                Trong câu nói thông thường, khi trợ động từ không được nhấn mạnh, nguyên âm thường chuyển thành âm lướt nhẹ <b>/ə/</b> hoặc <b>/ɪ/</b>:<br>
+                                - <b>do:</b> /də/ | <b>does:</b> /dəz/ | <b>can:</b> /kən/<br>
+                                - <b>have:</b> /həv/ | <b>has:</b> /həz/ | <b>was:</b> /wəz/ | <b>were:</b> /wə(r)/
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">Dạng mạnh (Strong Form)</div>
+                            <div class="vocab-meaning">
+                                Được dùng khi trợ động từ đứng ở cuối câu (câu trả lời ngắn), hoặc khi người nói muốn nhấn mạnh sự khẳng định / tương phản:<br>
+                                - <i>Yes, I <b>do</b> /duː/.</i><br>
+                                - <i>Yes, she <b>can</b> /kæn/.</i><br>
+                                - <i>He <b>has</b> /hæz/ finished it.</i>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="jump-btn-container">
+                    <button class="jump-btn" onclick="switchTab('quiz')">
+                        <i class="fa-solid fa-pen-to-square"></i> Làm bài tập củng cố
+                    </button>
+                </div>
+            </article>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: LÀM BÀI TẬP CỦNG CỐ -->
+        <div id="tab-quiz" class="tab-pane">
+            <!-- Modal Login / Start Prompt -->
+            <div id="modal-start" class="modal-overlay">
+                <div class="modal-card">
+                    <div class="modal-header">
+                        <div style="width: 50px; height: 50px; background: #eff6ff; color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 10px;">
+                            <i class="fa-solid fa-user-graduate"></i>
+                        </div>
+                        <h3 class="modal-title">THÔNG TIN HỌC SINH</h3>
+                        <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.25rem;">Unit 1: A Long and Healthy Life (40 câu / 45 phút)</p>
+                    </div>
+                    <div class="modal-input-group">
+                        <label class="modal-label">Họ và tên của bạn (*)</label>
+                        <input type="text" id="inp-name" class="modal-input" placeholder="Ví dụ: Nguyễn Văn A">
+                    </div>
+                    <div class="modal-input-group">
+                        <label class="modal-label">Lớp / Trường (*)</label>
+                        <input type="text" id="inp-class" class="modal-input" placeholder="Ví dụ: 11A1 - THPT Chuyên">
+                    </div>
+                    <div class="modal-notes">
+                        <b><i class="fa-solid fa-shield-halved"></i> QUY ĐỊNH BẢO MẬT & CHỐNG GIAN LẬN:</b><br>
+                        • 40 câu trắc nghiệm (có 8 câu Audio Nghe), thời gian 45 phút.<br>
+                        • Khóa copy, chuột phải và phím tắt F12.<br>
+                        • Rời tab quá 3 lần hệ thống sẽ tự động thu bài!
+                    </div>
+                    <button class="modal-btn" onclick="startExam()">BẮT ĐẦU LÀM BÀI</button>
+                </div>
+            </div>
+
+            <!-- Active Exam Screen -->
+            <div id="exam-screen" class="exam-grid" style="display: none;">
+                <!-- Left: Question Panel -->
+                <div class="exam-panel">
+                    <div class="exam-meta-bar">
+                        <span class="badge-topic" id="q-topic">Chủ điểm kiến thức</span>
+                        <span style="font-weight: 700; color: var(--primary-dark);" id="q-progress">Câu 1 / 40</span>
+                    </div>
+
+                    <!-- Audio Player for Listening questions -->
+                    <div id="audio-container" class="audio-player-card" style="display: none;">
+                        <div class="audio-label">
+                            <i class="fa-solid fa-headphones-simple"></i> <b>Audio phần Nghe (Listening Comprehension - Câu 1 đến 8):</b>
+                        </div>
+                        <audio id="audio-player" controls preload="auto">
+                            <source src="Unit 1 - Listening.mp3" type="audio/mpeg">
+                            Trình duyệt của bạn không hỗ trợ phát âm thanh HTML5.
+                        </audio>
+                    </div>
+
+                    <!-- Reading / Cloze Passage if any -->
+                    <div id="passage-container" class="passage-box" style="display: none;">
+                        <div class="passage-title" id="passage-title">ĐOẠN VĂN</div>
+                        <div id="passage-body"></div>
+                    </div>
+
+                    <!-- Question Prompt -->
+                    <div class="question-title" id="q-title">Nội dung câu hỏi đang được tải...</div>
+
+                    <!-- Options List -->
+                    <div class="options-list" id="opt-container"></div>
+
+                    <!-- Navigation Controls -->
+                    <div class="question-footer">
+                        <button class="ctrl-btn ctrl-btn-prev" id="btn-prev" onclick="prevQuestion()">
+                            <i class="fa-solid fa-arrow-left"></i> Câu trước
+                        </button>
+                        <button class="ctrl-btn ctrl-btn-next" id="btn-next" onclick="nextQuestion()">
+                            Câu tiếp theo <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right: Sticky Sidebar Palette -->
+                <div class="palette-panel">
+                    <div class="timer-card">
+                        <div class="timer-label"><i class="fa-regular fa-clock"></i> THỜI GIAN CÒN LẠI</div>
+                        <div class="timer-val" id="timer-display">45:00</div>
+                    </div>
+
+                    <div class="user-info-card">
+                        <div style="font-weight: 700; color: #1e293b;" id="user-display-name">Học sinh: ---</div>
+                        <div style="color: #64748b; font-size: 0.8rem;" id="user-display-class">Lớp: ---</div>
+                    </div>
+
+                    <div class="progress-wrap">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="progress-bar"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>Tiến độ làm bài</span>
+                            <span id="progress-percent">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="palette-title">
+                        <span>Bảng câu hỏi (40 câu)</span>
+                        <span style="font-size: 0.8rem; font-weight: 500; color: var(--primary);" id="answered-count">0/40</span>
+                    </div>
+
+                    <div class="palette-grid" id="palette-grid"></div>
+
+                    <button class="submit-btn" onclick="confirmSubmit()">
+                        <i class="fa-solid fa-paper-plane"></i> NỘP BÀI THI
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result Screen -->
+            <div id="result-screen" class="result-view" style="display: none;">
+                <div class="score-banner">
+                    <div class="score-circle">
+                        <div class="score-val" id="final-score">0.0</div>
+                        <div class="score-max">/ 10 ĐIỂM</div>
+                    </div>
+                    <h2 style="font-size: 1.5rem; font-weight: 800; color: #1e293b; margin-bottom: 0.5rem;">KẾT QUẢ BÀI LÀM CỦNG CỐ</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;" id="result-detail">Thí sinh: ...</p>
+                    <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('all')">Tất cả</button>
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('wrong')">Câu sai</button>
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('correct')">Câu đúng</button>
+                    </div>
+                </div>
+                <div class="review-list" id="review-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Site Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <p> VATLI102.COM - Hệ thống Học tập & Đánh giá Năng lực Tiếng Anh THPT Chuẩn GDPT 2018.</p>
+            <div class="footer-links">
+                <a href="https://vatli102.com">Trang chủ</a> • 
+                <a href="https://vatli102.com/lop-11">Tiếng Anh 11</a> • 
+                <a href="https://vatli102.com/de-thi">Ngân hàng đề thi</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT ENGINE -->
+    <script>
+        const LESSON_TITLE = "Unit 1: A Long and Healthy Life";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
+        const QUESTIONS = [{"num": 1, "topic": "Nghe hiểu - Đối thoại chi tiết", "passageId": null, "audio_file": "Unit 1 - Listening.mp3", "title": "Why has Lan been visiting Dr. Davis?", "options": {"A": "She suffered a severe physical injury from jogging.", "B": "She has been feeling sluggish and fatigued lately.", "C": "She needs a prescription for a bacterial infection.", "D": "She wants to join a professional sports competition."}, "correct": "B", "exp": "Trong đoạn hội thoại, Lan nói: <i>'I've been feeling quite sluggish and tired lately, especially in the afternoons.'</i> (Dạo này em cảm thấy khá uể oải và mệt mỏi, đặc biệt vào buổi chiều). Do đó phương án đúng là <b>B</b>.", "translation": "Tại sao Lan đến gặp bác sĩ Davis? -> Vì dạo gần đây cô ấy cảm thấy uể oải và mệt mỏi."}, {"num": 2, "topic": "Nghe hiểu - Tác động sinh học", "passageId": null, "audio_file": "Unit 1 - Listening.mp3", "title": "According to Dr. Davis, what negative effect does skipping breakfast have?", "options": {"A": "It permanently damages the digestive organs.", "B": "It deprives the brain of essential glucose and causes afternoon fatigue.", "C": "It directly causes severe viral infections.", "D": "It prevents the body from absorbing any water."}, "correct": "B", "exp": "Bác sĩ Davis giải thích: <i>'Skipping breakfast deprives your brain of essential glucose, which causes that afternoon fatigue.'</i> (Bỏ bữa sáng làm não bộ thiếu hụt lượng đường glucose cần thiết, dẫn đến sự mệt mỏi vào buổi chiều).", "translation": "Theo bác sĩ Davis, việc bỏ bữa sáng gây ra tác hại gì? -> Làm não thiếu glucose và gây mệt mỏi vào buổi chiều."}, {"num": 3, "topic": "Nghe hiểu - Lời khuyên dinh dưỡng", "passageId": null, "audio_file": "Unit 1 - Listening.mp3", "title": "What does Dr. Davis recommend Lan eat for breakfast?", "options": {"A": "Fast food and processed snacks near school", "B": "Sugary carbonated drinks and candies", "C": "Whole grains, eggs, or fresh fruit", "D": "Only vitamin supplements without solid food"}, "correct": "C", "exp": "Bác sĩ Davis khuyên: <i>'First, never skip breakfast; have whole grains, eggs, or fresh fruit.'</i> (Trước hết không được bỏ bữa sáng; hãy ăn ngũ cốc nguyên hạt, trứng hoặc trái cây tươi).", "translation": "Bác sĩ Davis khuyên Lan nên ăn gì cho bữa sáng? -> Ngũ cốc nguyên hạt, trứng hoặc trái cây tươi."}, {"num": 4, "topic": "Nghe hiểu - Tần suất rèn luyện", "passageId": null, "audio_file": "Unit 1 - Listening.mp3", "title": "How often should Lan do moderate aerobic exercise according to the doctor?", "options": {"A": "Only once every two weeks", "B": "Four to five times a week for at least 30 minutes", "C": "Two hours exclusively on Sunday afternoons", "D": "Every single hour throughout the day"}, "correct": "B", "exp": "Bác sĩ Davis khuyên: <i>'aim for at least 30 minutes of moderate aerobic exercise, like brisk walking or cycling, four to five times a week, rather than just on weekends.'</i> (hướng tới ít nhất 30 phút tập aerobic vừa phải, 4 đến 5 lần mỗi tuần).", "translation": "Lan nên tập thể dục nhịp điệu với tần suất như thế nào? -> 4 đến 5 lần một tuần, mỗi lần ít nhất 30 phút."}, {"num": 5, "topic": "Nghe hiểu - Thông tin Vùng Xanh", "passageId": null, "audio_file": "Unit 1 - Listening.mp3", "title": "What is a prominent characteristic of 'Blue Zones' mentioned by the speaker?", "options": {"A": "They have the most advanced and expensive hospitals in the world.", "B": "Many residents actively live past the age of one hundred.", "C": "People rely exclusively on pharmaceutical longevity pills.", "D": "Residents never engage in any physical labor or walking."}, "correct": "B", "exp": "Người nói nêu rõ: <i>'there are specific regions known as Blue Zones... where people consistently live active lives past the age of one hundred.'</i> (những khu vực nơi người dân sống năng động vượt qua tuổi 100).", "translation": "Đặc điểm nổi bật của 'Vùng Xanh' (Blue Zones) là gì? -> Nhiều người dân sống khỏe mạnh, năng động qua tuổi 100."}, {"num": 6, "topic": "Nghe hiểu - Chế độ ăn trường thọ", "passageId": null, "audio_file": "Unit 1 - Listening.mp3", "title": "What forms the foundation of the centenarians' diet in Blue Zones?", "options": {"A": "Predominantly plant-based foods such as whole grains, legumes, and fresh vegetables", "B": "Large amounts of red meat and dairy products every day", "C": "Processed canned food and artificial sweetening agents", "D": "Imported high-calorie fast food"}, "correct": "A", "exp": "Trong bài nói: <i>'their diets are predominantly plant-based, consisting of whole grains, legumes, nuts, and fresh seasonal vegetables'</i>.", "translation": "Nền tảng chế độ ăn của các cụ thọ trăm tuổi ở Vùng Xanh là gì? -> Chủ yếu từ thực vật như ngũ cốc nguyên hạt, các loại đậu và rau tươi."}, {"num": 7, "topic": "Nghe hiểu - Vận động tự nhiên", "passageId": null, "audio_file": "Unit 1 - Listening.mp3", "title": "How do people in Blue Zones incorporate physical activity into their lives?", "options": {"A": "By training vigorously in indoor fitness gyms daily", "B": "By naturally integrating movement like walking and gardening into daily chores", "C": "By running long-distance marathons every month", "D": "By relying solely on electric vehicles for transport"}, "correct": "B", "exp": "Trong bài: <i>'physical activity is naturally integrated into their daily routine; they walk everywhere, garden, and do manual chores'</i>.", "translation": "Người dân ở Vùng Xanh vận động thể chất bằng cách nào? -> Tự nhiên lồng ghép vận động như đi bộ, làm vườn vào công việc hàng ngày."}, {"num": 8, "topic": "Nghe hiểu - Triết lý Ikigai", "passageId": null, "audio_file": "Unit 1 - Listening.mp3", "title": "What does the Okinawan concept of 'Ikigai' refer to?", "options": {"A": "A special traditional herbal medication", "B": "A rigorous dietary restriction plan", "C": "A strong sense of life purpose and meaning", "D": "An intense cardiovascular workout technique"}, "correct": "C", "exp": "Người nói chỉ ra: <i>'strong social connections and a clear sense of purpose—known in Okinawa as Ikigai—keep their minds resilient'</i>.", "translation": "Khái niệm 'Ikigai' của người dân Okinawa chỉ điều gì? -> Lẽ sống, ý nghĩa và mục đích sống rõ ràng."}, {"num": 9, "topic": "Phát âm nguyên âm", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word whose underlined part differs from the other three in pronunciation:", "options": {"A": "bacteri<u>a</u>", "B": "tr<u>a</u>vel", "C": "h<u>a</u>bit", "D": "f<u>a</u>t"}, "correct": "A", "exp": "<b>bacteria</b> /bækˈtɪəriə/ (phần gạch chân phát âm là <b>/ə/</b>). Các từ <i>travel</i> /ˈtrævl/, <i>habit</i> /ˈhæbɪt/, <i>fat</i> /fæt/ đều có phần gạch chân phát âm là <b>/æ/</b>.", "translation": "Phát âm nguyên âm 'a': bacteria (/ə/) khác với travel, habit, fat (/æ/)."}, {"num": 10, "topic": "Phát âm đuôi -ed", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word whose underlined part differs from the other three in pronunciation:", "options": {"A": "infect<u>ed</u>", "B": "treat<u>ed</u>", "C": "boost<u>ed</u>", "D": "examin<u>ed</u>"}, "correct": "D", "exp": "<b>examined</b> kết thúc bằng âm hữu thanh /n/ nên <i>-ed</i> phát âm là <b>/d/</b> (/ɪɡˈzæmɪnd/). Các từ <i>infected</i>, <i>treated</i>, <i>boosted</i> kết thúc bằng /t/ nên <i>-ed</i> phát âm là <b>/ɪd/</b>.", "translation": "Phát âm đuôi -ed: examined phát âm là /d/, ba từ còn lại phát âm là /ɪd/."}, {"num": 11, "topic": "Trọng âm 2 âm tiết", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word that differs from the other three in the position of primary stress:", "options": {"A": "fitness", "B": "diet", "C": "disease", "D": "muscle"}, "correct": "C", "exp": "<b>disease</b> có trọng âm rơi vào âm tiết thứ 2 (/dɪˈziːz/). Các từ <i>fitness</i> /ˈfɪtnəs/, <i>diet</i> /ˈdaɪət/, <i>muscle</i> /ˈmʌsl/ đều có trọng âm rơi vào âm tiết thứ 1.", "translation": "Trọng âm từ 2 âm tiết: disease nhấn âm 2, các từ còn lại nhấn âm 1."}, {"num": 12, "topic": "Trọng âm 3-4 âm tiết", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word that differs from the other three in the position of primary stress:", "options": {"A": "nutrient", "B": "longevity", "C": "mineral", "D": "exercise"}, "correct": "B", "exp": "<b>longevity</b> có trọng âm rơi vào âm tiết thứ 2 (/lɒnˈdʒevəti/). Các từ <i>nutrient</i> /ˈnjuːtriənt/, <i>mineral</i> /ˈmɪnərəl/, <i>exercise</i> /ˈeksəsaɪz/ đều có trọng âm rơi vào âm tiết thứ 1.", "translation": "Trọng âm: longevity nhấn âm 2, các từ còn lại nhấn âm 1."}, {"num": 13, "topic": "Từ vựng Y học & Dược phẩm", "passageId": null, "title": "Penicillin is one of the most famous ______ that revolutionized modern medicine by killing infectious bacteria.", "options": {"A": "antibiotics", "B": "nutrients", "C": "prescriptions", "D": "ingredients"}, "correct": "A", "exp": "<b>antibiotics</b> (n): thuốc kháng sinh (chuyên tiêu diệt vi khuẩn gây bệnh). <i>Nutrient</i>: chất dinh dưỡng; <i>prescription</i>: đơn thuốc; <i>ingredient</i>: thành phần.", "translation": "Penicillin là một trong những loại thuốc kháng sinh nổi tiếng nhất giúp cứu sống hàng triệu người bằng cách tiêu diệt vi khuẩn lây nhiễm."}, {"num": 14, "topic": "Cụm từ Cố định (Collocation)", "passageId": null, "title": "Regular cardiovascular workouts help enhance your ______ system, making you less susceptible to seasonal flu.", "options": {"A": "digestive", "B": "immune", "C": "nervous", "D": "respiratory"}, "correct": "B", "exp": "Cụm danh từ cố định <b>immune system</b> (hệ thống miễn dịch). <i>Digestive system</i>: hệ tiêu hóa; <i>nervous system</i>: hệ thần kinh; <i>respiratory system</i>: hệ hô hấp.", "translation": "Tập luyện tim mạch đều đặn giúp tăng cường hệ miễn dịch, làm bạn ít bị nhiễm cảm cúm theo mùa."}, {"num": 15, "topic": "Thì Hiện tại hoàn thành (Since)", "passageId": null, "title": "Dr. Minh ______ at this community health center since he graduated from medical university in 2018.", "options": {"A": "works", "B": "worked", "C": "has worked", "D": "is working"}, "correct": "C", "exp": "Mệnh đề có <i>'since + mốc thời gian quá khứ'</i> diễn tả hành động bắt đầu trong quá khứ kéo dài đến hiện tại -> Dùng thì <b>Hiện tại hoàn thành (has worked)</b>.", "translation": "Bác sĩ Minh đã làm việc tại trung tâm y tế cộng đồng này từ khi tốt nghiệp đại học y năm 2018."}, {"num": 16, "topic": "Thì Quá khứ đơn (Last night)", "passageId": null, "title": "Last night, Nam ______ a severe stomachache after eating unhygienic street food, so his parents took him to the hospital.", "options": {"A": "has had", "B": "had", "C": "was having", "D": "had had"}, "correct": "B", "exp": "Dấu hiệu thời gian <i>'Last night'</i> chỉ thời điểm xác định trong quá khứ đã chấm dứt hoàn toàn -> Dùng thì <b>Quá khứ đơn (had)</b>.", "translation": "Tối qua, Nam bị đau dạ dày dữ dội sau khi ăn đồ ăn đường phố không hợp vệ sinh, nên bố mẹ đã đưa bạn ấy vào viện."}, {"num": 17, "topic": "Cụm danh từ Tuổi thọ", "passageId": null, "title": "Scientists have found that adopting a plant-based diet can dramatically increase human life ______.", "options": {"A": "expectation", "B": "expectancy", "C": "expectant", "D": "unexpected"}, "correct": "B", "exp": "Thuật ngữ nhân khẩu học & y tế: <b>life expectancy</b> (tuổi thọ trung bình dự kiến).", "translation": "Các nhà khoa học phát hiện áp dụng chế độ ăn thực vật có thể tăng đáng kể tuổi thọ trung bình của con người."}, {"num": 18, "topic": "Cụm động từ (Phrasal Verb)", "passageId": null, "title": "To prevent obesity and maintain optimal fitness, nutritionists suggest that we should ______ on fast food and soft drinks.", "options": {"A": "cut down", "B": "carry out", "C": "give up", "D": "take over"}, "correct": "A", "exp": "Cụm động từ <b>cut down on</b> (cắt giảm tiêu thụ). <i>Carry out</i>: tiến hành; <i>give up</i>: từ bỏ; <i>take over</i>: tiếp quản.", "translation": "Để ngăn ngừa béo phì và duy trì thể lực tối ưu, chuyên gia dinh dưỡng gợi ý nên cắt giảm thức ăn nhanh và đồ uống ngọt."}, {"num": 19, "topic": "Từ đồng nghĩa (Closest Meaning)", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word(s) CLOSEST in meaning to the underlined word:\nConsuming a <u>nutritious</u> diet filled with fresh vegetables and fruits is crucial for long-term health.", "options": {"A": "wholesome", "B": "harmful", "C": "artificial", "D": "poisonous"}, "correct": "A", "exp": "<b>nutritious</b> (adj): bổ dưỡng, lành mạnh = <b>wholesome</b> (adj): tốt cho sức khỏe. <i>Harmful</i>: có hại; <i>artificial</i>: nhân tạo; <i>poisonous</i>: độc hại.", "translation": "Từ đồng nghĩa: nutritious (bổ dưỡng) = wholesome."}, {"num": 20, "topic": "Từ trái nghĩa (Opposite Meaning)", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word(s) OPPOSITE in meaning to the underlined word:\nA <u>sedentary</u> lifestyle with prolonged sitting behind a screen increases the risk of heart disease.", "options": {"A": "inactive", "B": "physically active", "C": "sluggish", "D": "motionless"}, "correct": "B", "exp": "<b>sedentary</b> (adj): ít vận động, ngồi một chỗ. Trái nghĩa là <b>physically active</b> (năng động, vận động thể chất thường xuyên).", "translation": "Từ trái nghĩa: sedentary (ít vận động) >< physically active (năng động)."}, {"num": 21, "topic": "Câu hỏi với How long", "passageId": null, "title": "How long ______ you ______ your current fitness regimen at the gym?", "options": {"A": "did / practice", "B": "have / practiced", "C": "do / practice", "D": "are / practicing"}, "correct": "B", "exp": "Hỏi về khoảng thời gian kéo dài từ quá khứ đến hiện tại với <i>'How long'</i> -> Dùng thì <b>Hiện tại hoàn thành (have you practiced)</b>.", "translation": "Bạn đã tập luyện chế độ thể hình hiện tại ở phòng gym được bao lâu rồi?"}, {"num": 22, "topic": "Phân biệt Treat vs. Cure vs. Heal", "passageId": null, "title": "Although the patient suffered from a severe infection, doctors managed to ______ him with new antiviral therapy.", "options": {"A": "treat", "B": "heal", "C": "cure", "D": "recover"}, "correct": "C", "exp": "<b>cure somebody</b>: chữa khỏi dứt điểm bệnh cho ai đó. <i>Treat</i>: điều trị (chưa khẳng định khỏi hẳn); <i>heal</i>: vết thương tự liền sẹo; <i>recover</i>: tự hồi phục.", "translation": "Mặc dù bệnh nhân bị nhiễm trùng nặng, các bác sĩ đã chữa khỏi dứt điểm cho anh ấy bằng liệu pháp kháng virus mới."}, {"num": 23, "topic": "Giao tiếp - Đồng tình ý kiến", "passageId": null, "title": "Tom is talking to Mary about staying healthy:\nTom: 'I think going to bed before 10:30 PM significantly improves our mental focus.'\nMary: '______. I always feel refreshed and alert whenever I sleep early.'", "options": {"A": "I don't think so at all", "B": "I couldn't agree with you more", "C": "You must be kidding", "D": "That is completely unacceptable"}, "correct": "B", "exp": "<b>'I couldn't agree with you more'</b> thể hiện sự đồng tình 100% với ý kiến của Tom (Tôi hoàn toàn đồng ý với bạn. Tôi luôn cảm thấy sảng khoái và tỉnh táo mỗi khi đi ngủ sớm).", "translation": "Giao tiếp: Tom: 'Tôi nghĩ đi ngủ trước 10h30 tối giúp cải thiện sự tập trung tinh thần.' - Mary: 'Tôi hoàn toàn đồng ý với bạn...'"}, {"num": 24, "topic": "Giao tiếp - Cảm ơn lời khuyên", "passageId": null, "title": "Lan is giving advice to her classmate Phong, who has a sore throat:\nLan: 'You should drink warm ginger tea and avoid cold drinks for a few days.'\nPhong: '______. I'll give it a try.'", "options": {"A": "Never mind", "B": "Thanks for your advice", "C": "It doesn't matter to me", "D": "No problem, forget it"}, "correct": "B", "exp": "Khi nhận được lời khuyên hữu ích, câu đáp lịch sự nhất là cảm ơn: <b>'Thanks for your advice'</b> (Cảm ơn lời khuyên của bạn).", "translation": "Giao tiếp: Lan: 'Bạn nên uống trà gừng ấm và tránh đồ uống lạnh...' - Phong: 'Cảm ơn lời khuyên của bạn. Mình sẽ thử ngay.'"}, {"num": 25, "topic": "Đọc điền từ - Danh từ", "passageId": "cloze", "title": "Choose the best answer for blank (25):", "options": {"A": "longevity", "B": "illness", "C": "fatigue", "D": "infection"}, "correct": "A", "exp": "Ngữ cảnh <i>'determining future ______ and vitality'</i> (quyết định tuổi thọ và sức sống trong tương lai) -> Danh từ <b>longevity</b> (sự trường thọ) là chính xác.", "translation": "Điền vào chỗ trống (25): longevity (tuổi thọ/sự trường thọ)."}, {"num": 26, "topic": "Đọc điền từ - Tính từ hệ cơ quan", "passageId": "cloze", "title": "Choose the best answer for blank (26):", "options": {"A": "immune", "B": "digestive", "C": "respiratory", "D": "skeletal"}, "correct": "A", "exp": "Cụm từ <b>immune system</b> (hệ thống miễn dịch) đi cùng ý nghĩa <i>'fight off harmful bacteria and viral infections'</i>.", "translation": "Điền vào chỗ trống (26): immune (hệ miễn dịch)."}, {"num": 27, "topic": "Đọc điền từ - Cụm động từ", "passageId": "cloze", "title": "Choose the best answer for blank (27):", "options": {"A": "break", "B": "cut", "C": "turn", "D": "fall"}, "correct": "B", "exp": "Cụm từ <b>cut down on</b> (cắt giảm tiêu thụ fast food, đồ uống ngọt...).", "translation": "Điền vào chỗ trống (27): cut (trong cụm 'cut down on' = cắt giảm)."}, {"num": 28, "topic": "Đọc điền từ - Động từ sinh học", "passageId": "cloze", "title": "Choose the best answer for blank (28):", "options": {"A": "regenerate", "B": "deteriorate", "C": "infect", "D": "contaminate"}, "correct": "A", "exp": "Giấc ngủ giúp <i>'brain cells to recharge and tissues to regenerate'</i> (tế bào não nạp năng lượng và các mô tế bào được tái tạo/phục hồi). <b>Regenerate</b> = tái tạo.", "translation": "Điền vào chỗ trống (28): regenerate (tái tạo, phục hồi)."}, {"num": 29, "topic": "Đọc điền từ - Rút gọn mệnh đề quan hệ", "passageId": "cloze", "title": "Choose the best answer for blank (29):", "options": {"A": "enabling", "B": "preventing", "C": "forbidding", "D": "warning"}, "correct": "A", "exp": "Rút gọn mệnh đề quan hệ chỉ kết quả tích cực dạng chủ động: <i>'..., enabling teenagers to lead happier lives'</i> (cho phép/giúp thanh thiếu niên sống hạnh phúc hơn).", "translation": "Điền vào chỗ trống (29): enabling (cho phép, tạo điều kiện)."}, {"num": 30, "topic": "Đọc hiểu - Ý chính bài đọc", "passageId": "reading", "title": "What is the primary focus of the passage?", "options": {"A": "The historical development of pharmaceutical antibiotics", "B": "The vital biological importance of restorative sleep for health and longevity", "C": "The negative economic consequences of digital smartphone screens", "D": "The dietary customs of centenarians in Mediterranean countries"}, "correct": "B", "exp": "Bài đọc phân tích toàn diện về vai trò sinh học thiết yếu của giấc ngủ đối với hệ miễn dịch, hệ thần kinh và sự trường thọ: <b>'The vital biological importance of restorative sleep for health and longevity'</b>.", "translation": "Ý chính của đoạn văn là gì? -> Tầm quan trọng sinh học thiết yếu của giấc ngủ phục hồi đối với sức khỏe và tuổi thọ."}, {"num": 31, "topic": "Đọc hiểu - Chi tiết chức năng", "passageId": "reading", "title": "According to paragraph 1, what do cytokines produced during deep sleep do?", "options": {"A": "They destroy healthy brain cells during waking hours.", "B": "They target inflammation and defend the body against pathogens.", "C": "They stop the biological production of all antibodies.", "D": "They emit harmful blue light inside the body."}, "correct": "B", "exp": "Đoạn 1 nêu rõ: <i>'The immune system releases proteins called cytokines, which help target inflammation and defend against pathogens such as viruses and bacteria.'</i>", "translation": "Theo đoạn 1, protein cytokines tiết ra trong giấc ngủ sâu có tác dụng gì? -> Nhắm đến tình trạng viêm và bảo vệ cơ thể khỏi mầm bệnh."}, {"num": 32, "topic": "Đọc hiểu - Từ vựng theo ngữ cảnh", "passageId": "reading", "title": "The word 'flushes out' in paragraph 2 is closest in meaning to ______.", "options": {"A": "accumulates", "B": "removes", "C": "absorbs", "D": "creates"}, "correct": "B", "exp": "<b>flush out</b> có nghĩa là đào thải, loại bỏ (<b>removes</b> / clears away) các protein độc hại tích tụ trong não.", "translation": "Từ 'flushes out' trong đoạn 2 đồng nghĩa với từ nào? -> removes (loại bỏ, đào thải ra ngoài)."}, {"num": 33, "topic": "Đọc hiểu - Từ trái nghĩa trong bài", "passageId": "reading", "title": "The word 'deteriorate' in paragraph 2 is OPPOSITE in meaning to ______.", "options": {"A": "improve", "B": "worsen", "C": "decline", "D": "decay"}, "correct": "A", "exp": "<b>deteriorate</b> (suy giảm, xấu đi) -> Trái nghĩa là <b>improve</b> (cải thiện, tốt lên).", "translation": "Từ 'deteriorate' (suy giảm) trong đoạn 2 trái nghĩa với từ nào? -> improve (cải thiện)."}, {"num": 34, "topic": "Đọc hiểu - Tác hại ánh sáng xanh", "passageId": "reading", "title": "According to paragraph 3, how does blue light from screens harm our sleep?", "options": {"A": "It permanently cures all bacterial infections.", "B": "It accelerates the clearance of beta-amyloid proteins.", "C": "It suppresses the secretion of melatonin, delaying sleepiness.", "D": "It forces the immune system to produce too many antibodies."}, "correct": "C", "exp": "Đoạn 3 chỉ ra: <i>'The blue light emitted by electronic devices suppresses the secretion of melatonin, the hormone responsible for signaling sleepiness.'</i> (Ánh sáng xanh ức chế tiết melatonin - hormone gây buồn ngủ).", "translation": "Theo đoạn 3, ánh sáng xanh gây hại cho giấc ngủ như thế nào? -> Ức chế bài tiết melatonin, khiến cơ thể khó buồn ngủ."}, {"num": 35, "topic": "Đọc hiểu - Suy luận (Inference)", "passageId": "reading", "title": "Which of the following can be inferred from the passage?", "options": {"A": "Deep sleep is solely required by people suffering from severe infections.", "B": "Consistently getting quality sleep helps maintain long-term cognitive and immune health.", "C": "Using smartphones right before bedtime helps the brain flush out beta-amyloid.", "D": "Melatonin is a toxic protein that causes Alzheimer's disease."}, "correct": "B", "exp": "Toàn bài dẫn đến kết luận: Duy trì giấc ngủ chất lượng ổn định là chìa khóa bảo vệ hệ miễn dịch và nhận thức thần kinh lâu dài: <b>'Consistently getting quality sleep helps maintain long-term cognitive and immune health'</b>.", "translation": "Điều nào có thể suy ra từ bài đọc? -> Việc thường xuyên có giấc ngủ chất lượng giúp duy trì sức khỏe miễn dịch và nhận thức lâu dài."}, {"num": 36, "topic": "Biến đổi câu - Last time to Present Perfect", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the sentence that is closest in meaning to the original sentence:\nTom last participated in a marathon three years ago.", "options": {"A": "Tom has participated in marathons for three years.", "B": "Tom hasn't participated in a marathon for three years.", "C": "Tom didn't participate in a marathon three years ago.", "D": "Tom has started participating in marathons since three years ago."}, "correct": "B", "exp": "Cấu trúc: <i>'S + last + V2/ed + time ago'</i> = <b>'S + haven't/hasn't + V3/ed + for + time'</b>.\nTom last participated in a marathon three years ago = <b>Tom hasn't participated in a marathon for three years</b>.", "translation": "Biến đổi câu: Lần cuối cùng Tom chạy marathon là 3 năm trước = Tom đã không chạy marathon được 3 năm rồi."}, {"num": 37, "topic": "Biến đổi câu - It is time since", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the sentence that is closest in meaning to the original sentence:\nIt is five months since Linda started following this balanced organic diet.", "options": {"A": "Linda has followed this balanced organic diet for five months.", "B": "Linda followed this balanced organic diet five months ago and stopped.", "C": "Linda didn't follow this balanced organic diet five months ago.", "D": "Linda hasn't followed this balanced organic diet for five months."}, "correct": "A", "exp": "Cấu trúc: <i>'It is + time + since + S + started + V-ing'</i> = <b>'S + have/has + V3/ed + for + time'</b>.\n=> <b>Linda has followed this balanced organic diet for five months</b>.", "translation": "Biến đổi câu: Đã 5 tháng kể từ khi Linda bắt đầu ăn theo chế độ hữu cơ này = Linda đã theo chế độ ăn này được 5 tháng."}, {"num": 38, "topic": "Kết hợp câu - Đảo ngữ Not only... but also", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the sentence that best combines each pair of sentences:\nRegular physical exercise strengthens muscles. It also boosts cardiovascular endurance.", "options": {"A": "Not only does regular physical exercise strengthen muscles, but it also boosts cardiovascular endurance.", "B": "Although regular exercise strengthens muscles, it prevents cardiovascular endurance.", "C": "Regular physical exercise neither strengthens muscles nor boosts cardiovascular endurance.", "D": "Because regular exercise strengthens muscles, it avoids boosting cardiovascular endurance."}, "correct": "A", "exp": "Cấu trúc đảo ngữ kết hợp hai vế đồng thuận tích cực: <b>'Not only + trợ động từ + S + V, but S + also + V'</b> (Không những... mà còn...).", "translation": "Kết hợp câu: Tập thể dục thường xuyên không chỉ làm săn chắc cơ bắp mà còn tăng cường sức bền tim mạch."}, {"num": 39, "topic": "Tìm lỗi sai - Sự hòa hợp thì", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the underlined part that needs correction:\nSince last year, the medical researchers <u>discovered</u> several new <u>compounds</u> that can <u>inhibit</u> the growth of <u>antibiotic-resistant</u> bacteria.", "options": {"A": "discovered", "B": "compounds", "C": "inhibit", "D": "antibiotic-resistant"}, "correct": "A", "exp": "Dấu hiệu <i>'Since last year'</i> (Kể từ năm ngoái đến nay) phải chia động từ ở thì <b>Hiện tại hoàn thành (Present Perfect)</b>. Sửa <i>'discovered'</i> thành <b>'have discovered'</b>.", "translation": "Tìm lỗi sai: 'Since last year' đi với thì hiện tại hoàn thành -> sửa 'discovered' thành 'have discovered'."}, {"num": 40, "topic": "Tìm lỗi sai - Trạng từ vs. Tính từ", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the underlined part that needs correction:\nLiving a long and <u>healthy</u> life requires not only a <u>balanced</u> diet but also <u>regularly</u> physical exercise and <u>adequate</u> rest.", "options": {"A": "healthy", "B": "balanced", "C": "regularly", "D": "adequate"}, "correct": "C", "exp": "<i>'physical exercise'</i> là cụm danh từ, trước đó cần tính từ bổ nghĩa. Sửa trạng từ <i>'regularly'</i> thành tính từ <b>'regular'</b> (regular physical exercise).", "translation": "Tìm lỗi sai: Cần tính từ 'regular' bổ nghĩa cho danh từ 'physical exercise', không dùng trạng từ 'regularly'."}];
+        const PASSAGES = {"cloze": "Good health is not merely the absence of disease, but a state of complete physical, mental, and social well-being. During adolescence, establishing healthy lifestyle habits plays a crucial role in determining future (25)________ and vitality. First and foremost, a well-balanced diet rich in essential vitamins, minerals, and dietary fiber helps strengthen the (26)________ system, allowing the body to fight off harmful bacteria and viral infections. Furthermore, teenagers should engage in regular physical workouts to build strong bones and cardiovascular fitness. It is equally important to (27)________ down on the consumption of fast food, sugary sodas, and processed snacks, which are leading causes of obesity and chronic illnesses. In addition, getting at least eight hours of sound sleep each night allows brain cells to recharge and tissues to (28)________. Finally, maintaining positive friendships and managing academic stress effectively will foster emotional resilience, (29)________ teenagers to lead happier and more fulfilling lives.", "reading": "Sleep is often regarded as a passive state of rest, but scientific research has revealed that it is an intensely active biological process vital for human survival and longevity. When we enter deep sleep, our bodies undergo crucial physiological repairs. The immune system releases proteins called cytokines, which help target inflammation and defend against pathogens such as viruses and bacteria. Chronic sleep deprivation significantly reduces the production of these protective antibodies, making individuals far more vulnerable to infectious illnesses and prolonging recovery times.\n\nMoreover, the brain undergoes a unique metabolic clearance process during non-REM sleep. The glymphatic system, a waste-clearing network, flushes out toxic proteins that accumulate during waking hours, including beta-amyloid, which has been linked to Alzheimer's disease. Without adequate restorative rest, cognitive functions such as memory consolidation, analytical thinking, and emotional regulation deteriorate rapidly.\n\nIn modern society, the pervasive use of smartphones and digital screens before bedtime has disrupted natural circadian rhythms. The blue light emitted by electronic devices suppresses the secretion of melatonin, the hormone responsible for signaling sleepiness. Health experts strongly recommend turning off all digital displays at least an hour before sleep, maintaining a consistent bedtime schedule, and ensuring a dark, cool sleeping environment. Prioritizing quality sleep is not a luxury, but an indispensable foundation for a long, vigorous, and healthy life."};
+
+        let currentIdx = 0;
+        let userAnswers = new Array(QUESTIONS.length).fill(null);
+        let timeLeft = 45 * 60;
+        let timerInterval = null;
+        let tabViolations = 0;
+        let examActive = false;
+        let examSubmitted = false;
+        let studentName = "";
+        let studentClass = "";
+
+        // Anti-Copy & Shortcuts Protection
+        document.addEventListener('keydown', e => {
+            if ((e.ctrlKey && (e.key === 'c' || e.key === 'u' || e.key === 's' || e.key === 'a')) || e.keyCode === 123) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        window.addEventListener('blur', () => {
+            if (examActive && !examSubmitted) {
+                tabViolations++;
+                if (tabViolations >= 3) {
+                    alert('CẢNH BÁO: Bạn đã rời khỏi màn hình thi quá 3 lần. Hệ thống sẽ tự động nộp bài!');
+                    submitExam();
+                } else {
+                    alert(`CẢNH BÁO: Vui lòng không chuyển tab khi đang làm bài! (Lần ${tabViolations}/3)`);
+                }
+            }
+        });
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+
+            if (tabId === 'theory') {
+                const b = document.getElementById('btn-tab-theory');
+                if (b) b.classList.add('active');
+                document.getElementById('tab-theory').classList.add('active');
+            } else {
+                const b = document.getElementById('btn-tab-quiz');
+                if (b) b.classList.add('active');
+                document.getElementById('tab-quiz').classList.add('active');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // LOCAL STORAGE PREFILL
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedName = localStorage.getItem('studentName') || localStorage.getItem('vatli102_student_name');
+            const savedClass = localStorage.getItem('studentClass') || localStorage.getItem('vatli102_student_class');
+            if (savedName && document.getElementById('inp-name')) document.getElementById('inp-name').value = savedName;
+            if (savedClass && document.getElementById('inp-class')) document.getElementById('inp-class').value = savedClass;
+        });
+
+        function startExam() {
+            const nameInp = document.getElementById('inp-name').value.trim();
+            const classInp = document.getElementById('inp-class').value.trim();
+
+            if (!nameInp || !classInp) {
+                alert("Vui lòng điền đầy đủ Họ tên và Lớp để bắt đầu làm bài!");
+                return;
+            }
+
+            studentName = nameInp;
+            studentClass = classInp;
+            localStorage.setItem('studentName', studentName);
+            localStorage.setItem('studentClass', studentClass);
+            localStorage.setItem('vatli102_student_name', studentName);
+            localStorage.setItem('vatli102_student_class', studentClass);
+
+            document.getElementById('modal-start').style.display = 'none';
+            document.getElementById('exam-screen').style.display = 'grid';
+            document.getElementById('user-display-name').innerText = "Học sinh: " + studentName;
+            document.getElementById('user-display-class').innerText = "Lớp: " + studentClass;
+
+            examActive = true;
+            renderPalette();
+            renderQuestion(0);
+            startTimer();
+        }
+
+        function startTimer() {
+            const display = document.getElementById('timer-display');
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Đã hết thời gian làm bài! Hệ thống đang nộp bài của bạn.");
+                    submitExam();
+                    return;
+                }
+                timeLeft--;
+                const min = Math.floor(timeLeft / 60);
+                const sec = timeLeft % 60;
+                display.innerText = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function renderPalette() {
+            const grid = document.getElementById('palette-grid');
+            grid.innerHTML = "";
+            QUESTIONS.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'pal-btn';
+                btn.innerText = idx + 1;
+                btn.onclick = () => renderQuestion(idx);
+                grid.appendChild(btn);
+            });
+            updatePalette();
+        }
+
+        function updatePalette() {
+            const btns = document.querySelectorAll('.pal-btn');
+            let answered = 0;
+            btns.forEach((btn, idx) => {
+                btn.classList.toggle('current', idx === currentIdx);
+                const hasAns = userAnswers[idx] !== null;
+                btn.classList.toggle('answered', hasAns);
+                if (hasAns) answered++;
+            });
+            document.getElementById('answered-count').innerText = `${answered}/${QUESTIONS.length}`;
+            const percent = Math.round((answered / QUESTIONS.length) * 100);
+            document.getElementById('progress-bar').style.width = percent + "%";
+            document.getElementById('progress-percent').innerText = percent + "%";
+        }
+
+        function renderQuestion(idx) {
+            currentIdx = idx;
+            const q = QUESTIONS[idx];
+
+            document.getElementById('q-topic').innerText = `Câu ${idx + 1}: ${q.topic || 'Kiểm tra kiến thức'}`;
+            document.getElementById('q-progress').innerText = `Câu ${idx + 1} / ${QUESTIONS.length}`;
+
+            // Audio player display for listening questions (Q1 to Q8)
+            const audioCont = document.getElementById('audio-container');
+            const audioPlayer = document.getElementById('audio-player');
+            if (idx < 8 || q.audio_file) {
+                audioCont.style.display = 'block';
+            } else {
+                audioCont.style.display = 'none';
+                if (audioPlayer && !audioPlayer.paused) {
+                    audioPlayer.pause();
+                }
+            }
+
+            // Reading Passage Box
+            const pCont = document.getElementById('passage-container');
+            const passKey = q.passageId || q.passage_ref;
+            if (passKey && PASSAGES[passKey]) {
+                pCont.style.display = 'block';
+                document.getElementById('passage-title').innerText = 
+                    passKey === 'cloze' ? 'ĐOẠN VĂN ĐIỀN TỪ (CÂU 25 - 29)' : 'BÀI ĐỌC HIỂU (CÂU 30 - 35)';
+                document.getElementById('passage-body').innerHTML = PASSAGES[passKey].replace(/\n/g, '<br><br>');
+            } else {
+                pCont.style.display = 'none';
+            }
+
+            document.getElementById('q-title').innerHTML = q.title;
+
+            // Options
+            const optCont = document.getElementById('opt-container');
+            optCont.innerHTML = "";
+            ['A', 'B', 'C', 'D'].forEach(letter => {
+                if (q.options && q.options[letter] !== undefined) {
+                    const label = document.createElement('label');
+                    label.className = `opt-label ${userAnswers[idx] === letter ? 'selected' : ''}`;
+                    label.onclick = () => selectOption(letter);
+                    label.innerHTML = `
+                        <div class="opt-circle">${letter}</div>
+                        <div class="opt-text">${q.options[letter]}</div>
+                    `;
+                    optCont.appendChild(label);
+                }
+            });
+
+            document.getElementById('btn-prev').disabled = (idx === 0);
+            document.getElementById('btn-next').innerHTML = (idx === QUESTIONS.length - 1)
+                ? 'Đến bảng nộp bài <i class="fa-solid fa-check-double"></i>' 
+                : 'Câu tiếp theo <i class="fa-solid fa-arrow-right"></i>';
+
+            updatePalette();
+        }
+
+        function selectOption(letter) {
+            if (examSubmitted) return;
+            userAnswers[currentIdx] = letter;
+            renderQuestion(currentIdx);
+        }
+
+        function prevQuestion() {
+            if (currentIdx > 0) renderQuestion(currentIdx - 1);
+        }
+
+        function nextQuestion() {
+            if (currentIdx < QUESTIONS.length - 1) {
+                renderQuestion(currentIdx + 1);
+            } else {
+                confirmSubmit();
+            }
+        }
+
+        function confirmSubmit() {
+            const unans = userAnswers.filter(a => a === null).length;
+            let msg = "Bạn có chắc chắn muốn nộp bài?";
+            if (unans > 0) msg = `Bạn còn ${unans} câu chưa chọn đáp án. Bạn vẫn muốn nộp bài?`;
+            if (confirm(msg)) {
+                submitExam();
+            }
+        }
+
+        function submitExam() {
+            if (examSubmitted) return;
+            examSubmitted = true;
+            examActive = false;
+            clearInterval(timerInterval);
+
+            // Pause audio
+            const aud = document.getElementById('audio-player');
+            if (aud && !aud.paused) aud.pause();
+
+            let correctCount = 0;
+            QUESTIONS.forEach((q, idx) => {
+                if (userAnswers[idx] === q.correct) correctCount++;
+            });
+
+            const score = (correctCount * (10 / QUESTIONS.length)).toFixed(2);
+            const timeSpentSec = (45 * 60) - timeLeft;
+            const min = Math.floor(timeSpentSec / 60);
+            const sec = timeSpentSec % 60;
+            const timeStr = `${min} phút ${sec} giây`;
+
+            document.getElementById('exam-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('result-detail').innerText = 
+                `Thí sinh: ${studentName} | Lớp: ${studentClass} | Đúng: ${correctCount}/${QUESTIONS.length} câu | Thời gian: ${timeStr}`;
+
+            if (parseFloat(score) >= 7.0 && window.confetti) {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+
+            renderReview('all');
+
+            // Send to Google Sheets (Dual mode: POST JSON + Query Params fallback for 100% delivery)
+            if (SCRIPT_URL && SCRIPT_URL.startsWith("http")) {
+                const payload = {
+                    name: studentName,
+                    className: studentClass,
+                    lesson: LESSON_TITLE,
+                    correct: `${correctCount}/${QUESTIONS.length}`,
+                    score: score,
+                    timeSpent: timeStr,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Method 1: POST text/plain
+                fetch(SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify(payload)
+                }).catch(e => console.warn("POST sync note:", e));
+
+                // Method 2: GET URL Parameters fallback
+                try {
+                    const params = new URLSearchParams({
+                        name: studentName,
+                        className: studentClass,
+                        lesson: LESSON_TITLE,
+                        score: score,
+                        correct: `${correctCount}/${QUESTIONS.length}`,
+                        timeSpent: timeStr
+                    });
+                    const getUrl = SCRIPT_URL + (SCRIPT_URL.includes("?") ? "&" : "?") + params.toString();
+                    if (navigator.sendBeacon) {
+                        navigator.sendBeacon(getUrl);
+                    } else {
+                        fetch(getUrl, { mode: "no-cors" }).catch(e => console.warn("GET sync note:", e));
+                    }
+                } catch(err) {
+                    console.warn("Fallback sync note:", err);
+                }
+            }
+        }
+
+        function renderReview(filter) {
+            const revList = document.getElementById('review-list');
+            revList.innerHTML = "";
+            QUESTIONS.forEach((q, idx) => {
+                const isCor = userAnswers[idx] === q.correct;
+                if (filter === 'wrong' && isCor) return;
+                if (filter === 'correct' && !isCor) return;
+
+                const item = document.createElement('div');
+                item.className = `review-item ${isCor ? 'correct' : 'incorrect'}`;
+                item.innerHTML = `
+                    <div class="review-header">
+                        <span>Câu ${idx + 1}: ${q.topic || ''}</span>
+                        <span style="color: ${isCor ? 'var(--success)' : 'var(--danger)'};">
+                            ${isCor ? '✔ Đúng' : '✖ Sai'} (Đã chọn: ${userAnswers[idx] || 'Chưa chọn'} | Đáp án: ${q.correct})
+                        </span>
+                    </div>
+                    <div style="text-align: justify; margin-bottom: 0.5rem; font-weight: 500;">${q.title}</div>
+                    <div class="review-exp">
+                        <div><b>Hướng dẫn giải:</b> ${q.exp}</div>
+                        <div style="color: #0284c7; margin-top: 4px; font-style: italic;"><b>Dịch nghĩa:</b> ${q.translation}</div>
+                    </div>
+                `;
+                revList.appendChild(item);
+            });
+        }
+
+        function filterReview(type) {
+            renderReview(type);
+        }
+    </script>
+</body>
+</html>

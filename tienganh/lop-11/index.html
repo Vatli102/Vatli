@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiếng Anh 11 (Global Success) - vatli102.com</title>
+    <link rel="icon" type="image/svg+xml" href="unit-1/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-light: #e0e7ff;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .sticky-header {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+        .header-container {
+            max-width: 1200px; margin: 0 auto; padding: 12px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .site-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .logo-text {
+            font-size: 1.3rem; font-weight: 800;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .nav-links { display: flex; gap: 16px; align-items: center; }
+        .nav-item {
+            text-decoration: none; color: #475569; font-weight: 600; font-size: 0.9rem;
+            display: inline-flex; align-items: center; gap: 6px; transition: color 0.2s;
+        }
+        .nav-item:hover { color: var(--primary); }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+            color: white; padding: 48px 20px; text-align: center;
+        }
+        .hero-title {
+            font-size: 2.2rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 8px; letter-spacing: -0.5px;
+        }
+        .hero-sub {
+            font-size: 1.05rem; opacity: 0.9; max-width: 760px; margin: 0 auto;
+        }
+
+        .main-container {
+            max-width: 1200px; width: 100%; margin: 32px auto; padding: 0 20px; flex: 1;
+        }
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid #e2e8f0;
+        }
+        .section-title {
+            font-size: 1.4rem; font-weight: 800; color: #1e293b; display: flex; align-items: center; gap: 10px;
+        }
+        .schedule-badge {
+            background: #ede9fe; color: #6d28d9; padding: 6px 14px; border-radius: 9999px;
+            font-size: 0.85rem; font-weight: 700;
+        }
+
+        .units-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 20px;
+        }
+        .unit-card {
+            background: white; border-radius: var(--radius-lg); border: 1px solid var(--border);
+            padding: 24px; box-shadow: var(--shadow-md); display: flex; flex-direction: column;
+            justify-content: space-between; transition: all 0.2s ease;
+        }
+        .unit-card:hover {
+            transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-color: #c7d2fe;
+        }
+        .unit-card.published {
+            border-left: 5px solid var(--success);
+        }
+        .unit-card.scheduled {
+            border-left: 5px solid var(--warning); opacity: 0.88;
+        }
+        .card-top {
+            display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;
+        }
+        .unit-badge {
+            padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 700;
+        }
+        .badge-pub {
+            background: #ecfdf5; color: #047857;
+        }
+        .badge-sch {
+            background: #fffbeb; color: #b45309;
+        }
+        .unit-name {
+            font-size: 1.15rem; font-weight: 700; color: #0f172a; margin-bottom: 8px; line-height: 1.4;
+        }
+        .unit-meta {
+            font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;
+        }
+        .btn-access {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 10px 18px; border-radius: var(--radius-md); font-weight: 700; font-size: 0.92rem;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .btn-active {
+            background: var(--primary); color: white;
+        }
+        .btn-active:hover {
+            background: var(--primary-dark);
+        }
+        .btn-disabled {
+            background: #f1f5f9; color: #94a3b8; cursor: not-allowed; border: 1px solid var(--border);
+        }
+
+        .site-footer {
+            background: white; border-top: 1px solid var(--border); padding: 32px 20px;
+            text-align: center; color: var(--text-muted); font-size: 0.88rem; margin-top: 48px;
+        }
+    </style>
+</head>
+<body>
+    <header class="sticky-header">
+        <div class="header-container">
+            <a href="https://vatli102.com" class="site-logo">
+                <span class="logo-text">vatli102.com</span>
+            </a>
+            <div class="nav-links">
+                <a href="https://vatli102.com" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
+                <a href="https://vatli102.com/tienganh/" class="nav-item"><i class="fa-solid fa-graduation-cap"></i> Môn Tiếng Anh</a>
+                <a href="https://vatli102.com/gioi-thieu.html" class="nav-item"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero-banner">
+        <h1 class="hero-title">TIẾNG ANH 11 (GLOBAL SUCCESS)</h1>
+        <p class="hero-sub">Hệ thống Lý thuyết trọng tâm, Luyện đề trắc nghiệm chuẩn GDPT 2018 và Lịch phát hành định kỳ vào 19:30 Thứ Bảy hàng tuần.</p>
+    </section>
+
+    <main class="main-container">
+        <div class="section-header">
+            <div class="section-title">
+                <i class="fa-solid fa-layer-group" style="color:var(--primary);"></i> Lộ trình học tập & Luyện đề cả năm
+            </div>
+            <span class="schedule-badge"><i class="fa-regular fa-calendar-check"></i> Phát hành: 19:30 Thứ Bảy</span>
+        </div>
+
+        <div class="units-grid">
+
+            <div class="unit-card published">
+                <div>
+                    <div class="card-top">
+                        <span class="unit-badge badge-pub">✔ Đã xuất bản</span>
+                        <span style="font-size:0.8rem; font-weight:700; color:#64748b;">#1</span>
+                    </div>
+                    <div class="unit-name">Unit 1: A Long and Healthy Life</div>
+                    <div class="unit-meta">
+                        <i class="fa-regular fa-clock"></i> Ngày phát hành: <b>05/09/2026 (19:30)</b><br>
+                        Lý thuyết trọng tâm & 40 câu trắc nghiệm CBT
+                    </div>
+                </div>
+                <div>
+    
+                    <a href="unit-1/index.html" class="btn-access btn-active">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i> Vào học & Làm bài ngay
+                    </a>
+        
+                </div>
+            </div>
+    
+            <div class="unit-card published">
+                <div>
+                    <div class="card-top">
+                        <span class="unit-badge badge-pub">✔ Đã xuất bản</span>
+                        <span style="font-size:0.8rem; font-weight:700; color:#64748b;">#2</span>
+                    </div>
+                    <div class="unit-name">Unit 2: The Generation Gap</div>
+                    <div class="unit-meta">
+                        <i class="fa-regular fa-clock"></i> Ngày phát hành: <b>19/09/2026 (19:30)</b><br>
+                        Lý thuyết trọng tâm & 40 câu trắc nghiệm CBT
+                    </div>
+                </div>
+                <div>
+    
+                    <a href="unit-2/index.html" class="btn-access btn-active">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i> Vào học & Làm bài ngay
+                    </a>
+        
+                </div>
+            </div>
+    
+            <div class="unit-card scheduled">
+                <div>
+                    <div class="card-top">
+                        <span class="unit-badge badge-sch">⏳ Lên lịch: 2026-10-03</span>
+                        <span style="font-size:0.8rem; font-weight:700; color:#64748b;">#3</span>
+                    </div>
+                    <div class="unit-name">Unit 3: Cities of the Future</div>
+                    <div class="unit-meta">
+                        <i class="fa-regular fa-clock"></i> Ngày phát hành: <b>03/10/2026 (19:30)</b><br>
+                        Lý thuyết trọng tâm & 40 câu trắc nghiệm CBT
+                    </div>
+                </div>
+                <div>
+    
+                    <span class="btn-access btn-disabled">
+                        <i class="fa-solid fa-lock"></i> Mở ngày 03/10/2026
+                    </span>
+        
+                </div>
+            </div>
+    
+            <div class="unit-card scheduled">
+                <div>
+                    <div class="card-top">
+                        <span class="unit-badge badge-sch">⏳ Lên lịch: 2026-10-24</span>
+                        <span style="font-size:0.8rem; font-weight:700; color:#64748b;">#4</span>
+                    </div>
+                    <div class="unit-name">Review 1 (Units 1, 2, 3)</div>
+                    <div class="unit-meta">
+                        <i class="fa-regular fa-clock"></i> Ngày phát hành: <b>24/10/2026 (19:30)</b><br>
+                        Khoảng cuối tháng 10 - Ôn tập Giữa Kỳ I
+                    </div>
+                </div>
+                <div>
+    
+                    <span class="btn-access btn-disabled">
+                        <i class="fa-solid fa-lock"></i> Mở ngày 24/10/2026
+                    </span>
+        
+                </div>
+            </div>
+    
+            <div class="unit-card scheduled">
+                <div>
+                    <div class="card-top">
+                        <span class="unit-badge badge-sch">⏳ Lên lịch: 2026-11-07</span>
+                        <span style="font-size:0.8rem; font-weight:700; color:#64748b;">#5</span>
+                    </div>
+                    <div class="unit-name">Unit 4: ASEAN and Viet Nam</div>
+                    <div class="unit-meta">
+                        <i class="fa-regular fa-clock"></i> Ngày phát hành: <b>07/11/2026 (19:30)</b><br>
+                        Lý thuyết trọng tâm & 40 câu trắc nghiệm CBT
+                    </div>
+                </div>
+                <div>
+    
+                    <span class="btn-access btn-disabled">
+                        <i class="fa-solid fa-lock"></i> Mở ngày 07/11/2026
+                    </span>
+        
+                </div>
+            </div>
+    
+            <div class="unit-card scheduled">
+                <div>
+                    <div class="card-top">
+                        <span class="unit-badge badge-sch">⏳ Lên lịch: 2026-11-21</span>
+                        <span style="font-size:0.8rem; font-weight:700; color:#64748b;">#6</span>
+                    </div>
+                    <div class="unit-name">Unit 5: Global Warming</div>
+                    <div class="unit-meta">
+                        <i class="fa-regular fa-clock"></i> Ngày phát hành: <b>21/11/2026 (19:30)</b><br>
+                        Lý thuyết trọng tâm & 40 câu trắc nghiệm CBT
+                    </div>
+                </div>
+                <div>
+    
+                    <span class="btn-access btn-disabled">
+                        <i class="fa-solid fa-lock"></i> Mở ngày 21/11/2026
+                    </span>
+        
+                </div>
+            </div>
+    
+            <div class="unit-card scheduled">
+                <div>
+                    <div class="card-top">
+                        <span class="unit-badge badge-sch">⏳ Lên lịch: 2026-12-05</span>
+                        <span style="font-size:0.8rem; font-weight:700; color:#64748b;">#7</span>
+                    </div>
+                    <div class="unit-name">Review 2 (Units 4, 5)</div>
+                    <div class="unit-meta">
+                        <i class="fa-regular fa-clock"></i> Ngày phát hành: <b>05/12/2026 (19:30)</b><br>
+                        Khoảng đầu tháng 12 - Ôn tập Cuối Kỳ I
+                    </div>
+                </div>
+                <div>
+    
+                    <span class="btn-access btn-disabled">
+                        <i class="fa-solid fa-lock"></i> Mở ngày 05/12/2026
+                    </span>
+        
+                </div>
+            </div>
+    
+            <div class="unit-card scheduled">
+                <div>
+                    <div class="card-top">
+                        <span class="unit-badge badge-sch">⏳ Lên lịch: 2027-01-09</span>
+                        <span style="font-size:0.8rem; font-weight:700; color:#64748b;">#8</span>
+                    </div>
+                    <div class="unit-name">Unit 6: Preserving Our Heritage</div>
+                    <div class="unit-meta">
+                        <i class="fa-regular fa-clock"></i> Ngày phát hành: <b>09/01/2027 (19:30)</b><br>
+                        Lý thuyết trọng tâm & 40 câu trắc nghiệm CBT
+                    </div>
+                </div>
+                <div>
+    
+                    <span class="btn-access btn-disabled">
+                        <i class="fa-solid fa-lock"></i> Mở ngày 09/01/2027
+                    </span>
+        
+                </div>
+            </div>
+    
+            <div class="unit-card scheduled">
+                <div>
+                    <div class="card-top">
+                        <span class="unit-badge badge-sch">⏳ Lên lịch: 2027-02-06</span>
+                        <span style="font-size:0.8rem; font-weight:700; color:#64748b;">#9</span>
+                    </div>
+                    <div class="unit-name">Unit 7: Education Options for School-Leavers</div>
+                    <div class="unit-meta">
+                        <i class="fa-regular fa-clock"></i> Ngày phát hành: <b>06/02/2027 (19:30)</b><br>
+                        Lý thuyết trọng tâm & 40 câu trắc nghiệm CBT
+                    </div>
+                </div>
+                <div>
+    
+                    <span class="btn-access btn-disabled">
+                        <i class="fa-solid fa-lock"></i> Mở ngày 06/02/2027
+                    </span>
+        
+                </div>
+            </div>
+    
+            <div class="unit-card scheduled">
+                <div>
+                    <div class="card-top">
+                        <span class="unit-badge badge-sch">⏳ Lên lịch: 2027-02-20</span>
+                        <span style="font-size:0.8rem; font-weight:700; color:#64748b;">#10</span>
+                    </div>
+                    <div class="unit-name">Unit 8: Becoming Independent</div>
+                    <div class="unit-meta">
+                        <i class="fa-regular fa-clock"></i> Ngày phát hành: <b>20/02/2027 (19:30)</b><br>
+                        Lý thuyết trọng tâm & 40 câu trắc nghiệm CBT
+                    </div>
+                </div>
+                <div>
+    
+                    <span class="btn-access btn-disabled">
+                        <i class="fa-solid fa-lock"></i> Mở ngày 20/02/2027
+                    </span>
+        
+                </div>
+            </div>
+    
+            <div class="unit-card scheduled">
+                <div>
+                    <div class="card-top">
+                        <span class="unit-badge badge-sch">⏳ Lên lịch: 2027-03-06</span>
+                        <span style="font-size:0.8rem; font-weight:700; color:#64748b;">#11</span>
+                    </div>
+                    <div class="unit-name">Review 3 (Units 6, 7, 8)</div>
+                    <div class="unit-meta">
+                        <i class="fa-regular fa-clock"></i> Ngày phát hành: <b>06/03/2027 (19:30)</b><br>
+                        Khoảng đầu tháng 3 - Ôn tập Giữa Kỳ II
+                    </div>
+                </div>
+                <div>
+    
+                    <span class="btn-access btn-disabled">
+                        <i class="fa-solid fa-lock"></i> Mở ngày 06/03/2027
+                    </span>
+        
+                </div>
+            </div>
+    
+            <div class="unit-card scheduled">
+                <div>
+                    <div class="card-top">
+                        <span class="unit-badge badge-sch">⏳ Lên lịch: 2027-03-20</span>
+                        <span style="font-size:0.8rem; font-weight:700; color:#64748b;">#12</span>
+                    </div>
+                    <div class="unit-name">Unit 9: Social Issues</div>
+                    <div class="unit-meta">
+                        <i class="fa-regular fa-clock"></i> Ngày phát hành: <b>20/03/2027 (19:30)</b><br>
+                        Lý thuyết trọng tâm & 40 câu trắc nghiệm CBT
+                    </div>
+                </div>
+                <div>
+    
+                    <span class="btn-access btn-disabled">
+                        <i class="fa-solid fa-lock"></i> Mở ngày 20/03/2027
+                    </span>
+        
+                </div>
+            </div>
+    
+            <div class="unit-card scheduled">
+                <div>
+                    <div class="card-top">
+                        <span class="unit-badge badge-sch">⏳ Lên lịch: 2027-04-03</span>
+                        <span style="font-size:0.8rem; font-weight:700; color:#64748b;">#13</span>
+                    </div>
+                    <div class="unit-name">Unit 10: The Ecosystem</div>
+                    <div class="unit-meta">
+                        <i class="fa-regular fa-clock"></i> Ngày phát hành: <b>03/04/2027 (19:30)</b><br>
+                        Lý thuyết trọng tâm & 40 câu trắc nghiệm CBT
+                    </div>
+                </div>
+                <div>
+    
+                    <span class="btn-access btn-disabled">
+                        <i class="fa-solid fa-lock"></i> Mở ngày 03/04/2027
+                    </span>
+        
+                </div>
+            </div>
+    
+            <div class="unit-card scheduled">
+                <div>
+                    <div class="card-top">
+                        <span class="unit-badge badge-sch">⏳ Lên lịch: 2027-04-17</span>
+                        <span style="font-size:0.8rem; font-weight:700; color:#64748b;">#14</span>
+                    </div>
+                    <div class="unit-name">Review 4 (Units 9, 10)</div>
+                    <div class="unit-meta">
+                        <i class="fa-regular fa-clock"></i> Ngày phát hành: <b>17/04/2027 (19:30)</b><br>
+                        Khoảng giữa tháng 4 - Ôn tập Cuối Kỳ II & Chuẩn bị chuyển tiếp Lớp 12
+                    </div>
+                </div>
+                <div>
+    
+                    <span class="btn-access btn-disabled">
+                        <i class="fa-solid fa-lock"></i> Mở ngày 17/04/2027
+                    </span>
+        
+                </div>
+            </div>
+    
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p><b>Hệ thống Học tập & Luyện thi Tiếng Anh THCS - THPT</b></p>
+        <p>Bản quyền thuộc về Dự án Giáo dục Trực tuyến <b>vatli102.com</b>.</p>
+    </footer>
+</body>
+</html>

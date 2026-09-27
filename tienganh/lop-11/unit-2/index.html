@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 2: The Generation Gap - Tiếng Anh 11 (Global Success)</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-light: #e0e7ff;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #4f46e5;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Sticky Header */
+        .sticky-header {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        }
+        .header-container {
+            max-width: 1200px; margin: 0 auto; padding: 10px 15px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .site-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .logo-img { width: 32px; height: 32px; border-radius: 8px; object-fit: contain; }
+        .logo-text {
+            font-size: 1.25rem; font-weight: 800;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .nav-links { display: flex; gap: 14px; align-items: center; }
+        .nav-item {
+            text-decoration: none; color: #475569; font-weight: 600; font-size: 0.9rem;
+            display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s;
+        }
+        .nav-item:hover { color: #4f46e5; }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 0.4rem;
+            background: #f1f5f9;
+            padding: 0.25rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #475569;
+            padding: 0.45rem 0.9rem;
+            font-weight: 700;
+            font-size: 0.88rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn.active {
+            background: #4f46e5;
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        @media (max-width: 768px) {
+            .header-container { padding: 8px 12px; flex-direction: column; gap: 8px; }
+            .logo-text { font-size: 1.1rem; }
+            .nav-links { width: 100%; justify-content: space-between; }
+        }
+
+        .main-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+            flex: 1;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Theory Tab Styling */
+        .theory-wrapper {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2.25rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .theory-content {
+            text-align: justify;
+            line-height: 1.7;
+        }
+
+        .theory-card {
+            background: white; border-radius: 14px; padding: 20px; margin-bottom: 20px;
+            border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .theory-card-header {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        .theory-icon {
+            width: 36px; height: 36px; border-radius: 8px; background: #e0e7ff; color: #4338ca;
+            display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;
+        }
+        .theory-title { font-size: 1.15rem; font-weight: 800; color: #1e1b4b; }
+        .vocab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 10px; }
+        .vocab-card, .vocab-item {
+            background: #f8fafc; border-left: 4px solid var(--primary); padding: 10px 14px; border-radius: 8px;
+        }
+        .vocab-word { font-weight: 700; color: #1e293b; font-size: 0.95rem; }
+        .vocab-pos { font-size: 0.8rem; color: #64748b; font-style: italic; }
+        .vocab-meaning { font-size: 0.88rem; color: #475569; margin-top: 2px; }
+        .vocab-example { font-size: 0.82rem; color: #0284c7; font-style: italic; margin-top: 4px; }
+        
+        .grammar-box, .grammar-rule {
+            background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 14px 16px; margin-top: 12px;
+        }
+        .rule-title { font-weight: 700; color: #166534; font-size: 0.92rem; margin-bottom: 6px; }
+        .rule-formula {
+            background: white; padding: 8px 12px; border-radius: 6px; font-family: monospace;
+            font-weight: 700; color: #0f172a; border: 1px solid #bbf7d0; margin: 4px 0; font-size: 0.9rem;
+        }
+
+        .jump-btn-container {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px dashed var(--border);
+        }
+
+        .jump-btn {
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 800;
+            padding: 1rem 2.5rem;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.35);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .jump-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(79, 70, 229, 0.45);
+        }
+
+        /* CBT / Exam Tab Styling */
+        .exam-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .exam-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .exam-panel {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .exam-meta-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge-topic {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+        }
+
+        /* Audio Player Card */
+        .audio-player-card {
+            background: #f0fdf4;
+            border: 1.5px solid #86efac;
+            border-radius: 0.75rem;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .audio-label {
+            font-size: 0.9rem;
+            color: #166534;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .audio-player-card audio {
+            width: 100%;
+            height: 40px;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .passage-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            text-align: justify;
+            max-height: 280px;
+            overflow-y: auto;
+            line-height: 1.7;
+        }
+
+        .passage-title {
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .question-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+            line-height: 1.6;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .opt-label {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            background: white;
+            border: 1.5px solid var(--border);
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: justify;
+        }
+
+        .opt-label:hover {
+            border-color: var(--primary);
+            background: #f8fafc;
+        }
+
+        .opt-label.selected {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .opt-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #64748b;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .opt-label.selected .opt-circle {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .opt-text {
+            font-size: 1rem;
+            color: #1e293b;
+        }
+
+        .question-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .ctrl-btn {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ctrl-btn-prev {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .ctrl-btn-prev:hover {
+            background: #e2e8f0;
+        }
+
+        .ctrl-btn-next {
+            background: var(--primary);
+            color: white;
+        }
+
+        .ctrl-btn-next:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Sidebar Palette */
+        .palette-panel {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            position: sticky;
+            top: 5.5rem;
+        }
+
+        .timer-card {
+            background: #0f172a;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .timer-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            margin-bottom: 0.25rem;
+        }
+
+        .timer-val {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+
+        .user-info-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.85rem;
+        }
+
+        .progress-wrap {
+            margin-bottom: 1.25rem;
+        }
+
+        .progress-bar-bg {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0.4rem;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #06b6d4);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .palette-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pal-btn {
+            height: 38px;
+            border-radius: 0.375rem;
+            border: 1.5px solid var(--border);
+            background: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .pal-btn:hover {
+            border-color: var(--primary);
+        }
+
+        .pal-btn.answered {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary-dark);
+        }
+
+        .pal-btn.current {
+            border-color: #0f172a;
+            box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.2);
+            font-weight: 800;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            font-weight: 700;
+            padding: 0.875rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-1px);
+        }
+
+        /* Modal Dialogs */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-card {
+            background: white;
+            border-radius: 1rem;
+            max-width: 480px;
+            width: 100%;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .modal-input-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .modal-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 0.375rem;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .modal-input:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        .modal-notes {
+            background: #fffbeb;
+            border-left: 4px solid var(--accent);
+            padding: 0.75rem 1rem;
+            border-radius: 0 0.375rem 0.375rem 0;
+            font-size: 0.825rem;
+            color: #92400e;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            padding: 0.875rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* Results Display */
+        .result-view {
+            background: white;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .score-banner {
+            text-align: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .score-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.5);
+        }
+
+        .score-val {
+            font-size: 2.4rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .score-max {
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
+
+        .review-item {
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            background: #fafafa;
+        }
+
+        .review-item.correct {
+            border-left: 5px solid var(--success);
+        }
+
+        .review-item.incorrect {
+            border-left: 5px solid var(--danger);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .review-exp {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background: #f1f5f9;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            color: #1e293b;
+            line-height: 1.5;
+        }
+
+        /* Site Footer */
+        .site-footer {
+            width: 100%; text-align: center; padding: 25px 15px; background: #ffffff;
+            border-top: 1px solid var(--border); margin-top: 40px; color: #64748b; font-size: 0.88rem;
+        }
+        .footer-container { max-width: 1200px; margin: 0 auto; }
+        .footer-links { margin-top: 8px; font-size: 0.82rem; }
+        .footer-links a { color: #4f46e5; text-decoration: none; margin: 0 4px; transition: color 0.2s; }
+        .footer-links a:hover { text-decoration: underline; color: #3730a3; }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+    <!-- Sticky Header -->
+    <header class="sticky-header">
+        <div class="header-container">
+            <a href="https://vatli102.com" class="site-logo">
+                <img src="favicon.svg" alt="Logo" class="logo-img">
+                <span class="logo-text">vatli102.com</span>
+            </a>
+            <div class="nav-links">
+                <a href="https://vatli102.com" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
+                <a href="https://vatli102.com/gioi-thieu.html" class="nav-item"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a>
+                <a href="https://vatli102.com/lien-he.html" class="nav-item"><i class="fa-solid fa-envelope"></i> Liên hệ</a>
+                <div class="nav-tabs">
+                    <button class="nav-btn active" id="btn-tab-theory" onclick="switchTab('theory')">
+                        <i class="fa-solid fa-book-open"></i> Lý thuyết trọng tâm
+                    </button>
+                    <button class="nav-btn" id="btn-tab-quiz" onclick="switchTab('quiz')">
+                        <i class="fa-solid fa-pen-to-square"></i> Làm bài tập củng cố
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- TAB 1: LÝ THUYẾT TRỌNG TÂM -->
+        <div id="tab-theory" class="tab-pane active">
+            <div class="theory-wrapper">
+                <div class="theory-content">
+                    
+            <article class="theory-wrapper">
+                <header style="margin-bottom: 25px; border-bottom: 2px solid var(--border); padding-bottom: 15px;">
+                    <h1 style="color: var(--primary-dark); font-size: 1.8rem; font-weight: 800; margin-bottom: 8px;">
+                        TỔNG HỢP KIẾN THỨC TRỌNG TÂM: UNIT 2 - THE GENERATION GAP
+                    </h1>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">
+                        Chương trình Tiếng Anh 11 Global Success - Khung GDPT 2018 | Hệ thống toàn diện Từ vựng Cấu trúc gia đình & Xung đột thế hệ, Dạng của từ, Cặp từ dễ nhầm lẫn, Động từ khuyết thiếu (Modal Verbs), Động từ nối (Linking Verbs) và Quy tắc Nối âm tự nhiên.
+                    </p>
+                </header>
+
+                <!-- SECTION 1: VOCABULARY & COLLOCATIONS -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-people-roof"></i></div>
+                        <div class="theory-title">1. Từ vựng & Cụm từ trọng tâm (Vocabulary & Collocations)</div>
+                    </div>
+                    <p style="margin-bottom: 14px; font-size: 0.93rem; color: #334155;">
+                        Chủ đề <i>The Generation Gap</i> tập trung vào các mối quan hệ gia đình hiện đại, những bất đồng quan điểm giữa các thế hệ và kỹ năng giải quyết mâu thuẫn thấu cảm:
+                    </p>
+                    <div class="vocab-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-word">generation gap <span class="vocab-pos">/ˌdʒenəˈreɪʃn ɡæp/ (n)</span></div>
+                            <div class="vocab-meaning">khoảng cách thế hệ (sự khác biệt về quan điểm, giá trị sống giữa người trẻ và người lớn tuổi)</div>
+                            <div class="vocab-example">Empathetic listening and open dialogue help bridge the generation gap in modern families.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">nuclear family <span class="vocab-pos">/ˌnjuːkliə ˈfæməli/ (n)</span></div>
+                            <div class="vocab-meaning">gia đình hạt nhân (chỉ bao gồm hai thế hệ: cha mẹ và con cái)</div>
+                            <div class="vocab-example">Nuclear families have become the predominant household model in contemporary urban centers.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">extended family <span class="vocab-pos">/ɪkˌstendɪd ˈfæməli/ (n)</span></div>
+                            <div class="vocab-meaning">gia đình đa thế hệ / gia đình mở rộng (ông bà, cha mẹ, con cái, cô chú cùng chung sống)</div>
+                            <div class="vocab-example">Living in an extended family enables grandparents to provide valuable guidance in raising grandchildren.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">curfew <span class="vocab-pos">/ˈkɜːfjuː/ (n)</span></div>
+                            <div class="vocab-meaning">giờ giới nghiêm (quy định thời gian phải có mặt ở nhà vào buổi tối)</div>
+                            <div class="vocab-example">My parents set a reasonable 10 PM curfew to guarantee my personal safety during school terms.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">follow in one's footsteps <span class="vocab-pos">(idiom)</span></div>
+                            <div class="vocab-meaning">nối nghiệp, tiếp bước con đường sự nghiệp của cha mẹ/tiền bối</div>
+                            <div class="vocab-example">Rather than following in his father's footsteps as a surgeon, Nam decided to pursue digital arts.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">open-minded <span class="vocab-pos">/ˌəʊpən ˈmaɪndɪd/ (adj)</span></div>
+                            <div class="vocab-meaning">cởi mở, phóng khoáng, sẵn sàng lắng nghe và tiếp thu ý tưởng mới</div>
+                            <div class="vocab-example">Modern parents should be open-minded regarding unconventional career aspirations.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">conservative <span class="vocab-pos">/kənˈsɜːvətɪv/ (adj)</span></div>
+                            <div class="vocab-meaning">bảo thủ, thận trọng, chuộng gìn giữ các giá trị và tập tục truyền thống</div>
+                            <div class="vocab-example">Older generations often hold conservative viewpoints regarding table manners and social attire.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">mutual respect <span class="vocab-pos">/ˈmjuːtʃuəl rɪˈspekt/ (n)</span></div>
+                            <div class="vocab-meaning">sự tôn trọng lẫn nhau hai chiều giữa các thành viên</div>
+                            <div class="vocab-example">A peaceful and harmonious household must be anchored in genuine mutual respect.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 2: WORD FORMATION -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-diagram-project"></i></div>
+                        <div class="theory-title">2. Cấu tạo từ / Dạng của từ (Word Formation)</div>
+                    </div>
+                    <div class="vocab-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-word">generate &rarr; generation &rarr; generational</div>
+                            <div class="vocab-meaning">
+                                - <b>generate (v):</b> tạo ra, phát sinh (năng lượng, ý tưởng).<br>
+                                - <b>generation (n):</b> thế hệ (Generation Z, Millennials).<br>
+                                - <b>generational (adj):</b> thuộc về thế hệ (generational conflicts).
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">respect &rarr; respectful &rarr; respectable &rarr; respective</div>
+                            <div class="vocab-meaning">
+                                - <b>respect (v, n):</b> tôn trọng / sự kính trọng.<br>
+                                - <b>respectful (adj):</b> có thái độ lễ phép, tôn kính (a respectful attitude).<br>
+                                - <b>respectable (adj):</b> đáng kính, đứng đắn, danh giá (a respectable profession).<br>
+                                - <b>respective (adj):</b> riêng từng người, tương ứng.
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">differ &rarr; difference &rarr; different &rarr; differentiate</div>
+                            <div class="vocab-meaning">
+                                - <b>differ (v):</b> bất đồng, khác biệt.<br>
+                                - <b>difference (n):</b> sự khác nhau, bất đồng.<br>
+                                - <b>different (adj):</b> khác biệt (+ from).<br>
+                                - <b>differentiate (v):</b> phân biệt.
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">value &rarr; valuable &rarr; invaluable &rarr; evaluate</div>
+                            <div class="vocab-meaning">
+                                - <b>value (v, n):</b> quý trọng / giá trị đạo đức.<br>
+                                - <b>valuable (adj):</b> có giá trị, quý giá.<br>
+                                - <b>invaluable (adj):</b> vô giá, cực kỳ quý báu.<br>
+                                - <b>evaluate (v):</b> đánh giá, định giá.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 3: CONFUSING WORDS -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-arrows-split-up-and-left"></i></div>
+                        <div class="theory-title">3. Phân biệt các từ dễ gây nhầm lẫn (Confusing Words)</div>
+                    </div>
+                    <div class="vocab-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-word">Respectful vs. Respectable vs. Respective</div>
+                            <div class="vocab-meaning">
+                                <b>- Respectful:</b> Bày tỏ sự kính trọng, lễ phép với người khác (<i>He was very respectful to his elders</i>).<br>
+                                <b>- Respectable:</b> Đáng kính trọng, đứng đắn, có địa vị tốt trong xã hội (<i>a respectable family</i>).<br>
+                                <b>- Respective:</b> Riêng từng cái/người tương ứng (<i>They went to their respective rooms</i>).
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">Advice (n) vs. Advise (v)</div>
+                            <div class="vocab-meaning">
+                                <b>- Advice /ədˈvaɪs/ (danh từ không đếm được):</b> Lời khuyên (<i>a useful piece of advice</i>). Không dùng *an advice* hay *advices*.<br>
+                                <b>- Advise /ədˈvaɪz/ (động từ):</b> Khuyên bảo (<i>The counselor advised us to talk openly</i>).
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">Nuclear Family vs. Extended Family</div>
+                            <div class="vocab-meaning">
+                                <b>- Nuclear Family:</b> Gia đình 2 thế hệ gồm cha mẹ và các con.<br>
+                                <b>- Extended Family:</b> Gia đình lớn từ 3 thế hệ trở lên cùng sinh hoạt (ông bà, cha mẹ, con cái, cô chú).
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">Follow footsteps vs. Follow dreams</div>
+                            <div class="vocab-meaning">
+                                <b>- Follow in footsteps:</b> Tiếp bước / nối nghiệp nghề truyền thống của gia đình.<br>
+                                <b>- Follow one's dreams:</b> Dũng cảm theo đuổi ước mơ và đam mê cá nhân của bản thân.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 4: GRAMMAR -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-spell-check"></i></div>
+                        <div class="theory-title">4. Ngữ pháp trọng tâm: Động từ khuyết thiếu & Động từ nối</div>
+                    </div>
+                    
+                    <div class="grammar-box">
+                        <div class="rule-title">A. Động từ khuyết thiếu (Modal Verbs: Must, Have to, Should, Ought to)</div>
+                        <p style="margin-bottom: 6px;"><b>1. Diễn tả sự bắt buộc & Bổn phận (Obligation & Necessity):</b></p>
+                        <p>- <b>Must + V-inf:</b> Sự bắt buộc xuất phát từ ý chí/cảm xúc chủ quan của người nói, hoặc quy tắc luật pháp nghiêm ngặt.<br>
+                        - <b>Have to + V-inf:</b> Sự bắt buộc do hoàn cảnh khách quan, nội quy cơ quan/trường học bắt buộc.<br>
+                        - <b>Mustn't + V-inf:</b> Tuyệt đối cấm làm điều gì (Prohibition).<br>
+                        - <b>Don't / Doesn't have to + V-inf:</b> Không cần thiết phải làm (không bắt buộc).</p>
+                        
+                        <p style="margin-top: 8px; margin-bottom: 6px;"><b>2. Diễn tả lời khuyên (Advice & Recommendation):</b></p>
+                        <p>- <b>Should / Ought to + V-inf:</b> Khuyên ai đó nên làm gì vì điều đó tốt hoặc đúng đắn.<br>
+                        - <b>Shouldn't / Ought not to + V-inf:</b> Khuyên ai đó không nên làm điều gì.</p>
+                    </div>
+
+                    <div class="grammar-box" style="margin-top: 14px; background: #eff6ff; border-color: #93c5fd;">
+                        <div class="rule-title" style="color: #1e40af;">B. Động từ nối (Linking Verbs + Adjective)</div>
+                        <p>Động từ nối không diễn tả hành động thể chất mà dùng để liên kết chủ ngữ với tính từ (bổ ngữ) nhằm miêu tả trạng thái, tính chất hoặc cảm xúc:</p>
+                        <div class="rule-formula" style="border-color: #bfdbfe;">Cấu trúc chuẩn: Subject + Linking Verb + Adjective (Tính từ)</div>
+                        <p style="margin-top: 6px; font-size: 0.88rem; color: #334155;">
+                            - <b>Nhóm giác quan:</b> <i>look</i> (trông có vẻ), <i>sound</i> (nghe có vẻ), <i>smell</i> (tỏa mùi), <i>taste</i> (nếm có vị), <i>feel</i> (cảm thấy).<br>
+                            - <b>Nhóm trạng thái & Biến đổi:</b> <i>seem / appear</i> (dường như), <i>become / get</i> (trở nên), <i>remain / stay</i> (vẫn giữ nguyên).
+                        </p>
+                        <p style="font-size: 0.85rem; color: #1e40af; font-style: italic; margin-top: 3px;">
+                            Ví dụ: That traditional noodle soup <b>smells delicious</b> (không dùng *deliciously). The father <b>remained calm</b> throughout the debate.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- SECTION 5: PRONUNCIATION -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-volume-high"></i></div>
+                        <div class="theory-title">5. Ngữ âm: Sự nối âm Phụ âm - Nguyên âm (Linking Consonant to Vowel)</div>
+                    </div>
+                    <div class="vocab-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-word">Nguyên tắc nối âm liền mạch (Liaison)</div>
+                            <div class="vocab-meaning">
+                                Trong ngữ lưu tự nhiên, khi một từ kết thúc bằng một phụ âm và từ kế tiếp bắt đầu bằng một nguyên âm, phụ âm cuối sẽ tự động nối liền vào nguyên âm đầu của từ tiếp theo:<br>
+                                - <b>hold on:</b> /həʊld ɒn/ &rarr; [həʊl-dɒn]<br>
+                                - <b>turn off:</b> /tɜːn ɒf/ &rarr; [tɜː-nɒf]<br>
+                                - <b>an extended family:</b> /ən ɪkˈstendɪd/ &rarr; [ə-nɪkˈstendɪd]<br>
+                                - <b>bridge a gap:</b> /brɪdʒ ə ɡæp/ &rarr; [brɪ-dʒə ɡæp]
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="jump-btn-container">
+                    <button class="jump-btn" onclick="switchTab('quiz')">
+                        <i class="fa-solid fa-pen-to-square"></i> Làm bài tập củng cố
+                    </button>
+                </div>
+            </article>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: LÀM BÀI TẬP CỦNG CỐ -->
+        <div id="tab-quiz" class="tab-pane">
+            <!-- Modal Login / Start Prompt -->
+            <div id="modal-start" class="modal-overlay">
+                <div class="modal-card">
+                    <div class="modal-header">
+                        <div style="width: 50px; height: 50px; background: #eff6ff; color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 10px;">
+                            <i class="fa-solid fa-user-graduate"></i>
+                        </div>
+                        <h3 class="modal-title">THÔNG TIN HỌC SINH</h3>
+                        <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.25rem;">Unit 2: The Generation Gap (40 câu / 45 phút)</p>
+                    </div>
+                    <div class="modal-input-group">
+                        <label class="modal-label">Họ và tên của bạn (*)</label>
+                        <input type="text" id="inp-name" class="modal-input" placeholder="Ví dụ: Nguyễn Văn A">
+                    </div>
+                    <div class="modal-input-group">
+                        <label class="modal-label">Lớp / Trường (*)</label>
+                        <input type="text" id="inp-class" class="modal-input" placeholder="Ví dụ: 11A1 - THPT Chuyên">
+                    </div>
+                    <div class="modal-notes">
+                        <b><i class="fa-solid fa-shield-halved"></i> QUY ĐỊNH BẢO MẬT & CHỐNG GIAN LẬN:</b><br>
+                        • 40 câu trắc nghiệm (có 8 câu Audio Nghe), thời gian 45 phút.<br>
+                        • Khóa copy, chuột phải và phím tắt F12.<br>
+                        • Rời tab quá 3 lần hệ thống sẽ tự động thu bài!
+                    </div>
+                    <button class="modal-btn" onclick="startExam()">BẮT ĐẦU LÀM BÀI</button>
+                </div>
+            </div>
+
+            <!-- Active Exam Screen -->
+            <div id="exam-screen" class="exam-grid" style="display: none;">
+                <!-- Left: Question Panel -->
+                <div class="exam-panel">
+                    <div class="exam-meta-bar">
+                        <span class="badge-topic" id="q-topic">Chủ điểm kiến thức</span>
+                        <span style="font-weight: 700; color: var(--primary-dark);" id="q-progress">Câu 1 / 40</span>
+                    </div>
+
+                    <!-- Audio Player for Listening questions -->
+                    <div id="audio-container" class="audio-player-card" style="display: none;">
+                        <div class="audio-label">
+                            <i class="fa-solid fa-headphones-simple"></i> <b>Audio phần Nghe (Listening Comprehension - Câu 1 đến 8):</b>
+                        </div>
+                        <audio id="audio-player" controls preload="auto">
+                            <source src="Unit 2 - Listening.mp3" type="audio/mpeg">
+                            Trình duyệt của bạn không hỗ trợ phát âm thanh HTML5.
+                        </audio>
+                    </div>
+
+                    <!-- Reading / Cloze Passage if any -->
+                    <div id="passage-container" class="passage-box" style="display: none;">
+                        <div class="passage-title" id="passage-title">ĐOẠN VĂN</div>
+                        <div id="passage-body"></div>
+                    </div>
+
+                    <!-- Question Prompt -->
+                    <div class="question-title" id="q-title">Nội dung câu hỏi đang được tải...</div>
+
+                    <!-- Options List -->
+                    <div class="options-list" id="opt-container"></div>
+
+                    <!-- Navigation Controls -->
+                    <div class="question-footer">
+                        <button class="ctrl-btn ctrl-btn-prev" id="btn-prev" onclick="prevQuestion()">
+                            <i class="fa-solid fa-arrow-left"></i> Câu trước
+                        </button>
+                        <button class="ctrl-btn ctrl-btn-next" id="btn-next" onclick="nextQuestion()">
+                            Câu tiếp theo <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right: Sticky Sidebar Palette -->
+                <div class="palette-panel">
+                    <div class="timer-card">
+                        <div class="timer-label"><i class="fa-regular fa-clock"></i> THỜI GIAN CÒN LẠI</div>
+                        <div class="timer-val" id="timer-display">45:00</div>
+                    </div>
+
+                    <div class="user-info-card">
+                        <div style="font-weight: 700; color: #1e293b;" id="user-display-name">Học sinh: ---</div>
+                        <div style="color: #64748b; font-size: 0.8rem;" id="user-display-class">Lớp: ---</div>
+                    </div>
+
+                    <div class="progress-wrap">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="progress-bar"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>Tiến độ làm bài</span>
+                            <span id="progress-percent">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="palette-title">
+                        <span>Bảng câu hỏi (40 câu)</span>
+                        <span style="font-size: 0.8rem; font-weight: 500; color: var(--primary);" id="answered-count">0/40</span>
+                    </div>
+
+                    <div class="palette-grid" id="palette-grid"></div>
+
+                    <button class="submit-btn" onclick="confirmSubmit()">
+                        <i class="fa-solid fa-paper-plane"></i> NỘP BÀI THI
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result Screen -->
+            <div id="result-screen" class="result-view" style="display: none;">
+                <div class="score-banner">
+                    <div class="score-circle">
+                        <div class="score-val" id="final-score">0.0</div>
+                        <div class="score-max">/ 10 ĐIỂM</div>
+                    </div>
+                    <h2 style="font-size: 1.5rem; font-weight: 800; color: #1e293b; margin-bottom: 0.5rem;">KẾT QUẢ BÀI LÀM CỦNG CỐ</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;" id="result-detail">Thí sinh: ...</p>
+                    <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('all')">Tất cả</button>
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('wrong')">Câu sai</button>
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('correct')">Câu đúng</button>
+                    </div>
+                </div>
+                <div class="review-list" id="review-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Site Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <p> VATLI102.COM - Hệ thống Học tập & Đánh giá Năng lực Tiếng Anh THPT Chuẩn GDPT 2018.</p>
+            <div class="footer-links">
+                <a href="https://vatli102.com">Trang chủ</a> • 
+                <a href="https://vatli102.com/lop-11">Tiếng Anh 11</a> • 
+                <a href="https://vatli102.com/de-thi">Ngân hàng đề thi</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT ENGINE -->
+    <script>
+        const LESSON_TITLE = "Unit 2: The Generation Gap";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
+        const QUESTIONS = [{"num": 1, "topic": "Nghe hiểu - Kỳ vọng của cha mẹ", "passageId": null, "audio_file": "Unit 2 - Listening.mp3", "title": "What career did Minh's father expect him to pursue?", "options": {"A": "Digital marketing and advertising", "B": "Medicine, continuing the family's three-generation tradition", "C": "Professional software programming", "D": "Video game development and animation"}, "correct": "B", "exp": "Trong bài nghe, người bố nói: <i>'You know our family has had three generations of successful doctors. We believe studying medicine is the most respectable and stable path for you.'</i> (Gia đình mình đã có 3 thế hệ làm bác sĩ thành đạt. Bố mẹ tin học y là con đường danh giá và ổn định nhất).", "translation": "Bố của Minh mong muốn bạn ấy theo đuổi ngành nghề nào? -> Ngành Y, tiếp nối truyền thống 3 thế hệ của gia đình."}, {"num": 2, "topic": "Nghe hiểu - Đam mê cá nhân", "passageId": null, "audio_file": "Unit 2 - Listening.mp3", "title": "What field is Minh truly passionate about studying?", "options": {"A": "Graphic design and digital media", "B": "Pharmaceutical manufacturing", "C": "Classical music performance", "D": "Traditional agriculture"}, "correct": "A", "exp": "Minh giải thích: <i>'to be honest, I feel passionate about graphic design and digital media.'</i> (Thành thật mà nói, con cảm thấy đam mê ngành thiết kế đồ họa và truyền thông số).", "translation": "Minh thực sự đam mê theo học lĩnh vực nào? -> Thiết kế đồ họa và truyền thông số."}, {"num": 3, "topic": "Nghe hiểu - Quan điểm thế hệ", "passageId": null, "audio_file": "Unit 2 - Listening.mp3", "title": "Why was Minh's father initially hesitant about graphic design?", "options": {"A": "Because tuition fees for art universities are too low.", "B": "Because his generation prioritized stability and guaranteed employment.", "C": "Because Minh had failed all his previous school art exams.", "D": "Because there are no universities teaching graphic design."}, "correct": "B", "exp": "Người bố nói: <i>'In our generation, stability and guaranteed employment were the top priorities. Why take unnecessary risks?'</i> (Ở thế hệ của bố, sự ổn định và việc làm đảm bảo là ưu tiên hàng đầu. Tại sao lại mạo hiểm không cần thiết?).", "translation": "Tại sao ban đầu bố của Minh còn do dự về ngành thiết kế đồ họa? -> Vì ở thế hệ của bố, sự ổn định và việc làm đảm bảo là ưu tiên hàng đầu."}, {"num": 4, "topic": "Nghe hiểu - Giải pháp đồng thuận", "passageId": null, "audio_file": "Unit 2 - Listening.mp3", "title": "What constructive step did Minh and his father agree to take together?", "options": {"A": "Reject all university applications immediately", "B": "Consult a professional career counselor this weekend", "C": "Let Minh move out and live independently right away", "D": "Forbid Minh from using any computer at home"}, "correct": "B", "exp": "Người bố đề xuất: <i>'Let's arrange a meeting with a career counselor this weekend so we can evaluate both options together.'</i> (Chúng ta hãy hẹn gặp chuyên gia tư vấn hướng nghiệp vào cuối tuần này để cùng đánh giá cả hai lựa chọn).", "translation": "Minh và bố đã nhất trí thực hiện bước đi tích cực nào? -> Cùng gặp chuyên gia tư vấn hướng nghiệp vào cuối tuần."}, {"num": 5, "topic": "Nghe hiểu - Nguyên nhân xung đột", "passageId": null, "audio_file": "Unit 2 - Listening.mp3", "title": "According to the counselor, what causes generational conflicts within families?", "options": {"A": "Rapid cultural shifts and technological progress", "B": "A total lack of financial support in modern times", "C": "Strict government regulations on family sizes", "D": "The disappearance of all school curricula"}, "correct": "A", "exp": "Chuyên gia tâm lý khẳng định: <i>'Generational conflicts within families are natural occurrences driven by rapid cultural shifts and technological progress.'</i> (Xung đột thế hệ là điều tự nhiên do sự chuyển dịch văn hóa và tiến bộ công nghệ nhanh chóng).", "translation": "Theo chuyên gia tư vấn, điều gì gây ra xung đột thế hệ trong gia đình? -> Sự thay đổi nhanh chóng về văn hóa và công nghệ."}, {"num": 6, "topic": "Nghe hiểu - Lắng nghe chủ động", "passageId": null, "audio_file": "Unit 2 - Listening.mp3", "title": "What does the first principle 'active listening' require parents to do?", "options": {"A": "Enforce strict punishments immediately without talking", "B": "Listen attentively to understand teenagers' emotional perspectives without judging", "C": "Agree with everything teenagers demand without question", "D": "Ignore all household communication completely"}, "correct": "B", "exp": "Bài nói nêu rõ: <i>'Parents should listen attentively to understand their teenagers' emotional perspectives rather than imposing rigid rules immediately.'</i>", "translation": "Nguyên tắc lắng nghe tích cực yêu cầu cha mẹ làm gì? -> Lắng nghe chăm chú để hiểu góc nhìn cảm xúc của con mà không vội phán xét."}, {"num": 7, "topic": "Nghe hiểu - Kênh giao tiếp mở", "passageId": null, "audio_file": "Unit 2 - Listening.mp3", "title": "How can families create safe spaces for open communication?", "options": {"A": "By communicating exclusively via social media texts", "B": "By having regular family meals or casual leisure activities together", "C": "By never discussing personal matters under any circumstances", "D": "By setting up surveillance cameras in teenagers' rooms"}, "correct": "B", "exp": "Trong bài: <i>'Scheduling regular weekly family meals or casual leisure activities creates a safe space to discuss personal issues respectfully.'</i>", "translation": "Gia đình có thể tạo không gian an toàn để giao tiếp cởi mở bằng cách nào? -> Cùng nhau duy trì các bữa cơm gia đình hoặc hoạt động thư giãn đều đặn."}, {"num": 8, "topic": "Nghe hiểu - Thỏa hiệp linh hoạt", "passageId": null, "audio_file": "Unit 2 - Listening.mp3", "title": "What is an example of 'mutual compromise' mentioned by the speaker?", "options": {"A": "Banning teenagers from having any friends outside", "B": "Negotiating a reasonable and flexible curfew instead of a rigid rule", "C": "Allowing teenagers to stay out all night every day", "D": "Canceling all family dinners permanently"}, "correct": "B", "exp": "Ví dụ trong bài: <i>'rather than having a strict, non-negotiable curfew, parents and adolescents can negotiate a reasonable time frame that guarantees safety while honoring autonomy.'</i>", "translation": "Đâu là ví dụ về sự thỏa hiệp lẫn nhau được nêu trong bài? -> Cùng thương lượng giờ giới nghiêm hợp lý, linh hoạt thay vì áp đặt cứng nhắc."}, {"num": 9, "topic": "Phát âm nguyên âm", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word whose underlined part differs from the other three in pronunciation:", "options": {"A": "gener<u>a</u>tion", "B": "gr<u>a</u>ndparent", "C": "v<u>a</u>lue", "D": "f<u>a</u>mily"}, "correct": "A", "exp": "<b>generation</b> /ˌdʒenəˈreɪʃn/ (phần gạch chân đọc là <b>/eɪ/</b>). Các từ <i>grandparent</i> /ˈɡrænpeərənt/, <i>value</i> /ˈvæljuː/, <i>family</i> /ˈfæməli/ đều có phần gạch chân phát âm là <b>/æ/</b>.", "translation": "Phát âm phần gạch chân: generation (/eɪ/) khác với grandparent, value, family (/æ/)."}, {"num": 10, "topic": "Phát âm phụ âm 'c'", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word whose underlined part differs from the other three in pronunciation:", "options": {"A": "confli<u>c</u>t", "B": "<u>c</u>urfew", "C": "so<u>c</u>ial", "D": "<u>c</u>areer"}, "correct": "C", "exp": "<b>social</b> /ˈsəʊʃl/ (chữ <i>c</i> phát âm là <b>/ʃ/</b>). Các từ <i>conflict</i> /ˈkɒnflɪkt/, <i>curfew</i> /ˈkɜːfjuː/, <i>career</i> /kəˈrɪə(r)/ đều có chữ <i>c</i> phát âm là <b>/k/</b>.", "translation": "Phát âm: social có chữ c phát âm là /ʃ/, các từ còn lại phát âm là /k/."}, {"num": 11, "topic": "Trọng âm 2 âm tiết", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word that differs from the other three in the position of primary stress:", "options": {"A": "curfew", "B": "viewpoint", "C": "conflict", "D": "advice"}, "correct": "D", "exp": "<b>advice</b> /ədˈvaɪs/ (trọng âm âm 2). Các từ <i>curfew</i> /ˈkɜːfjuː/, <i>viewpoint</i> /ˈvjuːpɔɪnt/, <i>conflict</i> /ˈkɒnflɪkt/ đều có trọng âm rơi vào âm tiết thứ 1.", "translation": "Trọng âm: advice nhấn âm 2, các danh từ 2 âm tiết còn lại nhấn âm 1."}, {"num": 12, "topic": "Trọng âm 3 âm tiết", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word that differs from the other three in the position of primary stress:", "options": {"A": "extended", "B": "nuclear", "C": "critical", "D": "open-minded"}, "correct": "A", "exp": "<b>extended</b> /ɪkˈstendɪd/ (nhấn âm 2). Các từ <i>nuclear</i> /ˈnjuːkliə(r)/, <i>critical</i> /ˈkrɪtɪkl/ đều nhấn âm 1.", "translation": "Trọng âm: extended nhấn âm 2."}, {"num": 13, "topic": "Từ vựng Cấu trúc gia đình", "passageId": null, "title": "In a traditional ______ family, three or more generations including grandparents, parents, and children live together.", "options": {"A": "nuclear", "B": "extended", "C": "single-parent", "D": "blended"}, "correct": "B", "exp": "<b>extended family</b> (n): gia đình đa thế hệ / gia đình lớn (ông bà, cha mẹ, con cái...). <i>Nuclear family</i>: gia đình hạt nhân (2 thế hệ bố mẹ và con).", "translation": "Trong một gia đình đa thế hệ truyền thống, có từ ba thế hệ trở lên cùng sinh sống dưới một mái nhà."}, {"num": 14, "topic": "Từ vựng Giờ giới nghiêm", "passageId": null, "title": "My parents set a strict ______ of 9:30 PM, so I must return home before that time every evening.", "options": {"A": "table manner", "B": "curfew", "C": "viewpoint", "D": "burden"}, "correct": "B", "exp": "<b>curfew</b> (n): giờ giới nghiêm (quy định giờ về nhà buổi tối). <i>Table manner</i>: quy tắc bàn ăn; <i>viewpoint</i>: quan điểm; <i>burden</i>: gánh nặng.", "translation": "Bố mẹ tôi đặt ra giờ giới nghiêm nghiêm ngặt lúc 9h30 tối, vì vậy tôi phải về nhà trước giờ đó mỗi tối."}, {"num": 15, "topic": "Động từ khuyết thiếu - Bắt buộc (Must)", "passageId": null, "title": "According to school regulations, all students ______ wear uniform and display their student ID badges during school hours.", "options": {"A": "must", "B": "should", "C": "ought to", "D": "might"}, "correct": "A", "exp": "<b>must</b> dùng để diễn tả quy định bắt buộc mang tính pháp lý / nội quy chính thức của nhà trường (School regulations).", "translation": "Theo nội quy nhà trường, tất cả học sinh bắt buộc phải mặc đồng phục và đeo thẻ học sinh trong giờ học."}, {"num": 16, "topic": "Động từ khuyết thiếu - Lời khuyên (Shouldn't)", "passageId": null, "title": "You ______ eat too much fast food because it is detrimental to your long-term cardiovascular health.", "options": {"A": "must", "B": "shouldn't", "C": "have to", "D": "need"}, "correct": "B", "exp": "<b>shouldn't</b> dùng để đưa ra lời khuyên không nên làm điều gì có hại cho sức khỏe.", "translation": "Bạn không nên ăn quá nhiều thức ăn nhanh vì nó có hại cho sức khỏe tim mạch lâu dài."}, {"num": 17, "topic": "Động từ nối (Linking Verb) - Remained", "passageId": null, "title": "During the discussion, the father ______ calm and listened attentively to his daughter's opinions.", "options": {"A": "remained", "B": "staying", "C": "was remaining", "D": "calmly"}, "correct": "A", "exp": "<b>remain</b> là động từ nối (Linking Verb) đi trực tiếp với tính từ <i>'calm'</i> (remain calm = giữ bình tĩnh). Câu ở thì quá khứ đơn nên dùng <b>remained</b>.", "translation": "Trong suốt buổi thảo luận, người bố vẫn giữ bình tĩnh và chăm chú lắng nghe quan điểm của con gái."}, {"num": 18, "topic": "Thành ngữ (Idiom) - Follow in footsteps", "passageId": null, "title": "Mai's parents always encourage her to pursue her dreams rather than forcing her to follow in their ______.", "options": {"A": "footsteps", "B": "tracks", "C": "pathways", "D": "roads"}, "correct": "A", "exp": "Thành ngữ cố định: <b>follow in someone's footsteps</b> (nối nghiệp, đi theo bước chân của ai đó).", "translation": "Bố mẹ của Mai luôn khuyến khích bạn ấy theo đuổi ước mơ thay vì ép bạn ấy phải nối nghiệp gia đình."}, {"num": 19, "topic": "Từ đồng nghĩa (Closest Meaning)", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word(s) CLOSEST in meaning to the underlined word:\nGrandparents are often <u>conservative</u> and prefer keeping traditional customs rather than embracing new trends.", "options": {"A": "open-minded", "B": "traditional", "C": "modern", "D": "flexible"}, "correct": "B", "exp": "<b>conservative</b> (adj): bảo thủ, chuộng truyền thống = <b>traditional</b> (adj). <i>Open-minded / modern / flexible</i> mang nghĩa cởi mở, hiện đại, linh hoạt.", "translation": "Từ đồng nghĩa: conservative (bảo thủ, chuộng truyền thống) = traditional."}, {"num": 20, "topic": "Từ trái nghĩa (Opposite Meaning)", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word(s) OPPOSITE in meaning to the underlined word:\nParents and teenagers should cultivate <u>mutual</u> respect to resolve daily disagreements.", "options": {"A": "one-sided", "B": "reciprocal", "C": "shared", "D": "collective"}, "correct": "A", "exp": "<b>mutual</b> (adj): lẫn nhau, hai chiều. Trái nghĩa là <b>one-sided</b> (đơn phương, một chiều).", "translation": "Từ trái nghĩa: mutual (lẫn nhau, song phương) >< one-sided (đơn phương, một chiều)."}, {"num": 21, "topic": "Động từ giác quan (Smell + Adj)", "passageId": null, "title": "That bowl of traditional chicken noodle soup ______ delicious, making everyone in the kitchen hungry.", "options": {"A": "smells", "B": "is smelling", "C": "smell", "D": "smelledly"}, "correct": "A", "exp": "<b>smell</b> là động từ chỉ giác quan / động từ nối đi với tính từ <i>delicious</i>, không dùng thì tiếp diễn để mô tả tính chất. Chủ ngữ số ít 'That bowl' -> chia <b>smells</b>.", "translation": "Tô phở gà truyền thống đó tỏa mùi thơm ngào ngạt, làm cho mọi người trong bếp đều cảm thấy đói."}, {"num": 22, "topic": "Tính từ chỉ tính cách (Open-minded)", "passageId": null, "title": "My grandmother is very ______; she always listens without judging when I share my new ideas.", "options": {"A": "open-minded", "B": "strict", "C": "conservative", "D": "impatient"}, "correct": "A", "exp": "<b>open-minded</b> (adj): cởi mở, sẵn sàng lắng nghe cái mới. <i>Strict</i>: nghiêm khắc; <i>conservative</i>: bảo thủ; <i>impatient</i>: thiếu kiên nhẫn.", "translation": "Bà tôi rất cởi mở; bà luôn lắng nghe mà không phán xét mỗi khi tôi chia sẻ những ý tưởng mới."}, {"num": 23, "topic": "Giao tiếp - Xin phép lịch sự", "passageId": null, "title": "Hoa is talking to her mother after dinner:\nHoa: 'Mom, would you mind if I go to the science museum with my study group this Saturday?'\nMother: '______. Just make sure you finish your homework first.'", "options": {"A": "No, not at all", "B": "Yes, I would mind terribly", "C": "Never ask me again", "D": "I don't think you can"}, "correct": "A", "exp": "Câu hỏi xin phép <i>'Would you mind if...?'</i> (Mẹ có phiền nếu... không?). Đồng ý cho phép một cách lịch sự: <b>'No, not at all'</b> (Không, mẹ không phiền đâu).", "translation": "Giao tiếp: Hoa: 'Mẹ có phiền không nếu thứ 7 này con đi bảo tàng khoa học cùng nhóm học tập?' - Mẹ: 'Không, không phiền đâu con. Miễn là con nhớ hoàn thành bài tập trước nhé.'"}, {"num": 24, "topic": "Giao tiếp - Bày tỏ đồng tình", "passageId": null, "title": "Nam and his father are discussing curfew rules:\nFather: 'I believe setting a curfew ensures your personal safety at night.'\nNam: '______. It helps me manage my evening study time much better.'", "options": {"A": "I totally agree with you, Dad", "B": "I couldn't disagree more", "C": "That sounds totally useless", "D": "You are completely mistaken"}, "correct": "A", "exp": "Nam đưa ra lý do ủng hộ quan điểm của bố, nên đáp lại đồng thuận: <b>'I totally agree with you, Dad'</b> (Con hoàn toàn đồng ý với bố).", "translation": "Giao tiếp: Bố: 'Bố tin rằng đặt giờ giới nghiêm giúp đảm bảo an toàn cho con...' - Nam: 'Con hoàn toàn đồng ý với bố...'"}, {"num": 25, "topic": "Đọc điền từ - Tính từ văn hóa", "passageId": "cloze", "title": "Choose the best answer for blank (25):", "options": {"A": "cultural", "B": "economic", "C": "industrial", "D": "artificial"}, "correct": "A", "exp": "Cụm danh từ <b>cultural norm</b> (chuẩn mực văn hóa trong xã hội).", "translation": "Điền vào chỗ trống (25): cultural (thuộc về văn hóa)."}, {"num": 26, "topic": "Đọc điền từ - Tính từ phổ biến", "passageId": "cloze", "title": "Choose the best answer for blank (26):", "options": {"A": "prevalent", "B": "scarce", "C": "rare", "D": "extinct"}, "correct": "A", "exp": "<b>prevalent</b> (adj): phổ biến, thịnh hành khắp nơi. <i>Scarce / rare / extinct</i>: khan hiếm, hiếm gặp, tuyệt chủng.", "translation": "Điền vào chỗ trống (26): prevalent (phổ biến, thông dụng)."}, {"num": 27, "topic": "Đọc điền từ - Động từ theo đuổi", "passageId": "cloze", "title": "Choose the best answer for blank (27):", "options": {"A": "pursue", "B": "neglect", "C": "abandon", "D": "prohibit"}, "correct": "A", "exp": "Cụm từ <b>pursue one's dreams</b> (theo đuổi ước mơ / hoài bão của bản thân).", "translation": "Điền vào chỗ trống (27): pursue (trong 'pursue their own dreams' = theo đuổi ước mơ)."}, {"num": 28, "topic": "Đọc điền từ - Cấu trúc Force sb to V", "passageId": "cloze", "title": "Choose the best answer for blank (28):", "options": {"A": "force", "B": "allow", "C": "let", "D": "help"}, "correct": "A", "exp": "Cấu trúc <b>force somebody to do something</b> (ép buộc ai làm gì: ép con cái nối nghiệp gia đình).", "translation": "Điền vào chỗ trống (28): force (ép buộc)."}, {"num": 29, "topic": "Đọc điền từ - Tính từ tôn trọng lẫn nhau", "passageId": "cloze", "title": "Choose the best answer for blank (29):", "options": {"A": "mutual", "B": "distant", "C": "hostile", "D": "aggressive"}, "correct": "A", "exp": "Cụm từ <b>mutual respect</b> (sự tôn trọng lẫn nhau giữa cha mẹ và con cái).", "translation": "Điền vào chỗ trống (29): mutual (lẫn nhau, hai chiều)."}, {"num": 30, "topic": "Đọc hiểu - Tiêu đề bài đọc", "passageId": "reading", "title": "Which title best summarizes the main idea of the passage?", "options": {"A": "The History of Digital Technology and Social Media Platforms", "B": "Understanding the Contemporary Generation Gap and Building Empathetic Bridges", "C": "Why Generation Z Should Obey All Parental Decisions Unconditionally", "D": "The Complete Breakdown of Traditional Nuclear Families"}, "correct": "B", "exp": "Toàn bài phân tích bản chất của khoảng cách thế hệ hiện đại giữa Gen Z và cha mẹ, đồng thời đề xuất giải pháp thấu cảm để thu hẹp khoảng cách: <b>'Understanding the Contemporary Generation Gap and Building Empathetic Bridges'</b>.", "translation": "Tiêu đề nào tóm tắt đúng nhất ý chính của bài đọc? -> Thấu hiểu khoảng cách thế hệ đương đại và xây dựng cầu nối thấu cảm."}, {"num": 31, "topic": "Đọc hiểu - Công dân số (Digital natives)", "passageId": "reading", "title": "According to paragraph 2, why are Generation Z described as 'digital natives'?", "options": {"A": "Because they only communicate through written letters", "B": "Because they have had instantaneous access to digital technology and global perspectives since early childhood", "C": "Because they refuse to attend conventional schools", "D": "Because they invented the first computer networks"}, "correct": "B", "exp": "Đoạn 2 nêu rõ: <i>'They have had instantaneous access to global perspectives, diverse cultures, and alternative viewpoints since early childhood.'</i>", "translation": "Theo đoạn 2, tại sao Gen Z được gọi là những 'công dân số'? -> Vì họ được tiếp cận tức thì với công nghệ số và quan điểm toàn cầu từ nhỏ."}, {"num": 32, "topic": "Đọc hiểu - Từ đồng nghĩa (Unprecedented)", "passageId": "reading", "title": "The word 'unprecedented' in paragraph 1 is closest in meaning to ______.", "options": {"A": "never seen before", "B": "very common", "C": "extremely ancient", "D": "predictable"}, "correct": "A", "exp": "<b>unprecedented</b> (adj): chưa từng có tiền lệ, chưa từng thấy trước đây = <b>never seen before</b>.", "translation": "Từ 'unprecedented' trong đoạn 1 đồng nghĩa với từ nào? -> never seen before (chưa từng thấy trước đây)."}, {"num": 33, "topic": "Đọc hiểu - Từ trái nghĩa (Overbearing)", "passageId": "reading", "title": "The word 'overbearing' in paragraph 3 is OPPOSITE in meaning to ______.", "options": {"A": "domineering", "B": "understanding and tolerant", "C": "strict", "D": "demanding"}, "correct": "B", "exp": "<b>overbearing</b> (adj): độc đoán, áp đặt. Trái nghĩa là <b>understanding and tolerant</b> (thấu hiểu và khoan dung).", "translation": "Từ 'overbearing' (áp đặt, độc đoán) trái nghĩa với từ nào? -> understanding and tolerant (thấu hiểu và khoan dung)."}, {"num": 34, "topic": "Đọc hiểu - Học hỏi lẫn nhau (Reciprocal)", "passageId": "reading", "title": "According to the last paragraph, what transforms the generation gap into reciprocal learning?", "options": {"A": "Abandoning all traditional cultural principles completely", "B": "Practicing empathetic communication and mutual validation of each other's perspectives", "C": "Eliminating all internet access inside the family home", "D": "Avoiding all conversations between parents and children"}, "correct": "B", "exp": "Đoạn cuối khẳng định: <i>'When parents validate their children's digital reality and adolescents demonstrate appreciation for parental guidance, the generation gap ceases to be a battleground and transforms into an enriching opportunity for reciprocal learning.'</i>", "translation": "Theo đoạn cuối, điều gì biến khoảng cách thế hệ thành cơ hội học hỏi lẫn nhau? -> Giao tiếp thấu cảm và tôn trọng công nhận góc nhìn của nhau."}, {"num": 35, "topic": "Đọc hiểu - Nhận định sai (NOT true)", "passageId": "reading", "title": "Which statement is NOT TRUE according to the passage?", "options": {"A": "Boomer and Gen X parents grew up in an analog environment.", "B": "Generation Z are often drawn to unconventional career paths.", "C": "Psychologists believe either generation must completely renounce their beliefs to resolve conflicts.", "D": "Digital acceleration is a primary catalyst for the widening divide."}, "correct": "C", "exp": "Đoạn cuối chỉ ra: <i>'Psychologists emphasize that overcoming these tensions does not require either generation to completely abandon their principles.'</i> Do đó phương án C (phải từ bỏ hoàn toàn niềm tin) là nhận định sai.", "translation": "Câu nào KHÔNG ĐÚNG theo bài đọc? -> Câu C: Các nhà tâm lý cho rằng một trong hai thế hệ phải từ bỏ hoàn toàn niềm tin của mình."}, {"num": 36, "topic": "Biến đổi câu - Cấm đoán (Forbidden to Mustn't)", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the sentence that is closest in meaning to the original sentence:\nIt is strictly forbidden for students to bring dangerous items into the school campus.", "options": {"A": "Students mustn't bring dangerous items into the school campus.", "B": "Students don't have to bring dangerous items into the school campus.", "C": "Students shouldn't bring dangerous items into the school campus if they like.", "D": "Students need bring dangerous items into the school campus."}, "correct": "A", "exp": "Cấu trúc cấm đoán: <i>'It is strictly forbidden to do sth'</i> = <b>'S + mustn't + V-inf'</b> (Tuyệt đối không được làm gì).", "translation": "Biến đổi câu: Nghiêm cấm học sinh mang đồ vật nguy hiểm vào trường = Học sinh tuyệt đối không được mang đồ nguy hiểm vào trường."}, {"num": 37, "topic": "Biến đổi câu - Lời khuyên (Advisable to Ought to)", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the sentence that is closest in meaning to the original sentence:\nIt is advisable for parents to listen attentively to their children's opinions.", "options": {"A": "Parents ought to listen attentively to their children's opinions.", "B": "Parents must force their children to obey without listening.", "C": "Parents don't need to listen to their children's opinions.", "D": "Parents have to ignore their children's opinions."}, "correct": "A", "exp": "Cấu trúc lời khuyên: <i>'It is advisable for sb to do sth'</i> = <b>'S + ought to / should + V-inf'</b>.", "translation": "Biến đổi câu: Cha mẹ nên lắng nghe chăm chú quan điểm của con cái = Cha mẹ nên (ought to) lắng nghe chăm chú..."}, {"num": 38, "topic": "Kết hợp câu - Mệnh đề nhượng bộ Although", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the sentence that best combines each pair of sentences:\nGenerations have different viewpoints on lifestyle. However, they can build harmony through mutual respect.", "options": {"A": "Although generations have different viewpoints on lifestyle, they can build harmony through mutual respect.", "B": "Because generations have different viewpoints, they can never build harmony through mutual respect.", "C": "Generations have different viewpoints on lifestyle so that they avoid mutual respect.", "D": "Unless generations build harmony, they have the same viewpoints on lifestyle."}, "correct": "A", "exp": "Kết hợp hai vế đối lập bằng liên từ nhượng bộ <b>'Although'</b> (Mặc dù các thế hệ có quan điểm khác nhau về lối sống, họ vẫn có thể xây dựng sự hòa thuận thông qua sự tôn trọng lẫn nhau).", "translation": "Kết hợp câu: Mặc dù các thế hệ có quan điểm khác nhau, họ có thể xây dựng sự hòa thuận nhờ tôn trọng lẫn nhau."}, {"num": 39, "topic": "Tìm lỗi sai - Động từ nối Smell + Adj", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the underlined part that needs correction:\nAlthough the freshly baked cookies <u>smelled</u> <u>deliciously</u>, Nam <u>wasn't allowed</u> to eat them before <u>dinner</u>.", "options": {"A": "smelled", "B": "deliciously", "C": "wasn't allowed", "D": "dinner"}, "correct": "B", "exp": "<b>smell</b> là động từ nối (Linking Verb) chỉ giác quan, phải đi kèm tính từ <b>delicious</b> chứ không dùng trạng từ <i>'deliciously'</i>.", "translation": "Tìm lỗi sai: Động từ nối 'smell' đi với tính từ -> sửa 'deliciously' thành 'delicious'."}, {"num": 40, "topic": "Tìm lỗi sai - Cặp trạng từ song hành", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the underlined part that needs correction:\nIn a <u>democratic</u> family, parents and children <u>ought to</u> discuss household rules <u>open</u> and <u>respectfully</u>.", "options": {"A": "democratic", "B": "ought to", "C": "open", "D": "respectfully"}, "correct": "C", "exp": "Bổ nghĩa cho động từ hành động <i>'discuss'</i> cần trạng từ song hành: <b>'openly and respectfully'</b>. Sửa tính từ <i>'open'</i> thành trạng từ <b>'openly'</b>.", "translation": "Tìm lỗi sai: Cần trạng từ 'openly' đi đôi với 'respectfully' để bổ nghĩa cho động từ 'discuss'."}];
+        const PASSAGES = {"cloze": "In modern society, the structure of the family and the dynamics between family members have undergone significant transformations. In the past, extended families comprising three or more generations living under one roof were the (25)________ norm. Grandparents played an active role in child-rearing and passed on traditional values. However, with rapid urbanisation, the nuclear family consisting solely of parents and children has become much more (26)________. This shift often leads to differences in beliefs and lifestyles, commonly referred to as the generation gap. While older generations tend to be more conservative and value financial security, teenagers often desire personal freedom and are eager to (27)________ their own dreams. When parents attempt to (28)________ their children to follow in their footsteps, friction inevitably occurs. Therefore, it is vital that both sides practice open dialogue and (29)________ respect to bridge the gap and maintain strong family bonds.", "reading": "The generation gap is a well-documented phenomenon that describes the differences in values, attitudes, and behaviors between younger and older generations. Today, this divide is particularly pronounced between 'Baby Boomers' or 'Generation X' parents and their 'Generation Z' children. The primary catalyst driving this unprecedented divergence is the exponential acceleration of digital technology and social media.\n\nUnlike their parents, who grew up in an analog world where information was centralized and traditional authority was rarely questioned, Generation Z are 'digital natives.' They have had instantaneous access to global perspectives, diverse cultures, and alternative viewpoints since early childhood. Consequently, teenagers today tend to be highly individualistic, socially conscious, and open-minded regarding unconventional career paths such as content creation, freelancing, and entrepreneurship. Conversely, parents often prioritize institutional stability, prestigious qualifications, and hierarchical obedience, which they perceive as reliable safeguards against financial hardship.\n\nThese differing worldviews frequently manifest as domestic conflicts over screen time, career aspirations, and social behavior. Parents may perceive their children's digital attachment as anti-social or unproductive, while adolescents often view parental restrictions as outdated and overbearing. \n\nPsychologists emphasize that overcoming these tensions does not require either generation to completely abandon their principles. Instead, cultivating empathetic communication is essential. When parents validate their children's digital reality and adolescents demonstrate appreciation for parental guidance, the generation gap ceases to be a battleground and transforms into an enriching opportunity for reciprocal learning."};
+
+        let currentIdx = 0;
+        let userAnswers = new Array(QUESTIONS.length).fill(null);
+        let timeLeft = 45 * 60;
+        let timerInterval = null;
+        let tabViolations = 0;
+        let examActive = false;
+        let examSubmitted = false;
+        let studentName = "";
+        let studentClass = "";
+
+        // Anti-Copy & Shortcuts Protection
+        document.addEventListener('keydown', e => {
+            if ((e.ctrlKey && (e.key === 'c' || e.key === 'u' || e.key === 's' || e.key === 'a')) || e.keyCode === 123) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        window.addEventListener('blur', () => {
+            if (examActive && !examSubmitted) {
+                tabViolations++;
+                if (tabViolations >= 3) {
+                    alert('CẢNH BÁO: Bạn đã rời khỏi màn hình thi quá 3 lần. Hệ thống sẽ tự động nộp bài!');
+                    submitExam();
+                } else {
+                    alert(`CẢNH BÁO: Vui lòng không chuyển tab khi đang làm bài! (Lần ${tabViolations}/3)`);
+                }
+            }
+        });
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+
+            if (tabId === 'theory') {
+                const b = document.getElementById('btn-tab-theory');
+                if (b) b.classList.add('active');
+                document.getElementById('tab-theory').classList.add('active');
+            } else {
+                const b = document.getElementById('btn-tab-quiz');
+                if (b) b.classList.add('active');
+                document.getElementById('tab-quiz').classList.add('active');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // LOCAL STORAGE PREFILL
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedName = localStorage.getItem('studentName') || localStorage.getItem('vatli102_student_name');
+            const savedClass = localStorage.getItem('studentClass') || localStorage.getItem('vatli102_student_class');
+            if (savedName && document.getElementById('inp-name')) document.getElementById('inp-name').value = savedName;
+            if (savedClass && document.getElementById('inp-class')) document.getElementById('inp-class').value = savedClass;
+        });
+
+        function startExam() {
+            const nameInp = document.getElementById('inp-name').value.trim();
+            const classInp = document.getElementById('inp-class').value.trim();
+
+            if (!nameInp || !classInp) {
+                alert("Vui lòng điền đầy đủ Họ tên và Lớp để bắt đầu làm bài!");
+                return;
+            }
+
+            studentName = nameInp;
+            studentClass = classInp;
+            localStorage.setItem('studentName', studentName);
+            localStorage.setItem('studentClass', studentClass);
+            localStorage.setItem('vatli102_student_name', studentName);
+            localStorage.setItem('vatli102_student_class', studentClass);
+
+            document.getElementById('modal-start').style.display = 'none';
+            document.getElementById('exam-screen').style.display = 'grid';
+            document.getElementById('user-display-name').innerText = "Học sinh: " + studentName;
+            document.getElementById('user-display-class').innerText = "Lớp: " + studentClass;
+
+            examActive = true;
+            renderPalette();
+            renderQuestion(0);
+            startTimer();
+        }
+
+        function startTimer() {
+            const display = document.getElementById('timer-display');
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Đã hết thời gian làm bài! Hệ thống đang nộp bài của bạn.");
+                    submitExam();
+                    return;
+                }
+                timeLeft--;
+                const min = Math.floor(timeLeft / 60);
+                const sec = timeLeft % 60;
+                display.innerText = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function renderPalette() {
+            const grid = document.getElementById('palette-grid');
+            grid.innerHTML = "";
+            QUESTIONS.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'pal-btn';
+                btn.innerText = idx + 1;
+                btn.onclick = () => renderQuestion(idx);
+                grid.appendChild(btn);
+            });
+            updatePalette();
+        }
+
+        function updatePalette() {
+            const btns = document.querySelectorAll('.pal-btn');
+            let answered = 0;
+            btns.forEach((btn, idx) => {
+                btn.classList.toggle('current', idx === currentIdx);
+                const hasAns = userAnswers[idx] !== null;
+                btn.classList.toggle('answered', hasAns);
+                if (hasAns) answered++;
+            });
+            document.getElementById('answered-count').innerText = `${answered}/${QUESTIONS.length}`;
+            const percent = Math.round((answered / QUESTIONS.length) * 100);
+            document.getElementById('progress-bar').style.width = percent + "%";
+            document.getElementById('progress-percent').innerText = percent + "%";
+        }
+
+        function renderQuestion(idx) {
+            currentIdx = idx;
+            const q = QUESTIONS[idx];
+
+            document.getElementById('q-topic').innerText = `Câu ${idx + 1}: ${q.topic || 'Kiểm tra kiến thức'}`;
+            document.getElementById('q-progress').innerText = `Câu ${idx + 1} / ${QUESTIONS.length}`;
+
+            // Audio player display for listening questions (Q1 to Q8)
+            const audioCont = document.getElementById('audio-container');
+            const audioPlayer = document.getElementById('audio-player');
+            if (idx < 8 || q.audio_file) {
+                audioCont.style.display = 'block';
+            } else {
+                audioCont.style.display = 'none';
+                if (audioPlayer && !audioPlayer.paused) {
+                    audioPlayer.pause();
+                }
+            }
+
+            // Reading Passage Box
+            const pCont = document.getElementById('passage-container');
+            const passKey = q.passageId || q.passage_ref;
+            if (passKey && PASSAGES[passKey]) {
+                pCont.style.display = 'block';
+                document.getElementById('passage-title').innerText = 
+                    passKey === 'cloze' ? 'ĐOẠN VĂN ĐIỀN TỪ (CÂU 25 - 29)' : 'BÀI ĐỌC HIỂU (CÂU 30 - 35)';
+                document.getElementById('passage-body').innerHTML = PASSAGES[passKey].replace(/\n/g, '<br><br>');
+            } else {
+                pCont.style.display = 'none';
+            }
+
+            document.getElementById('q-title').innerHTML = q.title;
+
+            // Options
+            const optCont = document.getElementById('opt-container');
+            optCont.innerHTML = "";
+            ['A', 'B', 'C', 'D'].forEach(letter => {
+                if (q.options && q.options[letter] !== undefined) {
+                    const label = document.createElement('label');
+                    label.className = `opt-label ${userAnswers[idx] === letter ? 'selected' : ''}`;
+                    label.onclick = () => selectOption(letter);
+                    label.innerHTML = `
+                        <div class="opt-circle">${letter}</div>
+                        <div class="opt-text">${q.options[letter]}</div>
+                    `;
+                    optCont.appendChild(label);
+                }
+            });
+
+            document.getElementById('btn-prev').disabled = (idx === 0);
+            document.getElementById('btn-next').innerHTML = (idx === QUESTIONS.length - 1)
+                ? 'Đến bảng nộp bài <i class="fa-solid fa-check-double"></i>' 
+                : 'Câu tiếp theo <i class="fa-solid fa-arrow-right"></i>';
+
+            updatePalette();
+        }
+
+        function selectOption(letter) {
+            if (examSubmitted) return;
+            userAnswers[currentIdx] = letter;
+            renderQuestion(currentIdx);
+        }
+
+        function prevQuestion() {
+            if (currentIdx > 0) renderQuestion(currentIdx - 1);
+        }
+
+        function nextQuestion() {
+            if (currentIdx < QUESTIONS.length - 1) {
+                renderQuestion(currentIdx + 1);
+            } else {
+                confirmSubmit();
+            }
+        }
+
+        function confirmSubmit() {
+            const unans = userAnswers.filter(a => a === null).length;
+            let msg = "Bạn có chắc chắn muốn nộp bài?";
+            if (unans > 0) msg = `Bạn còn ${unans} câu chưa chọn đáp án. Bạn vẫn muốn nộp bài?`;
+            if (confirm(msg)) {
+                submitExam();
+            }
+        }
+
+        function submitExam() {
+            if (examSubmitted) return;
+            examSubmitted = true;
+            examActive = false;
+            clearInterval(timerInterval);
+
+            // Pause audio
+            const aud = document.getElementById('audio-player');
+            if (aud && !aud.paused) aud.pause();
+
+            let correctCount = 0;
+            QUESTIONS.forEach((q, idx) => {
+                if (userAnswers[idx] === q.correct) correctCount++;
+            });
+
+            const score = (correctCount * (10 / QUESTIONS.length)).toFixed(2);
+            const timeSpentSec = (45 * 60) - timeLeft;
+            const min = Math.floor(timeSpentSec / 60);
+            const sec = timeSpentSec % 60;
+            const timeStr = `${min} phút ${sec} giây`;
+
+            document.getElementById('exam-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('result-detail').innerText = 
+                `Thí sinh: ${studentName} | Lớp: ${studentClass} | Đúng: ${correctCount}/${QUESTIONS.length} câu | Thời gian: ${timeStr}`;
+
+            if (parseFloat(score) >= 7.0 && window.confetti) {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+
+            renderReview('all');
+
+            // Send to Google Sheets (Dual mode: POST JSON + Query Params fallback for 100% delivery)
+            if (SCRIPT_URL && SCRIPT_URL.startsWith("http")) {
+                const payload = {
+                    name: studentName,
+                    className: studentClass,
+                    lesson: LESSON_TITLE,
+                    correct: `${correctCount}/${QUESTIONS.length}`,
+                    score: score,
+                    timeSpent: timeStr,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Method 1: POST text/plain
+                fetch(SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify(payload)
+                }).catch(e => console.warn("POST sync note:", e));
+
+                // Method 2: GET URL Parameters fallback
+                try {
+                    const params = new URLSearchParams({
+                        name: studentName,
+                        className: studentClass,
+                        lesson: LESSON_TITLE,
+                        score: score,
+                        correct: `${correctCount}/${QUESTIONS.length}`,
+                        timeSpent: timeStr
+                    });
+                    const getUrl = SCRIPT_URL + (SCRIPT_URL.includes("?") ? "&" : "?") + params.toString();
+                    if (navigator.sendBeacon) {
+                        navigator.sendBeacon(getUrl);
+                    } else {
+                        fetch(getUrl, { mode: "no-cors" }).catch(e => console.warn("GET sync note:", e));
+                    }
+                } catch(err) {
+                    console.warn("Fallback sync note:", err);
+                }
+            }
+        }
+
+        function renderReview(filter) {
+            const revList = document.getElementById('review-list');
+            revList.innerHTML = "";
+            QUESTIONS.forEach((q, idx) => {
+                const isCor = userAnswers[idx] === q.correct;
+                if (filter === 'wrong' && isCor) return;
+                if (filter === 'correct' && !isCor) return;
+
+                const item = document.createElement('div');
+                item.className = `review-item ${isCor ? 'correct' : 'incorrect'}`;
+                item.innerHTML = `
+                    <div class="review-header">
+                        <span>Câu ${idx + 1}: ${q.topic || ''}</span>
+                        <span style="color: ${isCor ? 'var(--success)' : 'var(--danger)'};">
+                            ${isCor ? '✔ Đúng' : '✖ Sai'} (Đã chọn: ${userAnswers[idx] || 'Chưa chọn'} | Đáp án: ${q.correct})
+                        </span>
+                    </div>
+                    <div style="text-align: justify; margin-bottom: 0.5rem; font-weight: 500;">${q.title}</div>
+                    <div class="review-exp">
+                        <div><b>Hướng dẫn giải:</b> ${q.exp}</div>
+                        <div style="color: #0284c7; margin-top: 4px; font-style: italic;"><b>Dịch nghĩa:</b> ${q.translation}</div>
+                    </div>
+                `;
+                revList.appendChild(item);
+            });
+        }
+
+        function filterReview(type) {
+            renderReview(type);
+        }
+    </script>
+</body>
+</html>

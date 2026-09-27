@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review 2 (Units 4 - 5 - 6) - Test 2 | Tiếng Anh 7 Global Success</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            text-align: justify;
+        }
+        .palette-btn.active {
+            border-color: #4f46e5;
+            background-color: #4f46e5;
+            color: #ffffff;
+        }
+        .palette-btn.answered {
+            background-color: #e0e7ff;
+            color: #3730a3;
+            border-color: #c7d2fe;
+        }
+        .palette-btn.wrong {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-color: #fca5a5;
+        }
+        .palette-btn.correct {
+            background-color: #dcfce7;
+            color: #166534;
+            border-color: #86efac;
+        }
+        .tab-btn.active {
+            border-bottom: 3px solid #4f46e5;
+            color: #4f46e5;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between">
+
+    <!-- Modal Nhập Họ Tên Trước Khi Làm Bài -->
+    <div id="modal-start" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 space-y-6 border border-slate-100 transform transition-all text-left">
+            <div class="text-center space-y-2">
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 text-2xl font-black mb-1">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-black text-slate-900">THÔNG TIN HỌC SINH</h3>
+                <p class="text-xs text-slate-500">Đề kiểm tra: <b>Review 2 (Units 4-5-6) — Test 2 (Tiếng Anh 7)</b></p>
+            </div>
+            <div class="space-y-4 text-xs font-semibold">
+                <div>
+                    <label class="block text-slate-700 mb-1.5 font-bold">Họ và tên học sinh <span class="text-rose-500">*</span></label>
+                    <input type="text" id="input-fullname" placeholder="Ví dụ: Hoàng Thu Trang" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium">
+                </div>
+                <div>
+                    <label class="block text-slate-700 mb-1.5 font-bold">Lớp học <span class="text-rose-500">*</span></label>
+                    <input type="text" id="input-class" placeholder="Ví dụ: 7A4" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium">
+                </div>
+            </div>
+            <div class="pt-2">
+                <button onclick="startExam()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-indigo-200 transition-all flex items-center justify-center gap-2">
+                    <span>BẮT ĐẦU LÀM BÀI THI</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="/tienganh/" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-chevron-left text-sm"></i>
+                </a>
+                <div>
+                    <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-indigo-100 text-indigo-800">Review 2 • Test 2</span>
+                    <h1 class="text-sm sm:text-base font-extrabold text-slate-900 leading-tight">Tiếng Anh 7: Tổng ôn Units 4 - 5 - 6</h1>
+                </div>
+            </div>
+
+            <!-- Tab Switcher -->
+            <div class="flex items-center gap-2 sm:gap-6 border-b sm:border-0 border-slate-100 text-xs sm:text-sm font-bold">
+                <button id="tab-btn-theory" onclick="switchTab('theory')" class="tab-btn py-4 px-2 text-slate-500 hover:text-slate-800 transition-all">
+                    <i class="fa-solid fa-book-open mr-1 text-indigo-500"></i> Lý thuyết trọng tâm
+                </button>
+                <button id="tab-btn-quiz" onclick="switchTab('quiz')" class="tab-btn active py-4 px-2 text-indigo-600 transition-all">
+                    <i class="fa-solid fa-pen-to-square mr-1 text-indigo-500"></i> Làm bài tập củng cố
+                </button>
+            </div>
+
+            <!-- Timer / Profile pill -->
+            <div class="hidden sm:flex items-center gap-3">
+                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-black">
+                    <i class="fa-solid fa-clock text-indigo-600"></i>
+                    <span id="timer-display">45:00</span>
+                </div>
+                <div class="text-right">
+                    <div id="header-student-name" class="text-xs font-extrabold text-slate-800">Thí sinh</div>
+                    <div id="header-student-class" class="text-[10px] font-semibold text-slate-500">Lớp 7</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full flex-1">
+        
+        <!-- Tab 1: Lý Thuyết Trọng Tâm -->
+        <section id="tab-theory" class="hidden max-w-5xl mx-auto">
+            
+<div class="theory-container space-y-8 text-slate-800">
+    <div class="bg-gradient-to-r from-indigo-900 via-blue-900 to-slate-900 text-white p-6 rounded-2xl shadow-md">
+        <div class="inline-block px-3 py-1 bg-indigo-500/30 border border-indigo-400/40 rounded-full text-xs font-extrabold uppercase tracking-wider text-indigo-300 mb-2">
+            GLOBAL SUCCESS 7 • TỔNG ÔN TRỌNG TÂM REVIEW 2 (UNITS 4 - 5 - 6)
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black tracking-tight">Lý Thuyết Trọng Tâm: Review 2</h2>
+        <p class="text-indigo-200 text-sm mt-1">Tổng hợp toàn diện kiến thức từ vựng, ngữ pháp, ngữ âm và kỹ năng thực hành của Unit 4 (Music and Arts), Unit 5 (Food and Drink) và Unit 6 (A Visit to a School).</p>
+    </div>
+
+    <!-- 1. TỪ VỰNG & CỤM TỪ TRỌNG TÂM -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">1</span>
+            <h3 class="text-lg font-black text-slate-900">Từ vựng & Cụm từ (Vocabulary & Collocations)</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <h4 class="font-extrabold text-indigo-700 text-sm flex items-center gap-1.5"><i class="fa-solid fa-masks-theater"></i> Unit 4: Music and Arts</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>art gallery</b>: phòng trưng bày mỹ thuật</li>
+                    <li>• <b>concert hall</b>: nhà hát hòa nhạc</li>
+                    <li>• <b>water puppet show</b>: múa rối nước</li>
+                    <li>• <b>composer</b>: nhà soạn nhạc, nhạc sĩ</li>
+                    <li>• <b>musical instrument</b>: nhạc cụ</li>
+                    <li>• <b>portrait</b>: tranh chân dung</li>
+                    <li>• <b>take photos / painted by</b>: chụp ảnh / được vẽ bởi</li>
+                </ul>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <h4 class="font-extrabold text-emerald-700 text-sm flex items-center gap-1.5"><i class="fa-solid fa-utensils"></i> Unit 5: Food and Drink</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>ingredients</b>: các nguyên liệu nấu ăn</li>
+                    <li>• <b>recipe</b>: công thức nấu ăn</li>
+                    <li>• <b>beef noodle soup (Pho)</b>: phở bò</li>
+                    <li>• <b>spring rolls</b>: nem rán / gỏi cuốn</li>
+                    <li>• <b>turmeric</b>: bột nghệ</li>
+                    <li>• <b>fragrant broth</b>: nước dùng thơm phức</li>
+                    <li>• <b>pour / heat / fold / serve</b>: rót / làm nóng / gập / dọn ra đĩa</li>
+                </ul>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <h4 class="font-extrabold text-amber-700 text-sm flex items-center gap-1.5"><i class="fa-solid fa-school"></i> Unit 6: A Visit to a School</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>school facilities</b>: cơ sở vật chất nhà trường</li>
+                    <li>• <b>science laboratory</b>: phòng thí nghiệm khoa học</li>
+                    <li>• <b>well-equipped library</b>: thư viện trang bị hiện đại</li>
+                    <li>• <b>entrance examination</b>: kỳ thi tuyển sinh</li>
+                    <li>• <b>talented / gifted students</b>: học sinh tài năng, trường chuyên</li>
+                    <li>• <b>take place</b>: diễn ra</li>
+                    <li>• <b>located in / on</b>: tọa lạc tại</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. CẤU TẠO TỪ -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">2</span>
+            <h3 class="text-lg font-black text-slate-900">Cấu tạo từ / Dạng của từ (Word Formation)</h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left text-slate-700 border-collapse">
+                <thead class="bg-indigo-50 text-indigo-900 font-extrabold">
+                    <tr>
+                        <th class="p-2.5 border border-indigo-100">Động từ (Verb)</th>
+                        <th class="p-2.5 border border-indigo-100">Danh từ (Noun)</th>
+                        <th class="p-2.5 border border-indigo-100">Tính từ (Adjective)</th>
+                        <th class="p-2.5 border border-indigo-100">Trạng từ (Adverb)</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    <tr>
+                        <td class="p-2.5 border border-slate-100 font-bold">—</td>
+                        <td class="p-2.5 border border-slate-100"><b>music</b> / <b>musician</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>musical</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>musically</b></td>
+                    </tr>
+                    <tr class="bg-slate-50/50">
+                        <td class="p-2.5 border border-slate-100 font-bold">—</td>
+                        <td class="p-2.5 border border-slate-100"><b>art</b> / <b>artist</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>artistic</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>artistically</b></td>
+                    </tr>
+                    <tr>
+                        <td class="p-2.5 border border-slate-100 font-bold"><b>perform</b> (biểu diễn)</td>
+                        <td class="p-2.5 border border-slate-100"><b>performance</b> / <b>performer</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>performing</b></td>
+                        <td class="p-2.5 border border-slate-100">—</td>
+                    </tr>
+                    <tr class="bg-slate-50/50">
+                        <td class="p-2.5 border border-slate-100 font-bold"><b>taste</b> (nếm)</td>
+                        <td class="p-2.5 border border-slate-100"><b>taste</b> (vị giác)</td>
+                        <td class="p-2.5 border border-slate-100"><b>tasty</b> (ngon) / <b>tasteless</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>tastefully</b></td>
+                    </tr>
+                    <tr>
+                        <td class="p-2.5 border border-slate-100 font-bold"><b>educate</b> (giáo dục)</td>
+                        <td class="p-2.5 border border-slate-100"><b>education</b> / <b>educator</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>educational</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>educationally</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 3. PHÂN BIỆT TỪ DỄ NHẦM LẪN -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">3</span>
+            <h3 class="text-lg font-black text-slate-900">Phân biệt các từ dễ gây nhầm lẫn (Confusing Words)</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200 space-y-1.5">
+                <h4 class="font-extrabold text-amber-900">1. Recipe vs. Menu vs. Ingredient</h4>
+                <p>• <b>Recipe</b>: Công thức nấu ăn chi tiết từng bước (<i>a recipe for spring rolls</i>).</p>
+                <p>• <b>Menu</b>: Thực đơn danh sách các món ăn/thức uống tại nhà hàng để khách gọi món.</p>
+                <p>• <b>Ingredient</b>: Một thành phần/nguyên liệu trong món ăn (<i>sugar, salt, flour</i>).</p>
+            </div>
+            <div class="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200 space-y-1.5">
+                <h4 class="font-extrabold text-emerald-900">2. Like vs. As vs. The same as</h4>
+                <p>• <b>Like + Noun</b>: Giống như (<i>He sings like a professional singer.</i>)</p>
+                <p>• <b>as + adj + as</b>: So sánh ngang bằng (<i>She is as tall as her sister.</i>)</p>
+                <p>• <b>the same as</b>: Hoàn toàn giống như (<i>My bag is the same as yours.</i>)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. NGỮ PHÁP TRỌNG TÂM -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">4</span>
+            <h3 class="text-lg font-black text-slate-900">Ngữ pháp trọng tâm (Grammar Focus)</h3>
+        </div>
+        <div class="space-y-4 text-xs">
+            <!-- Grammar 1 -->
+            <div class="p-4 rounded-xl bg-indigo-50/50 border border-indigo-100 space-y-2">
+                <h4 class="font-black text-indigo-900 text-sm">A. Cấu trúc so sánh: (not) as... as, the same as, different from</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>as + adj/adv + as</b>: So sánh bằng (<i>Classical music is as interesting as pop music.</i>)</li>
+                    <li>• <b>not as + adj/adv + as</b>: So sánh không bằng (<i>This painting is not as colorful as that one.</i>)</li>
+                    <li>• <b>the same as</b>: Giống như (<i>His uniform is the same as mine.</i>)</li>
+                    <li>• <b>different from</b>: Khác với (<i>Pho in Hanoi is different from Pho in Saigon.</i>)</li>
+                </ul>
+            </div>
+
+            <!-- Grammar 2 -->
+            <div class="p-4 rounded-xl bg-blue-50/50 border border-blue-100 space-y-2">
+                <h4 class="font-black text-blue-900 text-sm">B. Danh từ đếm được / không đếm được & Từ chỉ số lượng (some, any, a lot of, how much/many)</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="p-3 bg-white rounded-lg border border-blue-200">
+                        <div class="font-bold text-blue-900 mb-1">How many + N(đếm được số nhiều)</div>
+                        <div class="text-[11px] text-slate-600">• <i>How many apples are there on the table?</i></div>
+                        <div class="text-[11px] text-slate-600">• Dùng <i>some</i> trong câu khẳng định, <i>any</i> trong phủ định/nghi vấn.</div>
+                    </div>
+                    <div class="p-3 bg-white rounded-lg border border-blue-200">
+                        <div class="font-bold text-blue-900 mb-1">How much + N(không đếm được)</div>
+                        <div class="text-[11px] text-slate-600">• <i>How much water / sugar / milk do you need?</i></div>
+                        <div class="text-[11px] text-slate-600">• Dùng <i>a lot of / lots of</i> cho cả đếm được và không đếm được.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grammar 3 -->
+            <div class="p-4 rounded-xl bg-purple-50/50 border border-purple-100 space-y-2">
+                <h4 class="font-black text-purple-900 text-sm">C. Giới từ chỉ thời gian và nơi chốn (Prepositions: at, on, in)</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>at</b>: Thời điểm cụ thể (<i>at 7:00 a.m., at noon, at night</i>) / Địa điểm cụ thể (<i>at school, at the entrance</i>).</li>
+                    <li>• <b>on</b>: Ngày trong tuần, ngày tháng (<i>on Monday, on May 19th</i>) / Bề mặt, tầng lầu (<i>on the table, on the second floor</i>).</li>
+                    <li>• <b>in</b>: Tháng, năm, mùa, thế kỷ (<i>in June, in 2024, in summer</i>) / Không gian kín, địa danh lớn (<i>in the classroom, in Hanoi</i>).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. NGỮ ÂM -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">5</span>
+            <h3 class="text-lg font-black text-slate-900">Ngữ âm: Quy tắc phát âm trọng tâm Units 4 - 6</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                <h4 class="font-bold text-slate-900 mb-1">Âm /ʃ/ & /ʒ/ (Unit 4)</h4>
+                <p>• <b>/ʃ/</b>: <i><u>sh</u>ow, musi<u>ci</u>an, deli<u>ci</u>ous</i></p>
+                <p>• <b>/ʒ/</b>: <i>plea<u>s</u>ure, televi<u>si</u>on, mea<u>s</u>ure</i></p>
+            </div>
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                <h4 class="font-bold text-slate-900 mb-1">Âm /ɒ/ & /ɔː/ (Unit 5)</h4>
+                <p>• <b>/ɒ/</b>: <i>p<u>o</u>t, b<u>o</u>ttle, h<u>o</u>t</i></p>
+                <p>• <b>/ɔː/</b>: <i>p<u>or</u>k, s<u>au</u>ce, w<u>a</u>ter</i></p>
+            </div>
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                <h4 class="font-bold text-slate-900 mb-1">Âm /tʃ/ & /dʒ/ (Unit 6)</h4>
+                <p>• <b>/tʃ/</b>: <i><u>ch</u>ildren, tea<u>ch</u>er, lun<u>ch</u></i></p>
+                <p>• <b>/dʒ/</b>: <i>oran<u>ge</u>, villa<u>ge</u>, <u>j</u>acket</i></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nút làm bài tập -->
+    <div class="text-center pt-4 pb-2">
+        <button onclick="switchTab('quiz')" class="px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-extrabold text-sm rounded-xl shadow-md shadow-indigo-200 transition-all transform hover:-translate-y-0.5 inline-flex items-center gap-2">
+            <span>Làm bài tập củng cố</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </button>
+    </div>
+</div>
+
+        </section>
+
+        <!-- Tab 2: Làm Bài Tập Củng Cố (CBT 2-Column Mode) -->
+        <section id="tab-quiz" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Left Column: Single Question Card & Passage Area (8 cols) -->
+            <div class="lg:col-span-8 space-y-4">
+                
+                <!-- Audio Player Widget -->
+                <div id="audio-player-card" class="bg-gradient-to-r from-indigo-900 to-blue-900 text-white rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-cyan-300 text-lg shrink-0">
+                            <i class="fa-solid fa-headphones"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-cyan-300 uppercase tracking-wider">Audio Bài Nghe (Questions 1 - 8)</div>
+                            <div class="text-xs text-slate-200">Listening Part 1 & Part 2 — Voice Chuẩn Bản Ngữ</div>
+                        </div>
+                    </div>
+                    <audio id="exam-audio" controls class="w-full sm:w-72 h-9 rounded-lg outline-none">
+                        <source src="Test 2 - Review 2 - Full Audio Listening.mp3" type="audio/mpeg">
+                        Trình duyệt của bạn không hỗ trợ phát âm thanh.
+                    </audio>
+                </div>
+
+                <!-- Main Question Card -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6 min-h-[420px] flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <div class="flex items-center gap-2">
+                                <span id="q-badge" class="px-3 py-1 rounded-full text-xs font-black bg-indigo-100 text-indigo-800">Câu 1 / 40</span>
+                                <span id="q-topic" class="text-xs font-bold text-slate-500">Listening Part 1</span>
+                            </div>
+                            <span class="text-xs font-extrabold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-100">0.25 điểm</span>
+                        </div>
+
+                        <!-- Passage Box if applicable -->
+                        <div id="q-passage-container" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs sm:text-sm leading-relaxed text-slate-700 max-h-60 overflow-y-auto">
+                            <div id="q-passage-content"></div>
+                        </div>
+
+                        <!-- Question Title -->
+                        <div id="q-title" class="text-sm sm:text-base font-extrabold text-slate-900 leading-relaxed pt-1">
+                            Loading question...
+                        </div>
+
+                        <!-- Options List -->
+                        <div id="q-options" class="space-y-2.5 pt-2">
+                            <!-- Injected by JS -->
+                        </div>
+
+                        <!-- Explanation Area -->
+                        <div id="q-explanation-box" class="hidden bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-xs leading-relaxed text-emerald-950 space-y-1">
+                            <div class="font-bold text-emerald-800 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-check"></i> Lời giải chi tiết:
+                            </div>
+                            <div id="q-explanation-text"></div>
+                        </div>
+                    </div>
+
+                    <!-- Question Navigation Controls -->
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+                        <button onclick="prevQuestion()" id="btn-prev" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-50 transition-colors flex items-center gap-1.5">
+                            <i class="fa-solid fa-arrow-left"></i> <span>Câu trước</span>
+                        </button>
+
+                        <div class="text-xs font-bold text-slate-400">
+                            Tiến độ: <span id="progress-text" class="text-indigo-600 font-black">0/40</span>
+                        </div>
+
+                        <button onclick="nextQuestion()" id="btn-next" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition-colors flex items-center gap-1.5 shadow-sm shadow-indigo-200">
+                            <span>Câu tiếp theo</span> <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Sidebar (Palette & Actions) (4 cols) -->
+            <div class="lg:col-span-4 space-y-4">
+                
+                <!-- Student Card & Submit Button -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Học sinh dự thi</div>
+                            <div id="sidebar-student-name" class="text-sm font-black text-slate-900">Hoàng Thu Trang</div>
+                            <div id="sidebar-student-class" class="text-xs font-semibold text-slate-500">Lớp 7A4</div>
+                        </div>
+                        <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-black text-sm">
+                            7
+                        </div>
+                    </div>
+
+                    <!-- Progress bar -->
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between text-[11px] font-bold text-slate-500">
+                            <span>Đã hoàn thành</span>
+                            <span id="percent-text">0%</span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div id="progress-bar-fill" class="h-full bg-indigo-600 transition-all duration-300 w-0"></div>
+                        </div>
+                    </div>
+
+                    <button onclick="confirmSubmit()" id="btn-submit-exam" class="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-emerald-200 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>NỘP BÀI THI</span>
+                    </button>
+                </div>
+
+                <!-- Palette Grid (40 Questions) -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider">Bảng 40 Câu Hỏi</h4>
+                        <span class="text-[10px] text-slate-400 font-bold">Nhấn số để chuyển câu</span>
+                    </div>
+
+                    <div id="palette-grid" class="grid grid-cols-5 sm:grid-cols-8 lg:grid-cols-5 gap-2 pt-1">
+                        <!-- 40 buttons injected by JS -->
+                    </div>
+
+                    <!-- Review Filter -->
+                    <div id="review-filter-box" class="hidden pt-3 border-t border-slate-100 space-y-2">
+                        <div class="text-[11px] font-bold text-slate-500">Lọc xem kết quả:</div>
+                        <div class="grid grid-cols-3 gap-1.5 text-[10px] font-bold">
+                            <button onclick="filterReview('all')" class="py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">Tất cả</button>
+                            <button onclick="filterReview('wrong')" class="py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 transition-colors">Chỉ câu sai</button>
+                            <button onclick="filterReview('correct')" class="py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 transition-colors">Chỉ câu đúng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Báo Cáo Kết Quả Sau Khi Nộp -->
+    <div id="modal-result" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 space-y-6 border border-slate-100 text-center transform transition-all">
+            <div class="space-y-2">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 text-3xl font-black mb-1">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h3 class="text-2xl font-black text-slate-900">KẾT QUẢ BÀI THI</h3>
+                <p class="text-xs text-slate-500">Review 2 (Units 4-5-6) — Test 2 (Tiếng Anh 7 Global Success)</p>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-indigo-50 border border-indigo-100 space-y-3">
+                <div class="text-4xl sm:text-5xl font-black text-indigo-700" id="result-score">
+                    0.0 <span class="text-lg font-bold text-slate-400">/ 10</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs font-bold text-slate-700 pt-2 border-t border-indigo-200/60">
+                    <div>Số câu đúng: <span id="result-correct-count" class="text-emerald-600 font-extrabold text-sm">0/40</span></div>
+                    <div>Thời gian: <span id="result-time-spent" class="text-indigo-600 font-extrabold text-sm">00:00</span></div>
+                </div>
+            </div>
+
+            <p id="result-feedback" class="text-xs font-semibold text-slate-600">
+                Chúc mừng bạn đã hoàn thành bài kiểm tra! Toàn bộ lời giải chi tiết đã được mở khóa.
+            </p>
+
+            <div class="flex gap-3">
+                <button onclick="closeResultModal()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-indigo-200 transition-all">
+                    XEM LỜI GIẢI CHI TIẾT
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Logic -->
+    <script>
+        const QUESTIONS = [
+  {
+    "num": 1,
+    "topic": "Listening Part 1: Musical Instrument",
+    "audio_file": "Test 2 - Review 2 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What traditional instrument is Linh practicing for the talent show?",
+    "options": {
+      "A": "The electric guitar",
+      "B": "The Dan Tranh (16-string zither)",
+      "C": "The piano",
+      "D": "The drums"
+    },
+    "correct": "B",
+    "exp": "Trong bài nghe, Linh nói: <i>'I am learning to play the Dan Tranh, a traditional sixteen-string zither.'</i> (Đàn Tranh 16 dây)."
+  },
+  {
+    "num": 2,
+    "topic": "Listening Part 1: Music Feature",
+    "audio_file": "Test 2 - Review 2 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "How does Linh describe the sound and melodies of the Dan Tranh?",
+    "options": {
+      "A": "Loud and noisy",
+      "B": "Soft and poetic",
+      "C": "Fast and aggressive",
+      "D": "Boring and plain"
+    },
+    "correct": "B",
+    "exp": "Linh miêu tả: <i>'...the finger technique is more delicate, and the melodies sound soft and poetic.'</i> (Giai điệu êm dịu và thơ mộng)."
+  },
+  {
+    "num": 3,
+    "topic": "Listening Part 1: Traditional Dish",
+    "audio_file": "Test 2 - Review 2 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What special spices give Bun Bo Hue its authentic flavor?",
+    "options": {
+      "A": "Lemongrass, chili paste, and fermented shrimp sauce",
+      "B": "Cheese, butter, and mayonnaise",
+      "C": "Chocolate and sweet syrup",
+      "D": "Curry powder and coconut cream"
+    },
+    "correct": "A",
+    "exp": "Linh giải thích: <i>'The secret to authentic Hue beef noodle soup is adding lemongrass, chili paste, and a little bit of fermented shrimp sauce.'</i> (Sả, ớt sa tế và mắm ruốc)."
+  },
+  {
+    "num": 4,
+    "topic": "Listening Part 1: Taste Comparison",
+    "audio_file": "Test 2 - Review 2 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "Compared to Hanoi Pho broth, how is the broth of Bun Bo Hue described?",
+    "options": {
+      "A": "Much sweeter",
+      "B": "Much spicier",
+      "C": "Much colder",
+      "D": "Much lighter"
+    },
+    "correct": "B",
+    "exp": "Linh khẳng định: <i>'The broth is much spicier than Hanoi Pho.'</i> (Nước dùng cay hơn nhiều so với Phở Hà Nội)."
+  },
+  {
+    "num": 5,
+    "topic": "Listening Part 2: School History",
+    "audio_file": "Test 2 - Review 2 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "In what year was Chu Van An High School established?",
+    "options": {
+      "A": "In 1070",
+      "B": "In 1908",
+      "C": "In 1954",
+      "D": "In 2000"
+    },
+    "correct": "B",
+    "exp": "Người nói giới thiệu: <i>'Established in 1908 on the picturesque bank of West Lake...'</i> (Năm 1908 bên bờ Hồ Tây)."
+  },
+  {
+    "num": 6,
+    "topic": "Listening Part 2: Historical Nickname",
+    "audio_file": "Test 2 - Review 2 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What was the affectionate traditional name of Chu Van An High School?",
+    "options": {
+      "A": "Buoi School (Trường Bưởi)",
+      "B": "Lotus School",
+      "C": "Sword Lake Academy",
+      "D": "Red River Institute"
+    },
+    "correct": "A",
+    "exp": "Trong bài nghe: <i>'...or more affectionately called Buoi School.'</i> (Trường Bưởi thân thương)."
+  },
+  {
+    "num": 7,
+    "topic": "Listening Part 2: Computer Facilities",
+    "audio_file": "Test 2 - Review 2 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "How many modern computer laboratories does the school campus have?",
+    "options": {
+      "A": "Two laboratories",
+      "B": "Three laboratories",
+      "C": "Four laboratories",
+      "D": "Six laboratories"
+    },
+    "correct": "C",
+    "exp": "Người nói nêu rõ: <i>'There are four modern computer laboratories...'</i> (4 phòng máy tính hiện đại)."
+  },
+  {
+    "num": 8,
+    "topic": "Listening Part 2: Library Scale",
+    "audio_file": "Test 2 - Review 2 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "How many reference books are preserved in the school library?",
+    "options": {
+      "A": "Over 5,000 books",
+      "B": "Over 10,000 books",
+      "C": "Over 30,000 reference books",
+      "D": "Over 100,000 books"
+    },
+    "correct": "C",
+    "exp": "Người nói thông báo: <i>'...and an air-conditioned library containing over thirty thousand reference books.'</i> (Hơn 30.000 cuốn sách tham khảo)."
+  },
+  {
+    "num": 9,
+    "topic": "Pronunciation: Sound /ʃ/ vs /ʒ/",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose underlined part is pronounced differently from the others.",
+    "options": {
+      "A": "televi<u>si</u>on",
+      "B": "deci<u>si</u>on",
+      "C": "conclu<u>si</u>on",
+      "D": "na<u>ti</u>on"
+    },
+    "correct": "D",
+    "exp": "<b>nation</b> có đuôi -tion phát âm là /ʃ/ (/ˈneɪʃn/). Các từ <b>television</b>, <b>decision</b>, <b>conclusion</b> đều có âm /ʒ/ (/ˈtelɪvɪʒn/, /dɪˈsɪʒn/, /kənˈkluːʒn/)."
+  },
+  {
+    "num": 10,
+    "topic": "Pronunciation: Sound /ɒ/ vs /ɔː/",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose underlined part is pronounced differently from the others.",
+    "options": {
+      "A": "s<u>au</u>ce",
+      "B": "w<u>a</u>ter",
+      "C": "w<u>al</u>k",
+      "D": "b<u>o</u>x"
+    },
+    "correct": "D",
+    "exp": "<b>box</b> phát âm là âm /ɒ/ ngắn (/bɒks/). Các từ <b>sauce</b>, <b>water</b>, <b>walk</b> đều có âm /ɔː/ dài (/sɔːs/, /ˈwɔːtə/, /wɔːk/)."
+  },
+  {
+    "num": 11,
+    "topic": "Pronunciation: Sound /tʃ/ vs /dʒ/",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose underlined part is pronounced differently from the others.",
+    "options": {
+      "A": "<u>j</u>acket",
+      "B": "villa<u>ge</u>",
+      "C": "<u>g</u>ym",
+      "D": "<u>ch</u>emistry"
+    },
+    "correct": "D",
+    "exp": "<b>chemistry</b> có phần đầu phát âm là /k/ (/ˈkemɪstri/). Các từ <b>jacket</b>, <b>village</b>, <b>gym</b> đều phát âm là âm /dʒ/ (/ˈdʒækɪt/, /ˈvɪlɪdʒ/, /dʒɪm/)."
+  },
+  {
+    "num": 12,
+    "topic": "Word Stress: Two-syllable Words",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose primary stress is positioned differently from the others.",
+    "options": {
+      "A": "composer",
+      "B": "ingredient",
+      "C": "omelette",
+      "D": "examination"
+    },
+    "correct": "C",
+    "exp": "<b>omelette</b> có trọng âm rơi vào âm tiết thứ 1 (/ˈɒmlət/). Từ <b>composer</b> (/kəmˈpəʊzə/) và <b>ingredient</b> (/ɪnˈɡriːdiənt/) có trọng âm rơi vào âm tiết thứ 2."
+  },
+  {
+    "num": 13,
+    "topic": "Grammar: Comparison with The same as",
+    "audio_file": null,
+    "passage": null,
+    "title": "My painting style is not the same ________ my brother's; he prefers abstract art while I like landscapes.",
+    "options": {
+      "A": "as",
+      "B": "from",
+      "C": "like",
+      "D": "to"
+    },
+    "correct": "A",
+    "exp": "Cấu trúc so sánh giống nhau: <i>the same as</i> (giống như). Do đó chọn <b>as</b>."
+  },
+  {
+    "num": 14,
+    "topic": "Grammar: Comparison with (not) as... as",
+    "audio_file": null,
+    "passage": null,
+    "title": "Learning to play the violin is as challenging ________ learning to play the piano.",
+    "options": {
+      "A": "as",
+      "B": "from",
+      "C": "than",
+      "D": "so"
+    },
+    "correct": "A",
+    "exp": "Cấu trúc so sánh bằng: <i>as + adj + as</i>. Do đó chọn <b>as</b>."
+  },
+  {
+    "num": 15,
+    "topic": "Grammar: Quantifiers (How many vs How much)",
+    "audio_file": null,
+    "passage": null,
+    "title": "________ eggs do we need to make an omelette for four people?",
+    "options": {
+      "A": "How many",
+      "B": "How much",
+      "C": "How long",
+      "D": "How often"
+    },
+    "correct": "A",
+    "exp": "<i>eggs</i> là danh từ đếm được số nhiều -> dùng từ để hỏi lượng: <b>How many</b>."
+  },
+  {
+    "num": 16,
+    "topic": "Grammar: Some vs Any in Negative sentence",
+    "audio_file": null,
+    "passage": null,
+    "title": "There aren't ________ fresh tomatoes left in the basket, so we cannot make salad.",
+    "options": {
+      "A": "any",
+      "B": "some",
+      "C": "much",
+      "D": "a"
+    },
+    "correct": "A",
+    "exp": "Trong câu phủ định (*aren't*) với danh từ đếm được số nhiều (*fresh tomatoes*), ta dùng <b>any</b>."
+  },
+  {
+    "num": 17,
+    "topic": "Grammar: Prepositions of Place (in / at / on)",
+    "audio_file": null,
+    "passage": null,
+    "title": "Students often gather ________ the school courtyard during recess to play badminton.",
+    "options": {
+      "A": "in",
+      "B": "on",
+      "C": "at",
+      "D": "under"
+    },
+    "correct": "A",
+    "exp": "Chỉ không gian sân trường: <b>in the school courtyard</b> (trong sân trường)."
+  },
+  {
+    "num": 18,
+    "topic": "Grammar: Prepositions of Time (in / on / at)",
+    "audio_file": null,
+    "passage": null,
+    "title": "The school morning assembly always starts promptly ________ 7:15 a.m.",
+    "options": {
+      "A": "at",
+      "B": "on",
+      "C": "in",
+      "D": "from"
+    },
+    "correct": "A",
+    "exp": "Trước mốc giờ giấc cụ thể (7:15 a.m.) dùng giới từ <b>at</b>: <i>at 7:15 a.m.</i>"
+  },
+  {
+    "num": 19,
+    "topic": "Confusing Words: Learn vs Study",
+    "audio_file": null,
+    "passage": null,
+    "title": "She spent three years in Hue to ________ how to make traditional conical hats from local artisans.",
+    "options": {
+      "A": "learn",
+      "B": "study",
+      "C": "pour",
+      "D": "exhibit"
+    },
+    "correct": "A",
+    "exp": "<b>learn</b> nhấn mạnh vào việc tiếp thu, rèn luyện một kỹ năng thực hành (<i>learn how to make...</i>), khác với <i>study</i> (nghiên cứu lý thuyết sách vở)."
+  },
+  {
+    "num": 20,
+    "topic": "Word Formation: Art (n) -> Artist (n) / Artistic (adj)",
+    "audio_file": null,
+    "passage": null,
+    "title": "Bui Xuan Phai is a legendary Vietnamese ________ celebrated worldwide for his paintings of ancient Hanoi streets.",
+    "options": {
+      "A": "artist",
+      "B": "artistic",
+      "C": "artistically",
+      "D": "art"
+    },
+    "correct": "A",
+    "exp": "Vị trí chỉ danh từ chỉ người họa sĩ/nghệ sĩ: <b>artist</b>."
+  },
+  {
+    "num": 21,
+    "topic": "Vocabulary: Food & Flavours",
+    "audio_file": null,
+    "passage": null,
+    "title": "Turmeric powder not only gives curries a pleasant aroma but also creates a beautiful ________ yellow color.",
+    "options": {
+      "A": "golden",
+      "B": "sour",
+      "C": "salty",
+      "D": "bitter"
+    },
+    "correct": "A",
+    "exp": "Bột nghệ (turmeric) tạo nên sắc vàng óng đẹp mắt cho món ăn: <b>golden yellow color</b>."
+  },
+  {
+    "num": 22,
+    "topic": "Vocabulary: Historical School Facilities",
+    "audio_file": null,
+    "passage": null,
+    "title": "In ancient Quoc Tu Giam, names of high-ranking doctors were engraved on stone ________ placed on top of tortoises.",
+    "options": {
+      "A": "steles",
+      "B": "recipes",
+      "C": "broths",
+      "D": "omelettes"
+    },
+    "correct": "A",
+    "exp": "Từ vựng Unit 6: <b>stone steles</b> (bia tiến sĩ bằng đá)."
+  },
+  {
+    "num": 23,
+    "topic": "Communication: Inviting to a Cultural Performance",
+    "audio_file": null,
+    "passage": null,
+    "title": "Hoa: 'Do you want to see a traditional water puppet show with me this Sunday?' - Tim: '________'",
+    "options": {
+      "A": "I'd love to! I've heard water puppetry is uniquely fascinating.",
+      "B": "No, I don't want to eat noodles.",
+      "C": "It is located on the second floor.",
+      "D": "My favorite subject is chemistry."
+    },
+    "correct": "A",
+    "exp": "Lời đáp đồng ý lịch sự và nhiệt tình trước lời rủ đi xem múa rối nước: <i>'I'd love to! I've heard water puppetry is uniquely fascinating.'</i>"
+  },
+  {
+    "num": 24,
+    "topic": "Communication: Asking for Cooking Advice",
+    "audio_file": null,
+    "passage": null,
+    "title": "Student: 'How do I prevent the spring rolls from breaking when frying?' - Chef: '________'",
+    "options": {
+      "A": "Do not wrap them too tightly and make sure the cooking oil is sufficiently hot.",
+      "B": "You should turn off the school lights.",
+      "C": "Visit the Temple of Literature yesterday.",
+      "D": "Play the acoustic guitar softly."
+    },
+    "correct": "A",
+    "exp": "Lời khuyên kỹ thuật nấu ăn chuẩn xác: Không gói quá chặt và đảm bảo dầu ăn đủ nóng khi rán nem."
+  },
+  {
+    "num": 25,
+    "topic": "Public Notice: School Library Rules",
+    "audio_file": null,
+    "passage": null,
+    "title": "What does this notice in the school library instruct students to do?<br><div style='background:#f0fdf4; border:2px dashed #16a34a; padding:10px; border-radius:8px; margin:8px 0; font-family:sans-serif;'><b>SCHOOL LIBRARY POLICY</b><br>Return all borrowed books within 14 days. Do not write or draw on reference materials. Silence is golden.</div>",
+    "options": {
+      "A": "Students must return books on time, keep quiet, and not damage reference books.",
+      "B": "Students can keep borrowed books forever without returning.",
+      "C": "Students are encouraged to draw pictures on library book pages.",
+      "D": "The library is only open during summer holidays."
+    },
+    "correct": "A",
+    "exp": "Nội quy thư viện yêu cầu trả sách đúng hạn trong 14 ngày, giữ trật tự và không vẽ bậy lên sách tham khảo."
+  },
+  {
+    "num": 26,
+    "topic": "Public Sign: Museum Photography Policy",
+    "audio_file": null,
+    "passage": null,
+    "title": "What does this sign mean in the historical museum?<br><div style='background:#fef2f2; border:2px solid #e11d48; padding:10px; border-radius:8px; margin:8px 0; font-family:sans-serif; text-align:center;'><b>NO FLASH PHOTOGRAPHY ALLOWED IN HISTORICAL GALLERIES</b></div>",
+    "options": {
+      "A": "Visitors must not use camera flash because strong light damages ancient artifacts.",
+      "B": "Visitors cannot bring cameras into the museum building.",
+      "C": "Photos are sold for free inside.",
+      "D": "Flashlights are provided to all tourists."
+    },
+    "correct": "A",
+    "exp": "Biển báo cấm chụp ảnh có đèn flash vì ánh sáng mạnh làm tổn hại đến hiện vật lịch sử lâu đời."
+  },
+  {
+    "num": 27,
+    "topic": "Guided Cloze: Vietnamese Street Food Heritage",
+    "audio_file": null,
+    "passage": "Vietnamese street food is internationally renowned for its incredible variety, vibrant colors, and balanced flavors. Street food in Vietnam is not only delicious (27)________ also affordable and healthy. Most popular dishes are made from fresh ingredients, including aromatic herbs, lean meat, fresh seafood, and crispy vegetables. A classic example is Banh Mi, a French-influenced baguette filled (28)________ savory pork liver pâté, grilled pork, pickled carrots, cucumber slices, and spicy chili sauce. Another iconic specialty is Pho, a comforting noodle soup served in a clear, (29)________ broth that has been simmered with bones and herbs for hours. Food stalls are located (30)________ almost every bustling street corner in major cities like Hanoi, Da Nang, and Ho Chi Minh City. Eating on small plastic stools along lively sidewalks allows diners to (31)________ authentic local culture. For food lovers around the world, exploring Vietnamese street cuisine is (32)________ unforgettable gastronomic adventure.",
+    "title": "Choose the best option for blank (27):",
+    "options": {
+      "A": "but",
+      "B": "so",
+      "C": "and",
+      "D": "or"
+    },
+    "correct": "A",
+    "exp": "Cấu trúc: <i>not only... but also...</i> (không những ngon mà còn rẻ và tốt cho sức khỏe)."
+  },
+  {
+    "num": 28,
+    "topic": "Guided Cloze: Blank (28)",
+    "audio_file": null,
+    "passage": "Vietnamese street food is internationally renowned for its incredible variety, vibrant colors, and balanced flavors. Street food in Vietnam is not only delicious (27)________ also affordable and healthy. Most popular dishes are made from fresh ingredients, including aromatic herbs, lean meat, fresh seafood, and crispy vegetables. A classic example is Banh Mi, a French-influenced baguette filled (28)________ savory pork liver pâté, grilled pork, pickled carrots, cucumber slices, and spicy chili sauce. Another iconic specialty is Pho, a comforting noodle soup served in a clear, (29)________ broth that has been simmered with bones and herbs for hours. Food stalls are located (30)________ almost every bustling street corner in major cities like Hanoi, Da Nang, and Ho Chi Minh City. Eating on small plastic stools along lively sidewalks allows diners to (31)________ authentic local culture. For food lovers around the world, exploring Vietnamese street cuisine is (32)________ unforgettable gastronomic adventure.",
+    "title": "Choose the best option for blank (28):",
+    "options": {
+      "A": "with",
+      "B": "from",
+      "C": "about",
+      "D": "to"
+    },
+    "correct": "A",
+    "exp": "Cụm tính từ/phân từ: <i>filled with sth</i> (được nhồi đầy nhân gì đó)."
+  },
+  {
+    "num": 29,
+    "topic": "Guided Cloze: Blank (29)",
+    "audio_file": null,
+    "passage": "Vietnamese street food is internationally renowned for its incredible variety, vibrant colors, and balanced flavors. Street food in Vietnam is not only delicious (27)________ also affordable and healthy. Most popular dishes are made from fresh ingredients, including aromatic herbs, lean meat, fresh seafood, and crispy vegetables. A classic example is Banh Mi, a French-influenced baguette filled (28)________ savory pork liver pâté, grilled pork, pickled carrots, cucumber slices, and spicy chili sauce. Another iconic specialty is Pho, a comforting noodle soup served in a clear, (29)________ broth that has been simmered with bones and herbs for hours. Food stalls are located (30)________ almost every bustling street corner in major cities like Hanoi, Da Nang, and Ho Chi Minh City. Eating on small plastic stools along lively sidewalks allows diners to (31)________ authentic local culture. For food lovers around the world, exploring Vietnamese street cuisine is (32)________ unforgettable gastronomic adventure.",
+    "title": "Choose the best option for blank (29):",
+    "options": {
+      "A": "fragrant",
+      "B": "bitter",
+      "C": "tasteless",
+      "D": "frozen"
+    },
+    "correct": "A",
+    "exp": "Nước dùng thơm ngát, dậy mùi: <b>fragrant broth</b>."
+  },
+  {
+    "num": 30,
+    "topic": "Guided Cloze: Blank (30)",
+    "audio_file": null,
+    "passage": "Vietnamese street food is internationally renowned for its incredible variety, vibrant colors, and balanced flavors. Street food in Vietnam is not only delicious (27)________ also affordable and healthy. Most popular dishes are made from fresh ingredients, including aromatic herbs, lean meat, fresh seafood, and crispy vegetables. A classic example is Banh Mi, a French-influenced baguette filled (28)________ savory pork liver pâté, grilled pork, pickled carrots, cucumber slices, and spicy chili sauce. Another iconic specialty is Pho, a comforting noodle soup served in a clear, (29)________ broth that has been simmered with bones and herbs for hours. Food stalls are located (30)________ almost every bustling street corner in major cities like Hanoi, Da Nang, and Ho Chi Minh City. Eating on small plastic stools along lively sidewalks allows diners to (31)________ authentic local culture. For food lovers around the world, exploring Vietnamese street cuisine is (32)________ unforgettable gastronomic adventure.",
+    "title": "Choose the best option for blank (30):",
+    "options": {
+      "A": "on",
+      "B": "in",
+      "C": "at",
+      "D": "under"
+    },
+    "correct": "A",
+    "exp": "Chỉ vị trí góc phố/trên đường: <b>on almost every bustling street corner</b>."
+  },
+  {
+    "num": 31,
+    "topic": "Guided Cloze: Blank (31)",
+    "audio_file": null,
+    "passage": "Vietnamese street food is internationally renowned for its incredible variety, vibrant colors, and balanced flavors. Street food in Vietnam is not only delicious (27)________ also affordable and healthy. Most popular dishes are made from fresh ingredients, including aromatic herbs, lean meat, fresh seafood, and crispy vegetables. A classic example is Banh Mi, a French-influenced baguette filled (28)________ savory pork liver pâté, grilled pork, pickled carrots, cucumber slices, and spicy chili sauce. Another iconic specialty is Pho, a comforting noodle soup served in a clear, (29)________ broth that has been simmered with bones and herbs for hours. Food stalls are located (30)________ almost every bustling street corner in major cities like Hanoi, Da Nang, and Ho Chi Minh City. Eating on small plastic stools along lively sidewalks allows diners to (31)________ authentic local culture. For food lovers around the world, exploring Vietnamese street cuisine is (32)________ unforgettable gastronomic adventure.",
+    "title": "Choose the best option for blank (31):",
+    "options": {
+      "A": "experience",
+      "B": "destroy",
+      "C": "forget",
+      "D": "avoid"
+    },
+    "correct": "A",
+    "exp": "Trải nghiệm văn hóa bản địa đích thực: <b>experience authentic local culture</b>."
+  },
+  {
+    "num": 32,
+    "topic": "Guided Cloze: Blank (32)",
+    "audio_file": null,
+    "passage": "Vietnamese street food is internationally renowned for its incredible variety, vibrant colors, and balanced flavors. Street food in Vietnam is not only delicious (27)________ also affordable and healthy. Most popular dishes are made from fresh ingredients, including aromatic herbs, lean meat, fresh seafood, and crispy vegetables. A classic example is Banh Mi, a French-influenced baguette filled (28)________ savory pork liver pâté, grilled pork, pickled carrots, cucumber slices, and spicy chili sauce. Another iconic specialty is Pho, a comforting noodle soup served in a clear, (29)________ broth that has been simmered with bones and herbs for hours. Food stalls are located (30)________ almost every bustling street corner in major cities like Hanoi, Da Nang, and Ho Chi Minh City. Eating on small plastic stools along lively sidewalks allows diners to (31)________ authentic local culture. For food lovers around the world, exploring Vietnamese street cuisine is (32)________ unforgettable gastronomic adventure.",
+    "title": "Choose the best option for blank (32):",
+    "options": {
+      "A": "an",
+      "B": "a",
+      "C": "the",
+      "D": "zero article"
+    },
+    "correct": "A",
+    "exp": "Trước cụm danh từ đếm được số ít bắt đầu bằng nguyên âm <i>unforgettable...</i> ta dùng mạo từ <b>an</b>."
+  },
+  {
+    "num": 33,
+    "topic": "Reading Comprehension: Main Idea",
+    "audio_file": null,
+    "passage": "In recent years, many secondary schools across Vietnam have innovated their educational programs by integrating arts, music, and culinary education into standard STEM (Science, Technology, Engineering, and Mathematics) curricula.<br><br>At Thang Long Secondary School, students participate in multidisciplinary projects that bridge science and cultural heritage. In biology and chemistry classes, students analyze how fermentation works when making traditional pickles and yoghurt. In physics, they study acoustics and sound wave frequencies by designing and tuning bamboo flutes and monochords (Dan Bau).<br><br>Additionally, the school has created a 'Heritage Art Studio' where students learn to paint lacquer pictures and create ceramic items using pottery wheels. Through these artistic endeavors, students not only relax after intensive academic hours but also discover the chemical properties of natural minerals used in traditional glazes.<br><br>Educators emphasize that combining academic subjects with hands-on artistic and cultural practice stimulates holistic cognitive development, sparks innovative problem-solving, and instills profound pride in Vietnamese national culture.",
+    "title": "What is the primary topic of the passage?",
+    "options": {
+      "A": "The innovative integration of arts, culture, and science in secondary school education",
+      "B": "How to tune an acoustic guitar in European music schools",
+      "C": "The history of lacquer export markets in Asia",
+      "D": "The chemical formula of industrial fertilizers"
+    },
+    "correct": "A",
+    "exp": "Bài đọc xoay quanh sự đổi mới giáo dục khi tích hợp hài hòa giữa nghệ thuật, văn hóa truyền thống và các môn khoa học tại trường THCS."
+  },
+  {
+    "num": 34,
+    "topic": "Reading Comprehension: Detail Retrieval",
+    "audio_file": null,
+    "passage": "In recent years, many secondary schools across Vietnam have innovated their educational programs by integrating arts, music, and culinary education into standard STEM (Science, Technology, Engineering, and Mathematics) curricula.<br><br>At Thang Long Secondary School, students participate in multidisciplinary projects that bridge science and cultural heritage. In biology and chemistry classes, students analyze how fermentation works when making traditional pickles and yoghurt. In physics, they study acoustics and sound wave frequencies by designing and tuning bamboo flutes and monochords (Dan Bau).<br><br>Additionally, the school has created a 'Heritage Art Studio' where students learn to paint lacquer pictures and create ceramic items using pottery wheels. Through these artistic endeavors, students not only relax after intensive academic hours but also discover the chemical properties of natural minerals used in traditional glazes.<br><br>Educators emphasize that combining academic subjects with hands-on artistic and cultural practice stimulates holistic cognitive development, sparks innovative problem-solving, and instills profound pride in Vietnamese national culture.",
+    "title": "How do physics students study acoustics and sound waves at Thang Long Secondary School?",
+    "options": {
+      "A": "By designing and tuning bamboo flutes and monochords (Dan Bau)",
+      "B": "By listening to loud rock concerts with headphones",
+      "C": "By playing computer video games",
+      "D": "By building concrete walls"
+    },
+    "correct": "A",
+    "exp": "Đoạn 2 chỉ rõ: <i>'In physics, they study acoustics and sound wave frequencies by designing and tuning bamboo flutes and monochords (Dan Bau).'</i>"
+  },
+  {
+    "num": 35,
+    "topic": "Reading Comprehension: Detail Retrieval",
+    "audio_file": null,
+    "passage": "In recent years, many secondary schools across Vietnam have innovated their educational programs by integrating arts, music, and culinary education into standard STEM (Science, Technology, Engineering, and Mathematics) curricula.<br><br>At Thang Long Secondary School, students participate in multidisciplinary projects that bridge science and cultural heritage. In biology and chemistry classes, students analyze how fermentation works when making traditional pickles and yoghurt. In physics, they study acoustics and sound wave frequencies by designing and tuning bamboo flutes and monochords (Dan Bau).<br><br>Additionally, the school has created a 'Heritage Art Studio' where students learn to paint lacquer pictures and create ceramic items using pottery wheels. Through these artistic endeavors, students not only relax after intensive academic hours but also discover the chemical properties of natural minerals used in traditional glazes.<br><br>Educators emphasize that combining academic subjects with hands-on artistic and cultural practice stimulates holistic cognitive development, sparks innovative problem-solving, and instills profound pride in Vietnamese national culture.",
+    "title": "What do students learn to create in the 'Heritage Art Studio'?",
+    "options": {
+      "A": "Lacquer paintings and ceramic pottery items",
+      "B": "Electronic smartphones and tablets",
+      "C": "Plastic single-use cups",
+      "D": "Expensive racing bicycles"
+    },
+    "correct": "A",
+    "exp": "Đoạn 3: <i>'...students learn to paint lacquer pictures and create ceramic items using pottery wheels.'</i>"
+  },
+  {
+    "num": 36,
+    "topic": "Reading Comprehension: Vocabulary in Context",
+    "audio_file": null,
+    "passage": "In recent years, many secondary schools across Vietnam have innovated their educational programs by integrating arts, music, and culinary education into standard STEM (Science, Technology, Engineering, and Mathematics) curricula.<br><br>At Thang Long Secondary School, students participate in multidisciplinary projects that bridge science and cultural heritage. In biology and chemistry classes, students analyze how fermentation works when making traditional pickles and yoghurt. In physics, they study acoustics and sound wave frequencies by designing and tuning bamboo flutes and monochords (Dan Bau).<br><br>Additionally, the school has created a 'Heritage Art Studio' where students learn to paint lacquer pictures and create ceramic items using pottery wheels. Through these artistic endeavors, students not only relax after intensive academic hours but also discover the chemical properties of natural minerals used in traditional glazes.<br><br>Educators emphasize that combining academic subjects with hands-on artistic and cultural practice stimulates holistic cognitive development, sparks innovative problem-solving, and instills profound pride in Vietnamese national culture.",
+    "title": "The word <b>'endeavors'</b> in paragraph 3 is closest in meaning to:",
+    "options": {
+      "A": "activities and efforts",
+      "B": "dangers and injuries",
+      "C": "diseases and pains",
+      "D": "fears and worries"
+    },
+    "correct": "A",
+    "exp": "<b>endeavors</b> mang nghĩa những hoạt động, nỗ lực và trải nghiệm sáng tạo: <b>activities and efforts</b>."
+  },
+  {
+    "num": 37,
+    "topic": "Reading Comprehension: Science Application",
+    "audio_file": null,
+    "passage": "In recent years, many secondary schools across Vietnam have innovated their educational programs by integrating arts, music, and culinary education into standard STEM (Science, Technology, Engineering, and Mathematics) curricula.<br><br>At Thang Long Secondary School, students participate in multidisciplinary projects that bridge science and cultural heritage. In biology and chemistry classes, students analyze how fermentation works when making traditional pickles and yoghurt. In physics, they study acoustics and sound wave frequencies by designing and tuning bamboo flutes and monochords (Dan Bau).<br><br>Additionally, the school has created a 'Heritage Art Studio' where students learn to paint lacquer pictures and create ceramic items using pottery wheels. Through these artistic endeavors, students not only relax after intensive academic hours but also discover the chemical properties of natural minerals used in traditional glazes.<br><br>Educators emphasize that combining academic subjects with hands-on artistic and cultural practice stimulates holistic cognitive development, sparks innovative problem-solving, and instills profound pride in Vietnamese national culture.",
+    "title": "What biological/chemical process do students study when making pickles and yoghurt?",
+    "options": {
+      "A": "Fermentation",
+      "B": "Evaporation",
+      "C": "Freezing",
+      "D": "Combustion"
+    },
+    "correct": "A",
+    "exp": "Đoạn 2 nêu rõ: <i>'In biology and chemistry classes, students analyze how fermentation works...'</i> (Quá trình lên men sinh học)."
+  },
+  {
+    "num": 38,
+    "topic": "Reading Comprehension: Reference Word",
+    "audio_file": null,
+    "passage": "In recent years, many secondary schools across Vietnam have innovated their educational programs by integrating arts, music, and culinary education into standard STEM (Science, Technology, Engineering, and Mathematics) curricula.<br><br>At Thang Long Secondary School, students participate in multidisciplinary projects that bridge science and cultural heritage. In biology and chemistry classes, students analyze how fermentation works when making traditional pickles and yoghurt. In physics, they study acoustics and sound wave frequencies by designing and tuning bamboo flutes and monochords (Dan Bau).<br><br>Additionally, the school has created a 'Heritage Art Studio' where students learn to paint lacquer pictures and create ceramic items using pottery wheels. Through these artistic endeavors, students not only relax after intensive academic hours but also discover the chemical properties of natural minerals used in traditional glazes.<br><br>Educators emphasize that combining academic subjects with hands-on artistic and cultural practice stimulates holistic cognitive development, sparks innovative problem-solving, and instills profound pride in Vietnamese national culture.",
+    "title": "The word <b>'they'</b> in paragraph 2 refers to:",
+    "options": {
+      "A": "Students in physics classes",
+      "B": "The bamboo flutes",
+      "C": "The chemical acids",
+      "D": "The school buildings"
+    },
+    "correct": "A",
+    "exp": "Từ <b>'they'</b> trong <i>'In physics, they study acoustics...'</i> thay thế cho các em học sinh trong lớp vật lý."
+  },
+  {
+    "num": 39,
+    "topic": "Reading Comprehension: Educational Benefits",
+    "audio_file": null,
+    "passage": "In recent years, many secondary schools across Vietnam have innovated their educational programs by integrating arts, music, and culinary education into standard STEM (Science, Technology, Engineering, and Mathematics) curricula.<br><br>At Thang Long Secondary School, students participate in multidisciplinary projects that bridge science and cultural heritage. In biology and chemistry classes, students analyze how fermentation works when making traditional pickles and yoghurt. In physics, they study acoustics and sound wave frequencies by designing and tuning bamboo flutes and monochords (Dan Bau).<br><br>Additionally, the school has created a 'Heritage Art Studio' where students learn to paint lacquer pictures and create ceramic items using pottery wheels. Through these artistic endeavors, students not only relax after intensive academic hours but also discover the chemical properties of natural minerals used in traditional glazes.<br><br>Educators emphasize that combining academic subjects with hands-on artistic and cultural practice stimulates holistic cognitive development, sparks innovative problem-solving, and instills profound pride in Vietnamese national culture.",
+    "title": "According to educators in the final paragraph, what does this integrated approach foster in students?",
+    "options": {
+      "A": "Holistic cognitive development, innovative problem-solving, and pride in national culture",
+      "B": "A desire to leave school early",
+      "C": "Fears of science subjects",
+      "D": "Dependence on electronic devices"
+    },
+    "correct": "A",
+    "exp": "Đoạn cuối: <i>'...stimulates holistic cognitive development, sparks innovative problem-solving, and instills profound pride in Vietnamese national culture.'</i>"
+  },
+  {
+    "num": 40,
+    "topic": "Reading Comprehension: Inference",
+    "audio_file": null,
+    "passage": "In recent years, many secondary schools across Vietnam have innovated their educational programs by integrating arts, music, and culinary education into standard STEM (Science, Technology, Engineering, and Mathematics) curricula.<br><br>At Thang Long Secondary School, students participate in multidisciplinary projects that bridge science and cultural heritage. In biology and chemistry classes, students analyze how fermentation works when making traditional pickles and yoghurt. In physics, they study acoustics and sound wave frequencies by designing and tuning bamboo flutes and monochords (Dan Bau).<br><br>Additionally, the school has created a 'Heritage Art Studio' where students learn to paint lacquer pictures and create ceramic items using pottery wheels. Through these artistic endeavors, students not only relax after intensive academic hours but also discover the chemical properties of natural minerals used in traditional glazes.<br><br>Educators emphasize that combining academic subjects with hands-on artistic and cultural practice stimulates holistic cognitive development, sparks innovative problem-solving, and instills profound pride in Vietnamese national culture.",
+    "title": "What can be inferred about modern education from the passage?",
+    "options": {
+      "A": "Integrating cultural arts with STEM subjects makes learning more engaging, practical, and meaningful.",
+      "B": "Traditional arts will soon disappear from secondary schools.",
+      "C": "Cooking is not related to any scientific principles.",
+      "D": "Students should only study theory from textbooks without doing experiments."
+    },
+    "correct": "A",
+    "exp": "Mô hình giáo dục liên môn tích hợp nghệ thuật truyền thống với STEM giúp việc học tập trở nên hứng thú, thực tiễn và sâu sắc hơn rất nhiều."
+  }
+];
+
+        let currentQIndex = 0;
+        let userAnswers = new Array(QUESTIONS.length).fill(null);
+        let isSubmitted = false;
+        let timerInterval = null;
+        let secondsLeft = 45 * 60;
+        let secondsSpent = 0;
+        let cheatWarnings = 0;
+
+        // Init on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedName = localStorage.getItem('ta7_fullname') || '';
+            const savedClass = localStorage.getItem('ta7_class') || '';
+            if (savedName) document.getElementById('input-fullname').value = savedName;
+            if (savedClass) document.getElementById('input-class').value = savedClass;
+            
+            initPalette();
+            renderQuestion(0);
+        });
+
+        // Anti-Cheat Protection
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if ((e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'u' || e.key === 'a')) || e.key === 'F12') {
+                e.preventDefault();
+            }
+        });
+
+        window.addEventListener('blur', () => {
+            if (!isSubmitted && document.getElementById('modal-start').classList.contains('hidden')) {
+                cheatWarnings++;
+                if (cheatWarnings < 3) {
+                    alert(`CẢNH BÁO GIAN LẬN (${cheatWarnings}/3): Bạn vừa rời khỏi màn hình làm bài! Lần thứ 3 hệ thống sẽ tự động nộp bài.`);
+                } else if (cheatWarnings === 3) {
+                    alert('HỆ THỐNG TỰ ĐỘNG NỘP BÀI: Bạn đã rời khỏi màn hình quá 3 lần quy định!');
+                    submitExam();
+                }
+            }
+        });
+
+        function startExam() {
+            const name = document.getElementById('input-fullname').value.trim();
+            const cls = document.getElementById('input-class').value.trim();
+            if (!name || !cls) {
+                alert('Vui lòng nhập đầy đủ Họ và tên cùng Lớp học!');
+                return;
+            }
+            localStorage.setItem('ta7_fullname', name);
+            localStorage.setItem('ta7_class', cls);
+            
+            document.getElementById('header-student-name').innerText = name;
+            document.getElementById('header-student-class').innerText = cls;
+            document.getElementById('sidebar-student-name').innerText = name;
+            document.getElementById('sidebar-student-class').innerText = cls;
+
+            document.getElementById('modal-start').classList.add('hidden');
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (secondsLeft > 0) {
+                    secondsLeft--;
+                    secondsSpent++;
+                    const m = Math.floor(secondsLeft / 60).toString().padStart(2, '0');
+                    const s = (secondsLeft % 60).toString().padStart(2, '0');
+                    document.getElementById('timer-display').innerText = `${m}:${s}`;
+                } else {
+                    clearInterval(timerInterval);
+                    alert('Hết thời gian làm bài! Hệ thống đang tự động nộp bài...');
+                    submitExam();
+                }
+            }, 1000);
+        }
+
+        function initPalette() {
+            const container = document.getElementById('palette-grid');
+            container.innerHTML = '';
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const btn = document.createElement('button');
+                btn.id = `palette-btn-${i}`;
+                btn.className = 'palette-btn h-8 rounded-lg border border-slate-200 text-xs font-black text-slate-700 hover:bg-slate-100 transition-all';
+                btn.innerText = i + 1;
+                btn.onclick = () => renderQuestion(i);
+                container.appendChild(btn);
+            }
+        }
+
+        function renderQuestion(index) {
+            // Audio Player Visibility (Only show for Listening Questions 1 to 8)
+            const audioCard = document.getElementById('audio-player-card');
+            const audioEl = document.getElementById('exam-audio');
+            if (audioCard) {
+                if (index < 8) {
+                    audioCard.classList.remove('hidden');
+                } else {
+                    audioCard.classList.add('hidden');
+                    if (audioEl && !audioEl.paused) {
+                        audioEl.pause();
+                    }
+                }
+            }
+            currentQIndex = index;
+            const q = QUESTIONS[index];
+
+            // Badge & Topic
+            document.getElementById('q-badge').innerText = `Câu ${q.num} / ${QUESTIONS.length}`;
+            document.getElementById('q-topic').innerText = q.topic;
+
+            // Passage
+            const passContainer = document.getElementById('q-passage-container');
+            if (q.passage) {
+                passContainer.classList.remove('hidden');
+                document.getElementById('q-passage-content').innerHTML = q.passage;
+            } else {
+                passContainer.classList.add('hidden');
+            }
+
+            // Title
+            document.getElementById('q-title').innerHTML = q.title;
+
+            // Options
+            const optsContainer = document.getElementById('q-options');
+            optsContainer.innerHTML = '';
+            
+            const letters = ['A', 'B', 'C', 'D'];
+            letters.forEach(letter => {
+                const optText = q.options[letter];
+                const optBtn = document.createElement('div');
+                optBtn.className = `p-3.5 rounded-xl border text-xs sm:text-sm font-semibold cursor-pointer transition-all flex items-center gap-3 ${
+                    userAnswers[index] === letter 
+                        ? 'border-indigo-600 bg-indigo-50/70 text-indigo-950 ring-2 ring-indigo-500/20' 
+                        : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-800'
+                }`;
+                
+                if (isSubmitted) {
+                    optBtn.classList.remove('cursor-pointer', 'hover:bg-slate-50');
+                    if (letter === q.correct) {
+                        optBtn.className = 'p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-950 text-xs sm:text-sm font-bold flex items-center gap-3';
+                    } else if (userAnswers[index] === letter && letter !== q.correct) {
+                        optBtn.className = 'p-3.5 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-950 text-xs sm:text-sm font-bold flex items-center gap-3';
+                    }
+                } else {
+                    optBtn.onclick = () => selectOption(letter);
+                }
+
+                optBtn.innerHTML = `
+                    <span class="w-6 h-6 rounded-lg ${
+                        userAnswers[index] === letter ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700'
+                    } flex items-center justify-center font-black text-xs shrink-0">${letter}</span>
+                    <span class="flex-1">${optText}</span>
+                `;
+                optsContainer.appendChild(optBtn);
+            });
+
+            // Explanation
+            const expBox = document.getElementById('q-explanation-box');
+            if (isSubmitted) {
+                expBox.classList.remove('hidden');
+                document.getElementById('q-explanation-text').innerHTML = q.exp;
+            } else {
+                expBox.classList.add('hidden');
+            }
+
+            // Palette Active update
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const pBtn = document.getElementById(`palette-btn-${i}`);
+                if (pBtn) {
+                    if (i === index) pBtn.classList.add('ring-2', 'ring-indigo-600');
+                    else pBtn.classList.remove('ring-2', 'ring-indigo-600');
+                }
+            }
+
+            // Prev/Next buttons
+            document.getElementById('btn-prev').disabled = (index === 0);
+            document.getElementById('btn-prev').classList.toggle('opacity-40', index === 0);
+            document.getElementById('btn-next').disabled = (index === QUESTIONS.length - 1);
+            document.getElementById('btn-next').classList.toggle('opacity-40', index === QUESTIONS.length - 1);
+        }
+
+        function selectOption(letter) {
+            if (isSubmitted) return;
+            userAnswers[currentQIndex] = letter;
+            
+            // Update Palette
+            const pBtn = document.getElementById(`palette-btn-${currentQIndex}`);
+            if (pBtn) pBtn.classList.add('answered');
+
+            // Update Progress
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            document.getElementById('progress-text').innerText = `${answeredCount}/${QUESTIONS.length}`;
+            const pct = Math.round((answeredCount / QUESTIONS.length) * 100);
+            document.getElementById('percent-text').innerText = `${pct}%`;
+            document.getElementById('progress-bar-fill').style.width = `${pct}%`;
+
+            renderQuestion(currentQIndex);
+        }
+
+        function prevQuestion() {
+            if (currentQIndex > 0) renderQuestion(currentQIndex - 1);
+        }
+
+        function nextQuestion() {
+            if (currentQIndex < QUESTIONS.length - 1) renderQuestion(currentQIndex + 1);
+        }
+
+        function switchTab(tab) {
+            if (tab === 'theory') {
+                document.getElementById('tab-theory').classList.remove('hidden');
+                document.getElementById('tab-quiz').classList.add('hidden');
+                document.getElementById('tab-btn-theory').classList.add('active');
+                document.getElementById('tab-btn-quiz').classList.remove('active');
+            } else {
+                document.getElementById('tab-theory').classList.add('hidden');
+                document.getElementById('tab-quiz').classList.remove('hidden');
+                document.getElementById('tab-btn-theory').classList.remove('active');
+                document.getElementById('tab-btn-quiz').classList.add('active');
+            }
+        }
+
+        function confirmSubmit() {
+            if (isSubmitted) return;
+            const unanswered = userAnswers.filter(a => a === null).length;
+            if (unanswered > 0) {
+                if (!confirm(`Bạn còn ${unanswered} câu chưa hoàn thành. Bạn có chắc chắn muốn nộp bài ngay không?`)) {
+                    return;
+                }
+            } else {
+                if (!confirm('Bạn đã hoàn thành 40/40 câu hỏi. Bạn có chắc chắn muốn nộp bài để xem kết quả?')) {
+                    return;
+                }
+            }
+            submitExam();
+        }
+
+        function submitExam() {
+            if (isSubmitted) return;
+            isSubmitted = true;
+            clearInterval(timerInterval);
+
+            // Calculate Score
+            let correctCount = 0;
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const pBtn = document.getElementById(`palette-btn-${i}`);
+                if (userAnswers[i] === QUESTIONS[i].correct) {
+                    correctCount++;
+                    if (pBtn) {
+                        pBtn.className = 'palette-btn correct h-8 rounded-lg border text-xs font-black';
+                    }
+                } else {
+                    if (pBtn) {
+                        pBtn.className = 'palette-btn wrong h-8 rounded-lg border text-xs font-black';
+                    }
+                }
+            }
+
+            const rawScore = (correctCount * 10) / QUESTIONS.length;
+            const finalScore = rawScore.toFixed(2);
+
+            const mSpent = Math.floor(secondsSpent / 60).toString().padStart(2, '0');
+            const sSpent = (secondsSpent % 60).toString().padStart(2, '0');
+
+            document.getElementById('result-score').innerHTML = `${finalScore} <span class="text-lg font-bold text-slate-400">/ 10</span>`;
+            document.getElementById('result-correct-count').innerText = `${correctCount} / ${QUESTIONS.length}`;
+            document.getElementById('result-time-spent').innerText = `${mSpent}:${sSpent}`;
+
+            document.getElementById('btn-submit-exam').classList.add('hidden');
+            document.getElementById('review-filter-box').classList.remove('hidden');
+            document.getElementById('modal-result').classList.remove('hidden');
+
+            if (rawScore >= 8.0) {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+
+            // Sync to Google Sheets
+            syncGoogleSheets(finalScore, correctCount, `${mSpent}:${sSpent}`);
+            renderQuestion(currentQIndex);
+        }
+
+        function closeResultModal() {
+            document.getElementById('modal-result').classList.add('hidden');
+        }
+
+        function filterReview(type) {
+            if (type === 'all') {
+                renderQuestion(0);
+            } else if (type === 'wrong') {
+                const wrongIdx = userAnswers.findIndex((ans, idx) => ans !== QUESTIONS[idx].correct);
+                if (wrongIdx !== -1) renderQuestion(wrongIdx);
+                else alert('Chúc mừng! Bạn không làm sai câu nào.');
+            } else if (type === 'correct') {
+                const corrIdx = userAnswers.findIndex((ans, idx) => ans === QUESTIONS[idx].correct);
+                if (corrIdx !== -1) renderQuestion(corrIdx);
+            }
+        }
+
+        function syncGoogleSheets(score, correct, time) {
+            const name = localStorage.getItem('ta7_fullname') || 'Ẩn danh';
+            const cls = localStorage.getItem('ta7_class') || '7';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec';
+
+            const payload = {
+                ho_ten: name,
+                lop: cls,
+                mon_hoc: 'Tiếng Anh 7',
+                ten_bai: 'Review 2 (Units 4-5-6) - Test 2',
+                diem: score,
+                so_cau_dung: `${correct}/${QUESTIONS.length}`,
+                thoi_gian: time,
+                timestamp: new Date().toISOString()
+            };
+
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).catch(err => console.log('Sync note:', err));
+        }
+    </script>
+</body>
+</html>
