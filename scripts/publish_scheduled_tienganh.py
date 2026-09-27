@@ -124,7 +124,7 @@ def update_portal_index(manifest_items):
             badge_html = f'''<div class="absolute top-0 right-0 bg-gradient-to-l from-amber-500 to-orange-600 text-white text-[10px] font-black px-3 py-1 rounded-bl-xl uppercase tracking-wider shadow-sm">
                         ⏳ MỞ NGÀY {d_display}
                     </div>'''
-            btn_html = f'''<button onclick="alert('Đề thi sẽ chính thức mở vào ngày {d_display} theo phân phối chương trình năm học 2026-2027!')" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+            btn_html = f'''<button onclick="alert('Đề thi sẽ chính thức mở vào ngày {d_display}!')" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer">
                             <i class="fa-regular fa-clock text-amber-500"></i>
                             <span>Lên lịch mở: {d_display}</span>
                         </button>'''
