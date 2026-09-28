@@ -86,7 +86,7 @@ for df in sorted(draft_files):
                     idx_content = idx_content.replace("<!-- CONTAINER_BAI_VIET_MOI -->", f"<!-- CONTAINER_BAI_VIET_MOI -->\n{post_card_html}")
                     with open(INDEX_HTML, "w", encoding="utf-8") as f:
                         f.write(idx_content)
-                    print(f"Da cap nhat vao van/index.html: {title}")
+                    print(f"Da cap nhat vao van/index.html: {slug}")
         
         if os.path.exists(SITEMAP_XML):
             with open(SITEMAP_XML, "r", encoding="utf-8") as f:
