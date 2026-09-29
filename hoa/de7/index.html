@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📝 Đề Ôn Tập Chuyên Đề Amino Acid - Hóa Học 12</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary: #7c3aed;
+            --primary-hover: #6d28d9;
+            --secondary: #0d9488;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.65;
+            padding-bottom: 50px;
+        }
+
+        p, .question-title, .explanation-box, .score-desc {
+            text-align: justify;
+        }
+
+        .sticky-header {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        }
+        .header-container {
+            max-width: 920px; margin: 0 auto; padding: 10px 15px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .site-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .logo-text {
+            font-size: 1.25rem; font-weight: 800;
+            background: linear-gradient(135deg, #7c3aed, #0d9488);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .timer-badge {
+            background: #fee2e2; color: #ef4444; padding: 5px 12px; border-radius: 10px;
+            font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;
+        }
+
+        .quiz-container { max-width: 920px; margin: 20px auto; padding: 0 15px; }
+
+        .exam-banner {
+            background: linear-gradient(135deg, #2e1065, #6b21a8, #0f766e); color: white;
+            padding: 2.2rem 1.5rem; border-radius: 20px; text-align: center; margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(107, 33, 168, 0.25);
+        }
+        .exam-banner h1 { font-size: 1.65rem; font-weight: 800; margin-bottom: 8px; }
+        .exam-banner p { font-size: 0.95rem; color: #f3e8ff; text-align: center; }
+        .badge-exam { display: inline-block; background: rgba(255,255,255,0.2); padding: 4px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; margin-top: 10px; }
+
+        .login-card {
+            background: white; border-radius: 16px; padding: 30px 20px; text-align: center;
+            border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 30px;
+        }
+        .login-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 10px; color: var(--text-dark); }
+        .login-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; }
+        .input-row { display: flex; gap: 15px; max-width: 500px; margin: 0 auto 20px; flex-wrap: wrap; }
+        .input-control {
+            flex: 1; min-width: 200px; padding: 12px 16px; border: 1.5px solid var(--border);
+            border-radius: 10px; font-size: 0.95rem; outline: none; transition: 0.2s;
+        }
+        .input-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15); }
+        .btn-start {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white; border: none; padding: 12px 36px; border-radius: 12px; font-weight: 700;
+            font-size: 1rem; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+        }
+        .btn-start:hover { opacity: 0.95; transform: translateY(-2px); }
+
+        .progress-card {
+            background: white; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px;
+            border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;
+        }
+        .progress-bar-bg { flex: 1; height: 10px; background: #e2e8f0; border-radius: 5px; margin: 0 15px; overflow: hidden; }
+        .progress-bar-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #7c3aed, #0d9488); transition: width 0.3s ease; }
+
+        .section-header {
+            background: white; border-radius: 14px; padding: 16px 20px; margin-bottom: 18px;
+            border-left: 6px solid var(--primary); box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+        .section-header h3 { font-size: 1.15rem; font-weight: 800; color: var(--primary); }
+        .section-header p { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+
+        .question-card {
+            background: white; border-radius: 16px; padding: 22px; margin-bottom: 20px;
+            border: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .question-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.05); }
+        .question-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .q-badge {
+            display: inline-block; padding: 4px 12px; border-radius: 8px; font-weight: 800;
+            font-size: 0.82rem; background: #ede9fe; color: #6d28d9;
+        }
+        .level-badge {
+            font-size: 0.78rem; font-weight: 700; padding: 3px 10px; border-radius: 6px;
+            background: #f1f5f9; color: #475569;
+        }
+        .question-title { font-size: 1rem; font-weight: 600; line-height: 1.6; margin-bottom: 16px; color: var(--text-dark); }
+
+        .options-list { display: flex; flex-direction: column; gap: 10px; }
+        .option-item {
+            display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px;
+            border: 1.5px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: 0.2s;
+            background: #ffffff; user-select: none;
+        }
+        .option-item:hover { background: #fdf4ff; border-color: #d8b4fe; }
+        .option-item.selected { background: #f5f3ff; border-color: var(--primary); font-weight: 600; }
+        .option-item.correct { background: #ecfdf5 !important; border-color: #10b981 !important; color: #065f46; font-weight: 700; }
+        .option-item.incorrect { background: #fef2f2 !important; border-color: #ef4444 !important; color: #991b1b; }
+
+        .opt-letter {
+            width: 28px; height: 28px; border-radius: 50%; background: #f1f5f9;
+            display: flex; align-items: center; justify-content: center; font-weight: 800;
+            font-size: 0.85rem; color: #475569; flex-shrink: 0;
+        }
+        .option-item.selected .opt-letter { background: var(--primary); color: white; }
+        .option-item.correct .opt-letter { background: #10b981; color: white; }
+        .option-item.incorrect .opt-letter { background: #ef4444; color: white; }
+        .opt-text { flex: 1; font-size: 0.95rem; line-height: 1.5; }
+
+        .explanation-box {
+            display: none; margin-top: 16px; padding: 16px 18px; border-radius: 12px;
+            background: #faf5ff; border: 1px solid #e9d5ff; font-size: 0.92rem;
+            color: #581c87; line-height: 1.6;
+        }
+        .explanation-box.show { display: block; }
+        .exp-label { font-weight: 800; color: #6b21a8; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+
+        .submit-section { text-align: center; margin: 35px 0 20px; }
+        .btn-submit {
+            background: linear-gradient(135deg, #10b981, #0d9488); color: white;
+            border: none; padding: 15px 45px; border-radius: 14px; font-weight: 800;
+            font-size: 1.05rem; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
+        }
+        .btn-submit:hover { transform: translateY(-2px); opacity: 0.95; }
+
+        .results-panel {
+            display: none; background: white; border-radius: 20px; padding: 30px 20px;
+            border: 2px solid #8b5cf6; box-shadow: 0 15px 40px rgba(139, 92, 246, 0.2);
+            text-align: center; margin-bottom: 30px;
+        }
+        .results-score {
+            width: 110px; height: 110px; border-radius: 50%; margin: 0 auto 15px;
+            background: linear-gradient(135deg, #7c3aed, #0d9488); color: white;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-size: 2.2rem; font-weight: 900; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+        }
+        .results-score span { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; opacity: 0.9; }
+        .stats-grid { display: flex; justify-content: center; gap: 20px; margin: 20px 0; flex-wrap: wrap; }
+        .stat-card { background: #f8fafc; padding: 12px 20px; border-radius: 12px; border: 1px solid var(--border); min-width: 130px; }
+        .stat-num { font-size: 1.4rem; font-weight: 800; }
+        .stat-label { font-size: 0.8rem; color: var(--text-muted); }
+
+        @media (max-width: 640px) {
+            .exam-banner h1 { font-size: 1.35rem; }
+            .input-row { flex-direction: column; }
+            .header-container { padding: 8px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="sticky-header">
+        <div class="header-container">
+            <a href="/hoa/" class="site-logo">
+                <span class="logo-text"><i class="fa-solid fa-atom"></i> Vatli102</span>
+            </a>
+            <div id="activeTimer" class="timer-badge" style="display: none;">
+                <i class="fa-regular fa-clock"></i> <span id="timerDisplay">40:00</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="quiz-container">
+        <div class="exam-banner">
+            <span class="badge-exam"><i class="fa-solid fa-flask-vial"></i> HÓA HỌC 12 - GDPT 2018</span>
+            <h1>ĐỀ ÔN TẬP CHUYÊN ĐỀ: AMINO ACID</h1>
+            <p>Hệ thống 20 câu trắc nghiệm lý thuyết chọn lọc (60% Thông hiểu & 40% Vận dụng bối cảnh thực tế)</p>
+            <div style="font-size: 0.82rem; margin-top: 10px; color: #e9d5ff;">
+                <span><i class="fa-solid fa-check-circle"></i> 20 câu trắc nghiệm</span> • 
+                <span><i class="fa-solid fa-stopwatch"></i> 40 phút</span> • 
+                <span><i class="fa-solid fa-cloud-arrow-up"></i> Tự động đồng bộ kết quả</span>
+            </div>
+        </div>
+
+        <section id="loginCard" class="login-card">
+            <h2 class="login-title">Thông Tin Học Sinh</h2>
+            <p class="login-desc">Vui lòng nhập họ tên và lớp để hệ thống ghi nhận điểm và hỗ trợ tự động chấm bài trực tuyến.</p>
+            <div class="input-row">
+                <input type="text" id="studentName" class="input-control" placeholder="Họ và tên học sinh *" required>
+                <input type="text" id="studentClass" class="input-control" placeholder="Lớp học (Ví dụ: 12A1) *" required>
+            </div>
+            <button type="button" class="btn-start" onclick="startQuiz()">
+                <i class="fa-solid fa-play"></i> BẮT ĐẦU LÀM BÀI
+            </button>
+        </section>
+
+        <section id="quizSection" style="display: none;">
+            <div class="progress-card">
+                <div style="font-weight: 700; font-size: 0.9rem; color: #475569;">
+                    <i class="fa-solid fa-user-graduate text-purple-600"></i> <span id="displayName"></span> (<span id="displayClass"></span>)
+                </div>
+                <div class="progress-bar-bg">
+                    <div id="progressBar" class="progress-bar-fill"></div>
+                </div>
+                <div style="font-weight: 800; font-size: 0.88rem; color: var(--primary);">
+                    <span id="answeredCount">0</span>/20 câu
+                </div>
+            </div>
+
+            <div id="resultsPanel" class="results-panel">
+                <div class="results-score">
+                    <div id="scoreCircle">0.0</div>
+                    <span>Điểm</span>
+                </div>
+                <h3 style="font-size: 1.4rem; font-weight: 800; color: #2e1065;" id="resultStatus">Kết Quả Làm Bài</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-num" id="correctCountText" style="color: #10b981;">0</div>
+                        <div class="stat-label">Số câu đúng</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num" id="incorrectCountText" style="color: #ef4444;">0</div>
+                        <div class="stat-label">Số câu sai</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num" id="timeSpentText" style="color: #6366f1;">00:00</div>
+                        <div class="stat-label">Thời gian làm</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num" id="gradeText" style="color: var(--primary);">0/10</div>
+                        <div class="stat-label">Thang điểm 10</div>
+                    </div>
+                </div>
+                <p class="score-desc" style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+                    Chi tiết đáp án đúng và hướng dẫn giải từng câu đã được hiển thị bên dưới.
+                </p>
+            </div>
+
+            <div class="section-header">
+                <h3>PHẦN 1: MỨC ĐỘ THÔNG HIỂU (12 CÂU)</h3>
+                <p>Nắm vững khái niệm, tên gọi, cấu trúc ion lưỡng cực, tính chất vật lí và hóa học cơ bản của amino acid.</p>
+            </div>
+            <div id="questionsPart1"></div>
+
+            <div class="section-header" style="border-left-color: #0d9488; margin-top: 30px;">
+                <h3 style="color: #0d9488;">PHẦN 2: MỨC ĐỘ VẬN DỤNG CÓ BỐI CẢNH THỰC TẾ (8 CÂU)</h3>
+                <p>Ứng dụng thực tiễn trong an toàn thực phẩm (mì chính), y dược học (acid glutamic, methionine, aspartame & bệnh PKU), chăn nuôi, khoa học hình sự và sản xuất công nghiệp.</p>
+            </div>
+            <div id="questionsPart2"></div>
+
+            <div class="submit-section">
+                <button type="button" id="btnSubmit" class="btn-submit" onclick="submitExam()">
+                    <i class="fa-solid fa-paper-plane"></i> NỘP BÀI VÀ XEM ĐÁP ÁN
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const QUESTIONS = [{"id": 1, "level": "Thông hiểu", "question": "Amino acid là loại hợp chất hữu cơ tạp chức, trong phân tử chứa đồng thời nhóm chức amino ($-NH_2$) và nhóm chức carboxyl ($-COOH$). Hầu hết các amino acid thiên nhiên cấu tạo nên các chuỗi polypeptide trong phân tử protein của mọi cơ thể sinh vật đều thuộc loại nào sau đây?", "options": {"A": "$\\alpha$-amino acid.", "B": "$\\beta$-amino acid.", "C": "$\\gamma$-amino acid.", "D": "$\\omega$-amino acid."}, "answer": "A", "explanation": "Trong tự nhiên, hầu hết các amino acid cấu tạo nên protein của cơ thể sinh vật và con người là các $\\alpha$-amino acid (nhóm amino $-NH_2$ liên kết trực tiếp với nguyên tử carbon số 2, tức carbon $\\alpha$ ngay cạnh nhóm carboxyl $-COOH$)."}, {"id": 2, "level": "Thông hiểu", "question": "Valine là một amino acid thiết yếu có cấu trúc mạch carbon phân nhánh với công thức cấu tạo: $(CH_3)_2CH-CH(NH_2)-COOH$. Tên gọi của valine theo danh pháp thay thế (IUPAC) là", "options": {"A": "acid 2-aminopentanoic.", "B": "acid 2-amino-3-methylbutanoic.", "C": "acid 3-methyl-2-aminobutanoic.", "D": "acid $\\alpha$-aminoisovaleric."}, "answer": "B", "explanation": "Chọn mạch chính dài nhất chứa nhóm $-COOH$ gồm 4 nguyên tử carbon (đánh số 1 từ nhóm $-COOH$, carbon số 2 gắn nhóm $-NH_2$, carbon số 3 gắn nhóm nhánh $-CH_3$). Theo quy tắc IUPAC (chữ cái 'a' của amino đứng trước chữ 'm' của methyl): tên thay thế là acid 2-amino-3-methylbutanoic."}, {"id": 3, "level": "Thông hiểu", "question": "Ở điều kiện thường, các amino acid tồn tại chủ yếu ở dạng ion lưỡng cực (zwitterion: $H_3N^+-CH(R)-COO^-$) do tương tác trao đổi proton nội phân tử giữa nhóm carboxyl và nhóm amino. Đặc điểm cấu tạo này quyết định tính chất vật lí nào sau đây của amino acid?", "options": {"A": "Là chất lỏng sánh, dễ bay hơi, có mùi khai hắc tương tự amine và khó tan trong nước.", "B": "Là chất khí không màu ở điều kiện thường, tan vô hạn trong các dung môi hữu cơ không phân cực như benzene.", "C": "Là chất rắn kết tinh, không màu, có nhiệt độ nóng chảy cao (thường kèm phân hủy) và dễ tan trong nước.", "D": "Có nhiệt độ nóng chảy và nhiệt độ sôi rất thấp, tương đương với các hydrocarbon có cùng số nguyên tử carbon."}, "answer": "C", "explanation": "Do tồn tại chủ yếu ở dạng ion lưỡng cực, giữa các phân tử amino acid hình thành lực hút tĩnh điện ion - ion rất mạnh (tương tự mạng tinh thể muối). Vì vậy, amino acid là những chất rắn kết tinh, không màu, vị hơi ngọt, có nhiệt độ nóng chảy cao (thường $> 200^\\circ C$ kèm hiện tượng phân hủy), tan tốt trong nước và hầu như không tan trong các dung môi hữu cơ không phân cực như benzene, ether."}, {"id": 4, "level": "Thông hiểu", "question": "Cho glycine ($H_2N-CH_2-COOH$) tác dụng lần lượt với dung dịch $HCl$ và dung dịch $NaOH$. Nhận định nào sau đây là đúng về bản chất phản ứng theo thuyết acid - base của Brønsted - Lowry?", "options": {"A": "Khi tác dụng với $HCl$, nhóm carboxyl nhường proton; khi tác dụng với $NaOH$, nhóm amino nhận proton.", "B": "Glycine thể hiện tính chất lưỡng tính: phản ứng với $HCl$ thể hiện tính base do nhóm $-NH_2$ nhận proton; phản ứng với $NaOH$ thể hiện tính acid do nhóm $-COOH$ nhường proton.", "C": "Glycine chỉ là một hợp chất trung tính do tính acid của nhóm $-COOH$ và tính base của nhóm $-NH_2$ triệt tiêu hoàn toàn lẫn nhau.", "D": "Trong cả hai phản ứng, phân tử glycine đều bị bẻ gãy liên kết carbon - nitrogen tạo thành ammonia và carbon dioxide."}, "answer": "B", "explanation": "Amino acid có tính chất lưỡng tính (amphoteric):\n- Khi tác dụng với acid mạnh: $H_2N-CH_2-COOH + HCl \\rightarrow ClH_3N-CH_2-COOH$ (nhóm $-NH_2$ nhận $H^+$ đóng vai trò là base).\n- Khi tác dụng với base mạnh: $H_2N-CH_2-COOH + NaOH \\rightarrow H_2N-CH_2-COONa + H_2O$ (nhóm $-COOH$ nhường $H^+$ đóng vai trò là acid)."}, {"id": 5, "level": "Thông hiểu", "question": "Cho 4 dung dịch có cùng nồng độ mol ($0,1\\text{ M}$): (1) Glycine, (2) Glutamic acid, (3) Lysine, (4) Alanine. Dung dịch làm quỳ tím chuyển sang màu đỏ và dung dịch làm quỳ tím chuyển sang màu xanh lần lượt là", "options": {"A": "(2) và (3).", "B": "(1) và (4).", "C": "(3) và (2).", "D": "(2) và (1)."}, "answer": "A", "explanation": "Tính acid - base của dung dịch amino acid phụ thuộc vào tương quan số lượng nhóm $-COOH$ và nhóm $-NH_2$:\n- Glycine (1) và Alanine (4): có 1 nhóm $-COOH$ và 1 nhóm $-NH_2$ $\\rightarrow$ môi trường gần trung tính ($pH \\approx 6$), không làm đổi màu quỳ tím.\n- Glutamic acid (2): có 2 nhóm $-COOH$ và 1 nhóm $-NH_2$ $\\rightarrow$ tính acid trội hơn, dung dịch làm quỳ tím chuyển sang màu đỏ hồng.\n- Lysine (3): có 1 nhóm $-COOH$ và 2 nhóm $-NH_2$ $\\rightarrow$ tính base trội hơn, dung dịch làm quỳ tím chuyển sang màu xanh."}, {"id": 6, "level": "Thông hiểu", "question": "Điểm đẳng điện (kí hiệu là $pI$) là giá trị pH mà tại đó nồng độ ion lưỡng cực của amino acid đạt cực đại và phân tử không tích điện (tổng điện tích bằng 0). Khi hòa tan alanine ($pI = 6,00$) vào dung dịch đệm có $pH = 2,00$, alanine sẽ tồn tại chủ yếu ở dạng ion nào và mang điện tích gì?", "options": {"A": "Cation $CH_3-CH(NH_3^+)-COOH$ tích điện dương ($+1$).", "B": "Anion $CH_3-CH(NH_2)-COO^-$ tích điện âm ($-1$).", "C": "Ion lưỡng cực $CH_3-CH(NH_3^+)-COO^-$ trung hòa về điện.", "D": "Anion $CH_3-CH(NH^-)-COO^-$ tích điện âm ($-2$)."}, "answer": "A", "explanation": "Ở môi trường đệm $pH = 2,00 < pI$ (môi trường acid mạnh, nồng độ $H^+$ rất cao), cân bằng nhận proton chuyển dịch sang phải: nhóm $-COO^-$ của ion lưỡng cực nhận thêm proton $H^+$ để tạo nhóm $-COOH$. Do đó, alanine tồn tại chủ yếu ở dạng cation mang điện tích dương: $CH_3-CH(NH_3^+)-COOH$ (tích điện $+1$)."}, {"id": 7, "level": "Thông hiểu", "question": "Để điều chế ester của glycine làm chất trung gian trong tổng hợp hữu cơ, người ta đun hồi lưu glycine với ethanol có sục luồng khí hydrogen chloride ($HCl$) khan. Vai trò trọng yếu của khí $HCl$ khan trong phản ứng này là", "options": {"A": "vừa làm chất xúc tác acid cho phản ứng ester hóa, vừa tạo muối amoni ($ClH_3N-CH_2-COOC_2H_5$) để bảo vệ nhóm amino, ngăn cản phản ứng trùng ngưng giữa các phân tử amino acid.", "B": "đóng vai trò chất oxi hóa mạnh chuyển nhóm amino thành khí nitrogen tự do thoát ra.", "C": "chỉ đóng vai trò dung môi trơ hòa tan ethanol và glycine mà không tham gia bất kì phản ứng hóa học nào.", "D": "đóng vai trò chất khử làm tăng tốc độ phân hủy liên kết peptide."}, "answer": "A", "explanation": "Amino acid có đồng thời nhóm $-NH_2$ và $-COOH$ nên rất dễ tự tương tác với nhau để tạo peptide hoặc trùng ngưng. Khi sục khí $HCl$ khan: $HCl$ vừa đóng vai trò xúc tác acid cho phản ứng ester hóa nhóm $-COOH$ với alcohol, vừa proton hóa nhóm amino tạo muối clohidrat $ClH_3N-CH_2-COOC_2H_5$. Dạng muối này làm mất tính base và tính nucleophile của nhóm amino, ngăn ngừa hoàn toàn phản ứng trùng ngưng không mong muốn."}, {"id": 8, "level": "Thông hiểu", "question": "Khi đun nóng acid 6-aminohexanoic (còn gọi là acid $\\varepsilon$-aminocaproic, $H_2N-(CH_2)_5-COOH$) ở nhiệt độ cao có xúc tác thích hợp, các phân tử liên kết với nhau bằng cách tách nước tạo thành polycaproamide (tơ nilon-6). Phản ứng này thuộc loại", "options": {"A": "phản ứng trùng hợp.", "B": "phản ứng trùng ngưng.", "C": "phản ứng thủy phân.", "D": "phản ứng xà phòng hóa."}, "answer": "B", "explanation": "Phản ứng trùng ngưng là quá trình kết hợp nhiều phân tử nhỏ (monomer) chứa từ hai nhóm chức có khả năng phản ứng trở lên thành phân tử polymer lớn, đồng thời giải phóng các phân tử nhỏ khác (như $H_2O$):\n$n H_2N-(CH_2)_5-COOH \\xrightarrow{t^\\circ, xt} -[NH-(CH_2)_5-CO]-_n + n H_2O$."}, {"id": 9, "level": "Thông hiểu", "question": "Trong phòng thí nghiệm và hóa sinh phân tích, để nhận biết nhanh sự có mặt của các $\\alpha$-amino acid, người ta thường cho dung dịch mẫu phản ứng với thuốc thử ninhydrin và đun nóng nhẹ. Hiện tượng quan sát được là", "options": {"A": "xuất hiện kết tủa trắng tương tự phản ứng nhận biết aniline bằng nước bromine.", "B": "xuất hiện dung dịch có màu xanh tím đặc trưng (phức Ruhemann's purple).", "C": "xuất hiện lớp kim loại bạc sáng bóng bám vào thành ống nghiệm (phản ứng tráng bạc).", "D": "dung dịch chuyển sang màu đỏ máu tương tự phản ứng của ion $Fe^{3+}$ với $SCN^-$."}, "answer": "B", "explanation": "Ninhydrin phản ứng đặc hiệu với nhóm $\\alpha$-amino của các amino acid khi đun nóng nhẹ, trải qua phản ứng khử amin oxy hóa và ngưng tụ tạo thành một phức chất có màu xanh tím rất đậm và bền gọi là phức Ruhemann's purple. Đây là phản ứng kinh điển để định tính và định lượng amino acid."}, {"id": 10, "level": "Thông hiểu", "question": "Cho 4 chất hữu cơ có phân tử khối xấp xỉ nhau: (1) butanoic acid ($CH_3CH_2CH_2COOH, M = 88$), (2) pentan-1-ol ($CH_3(CH_2)_4OH, M = 88$), (3) alanine ($CH_3CH(NH_2)COOH, M = 89$), (4) ethyl acetate ($CH_3COOCH_2CH_3, M = 88$). Chất có nhiệt độ nóng chảy cao nhất ở điều kiện thường là", "options": {"A": "Alanine (3).", "B": "Butanoic acid (1).", "C": "Pentan-1-ol (2).", "D": "Ethyl acetate (4)."}, "answer": "A", "explanation": "Alanine tồn tại chủ yếu ở dạng ion lưỡng cực $CH_3CH(NH_3^+)COO^-$. Giữa các phân tử ion lưỡng cực có lực hút tĩnh điện rất mạnh (tương tự liên kết ion trong muối vô cơ), nên alanine là chất rắn có nhiệt độ nóng chảy rất cao ($297^\\circ C$, kèm phân hủy). Trong khi đó, butanoic acid, pentan-1-ol và ethyl acetate là các hợp chất phân tử chỉ có liên kết hydrogen liên phân tử hoặc lực van der Waals yếu nên đều ở thể lỏng ở điều kiện thường (nhiệt độ nóng chảy đều dưới $0^\\circ C$)."}, {"id": 11, "level": "Thông hiểu", "question": "Lysine là một amino acid thiết yếu có công thức cấu tạo thu gọn: $H_2N-(CH_2)_4-CH(NH_2)-COOH$. Phát biểu nào sau đây về lysine là sai?", "options": {"A": "Phân tử lysine chứa hai nhóm amino bậc I và một nhóm carboxyl.", "B": "Một mol lysine phản ứng tối đa với $2\\text{ mol } HCl$ trong dung dịch.", "C": "Một mol lysine phản ứng tối đa với $2\\text{ mol } NaOH$ trong dung dịch.", "D": "Dung dịch lysine làm quỳ tím chuyển sang màu xanh."}, "answer": "C", "explanation": "Phân tử lysine chỉ chứa 1 nhóm carboxyl ($-COOH$), do đó $1\\text{ mol}$ lysine chỉ phản ứng tối đa với $1\\text{ mol } NaOH$. Phát biểu C ghi '$2\\text{ mol } NaOH$' là sai. Lysine có 2 nhóm $-NH_2$ nên phản ứng với $2\\text{ mol } HCl$ và làm quỳ tím chuyển sang màu xanh."}, {"id": 12, "level": "Thông hiểu", "question": "Bột ngọt (mì chính) là một chất điều vị quen thuộc trong nghệ thuật ẩm thực và công nghiệp chế biến thực phẩm, mang lại vị umami (vị ngọt thịt đậm đà). Thành phần hóa học chủ yếu của bột ngọt thương phẩm là", "options": {"A": "muối disodium glutamate.", "B": "muối monosodium glutamate (MSG).", "C": "acid glutamic tự do dạng tinh thể.", "D": "muối monopotassium glutamate."}, "answer": "B", "explanation": "Bột ngọt thương phẩm có thành phần chính là muối monosodium glutamate (thường ở dạng ngậm 1 phân tử nước: $C_5H_8NO_4Na \\cdot H_2O$, viết tắt là MSG). Đây là muối natri tại một nhóm carboxyl của acid glutamic."}, {"id": 13, "level": "Vận dụng", "question": "Trong phòng xét nghiệm hóa sinh, kỹ thuật viên tiến hành phân tách một mẫu chứa hỗn hợp ba amino acid: Glutamic acid ($pI = 3,22$), Alanine ($pI = 6,00$) và Lysine ($pI = 9,74$) bằng phương pháp điện di trên giấy trong dung dịch đệm có $pH = 6,00$. Dưới tác dụng của điện trường một chiều (cực âm cathode, cực dương anode), hiện tượng quan sát được sau khi hiện màu là", "options": {"A": "Alanine di chuyển về cực âm, Lysine đứng yên, Glutamic acid di chuyển về cực dương.", "B": "Glutamic acid di chuyển về cực dương (anode), Alanine hầu như không di chuyển (ở lại vạch xuất phát), Lysine di chuyển về cực âm (cathode).", "C": "Cả ba amino acid đều tích điện âm và di chuyển đồng thời về cực dương với cùng một tốc độ.", "D": "Glutamic acid di chuyển về cực âm, Lysine di chuyển về cực dương, Alanine bị điện phân phân hủy hoàn toàn."}, "answer": "B", "explanation": "Tại môi trường đệm $pH = 6,00$:\n- Alanine có $pI = 6,00 = pH$, tồn tại ở dạng ion lưỡng cực trung hòa điện (điện tích tổng bằng 0) nên hầu như không di chuyển trong điện trường.\n- Glutamic acid có $pI = 3,22 < 6,00$ ($pH > pI$), nhường bớt proton tạo anion mang điện tích âm $\\rightarrow$ di chuyển về cực dương (anode).\n- Lysine có $pI = 9,74 > 6,00$ ($pH < pI$), nhận thêm proton tạo cation mang điện tích dương $\\rightarrow$ di chuyển về cực âm (cathode)."}, {"id": 14, "level": "Vận dụng", "question": "Trong cẩm nang an toàn thực phẩm gia đình, các chuyên gia dinh dưỡng khuyến cáo: 'Không nên nêm bột ngọt (mì chính) vào thức ăn khi dầu mỡ đang sôi sục hoặc khi đang xào nướng ở nhiệt độ cao trên $270^\\circ C$'. Về mặt hóa học, nguyên nhân của khuyến cáo này là do ở nhiệt độ trên $270^\\circ C$,", "options": {"A": "mì chính phản ứng với oxygen trong không khí tạo thành khí độc carbon monoxide ($CO$).", "B": "phân tử mì chính bị mất nước nội phân tử tạo thành muối natri pyroglutamat không còn vị ngọt umami và gây hại cho sức khỏe.", "C": "mì chính bị nhiệt phân giải phóng hoàn toàn khí ammonia ($NH_3$) gây mùi khai nồng nặc.", "D": "mì chính bị clo hóa biến đổi thành hợp chất hữu cơ độc hại dioxin."}, "answer": "B", "explanation": "Ở nhiệt độ trên $270^\\circ C$, phân tử monosodium glutamate (MSG) xảy ra phản ứng ngưng tụ tách một phân tử nước nội phân tử giữa nhóm $-NH_2$ và nhóm $-COOH$ còn lại để tạo thành vòng lactam 5 cạnh: muối natri pyroglutamat (sodium pyroglutamate). Hợp chất này hoàn toàn mất vị ngọt umami và khi tích tụ trong cơ thể có thể gây độc cho hệ thần kinh. Vì vậy, chỉ nên nêm bột ngọt khi món ăn đã chín và vừa tắt bếp."}, {"id": 15, "level": "Vận dụng", "question": "Trên nhãn bao bì của các loại nước ngọt ăn kiêng sử dụng chất tạo ngọt nhân tạo Aspartame thường in đậm dòng chữ cảnh báo y tế: 'Phenylketonurics: Contains Phenylalanine' (Người mắc bệnh Phenylceton niệu cần lưu ý: Sản phẩm có chứa Phenylalanine). Về mặt hóa sinh, Aspartame là methyl ester của dipeptide Aspartyl-Phenylalanine. Cảnh báo này mang ý nghĩa sống còn đối với bệnh nhân mắc hội chứng PKU vì", "options": {"A": "khi vào hệ tiêu hóa, Aspartame bị enzyme thủy phân giải phóng phenylalanine tự do, chất mà người mắc bệnh PKU bị thiếu hụt enzyme chuyển hóa bẩm sinh, dẫn đến tích tụ nồng độ cao trong máu gây tổn thương não và thiểu năng trí tuệ.", "B": "phenylalanine tự do phản ứng với acid dạ dày tạo thành chất độc cyanide làm tê liệt hô hấp tế bào.", "C": "aspartame trực tiếp kích thích tụy tiết quá mức hormone glucagon gây biến chứng hạ đường huyết cấp tính.", "D": "bệnh nhân PKU có kháng thể bẩm sinh chống lại liên kết peptide dẫn đến sốc phản vệ ngay lập tức."}, "answer": "A", "explanation": "Hội chứng Phenylketonuria (PKU) là một dị tật di truyền do cơ thể thiếu hụt enzyme phenylalanine hydroxylase (dùng để chuyển hóa phenylalanine thành tyrosine). Khi tiêu thụ thực phẩm chứa aspartame, các enzyme tiêu hóa sẽ cắt liên kết peptide giải phóng phenylalanine tự do. Do không thể chuyển hóa, phenylalanine tích tụ ở mức độc hại trong máu, vượt qua hàng rào máu não gây ngộ độc hệ thần kinh trung ương và suy giảm trí tuệ vĩnh viễn ở người bệnh PKU."}, {"id": 16, "level": "Vận dụng", "question": "Trong ngành công nghiệp thức ăn chăn nuôi gia súc (lợn thịt) và sản xuất siro dinh dưỡng giúp trẻ em ăn ngon miệng, người ta luôn bổ sung amino acid L-lysine dưới dạng muối monohydrochloride ($C_6H_{14}N_2O_2 \\cdot HCl$) thay vì dùng L-lysine tự do dạng base. Ưu điểm công nghệ và thực tiễn nổi bật nhất của việc này là gì?", "options": {"A": "Lysine tự do có tính base mạnh, rất háo nước (dễ hút ẩm chảy rữa) và dễ bị không khí oxi hóa làm ôi hỏng, trong khi dạng muối hydrochloride là chất rắn kết tinh khô ráo, bền nhiệt khi ép viên cám, không bị chảy nước và bảo quản ổn định lâu dài.", "B": "Lysine tự do không thể hòa tan trong nước nên đường tiêu hóa của gia súc và người không thể hấp thụ được.", "C": "Muối lysine hydrochloride có vị ngọt đậm hơn đường saccharose giúp tạo cảm giác thèm ăn cho vật nuôi.", "D": "Lysine tự do là một chất gây viêm loét dạ dày cực mạnh, chỉ có ion $Cl^-$ mới trung hòa được độc tính này."}, "answer": "A", "explanation": "Lysine tự do chứa 2 nhóm $-NH_2$ nên có tính base đáng kể, tính hút ẩm rất mạnh (chảy rữa thành chất nhầy khi tiếp xúc với không khí ẩm) và dễ bị oxy hóa gây biến màu, bốc mùi khó chịu. Khi chuyển hóa thành muối monohydrochloride ($Lys \\cdot HCl$), chất tồn tại ở dạng tinh thể ion khô ráo, không bị chảy rữa, chịu được nhiệt độ cao khi ép viên thức ăn chăn nuôi, dễ cân đo phối trộn và có hạn sử dụng lâu dài."}, {"id": 17, "level": "Vận dụng", "question": "Trong y học lâm sàng, Acid glutamic ($HOOC-CH_2-CH_2-CH(NH_2)-COOH$) được dùng làm thuốc hỗ trợ dẫn truyền thần kinh; còn Methionine ($CH_3-S-CH_2-CH_2-CH(NH_2)-COOH$) là amino acid thiết yếu chứa lưu huỳnh được kê đơn trong điều trị bảo vệ nhu mô gan, chống thoái hóa mỡ gan. Cho các phát biểu sau về hai amino acid này:\n(a) Cả hai chất đều thuộc loại $\\alpha$-amino acid mạch hở.\n(b) Dung dịch acid glutamic làm quỳ tím chuyển màu đỏ hồng, trong khi dung dịch methionine không làm đổi màu quỳ tím.\n(c) Trong phân tử methionine có chứa một cầu nối thioether ($-S-$) và đóng vai trò cung cấp nhóm methyl ($-CH_3$) cho phản ứng sinh hóa trong cơ thể.\n(d) Cơ thể người có thể tự tổng hợp được acid glutamic từ các chất chuyển hóa trung gian, nhưng không thể tự tổng hợp được methionine.\nSố phát biểu đúng là", "options": {"A": "1.", "B": "2.", "C": "3.", "D": "4."}, "answer": "D", "explanation": "Cả 4 phát biểu đều đúng:\n- (a) Đúng: Cả hai đều có nhóm $-NH_2$ ở carbon số 2 (carbon $\\alpha$).\n- (b) Đúng: Acid glutamic có 2 nhóm $-COOH$ và 1 nhóm $-NH_2$ ($pH < 7$, quỳ tím hóa đỏ hồng); methionine có 1 nhóm $-COOH$ và 1 nhóm $-NH_2$ ($pH \\approx 6$, quỳ tím không đổi màu).\n- (c) Đúng: Methionine chứa liên kết $C-S-C$ (thioether), trong chuyển hóa sinh học nó tạo thành S-adenosylmethionine (SAMe) - chất cho nhóm methyl chủ yếu của cơ thể để tổng hợp phospholipid màng tế bào gan.\n- (d) Đúng: Acid glutamic là amino acid không thiết yếu (cơ thể tự tạo được qua quá trình khử amin/chuyển amin của $\\alpha$-ketoglutarate), còn methionine là amino acid thiết yếu bắt buộc phải lấy từ nguồn thực phẩm."}, {"id": 18, "level": "Vận dụng", "question": "Tại hiện trường các vụ án hình sự, khi kẻ tình nghi chạm ngón tay trần vào giấy tờ, biên nhận hoặc tài liệu, dịch mồ hôi từ các tuyến mồ hôi đầu ngón tay sẽ lưu lại đường vân tay. Các giám định viên kỹ thuật hình sự phun sương dung dịch ninhydrin lên giấy rồi sấy nhẹ nhiệt độ $80^\\circ C - 100^\\circ C$. Hiện tượng dấu vân tay hiện rõ nét với các chi tiết phức tạp là do", "options": {"A": "ninhydrin phản ứng với muối ăn ($NaCl$) trong mồ hôi tạo kết tủa bạc chloride phản quang.", "B": "ninhydrin phản ứng oxy hóa - ngưng tụ đặc hiệu với các vết amino acid tự do có trong mồ hôi tạo ra phức chất màu xanh tím đậm (Ruhemann's purple) bám dọc theo đường vân tay trên nền sợi giấy.", "C": "ninhydrin xúc tác làm cháy sém các sợi cellulose tại vị trí có lipid mồ hôi tạo thành vệt than đen.", "D": "ninhydrin phản ứng với nước trong mồ hôi tạo ra bọt khí đẩy các tế bào chết nổi lên bề mặt."}, "answer": "B", "explanation": "Mồ hôi ngón tay người chứa một lượng nhỏ các amino acid tự do (glycine, serine, alanine,...). Khi dung dịch ninhydrin ngấm vào giấy và được cấp nhiệt nhẹ, ninhydrin phản ứng với các amino acid này sinh ra hợp chất màu tím xanh đậm Ruhemann's purple. Do các amino acid được giữ lại chính xác theo hình dáng đường vân tay trên bề mặt sợi cellulose của giấy, phức màu xanh tím nổi bật giúp chụp ảnh và giám định nhận diện dấu vân tay nghi phạm."}, {"id": 19, "level": "Vận dụng", "question": "Tơ nilon-6 (polycaproamide) và tơ nilon-7 (polyenanthamide) là hai loại sợi tổng hợp thuộc họ polyamide có độ bền cơ học cao, chịu mài mòn tốt, mềm mịn, được dùng dệt vải may mặc và dây dù, lưới đánh cá. Cho các nhận định sau:\n(a) Monomer dùng để trùng ngưng tạo tơ nilon-6 là acid 6-aminohexanoic ($H_2N-(CH_2)_5-COOH$).\n(b) Monomer dùng để trùng ngưng tạo tơ nilon-7 là acid 7-aminoheptanoic ($H_2N-(CH_2)_6-COOH$).\n(c) Trong mạch phân tử của cả nilon-6 và nilon-7 đều chứa các liên kết amide ($-CO-NH-$).\n(d) Do liên kết amide rất bền vững với mọi tác nhân hóa học, quần áo may bằng tơ nilon-6 và nilon-7 có thể giặt an toàn trong dung dịch xà phòng có độ kiềm cao hoặc dung dịch acid đậm đặc.\nSố nhận định đúng là", "options": {"A": "1.", "B": "2.", "C": "3.", "D": "4."}, "answer": "C", "explanation": "- Các nhận định (a), (b), (c) đều đúng.\n- Nhận định (d) sai: Liên kết amide $-CO-NH-$ trong mạch polymer của các loại tơ polyamide rất dễ bị thủy phân trong môi trường acid mạnh hoặc môi trường kiềm nóng. Vì vậy, trang phục làm bằng tơ nilon không nên giặt bằng xà phòng có tính kiềm mạnh, không giặt bằng nước quá nóng và không tiếp xúc với hóa chất acid."}, {"id": 20, "level": "Vận dụng", "question": "Trong quy trình công nghệ sinh học sản xuất bột ngọt (mì chính) từ rỉ đường mía bằng phương pháp lên men vi sinh vật, sau khi kết thúc quá trình lên men, môi trường chứa acid glutamic hòa tan cùng nhiều muối khoáng và protein vi khuẩn. Để tách acid glutamic kết tinh ra khỏi dịch lên men với hiệu suất thu hồi tối đa và độ tinh khiết cao nhất, kỹ sư công nghệ sẽ điều chỉnh pH của dung dịch về giá trị nào sau đây và vì sao?", "options": {"A": "Điều chỉnh pH về khoảng $3,0 - 3,22$ (bằng điểm đẳng điện $pI$ của acid glutamic) vì tại giá trị này, acid glutamic tồn tại chủ yếu ở dạng ion lưỡng cực có tổng điện tích bằng 0, độ tan trong nước đạt cực tiểu nên kết tinh lắng xuống tối đa.", "B": "Điều chỉnh pH về mức kiềm mạnh ($pH = 12,0$) bằng $NaOH$ đặc để acid glutamic bay hơi ngưng tụ tách ra khỏi dung dịch.", "C": "Điều chỉnh pH về mức trung tính ($pH = 7,0$) để acid glutamic tan hoàn toàn thành dung dịch đồng nhất rồi đem làm lạnh.", "D": "Điều chỉnh pH về mức acid cực mạnh ($pH = 0,5$) bằng $HNO_3$ đặc để acid glutamic bị oxi hóa tạo kết tủa vàng."}, "answer": "A", "explanation": "Acid glutamic có điểm đẳng điện $pI = 3,22$. Ở giá trị pH này, hầu như toàn bộ phân tử acid glutamic tồn tại ở dạng ion lưỡng cực có tổng điện tích bằng 0. Khi phân tử trung hòa điện, tương tác solvat hóa giữa acid glutamic với phân tử nước đạt mức thấp nhất, dẫn đến độ tan của acid glutamic trong nước đạt giá trị cực tiểu (chỉ khoảng $8,6\\text{ g/L}$ ở $25^\\circ C$). Nhờ đó, bằng cách thêm $H_2SO_4$ để đưa pH dịch lên men về $3,0 - 3,2$, acid glutamic sẽ kết tinh tách ra dạng tinh thể rắn lắng xuống với hiệu suất trên 90%, dễ dàng lọc ly tâm thu hồi trước khi trung hòa thành mì chính."}];
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRRiM81mghvA7cInvJgb4rPLzWOAE3s44wer0BJcURQ4hWwoykS19pkNQ9LyzH6Q8lTQ/exec";
+        const TOTAL_QUESTIONS = QUESTIONS.length;
+        let userAnswers = {};
+        let isSubmitted = false;
+        let totalTimeSeconds = 40 * 60;
+        let timeRemaining = totalTimeSeconds;
+        let timerInterval = null;
+
+        function startQuiz() {
+            const name = document.getElementById('studentName').value.trim();
+            const sClass = document.getElementById('studentClass').value.trim();
+            if (!name || !sClass) {
+                alert('Vui lòng điền đầy đủ Họ và tên cùng Lớp học trước khi bắt đầu!');
+                return;
+            }
+
+            document.getElementById('displayName').innerText = name;
+            document.getElementById('displayClass').innerText = sClass;
+            document.getElementById('loginCard').style.display = 'none';
+            document.getElementById('quizSection').style.display = 'block';
+            document.getElementById('activeTimer').style.display = 'flex';
+
+            renderQuestions();
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Hết thời gian làm bài! Hệ thống đang tự động nộp bài của bạn.');
+                    submitExam();
+                    return;
+                }
+                timeRemaining--;
+                const mins = Math.floor(timeRemaining / 60);
+                const secs = timeRemaining % 60;
+                document.getElementById('timerDisplay').innerText = 
+                    `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }, 1000);
+        }
+
+        function renderQuestions() {
+            const p1 = document.getElementById('questionsPart1');
+            const p2 = document.getElementById('questionsPart2');
+            p1.innerHTML = '';
+            p2.innerHTML = '';
+
+            QUESTIONS.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `qCard-${q.id}`;
+
+                let optionsHtml = '';
+                Object.keys(q.options).forEach(optKey => {
+                    optionsHtml += `
+                        <div class="option-item" id="opt-${q.id}-${optKey}" onclick="selectOption(${q.id}, '${optKey}')">
+                            <div class="opt-letter">${optKey}</div>
+                            <div class="opt-text">${q.options[optKey]}</div>
+                        </div>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="question-head">
+                        <span class="q-badge">Câu ${q.id}</span>
+                        <span class="level-badge">${q.level}</span>
+                    </div>
+                    <div class="question-title">${q.question}</div>
+                    <div class="options-list">${optionsHtml}</div>
+                    <div class="explanation-box" id="exp-${q.id}">
+                        <div class="exp-label"><i class="fa-solid fa-lightbulb"></i> Lời giải chi tiết:</div>
+                        <div style="white-space: pre-line;">${q.explanation}</div>
+                    </div>
+                `;
+
+                if (index < 12) {
+                    p1.appendChild(card);
+                } else {
+                    p2.appendChild(card);
+                }
+            });
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function selectOption(qId, optKey) {
+            if (isSubmitted) return;
+            userAnswers[qId] = optKey;
+
+            const q = QUESTIONS.find(item => item.id === qId);
+            Object.keys(q.options).forEach(k => {
+                const el = document.getElementById(`opt-${qId}-${k}`);
+                if (el) {
+                    if (k === optKey) el.classList.add('selected');
+                    else el.classList.remove('selected');
+                }
+            });
+
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const count = Object.keys(userAnswers).length;
+            document.getElementById('answeredCount').innerText = count;
+            const pct = Math.round((count / TOTAL_QUESTIONS) * 100);
+            document.getElementById('progressBar').style.width = pct + '%';
+        }
+
+        function submitExam() {
+            if (isSubmitted) return;
+            const answeredCount = Object.keys(userAnswers).length;
+            if (answeredCount < TOTAL_QUESTIONS) {
+                if (!confirm(`Bạn mới hoàn thành ${answeredCount}/${TOTAL_QUESTIONS} câu. Bạn có chắc chắn muốn nộp bài ngay bây giờ?`)) {
+                    return;
+                }
+            }
+
+            isSubmitted = true;
+            clearInterval(timerInterval);
+            document.getElementById('btnSubmit').style.display = 'none';
+
+            let totalCorrect = 0;
+            let totalIncorrect = 0;
+
+            QUESTIONS.forEach(q => {
+                const userChoice = userAnswers[q.id];
+                if (userChoice === q.answer) {
+                    totalCorrect++;
+                } else {
+                    totalIncorrect++;
+                }
+
+                Object.keys(q.options).forEach(k => {
+                    const el = document.getElementById(`opt-${q.id}-${k}`);
+                    if (el) {
+                        if (k === q.answer) {
+                            el.classList.add('correct');
+                        } else if (k === userChoice) {
+                            el.classList.add('incorrect');
+                        }
+                    }
+                });
+
+                const expEl = document.getElementById(`exp-${q.id}`);
+                if (expEl) expEl.classList.add('show');
+            });
+
+            const score = (totalCorrect * 0.5).toFixed(2);
+            document.getElementById('scoreCircle').innerText = score;
+            document.getElementById('gradeText').innerText = `${score}/10`;
+            document.getElementById('correctCountText').innerText = totalCorrect;
+            document.getElementById('incorrectCountText').innerText = totalIncorrect;
+
+            const spentSeconds = totalTimeSeconds - timeRemaining;
+            const sMins = Math.floor(spentSeconds / 60);
+            const sSecs = spentSeconds % 60;
+            const timeSpentStr = `${sMins < 10 ? '0' : ''}${sMins}:${sSecs < 10 ? '0' : ''}${sSecs}`;
+            document.getElementById('timeSpentText').innerText = timeSpentStr;
+
+            const resultsPanel = document.getElementById('resultsPanel');
+            resultsPanel.style.display = 'block';
+            resultsPanel.scrollIntoView({ behavior: 'smooth' });
+
+            const sName = document.getElementById('displayName').innerText;
+            const sClass = document.getElementById('displayClass').innerText;
+
+            sendResultsToGoogleSheet({
+                timestamp: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
+                subject: "Hóa học",
+                monHoc: "Hóa học",
+                chuyenMuc: "vatli102.com/hoa/",
+                sourceUrl: window.location.href,
+                sourceDomain: window.location.hostname,
+                studentName: sName,
+                studentClass: sClass,
+                score: score,
+                correctCount: totalCorrect,
+                incorrectCount: totalIncorrect,
+                timeSpent: timeSpentStr,
+                examTitle: "Đề Ôn Tập Amino Acid (20 Câu TH - VD Thực Tế) - Hóa Học 12"
+            });
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise();
+            }
+
+            if (parseFloat(score) >= 7.0 && typeof confetti === 'function') {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+        }
+
+        function sendResultsToGoogleSheet(data) {
+            if (!GOOGLE_SCRIPT_URL) return;
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(data)
+            }).then(() => {
+                console.log("Đã đồng bộ kết quả lên Google Sheet giáo viên thành công!");
+            }).catch(err => {
+                console.warn("Lỗi kết nối Google Sheet:", err);
+            });
+        }
+    </script>
+</body>
+</html>
