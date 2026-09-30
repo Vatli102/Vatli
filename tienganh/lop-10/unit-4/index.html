@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 4: For a Better Community - Tiếng Anh 10 (Global Success)</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --primary-light: #e0e7ff;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #4f46e5;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
+        .sticky-header { position: sticky; top: 0; z-index: 1000; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.04); }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; }
+        .site-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .logo-img { width: 32px; height: 32px; border-radius: 8px; object-fit: contain; }
+        .logo-text { font-size: 1.25rem; font-weight: 800; background: linear-gradient(135deg, #4f46e5, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 14px; align-items: center; }
+        .nav-item { text-decoration: none; color: #475569; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s; }
+        .nav-item:hover { color: #4f46e5; }
+        .nav-tabs { display: flex; gap: 0.4rem; background: #f1f5f9; padding: 0.25rem; border-radius: 0.5rem; border: 1px solid var(--border); }
+        .nav-btn { background: transparent; border: none; color: #475569; padding: 0.45rem 0.9rem; font-weight: 700; font-size: 0.88rem; border-radius: 0.375rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+        .nav-btn.active { background: #4f46e5; color: white; box-shadow: var(--shadow-sm); }
+        @media (max-width: 768px) { .header-container { padding: 8px 12px; flex-direction: column; gap: 8px; } .nav-links { width: 100%; justify-content: space-between; } }
+        .main-container { max-width: 1200px; width: 100%; margin: 1.5rem auto; padding: 0 1rem; flex: 1; }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
+        .theory-wrapper { background: var(--card-bg); border-radius: 1rem; padding: 2.25rem; box-shadow: var(--shadow-md); border: 1px solid var(--border); }
+        .theory-content { text-align: justify; line-height: 1.7; }
+        .theory-card { background: white; border-radius: 14px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .theory-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid #f1f5f9; }
+        .theory-icon { width: 36px; height: 36px; border-radius: 8px; background: #e0e7ff; color: #4338ca; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+        .theory-title { font-size: 1.15rem; font-weight: 800; color: #1e1b4b; }
+        .vocab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 10px; }
+        .vocab-card { background: #f8fafc; border-left: 4px solid var(--primary); padding: 10px 14px; border-radius: 8px; }
+        .vocab-word { font-weight: 700; color: #1e293b; font-size: 0.95rem; }
+        .vocab-pos { font-size: 0.8rem; color: #64748b; font-style: italic; }
+        .vocab-meaning { font-size: 0.88rem; color: #475569; margin-top: 2px; }
+        .vocab-example { font-size: 0.82rem; color: #0284c7; font-style: italic; margin-top: 4px; }
+        .grammar-box { background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 14px 16px; margin-top: 12px; }
+        .rule-title { font-weight: 700; color: #166534; font-size: 0.92rem; margin-bottom: 6px; }
+        .rule-formula { background: white; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-weight: 700; color: #0f172a; border: 1px solid #bbf7d0; margin: 4px 0; font-size: 0.9rem; }
+        .jump-btn-container { text-align: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px dashed var(--border); }
+        .jump-btn { background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%); color: white; font-size: 1.1rem; font-weight: 800; padding: 1rem 2.5rem; border-radius: 9999px; border: none; cursor: pointer; box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.35); transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px; }
+        .jump-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px 0 rgba(79, 70, 229, 0.45); }
+        .exam-grid { display: grid; grid-template-columns: 1fr 340px; gap: 1.5rem; align-items: start; }
+        @media (max-width: 900px) { .exam-grid { grid-template-columns: 1fr; } }
+        .exam-panel { background: var(--card-bg); border-radius: 1rem; padding: 2rem; box-shadow: var(--shadow-md); border: 1px solid var(--border); }
+        .exam-meta-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+        .badge-topic { background: var(--primary-light); color: var(--primary-dark); font-size: 0.8rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 9999px; text-transform: uppercase; }
+        .audio-player-card { background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 0.75rem; padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
+        .audio-label { font-size: 0.9rem; color: #166534; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 6px; }
+        .audio-player-card audio { width: 100%; height: 40px; border-radius: 6px; outline: none; }
+        .passage-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 0.75rem; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; font-size: 0.95rem; text-align: justify; max-height: 280px; overflow-y: auto; line-height: 1.7; }
+        .passage-title { font-weight: 700; color: var(--primary-dark); margin-bottom: 0.5rem; font-size: 0.9rem; text-transform: uppercase; }
+        .question-title { font-size: 1.15rem; font-weight: 600; color: #0f172a; margin-bottom: 1.5rem; text-align: justify; line-height: 1.6; }
+        .options-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .opt-label { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; background: white; border: 1.5px solid var(--border); border-radius: 0.75rem; cursor: pointer; transition: all 0.2s; text-align: justify; }
+        .opt-label:hover { border-color: var(--primary); background: #f8fafc; }
+        .opt-label.selected { border-color: var(--primary); background: #eff6ff; }
+        .opt-circle { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #94a3b8; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: #64748b; flex-shrink: 0; transition: all 0.2s; }
+        .opt-label.selected .opt-circle { border-color: var(--primary); background: var(--primary); color: white; }
+        .opt-text { font-size: 1rem; color: #1e293b; }
+        .question-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 1rem; }
+        .ctrl-btn { padding: 0.75rem 1.5rem; font-weight: 600; border-radius: 0.5rem; border: none; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem; }
+        .ctrl-btn-prev { background: #f1f5f9; color: #475569; }
+        .ctrl-btn-prev:hover { background: #e2e8f0; }
+        .ctrl-btn-next { background: var(--primary); color: white; }
+        .ctrl-btn-next:hover { background: var(--primary-dark); }
+        .palette-panel { background: var(--card-bg); border-radius: 1rem; padding: 1.5rem; box-shadow: var(--shadow-md); border: 1px solid var(--border); position: sticky; top: 5.5rem; }
+        .timer-card { background: #0f172a; color: white; padding: 1rem; border-radius: 0.75rem; text-align: center; margin-bottom: 1.25rem; }
+        .timer-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-bottom: 0.25rem; }
+        .timer-val { font-family: 'Space Grotesk', monospace; font-size: 1.8rem; font-weight: 700; color: #38bdf8; }
+        .user-info-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 1.25rem; font-size: 0.85rem; }
+        .progress-wrap { margin-bottom: 1.25rem; }
+        .progress-bar-bg { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; margin-bottom: 0.4rem; }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #4f46e5, #06b6d4); width: 0%; transition: width 0.3s; }
+        .progress-text { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+        .palette-title { font-size: 0.9rem; font-weight: 700; color: #475569; margin-bottom: 0.75rem; display: flex; justify-content: space-between; }
+        .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; margin-bottom: 1.5rem; }
+        .pal-btn { height: 38px; border-radius: 0.375rem; border: 1.5px solid var(--border); background: white; font-weight: 600; font-size: 0.85rem; color: #475569; cursor: pointer; transition: all 0.15s; }
+        .pal-btn:hover { border-color: var(--primary); }
+        .pal-btn.answered { background: var(--primary-light); border-color: var(--primary); color: var(--primary-dark); }
+        .pal-btn.current { border-color: #0f172a; box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.2); font-weight: 800; }
+        .submit-btn { width: 100%; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; font-weight: 700; padding: 0.875rem; border-radius: 0.5rem; border: none; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2); transition: all 0.2s; }
+        .submit-btn:hover { background: linear-gradient(135deg, #059669 0%, #047857 100%); transform: translateY(-1px); }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+        .modal-card { background: white; border-radius: 1rem; max-width: 480px; width: 100%; padding: 2rem; box-shadow: var(--shadow-lg); }
+        .modal-header { text-align: center; margin-bottom: 1.5rem; }
+        .modal-title { font-size: 1.35rem; font-weight: 700; color: #0f172a; }
+        .modal-input-group { margin-bottom: 1.25rem; }
+        .modal-label { display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.375rem; }
+        .modal-input { width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 0.5rem; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+        .modal-notes { background: #fffbeb; border-left: 4px solid var(--accent); padding: 0.75rem 1rem; border-radius: 0 0.375rem 0.375rem 0; font-size: 0.825rem; color: #92400e; margin-bottom: 1.5rem; }
+        .modal-btn { width: 100%; background: var(--primary); color: white; font-weight: 700; padding: 0.875rem; border-radius: 0.5rem; border: none; cursor: pointer; font-size: 1rem; }
+        .result-view { background: white; border-radius: 1rem; padding: 2.5rem; box-shadow: var(--shadow-md); }
+        .score-banner { text-align: center; padding-bottom: 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
+        .score-circle { width: 130px; height: 130px; border-radius: 50%; background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 1rem; box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.5); }
+        .score-val { font-size: 2.4rem; font-weight: 800; line-height: 1; }
+        .score-max { font-size: 0.85rem; opacity: 0.85; }
+        .review-item { border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.25rem; margin-bottom: 1rem; background: #fafafa; }
+        .review-item.correct { border-left: 5px solid var(--success); }
+        .review-item.incorrect { border-left: 5px solid var(--danger); }
+        .review-header { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+        .review-exp { margin-top: 0.75rem; padding: 0.75rem; background: #f1f5f9; border-radius: 0.5rem; font-size: 0.9rem; color: #1e293b; line-height: 1.5; }
+        .site-footer { width: 100%; text-align: center; padding: 25px 15px; background: #ffffff; border-top: 1px solid var(--border); margin-top: 40px; color: #64748b; font-size: 0.88rem; }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+    <header class="sticky-header">
+        <div class="header-container">
+            <a href="https://vatli102.com" class="site-logo">
+                <img src="favicon.svg" alt="Logo" class="logo-img">
+                <span class="logo-text">vatli102.com</span>
+            </a>
+            <div class="nav-links">
+                <a href="https://vatli102.com" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
+                <a href="https://vatli102.com/tienganh/lop-10" class="nav-item"><i class="fa-solid fa-graduation-cap"></i> Tiếng Anh 10</a>
+                <div class="nav-tabs">
+                    <button class="nav-btn active" id="btn-tab-theory" onclick="switchTab('theory')">
+                        <i class="fa-solid fa-book-open"></i> Lý thuyết trọng tâm
+                    </button>
+                    <button class="nav-btn" id="btn-tab-quiz" onclick="switchTab('quiz')">
+                        <i class="fa-solid fa-pen-to-square"></i> Làm bài tập củng cố
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- TAB 1: LÝ THUYẾT TRỌNG TÂM -->
+        <div id="tab-theory" class="tab-pane active">
+            <div class="theory-wrapper">
+                <div class="theory-content">
+                    
+            <article class="theory-wrapper">
+                <header style="margin-bottom: 25px; border-bottom: 2px solid var(--border); padding-bottom: 15px;">
+                    <h1 style="color: var(--primary-dark); font-size: 1.8rem; font-weight: 800; margin-bottom: 8px;">
+                        TỔNG HỢP KIẾN THỨC TRỌNG TÂM: UNIT 4 - FOR A BETTER COMMUNITY
+                    </h1>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">
+                        Chương trình Tiếng Anh 10 Global Success - Khung GDPT 2018 | Từ vựng Hoạt động Tình nguyện & Phục vụ Cộng đồng, Cấu tạo từ, Ngữ pháp Quá khứ đơn vs. Quá khứ tiếp diễn (When / While) & Tính từ đuôi -ed / -ing.
+                    </p>
+                </header>
+
+                <!-- SECTION 1: VOCABULARY & COLLOCATIONS -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-hand-holding-heart"></i></div>
+                        <div class="theory-title">1. Từ vựng & Cụm từ trọng tâm (Vocabulary & Collocations)</div>
+                    </div>
+                    <div class="vocab-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-word">community service <span class="vocab-pos">/kəˈmjuːnəti ˈsɜːvɪs/ (n)</span></div>
+                            <div class="vocab-meaning">dịch vụ / hoạt động công ích phục vụ cộng đồng</div>
+                            <div class="vocab-example">High school students are encouraged to participate in community service.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">disadvantaged children <span class="vocab-pos">/ˌdɪsədˈvɑːntɪdʒd ˈtʃɪldrən/ (n)</span></div>
+                            <div class="vocab-meaning">trẻ em có hoàn cảnh khó khăn, cơ nhỡ</div>
+                            <div class="vocab-example">Our volunteer group organized free tutoring classes for disadvantaged children.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">donate money / supplies <span class="vocab-pos">/dəʊˈneɪt ˈmʌni/ (v phr)</span></div>
+                            <div class="vocab-meaning">quyên góp tiền bạc / nhu yếu phẩm cho từ thiện</div>
+                            <div class="vocab-example">Local residents generously donated warm clothes and books to the charity drive.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">rewarding experience <span class="vocab-pos">/rɪˈwɔːdɪŋ ɪkˈspɪəriəns/ (n)</span></div>
+                            <div class="vocab-meaning">trải nghiệm bổ ích, xứng đáng, đem lại niềm vui</div>
+                            <div class="vocab-example">Helping elderly people at the nursing home was a deeply rewarding experience.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 2: WORD FORMATION -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-diagram-project"></i></div>
+                        <div class="theory-title">2. Cấu tạo từ / Dạng của từ (Word Formation)</div>
+                    </div>
+                    <div class="vocab-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-word">volunteer &rarr; voluntary &rarr; voluntarily</div>
+                            <div class="vocab-meaning">
+                                - <b>volunteer (n, v):</b> tình nguyện viên; xung phong làm.<br>
+                                - <b>voluntary (adj):</b> mang tính tự nguyện (voluntary work).<br>
+                                - <b>voluntarily (adv):</b> một cách tự nguyện.
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">donate &rarr; donation &rarr; donor</div>
+                            <div class="vocab-meaning">
+                                - <b>donate (v):</b> quyên góp, ủng hộ.<br>
+                                - <b>donation (n):</b> khoản quyên góp, vật ủng hộ.<br>
+                                - <b>donor (n):</b> người quyên góp, người hiến tặng (blood donor).
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 3: CONFUSING WORDS -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-arrows-split-up-and-left"></i></div>
+                        <div class="theory-title">3. Phân biệt các từ dễ gây nhầm lẫn (Confusing Words)</div>
+                    </div>
+                    <div class="vocab-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-word">Disadvantaged vs. Disabled</div>
+                            <div class="vocab-meaning">
+                                <b>- Disadvantaged:</b> Hoàn cảnh khó khăn về kinh tế, điều kiện sống nghèo khó.<br>
+                                <b>- Disabled:</b> Khuyết tật, suy giảm chức năng thể chất hoặc giác quan.
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">Donation vs. Contribution</div>
+                            <div class="vocab-meaning">
+                                <b>- Donation:</b> Khoản tiền, vật phẩm cho/tặng từ thiện không mong nhận lại.<br>
+                                <b>- Contribution:</b> Sự đóng góp công sức, trí tuệ hoặc tài chính vào một mục tiêu chung.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 4: GRAMMAR -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-spell-check"></i></div>
+                        <div class="theory-title">4. Ngữ pháp: Quá khứ đơn vs. Quá khứ tiếp diễn & Tính từ -ed / -ing</div>
+                    </div>
+                    <div class="grammar-box">
+                        <div class="rule-title">A. Quá khứ đơn vs. Quá khứ tiếp diễn với WHEN và WHILE</div>
+                        <p><b>1. Hành động đang xảy ra thì có hành động khác xen vào:</b><br><code>S + was/were + V-ing + WHEN + S + V2/ed</code><br><i>Ví dụ: We <b>were cleaning</b> the park when it <b>started</b> to rain.</i></p>
+                        <p style="margin-top: 6px;"><b>2. Hai hành động diễn ra đồng thời song song trong quá khứ:</b><br><code>WHILE + S + was/were + V-ing, S + was/were + V-ing</code><br><i>Ví dụ: While Lan <b>was sorting</b> books, Nam <b>was packing</b> food boxes.</i></p>
+                    </div>
+                    <div class="grammar-box" style="margin-top: 14px; background: #eff6ff; border-color: #93c5fd;">
+                        <div class="rule-title" style="color: #1e40af;">B. Tính từ đuôi -ed và đuôi -ing (Participle Adjectives)</div>
+                        <p>- <b>Tính từ đuôi -ed:</b> Diễn tả cảm xúc, tâm trạng của con người trước sự việc.<br><i>Ví dụ: The volunteers were very <b>excited</b> about the trip.</i></p>
+                        <p style="margin-top: 4px;">- <b>Tính từ đuôi -ing:</b> Diễn tả tính chất, đặc điểm của sự vật, sự việc, trải nghiệm.<br><i>Ví dụ: Teaching orphans was a deeply <b>rewarding</b> experience.</i></p>
+                    </div>
+                </section>
+
+                <div class="jump-btn-container">
+                    <button class="jump-btn" onclick="switchTab('quiz')">
+                        <i class="fa-solid fa-pen-to-square"></i> Làm bài tập củng cố
+                    </button>
+                </div>
+            </article>
+    
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: LÀM BÀI TẬP CỦNG CỐ -->
+        <div id="tab-quiz" class="tab-pane">
+            <div id="modal-start" class="modal-overlay">
+                <div class="modal-card">
+                    <div class="modal-header">
+                        <div style="width: 50px; height: 50px; background: #eff6ff; color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 10px;">
+                            <i class="fa-solid fa-user-graduate"></i>
+                        </div>
+                        <h3 class="modal-title">THÔNG TIN HỌC SINH</h3>
+                        <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.25rem;">Unit 4: For a Better Community (40 câu / 45 phút)</p>
+                    </div>
+                    <div class="modal-input-group">
+                        <label class="modal-label">Họ và tên của bạn (*)</label>
+                        <input type="text" id="inp-name" class="modal-input" placeholder="Ví dụ: Nguyễn Văn A">
+                    </div>
+                    <div class="modal-input-group">
+                        <label class="modal-label">Lớp / Trường (*)</label>
+                        <input type="text" id="inp-class" class="modal-input" placeholder="Ví dụ: 10A1 - THPT Chuyên">
+                    </div>
+                    <div class="modal-notes">
+                        <b><i class="fa-solid fa-shield-halved"></i> QUY ĐỊNH BẢO MẬT & CHỐNG GIAN LẬN:</b><br>
+                        • 40 câu trắc nghiệm (có 8 câu Audio Nghe), thời gian 45 phút.<br>
+                        • Khóa copy, chuột phải và phím tắt F12.<br>
+                        • Rời tab quá 3 lần hệ thống sẽ tự động thu bài!
+                    </div>
+                    <button class="modal-btn" onclick="startExam()">BẮT ĐẦU LÀM BÀI</button>
+                </div>
+            </div>
+
+            <div id="exam-screen" class="exam-grid" style="display: none;">
+                <div class="exam-panel">
+                    <div class="exam-meta-bar">
+                        <span class="badge-topic" id="q-topic">Chủ điểm kiến thức</span>
+                        <span style="font-weight: 700; color: var(--primary-dark);" id="q-progress">Câu 1 / 40</span>
+                    </div>
+
+                    <div id="audio-container" class="audio-player-card" style="display: none;">
+                        <div class="audio-label">
+                            <i class="fa-solid fa-headphones-simple"></i> <b>Audio phần Nghe (Listening Comprehension - Câu 1 đến 8):</b>
+                        </div>
+                        <audio id="audio-player" controls preload="auto">
+                            <source src="Unit 4 - Listening.mp3" type="audio/mpeg">
+                        </audio>
+                    </div>
+
+                    <div id="passage-container" class="passage-box" style="display: none;">
+                        <div class="passage-title" id="passage-title">ĐOẠN VĂN</div>
+                        <div id="passage-body"></div>
+                    </div>
+
+                    <div class="question-title" id="q-title">Nội dung câu hỏi đang được tải...</div>
+                    <div class="options-list" id="opt-container"></div>
+
+                    <div class="question-footer">
+                        <button class="ctrl-btn ctrl-btn-prev" id="btn-prev" onclick="prevQuestion()">
+                            <i class="fa-solid fa-arrow-left"></i> Câu trước
+                        </button>
+                        <button class="ctrl-btn ctrl-btn-next" id="btn-next" onclick="nextQuestion()">
+                            Câu tiếp theo <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="palette-panel">
+                    <div class="timer-card">
+                        <div class="timer-label"><i class="fa-regular fa-clock"></i> THỜI GIAN CÒN LẠI</div>
+                        <div class="timer-val" id="timer-display">45:00</div>
+                    </div>
+                    <div class="user-info-card">
+                        <div style="font-weight: 700; color: #1e293b;" id="user-display-name">Học sinh: ---</div>
+                        <div style="color: #64748b; font-size: 0.8rem;" id="user-display-class">Lớp: ---</div>
+                    </div>
+                    <div class="progress-wrap">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="progress-bar"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>Tiến độ làm bài</span>
+                            <span id="progress-percent">0%</span>
+                        </div>
+                    </div>
+                    <div class="palette-title">
+                        <span>Bảng câu hỏi (40 câu)</span>
+                        <span style="font-size: 0.8rem; font-weight: 500; color: var(--primary);" id="answered-count">0/40</span>
+                    </div>
+                    <div class="palette-grid" id="palette-grid"></div>
+                    <button class="submit-btn" onclick="confirmSubmit()">
+                        <i class="fa-solid fa-paper-plane"></i> NỘP BÀI THI
+                    </button>
+                </div>
+            </div>
+
+            <div id="result-screen" class="result-view" style="display: none;">
+                <div class="score-banner">
+                    <div class="score-circle">
+                        <div class="score-val" id="final-score">0.0</div>
+                        <div class="score-max">/ 10 ĐIỂM</div>
+                    </div>
+                    <h2 style="font-size: 1.5rem; font-weight: 800; color: #1e293b; margin-bottom: 0.5rem;">KẾT QUẢ BÀI LÀM CỦNG CỐ</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;" id="result-detail">Thí sinh: ...</p>
+                    <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('all')">Tất cả</button>
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('wrong')">Câu sai</button>
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('correct')">Câu đúng</button>
+                    </div>
+                </div>
+                <div class="review-list" id="review-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <p>© VATLI102.COM - Hệ thống Học tập & Đánh giá Năng lực Tiếng Anh THPT Chuẩn GDPT 2018.</p>
+    </footer>
+
+    <script>
+        const LESSON_TITLE = "Unit 4: For a Better Community";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
+        const QUESTIONS = [{"num": 1, "topic": "Nghe hiểu - Tên chiến dịch tình nguyện", "passageId": null, "audio_file": "Unit 4 - Listening.mp3", "title": "What volunteer campaign was Tam participating in on Saturday morning?", "options": {"A": "The 'Warm Clothes for Winter' campaign", "B": "The 'Clean and Green Beach' campaign", "C": "The 'Digital Skills for Seniors' campaign", "D": "The 'Save Endangered Wildlife' campaign"}, "correct": "A", "exp": "Tam chia sẻ: <i>'I was participating in the 'Warm Clothes for Winter' campaign organized by our youth volunteer club.'</i>", "translation": "Chiến dịch tình nguyện Tam tham gia vào sáng thứ Bảy có tên là gì? -> Chiến dịch 'Áo ấm mùa đông'."}, {"num": 2, "topic": "Nghe hiểu - Đồ dùng quyên góp", "passageId": null, "audio_file": "Unit 4 - Listening.mp3", "title": "What items did Tam's volunteer group collect and pack into boxes?", "options": {"A": "Warm jackets, blankets, and school supplies", "B": "Video game consoles and televisions", "C": "Fast food and sugary carbonated drinks", "D": "Expensive electronic smartphones"}, "correct": "A", "exp": "Tam nói: <i>'We collected warm jackets, blankets, and school supplies from local families...'</i>", "translation": "Nhóm của Tam đã quyên góp và đóng gói những vật phẩm gì? -> Áo khoác ấm, chăn và đồ dùng học tập."}, {"num": 3, "topic": "Nghe hiểu - Địa bàn hỗ trợ", "passageId": null, "audio_file": "Unit 4 - Listening.mp3", "title": "Where will the collected relief boxes be sent to?", "options": {"A": "Children in remote mountainous districts", "B": "Luxury hotels in big cities", "C": "Commercial shopping malls", "D": "International sports stadiums"}, "correct": "A", "exp": "Tam nêu: <i>'...packed them into boxes to send to children in remote mountainous districts.'</i>", "translation": "Các thùng quà cứu trợ sẽ được gửi đến đâu? -> Trẻ em ở các huyện vùng sâu vùng xa, miền núi."}, {"num": 4, "topic": "Nghe hiểu - Cảm nhận sau chuyến đi", "passageId": null, "audio_file": "Unit 4 - Listening.mp3", "title": "How did Tam feel after completing the volunteer project?", "options": {"A": "He felt tired but found it a truly rewarding experience.", "B": "He felt angry and regretted joining.", "C": "He wanted to stop doing all school activities.", "D": "He felt bored and fell asleep immediately."}, "correct": "A", "exp": "Tam bày tỏ: <i>'It was quite tiring, but seeing the immense generosity of our community made it a truly rewarding experience.'</i>", "translation": "Tam cảm thấy thế nào sau khi hoàn thành dự án? -> Khá mệt nhưng cảm thấy đó là trải nghiệm vô cùng bổ ích, xứng đáng."}, {"num": 5, "topic": "Nghe hiểu - Thông điệp của giám đốc quỹ", "passageId": null, "audio_file": "Unit 4 - Listening.mp3", "title": "According to Ms. Hoang, what is volunteering fundamentally about?", "options": {"A": "Building compassionate connections and empowering vulnerable individuals", "B": "Earning high financial profits for corporations", "C": "Competing with other charity organizations", "D": "Avoiding school assignments and tests"}, "correct": "A", "exp": "Bà Hoàng nhấn mạnh: <i>'it is about building compassionate connections and empowering vulnerable individuals in our society.'</i>", "translation": "Theo bà Hoàng, bản chất cốt lõi của hoạt động tình nguyện là gì? -> Xây dựng sự gắn kết giàu lòng nhân ái và trao quyền cho những người yếu thế."}, {"num": 6, "topic": "Nghe hiểu - Các hoạt động tiêu biểu", "passageId": null, "audio_file": "Unit 4 - Listening.mp3", "title": "Which activity has the Sunshine Charity Foundation organized over the past five years?", "options": {"A": "Teaching free English classes to disadvantaged orphans", "B": "Building luxury private golf courses", "C": "Selling high-priced commercial electronics", "D": "Cutting down coastal protection forests"}, "correct": "A", "exp": "Trong bài: <i>'teach free English classes to disadvantaged orphans, assist elderly residents in nursing homes...'</i>", "translation": "Quỹ Sunshine đã tổ chức hoạt động nào trong 5 năm qua? -> Dạy tiếng Anh miễn phí cho trẻ mồ côi có hoàn cảnh khó khăn."}, {"num": 7, "topic": "Nghe hiểu - Kỹ năng phát triển", "passageId": null, "audio_file": "Unit 4 - Listening.mp3", "title": "What essential skills do young volunteers cultivate through community service?", "options": {"A": "Emotional empathy, leadership skills, and teamwork abilities", "B": "Video game programming exclusively", "C": "Heavy machinery demolition", "D": "Individual isolation and selfishness"}, "correct": "A", "exp": "Diễn giả chỉ ra: <i>'they also cultivate vital emotional empathy, leadership skills, and teamwork abilities...'</i>", "translation": "Tình nguyện viên trẻ rèn luyện được những kỹ năng thiết yếu nào? -> Sự thấu cảm, kỹ năng lãnh đạo và khả năng làm việc nhóm."}, {"num": 8, "topic": "Nghe hiểu - Ý nghĩa xã hội", "passageId": null, "audio_file": "Unit 4 - Listening.mp3", "title": "What does every hour of volunteering create for the nation according to the speaker?", "options": {"A": "Hope and a brighter, more equitable future", "B": "Unnecessary financial inflation", "C": "Traffic congestion in big cities", "D": "Confusion in education systems"}, "correct": "A", "exp": "Bà Hoàng kết luận: <i>'Every single hour you dedicate to volunteering brings hope and creates a brighter, more equitable future for our entire nation.'</i>", "translation": "Mỗi giờ làm tình nguyện mang lại điều gì cho đất nước? -> Niềm hy vọng và một tương lai tươi sáng, công bằng hơn."}, {"num": 9, "topic": "Phát âm hậu tố -ed", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word whose underlined part differs from the other three in pronunciation:", "options": {"A": "donat<u>ed</u>", "B": "participat<u>ed</u>", "C": "delight<u>ed</u>", "D": "inspir<u>ed</u>"}, "correct": "D", "exp": "<b>inspired</b> phát âm là <b>/d/</b> (/ɪnˈspaɪəd/). Các từ <i>donated</i>, <i>participated</i>, <i>delighted</i> đều phát âm là <b>/ɪd/</b> vì kết thúc bằng /t/.", "translation": "Phát âm đuôi -ed: inspired (/d/) khác với donated, participated, delighted (/ɪd/)."}, {"num": 10, "topic": "Phát âm đuôi -ing / nguyên âm", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word whose underlined part differs from the other three in pronunciation:", "options": {"A": "ch<u>a</u>rity", "B": "p<u>a</u>ck", "C": "gr<u>a</u>nt", "D": "c<u>a</u>re"}, "correct": "D", "exp": "Từ <b>care</b> có phần gạch chân phát âm là <b>/eə/</b> (/keə/). Các từ <i>charity</i> /ˈtʃærəti/, <i>pack</i> /pæk/, <i>grant</i> /ɡrænt/ đều phát âm là <b>/æ/</b>.", "translation": "Phát âm: care (/eə/) khác với charity, pack, grant (/æ/)."}, {"num": 11, "topic": "Trọng âm 2 âm tiết", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word that differs from the other three in the position of primary stress:", "options": {"A": "donate", "B": "remote", "C": "nursing", "D": "reward"}, "correct": "C", "exp": "<b>nursing</b> có trọng âm rơi vào âm tiết thứ 1 (/ˈnɜːsɪŋ/). Các từ <i>donate</i> /dəʊˈneɪt/, <i>remote</i> /rɪˈməʊt/, <i>reward</i> /rɪˈwɔːd/ đều có trọng âm rơi vào âm tiết thứ 2.", "translation": "Trọng âm: nursing (âm 1) khác với donate, remote, reward (âm 2)."}, {"num": 12, "topic": "Trọng âm 3-4 âm tiết", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word that differs from the other three in the position of primary stress:", "options": {"A": "volunteer", "B": "community", "C": "disadvantaged", "D": "opportunity"}, "correct": "B", "exp": "<b>community</b> có trọng âm rơi vào âm tiết thứ 2 (/kəˈmjuːnəti/). Các từ <i>volunteer</i> /ˌvɒlənˈtɪə/, <i>disadvantaged</i> /ˌdɪsədˈvɑːntɪdʒd/, <i>opportunity</i> /ˌɒpəˈtjuːnəti/ đều rơi vào âm tiết thứ 3.", "translation": "Trọng âm: community (âm 2) khác với volunteer, disadvantaged, opportunity (âm 3)."}, {"num": 13, "topic": "Từ vựng - Hoàn cảnh khó khăn", "passageId": null, "title": "The foundation provides free textbooks and bicycles for ______ children living in mountainous regions.", "options": {"A": "disadvantaged", "B": "wealthy", "C": "luxurious", "D": "comfortable"}, "correct": "A", "exp": "<b>disadvantaged children</b> (n): trẻ em có hoàn cảnh khó khăn, cơ nhỡ.", "translation": "Quỹ tài trợ cung cấp sách giáo khoa và xe đạp miễn phí cho trẻ em có hoàn cảnh khó khăn sống ở vùng miền núi."}, {"num": 14, "topic": "Từ vựng - Viện dưỡng lão", "passageId": null, "title": "Our youth club regularly visits the local ______ home to chat with and cook for lonely elderly people.", "options": {"A": "nursing", "B": "kindergarten", "C": "stadium", "D": "factory"}, "correct": "A", "exp": "Cụm danh từ cố định <b>nursing home</b> (viện dưỡng lão).", "translation": "Câu lạc bộ thanh niên thường xuyên đến thăm viện dưỡng lão địa phương để trò chuyện và nấu ăn cho các cụ già neo đơn."}, {"num": 15, "topic": "Quá khứ đơn vs. Quá khứ tiếp diễn với When", "passageId": null, "title": "We ______ warm clothes for poor families when a heavy thunderstorm suddenly hit the town.", "options": {"A": "were sorting", "B": "sort", "C": "are sorting", "D": "sorted"}, "correct": "A", "exp": "Hành động đang diễn ra trong quá khứ (đang phân loại quần áo) thì có hành động bất ngờ xen vào (cơn giông ập đến) -> Dùng thì <b>Quá khứ tiếp diễn (were sorting)</b>.", "translation": "Chúng tôi đang phân loại quần áo ấm cho các gia đình nghèo thì một cơn giông bão lớn bất ngờ ập vào thị trấn."}, {"num": 16, "topic": "Quá khứ tiếp diễn song song với While", "passageId": null, "title": "While Lan was teaching English to the orphans, Tam ______ nutritious meals in the kitchen.", "options": {"A": "was preparing", "B": "prepared", "C": "is preparing", "D": "prepares"}, "correct": "A", "exp": "Hai hành động diễn ra song song cùng lúc trong quá khứ liên kết bằng <i>While</i> -> Dùng thì <b>Quá khứ tiếp diễn (was preparing)</b>.", "translation": "Trong khi Lan đang dạy tiếng Anh cho các em nhỏ mồ côi thì Tam đang chuẩn bị những bữa ăn bổ dưỡng dưới bếp."}, {"num": 17, "topic": "Tính từ đuôi -ing chỉ tính chất trải nghiệm", "passageId": null, "title": "Volunteering at the remote medical center was a deeply ______ experience that changed my outlook on life.", "options": {"A": "rewarding", "B": "rewarded", "C": "reward", "D": "rewardingly"}, "correct": "A", "exp": "Bổ nghĩa cho danh từ chỉ trải nghiệm <i>experience</i> cần một tính từ đuôi -ing chỉ tính chất: <b>rewarding experience</b> (trải nghiệm bổ ích, xứng đáng).", "translation": "Làm tình nguyện tại trung tâm y tế vùng sâu vùng xa là một trải nghiệm vô cùng bổ ích đã thay đổi cách nhìn cuộc sống của tôi."}, {"num": 18, "topic": "Tính từ đuôi -ed chỉ cảm xúc con người", "passageId": null, "title": "All the student volunteers were ______ when they received warm thank-you letters from the villagers.", "options": {"A": "touched", "B": "touching", "C": "touch", "D": "touchingly"}, "correct": "A", "exp": "Diễn tả cảm xúc, tâm trạng xúc động của các bạn tình nguyện viên -> Dùng tính từ đuôi -ed: <b>touched</b> (xúc động).", "translation": "Tất cả các bạn học sinh tình nguyện đều vô cùng xúc động khi nhận được những lá thư cảm ơn ấm áp từ bà con dân làng."}, {"num": 19, "topic": "Từ đồng nghĩa (Closest Meaning)", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word(s) CLOSEST in meaning to the underlined word:\nLocal enterprises generously <u>donated</u> ten thousand dollars to build a new library for the village.", "options": {"A": "contributed", "B": "received", "C": "borrowed", "D": "stole"}, "correct": "A", "exp": "<b>donated</b> (quyên góp, ủng hộ) = <b>contributed</b> / gave away. <i>Received</i>: nhận; <i>borrowed</i>: vay mượn.", "translation": "Từ đồng nghĩa: donated (quyên góp) = contributed."}, {"num": 20, "topic": "Từ trái nghĩa (Opposite Meaning)", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word(s) OPPOSITE in meaning to the underlined word:\nJoining voluntary community service is completely <u>voluntary</u> for all high school students.", "options": {"A": "compulsory", "B": "optional", "C": "willing", "D": "freely"}, "correct": "A", "exp": "<b>voluntary</b> (tự nguyện, không bắt buộc) >< <b>compulsory</b> (bắt buộc) / mandatory.", "translation": "Từ trái nghĩa: voluntary (tự nguyện) >< compulsory (bắt buộc)."}, {"num": 21, "topic": "Cấu tạo từ (Word Formation)", "passageId": null, "title": "Each student made a valuable ______ to the clean-up campaign in our neighborhood.", "options": {"A": "contribution", "B": "contribute", "C": "contributory", "D": "contributor"}, "correct": "A", "exp": "Cụm cấu trúc <b>make a valuable contribution to something</b> (đóng góp quý báu cho việc gì).", "translation": "Mỗi học sinh đều có một sự đóng góp quý báu cho chiến dịch dọn sạch khu phố của chúng ta."}, {"num": 22, "topic": "Phân biệt Disadvantaged vs. Disabled", "passageId": null, "title": "Special access ramps were installed at school to help ______ students move around easily in wheelchairs.", "options": {"A": "disabled", "B": "disadvantaged", "C": "wealthy", "D": "gifted"}, "correct": "A", "exp": "Học sinh khuyết tật thể chất phải di chuyển bằng xe lăn -> Dùng tính từ <b>disabled</b>. <i>Disadvantaged</i> chỉ hoàn cảnh nghèo khó.", "translation": "Các đường dốc đặc biệt được lắp đặt tại trường để giúp học sinh khuyết tật dễ dàng di chuyển bằng xe lăn."}, {"num": 23, "topic": "Giao tiếp - Bày tỏ sự ủng hộ chiến dịch", "passageId": null, "title": "Hoa: 'Our club is organizing a blood donation event this Sunday.' - Mai: '______! It can save many lives in emergency hospitals.'", "options": {"A": "That's a noble cause", "B": "I couldn't care less", "C": "You must be crazy", "D": "It sounds very boring"}, "correct": "A", "exp": "Bày tỏ sự ủng hộ và ca ngợi mục đích cao đẹp: <b>'That's a noble cause!'</b> (Đó quả là một nghĩa cử cao đẹp!).", "translation": "Giao tiếp: Hoa: 'Chủ nhật này câu lạc bộ mình tổ chức ngày hội hiến máu nhân đạo.' - Mai: 'Đó quả là một nghĩa cử cao đẹp!...'"}, {"num": 24, "topic": "Giao tiếp - Đăng ký tham gia tình nguyện", "passageId": null, "title": "Nam: 'Would you like to sign up for our tree-planting trip this weekend?' - Peter: '______! Count me in.'", "options": {"A": "I'd love to", "B": "No, absolutely not", "C": "Never in my life", "D": "I hate trees"}, "correct": "A", "exp": "Đồng ý tham gia hào hứng: <b>'I'd love to! Count me in.'</b> (Mình rất muốn tham gia! Hãy tính cả mình vào nhé).", "translation": "Giao tiếp: Nam: 'Bạn có muốn đăng ký tham gia chuyến trồng cây cuối tuần này không?' - Peter: 'Mình rất muốn! Tính cả mình nữa nhé.'"}, {"num": 25, "topic": "Đọc điền từ - Tính từ tình nguyện", "passageId": "cloze", "title": "Choose the best answer for blank (25):", "options": {"A": "voluntary", "B": "violent", "C": "expensive", "D": "chemical"}, "correct": "A", "exp": "Cụm danh từ <b>voluntary initiatives</b> (các sáng kiến tình nguyện cộng đồng).", "translation": "Điền vào chỗ trống (25): voluntary (mang tính tự nguyện)."}, {"num": 26, "topic": "Đọc điền từ - Động từ tích lũy rèn luyện", "passageId": "cloze", "title": "Choose the best answer for blank (26):", "options": {"A": "develop", "B": "destroy", "C": "refuse", "D": "forget"}, "correct": "A", "exp": "Tham gia các hoạt động giúp tình nguyện viên <b>develop practical communication skills</b> (phát triển các kỹ năng giao tiếp thực tế).", "translation": "Điền vào chỗ trống (26): develop (phát triển, rèn luyện)."}, {"num": 27, "topic": "Đọc điền từ - Danh từ lòng thấu cảm", "passageId": "cloze", "title": "Choose the best answer for blank (27):", "options": {"A": "empathy", "B": "anger", "C": "cruelty", "D": "greed"}, "correct": "A", "exp": "Chia sẻ khó khăn với trẻ em cơ nhỡ nuôi dưỡng <b>empathy</b> (sự thấu cảm, lòng trắc ẩn).", "translation": "Điền vào chỗ trống (27): empathy (lòng thấu cảm)."}, {"num": 28, "topic": "Đọc điền từ - Tính từ bổ ích xứng đáng", "passageId": "cloze", "title": "Choose the best answer for blank (28):", "options": {"A": "rewarding", "B": "painful", "C": "useless", "D": "harmful"}, "correct": "A", "exp": "Nhìn thấy nụ cười của người được giúp đỡ khiến công việc trở nên <b>rewarding</b> (bổ ích, xứng đáng).", "translation": "Điền vào chỗ trống (28): rewarding (bổ ích, thỏa mãn)."}, {"num": 29, "topic": "Đọc điền từ - Giới từ đi với dedication", "passageId": "cloze", "title": "Choose the best answer for blank (29):", "options": {"A": "to", "B": "with", "C": "about", "D": "from"}, "correct": "A", "exp": "Cấu trúc danh từ: <b>dedication to something</b> (sự cống hiến, tận tụy cho điều gì).", "translation": "Điền vào chỗ trống (29): to (trong cấu trúc dedication to)."}, {"num": 30, "topic": "Đọc hiểu - Ý chính bài đọc", "passageId": "reading", "title": "What is the primary topic of the passage?", "options": {"A": "The historical development of corporate profit margins", "B": "The transformative benefits of modern volunteerism for youth and society", "C": "The mechanical repair of transport vehicles", "D": "The academic grading criteria of standardized exams"}, "correct": "B", "exp": "Bài đọc phân tích những lợi ích chuyển hóa sâu sắc của hoạt động tình nguyện đối với sự trưởng thành của giới trẻ và sự gắn kết xã hội: <b>'The transformative benefits of modern volunteerism for youth and society'</b>.", "translation": "Ý chính của bài đọc là gì? -> Những lợi ích chuyển biến to lớn của hoạt động tình nguyện hiện đại đối với giới trẻ và xã hội."}, {"num": 31, "topic": "Đọc hiểu - Lợi ích tâm lý", "passageId": "reading", "title": "According to paragraph 1, what psychological benefits does voluntary work generate?", "options": {"A": "Higher life satisfaction, reduced loneliness, and enhanced self-esteem", "B": "Extreme anxiety and loss of personal identity", "C": "Permanent financial debt", "D": "Severe physical fatigue and anger"}, "correct": "A", "exp": "Đoạn 1 nêu rõ: <i>'generates profound psychological benefits, including elevated levels of life satisfaction, reduced feelings of loneliness, and enhanced self-esteem.'</i>", "translation": "Theo đoạn 1, hoạt động tình nguyện mang lại những lợi ích tâm lý nào? -> Tăng sự hài lòng cuộc sống, giảm cảm giác cô đơn và nâng cao lòng tự trọng."}, {"num": 32, "topic": "Đọc hiểu - Từ vựng theo ngữ cảnh", "passageId": "reading", "title": "The word 'invaluable' in paragraph 2 is closest in meaning to ______.", "options": {"A": "extremely useful", "B": "worthless", "C": "cheap", "D": "harmful"}, "correct": "A", "exp": "<b>invaluable</b> (vô giá, cực kỳ quý báu) = <b>extremely useful / priceless</b>. <i>Worthless</i>: vô giá trị.", "translation": "Từ 'invaluable' (vô giá, cực kỳ giá trị) đồng nghĩa với từ nào? -> extremely useful."}, {"num": 33, "topic": "Đọc hiểu - Từ trái nghĩa trong bài", "passageId": "reading", "title": "The word 'maturity' in paragraph 2 is OPPOSITE in meaning to ______.", "options": {"A": "immaturity", "B": "wisdom", "C": "responsibility", "D": "experience"}, "correct": "A", "exp": "<b>maturity</b> (sự chín chắn, trưởng thành) >< <b>immaturity</b> (sự non nớt, chưa trưởng thành).", "translation": "Từ 'maturity' (sự trưởng thành) trái nghĩa với từ nào? -> immaturity (sự chưa chín chắn)."}, {"num": 34, "topic": "Đọc hiểu - Phản ứng khi có thiên tai", "passageId": "reading", "title": "According to paragraph 3, how do grassroots volunteer groups respond during natural disasters?", "options": {"A": "They often respond faster and more flexibly than bureaucratic agencies.", "B": "They refuse to assist anyone until paid.", "C": "They leave the disaster zone immediately.", "D": "They wait for several months before taking action."}, "correct": "A", "exp": "Đoạn 3 chỉ ra: <i>'grassroots volunteer organizations often respond faster and more flexibly than bureaucratic government agencies.'</i>", "translation": "Theo đoạn 3, các nhóm tình nguyện phản ứng thế nào trong thiên tai? -> Thường phản ứng nhanh hơn và linh hoạt hơn các cơ quan hành chính."}, {"num": 35, "topic": "Đọc hiểu - Suy luận (Inference)", "passageId": "reading", "title": "Which of the following can be inferred from the passage?", "options": {"A": "Volunteering is only suitable for retired citizens.", "B": "Engaging in community service equips youth with indispensable character traits and practical capabilities.", "C": "Employers prefer candidates who have never participated in charity work.", "D": "Classroom textbooks teach all essential leadership skills perfectly."}, "correct": "B", "exp": "Toàn bài dẫn đến kết luận: Tham gia tình nguyện trang bị cho thanh thiếu niên những phẩm chất nhân cách và kỹ năng thực tiễn không thể thay thế: <b>'Engaging in community service equips youth with indispensable character traits and practical capabilities.'</b>", "translation": "Điều nào có thể suy ra từ đoạn văn? -> Tham gia phục vụ cộng đồng trang bị cho giới trẻ những phẩm chất nhân cách và năng lực thực tiễn thiết yếu."}, {"num": 36, "topic": "Biến đổi câu - While sang When", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the sentence that is closest in meaning to the original sentence:\nWhile we were delivering food to the orphanage, it began to rain heavily.", "options": {"A": "We were delivering food to the orphanage when it began to rain heavily.", "B": "We delivered food after it had rained heavily.", "C": "It began to rain heavily before we started delivering food.", "D": "We didn't deliver food because of the heavy rain."}, "correct": "A", "exp": "Cấu trúc tương đương: <i>'While S + was/were + V-ing, S + V2/ed'</i> = <b>'S + was/were + V-ing + WHEN + S + V2/ed'</b>.", "translation": "Biến đổi câu: Trong khi chúng tôi đang chở thức ăn tới trại mồ côi thì trời đổ mưa to = Chúng tôi đang chở thức ăn tới trại mồ côi thì trời đổ mưa to."}, {"num": 37, "topic": "Biến đổi câu - Tính từ -ed sang -ing", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the sentence that is closest in meaning to the original sentence:\nAll the student volunteers were deeply inspired by the elderly woman's kindness.", "options": {"A": "The elderly woman's kindness was deeply inspiring to all the student volunteers.", "B": "The elderly woman was inspired by all the student volunteers.", "C": "The student volunteers found the woman's kindness boring.", "D": "The elderly woman's kindness prevented student volunteers from helping."}, "correct": "A", "exp": "Chuyển từ tính từ đuôi -ed chỉ cảm xúc người (<i>were deeply inspired</i>) sang tính từ đuôi -ing chỉ tính chất của hành động (<i>was deeply inspiring</i>).", "translation": "Biến đổi câu: Tất cả tình nguyện viên đều cảm thấy được truyền cảm hứng sâu sắc bởi lòng tốt của cụ bà = Lòng tốt của cụ bà đã truyền cảm hứng sâu sắc cho tất cả tình nguyện viên."}, {"num": 38, "topic": "Kết hợp câu - Mệnh đề quan hệ Who", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the sentence that best combines each pair of sentences:\nWe met many passionate youth volunteers. They dedicated their summer vacation to teaching village children.", "options": {"A": "We met many passionate youth volunteers who dedicated their summer vacation to teaching village children.", "B": "We met many passionate youth volunteers which dedicated their summer vacation to teaching children.", "C": "Although we met youth volunteers, they dedicated their vacation to teaching children.", "D": "We met passionate youth volunteers whom dedicated their vacation to teaching children."}, "correct": "A", "exp": "Dùng đại từ quan hệ <b>who</b> làm chủ ngữ thay thế cho danh từ chỉ người <i>'youth volunteers'</i>.", "translation": "Kết hợp câu: Chúng tôi đã gặp nhiều bạn tình nguyện viên trẻ đầy nhiệt huyết, những người đã dành cả kỳ nghỉ hè để dạy học cho trẻ em trong làng."}, {"num": 39, "topic": "Tìm lỗi sai - Sự hòa hợp thì When", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the underlined part that needs correction:\nWhen the volunteer team <u>arrived</u> at the remote <u>village</u>, all the villagers <u>are waiting</u> <u>eagerly</u> at the communal house.", "options": {"A": "arrived", "B": "village", "C": "are waiting", "D": "eagerly"}, "correct": "C", "exp": "Mệnh đề <i>When</i> chia ở thì Quá khứ đơn (<i>arrived</i>), mệnh đề chính diễn tả hành động đang diễn ra trong quá khứ phải chia ở thì <b>Quá khứ tiếp diễn (were waiting)</b> thay vì <i>'are waiting'</i>.", "translation": "Tìm lỗi sai: Ngữ cảnh quá khứ -> sửa 'are waiting' thành 'were waiting'."}, {"num": 40, "topic": "Tìm lỗi sai - Tính từ -ed vs. -ing", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the underlined part that needs correction:\nTeaching <u>basic</u> computer <u>skills</u> to <u>disadvantaged</u> children was a deeply <u>rewarded</u> experience for our club.", "options": {"A": "basic", "B": "skills", "C": "disadvantaged", "D": "rewarded"}, "correct": "D", "exp": "Bổ nghĩa cho danh từ chỉ trải nghiệm <i>experience</i> cần tính từ đuôi -ing (<b>rewarding</b>), không dùng tính từ đuôi -ed <i>'rewarded'</i>.", "translation": "Tìm lỗi sai: Cần tính từ 'rewarding' bổ nghĩa cho danh từ 'experience', không dùng 'rewarded'."}];
+        const PASSAGES = {"cloze": "Voluntary work is an essential pillar of a civilized and compassionate society. When individuals dedicate their free time to community development, they create tangible benefits for both vulnerable citizens and themselves. Over the past decade, high schools and universities have actively encouraged students to join (25) ______ initiatives such as cleaning public parks, renovating rural classrooms, and caring for elderly residents in nursing homes. While participating in these noble activities, volunteers (26) ______ practical communication and problem-solving skills. Furthermore, sharing difficult circumstances with disadvantaged children nurtures (27) ______ and moral responsibility. Seeing the joyful smiles of those who receive aid makes all the hard work deeply (28) ______, motivating young citizens to continue their lifelong dedication (29) ______ community welfare.", "reading": "In an increasingly fast-paced and interconnected world, volunteering has evolved far beyond traditional charitable acts of delivering food or clothing. Modern volunteerism represents a powerful engine for social cohesion, youth empowerment, and sustainable community development. Research in social psychology indicates that engaging in voluntary work generates profound psychological benefits, including elevated levels of life satisfaction, reduced feelings of loneliness, and enhanced self-esteem.\n\nFor young people in particular, volunteering serves as an invaluable real-world training ground. Academic education provides theoretical knowledge, but volunteer projects immerse students in complex interpersonal dynamics that require collaborative teamwork, crisis management, and empathetic communication. For instance, when teenagers coordinate fundraising campaigns or organize educational workshops for marginalized groups, they learn to navigate logistical obstacles and manage limited resources effectively. Consequently, employers and university admissions committees increasingly prioritize candidates with substantial volunteer portfolios, recognizing that community service reflects maturity, initiative, and social responsibility.\n\nEqually important is the catalytic role of volunteers in addressing systemic community challenges. In regions affected by natural disasters or economic hardship, grassroots volunteer organizations often respond faster and more flexibly than bureaucratic government agencies. By bridging social divides and fostering mutual trust among diverse socioeconomic groups, volunteerism strengthens the democratic fabric of society. Ultimately, dedicating one's time and energy to uplifting others is not a sacrifice; it is a transformative investment in a harmonious, equitable, and resilient future."};
+
+        let currentIdx = 0;
+        let userAnswers = new Array(QUESTIONS.length).fill(null);
+        let timerInterval = null;
+        let timeLeft = 45 * 60;
+        let examSubmitted = false;
+        let tabSwitchCount = 0;
+        let studentName = "";
+        let studentClass = "";
+
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F12' || (e.ctrlKey && ['u','c','v','s','a','p'].includes(e.key.toLowerCase()))) {
+                e.preventDefault();
+            }
+        });
+        window.addEventListener('blur', () => {
+            if (!examSubmitted && document.getElementById('exam-screen').style.display !== 'none') {
+                tabSwitchCount++;
+                if (tabSwitchCount >= 3) {
+                    alert("CẢNH BÁO: Bạn đã chuyển tab 3 lần. Hệ thống tự động thu bài!");
+                    finishExam();
+                } else {
+                    alert(`CẢNH BÁO: Bạn vừa rời khỏi màn hình thi (${tabSwitchCount}/3 lần). Rời quá 3 lần hệ thống sẽ tự động nộp bài!`);
+                }
+            }
+        });
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            if (tabId === 'theory') {
+                document.getElementById('tab-theory').classList.add('active');
+                document.getElementById('btn-tab-theory').classList.add('active');
+            } else {
+                document.getElementById('tab-quiz').classList.add('active');
+                document.getElementById('btn-tab-quiz').classList.add('active');
+                if (!examSubmitted && document.getElementById('exam-screen').style.display === 'none' && document.getElementById('result-screen').style.display === 'none') {
+                    const savedName = localStorage.getItem('student_name') || '';
+                    const savedClass = localStorage.getItem('student_class') || '';
+                    if (savedName) document.getElementById('inp-name').value = savedName;
+                    if (savedClass) document.getElementById('inp-class').value = savedClass;
+                    document.getElementById('modal-start').style.display = 'flex';
+                }
+            }
+        }
+
+        function startExam() {
+            const name = document.getElementById('inp-name').value.trim();
+            const cls = document.getElementById('inp-class').value.trim();
+            if (!name || !cls) {
+                alert("Vui lòng nhập đầy đủ Họ tên và Lớp học trước khi làm bài!");
+                return;
+            }
+            studentName = name;
+            studentClass = cls;
+            localStorage.setItem('student_name', name);
+            localStorage.setItem('student_class', cls);
+
+            document.getElementById('user-display-name').textContent = "Học sinh: " + studentName;
+            document.getElementById('user-display-class').textContent = "Lớp: " + studentClass;
+            document.getElementById('modal-start').style.display = 'none';
+            document.getElementById('exam-screen').style.display = 'grid';
+
+            initPalette();
+            renderQuestion(0);
+            startTimer();
+        }
+
+        function initPalette() {
+            const grid = document.getElementById('palette-grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'pal-btn';
+                btn.id = `pal-${i}`;
+                btn.textContent = i + 1;
+                btn.onclick = () => renderQuestion(i);
+                grid.appendChild(btn);
+            }
+        }
+
+        function renderQuestion(idx) {
+            currentIdx = idx;
+            const q = QUESTIONS[idx];
+
+            document.getElementById('q-topic').textContent = q.topic || "Luyện tập";
+            document.getElementById('q-progress').textContent = `Câu ${idx + 1} / ${QUESTIONS.length}`;
+            document.getElementById('q-title').innerHTML = `<b>Câu ${idx + 1}:</b> ` + q.title.replace(/\n/g, '<br>');
+
+            const audioBox = document.getElementById('audio-container');
+            const audioPlayer = document.getElementById('audio-player');
+            if (q.audio_file) {
+                audioBox.style.display = 'block';
+            } else {
+                audioBox.style.display = 'none';
+                if (!audioPlayer.paused) audioPlayer.pause();
+            }
+
+            const passBox = document.getElementById('passage-container');
+            if (q.passageId && PASSAGES[q.passageId]) {
+                passBox.style.display = 'block';
+                document.getElementById('passage-title').textContent = q.passageId === 'cloze' ? 'Đoạn văn điền từ (Questions 25 - 29)' : 'Đoạn văn đọc hiểu (Questions 30 - 35)';
+                document.getElementById('passage-body').innerHTML = PASSAGES[q.passageId].replace(/\n/g, '<br><br>');
+            } else {
+                passBox.style.display = 'none';
+            }
+
+            const optContainer = document.getElementById('opt-container');
+            optContainer.innerHTML = '';
+            for (const [key, val] of Object.entries(q.options)) {
+                const label = document.createElement('label');
+                label.className = `opt-label ${userAnswers[idx] === key ? 'selected' : ''}`;
+                label.innerHTML = `
+                    <div class="opt-circle">${key}</div>
+                    <div class="opt-text"><b>${key}.</b> ${val}</div>
+                `;
+                label.onclick = () => selectOption(idx, key);
+                optContainer.appendChild(label);
+            }
+
+            document.getElementById('btn-prev').disabled = (idx === 0);
+            document.getElementById('btn-next').innerHTML = (idx === QUESTIONS.length - 1) ? `Đến câu đầu <i class="fa-solid fa-arrow-up"></i>` : `Câu tiếp theo <i class="fa-solid fa-arrow-right"></i>`;
+
+            document.querySelectorAll('.pal-btn').forEach((btn, i) => {
+                btn.classList.toggle('current', i === idx);
+            });
+        }
+
+        function selectOption(qIdx, optKey) {
+            if (examSubmitted) return;
+            userAnswers[qIdx] = optKey;
+            
+            const labels = document.querySelectorAll('.opt-label');
+            labels.forEach(l => l.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+
+            const palBtn = document.getElementById(`pal-${qIdx}`);
+            if (palBtn) palBtn.classList.add('answered');
+
+            updateProgress();
+        }
+
+        function prevQuestion() {
+            if (currentIdx > 0) renderQuestion(currentIdx - 1);
+        }
+
+        function nextQuestion() {
+            if (currentIdx < QUESTIONS.length - 1) {
+                renderQuestion(currentIdx + 1);
+            } else {
+                renderQuestion(0);
+            }
+        }
+
+        function updateProgress() {
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            const pct = Math.round((answeredCount / QUESTIONS.length) * 100);
+            document.getElementById('progress-bar').style.width = pct + '%';
+            document.getElementById('progress-percent').textContent = pct + '%';
+            document.getElementById('answered-count').textContent = `${answeredCount}/${QUESTIONS.length}`;
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const min = Math.floor(timeLeft / 60);
+                const sec = timeLeft % 60;
+                document.getElementById('timer-display').textContent = 
+                    `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Hết giờ làm bài! Hệ thống tự động thu bài.");
+                    finishExam();
+                }
+            }, 1000);
+        }
+
+        function confirmSubmit() {
+            const unanswered = userAnswers.filter(a => a === null).length;
+            let msg = "Bạn có chắc chắn muốn nộp bài thi?";
+            if (unanswered > 0) {
+                msg = `Bạn còn ${unanswered} câu chưa trả lời. Bạn có chắc chắn muốn nộp bài không?`;
+            }
+            if (confirm(msg)) {
+                finishExam();
+            }
+        }
+
+        function finishExam() {
+            if (examSubmitted) return;
+            examSubmitted = true;
+            clearInterval(timerInterval);
+
+            let correctCount = 0;
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                if (userAnswers[i] === QUESTIONS[i].correct) {
+                    correctCount++;
+                }
+            }
+            const score10 = ((correctCount / QUESTIONS.length) * 10).toFixed(1);
+
+            document.getElementById('exam-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            document.getElementById('final-score').textContent = score10;
+            document.getElementById('result-detail').textContent = 
+                `Thí sinh: ${studentName} | Lớp: ${studentClass} | Đúng: ${correctCount}/${QUESTIONS.length} câu (${Math.round(correctCount/QUESTIONS.length*100)}%)`;
+
+            if (score10 >= 8.0 && typeof confetti === 'function') {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+
+            renderReview('all');
+
+            try {
+                const timeSpent = 45 * 60 - timeLeft;
+                const minSpent = Math.floor(timeSpent / 60);
+                const secSpent = timeSpent % 60;
+                const payload = {
+                    timestamp: new Date().toISOString(),
+                    lesson: LESSON_TITLE,
+                    name: studentName,
+                    className: studentClass,
+                    score: score10,
+                    correct: `${correctCount}/${QUESTIONS.length}`,
+                    timeUsed: `${minSpent}m ${secSpent}s`
+                };
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                }).catch(e => console.log(e));
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        function renderReview(filter) {
+            const list = document.getElementById('review-list');
+            list.innerHTML = '';
+
+            QUESTIONS.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = (userAns === q.correct);
+
+                if (filter === 'correct' && !isCorrect) return;
+                if (filter === 'wrong' && isCorrect) return;
+
+                const card = document.createElement('div');
+                card.className = `review-item ${isCorrect ? 'correct' : 'incorrect'}`;
+                card.innerHTML = `
+                    <div class="review-header">
+                        <span>Câu ${idx + 1}: ${q.topic || ''}</span>
+                        <span style="color: ${isCorrect ? 'var(--success)' : 'var(--danger)'}">
+                            ${isCorrect ? '<i class="fa-solid fa-check"></i> ĐÚNG' : '<i class="fa-solid fa-xmark"></i> SAI'}
+                        </span>
+                    </div>
+                    <div style="font-weight: 600; margin-bottom: 0.5rem; text-align: justify;">${q.title.replace(/\n/g, '<br>')}</div>
+                    <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">
+                        <div>• Lựa chọn của bạn: <b>${userAns || 'Chưa trả lời'}</b></div>
+                        <div>• Đáp án chính xác: <b style="color: var(--success);">${q.correct}</b> - ${q.options[q.correct]}</div>
+                    </div>
+                    <div class="review-exp">
+                        <b><i class="fa-solid fa-lightbulb"></i> Giải thích chi tiết:</b> ${q.exp}
+                        ${q.translation ? `<div style="margin-top: 4px; font-style: italic; color: #475569;"><b>Dịch nghĩa:</b> ${q.translation}</div>` : ''}
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function filterReview(type) {
+            renderReview(type);
+        }
+    </script>
+</body>
+</html>
