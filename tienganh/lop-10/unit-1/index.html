@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 1: Family Life - Tiếng Anh 10 (Global Success)</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --primary-light: #e0e7ff;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #4f46e5;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Sticky Header */
+        .sticky-header {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        }
+        .header-container {
+            max-width: 1200px; margin: 0 auto; padding: 10px 15px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .site-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .logo-img { width: 32px; height: 32px; border-radius: 8px; object-fit: contain; }
+        .logo-text {
+            font-size: 1.25rem; font-weight: 800;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .nav-links { display: flex; gap: 14px; align-items: center; }
+        .nav-item {
+            text-decoration: none; color: #475569; font-weight: 600; font-size: 0.9rem;
+            display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s;
+        }
+        .nav-item:hover { color: #4f46e5; }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 0.4rem;
+            background: #f1f5f9;
+            padding: 0.25rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #475569;
+            padding: 0.45rem 0.9rem;
+            font-weight: 700;
+            font-size: 0.88rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn.active {
+            background: #4f46e5;
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        @media (max-width: 768px) {
+            .header-container { padding: 8px 12px; flex-direction: column; gap: 8px; }
+            .logo-text { font-size: 1.1rem; }
+            .nav-links { width: 100%; justify-content: space-between; }
+        }
+
+        .main-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+            flex: 1;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Theory Tab Styling */
+        .theory-wrapper {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2.25rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .theory-content {
+            text-align: justify;
+            line-height: 1.7;
+        }
+
+        .theory-card {
+            background: white; border-radius: 14px; padding: 20px; margin-bottom: 20px;
+            border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .theory-card-header {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        .theory-icon {
+            width: 36px; height: 36px; border-radius: 8px; background: #e0e7ff; color: #4338ca;
+            display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;
+        }
+        .theory-title { font-size: 1.15rem; font-weight: 800; color: #1e1b4b; }
+        .vocab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 10px; }
+        .vocab-card, .vocab-item {
+            background: #f8fafc; border-left: 4px solid var(--primary); padding: 10px 14px; border-radius: 8px;
+        }
+        .vocab-word { font-weight: 700; color: #1e293b; font-size: 0.95rem; }
+        .vocab-pos { font-size: 0.8rem; color: #64748b; font-style: italic; }
+        .vocab-meaning { font-size: 0.88rem; color: #475569; margin-top: 2px; }
+        .vocab-example { font-size: 0.82rem; color: #0284c7; font-style: italic; margin-top: 4px; }
+        
+        .grammar-box, .grammar-rule {
+            background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 14px 16px; margin-top: 12px;
+        }
+        .rule-title { font-weight: 700; color: #166534; font-size: 0.92rem; margin-bottom: 6px; }
+        .rule-formula {
+            background: white; padding: 8px 12px; border-radius: 6px; font-family: monospace;
+            font-weight: 700; color: #0f172a; border: 1px solid #bbf7d0; margin: 4px 0; font-size: 0.9rem;
+        }
+
+        .jump-btn-container {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px dashed var(--border);
+        }
+
+        .jump-btn {
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 800;
+            padding: 1rem 2.5rem;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.35);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .jump-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(79, 70, 229, 0.45);
+        }
+
+        /* CBT / Exam Tab Styling */
+        .exam-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .exam-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .exam-panel {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .exam-meta-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge-topic {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+        }
+
+        /* Audio Player Card */
+        .audio-player-card {
+            background: #f0fdf4;
+            border: 1.5px solid #86efac;
+            border-radius: 0.75rem;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .audio-label {
+            font-size: 0.9rem;
+            color: #166534;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .audio-player-card audio {
+            width: 100%;
+            height: 40px;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .passage-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            text-align: justify;
+            max-height: 280px;
+            overflow-y: auto;
+            line-height: 1.7;
+        }
+
+        .passage-title {
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .question-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+            line-height: 1.6;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .opt-label {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            background: white;
+            border: 1.5px solid var(--border);
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: justify;
+        }
+
+        .opt-label:hover {
+            border-color: var(--primary);
+            background: #f8fafc;
+        }
+
+        .opt-label.selected {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .opt-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #64748b;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .opt-label.selected .opt-circle {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .opt-text {
+            font-size: 1rem;
+            color: #1e293b;
+        }
+
+        .question-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .ctrl-btn {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ctrl-btn-prev {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .ctrl-btn-prev:hover {
+            background: #e2e8f0;
+        }
+
+        .ctrl-btn-next {
+            background: var(--primary);
+            color: white;
+        }
+
+        .ctrl-btn-next:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Sidebar Palette */
+        .palette-panel {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            position: sticky;
+            top: 5.5rem;
+        }
+
+        .timer-card {
+            background: #0f172a;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .timer-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            margin-bottom: 0.25rem;
+        }
+
+        .timer-val {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+
+        .user-info-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.85rem;
+        }
+
+        .progress-wrap {
+            margin-bottom: 1.25rem;
+        }
+
+        .progress-bar-bg {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0.4rem;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4f46e5, #06b6d4);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .palette-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pal-btn {
+            height: 38px;
+            border-radius: 0.375rem;
+            border: 1.5px solid var(--border);
+            background: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .pal-btn:hover {
+            border-color: var(--primary);
+        }
+
+        .pal-btn.answered {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary-dark);
+        }
+
+        .pal-btn.current {
+            border-color: #0f172a;
+            box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.2);
+            font-weight: 800;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            font-weight: 700;
+            padding: 0.875rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-1px);
+        }
+
+        /* Modal Dialogs */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-card {
+            background: white;
+            border-radius: 1rem;
+            max-width: 480px;
+            width: 100%;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .modal-input-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .modal-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 0.375rem;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .modal-input:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        .modal-notes {
+            background: #fffbeb;
+            border-left: 4px solid var(--accent);
+            padding: 0.75rem 1rem;
+            border-radius: 0 0.375rem 0.375rem 0;
+            font-size: 0.825rem;
+            color: #92400e;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            padding: 0.875rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* Results Display */
+        .result-view {
+            background: white;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .score-banner {
+            text-align: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .score-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.5);
+        }
+
+        .score-val {
+            font-size: 2.4rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .score-max {
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
+
+        .review-item {
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            background: #fafafa;
+        }
+
+        .review-item.correct {
+            border-left: 5px solid var(--success);
+        }
+
+        .review-item.incorrect {
+            border-left: 5px solid var(--danger);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .review-exp {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background: #f1f5f9;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            color: #1e293b;
+            line-height: 1.5;
+        }
+
+        /* Site Footer */
+        .site-footer {
+            width: 100%; text-align: center; padding: 25px 15px; background: #ffffff;
+            border-top: 1px solid var(--border); margin-top: 40px; color: #64748b; font-size: 0.88rem;
+        }
+        .footer-container { max-width: 1200px; margin: 0 auto; }
+        .footer-links { margin-top: 8px; font-size: 0.82rem; }
+        .footer-links a { color: #4f46e5; text-decoration: none; margin: 0 4px; transition: color 0.2s; }
+        .footer-links a:hover { text-decoration: underline; color: #3730a3; }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+    <!-- Sticky Header -->
+    <header class="sticky-header">
+        <div class="header-container">
+            <a href="https://vatli102.com" class="site-logo">
+                <img src="favicon.svg" alt="Logo" class="logo-img">
+                <span class="logo-text">vatli102.com</span>
+            </a>
+            <div class="nav-links">
+                <a href="https://vatli102.com" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
+                <a href="https://vatli102.com/gioi-thieu.html" class="nav-item"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a>
+                <a href="https://vatli102.com/lien-he.html" class="nav-item"><i class="fa-solid fa-envelope"></i> Liên hệ</a>
+                <div class="nav-tabs">
+                    <button class="nav-btn active" id="btn-tab-theory" onclick="switchTab('theory')">
+                        <i class="fa-solid fa-book-open"></i> Lý thuyết trọng tâm
+                    </button>
+                    <button class="nav-btn" id="btn-tab-quiz" onclick="switchTab('quiz')">
+                        <i class="fa-solid fa-pen-to-square"></i> Làm bài tập củng cố
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- TAB 1: LÝ THUYẾT TRỌNG TÂM -->
+        <div id="tab-theory" class="tab-pane active">
+            <div class="theory-wrapper">
+                <div class="theory-content">
+                    
+            <article class="theory-wrapper">
+                <header style="margin-bottom: 25px; border-bottom: 2px solid var(--border); padding-bottom: 15px;">
+                    <h1 style="color: var(--primary-dark); font-size: 1.8rem; font-weight: 800; margin-bottom: 8px;">
+                        TỔNG HỢP KIẾN THỨC TRỌNG TÂM: UNIT 1 - FAMILY LIFE
+                    </h1>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">
+                        Chương trình Tiếng Anh 10 Global Success - Khung GDPT 2018 | Hệ thống chuẩn xác Từ vựng, Cụm từ, Cấu tạo từ, Từ dễ gây nhầm lẫn, Ngữ pháp Thì Hiện tại đơn vs. Hiện tại tiếp diễn (Stative Verbs) và Ngữ âm phụ âm ghép /br/, /kr/, /tr/.
+                    </p>
+                </header>
+
+                <!-- SECTION 1: VOCABULARY & COLLOCATIONS -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-people-roof"></i></div>
+                        <div class="theory-title">1. Từ vựng & Cụm từ trọng tâm (Vocabulary & Collocations)</div>
+                    </div>
+                    <p style="margin-bottom: 14px; font-size: 0.93rem; color: #334155;">
+                        Chủ đề <i>Family Life</i> cung cấp vốn từ vựng thiết yếu về đời sống gia đình, sự phân công trách nhiệm và các kỹ năng sống của thanh thiếu niên:
+                    </p>
+                    <div class="vocab-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-word">breadwinner <span class="vocab-pos">/ˈbredwɪnə(r)/ (n)</span></div>
+                            <div class="vocab-meaning">người trụ cột kiếm tiền nuôi gia đình</div>
+                            <div class="vocab-example">In many traditional households, the father was considered the primary breadwinner.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">homemaker <span class="vocab-pos">/ˈhəʊmmeɪkə(r)/ (n)</span></div>
+                            <div class="vocab-meaning">người nội trợ (chăm sóc nhà cửa, con cái)</div>
+                            <div class="vocab-example">Being a homemaker is a demanding full-time job that requires endless dedication.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">household chores <span class="vocab-pos">/ˈhaʊshəʊld tʃɔːz/ (n. pl.)</span></div>
+                            <div class="vocab-meaning">công việc vặt trong nhà (dọn dẹp, giặt giũ, rửa bát)</div>
+                            <div class="vocab-example">All family members should share household chores to ease each other's burden.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">heavy lifting <span class="vocab-pos">/ˌhevi ˈlɪftɪŋ/ (n)</span></div>
+                            <div class="vocab-meaning">công việc nặng nhọc, mang vác đồ nặng</div>
+                            <div class="vocab-example">My elder brother always helps my father with the heavy lifting around the house.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">financial burden <span class="vocab-pos">/faɪˈnænʃl ˈbɜːdn/ (n)</span></div>
+                            <div class="vocab-meaning">gánh nặng tài chính</div>
+                            <div class="vocab-example">When both spouses work, they help relieve the financial burden on the family.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">divide / split chores <span class="vocab-pos">/dɪˈvaɪd tʃɔːz/ (v phr)</span></div>
+                            <div class="vocab-meaning">phân chia công việc nhà một cách hợp lý</div>
+                            <div class="vocab-example">We created a weekly schedule to divide household chores fairly between us.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">strengthen family bonds <span class="vocab-pos">/ˈstreŋθn ˈfæməli bɒndz/ (v phr)</span></div>
+                            <div class="vocab-meaning">thắt chặt, củng cố tình cảm gắn kết gia đình</div>
+                            <div class="vocab-example">Cooking and eating weekend meals together greatly strengthens family bonds.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">do the laundry <span class="vocab-pos">/duː ðə ˈlɔːndri/ (v phr)</span></div>
+                            <div class="vocab-meaning">giặt giũ quần áo</div>
+                            <div class="vocab-example">Lan usually does the laundry and irons clothes on Sunday mornings.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 2: WORD FORMATION -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-diagram-project"></i></div>
+                        <div class="theory-title">2. Cấu tạo từ / Dạng của từ (Word Formation)</div>
+                    </div>
+                    <p style="margin-bottom: 12px; font-size: 0.93rem; color: #334155;">
+                        Nắm vững các họ từ (Word Families) giúp học sinh tự tin giải quyết dạng bài biến đổi từ và điền khuyết trong đề thi THPT:
+                    </p>
+                    <div class="vocab-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-word">responsible &rarr; responsibility &rarr; responsibly &rarr; irresponsible</div>
+                            <div class="vocab-meaning">
+                                - <b>responsible (adj):</b> có trách nhiệm (be responsible for).<br>
+                                - <b>responsibility (n):</b> tinh thần trách nhiệm, bổn phận.<br>
+                                - <b>responsibly (adv):</b> một cách có trách nhiệm.<br>
+                                - <b>irresponsible (adj):</b> vô trách nhiệm.
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">finance &rarr; financial &rarr; financially</div>
+                            <div class="vocab-meaning">
+                                - <b>finance (n, v):</b> tài chính; cấp vốn.<br>
+                                - <b>financial (adj):</b> thuộc về tài chính (financial burden).<br>
+                                - <b>financially (adv):</b> về mặt tài chính.
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">appreciate &rarr; appreciation &rarr; appreciative</div>
+                            <div class="vocab-meaning">
+                                - <b>appreciate (v):</b> trân trọng, cảm kích, đánh giá cao.<br>
+                                - <b>appreciation (n):</b> sự trân trọng, lòng biết ơn.<br>
+                                - <b>appreciative (adj):</b> biết ơn, biết thưởng thức.
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">divide &rarr; division &rarr; divisive</div>
+                            <div class="vocab-meaning">
+                                - <b>divide (v):</b> phân chia, chia tách.<br>
+                                - <b>division (n):</b> sự phân chia (division of labor).<br>
+                                - <b>divisive (adj):</b> gây chia rẽ, bất đồng.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 3: CONFUSING WORDS -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-arrows-split-up-and-left"></i></div>
+                        <div class="theory-title">3. Phân biệt các từ dễ gây nhầm lẫn (Confusing Words)</div>
+                    </div>
+                    <div class="vocab-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-word">Breadwinner vs. Homemaker</div>
+                            <div class="vocab-meaning">
+                                <b>- Breadwinner:</b> Người đi làm kiếm tiền chính để trang trải chi phí cho cả gia đình.<br>
+                                <b>- Homemaker:</b> Người ở nhà quán xuyến việc nội trợ, chăm sóc con cái và nhà cửa.
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">Housework vs. Homework</div>
+                            <div class="vocab-meaning">
+                                <b>- Housework:</b> Công việc nhà (nấu nướng, lau dọn, giặt đồ...).<br>
+                                <b>- Homework:</b> Bài tập về nhà do giáo viên giao cho học sinh.
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">Chore vs. Duty vs. Task</div>
+                            <div class="vocab-meaning">
+                                <b>- Chore:</b> Công việc vặt thường nhật, có tính lặp đi lặp lại và đôi khi tẻ nhạt (<i>household chores</i>).<br>
+                                <b>- Duty:</b> Bổn phận, nghĩa vụ đạo đức hoặc pháp lý (<i>a citizen's duty</i>).<br>
+                                <b>- Task:</b> Nhiệm vụ công việc cụ thể được giao hoàn thành trong thời hạn nhất định.
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">Grateful vs. Thankful vs. Appreciative</div>
+                            <div class="vocab-meaning">
+                                <b>- Grateful:</b> Biết ơn sâu sắc vì nhận được sự giúp đỡ từ người khác (<i>be grateful to sb for sth</i>).<br>
+                                <b>- Thankful:</b> Cảm thấy nhẹ nhõm, may mắn vì một điều tồi tệ không xảy ra.<br>
+                                <b>- Appreciative:</b> Bày tỏ sự trân trọng và khen ngợi hành động tốt đẹp của người khác.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 4: GRAMMAR -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-spell-check"></i></div>
+                        <div class="theory-title">4. Ngữ pháp: Hiện tại đơn (Present Simple) vs. Hiện tại tiếp diễn (Present Continuous)</div>
+                    </div>
+                    
+                    <div class="grammar-box">
+                        <div class="rule-title">A. Thì Hiện tại đơn (Present Simple Tense)</div>
+                        <p>Dùng để diễn tả thói quen, hành động lặp đi lặp lại ở hiện tại, chân lý hoặc sự thật hiển nhiên.</p>
+                        <div class="rule-formula">Khẳng định: S + V(s/es) | Phủ định: S + do/does not + V-inf | Nghi vấn: Do/Does + S + V-inf?</div>
+                        <p style="margin-top: 6px; font-size: 0.88rem;"><b>Dấu hiệu nhận biết:</b> <i>always, usually, often, sometimes, rarely, never, every day/week/month...</i></p>
+                        <p style="font-size: 0.85rem; color: #166534; font-style: italic; margin-top: 3px;">Ví dụ: My father <b>takes out</b> the rubbish every evening at 7 PM.</p>
+                    </div>
+
+                    <div class="grammar-box" style="margin-top: 14px; background: #eff6ff; border-color: #93c5fd;">
+                        <div class="rule-title" style="color: #1e40af;">B. Thì Hiện tại tiếp diễn (Present Continuous Tense)</div>
+                        <p>Dùng để diễn tả hành động đang diễn ra tại thời điểm nói, hành động mang tính tạm thời, hoặc diễn tả sự phàn nàn về thói quen xấu với <i>always</i>.</p>
+                        <div class="rule-formula" style="border-color: #bfdbfe;">Khẳng định: S + am/is/are + V-ing | Phủ định: S + am/is/are not + V-ing | Nghi vấn: Am/Is/Are + S + V-ing?</div>
+                        <p style="margin-top: 6px; font-size: 0.88rem;"><b>Dấu hiệu nhận biết:</b> <i>now, right now, at the moment, at present, Look!, Listen!, Be quiet!...</i></p>
+                        <p style="font-size: 0.85rem; color: #1e40af; font-style: italic; margin-top: 3px;">Ví dụ: Look! Lan <b>is doing</b> the laundry while her brother <b>is washing</b> the dishes.</p>
+                    </div>
+
+                    <div class="grammar-box" style="margin-top: 14px; background: #fffbeb; border-color: #fde68a;">
+                        <div class="rule-title" style="color: #b45309;">C. Động từ chỉ trạng thái (Stative Verbs) & Trường hợp đặc biệt</div>
+                        <p style="font-size: 0.88rem; color: #334155;">
+                            <b>1. Stative Verbs</b> (không chia ở thì tiếp diễn): <i>know, understand, believe, think (nghĩ rằng), love, like, hate, want, need, prefer, belong to, seem, appear...</i><br>
+                            Ví dụ: <i>I <b>understand</b> your point now.</i> (KHÔNG DÙNG: <s>I am understanding...</s>)<br><br>
+                            <b>2. Động từ vừa chỉ trạng thái vừa chỉ hành động:</b><br>
+                            • <b>think:</b> <i>I think he is honest.</i> (ý kiến - Simple) vs. <i>I am thinking about my upcoming test.</i> (hành động suy nghĩ - Continuous)<br>
+                            • <b>have:</b> <i>She has a warm family.</i> (sở hữu - Simple) vs. <i>They are having dinner.</i> (ăn uống - Continuous)
+                        </p>
+                    </div>
+                </section>
+
+                <!-- SECTION 5: PRONUNCIATION -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-volume-high"></i></div>
+                        <div class="theory-title">5. Ngữ âm: Phụ âm ghép /br/, /kr/, /tr/ (Consonant Blends)</div>
+                    </div>
+                    <div class="vocab-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-word">Âm /br/</div>
+                            <div class="vocab-meaning">
+                                Được tạo thành khi kết hợp âm bật môi /b/ và âm rung /r/:<br>
+                                - <b>breadwinner</b> /ˈbredwɪnə/<br>
+                                - <b>brother</b> /ˈbrʌðə/<br>
+                                - <b>brush</b> /brʌʃ/<br>
+                                - <b>breakfast</b> /ˈbrekfəst/
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">Âm /kr/ (thường viết là 'cr-')</div>
+                            <div class="vocab-meaning">
+                                Được tạo thành khi phát âm ngạc mềm /k/ lướt sang /r/:<br>
+                                - <b>crash</b> /kræʃ/<br>
+                                - <b>create</b> /kriˈeɪt/<br>
+                                - <b>cream</b> /kriːm/<br>
+                                - <b>crowded</b> /ˈkraʊdɪd/
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">Âm /tr/</div>
+                            <div class="vocab-meaning">
+                                Được tạo thành khi đầu lưỡi chạm vòm miệng /t/ bật sang /r/:<br>
+                                - <b>trash</b> /træʃ/<br>
+                                - <b>track</b> /træk/<br>
+                                - <b>trust</b> /trʌst/<br>
+                                - <b>treat</b> /triːt/
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="jump-btn-container">
+                    <button class="jump-btn" onclick="switchTab('quiz')">
+                        <i class="fa-solid fa-pen-to-square"></i> Làm bài tập củng cố
+                    </button>
+                </div>
+            </article>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: LÀM BÀI TẬP CỦNG CỐ -->
+        <div id="tab-quiz" class="tab-pane">
+            <!-- Modal Login / Start Prompt -->
+            <div id="modal-start" class="modal-overlay">
+                <div class="modal-card">
+                    <div class="modal-header">
+                        <div style="width: 50px; height: 50px; background: #eff6ff; color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 10px;">
+                            <i class="fa-solid fa-user-graduate"></i>
+                        </div>
+                        <h3 class="modal-title">THÔNG TIN HỌC SINH</h3>
+                        <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.25rem;">Unit 1: Family Life (40 câu / 45 phút)</p>
+                    </div>
+                    <div class="modal-input-group">
+                        <label class="modal-label">Họ và tên của bạn (*)</label>
+                        <input type="text" id="inp-name" class="modal-input" placeholder="Ví dụ: Nguyễn Văn A">
+                    </div>
+                    <div class="modal-input-group">
+                        <label class="modal-label">Lớp / Trường (*)</label>
+                        <input type="text" id="inp-class" class="modal-input" placeholder="Ví dụ: 10A1 - THPT Chuyên">
+                    </div>
+                    <div class="modal-notes">
+                        <b><i class="fa-solid fa-shield-halved"></i> QUY ĐỊNH BẢO MẬT & CHỐNG GIAN LẬN:</b><br>
+                        • 40 câu trắc nghiệm (có 8 câu Audio Nghe), thời gian 45 phút.<br>
+                        • Khóa copy, chuột phải và phím tắt F12.<br>
+                        • Rời tab quá 3 lần hệ thống sẽ tự động thu bài!
+                    </div>
+                    <button class="modal-btn" onclick="startExam()">BẮT ĐẦU LÀM BÀI</button>
+                </div>
+            </div>
+
+            <!-- Active Exam Screen -->
+            <div id="exam-screen" class="exam-grid" style="display: none;">
+                <!-- Left: Question Panel -->
+                <div class="exam-panel">
+                    <div class="exam-meta-bar">
+                        <span class="badge-topic" id="q-topic">Chủ điểm kiến thức</span>
+                        <span style="font-weight: 700; color: var(--primary-dark);" id="q-progress">Câu 1 / 40</span>
+                    </div>
+
+                    <!-- Audio Player for Listening questions -->
+                    <div id="audio-container" class="audio-player-card" style="display: none;">
+                        <div class="audio-label">
+                            <i class="fa-solid fa-headphones-simple"></i> <b>Audio phần Nghe (Listening Comprehension - Câu 1 đến 8):</b>
+                        </div>
+                        <audio id="audio-player" controls preload="auto">
+                            <source src="Unit 1 - Listening.mp3" type="audio/mpeg">
+                            Trình duyệt của bạn không hỗ trợ phát âm thanh HTML5.
+                        </audio>
+                    </div>
+
+                    <!-- Reading / Cloze Passage if any -->
+                    <div id="passage-container" class="passage-box" style="display: none;">
+                        <div class="passage-title" id="passage-title">ĐOẠN VĂN</div>
+                        <div id="passage-body"></div>
+                    </div>
+
+                    <!-- Question Prompt -->
+                    <div class="question-title" id="q-title">Nội dung câu hỏi đang được tải...</div>
+
+                    <!-- Options List -->
+                    <div class="options-list" id="opt-container"></div>
+
+                    <!-- Navigation Controls -->
+                    <div class="question-footer">
+                        <button class="ctrl-btn ctrl-btn-prev" id="btn-prev" onclick="prevQuestion()">
+                            <i class="fa-solid fa-arrow-left"></i> Câu trước
+                        </button>
+                        <button class="ctrl-btn ctrl-btn-next" id="btn-next" onclick="nextQuestion()">
+                            Câu tiếp theo <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right: Sticky Sidebar Palette -->
+                <div class="palette-panel">
+                    <div class="timer-card">
+                        <div class="timer-label"><i class="fa-regular fa-clock"></i> THỜI GIAN CÒN LẠI</div>
+                        <div class="timer-val" id="timer-display">45:00</div>
+                    </div>
+
+                    <div class="user-info-card">
+                        <div style="font-weight: 700; color: #1e293b;" id="user-display-name">Học sinh: ---</div>
+                        <div style="color: #64748b; font-size: 0.8rem;" id="user-display-class">Lớp: ---</div>
+                    </div>
+
+                    <div class="progress-wrap">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="progress-bar"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>Tiến độ làm bài</span>
+                            <span id="progress-percent">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="palette-title">
+                        <span>Bảng câu hỏi (40 câu)</span>
+                        <span style="font-size: 0.8rem; font-weight: 500; color: var(--primary);" id="answered-count">0/40</span>
+                    </div>
+
+                    <div class="palette-grid" id="palette-grid"></div>
+
+                    <button class="submit-btn" onclick="confirmSubmit()">
+                        <i class="fa-solid fa-paper-plane"></i> NỘP BÀI THI
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result Screen -->
+            <div id="result-screen" class="result-view" style="display: none;">
+                <div class="score-banner">
+                    <div class="score-circle">
+                        <div class="score-val" id="final-score">0.0</div>
+                        <div class="score-max">/ 10 ĐIỂM</div>
+                    </div>
+                    <h2 style="font-size: 1.5rem; font-weight: 800; color: #1e293b; margin-bottom: 0.5rem;">KẾT QUẢ BÀI LÀM CỦNG CỐ</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;" id="result-detail">Thí sinh: ...</p>
+                    <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('all')">Tất cả</button>
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('wrong')">Câu sai</button>
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('correct')">Câu đúng</button>
+                    </div>
+                </div>
+                <div class="review-list" id="review-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Site Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <p>© VATLI102.COM - Hệ thống Học tập & Đánh giá Năng lực Tiếng Anh THPT Chuẩn GDPT 2018.</p>
+            <div class="footer-links">
+                <a href="https://vatli102.com">Trang chủ</a> • 
+                <a href="https://vatli102.com/tienganh/lop-10">Tiếng Anh 10</a> • 
+                <a href="https://vatli102.com/tienganh/lop-11">Tiếng Anh 11</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT ENGINE -->
+    <script>
+        const LESSON_TITLE = "Unit 1: Family Life";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
+        const QUESTIONS = [{"num": 1, "topic": "Nghe hiểu - Lý do nhân vật", "passageId": null, "audio_file": "Unit 1 - Listening.mp3", "title": "Why does Minh need to return home quickly?", "options": {"A": "To prepare for an upcoming final exam", "B": "To do his assigned household chores", "C": "To help his father repair the car", "D": "To watch his favorite television program"}, "correct": "B", "exp": "Trong đoạn hội thoại, Minh nói: <i>'I need to get home right away to do some household chores. Today is my turn to do the laundry and shop for groceries.'</i> (Mình phải về nhà ngay để làm việc nhà. Hôm nay đến lượt mình giặt quần áo và đi mua đồ tạp hóa).", "translation": "Tại sao Minh cần về nhà gấp? -> Vì bạn ấy phải về làm các việc nhà được phân công."}, {"num": 2, "topic": "Nghe hiểu - Phân công truyền thống", "passageId": null, "audio_file": "Unit 1 - Listening.mp3", "title": "In Nam's family, who is the main breadwinner?", "options": {"A": "His mother", "B": "His elder sister", "C": "His father", "D": "Both of his parents"}, "correct": "C", "exp": "Nam chia sẻ: <i>'my mother usually handles most of the housework because she is a homemaker, while my father is the main breadwinner.'</i> (mẹ mình làm việc nhà vì là nội trợ, còn bố mình là trụ cột kiếm tiền chính).", "translation": "Trong gia đình Nam, ai là người trụ cột kiếm tiền chính? -> Bố của Nam."}, {"num": 3, "topic": "Nghe hiểu - Chi tiết công việc", "passageId": null, "audio_file": "Unit 1 - Listening.mp3", "title": "Which specific chores do Minh and his sister take care of?", "options": {"A": "Daily cleaning, washing dishes, and putting out the rubbish", "B": "Cooking dinner and taking care of heavy lifting", "C": "Doing electrical repairs and painting walls", "D": "Managing the family budget and grocery shopping only"}, "correct": "A", "exp": "Minh nói: <i>'my sister and I split the daily cleaning, washing dishes, and putting out the rubbish.'</i> (chị gái và mình chia nhau dọn dẹp hàng ngày, rửa bát và đổ rác).", "translation": "Minh và chị gái chịu trách nhiệm cho những việc nhà cụ thể nào? -> Dọn dẹp hàng ngày, rửa bát và đổ rác."}, {"num": 4, "topic": "Nghe hiểu - Lợi ích việc nhà", "passageId": null, "audio_file": "Unit 1 - Listening.mp3", "title": "According to Minh, what is one major benefit of sharing household chores?", "options": {"A": "It completely replaces the need for academic studying.", "B": "It helps family members avoid talking to each other.", "C": "It enables children to earn extra pocket money from parents.", "D": "It teaches life skills, responsibility, and strengthens family bonds."}, "correct": "D", "exp": "Minh khẳng định: <i>'Sharing chores actually teaches us life skills and responsibility. Plus, working together strengthens our family bonds and makes everyone feel appreciated.'</i>", "translation": "Theo Minh, một lợi ích lớn của việc chia sẻ việc nhà là gì? -> Dạy kỹ năng sống, tinh thần trách nhiệm và thắt chặt tình cảm gia đình."}, {"num": 5, "topic": "Nghe hiểu - Chủ đề bài nói", "passageId": null, "audio_file": "Unit 1 - Listening.mp3", "title": "What is the primary topic of Dr. Sarah Jenkins' talk?", "options": {"A": "The financial cost of hiring professional housekeepers", "B": "The psychological and developmental benefits of doing chores for adolescents", "C": "The history of traditional gender roles in ancient societies", "D": "The negative impact of school homework on children's health"}, "correct": "B", "exp": "Người dẫn nhập nêu rõ: <i>'discussing the psychological and developmental benefits of doing chores for adolescents'</i> và bác sĩ nhắc đến: <i>'doing household chores plays a crucial role in character development.'</i>", "translation": "Chủ đề chính của bài nói của Tiến sĩ Sarah Jenkins là gì? -> Những lợi ích về mặt tâm lý và phát triển khi thanh thiếu niên làm việc nhà."}, {"num": 6, "topic": "Nghe hiểu - Kỹ năng sống", "passageId": null, "audio_file": "Unit 1 - Listening.mp3", "title": "According to the speaker, how does doing chores prepare teenagers for the future?", "options": {"A": "By providing practical life skills essential for independent adulthood", "B": "By training them to become professional domestic cleaners", "C": "By forcing them to stay indoors all the time", "D": "By helping them pass standardized school tests easily"}, "correct": "A", "exp": "Bác sĩ phân tích: <i>'When teenagers learn to cook, iron clothes, or manage cleaning routines, they gain practical life skills essential for independent adulthood.'</i>", "translation": "Theo diễn giả, việc làm việc nhà chuẩn bị cho tương lai của thanh thiếu niên như thế nào? -> Cung cấp các kỹ năng sống thực tế cần thiết cho cuộc sống độc lập khi trưởng thành."}, {"num": 7, "topic": "Nghe hiểu - Cảm xúc & Thái độ", "passageId": null, "audio_file": "Unit 1 - Listening.mp3", "title": "What positive emotional quality does sharing chores nurture in teenagers towards their parents?", "options": {"A": "Jealousy and competition", "B": "Fear and strict obedience", "C": "Empathy, gratitude, and appreciation for parents' hard work", "D": "Indifference to family matters"}, "correct": "C", "exp": "Bác sĩ nêu rõ: <i>'participating in daily chores nurtures empathy and gratitude. Teenagers who actively share household tasks develop a deeper appreciation for their parents' hard work'</i>.", "translation": "Việc chia sẻ việc nhà nuôi dưỡng phẩm chất cảm xúc tích cực nào ở thanh thiếu niên đối với cha mẹ? -> Sự thấu cảm, lòng biết ơn và trân trọng sự vất vả của cha mẹ."}, {"num": 8, "topic": "Nghe hiểu - Vị thế trong gia đình", "passageId": null, "audio_file": "Unit 1 - Listening.mp3", "title": "How does collaborating on housework make teenagers feel within the family unit?", "options": {"A": "Like unpaid household servants", "B": "Like valued contributors rather than passive recipients of care", "C": "Like guests who have no obligations", "D": "Like they are being unfairly punished"}, "correct": "B", "exp": "Bác sĩ nhấn mạnh: <i>'Teenagers feel like valued contributors to the household rather than passive recipients of care.'</i> (Thanh thiếu niên cảm thấy mình là những người đóng góp có giá trị cho gia đình chứ không chỉ là người thụ hưởng chăm sóc thụ động).", "translation": "Việc cùng làm việc nhà giúp thanh thiếu niên cảm thấy như thế nào trong gia đình? -> Cảm thấy mình là thành viên đóng góp có giá trị."}, {"num": 9, "topic": "Phát âm phụ âm ghép /br/ vs /kr/", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word whose underlined part differs from the other three in pronunciation:", "options": {"A": "<u>br</u>eadwinner", "B": "<u>br</u>ush", "C": "<u>cr</u>ash", "D": "<u>br</u>other"}, "correct": "C", "exp": "Từ <b>crash</b> có phần gạch chân phát âm là <b>/kr/</b> (/kræʃ/). Các từ <i>breadwinner</i> /ˈbredwɪnə/, <i>brush</i> /brʌʃ/, <i>brother</i> /ˈbrʌðə/ đều phát âm là <b>/br/</b>.", "translation": "Phát âm phụ âm ghép: crash (/kr/) khác với breadwinner, brush, brother (/br/)."}, {"num": 10, "topic": "Phát âm phụ âm ghép /tr/ vs /kr/", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word whose underlined part differs from the other three in pronunciation:", "options": {"A": "<u>tr</u>ash", "B": "<u>tr</u>ack", "C": "<u>tr</u>ust", "D": "<u>cr</u>eam"}, "correct": "D", "exp": "Từ <b>cream</b> có phần gạch chân phát âm là <b>/kr/</b> (/kriːm/). Các từ <i>trash</i> /træʃ/, <i>track</i> /træk/, <i>trust</i> /trʌst/ đều phát âm là <b>/tr/</b>.", "translation": "Phát âm phụ âm ghép: cream (/kr/) khác với trash, track, trust (/tr/)."}, {"num": 11, "topic": "Trọng âm từ 2 âm tiết", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word that differs from the other three in the position of primary stress:", "options": {"A": "laundry", "B": "duty", "C": "divide", "D": "rubbish"}, "correct": "C", "exp": "<b>divide</b> có trọng âm rơi vào âm tiết thứ 2 (/dɪˈvaɪd/). Các từ <i>laundry</i> /ˈlɔːndri/, <i>duty</i> /ˈdjuːti/, <i>rubbish</i> /ˈrʌbɪʃ/ đều có trọng âm rơi vào âm tiết thứ 1.", "translation": "Trọng âm từ 2 âm tiết: divide (âm 2) khác với laundry, duty, rubbish (âm 1)."}, {"num": 12, "topic": "Trọng âm từ 3-4 âm tiết", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word that differs from the other three in the position of primary stress:", "options": {"A": "gratitude", "B": "homemaker", "C": "grocery", "D": "responsible"}, "correct": "D", "exp": "<b>responsible</b> có trọng âm rơi vào âm tiết thứ 2 (/rɪˈspɒnsəbl/). Các từ <i>gratitude</i> /ˈɡrætɪtjuːd/, <i>homemaker</i> /ˈhəʊmmeɪkə/, <i>grocery</i> /ˈɡrəʊsəri/ đều có trọng âm rơi vào âm tiết thứ 1.", "translation": "Trọng âm: responsible (âm 2) khác với gratitude, homemaker, grocery (âm 1)."}, {"num": 13, "topic": "Từ vựng - Trụ cột gia đình", "passageId": null, "title": "In many traditional societies, the husband was seen as the main ______ who provided financial support for the entire household.", "options": {"A": "breadwinner", "B": "homemaker", "C": "housekeeper", "D": "servant"}, "correct": "A", "exp": "<b>breadwinner</b> (n): người trụ cột kiếm tiền nuôi gia đình. <i>Homemaker</i>: người nội trợ; <i>housekeeper</i>: người quản gia/người giúp việc; <i>servant</i>: người hầu.", "translation": "Trong nhiều xã hội truyền thống, người chồng được xem là người trụ cột kiếm tiền chính cung cấp tài chính cho cả gia đình."}, {"num": 14, "topic": "Cụm từ Cố định (Collocation)", "passageId": null, "title": "In modern households, both parents work full-time, so they agree to ______ the household chores equally.", "options": {"A": "multiply", "B": "divide", "C": "subtract", "D": "calculate"}, "correct": "B", "exp": "Cụm từ <b>divide / split household chores</b> có nghĩa là phân chia công việc nhà.", "translation": "Trong các gia đình hiện đại, cả bố và mẹ đều đi làm toàn thời gian, vì vậy họ đồng ý phân chia việc nhà một cách bình đẳng."}, {"num": 15, "topic": "Cụm danh từ - Việc nặng nhọc", "passageId": null, "title": "My father usually takes care of the ______ lifting, such as moving heavy furniture and repairing household appliances.", "options": {"A": "strong", "B": "hard", "C": "heavy", "D": "massive"}, "correct": "C", "exp": "Cụm danh từ cố định <b>heavy lifting</b>: công việc nặng nhọc, mang vác đồ đạc nặng.", "translation": "Bố tôi thường phụ trách các công việc nặng nhọc như chuyển đồ nội thất nặng và sửa chữa các thiết bị gia dụng."}, {"num": 16, "topic": "Thì Hiện tại tiếp diễn (Look!)", "passageId": null, "title": "Look! My brother ______ the kitchen floor while my mother is preparing dinner.", "options": {"A": "sweeps", "B": "is sweeping", "C": "swept", "D": "has swept"}, "correct": "B", "exp": "Dấu hiệu mệnh lệnh <i>'Look!'</i> kết hợp với hành động song song <i>'while my mother is preparing dinner'</i> diễn tả hành động đang xảy ra tại thời điểm nói -> Dùng thì <b>Hiện tại tiếp diễn (is sweeping)</b>.", "translation": "Nhìn kìa! Anh trai tôi đang quét sàn bếp trong khi mẹ đang chuẩn bị bữa tối."}, {"num": 17, "topic": "Động từ chỉ trạng thái (Stative Verbs)", "passageId": null, "title": "Nam ______ that doing household chores helps him become more independent and responsible.", "options": {"A": "is understanding", "B": "understands", "C": "has understood", "D": "was understanding"}, "correct": "B", "exp": "<b>understand</b> là động từ chỉ nhận thức/trạng thái (Stative Verb), không dùng ở thì tiếp diễn kể cả khi nói về nhận thức ở hiện tại -> Dùng thì <b>Hiện tại đơn (understands)</b>.", "translation": "Nam hiểu rằng việc làm việc nhà giúp bạn ấy trở nên tự lập và có trách nhiệm hơn."}, {"num": 18, "topic": "Cụm động từ (Phrasal Verb)", "passageId": null, "title": "Before going to sleep, my mother always reminds me to ______ the rubbish bin in front of the house.", "options": {"A": "take in", "B": "put out", "C": "give away", "D": "turn off"}, "correct": "B", "exp": "Cụm động từ <b>put out the rubbish / trash</b>: đem rác ra ngoài / đổ rác.", "translation": "Trước khi đi ngủ, mẹ luôn nhắc tôi mang thùng rác ra đặt trước cửa nhà."}, {"num": 19, "topic": "Từ đồng nghĩa (Closest Meaning)", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word(s) CLOSEST in meaning to the underlined word:\nSharing household chores fosters <u>mutual</u> respect and deep understanding among family members.", "options": {"A": "shared", "B": "individual", "C": "separate", "D": "secret"}, "correct": "A", "exp": "<b>mutual</b> (adj): lẫn nhau, qua lại, có tính sẻ chia = <b>shared</b> (adj) / reciprocal. <i>Individual</i>: cá nhân; <i>separate</i>: riêng biệt; <i>secret</i>: bí mật.", "translation": "Từ đồng nghĩa: mutual (lẫn nhau, chia sẻ) = shared."}, {"num": 20, "topic": "Từ trái nghĩa (Opposite Meaning)", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word(s) OPPOSITE in meaning to the underlined word:\nHis <u>irresponsible</u> attitude towards daily domestic chores caused frequent arguments with his parents.", "options": {"A": "careless", "B": "dutiful", "C": "reckless", "D": "passive"}, "correct": "B", "exp": "<b>irresponsible</b> (adj): vô trách nhiệm. Trái nghĩa là <b>dutiful</b> (adj): có trách nhiệm, tận tụy, chu toàn bổn phận / responsible.", "translation": "Từ trái nghĩa: irresponsible (vô trách nhiệm) >< dutiful (có trách nhiệm, tận tụy)."}, {"num": 21, "topic": "Cấu tạo từ (Word Formation)", "passageId": null, "title": "Parents should encourage their children to take ______ for their own personal belongings and school assignments.", "options": {"A": "responsible", "B": "responsibility", "C": "responsibly", "D": "irresponsible"}, "correct": "B", "exp": "Cấu trúc <b>take responsibility for something</b> (chịu trách nhiệm về điều gì). Sau động từ <i>take</i> cần một danh từ -> <b>responsibility</b>.", "translation": "Cha mẹ nên khuyến khích con cái tự chịu trách nhiệm về đồ dùng cá nhân và bài tập trường học của mình."}, {"num": 22, "topic": "Phân biệt Housework vs. Homework", "passageId": null, "title": "After finishing all his math ______ for school, Nam helped his mother do the ______ around the house.", "options": {"A": "homework / housework", "B": "housework / homework", "C": "homework / homework", "D": "housework / housework"}, "correct": "A", "exp": "<b>homework</b> (n): bài tập về nhà do giáo viên giao; <b>housework</b> (n): công việc nhà (nấu nướng, dọn dẹp, giặt giũ).", "translation": "Sau khi hoàn thành tất cả bài tập toán ở trường, Nam giúp mẹ làm công việc nhà."}, {"num": 23, "topic": "Giao tiếp - Đề nghị giúp đỡ", "passageId": null, "title": "David is offering to help his sister in the kitchen:\nDavid: 'Would you like me to give you a hand with washing the dishes?'\nAnna: '______. That is very kind of you.'", "options": {"A": "No, I don't like it", "B": "Yes, please", "C": "You are welcome", "D": "Never mind, go away"}, "correct": "B", "exp": "Khi ai đó ngỏ ý giúp đỡ một cách lịch sự bằng <i>'Would you like me to...?'</i>, câu đáp nhận lời trang trọng, lịch sự nhất là <b>'Yes, please. That is very kind of you.'</b> (Vâng, cảm ơn anh. Anh thật tốt bụng).", "translation": "Giao tiếp: David: 'Em có muốn anh giúp một tay rửa bát không?' - Anna: 'Vâng, nhờ anh ạ. Anh thật tốt bụng.'"}, {"num": 24, "topic": "Giao tiếp - Bày tỏ quan điểm đồng thuận", "passageId": null, "title": "Linda and Peter are discussing family responsibilities:\nLinda: 'I firmly believe that teenagers should share household chores with their parents.'\nPeter: '______. It teaches them vital self-care skills for independent life.'", "options": {"A": "I couldn't agree with you more", "B": "I totally disagree with you", "C": "I don't think that is true", "D": "You must be joking"}, "correct": "A", "exp": "Peter đưa ra lý do bổ trợ <i>'It teaches them vital self-care skills...'</i> chứng tỏ bạn ấy hoàn toàn tán thành quan điểm của Linda -> Chọn <b>'I couldn't agree with you more'</b> (Tôi hoàn toàn đồng ý với bạn).", "translation": "Giao tiếp: Linda: 'Tôi tin chắc rằng thanh thiếu niên nên chia sẻ việc nhà với cha mẹ.' - Peter: 'Tôi hoàn toàn đồng ý với bạn. Việc đó dạy các bạn kỹ năng tự chăm sóc bản thân cần thiết...'"}, {"num": 25, "topic": "Đọc điền từ - Danh từ trụ cột", "passageId": "cloze", "title": "Choose the best answer for blank (25):", "options": {"A": "breadwinner", "B": "homemaker", "C": "lodger", "D": "tenant"}, "correct": "A", "exp": "Ngữ cảnh <i>'the father acted as the sole ______ who earned the family income'</i> (người cha đóng vai trò là người trụ cột duy nhất kiếm thu nhập) -> Danh từ <b>breadwinner</b>.", "translation": "Điền vào chỗ trống (25): breadwinner (người trụ cột kiếm tiền)."}, {"num": 26, "topic": "Đọc điền từ - Danh động từ phân chia", "passageId": "cloze", "title": "Choose the best answer for blank (26):", "options": {"A": "ignoring", "B": "dividing", "C": "stopping", "D": "multiplying"}, "correct": "B", "exp": "Cụm từ <b>dividing household chores</b>: phân chia việc nhà giữa các thành viên.", "translation": "Điền vào chỗ trống (26): dividing (việc phân chia việc nhà)."}, {"num": 27, "topic": "Đọc điền từ - Tính từ gánh nặng tài chính/tâm lý", "passageId": "cloze", "title": "Choose the best answer for blank (27):", "options": {"A": "financial", "B": "musical", "C": "chemical", "D": "magical"}, "correct": "A", "exp": "Cụm từ <b>financial burden</b>: gánh nặng tài chính (hoặc gánh nặng tâm lý/thể chất song hành trong bối cảnh gia đình).", "translation": "Điền vào chỗ trống (27): financial (thuộc về tài chính)."}, {"num": 28, "topic": "Đọc điền từ - Động từ gắn kết", "passageId": "cloze", "title": "Choose the best answer for blank (28):", "options": {"A": "damages", "B": "strengthens", "C": "breaks", "D": "weakens"}, "correct": "B", "exp": "Cụm từ <b>strengthens family bonds</b>: củng cố và thắt chặt tình cảm gia đình.", "translation": "Điền vào chỗ trống (28): strengthens (thắt chặt, làm bền chặt)."}, {"num": 29, "topic": "Đọc điền từ - Đại từ quan hệ", "passageId": "cloze", "title": "Choose the best answer for blank (29):", "options": {"A": "which", "B": "who", "C": "whom", "D": "whose"}, "correct": "A", "exp": "Dùng đại từ quan hệ <b>which</b> sau dấu phẩy để thay thế cho toàn bộ mệnh đề đứng trước (việc cùng làm việc nhà thắt chặt tình cảm, điều này tạo nên một môi trường gia đình ấm áp).", "translation": "Điền vào chỗ trống (29): which (thay thế cho cả mệnh đề phía trước)."}, {"num": 30, "topic": "Đọc hiểu - Ý chính bài đọc", "passageId": "reading", "title": "What is the primary topic of the passage?", "options": {"A": "The financial cost of domestic appliances in modern apartments", "B": "The profound benefits of equitable chore sharing for relationships and child development", "C": "The history of ancient gender inequalities in European societies", "D": "The academic pressure placed on high school students by parents"}, "correct": "B", "exp": "Bài đọc phân tích toàn diện từ lợi ích đối với hôn nhân (paragraph 1), đối với sự phát triển nhân cách và kỹ năng của trẻ (paragraph 2) và sự gắn kết gia đình (paragraph 3): <b>'The profound benefits of equitable chore sharing for relationships and child development'</b>.", "translation": "Ý chính của đoạn văn là gì? -> Những lợi ích sâu sắc của việc phân chia việc nhà bình đẳng đối với các mối quan hệ và sự phát triển của trẻ."}, {"num": 31, "topic": "Đọc hiểu - Chi tiết nghiên cứu Harvard", "passageId": "reading", "title": "According to the Harvard study mentioned in paragraph 2, children who do regular chores ______.", "options": {"A": "earn less money in their adult careers", "B": "grow into more successful, independent, and empathetic adults", "C": "suffer from severe exhaustion during adolescence", "D": "refuse to live with their parents after graduating"}, "correct": "B", "exp": "Đoạn 2 chỉ rõ: <i>'discovered that children who performed regular household chores grew into more successful, independent, and empathetic adults.'</i>", "translation": "Theo nghiên cứu của Harvard ở đoạn 2, những đứa trẻ thường xuyên làm việc nhà -> trưởng thành thành những người lớn thành công, độc lập và giàu lòng thấu cảm hơn."}, {"num": 32, "topic": "Đọc hiểu - Từ vựng theo ngữ cảnh", "passageId": "reading", "title": "The word 'collaborative' in paragraph 1 is closest in meaning to ______.", "options": {"A": "competitive", "B": "cooperative", "C": "isolated", "D": "aggressive"}, "correct": "B", "exp": "<b>collaborative</b> (adj): có tính hợp tác, chung tay = <b>cooperative</b> (adj). <i>Competitive</i>: cạnh tranh; <i>isolated</i>: cô lập; <i>aggressive</i>: hung hăng.", "translation": "Từ 'collaborative' (hợp tác) ở đoạn 1 đồng nghĩa với từ nào? -> cooperative (mang tính hợp tác)."}, {"num": 33, "topic": "Đọc hiểu - Từ trái nghĩa trong bài", "passageId": "reading", "title": "The word 'burdensome' in paragraph 3 is OPPOSITE in meaning to ______.", "options": {"A": "demanding", "B": "heavy", "C": "effortless", "D": "painful"}, "correct": "C", "exp": "<b>burdensome</b> (adj): nặng nề, gánh nặng. Trái nghĩa là <b>effortless</b> (adj): nhẹ nhàng, không tốn công sức / manageable.", "translation": "Từ 'burdensome' (nặng nề, phiền toái) ở đoạn 3 trái nghĩa với từ nào? -> effortless (nhẹ nhàng, dễ dàng)."}, {"num": 34, "topic": "Đọc hiểu - Tác hại khi được miễn việc nhà", "passageId": "reading", "title": "According to paragraph 2, what happens to teenagers who are exempt from all household tasks?", "options": {"A": "They become top academic scholars immediately.", "B": "They master time management faster than their peers.", "C": "They often struggle with time management and resilience when living independently.", "D": "They build closer relationships with their siblings."}, "correct": "C", "exp": "Đoạn 2 nêu rõ: <i>'Conversely, adolescents who are completely exempt from household responsibilities often struggle with time management, problem-solving, and emotional resilience when they leave home...'</i>", "translation": "Theo đoạn 2, điều gì xảy ra với những thiếu niên được miễn hoàn toàn việc nhà? -> Các bạn thường gặp khó khăn trong việc quản lý thời gian và khả năng phục hồi khi sống tự lập."}, {"num": 35, "topic": "Đọc hiểu - Suy luận (Inference)", "passageId": "reading", "title": "Which of the following can be inferred from the passage?", "options": {"A": "Housework should solely be completed by automated cleaning robots.", "B": "Sharing chores serves as an informal educational foundation for lifelong character building.", "C": "Parents who do not assign chores have happier marriages.", "D": "Academic success is completely unrelated to personal discipline."}, "correct": "B", "exp": "Đoạn kết khẳng định: <i>'it is a powerful educational strategy that cultivates responsible citizens and reinforces lifelong family harmony'</i> -> Việc chia sẻ việc nhà đóng vai trò như một nền tảng giáo dục không chính thức giúp rèn luyện nhân cách suốt đời.", "translation": "Điều nào có thể được suy ra từ đoạn văn? -> Việc chia sẻ việc nhà đóng vai trò như nền tảng giáo dục thực tế rèn luyện nhân cách lâu dài."}, {"num": 36, "topic": "Biến đổi câu - Hiện tại tiếp diễn chỉ sự phàn nàn", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the sentence that is closest in meaning to the original sentence:\nMy brother has an annoying habit of leaving his dirty clothes on the floor.", "options": {"A": "My brother is always leaving his dirty clothes on the floor.", "B": "My brother never leaves his dirty clothes on the floor.", "C": "My brother always leaves his clean clothes on the floor.", "D": "My brother was leaving his dirty clothes on the floor yesterday."}, "correct": "A", "exp": "Cấu trúc thì Hiện tại tiếp diễn với <b>always</b> (<i>'S + is/are + always + V-ing'</i>) dùng để diễn tả một thói quen xấu gây khó chịu, bực mình cho người nói.", "translation": "Biến đổi câu: Em trai tôi có thói quen khó chịu là hay vứt quần áo bẩn ra sàn = Em trai tôi lúc nào cũng vứt quần áo bẩn ra sàn."}, {"num": 37, "topic": "Biến đổi câu - Cấu trúc be responsible for", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the sentence that is closest in meaning to the original sentence:\nIt is my duty to wash the dishes and take out the rubbish every evening.", "options": {"A": "I am responsible for washing the dishes and taking out the rubbish every evening.", "B": "I refuse to wash the dishes and take out the rubbish every evening.", "C": "I avoid washing the dishes and taking out the rubbish every evening.", "D": "I used to wash the dishes and take out the rubbish every evening."}, "correct": "A", "exp": "Cấu trúc: <i>'It is one's duty to + V-inf'</i> tương đương với <b>'S + be responsible for + V-ing'</b> (Ai đó chịu trách nhiệm làm việc gì).", "translation": "Biến đổi câu: Bổn phận của tôi là rửa bát và đổ rác mỗi tối = Tôi chịu trách nhiệm rửa bát và đổ rác mỗi tối."}, {"num": 38, "topic": "Kết hợp câu - Đảo ngữ Not only... but also", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the sentence that best combines each pair of sentences:\nDoing chores equips teenagers with vital life skills. It also builds strong family bonds.", "options": {"A": "Not only does doing chores equip teenagers with vital life skills, but it also builds strong family bonds.", "B": "Although doing chores equips teenagers with vital life skills, it breaks family bonds.", "C": "Doing chores neither equips teenagers with vital life skills nor builds family bonds.", "D": "Because doing chores equips teenagers with life skills, it prevents building family bonds."}, "correct": "A", "exp": "Cấu trúc đảo ngữ nhấn mạnh sự kết hợp hai lợi ích: <b>'Not only + trợ động từ (does) + S + V-inf, but S + also + V'</b> (Không những... mà còn...).", "translation": "Kết hợp câu: Làm việc nhà trang bị cho thiếu niên kỹ năng sống quan trọng. Nó cũng xây dựng tình cảm gia đình gắn bó -> Không những trang bị kỹ năng sống, làm việc nhà còn giúp gắn kết gia đình."}, {"num": 39, "topic": "Tìm lỗi sai - Động từ chỉ trạng thái (Stative Verb)", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the underlined part that needs correction:\nAt present, my mother <u>is believing</u> that sharing <u>household chores</u> <u>equally</u> brings great <u>happiness</u> to our family.", "options": {"A": "is believing", "B": "household chores", "C": "equally", "D": "happiness"}, "correct": "A", "exp": "<b>believe</b> là động từ chỉ trạng thái/niềm tin (Stative Verb), không chia ở thì Hiện tại tiếp diễn ngay cả khi có trạng từ <i>'At present'</i>. Sửa <i>'is believing'</i> thành <b>'believes'</b>.", "translation": "Tìm lỗi sai: 'believe' là stative verb không dùng tiếp diễn -> sửa 'is believing' thành 'believes'."}, {"num": 40, "topic": "Tìm lỗi sai - Giới từ đi với responsible", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the underlined part that needs correction:\nIn our household, my father <u>is responsible</u> <u>with</u> the heavy <u>lifting</u> and technical <u>repairs</u>.", "options": {"A": "is responsible", "B": "with", "C": "lifting", "D": "repairs"}, "correct": "B", "exp": "Cấu trúc tính từ: <b>responsible for something</b> (chịu trách nhiệm về việc gì), không dùng <i>'responsible with'</i>. Sửa <i>'with'</i> thành <b>'for'</b>.", "translation": "Tìm lỗi sai: Cấu trúc đúng là 'responsible for', không dùng 'responsible with' -> sửa 'with' thành 'for'."}];
+        const PASSAGES = {"cloze": "Family life in modern society has undergone profound transformations. In traditional households, there was a strict division of labor: the father acted as the sole (25) ______ who earned the family income, while the mother worked as a homemaker responsible for all domestic chores. However, in contemporary society, both parents often work full-time outside the home. Consequently, (26) ______ household chores among family members has become essential. Sharing housework not only relieves the physical and (27) ______ burden on mothers, but also teaches children practical life skills. When children take part in sweeping the house, doing the laundry, or washing dishes, they develop a strong sense of responsibility. Furthermore, collaborating on daily tasks (28) ______ family bonds and nurtures mutual appreciation, (29) ______ creates a warm, harmonious, and supportive home environment for everyone.", "reading": "In recent decades, sociologists and psychologists have paid increasing attention to the dynamics of family life and the distribution of household responsibilities. Research consistently demonstrates that families where household chores are shared equitably experience significantly higher levels of marital satisfaction and lower rates of domestic conflict. When both partners contribute to cooking, cleaning, and childcare, they establish a collaborative partnership built on mutual respect.\n\nMoreover, the benefits of shared housework extend directly to children and adolescents. A landmark study conducted by Harvard University tracked individuals over several decades and discovered that children who performed regular household chores grew into more successful, independent, and empathetic adults. By participating in routine domestic tasks such as taking out the rubbish, ironing clothes, or grocery shopping, young people acquire vital self-care abilities that facilitate a smooth transition into independent adulthood. Conversely, adolescents who are completely exempt from household responsibilities often struggle with time management, problem-solving, and emotional resilience when they leave home for college or career.\n\nEqually important is the positive impact on family cohesion. When families work together as a cohesive team to maintain their living space, daily chores cease to be burdensome obligations and transform into opportunities for meaningful interaction and bonding. Parents can use this shared time to converse with their children about school, friendships, and future aspirations. Ultimately, fostering an equitable division of household labor is not merely about maintaining a clean living environment; it is a powerful educational strategy that cultivates responsible citizens and reinforces lifelong family harmony."};
+
+        let currentIdx = 0;
+        let userAnswers = new Array(QUESTIONS.length).fill(null);
+        let timerInterval = null;
+        let timeLeft = 45 * 60;
+        let examSubmitted = false;
+        let tabSwitchCount = 0;
+        let studentName = "";
+        let studentClass = "";
+
+        // Anti-cheat protections
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F12' || (e.ctrlKey && ['u','c','v','s','a','p'].includes(e.key.toLowerCase()))) {
+                e.preventDefault();
+            }
+        });
+        window.addEventListener('blur', () => {
+            if (!examSubmitted && document.getElementById('exam-screen').style.display !== 'none') {
+                tabSwitchCount++;
+                if (tabSwitchCount >= 3) {
+                    alert("CẢNH BÁO: Bạn đã chuyển tab 3 lần. Hệ thống tự động thu bài!");
+                    finishExam();
+                } else {
+                    alert(`CẢNH BÁO: Bạn vừa rời khỏi màn hình thi (${tabSwitchCount}/3 lần). Rời quá 3 lần hệ thống sẽ tự động nộp bài!`);
+                }
+            }
+        });
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            if (tabId === 'theory') {
+                document.getElementById('tab-theory').classList.add('active');
+                document.getElementById('btn-tab-theory').classList.add('active');
+            } else {
+                document.getElementById('tab-quiz').classList.add('active');
+                document.getElementById('btn-tab-quiz').classList.add('active');
+                if (!examSubmitted && document.getElementById('exam-screen').style.display === 'none' && document.getElementById('result-screen').style.display === 'none') {
+                    const savedName = localStorage.getItem('student_name') || '';
+                    const savedClass = localStorage.getItem('student_class') || '';
+                    if (savedName) document.getElementById('inp-name').value = savedName;
+                    if (savedClass) document.getElementById('inp-class').value = savedClass;
+                    document.getElementById('modal-start').style.display = 'flex';
+                }
+            }
+        }
+
+        function startExam() {
+            const name = document.getElementById('inp-name').value.trim();
+            const cls = document.getElementById('inp-class').value.trim();
+            if (!name || !cls) {
+                alert("Vui lòng nhập đầy đủ Họ tên và Lớp học trước khi làm bài!");
+                return;
+            }
+            studentName = name;
+            studentClass = cls;
+            localStorage.setItem('student_name', name);
+            localStorage.setItem('student_class', cls);
+
+            document.getElementById('user-display-name').textContent = "Học sinh: " + studentName;
+            document.getElementById('user-display-class').textContent = "Lớp: " + studentClass;
+            document.getElementById('modal-start').style.display = 'none';
+            document.getElementById('exam-screen').style.display = 'grid';
+
+            initPalette();
+            renderQuestion(0);
+            startTimer();
+        }
+
+        function initPalette() {
+            const grid = document.getElementById('palette-grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'pal-btn';
+                btn.id = `pal-${i}`;
+                btn.textContent = i + 1;
+                btn.onclick = () => renderQuestion(i);
+                grid.appendChild(btn);
+            }
+        }
+
+        function renderQuestion(idx) {
+            currentIdx = idx;
+            const q = QUESTIONS[idx];
+
+            document.getElementById('q-topic').textContent = q.topic || "Luyện tập";
+            document.getElementById('q-progress').textContent = `Câu ${idx + 1} / ${QUESTIONS.length}`;
+            document.getElementById('q-title').innerHTML = `<b>Câu ${idx + 1}:</b> ` + q.title.replace(/\n/g, '<br>');
+
+            // Handle Audio Player
+            const audioBox = document.getElementById('audio-container');
+            const audioPlayer = document.getElementById('audio-player');
+            if (q.audio_file) {
+                audioBox.style.display = 'block';
+            } else {
+                audioBox.style.display = 'none';
+                if (!audioPlayer.paused) audioPlayer.pause();
+            }
+
+            // Handle Passage
+            const passBox = document.getElementById('passage-container');
+            if (q.passageId && PASSAGES[q.passageId]) {
+                passBox.style.display = 'block';
+                document.getElementById('passage-title').textContent = q.passageId === 'cloze' ? 'Đoạn văn điền từ (Questions 25 - 29)' : 'Đoạn văn đọc hiểu (Questions 30 - 35)';
+                document.getElementById('passage-body').innerHTML = PASSAGES[q.passageId].replace(/\n/g, '<br><br>');
+            } else {
+                passBox.style.display = 'none';
+            }
+
+            // Render Options
+            const optContainer = document.getElementById('opt-container');
+            optContainer.innerHTML = '';
+            for (const [key, val] of Object.entries(q.options)) {
+                const label = document.createElement('label');
+                label.className = `opt-label ${userAnswers[idx] === key ? 'selected' : ''}`;
+                label.innerHTML = `
+                    <div class="opt-circle">${key}</div>
+                    <div class="opt-text"><b>${key}.</b> ${val}</div>
+                `;
+                label.onclick = () => selectOption(idx, key);
+                optContainer.appendChild(label);
+            }
+
+            // Update Controls
+            document.getElementById('btn-prev').disabled = (idx === 0);
+            document.getElementById('btn-next').innerHTML = (idx === QUESTIONS.length - 1) ? `Đến câu đầu <i class="fa-solid fa-arrow-up"></i>` : `Câu tiếp theo <i class="fa-solid fa-arrow-right"></i>`;
+
+            // Update Palette Active State
+            document.querySelectorAll('.pal-btn').forEach((btn, i) => {
+                btn.classList.toggle('current', i === idx);
+            });
+        }
+
+        function selectOption(qIdx, optKey) {
+            if (examSubmitted) return;
+            userAnswers[qIdx] = optKey;
+            
+            // Highlight option
+            const labels = document.querySelectorAll('.opt-label');
+            labels.forEach(l => l.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+
+            // Update palette item
+            const palBtn = document.getElementById(`pal-${qIdx}`);
+            if (palBtn) palBtn.classList.add('answered');
+
+            updateProgress();
+        }
+
+        function prevQuestion() {
+            if (currentIdx > 0) renderQuestion(currentIdx - 1);
+        }
+
+        function nextQuestion() {
+            if (currentIdx < QUESTIONS.length - 1) {
+                renderQuestion(currentIdx + 1);
+            } else {
+                renderQuestion(0);
+            }
+        }
+
+        function updateProgress() {
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            const pct = Math.round((answeredCount / QUESTIONS.length) * 100);
+            document.getElementById('progress-bar').style.width = pct + '%';
+            document.getElementById('progress-percent').textContent = pct + '%';
+            document.getElementById('answered-count').textContent = `${answeredCount}/${QUESTIONS.length}`;
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const min = Math.floor(timeLeft / 60);
+                const sec = timeLeft % 60;
+                document.getElementById('timer-display').textContent = 
+                    `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Hết giờ làm bài! Hệ thống tự động thu bài.");
+                    finishExam();
+                }
+            }, 1000);
+        }
+
+        function confirmSubmit() {
+            const unanswered = userAnswers.filter(a => a === null).length;
+            let msg = "Bạn có chắc chắn muốn nộp bài thi?";
+            if (unanswered > 0) {
+                msg = `Bạn còn ${unanswered} câu chưa trả lời. Bạn có chắc chắn muốn nộp bài không?`;
+            }
+            if (confirm(msg)) {
+                finishExam();
+            }
+        }
+
+        function finishExam() {
+            if (examSubmitted) return;
+            examSubmitted = true;
+            clearInterval(timerInterval);
+
+            // Compute Score
+            let correctCount = 0;
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                if (userAnswers[i] === QUESTIONS[i].correct) {
+                    correctCount++;
+                }
+            }
+            const score10 = ((correctCount / QUESTIONS.length) * 10).toFixed(1);
+
+            // Show Result Screen
+            document.getElementById('exam-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            document.getElementById('final-score').textContent = score10;
+            document.getElementById('result-detail').textContent = 
+                `Thí sinh: ${studentName} | Lớp: ${studentClass} | Đúng: ${correctCount}/${QUESTIONS.length} câu (${Math.round(correctCount/QUESTIONS.length*100)}%)`;
+
+            // Confetti
+            if (score10 >= 8.0 && typeof confetti === 'function') {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+
+            renderReview('all');
+
+            // Send Result to Google Sheets
+            try {
+                const timeSpent = 45 * 60 - timeLeft;
+                const minSpent = Math.floor(timeSpent / 60);
+                const secSpent = timeSpent % 60;
+                const payload = {
+                    timestamp: new Date().toISOString(),
+                    lesson: LESSON_TITLE,
+                    name: studentName,
+                    className: studentClass,
+                    score: score10,
+                    correct: `${correctCount}/${QUESTIONS.length}`,
+                    timeUsed: `${minSpent}m ${secSpent}s`
+                };
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                }).catch(e => console.log(e));
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        function renderReview(filter) {
+            const list = document.getElementById('review-list');
+            list.innerHTML = '';
+
+            QUESTIONS.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = (userAns === q.correct);
+
+                if (filter === 'correct' && !isCorrect) return;
+                if (filter === 'wrong' && isCorrect) return;
+
+                const card = document.createElement('div');
+                card.className = `review-item ${isCorrect ? 'correct' : 'incorrect'}`;
+                card.innerHTML = `
+                    <div class="review-header">
+                        <span>Câu ${idx + 1}: ${q.topic || ''}</span>
+                        <span style="color: ${isCorrect ? 'var(--success)' : 'var(--danger)'}">
+                            ${isCorrect ? '<i class="fa-solid fa-check"></i> ĐÚNG' : '<i class="fa-solid fa-xmark"></i> SAI'}
+                        </span>
+                    </div>
+                    <div style="font-weight: 600; margin-bottom: 0.5rem; text-align: justify;">${q.title.replace(/\n/g, '<br>')}</div>
+                    <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">
+                        <div>• Lựa chọn của bạn: <b>${userAns || 'Chưa trả lời'}</b></div>
+                        <div>• Đáp án chính xác: <b style="color: var(--success);">${q.correct}</b> - ${q.options[q.correct]}</div>
+                    </div>
+                    <div class="review-exp">
+                        <b><i class="fa-solid fa-lightbulb"></i> Giải thích chi tiết:</b> ${q.exp}
+                        ${q.translation ? `<div style="margin-top: 4px; font-style: italic; color: #475569;"><b>Dịch nghĩa:</b> ${q.translation}</div>` : ''}
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function filterReview(type) {
+            renderReview(type);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 2: My House - Tiếng Anh 6 (Global Success)</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #3b82f6;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Sticky Header */
+        .sticky-header {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        }
+        .header-container {
+            max-width: 1200px; margin: 0 auto; padding: 10px 15px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .site-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .logo-img { width: 32px; height: 32px; border-radius: 8px; object-fit: contain; }
+        .logo-text {
+            font-size: 1.25rem; font-weight: 800;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .nav-links { display: flex; gap: 14px; align-items: center; }
+        .nav-item {
+            text-decoration: none; color: #475569; font-weight: 600; font-size: 0.9rem;
+            display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s;
+        }
+        .nav-item:hover { color: #4f46e5; }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 0.4rem;
+            background: #f1f5f9;
+            padding: 0.25rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #475569;
+            padding: 0.45rem 0.9rem;
+            font-weight: 700;
+            font-size: 0.88rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn.active {
+            background: #4f46e5;
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        @media (max-width: 768px) {
+            .header-container { padding: 8px 12px; flex-direction: column; gap: 8px; }
+            .logo-text { font-size: 1.1rem; }
+            .nav-links { width: 100%; justify-content: space-between; }
+        }
+
+        .main-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+            flex: 1;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Theory Tab Styling */
+        .theory-wrapper {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2.25rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .theory-content {
+            text-align: justify;
+            line-height: 1.7;
+        }
+
+        .theory-card {
+            background: white; border-radius: 14px; padding: 20px; margin-bottom: 20px;
+            border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .theory-card-header {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        .theory-icon {
+            width: 36px; height: 36px; border-radius: 8px; background: #e0e7ff; color: #4338ca;
+            display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;
+        }
+        .theory-title { font-size: 1.15rem; font-weight: 800; color: #1e1b4b; }
+        .theory-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+        
+        .vocab-item {
+            background: #f8fafc; border-left: 4px solid var(--primary); padding: 10px 14px; border-radius: 8px;
+        }
+        .vocab-word { font-weight: 700; color: #1e293b; font-size: 0.95rem; }
+        .vocab-meaning { font-size: 0.88rem; color: #475569; margin-top: 2px; }
+        .vocab-example { font-size: 0.82rem; color: #0284c7; font-style: italic; margin-top: 4px; }
+
+        .grammar-box {
+            background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 14px 16px; margin-top: 12px;
+        }
+        .rule-title { font-weight: 700; color: #166534; font-size: 0.92rem; margin-bottom: 6px; }
+        .rule-formula {
+            background: white; padding: 8px 12px; border-radius: 6px; font-family: monospace;
+            font-weight: 700; color: #0f172a; border: 1px solid #bbf7d0; margin: 4px 0; font-size: 0.9rem;
+        }
+
+        .jump-btn-container {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px dashed var(--border);
+        }
+
+        .jump-btn {
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 800;
+            padding: 1rem 2.5rem;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.35);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .jump-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(79, 70, 229, 0.45);
+        }
+
+        /* CBT / Exam Tab Styling */
+        .exam-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .exam-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .exam-panel {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            text-align: justify;
+        }
+
+        .exam-meta-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .badge-topic {
+            background: #eef2ff;
+            color: #4338ca;
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.825rem;
+            font-weight: 700;
+        }
+
+        .audio-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .passage-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid var(--primary);
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .passage-title {
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .question-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .opt-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.875rem 1.25rem;
+            border: 1.5px solid var(--border);
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #ffffff;
+            font-size: 1rem;
+        }
+
+        .opt-item:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .opt-item.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .opt-letter {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .opt-item.selected .opt-letter {
+            background: var(--primary);
+            color: white;
+        }
+
+        .question-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .ctrl-btn {
+            padding: 0.65rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text-main);
+        }
+
+        .ctrl-btn:hover:not(:disabled) {
+            background: #f1f5f9;
+        }
+
+        .ctrl-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .ctrl-btn-next {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .ctrl-btn-next:hover:not(:disabled) {
+            background: var(--primary-dark);
+        }
+
+        /* Sidebar Palette */
+        .palette-panel {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            position: sticky;
+            top: 5rem;
+        }
+
+        .timer-card {
+            background: #fff7ed;
+            border: 1px solid #ffedd5;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            text-align: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .timer-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #c2410c;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .timer-val {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #9a3412;
+            font-family: 'Space Grotesk', monospace;
+        }
+
+        .user-info-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.875rem;
+        }
+
+        .progress-wrap {
+            margin-bottom: 1.25rem;
+        }
+
+        .progress-bar-bg {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 9999px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .palette-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            max-height: 240px;
+            overflow-y: auto;
+            padding-right: 4px;
+            margin-bottom: 1.5rem;
+        }
+
+        .palette-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: 0.375rem;
+            border: 1px solid var(--border);
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            color: var(--text-muted);
+        }
+
+        .palette-cell:hover {
+            border-color: var(--primary);
+        }
+
+        .palette-cell.current {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .palette-cell.answered {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 0.875rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        /* Registration Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 1rem;
+        }
+
+        .modal-box {
+            background: white;
+            border-radius: 1rem;
+            max-width: 480px;
+            width: 100%;
+            padding: 2.25rem;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .modal-input:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .modal-notes {
+            background: #fffbeb;
+            border-left: 4px solid var(--accent);
+            padding: 0.75rem 1rem;
+            border-radius: 0 0.375rem 0.375rem 0;
+            font-size: 0.825rem;
+            color: #92400e;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .modal-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            padding: 0.875rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* Results Display */
+        .result-view {
+            background: white;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .score-banner {
+            text-align: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .score-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.5);
+        }
+
+        .score-val {
+            font-size: 2.4rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .score-max {
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
+
+        .review-item {
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            background: #fafafa;
+        }
+
+        .review-item.correct {
+            border-left: 5px solid var(--success);
+        }
+
+        .review-item.incorrect {
+            border-left: 5px solid var(--danger);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .review-exp {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background: #f1f5f9;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            color: #1e293b;
+            line-height: 1.5;
+        }
+
+        /* Site Footer */
+        .site-footer {
+            width: 100%; text-align: center; padding: 25px 15px; background: #ffffff;
+            border-top: 1px solid var(--border); margin-top: 40px; color: #64748b; font-size: 0.88rem;
+        }
+        .footer-container { max-width: 1200px; margin: 0 auto; }
+        .footer-links { margin-top: 8px; font-size: 0.82rem; }
+        .footer-links a { color: #4f46e5; text-decoration: none; margin: 0 4px; transition: color 0.2s; }
+        .footer-links a:hover { text-decoration: underline; color: #3730a3; }
+    </style>
+</head>
+<body>
+    <!-- Sticky Header -->
+    <header class="sticky-header">
+        <div class="header-container">
+            <a href="https://vatli102.com" class="site-logo">
+                <img src="favicon.svg" alt="Logo" class="logo-img">
+                <span class="logo-text">vatli102.com</span>
+            </a>
+            <div class="nav-links">
+                <a href="https://vatli102.com" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
+                <a href="https://vatli102.com/gioi-thieu.html" class="nav-item"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a>
+                <a href="https://vatli102.com/lien-he.html" class="nav-item"><i class="fa-solid fa-envelope"></i> Liên hệ</a>
+                <div class="nav-tabs">
+                    <button class="nav-btn active" id="btn-tab-theory" onclick="switchTab('theory')">
+                        <i class="fa-solid fa-book-open"></i> Lý thuyết trọng tâm
+                    </button>
+                    <button class="nav-btn" id="btn-tab-quiz" onclick="switchTab('quiz')">
+                        <i class="fa-solid fa-pen-to-square"></i> Làm bài tập củng cố
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- TAB 1: LÝ THUYẾT TRỌNG TÂM -->
+        <div id="tab-theory" class="tab-pane active">
+            <div class="theory-wrapper">
+                <div class="theory-content">
+                    
+<div class="theory-card">
+    <h2 style="font-size: 1.3rem; font-weight: 800; color: #1e1b4b; margin-bottom: 10px;">
+        Tóm tắt Kiến thức: Unit 2 - My House (Tiếng Anh 6 Global Success)
+    </h2>
+    <p style="font-size: 0.95rem; color: #334155; line-height: 1.75; margin-bottom: 12px;">
+        Trong Unit 2 (Bộ sách <b>Global Success 6</b>), học sinh cần nắm vững hệ thống từ vựng về các loại hình nhà ở, các phòng trong nhà, đồ nội thất và thiết bị gia dụng, dạng của từ liên quan, cấu trúc <i>Sở hữu cách (Possessive Case)</i>, <i>Giới từ chỉ nơi chốn (Prepositions of Place)</i>, cấu trúc <i>There is / There are</i>, cùng quy tắc phát âm đuôi <b>-s / -es (/s/, /z/, /ɪz/)</b>.
+    </p>
+</div>
+
+<div class="theory-card">
+    <div class="theory-card-header">
+        <div class="theory-icon"><i class="fa-solid fa-house"></i></div>
+        <div class="theory-title">1. Từ vựng & Cụm từ (Vocabulary & Collocations)</div>
+    </div>
+    <div class="theory-grid">
+        <div class="vocab-item">
+            <div class="vocab-word">country house (n) /ˈkʌntri haʊs/</div>
+            <div class="vocab-meaning">nhà ở vùng quê / nông thôn</div>
+            <div class="vocab-example">My grandparents live in a cosy country house.</div>
+        </div>
+        <div class="vocab-item">
+            <div class="vocab-word">town house (n) /ˈtaʊn haʊs/</div>
+            <div class="vocab-meaning">nhà phố, nhà ở đô thị</div>
+            <div class="vocab-example">We moved into a new town house in Da Nang.</div>
+        </div>
+        <div class="vocab-item">
+            <div class="vocab-word">stilt house (n) /stɪlt haʊs/</div>
+            <div class="vocab-meaning">nhà sàn truyền thống</div>
+            <div class="vocab-example">The Tay people live in unique stilt houses.</div>
+        </div>
+        <div class="vocab-item">
+            <div class="vocab-word">chest of drawers (n) /ˌtʃest əv ˈdrɔːz/</div>
+            <div class="vocab-meaning">tủ có nhiều ngăn kéo</div>
+            <div class="vocab-example">Keep your socks in the chest of drawers.</div>
+        </div>
+        <div class="vocab-item">
+            <div class="vocab-word">wardrobe (n) /ˈwɔːdrəʊb/</div>
+            <div class="vocab-meaning">tủ đựng quần áo</div>
+            <div class="vocab-example">She hangs her dresses inside the wardrobe.</div>
+        </div>
+        <div class="vocab-item">
+            <div class="vocab-word">cooker (n) /ˈkʊkə(r)/</div>
+            <div class="vocab-meaning">bếp / nồi nấu (thiết bị gia dụng)</div>
+            <div class="vocab-example">We bought a modern electric cooker.</div>
+        </div>
+    </div>
+</div>
+
+<div class="theory-card">
+    <div class="theory-card-header">
+        <div class="theory-icon"><i class="fa-solid fa-shapes"></i></div>
+        <div class="theory-title">2. Cấu tạo từ / Dạng của từ (Word Formation)</div>
+    </div>
+    <div class="theory-grid">
+        <div class="vocab-item">
+            <div class="vocab-word">comfort (n/v) → comfortable (adj)</div>
+            <div class="vocab-meaning">sự tiện nghi → tiện nghi, êm ái</div>
+            <div class="vocab-example">This sofa is extremely comfortable.</div>
+        </div>
+        <div class="vocab-item">
+            <div class="vocab-word">tidy (adj/v) → untidy (adj)</div>
+            <div class="vocab-meaning">gọn gàng → bừa bộn, lộn xộn</div>
+            <div class="vocab-example">His bedroom is untidy with toys everywhere.</div>
+        </div>
+        <div class="vocab-item">
+            <div class="vocab-word">mess (n) → messy (adj)</div>
+            <div class="vocab-meaning">sự bừa bãi → bừa bộn, luộm thuộm</div>
+        </div>
+        <div class="vocab-item">
+            <div class="vocab-word">convenience (n) → convenient (adj)</div>
+            <div class="vocab-meaning">sự thuận tiện → tiện lợi, thuận tiện</div>
+        </div>
+    </div>
+</div>
+
+<div class="theory-card">
+    <div class="theory-card-header">
+        <div class="theory-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div class="theory-title">3. Phân biệt các từ dễ gây nhầm lẫn (Confusing Words)</div>
+    </div>
+    <div style="font-size: 0.92rem; color: #334155; line-height: 1.7;">
+        <p>• <b>COOKER vs. COOK:</b><br>
+        - <i>Cooker (n):</i> Thiết bị / cái bếp nấu ăn (electric cooker, gas cooker).<br>
+        - <i>Cook (n/v):</i> Người đầu bếp (<i>My dad is a great cook</i>) hoặc động từ nấu ăn (<i>She cooks dinner</i>).</p>
+        <p style="margin-top: 8px;">• <b>WARDROBE vs. CUPBOARD:</b><br>
+        - <i>Wardrobe (n):</i> Tủ chuyên dùng để treo quần áo trong phòng ngủ.<br>
+        - <i>Cupboard (n):</i> Tủ có nhiều ngăn kéo hoặc cánh đóng dùng để bát đĩa trong bếp.</p>
+        <p style="margin-top: 8px;">• <b>HOUSE vs. HOME:</b><br>
+        - <i>House (n):</i> Công trình kiến trúc vật lý.<br>
+        - <i>Home (n):</i> Mái ấm gia đình, nơi chốn tràn đầy tình cảm gắn bó.</p>
+    </div>
+</div>
+
+<div class="theory-card">
+    <div class="theory-card-header">
+        <div class="theory-icon"><i class="fa-solid fa-code-branch"></i></div>
+        <div class="theory-title">4. Ngữ pháp: Sở hữu cách & Giới từ vị trí & 'There is / There are'</div>
+    </div>
+    <div class="grammar-box">
+        <div class="rule-title">A. Sở hữu cách (Possessive Case)</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; margin: 10px 0;">
+            <div class="rule-formula" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                <span style="min-width: 160px; font-weight: 700; color: #166534;">• Danh từ số ít / Tên riêng:</span>
+                <span><b>N + 's</b> &nbsp; (<i>Ví dụ: Nam's bedroom, my teacher's desk</i>)</span>
+            </div>
+            <div class="rule-formula" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                <span style="min-width: 160px; font-weight: 700; color: #166534;">• Danh từ số nhiều có -s:</span>
+                <span><b>N(s) + '</b> &nbsp; (<i>Ví dụ: my parents' house, the students' bags</i>)</span>
+            </div>
+            <div class="rule-formula" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                <span style="min-width: 160px; font-weight: 700; color: #166534;">• Danh từ số nhiều bất quy tắc:</span>
+                <span><b>N + 's</b> &nbsp; (<i>Ví dụ: the children's toys, women's clothes</i>)</span>
+            </div>
+        </div>
+    </div>
+    <div class="grammar-box" style="margin-top: 14px;">
+        <div class="rule-title">B. Cấu trúc chỉ sự tồn tại: 'There is / There are'</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; margin: 10px 0;">
+            <div class="rule-formula" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                <span style="min-width: 120px; font-weight: 700; color: #166534;">(+) Khẳng định:</span>
+                <span><b>There is + a / an + N số ít</b> &nbsp;|&nbsp; <b>There are + N số nhiều</b> (<i>There is a lamp / There are two chairs</i>)</span>
+            </div>
+            <div class="rule-formula" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                <span style="min-width: 120px; font-weight: 700; color: #dc2626;">(-) Phủ định:</span>
+                <span><b>There isn't + a / an + N số ít</b> &nbsp;|&nbsp; <b>There aren't + any + N số nhiều</b></span>
+            </div>
+            <div class="rule-formula" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                <span style="min-width: 120px; font-weight: 700; color: #0284c7;">(?) Nghi vấn:</span>
+                <span><b>Is there a/an...?</b> (<i>Yes, there is. / No, there isn't.</i>) &nbsp;|&nbsp; <b>Are there any...?</b> (<i>Yes, there are. / No, there aren't.</i>)</span>
+            </div>
+        </div>
+    </div>
+    <div class="grammar-box" style="margin-top: 14px;">
+        <div class="rule-title">C. Giới từ chỉ nơi chốn (Prepositions of Place)</div>
+        <p style="font-size: 0.9rem; color: #14532d; line-height: 1.7; margin-top: 4px;">
+            • <b>in:</b> ở trong (<i>in the living room</i>) &nbsp;•&nbsp; <b>on:</b> ở trên bề mặt (<i>on the wall</i>) &nbsp;•&nbsp; <b>under:</b> ở dưới (<i>under the bed</i>)<br>
+            • <b>next to:</b> ở bên cạnh (<i>next to the fridge</i>) &nbsp;•&nbsp; <b>behind:</b> ở phía sau (<i>behind the door</i>) &nbsp;•&nbsp; <b>in front of:</b> ở phía trước (<i>in front of the TV</i>)<br>
+            • <b>between ... and ...:</b> ở giữa hai vật/người (<i>between the lamp and the sofa</i>)
+        </p>
+    </div>
+</div>
+
+<div class="theory-card">
+    <div class="theory-card-header">
+        <div class="theory-icon"><i class="fa-solid fa-volume-high"></i></div>
+        <div class="theory-title">5. Ngữ âm: Cách phát âm đuôi -s / -es (/s/, /z/, /ɪz/)</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 0.9rem;">
+        <div style="background: #f8fafc; padding: 10px; border-radius: 8px; border-left: 4px solid #ef4444;">
+            <b>/s/:</b> Sau âm vô thanh /p, k, f, t, θ/<br>
+            • lamp<b>s</b>, sink<b>s</b>, desk<b>s</b>, flat<b>s</b>
+        </div>
+        <div style="background: #f8fafc; padding: 10px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+            <b>/ɪz/:</b> Sau âm xuýt /s, z, ʃ, tʃ, dʒ/<br>
+            • hous<b>es</b>, fridg<b>es</b>, dish<b>es</b>, vas<b>es</b>
+        </div>
+        <div style="background: #f8fafc; padding: 10px; border-radius: 8px; border-left: 4px solid #10b981;">
+            <b>/z/:</b> Sau nguyên âm & âm hữu thanh còn lại<br>
+            • bed<b>s</b>, room<b>s</b>, chair<b>s</b>, villa<b>s</b>
+        </div>
+    </div>
+</div>
+
+
+                    <div class="jump-btn-container">
+                        <button class="jump-btn" onclick="switchTab('quiz')">
+                            <span>Làm bài tập củng cố ngay (40 câu)</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: LÀM BÀI TẬP CỦNG CỐ -->
+        <div id="tab-quiz" class="tab-pane">
+            <!-- Registration Modal -->
+            <div id="modal-reg" class="modal-overlay">
+                <div class="modal-box">
+                    <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: 0.75rem;">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <h2 style="font-size: 1.4rem; color: #0f172a; margin-bottom: 0.5rem; font-family: 'Space Grotesk', sans-serif;">
+                        BÀI TẬP CỦNG CỐ: UNIT 2
+                    </h2>
+                    <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1.5rem;">
+                        My House • 40 Câu trắc nghiệm (Thời gian: 45 phút)
+                    </p>
+
+                    <input type="text" id="inp-name" class="modal-input" placeholder="Nhập Họ và tên học sinh..." required>
+                    <input type="text" id="inp-class" class="modal-input" placeholder="Nhập Lớp (ví dụ: 6A1)..." required>
+
+                    <div class="modal-notes">
+                        <b>Quy chế thi trực tuyến:</b><br>
+                        • Chống gian lận: Không chuyển tab/rời màn hình (quá 3 lần sẽ tự động nộp bài).<br>
+                        • Hệ thống tự động chấm điểm và hiển thị lời giải chi tiết sau khi nộp bài.
+                    </div>
+
+                    <button class="modal-btn" onclick="startExam()">
+                        Bắt đầu làm bài <i class="fa-solid fa-play"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Exam Screen Grid -->
+            <div id="exam-screen" class="exam-grid" style="display: none;">
+                <!-- Left: Question Panel -->
+                <div class="exam-panel">
+                    <div class="exam-meta-bar">
+                        <span class="badge-topic" id="q-topic">Chủ điểm kiến thức</span>
+                        <span style="font-weight: 700; color: var(--primary-dark);" id="q-progress">Câu 1 / 40</span>
+                    </div>
+
+                    <!-- Audio Player Box for Listening Questions -->
+                    <div id="audio-container" class="audio-box" style="display: none;">
+                        <div style="font-weight: 700; color: #4338ca; font-size: 0.9rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-headphones"></i> BÀI NGHE (AUDIO LISTENING):
+                        </div>
+                        <audio id="audio-player" controls style="width: 100%; border-radius: 8px;">
+                            <source src="Test 1 - Unit 2 - Full Audio Listening.mp3" type="audio/mpeg">
+                            Trình duyệt của bạn không hỗ trợ phát âm thanh.
+                        </audio>
+                    </div>
+
+                    <!-- Reading / Cloze Passage if any -->
+                    <div id="passage-container" class="passage-box" style="display: none;">
+                        <div class="passage-title" id="passage-title">ĐOẠN VĂN ĐỌC HIỂU / ĐIỀN TỪ</div>
+                        <div id="passage-body"></div>
+                    </div>
+
+                    <!-- Question Prompt -->
+                    <div class="question-title" id="q-title">Nội dung câu hỏi đang được tải...</div>
+
+                    <!-- Options List -->
+                    <div class="options-list" id="opt-container"></div>
+
+                    <!-- Navigation Controls -->
+                    <div class="question-footer">
+                        <button class="ctrl-btn ctrl-btn-prev" id="btn-prev" onclick="prevQuestion()">
+                            <i class="fa-solid fa-arrow-left"></i> Câu trước
+                        </button>
+                        <button class="ctrl-btn ctrl-btn-next" id="btn-next" onclick="nextQuestion()">
+                            Câu tiếp theo <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right: Sticky Sidebar Palette -->
+                <div class="palette-panel">
+                    <div class="timer-card">
+                        <div class="timer-label"><i class="fa-regular fa-clock"></i> THỜI GIAN CÒN LẠI</div>
+                        <div class="timer-val" id="timer-display">45:00</div>
+                    </div>
+
+                    <div class="user-info-card">
+                        <div style="font-weight: 700; color: #1e293b;" id="user-display-name">Học sinh: ---</div>
+                        <div style="color: #64748b; font-size: 0.8rem;" id="user-display-class">Lớp: ---</div>
+                    </div>
+
+                    <div class="progress-wrap">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="progress-bar"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>Tiến độ làm bài</span>
+                            <span id="progress-percent">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="palette-title">
+                        <span>Bảng câu hỏi (40 câu)</span>
+                        <span style="font-size: 0.8rem; font-weight: 500; color: var(--primary);" id="answered-count">0/40</span>
+                    </div>
+
+                    <div class="palette-grid" id="palette-grid"></div>
+
+                    <button class="submit-btn" onclick="confirmSubmit()">
+                        <i class="fa-solid fa-paper-plane"></i> NỘP BÀI THI
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result Screen -->
+            <div id="result-screen" class="result-view" style="display: none;">
+                <div class="score-banner">
+                    <div class="score-circle">
+                        <span class="score-val" id="final-score">0.0</span>
+                        <span class="score-max">/ 10 ĐIỂM</span>
+                    </div>
+                    <h2 style="font-size: 1.5rem; color: #0f172a; margin-bottom: 0.5rem;" id="result-feedback">KẾT QUẢ BÀI LÀM CỦA BẠN</h2>
+                    <p style="color: #64748b;" id="result-detail">Thí sinh: --- | Lớp: ---</p>
+                </div>
+
+                <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+                    <h3 style="font-size: 1.1rem; color: #1e293b;">BẢNG ĐÁP ÁN & LỜI GIẢI CHI TIẾT</h3>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('all')" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Tất cả</button>
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('wrong')" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; color: var(--danger);">Chỉ câu sai</button>
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('correct')" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; color: var(--success);">Chỉ câu đúng</button>
+                    </div>
+                </div>
+
+                <div id="review-list"></div>
+
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="ctrl-btn ctrl-btn-next" onclick="location.reload()" style="margin: 0 auto;">
+                        <i class="fa-solid fa-rotate-right"></i> Làm lại bài thi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <p>© VATLI102.COM - Hệ thống Học tập & Đánh giá Năng lực Tiếng Anh THCS Chuẩn GDPT 2018.</p>
+            <div class="footer-links">
+                <a href="https://vatli102.com">Trang chủ</a> • 
+                <a href="https://vatli102.com/tieng-anh/lop-6">Tiếng Anh 6</a> • 
+                <a href="https://vatli102.com/de-thi">Ngân hàng đề thi</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC ENGINE -->
+    <script>
+        const LESSON_TITLE = "Unit 2: My House";
+        const QUESTIONS = [{"num": 1, "topic": "Listening Part 1: House Type", "audio_file": "Test 1 - Unit 2 - Full Audio Listening.mp3", "passage": null, "title": "What type of house does Mi live in?", "options": {"A": "A country villa", "B": "A modern town house", "C": "A traditional stilt house", "D": "A small flat on the fifth floor"}, "correct": "B", "exp": "Mi trả lời: <i>'It is a modern town house located in a quiet street near my school.'</i>"}, {"num": 2, "topic": "Listening Part 1: Number of Rooms", "audio_file": "Test 1 - Unit 2 - Full Audio Listening.mp3", "passage": null, "title": "How many rooms are there in Mi's new house?", "options": {"A": "Four rooms", "B": "Five rooms", "C": "Six rooms", "D": "Seven rooms"}, "correct": "C", "exp": "Mi liệt kê: <i>'There are six rooms: a living room, a kitchen, three bedrooms, and two bathrooms.'</i>"}, {"num": 3, "topic": "Listening Part 1: Favourite Room", "audio_file": "Test 1 - Unit 2 - Full Audio Listening.mp3", "passage": null, "title": "Which room is Mi's favourite room?", "options": {"A": "The living room", "B": "The kitchen", "C": "Her bedroom on the second floor", "D": "The dining room"}, "correct": "C", "exp": "Mi nói: <i>'My favourite room is my bedroom on the second floor.'</i>"}, {"num": 4, "topic": "Listening Part 1: Bedroom Furniture", "audio_file": "Test 1 - Unit 2 - Full Audio Listening.mp3", "passage": null, "title": "What furniture is inside Mi's bedroom?", "options": {"A": "A television, a sofa, and two armchairs", "B": "A single bed, a study desk, a bookshelf, and a wardrobe", "C": "A dining table, six chairs, and a microwave", "D": "A big cooker, a fridge, and a sink"}, "correct": "B", "exp": "Mi kể: <i>'There is a comfortable single bed, a wooden study desk with a lamp, a white bookshelf, and a big wardrobe for my clothes.'</i>"}, {"num": 5, "topic": "Listening Part 2: Stilt House Location", "audio_file": "Test 1 - Unit 2 - Full Audio Listening.mp3", "passage": null, "title": "Which ethnic group's traditional village are the visitors exploring?", "options": {"A": "The Tay ethnic group", "B": "The Cham ethnic group", "C": "The Ede ethnic group", "D": "The Khmer ethnic group"}, "correct": "A", "exp": "Hướng dẫn viên giới thiệu: <i>'...a traditional village of the Tay ethnic group in the northern mountains of Vietnam.'</i>"}, {"num": 6, "topic": "Listening Part 2: Purpose of Wooden Pillars", "audio_file": "Test 1 - Unit 2 - Full Audio Listening.mp3", "passage": null, "title": "Why are stilt houses built on tall wooden pillars?", "options": {"A": "To climb up easily for fun", "B": "To keep the house safe from wild animals and floods", "C": "To park luxury cars underneath", "D": "To build swimming pools"}, "correct": "B", "exp": "Bài nghe nêu rõ: <i>'These wooden pillars keep the house safe from wild animals and heavy floods during the rainy season.'</i>"}, {"num": 7, "topic": "Listening Part 2: Heart of the House", "audio_file": "Test 1 - Unit 2 - Full Audio Listening.mp3", "passage": null, "title": "What is in the center of a traditional stilt house?", "options": {"A": "A modern television set", "B": "A fireplace", "C": "A large refrigerator", "D": "A piano"}, "correct": "B", "exp": "Người thuyết minh cho biết: <i>'A traditional stilt house usually has a large open living area with a fireplace in the center.'</i>"}, {"num": 8, "topic": "Listening Part 2: Building Materials", "audio_file": "Test 1 - Unit 2 - Full Audio Listening.mp3", "passage": null, "title": "What natural materials are used to make traditional stilt houses?", "options": {"A": "Concrete, steel, and glass", "B": "Wood, bamboo, and palm leaves", "C": "Plastic, bricks, and cement", "D": "Metal sheets and ceramics"}, "correct": "B", "exp": "Bài nghe khẳng định: <i>'Stilt houses are made of natural materials like wood, bamboo, and palm leaves...'</i>"}, {"num": 9, "topic": "Phát âm: Đuôi -s / -es (/s/ vs /z/)", "passage": null, "title": "Choose the word whose underlined part is pronounced differently from that of the others.", "options": {"A": "lamp<u>s</u>", "B": "sink<u>s</u>", "C": "desk<u>s</u>", "D": "bed<u>s</u>"}, "correct": "D", "exp": "Đuôi -s sau phụ âm vô thanh /p, k/ phát âm là /s/ (lamps, sinks, desks); còn beds tận cùng bằng âm hữu thanh /d/ nên phát âm là /z/."}, {"num": 10, "topic": "Phát âm: Đuôi -s / -es (/s/, /z/, /ɪz/)", "passage": null, "title": "Choose the word whose underlined part is pronounced differently from that of the others.", "options": {"A": "hous<u>es</u>", "B": "fridg<u>es</u>", "C": "dish<u>es</u>", "D": "room<u>s</u>"}, "correct": "D", "exp": "houses /ˈhaʊzɪz/, fridges /ˈfrɪdʒɪz/, dishes /ˈdɪʃɪz/ có đuôi phát âm là /ɪz/; trong khi rooms /ruːmz/ phát âm là /z/."}, {"num": 11, "topic": "Trọng âm: Từ 2 âm tiết", "passage": null, "title": "Choose the word that differs from the other three in the position of primary stress.", "options": {"A": "bedroom", "B": "kitchen", "C": "wardrobe", "D": "behind"}, "correct": "D", "exp": "bedroom /ˈbedruːm/ (1), kitchen /ˈkɪtʃɪn/ (1), wardrobe /ˈwɔːdrəʊb/ (1); behind /bɪˈhaɪnd/ có trọng âm rơi vào âm tiết thứ 2."}, {"num": 12, "topic": "Trọng âm: Từ 2 âm tiết", "passage": null, "title": "Choose the word that differs from the other three in the position of primary stress.", "options": {"A": "apartment", "B": "balcony", "C": "furniture", "D": "cottage"}, "correct": "A", "exp": "apartment /əˈpɑːtmənt/ (2); balcony /ˈbælkəni/ (1), furniture /ˈfɜːnɪtʃə(r)/ (1), cottage /ˈkɒtɪdʒ/ (1)."}, {"num": 13, "topic": "Từ vựng: Thiết bị nhà bếp", "passage": null, "title": "We put leftover food and fresh vegetables in the ________ to keep them cold and fresh.", "options": {"A": "fridge", "B": "wardrobe", "C": "dishwasher", "D": "bookcase"}, "correct": "A", "exp": "<b>fridge / refrigerator</b> (tủ lạnh) là thiết bị dùng để bảo quản đồ ăn, rau củ tươi ngon."}, {"num": 14, "topic": "Sở hữu cách (Possessive Case)", "passage": null, "title": "This is ________ bedroom. It has blue walls and a lot of superhero posters.", "options": {"A": "Nam", "B": "Nam's", "C": "Nams'", "D": "of Nam"}, "correct": "B", "exp": "Sở hữu cách với danh từ riêng số ít: <b>Nam's bedroom</b> (phòng ngủ của Nam)."}, {"num": 15, "topic": "Giới từ chỉ nơi chốn (Prepositions of Place)", "passage": null, "title": "There is a modern television ________ the coffee table and the bookshelf.", "options": {"A": "between", "B": "in", "C": "under", "D": "on"}, "correct": "A", "exp": "Cấu trúc giới từ vị trí: <b>between A and B</b> (ở giữa cái bàn trà và giá sách)."}, {"num": 16, "topic": "Cấu trúc 'There is / There are'", "passage": null, "title": "________ two armchairs and a soft sofa in the living room.", "options": {"A": "There is", "B": "There are", "C": "There have", "D": "There has"}, "correct": "B", "exp": "Danh từ số nhiều 'two armchairs and a soft sofa' đi với <b>There are</b>."}, {"num": 17, "topic": "Giới từ chỉ nơi chốn: Next to", "passage": null, "title": "The kitchen is located right ________ the dining room on the ground floor.", "options": {"A": "next to", "B": "next", "C": "between", "D": "in front"}, "correct": "A", "exp": "Cụm giới từ chỉ vị trí bên cạnh: <b>next to</b>."}, {"num": 18, "topic": "Từ vựng: Loại hình nhà ở", "passage": null, "title": "My grandparents live in a peaceful ________ with a large vegetable garden in the countryside.", "options": {"A": "apartment", "B": "country house", "C": "town house", "D": "stilt house"}, "correct": "B", "exp": "Nhà ở vùng nông thôn có sân vườn: <b>country house</b> (nhà ở nông thôn)."}, {"num": 19, "topic": "Cấu tạo từ (Word Formation): Comfort -> Comfortable", "passage": null, "title": "This sofa is very ________; I can sit here reading books for hours without feeling tired.", "options": {"A": "comfort", "B": "comfortable", "C": "comfortably", "D": "discomfort"}, "correct": "B", "exp": "Sau 'is very' cần một tính từ mang nghĩa tích cực: <b>comfortable</b> (êm ái, thoải mái)."}, {"num": 20, "topic": "Cấu tạo từ (Word Formation): Tidy -> Untidy", "passage": null, "title": "His room is so ________ with clothes and books scattered all over the floor.", "options": {"A": "tidy", "B": "untidy", "C": "tidily", "D": "tidiness"}, "correct": "B", "exp": "Ngữ cảnh đồ đạc, quần áo vứt bừa bãi trên sàn nhà cho thấy căn phòng rất bừa bộn: <b>untidy</b> (không gọn gàng)."}, {"num": 21, "topic": "Phân biệt từ: Cooker vs. Cook", "passage": null, "title": "My mother bought a new electric ________ to cook rice and soup quickly.", "options": {"A": "cook", "B": "cooker", "C": "cooking", "D": "cooked"}, "correct": "B", "exp": "<b>cooker</b> (cái bếp / nồi nấu điện) là danh từ chỉ đồ gia dụng; còn <i>cook</i> là người đầu bếp hoặc động từ nấu ăn."}, {"num": 22, "topic": "Từ vựng: Đồ nội thất (Wardrobe vs Cupboard)", "passage": null, "title": "She hangs all her winter coats and school uniforms inside the wooden ________ in her bedroom.", "options": {"A": "cupboard", "B": "wardrobe", "C": "sink", "D": "dishwasher"}, "correct": "B", "exp": "Tủ dùng để treo quần áo trong phòng ngủ là <b>wardrobe</b> (tủ quần áo). <i>Cupboard</i> thường là tủ có ngăn để bát đĩa/đồ gia dụng."}, {"num": 23, "topic": "Sở hữu cách với danh từ số nhiều (Plural Possessive)", "passage": null, "title": "These are the ________ toys. They play with them together every evening.", "options": {"A": "children's", "B": "childrens'", "C": "child's", "D": "children"}, "correct": "A", "exp": "Với danh từ số nhiều bất quy tắc không tận cùng bằng 's' như 'children', ta thêm <b>'s</b> -> <b>children's toys</b>."}, {"num": 24, "topic": "Giới từ chỉ nơi chốn: Under / Above", "passage": null, "title": "Look! The cat is sleeping peacefully ________ the wooden chair in the corner.", "options": {"A": "under", "B": "between", "C": "in front", "D": "next"}, "correct": "A", "exp": "Vị trí nằm ngủ dưới gầm ghế: <b>under the wooden chair</b>."}, {"num": 25, "topic": "Giao tiếp xã hội: Đón khách tới thăm nhà", "passage": null, "title": "Phong: 'Welcome to my new apartment, Nick!'\nNick: '________'", "options": {"A": "Thank you! What a lovely and cosy living room you have!", "B": "No, I don't want to come.", "C": "I am fine, thank you.", "D": "Yes, I am going home now."}, "correct": "A", "exp": "Đáp lại lời chào đón của chủ nhà một cách thân thiện và khen ngợi ngôi nhà: <b>Thank you! What a lovely and cosy living room you have!</b>"}, {"num": 26, "topic": "Giao tiếp xã hội: Hỏi vị trí đồ vật / phòng ốc", "passage": null, "title": "Lan: 'Where is the bathroom in your house, Mai?'\nMai: '________'", "options": {"A": "It is at the end of the hallway, next to the kitchen.", "B": "Yes, there is a big bath.", "C": "I usually wash my hands.", "D": "It is very expensive."}, "correct": "A", "exp": "Hỏi vị trí ('Where is the bathroom...?') -> trả lời chỉ đường/vị trí: <b>It is at the end of the hallway, next to the kitchen.</b>"}, {"num": 27, "topic": "Tìm lỗi sai: There is / There are", "passage": null, "title": "[There is] (A) three [paintings] (B) and a [large mirror] (C) on the living room [wall] (D).", "options": {"A": "There is", "B": "paintings", "C": "large mirror", "D": "wall"}, "correct": "A", "exp": "Danh từ số nhiều 'three paintings' cần đi với <b>There are</b>. Sửa <b>There is</b> thành <b>There are</b>."}, {"num": 28, "topic": "Tìm lỗi sai: Sở hữu cách danh từ số nhiều", "passage": null, "title": "My [parents] (A) house is [located] (B) in a [quiet] (C) country [village] (D).", "options": {"A": "parents", "B": "located", "C": "quiet", "D": "village"}, "correct": "A", "exp": "Ngôi nhà của bố mẹ tôi cần dùng sở hữu cách: <b>My parents' house</b>. Sửa <b>parents</b> thành <b>parents'</b>."}, {"num": 29, "topic": "Tìm lỗi sai: Giới từ chỉ vị trí (Next to)", "passage": null, "title": "The study [desk] (A) is [placed] (B) right [next the] (C) big [bookshelf] (D).", "options": {"A": "desk", "B": "placed", "C": "next the", "D": "bookshelf"}, "correct": "C", "exp": "Cụm giới từ đúng là <b>next to the</b>. Sửa <b>next the</b> thành <b>next to the</b>."}, {"num": 30, "topic": "Tìm lỗi sai: Từ dễ nhầm lẫn (Cooker vs Cook)", "passage": null, "title": "My father [is] (A) an excellent [cooker] (B) who makes [delicious meals] (C) for our [family] (D).", "options": {"A": "is", "B": "cooker", "C": "delicious meals", "D": "family"}, "correct": "B", "exp": "Người nấu ăn / đầu bếp là <b>cook</b>. <i>Cooker</i> là cái bếp. Sửa <b>cooker</b> thành <b>cook</b>."}, {"num": 31, "topic": "Đọc điền từ (Cloze Test)", "passage": "A home is not just a building; it is a special place where we feel safe, relaxed, and loved. Many people dream of living in a modern green house that is both comfortable and environmentally (31)________. In a green home, solar panels are installed on the roof to generate clean electricity for all household (32)________ like refrigerators and cookers. Big windows allow natural sunlight to brighten every room during the day, reducing the need for electric lights. Furthermore, the living room is designed to be spacious and (33)________ with lots of indoor plants. In the kitchen, families often gather around the dining table (34)________ enjoy home-cooked meals together. Having a peaceful home helps people reduce stress and create sweet memories with their (35)________ ones.", "title": "Choose the correct word to fill in blank (31):", "options": {"A": "friendly", "B": "friend", "C": "friendship", "D": "friendliness"}, "correct": "A", "exp": "Cụm từ cố định: <b>environmentally friendly</b> (thân thiện với môi trường)."}, {"num": 32, "topic": "Đọc điền từ (Cloze Test)", "passage": "A home is not just a building; it is a special place where we feel safe, relaxed, and loved. Many people dream of living in a modern green house that is both comfortable and environmentally (31)________. In a green home, solar panels are installed on the roof to generate clean electricity for all household (32)________ like refrigerators and cookers. Big windows allow natural sunlight to brighten every room during the day, reducing the need for electric lights. Furthermore, the living room is designed to be spacious and (33)________ with lots of indoor plants. In the kitchen, families often gather around the dining table (34)________ enjoy home-cooked meals together. Having a peaceful home helps people reduce stress and create sweet memories with their (35)________ ones.", "title": "Choose the correct word to fill in blank (32):", "options": {"A": "appliances", "B": "clothes", "C": "uniforms", "D": "vehicles"}, "correct": "A", "exp": "Cụm từ: <b>household appliances</b> (các thiết bị gia dụng trong gia đình) như tủ lạnh, bếp."}, {"num": 33, "topic": "Đọc điền từ (Cloze Test)", "passage": "A home is not just a building; it is a special place where we feel safe, relaxed, and loved. Many people dream of living in a modern green house that is both comfortable and environmentally (31)________. In a green home, solar panels are installed on the roof to generate clean electricity for all household (32)________ like refrigerators and cookers. Big windows allow natural sunlight to brighten every room during the day, reducing the need for electric lights. Furthermore, the living room is designed to be spacious and (33)________ with lots of indoor plants. In the kitchen, families often gather around the dining table (34)________ enjoy home-cooked meals together. Having a peaceful home helps people reduce stress and create sweet memories with their (35)________ ones.", "title": "Choose the correct word to fill in blank (33):", "options": {"A": "cosy", "B": "untidy", "C": "messy", "D": "dangerous"}, "correct": "A", "exp": "Tính từ tích cực miêu tả phòng khách ấm cúng: <b>cosy</b> (ấm cúng, dễ chịu)."}, {"num": 34, "topic": "Đọc điền từ (Cloze Test)", "passage": "A home is not just a building; it is a special place where we feel safe, relaxed, and loved. Many people dream of living in a modern green house that is both comfortable and environmentally (31)________. In a green home, solar panels are installed on the roof to generate clean electricity for all household (32)________ like refrigerators and cookers. Big windows allow natural sunlight to brighten every room during the day, reducing the need for electric lights. Furthermore, the living room is designed to be spacious and (33)________ with lots of indoor plants. In the kitchen, families often gather around the dining table (34)________ enjoy home-cooked meals together. Having a peaceful home helps people reduce stress and create sweet memories with their (35)________ ones.", "title": "Choose the correct word to fill in blank (34):", "options": {"A": "to", "B": "for", "C": "so", "D": "because"}, "correct": "A", "exp": "Chỉ mục đích hành động: <b>to enjoy</b> (tụ họp quanh bàn ăn để cùng nhau thưởng thức các bữa cơm gia đình)."}, {"num": 35, "topic": "Đọc điền từ (Cloze Test)", "passage": "A home is not just a building; it is a special place where we feel safe, relaxed, and loved. Many people dream of living in a modern green house that is both comfortable and environmentally (31)________. In a green home, solar panels are installed on the roof to generate clean electricity for all household (32)________ like refrigerators and cookers. Big windows allow natural sunlight to brighten every room during the day, reducing the need for electric lights. Furthermore, the living room is designed to be spacious and (33)________ with lots of indoor plants. In the kitchen, families often gather around the dining table (34)________ enjoy home-cooked meals together. Having a peaceful home helps people reduce stress and create sweet memories with their (35)________ ones.", "title": "Choose the correct word to fill in blank (35):", "options": {"A": "loved", "B": "love", "C": "loving", "D": "lovely"}, "correct": "A", "exp": "Cụm từ cố định: <b>loved ones</b> (những người thân yêu trong gia đình)."}, {"num": 36, "topic": "Đọc hiểu: Ý chính của bài đọc", "passage": "The Hang Nga Villa, widely known as the 'Crazy House', is one of the most extraordinary and fascinating architectural landmarks in Da Lat City, Vietnam. Designed and built in 1990 by talented Vietnamese architect Dang Viet Nga, the building resembles a giant ancient tree with winding branches, uneven windows, and organic natural shapes.\n\nInside the Crazy House, visitors can explore ten themed guest rooms named after different animals and plants, such as the Tiger Room, the Eagle Room, the Ant Room, and the Kangaroo Room. Each room is decorated with handmade furniture, sculptures, and fireplaces that match its specific theme. Narrow bridges and twisting stone staircases connect the rooms and towers, giving guests the feeling of walking inside a fairy-tale forest.\n\nUnlike conventional concrete houses with straight walls and sharp corners, the Crazy House is designed without any right angles. Architect Dang Viet Nga wanted to create a unique living space that brings human beings closer to nature and encourages people to protect forests. Today, the Crazy House attracts hundreds of thousands of tourists from all around the world each year.", "title": "What is the passage mainly about?", "options": {"A": "The life of wild animals in the Da Lat forest.", "B": "A unique and creative house in Da Lat called the 'Crazy House'.", "C": "How to build standard concrete houses with straight walls.", "D": "The history of furniture manufacturing in Vietnam."}, "correct": "B", "exp": "Toàn bộ bài đọc miêu tả về kiến trúc độc đáo, các phòng theo chủ đề và ý nghĩa của ngôi nhà 'Crazy House' (Biệt thự Hằng Nga) tại Đà Lạt."}, {"num": 37, "topic": "Đọc hiểu: Thông tin chi tiết", "passage": "The Hang Nga Villa, widely known as the 'Crazy House', is one of the most extraordinary and fascinating architectural landmarks in Da Lat City, Vietnam. Designed and built in 1990 by talented Vietnamese architect Dang Viet Nga, the building resembles a giant ancient tree with winding branches, uneven windows, and organic natural shapes.\n\nInside the Crazy House, visitors can explore ten themed guest rooms named after different animals and plants, such as the Tiger Room, the Eagle Room, the Ant Room, and the Kangaroo Room. Each room is decorated with handmade furniture, sculptures, and fireplaces that match its specific theme. Narrow bridges and twisting stone staircases connect the rooms and towers, giving guests the feeling of walking inside a fairy-tale forest.\n\nUnlike conventional concrete houses with straight walls and sharp corners, the Crazy House is designed without any right angles. Architect Dang Viet Nga wanted to create a unique living space that brings human beings closer to nature and encourages people to protect forests. Today, the Crazy House attracts hundreds of thousands of tourists from all around the world each year.", "title": "What does the building resemble from the outside?", "options": {"A": "A giant modern skyscraper", "B": "A large stone castle on the hill", "C": "A giant ancient tree with winding branches", "D": "A traditional wooden boat"}, "correct": "C", "exp": "Đoạn 1 nêu rõ: <i>'...the building resembles a giant ancient tree with winding branches, uneven windows, and organic natural shapes.'</i>"}, {"num": 38, "topic": "Đọc hiểu: Thông tin chi tiết", "passage": "The Hang Nga Villa, widely known as the 'Crazy House', is one of the most extraordinary and fascinating architectural landmarks in Da Lat City, Vietnam. Designed and built in 1990 by talented Vietnamese architect Dang Viet Nga, the building resembles a giant ancient tree with winding branches, uneven windows, and organic natural shapes.\n\nInside the Crazy House, visitors can explore ten themed guest rooms named after different animals and plants, such as the Tiger Room, the Eagle Room, the Ant Room, and the Kangaroo Room. Each room is decorated with handmade furniture, sculptures, and fireplaces that match its specific theme. Narrow bridges and twisting stone staircases connect the rooms and towers, giving guests the feeling of walking inside a fairy-tale forest.\n\nUnlike conventional concrete houses with straight walls and sharp corners, the Crazy House is designed without any right angles. Architect Dang Viet Nga wanted to create a unique living space that brings human beings closer to nature and encourages people to protect forests. Today, the Crazy House attracts hundreds of thousands of tourists from all around the world each year.", "title": "How many themed guest rooms are there inside the Crazy House?", "options": {"A": "Six rooms", "B": "Eight rooms", "C": "Ten rooms", "D": "Twelve rooms"}, "correct": "C", "exp": "Đoạn 2 cho biết: <i>'Inside the Crazy House, visitors can explore ten themed guest rooms...'</i>"}, {"num": 39, "topic": "Đọc hiểu: Từ vựng trong ngữ cảnh", "passage": "The Hang Nga Villa, widely known as the 'Crazy House', is one of the most extraordinary and fascinating architectural landmarks in Da Lat City, Vietnam. Designed and built in 1990 by talented Vietnamese architect Dang Viet Nga, the building resembles a giant ancient tree with winding branches, uneven windows, and organic natural shapes.\n\nInside the Crazy House, visitors can explore ten themed guest rooms named after different animals and plants, such as the Tiger Room, the Eagle Room, the Ant Room, and the Kangaroo Room. Each room is decorated with handmade furniture, sculptures, and fireplaces that match its specific theme. Narrow bridges and twisting stone staircases connect the rooms and towers, giving guests the feeling of walking inside a fairy-tale forest.\n\nUnlike conventional concrete houses with straight walls and sharp corners, the Crazy House is designed without any right angles. Architect Dang Viet Nga wanted to create a unique living space that brings human beings closer to nature and encourages people to protect forests. Today, the Crazy House attracts hundreds of thousands of tourists from all around the world each year.", "title": "The word 'conventional' in the last paragraph is closest in meaning to ________.", "options": {"A": "traditional and usual", "B": "weird and crazy", "C": "colourful and bright", "D": "expensive and luxurious"}, "correct": "A", "exp": "Từ <b>conventional</b> (thông thường, truyền thống) = <i>traditional and usual</i> (trái ngược với kiểu kiến trúc độc lạ không có góc vuông của Crazy House)."}, {"num": 40, "topic": "Đọc hiểu: Mục đích của tác giả / Kiến trúc sư", "passage": "The Hang Nga Villa, widely known as the 'Crazy House', is one of the most extraordinary and fascinating architectural landmarks in Da Lat City, Vietnam. Designed and built in 1990 by talented Vietnamese architect Dang Viet Nga, the building resembles a giant ancient tree with winding branches, uneven windows, and organic natural shapes.\n\nInside the Crazy House, visitors can explore ten themed guest rooms named after different animals and plants, such as the Tiger Room, the Eagle Room, the Ant Room, and the Kangaroo Room. Each room is decorated with handmade furniture, sculptures, and fireplaces that match its specific theme. Narrow bridges and twisting stone staircases connect the rooms and towers, giving guests the feeling of walking inside a fairy-tale forest.\n\nUnlike conventional concrete houses with straight walls and sharp corners, the Crazy House is designed without any right angles. Architect Dang Viet Nga wanted to create a unique living space that brings human beings closer to nature and encourages people to protect forests. Today, the Crazy House attracts hundreds of thousands of tourists from all around the world each year.", "title": "Why did architect Dang Viet Nga design the Crazy House in this special way?", "options": {"A": "To sell the house for the highest price in Vietnam", "B": "To bring humans closer to nature and encourage environmental protection", "C": "To train wild animals inside the building", "D": "To show that concrete is better than natural wood"}, "correct": "B", "exp": "Đoạn cuối chỉ rõ: <i>'Architect Dang Viet Nga wanted to create a unique living space that brings human beings closer to nature and encourages people to protect forests.'</i>"}];
+
+        let currentIdx = 0;
+        let userAnswers = new Array(QUESTIONS.length).fill(null);
+        let studentName = "";
+        let studentClass = "";
+        let timeLeft = 45 * 60;
+        let timerInterval = null;
+        let tabSwitchCount = 0;
+        let examActive = false;
+        let examSubmitted = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedName = localStorage.getItem('v102_student_name');
+            const savedClass = localStorage.getItem('v102_student_class');
+            if (savedName) document.getElementById('inp-name').value = savedName;
+            if (savedClass) document.getElementById('inp-class').value = savedClass;
+
+            initAntiCheat();
+        });
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+
+            if (tab === 'theory') {
+                document.getElementById('tab-theory').classList.add('active');
+                document.getElementById('btn-tab-theory').classList.add('active');
+            } else {
+                document.getElementById('tab-quiz').classList.add('active');
+                document.getElementById('btn-tab-quiz').classList.add('active');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function startExam() {
+            const nameInp = document.getElementById('inp-name').value.trim();
+            const classInp = document.getElementById('inp-class').value.trim();
+
+            if (!nameInp || !classInp) {
+                alert("Vui lòng điền đầy đủ Họ và tên và Lớp học để bắt đầu làm bài.");
+                return;
+            }
+
+            studentName = nameInp;
+            studentClass = classInp;
+            localStorage.setItem('v102_student_name', studentName);
+            localStorage.setItem('v102_student_class', studentClass);
+
+            document.getElementById('modal-reg').style.display = 'none';
+            document.getElementById('exam-screen').style.display = 'grid';
+            document.getElementById('user-display-name').innerText = "Học sinh: " + studentName;
+            document.getElementById('user-display-class').innerText = "Lớp: " + studentClass;
+
+            buildPalette();
+            renderQuestion(0);
+            startTimer();
+            examActive = true;
+        }
+
+        function buildPalette() {
+            const grid = document.getElementById('palette-grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'palette-cell';
+                cell.id = `palette-cell-${i}`;
+                cell.innerText = i + 1;
+                cell.onclick = () => renderQuestion(i);
+                grid.appendChild(cell);
+            }
+        }
+
+        function renderQuestion(idx) {
+            currentIdx = idx;
+            const q = QUESTIONS[idx];
+
+            document.getElementById('q-progress').innerText = `Câu ${idx + 1} / ${QUESTIONS.length}`;
+            document.getElementById('q-topic').innerText = q.topic;
+            document.getElementById('q-title').innerHTML = `<b>Câu ${idx + 1}:</b> ${q.title}`;
+
+            // Audio for Listening questions
+            const audioBox = document.getElementById('audio-container');
+            if (q.num <= 8) {
+                audioBox.style.display = 'block';
+            } else {
+                audioBox.style.display = 'none';
+            }
+
+            // Reading passage if available
+            const passBox = document.getElementById('passage-container');
+            if (q.passage) {
+                passBox.style.display = 'block';
+                document.getElementById('passage-body').innerHTML = q.passage.replace(/\n/g, '<br><br>');
+            } else {
+                passBox.style.display = 'none';
+            }
+
+            // Options
+            const optContainer = document.getElementById('opt-container');
+            optContainer.innerHTML = '';
+            ['A', 'B', 'C', 'D'].forEach(key => {
+                const optItem = document.createElement('div');
+                optItem.className = 'opt-item' + (userAnswers[idx] === key ? ' selected' : '');
+                optItem.onclick = () => selectOption(idx, key);
+                optItem.innerHTML = `
+                    <span class="opt-letter">${key}</span>
+                    <span>${q.options[key]}</span>
+                `;
+                optContainer.appendChild(optItem);
+            });
+
+            // Controls state
+            document.getElementById('btn-prev').disabled = (idx === 0);
+            document.getElementById('btn-next').disabled = (idx === QUESTIONS.length - 1);
+
+            // Palette highlight
+            document.querySelectorAll('.palette-cell').forEach((c, i) => {
+                c.classList.toggle('current', i === idx);
+            });
+        }
+
+        function selectOption(qIdx, key) {
+            if (examSubmitted) return;
+            userAnswers[qIdx] = key;
+
+            const cell = document.getElementById(`palette-cell-${qIdx}`);
+            cell.classList.add('answered');
+
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            document.getElementById('answered-count').innerText = `${answeredCount}/${QUESTIONS.length}`;
+
+            const percent = Math.round((answeredCount / QUESTIONS.length) * 100);
+            document.getElementById('progress-bar').style.width = percent + '%';
+            document.getElementById('progress-percent').innerText = percent + '%';
+
+            renderQuestion(qIdx);
+        }
+
+        function prevQuestion() {
+            if (currentIdx > 0) renderQuestion(currentIdx - 1);
+        }
+
+        function nextQuestion() {
+            if (currentIdx < QUESTIONS.length - 1) renderQuestion(currentIdx + 1);
+        }
+
+        function startTimer() {
+            const timerEl = document.getElementById('timer-display');
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Đã hết thời gian làm bài! Hệ thống tự động nộp bài thi.");
+                    submitExam();
+                    return;
+                }
+                const m = Math.floor(timeLeft / 60);
+                const s = timeLeft % 60;
+                timerEl.innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function confirmSubmit() {
+            const unanswered = userAnswers.filter(a => a === null).length;
+            let msg = "Bạn có chắc chắn muốn nộp bài thi?";
+            if (unanswered > 0) {
+                msg = `Bạn còn ${unanswered} câu chưa trả lời. Bạn có chắc chắn muốn nộp bài ngay bây giờ?`;
+            }
+            if (confirm(msg)) {
+                submitExam();
+            }
+        }
+
+        function submitExam() {
+            if (examSubmitted) return;
+            examSubmitted = true;
+            examActive = false;
+            clearInterval(timerInterval);
+
+            let correctCount = 0;
+            QUESTIONS.forEach((q, i) => {
+                if (userAnswers[i] === q.correct) correctCount++;
+            });
+
+            const score = ((correctCount / QUESTIONS.length) * 10).toFixed(1);
+
+            document.getElementById('exam-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('result-detail').innerText = 
+                `Thí sinh: ${studentName} | Lớp: ${studentClass} | Đúng: ${correctCount} / ${QUESTIONS.length} câu`;
+
+            if (score >= 8.0) {
+                document.getElementById('result-feedback').innerText = "🎉 XUẤT SẮC! BẠN ĐẠT ĐIỂM GIỎI";
+                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+            } else if (score >= 6.5) {
+                document.getElementById('result-feedback').innerText = "👍 KHÁ TỐT! HÃY TIẾP TỤC PHÁT HUY";
+            } else if (score >= 5.0) {
+                document.getElementById('result-feedback').innerText = "📚 ĐẠT YÊU CẦU - CẦN CỐ GẮNG THÊM";
+            } else {
+                document.getElementById('result-feedback').innerText = "⚠️ CẦN ÔN TẬP LẠI LÝ THUYẾT TRỌNG TÂM";
+            }
+
+            buildReviewList();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function buildReviewList() {
+            const container = document.getElementById('review-list');
+            container.innerHTML = '';
+
+            QUESTIONS.forEach((q, i) => {
+                const isCorrect = (userAnswers[i] === q.correct);
+                const item = document.createElement('div');
+                item.className = `review-item ${isCorrect ? 'correct' : 'incorrect'}`;
+                item.setAttribute('data-status', isCorrect ? 'correct' : 'wrong');
+
+                item.innerHTML = `
+                    <div class="review-header">
+                        <span>Câu ${i + 1}: ${q.title}</span>
+                        <span style="color: ${isCorrect ? 'var(--success)' : 'var(--danger)'};">
+                            ${isCorrect ? '✓ Đúng' : '✗ Sai'}
+                        </span>
+                    </div>
+                    <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">
+                        <b>Đáp án của bạn:</b> ${userAnswers[i] ? userAnswers[i] + '. ' + q.options[userAnswers[i]] : 'Chưa chọn'} <br>
+                        <b>Đáp án đúng:</b> <span style="color: var(--success); font-weight: 700;">${q.correct}. ${q.options[q.correct]}</span>
+                    </div>
+                    <div class="review-exp">
+                        <b>Giải thích chi tiết:</b> ${q.exp}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function filterReview(status) {
+            const items = document.querySelectorAll('.review-item');
+            items.forEach(el => {
+                if (status === 'all') {
+                    el.style.display = 'block';
+                } else {
+                    el.style.display = (el.getAttribute('data-status') === status) ? 'block' : 'none';
+                }
+            });
+        }
+
+        function initAntiCheat() {
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', e => {
+                if ((e.ctrlKey && (e.key === 'c' || e.key === 'u' || e.key === 'a' || e.key === 's' || e.key === 'v')) || e.key === 'F12') {
+                    e.preventDefault();
+                }
+            });
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden && examActive && !examSubmitted) {
+                    tabSwitchCount++;
+                    if (tabSwitchCount >= 3) {
+                        alert("CẢNH BÁO VI PHẠM QUY CHẾ: Bạn đã chuyển màn hình 3 lần. Hệ thống tự động nộp bài thi!");
+                        submitExam();
+                    } else {
+                        alert(`CẢNH BÁO: Không được rời màn hình làm bài! (Lần ${tabSwitchCount}/3). Vi phạm 3 lần sẽ bị tự động nộp bài.`);
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

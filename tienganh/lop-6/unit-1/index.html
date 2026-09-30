@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 1: My New School - Tiếng Anh 6 (Global Success)</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #3b82f6;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Sticky Header */
+        .sticky-header {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        }
+        .header-container {
+            max-width: 1200px; margin: 0 auto; padding: 10px 15px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .site-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .logo-img { width: 32px; height: 32px; border-radius: 8px; object-fit: contain; }
+        .logo-text {
+            font-size: 1.25rem; font-weight: 800;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .nav-links { display: flex; gap: 14px; align-items: center; }
+        .nav-item {
+            text-decoration: none; color: #475569; font-weight: 600; font-size: 0.9rem;
+            display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s;
+        }
+        .nav-item:hover { color: #4f46e5; }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 0.4rem;
+            background: #f1f5f9;
+            padding: 0.25rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #475569;
+            padding: 0.45rem 0.9rem;
+            font-weight: 700;
+            font-size: 0.88rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn.active {
+            background: #4f46e5;
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        @media (max-width: 768px) {
+            .header-container { padding: 8px 12px; flex-direction: column; gap: 8px; }
+            .logo-text { font-size: 1.1rem; }
+            .nav-links { width: 100%; justify-content: space-between; }
+        }
+
+        .main-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+            flex: 1;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Theory Tab Styling */
+        .theory-wrapper {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2.25rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .theory-content {
+            text-align: justify;
+            line-height: 1.7;
+        }
+
+        .theory-card {
+            background: white; border-radius: 14px; padding: 20px; margin-bottom: 20px;
+            border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .theory-card-header {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        .theory-icon {
+            width: 36px; height: 36px; border-radius: 8px; background: #e0e7ff; color: #4338ca;
+            display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;
+        }
+        .theory-title { font-size: 1.15rem; font-weight: 800; color: #1e1b4b; }
+        .theory-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+        
+        .vocab-item {
+            background: #f8fafc; border-left: 4px solid var(--primary); padding: 10px 14px; border-radius: 8px;
+        }
+        .vocab-word { font-weight: 700; color: #1e293b; font-size: 0.95rem; }
+        .vocab-meaning { font-size: 0.88rem; color: #475569; margin-top: 2px; }
+        .vocab-example { font-size: 0.82rem; color: #0284c7; font-style: italic; margin-top: 4px; }
+
+        .grammar-box {
+            background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 14px 16px; margin-top: 12px;
+        }
+        .rule-title { font-weight: 700; color: #166534; font-size: 0.92rem; margin-bottom: 6px; }
+        .rule-formula {
+            background: white; padding: 8px 12px; border-radius: 6px; font-family: monospace;
+            font-weight: 700; color: #0f172a; border: 1px solid #bbf7d0; margin: 4px 0; font-size: 0.9rem;
+        }
+
+        .jump-btn-container {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px dashed var(--border);
+        }
+
+        .jump-btn {
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 800;
+            padding: 1rem 2.5rem;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.35);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .jump-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(79, 70, 229, 0.45);
+        }
+
+        /* CBT / Exam Tab Styling */
+        .exam-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .exam-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .exam-panel {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            text-align: justify;
+        }
+
+        .exam-meta-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .badge-topic {
+            background: #eef2ff;
+            color: #4338ca;
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.825rem;
+            font-weight: 700;
+        }
+
+        .audio-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .passage-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid var(--primary);
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .passage-title {
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .question-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .opt-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.875rem 1.25rem;
+            border: 1.5px solid var(--border);
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #ffffff;
+            font-size: 1rem;
+        }
+
+        .opt-item:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .opt-item.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .opt-letter {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .opt-item.selected .opt-letter {
+            background: var(--primary);
+            color: white;
+        }
+
+        .question-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .ctrl-btn {
+            padding: 0.65rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text-main);
+        }
+
+        .ctrl-btn:hover:not(:disabled) {
+            background: #f1f5f9;
+        }
+
+        .ctrl-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .ctrl-btn-next {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .ctrl-btn-next:hover:not(:disabled) {
+            background: var(--primary-dark);
+        }
+
+        /* Sidebar Palette */
+        .palette-panel {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            position: sticky;
+            top: 5rem;
+        }
+
+        .timer-card {
+            background: #fff7ed;
+            border: 1px solid #ffedd5;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            text-align: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .timer-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #c2410c;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .timer-val {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #9a3412;
+            font-family: 'Space Grotesk', monospace;
+        }
+
+        .user-info-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.875rem;
+        }
+
+        .progress-wrap {
+            margin-bottom: 1.25rem;
+        }
+
+        .progress-bar-bg {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 9999px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .palette-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            max-height: 240px;
+            overflow-y: auto;
+            padding-right: 4px;
+            margin-bottom: 1.5rem;
+        }
+
+        .palette-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: 0.375rem;
+            border: 1px solid var(--border);
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            color: var(--text-muted);
+        }
+
+        .palette-cell:hover {
+            border-color: var(--primary);
+        }
+
+        .palette-cell.current {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .palette-cell.answered {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 0.875rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        /* Registration Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 1rem;
+        }
+
+        .modal-box {
+            background: white;
+            border-radius: 1rem;
+            max-width: 480px;
+            width: 100%;
+            padding: 2.25rem;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .modal-input:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .modal-notes {
+            background: #fffbeb;
+            border-left: 4px solid var(--accent);
+            padding: 0.75rem 1rem;
+            border-radius: 0 0.375rem 0.375rem 0;
+            font-size: 0.825rem;
+            color: #92400e;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .modal-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            padding: 0.875rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* Results Display */
+        .result-view {
+            background: white;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .score-banner {
+            text-align: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .score-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.5);
+        }
+
+        .score-val {
+            font-size: 2.4rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .score-max {
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
+
+        .review-item {
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            background: #fafafa;
+        }
+
+        .review-item.correct {
+            border-left: 5px solid var(--success);
+        }
+
+        .review-item.incorrect {
+            border-left: 5px solid var(--danger);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .review-exp {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background: #f1f5f9;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            color: #1e293b;
+            line-height: 1.5;
+        }
+
+        /* Site Footer */
+        .site-footer {
+            width: 100%; text-align: center; padding: 25px 15px; background: #ffffff;
+            border-top: 1px solid var(--border); margin-top: 40px; color: #64748b; font-size: 0.88rem;
+        }
+        .footer-container { max-width: 1200px; margin: 0 auto; }
+        .footer-links { margin-top: 8px; font-size: 0.82rem; }
+        .footer-links a { color: #4f46e5; text-decoration: none; margin: 0 4px; transition: color 0.2s; }
+        .footer-links a:hover { text-decoration: underline; color: #3730a3; }
+    </style>
+</head>
+<body>
+    <!-- Sticky Header -->
+    <header class="sticky-header">
+        <div class="header-container">
+            <a href="https://vatli102.com" class="site-logo">
+                <img src="favicon.svg" alt="Logo" class="logo-img">
+                <span class="logo-text">vatli102.com</span>
+            </a>
+            <div class="nav-links">
+                <a href="https://vatli102.com" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
+                <a href="https://vatli102.com/gioi-thieu.html" class="nav-item"><i class="fa-solid fa-circle-info"></i> Giới thiệu</a>
+                <a href="https://vatli102.com/lien-he.html" class="nav-item"><i class="fa-solid fa-envelope"></i> Liên hệ</a>
+                <div class="nav-tabs">
+                    <button class="nav-btn active" id="btn-tab-theory" onclick="switchTab('theory')">
+                        <i class="fa-solid fa-book-open"></i> Lý thuyết trọng tâm
+                    </button>
+                    <button class="nav-btn" id="btn-tab-quiz" onclick="switchTab('quiz')">
+                        <i class="fa-solid fa-pen-to-square"></i> Làm bài tập củng cố
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- TAB 1: LÝ THUYẾT TRỌNG TÂM -->
+        <div id="tab-theory" class="tab-pane active">
+            <div class="theory-wrapper">
+                <div class="theory-content">
+                    
+<div class="theory-card">
+    <h2 style="font-size: 1.3rem; font-weight: 800; color: #1e1b4b; margin-bottom: 10px;">
+        Tóm tắt Kiến thức: Unit 1 - My New School (Tiếng Anh 6 Global Success)
+    </h2>
+    <p style="font-size: 0.95rem; color: #334155; line-height: 1.75; margin-bottom: 12px;">
+        Trong Unit 1 (Bộ sách <b>Global Success 6</b>), học sinh cần nắm vững hệ thống từ vựng về trường học mới, đồ dùng học tập, các câu lạc bộ, dạng của từ liên quan, phân biệt các động từ chỉ hoạt động học đường (<i>Play / Do / Have / Study</i>), cách dùng thì <i>Hiện tại đơn (Present Simple)</i>, <i>Trạng từ chỉ tần suất (Adverbs of Frequency)</i>, cùng quy tắc phát âm hai âm <b>/ɑː/</b> và <b>/ʌ/</b>.
+    </p>
+</div>
+
+<div class="theory-card">
+    <div class="theory-card-header">
+        <div class="theory-icon"><i class="fa-solid fa-spell-check"></i></div>
+        <div class="theory-title">1. Từ vựng & Cụm từ (Vocabulary & Collocations)</div>
+    </div>
+    <div class="theory-grid">
+        <div class="vocab-item">
+            <div class="vocab-word">calculator (n) /ˈkælkjuleɪtə(r)/</div>
+            <div class="vocab-meaning">máy tính cầm tay</div>
+            <div class="vocab-example">We use a calculator in maths lessons.</div>
+        </div>
+        <div class="vocab-item">
+            <div class="vocab-word">compass (n) /ˈkʌmpəs/</div>
+            <div class="vocab-meaning">com-pa (dùng vẽ hình tròn)</div>
+            <div class="vocab-example">A compass is useful for geometry.</div>
+        </div>
+        <div class="vocab-item">
+            <div class="vocab-word">pencil sharpener (n) /ˈpensl ʃɑːpnə(r)/</div>
+            <div class="vocab-meaning">cái gọt bút chì</div>
+            <div class="vocab-example">My pencil sharpener is in my pencil case.</div>
+        </div>
+        <div class="vocab-item">
+            <div class="vocab-word">rubber / eraser (n) /ˈrʌbə(r)/</div>
+            <div class="vocab-meaning">cục tẩy, gôm</div>
+            <div class="vocab-example">Can I borrow your rubber, please?</div>
+        </div>
+        <div class="vocab-item">
+            <div class="vocab-word">uniform (n) /ˈjuːnɪfɔːm/</div>
+            <div class="vocab-meaning">bộ đồng phục học sinh</div>
+            <div class="vocab-example">We wear our uniform on Mondays.</div>
+        </div>
+        <div class="vocab-item">
+            <div class="vocab-word">boarding school (n) /ˈbɔːdɪŋ skuːl/</div>
+            <div class="vocab-meaning">trường nội trú (học sinh ở lại trường)</div>
+            <div class="vocab-example">He studies at a famous boarding school.</div>
+        </div>
+    </div>
+
+    <div style="margin-top: 15px; overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+            <thead>
+                <tr style="background: #f1f5f9; text-align: left;">
+                    <th style="padding: 8px 12px; border: 1px solid #e2e8f0;">Động từ</th>
+                    <th style="padding: 8px 12px; border: 1px solid #e2e8f0;">Cụm từ kết hợp tiêu biểu (Collocations)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 8px 12px; border: 1px solid #e2e8f0; font-weight: 700; color: #4f46e5;">PLAY</td>
+                    <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">play football, play badminton, play chess, play sports, play the piano</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 12px; border: 1px solid #e2e8f0; font-weight: 700; color: #4f46e5;">DO</td>
+                    <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">do homework, do exercise, do judo, do karate, do physics experiments</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 12px; border: 1px solid #e2e8f0; font-weight: 700; color: #4f46e5;">HAVE</td>
+                    <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">have breakfast / lunch, have English / science lessons, have a break</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 12px; border: 1px solid #e2e8f0; font-weight: 700; color: #4f46e5;">STUDY</td>
+                    <td style="padding: 8px 12px; border: 1px solid #e2e8f0;">study English, study maths, study history, study science, study new words</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="theory-card">
+    <div class="theory-card-header">
+        <div class="theory-icon"><i class="fa-solid fa-shapes"></i></div>
+        <div class="theory-title">2. Cấu tạo từ / Dạng của từ (Word Formation)</div>
+    </div>
+    <div class="theory-grid">
+        <div class="vocab-item">
+            <div class="vocab-word">teach (v) → teacher (n)</div>
+            <div class="vocab-meaning">dạy học → thầy cô giáo</div>
+        </div>
+        <div class="vocab-item">
+            <div class="vocab-word">create (v) → creative (adj) → creativity (n)</div>
+            <div class="vocab-meaning">sáng tạo → có tính sáng tạo → óc sáng tạo</div>
+        </div>
+        <div class="vocab-item">
+            <div class="vocab-word">excite (v) → excited (adj) / exciting (adj)</div>
+            <div class="vocab-meaning">gây hào hứng → cảm thấy hào hứng / thú vị</div>
+        </div>
+        <div class="vocab-item">
+            <div class="vocab-word">friend (n) → friendly (adj) → friendship (n)</div>
+            <div class="vocab-meaning">bạn bè → thân thiện → tình bạn</div>
+        </div>
+        <div class="vocab-item">
+            <div class="vocab-word">help (v/n) → helpful (adj)</div>
+            <div class="vocab-meaning">giúp đỡ → hữu ích, hay giúp đỡ</div>
+        </div>
+    </div>
+</div>
+
+<div class="theory-card">
+    <div class="theory-card-header">
+        <div class="theory-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div class="theory-title">3. Phân biệt các từ dễ gây nhầm lẫn (Confusing Words)</div>
+    </div>
+    <div style="font-size: 0.92rem; color: #334155; line-height: 1.7;">
+        <p>• <b>DO vs. PLAY vs. STUDY:</b><br>
+        - <i>Play:</i> Dùng cho các môn thể thao có bóng hoặc luật thi đấu đối kháng (play football, play chess).<br>
+        - <i>Do:</i> Dùng cho bài tập hoặc môn võ thuật cá nhân không dùng bóng (do homework, do judo).<br>
+        - <i>Study:</i> Dùng cho việc học các môn học lý thuyết học thuật (study science, study history).</p>
+        <p style="margin-top: 8px;">• <b>EXCITED vs. EXCITING:</b><br>
+        - <i>Excited (adj):</i> Cảm xúc hào hứng của con người (<i>I am excited about my new school</i>).<br>
+        - <i>Exciting (adj):</i> Tính chất thú vị của sự việc, hoạt động (<i>The science lesson is exciting</i>).</p>
+    </div>
+</div>
+
+<div class="theory-card">
+    <div class="theory-card-header">
+        <div class="theory-icon"><i class="fa-solid fa-code-branch"></i></div>
+        <div class="theory-title">4. Ngữ pháp: Thì Hiện tại đơn & Trạng từ chỉ tần suất</div>
+    </div>
+    <div class="grammar-box">
+        <div class="rule-title">A. Thì Hiện tại đơn với Động từ thường (Ordinary Verbs)</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; margin: 10px 0;">
+            <div class="rule-formula" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                <span style="min-width: 120px; font-weight: 700; color: #166534;">(+) Khẳng định:</span>
+                <span><b>S + V(s/es)</b> &nbsp; (<i>I / You / We / They + V-inf &nbsp;|&nbsp; He / She / It + V-s/es</i>)</span>
+            </div>
+            <div class="rule-formula" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                <span style="min-width: 120px; font-weight: 700; color: #dc2626;">(-) Phủ định:</span>
+                <span><b>S + don't / doesn't + V-inf</b> &nbsp; (<i>Ví dụ: He doesn't wear a uniform on Sunday.</i>)</span>
+            </div>
+            <div class="rule-formula" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                <span style="min-width: 120px; font-weight: 700; color: #0284c7;">(?) Nghi vấn:</span>
+                <span><b>Do / Does + S + V-inf?</b> &nbsp;→&nbsp; <i>Yes, S + do/does. / No, S + don't/doesn't.</i></span>
+            </div>
+        </div>
+        <p style="font-size: 0.88rem; color: #166534; margin-top: 6px;">• <b>Quy tắc thêm -es:</b> Thêm <i>-es</i> sau các động từ tận cùng bằng: <i>-o, -s, -ch, -x, -sh, -z</i> (ví dụ: <i>goes, watches, washes, fixes</i>).</p>
+    </div>
+    <div class="grammar-box" style="margin-top: 14px;">
+        <div class="rule-title">B. Trạng từ chỉ tần suất (Adverbs of Frequency)</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; margin: 10px 0;">
+            <div class="rule-formula" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                <span style="min-width: 160px; font-weight: 700; color: #4338ca;">• Với Động từ thường:</span>
+                <span><b>S + Trạng từ + Động từ thường</b> &nbsp; (<i>Ví dụ: He <u>always walks</u> to school.</i>)</span>
+            </div>
+            <div class="rule-formula" style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                <span style="min-width: 160px; font-weight: 700; color: #4338ca;">• Với Động từ TO BE:</span>
+                <span><b>S + to be (am/is/are) + Trạng từ</b> &nbsp; (<i>Ví dụ: She <u>is always</u> on time.</i>)</span>
+            </div>
+        </div>
+        <p style="font-size: 0.88rem; color: #166534; margin-top: 6px;">• <b>Mức độ tần suất:</b> <i>always (100%), usually (80%), often (60%), sometimes (40%), rarely/seldom (20%), never (0%)</i>.</p>
+    </div>
+</div>
+
+<div class="theory-card">
+    <div class="theory-card-header">
+        <div class="theory-icon"><i class="fa-solid fa-volume-high"></i></div>
+        <div class="theory-title">5. Ngữ âm: Âm /ɑː/ và Âm /ʌ/</div>
+    </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.92rem;">
+        <div style="background: #f8fafc; padding: 12px; border-radius: 8px; border-left: 4px solid #4f46e5;">
+            <b>Âm /ɑː/ (Âm a dài):</b><br>
+            • sm<b>a</b>rt /smɑːt/<br>• <b>a</b>rt /ɑːt/<br>• cl<b>a</b>ss /klɑːs/<br>• st<b>a</b>r /stɑː/<br>• p<b>a</b>rk /pɑːk/
+        </div>
+        <div style="background: #f8fafc; padding: 12px; border-radius: 8px; border-left: 4px solid #06b6d4;">
+            <b>Âm /ʌ/ (Âm á ngắn):</b><br>
+            • s<b>u</b>bject /ˈsʌbdʒɪkt/<br>• r<b>u</b>bber /ˈrʌbə/<br>• c<b>o</b>mpass /ˈkʌmpəs/<br>• st<b>u</b>dy /ˈstʌdi/<br>• cl<b>u</b>b /klʌb/
+        </div>
+    </div>
+</div>
+
+
+                    <div class="jump-btn-container">
+                        <button class="jump-btn" onclick="switchTab('quiz')">
+                            <span>Làm bài tập củng cố ngay (40 câu)</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: LÀM BÀI TẬP CỦNG CỐ -->
+        <div id="tab-quiz" class="tab-pane">
+            <!-- Registration Modal -->
+            <div id="modal-reg" class="modal-overlay">
+                <div class="modal-box">
+                    <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: 0.75rem;">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <h2 style="font-size: 1.4rem; color: #0f172a; margin-bottom: 0.5rem; font-family: 'Space Grotesk', sans-serif;">
+                        BÀI TẬP CỦNG CỐ: UNIT 1
+                    </h2>
+                    <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1.5rem;">
+                        My New School • 40 Câu trắc nghiệm (Thời gian: 45 phút)
+                    </p>
+
+                    <input type="text" id="inp-name" class="modal-input" placeholder="Nhập Họ và tên học sinh..." required>
+                    <input type="text" id="inp-class" class="modal-input" placeholder="Nhập Lớp (ví dụ: 6A1)..." required>
+
+                    <div class="modal-notes">
+                        <b>Quy chế thi trực tuyến:</b><br>
+                        • Chống gian lận: Không chuyển tab/rời màn hình (quá 3 lần sẽ tự động nộp bài).<br>
+                        • Hệ thống tự động chấm điểm và hiển thị lời giải chi tiết sau khi nộp bài.
+                    </div>
+
+                    <button class="modal-btn" onclick="startExam()">
+                        Bắt đầu làm bài <i class="fa-solid fa-play"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Exam Screen Grid -->
+            <div id="exam-screen" class="exam-grid" style="display: none;">
+                <!-- Left: Question Panel -->
+                <div class="exam-panel">
+                    <div class="exam-meta-bar">
+                        <span class="badge-topic" id="q-topic">Chủ điểm kiến thức</span>
+                        <span style="font-weight: 700; color: var(--primary-dark);" id="q-progress">Câu 1 / 40</span>
+                    </div>
+
+                    <!-- Audio Player Box for Listening Questions -->
+                    <div id="audio-container" class="audio-box" style="display: none;">
+                        <div style="font-weight: 700; color: #4338ca; font-size: 0.9rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-headphones"></i> BÀI NGHE (AUDIO LISTENING):
+                        </div>
+                        <audio id="audio-player" controls style="width: 100%; border-radius: 8px;">
+                            <source src="Test 1 - Unit 1 - Full Audio Listening.mp3" type="audio/mpeg">
+                            Trình duyệt của bạn không hỗ trợ phát âm thanh.
+                        </audio>
+                    </div>
+
+                    <!-- Reading / Cloze Passage if any -->
+                    <div id="passage-container" class="passage-box" style="display: none;">
+                        <div class="passage-title" id="passage-title">ĐOẠN VĂN ĐỌC HIỂU / ĐIỀN TỪ</div>
+                        <div id="passage-body"></div>
+                    </div>
+
+                    <!-- Question Prompt -->
+                    <div class="question-title" id="q-title">Nội dung câu hỏi đang được tải...</div>
+
+                    <!-- Options List -->
+                    <div class="options-list" id="opt-container"></div>
+
+                    <!-- Navigation Controls -->
+                    <div class="question-footer">
+                        <button class="ctrl-btn ctrl-btn-prev" id="btn-prev" onclick="prevQuestion()">
+                            <i class="fa-solid fa-arrow-left"></i> Câu trước
+                        </button>
+                        <button class="ctrl-btn ctrl-btn-next" id="btn-next" onclick="nextQuestion()">
+                            Câu tiếp theo <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right: Sticky Sidebar Palette -->
+                <div class="palette-panel">
+                    <div class="timer-card">
+                        <div class="timer-label"><i class="fa-regular fa-clock"></i> THỜI GIAN CÒN LẠI</div>
+                        <div class="timer-val" id="timer-display">45:00</div>
+                    </div>
+
+                    <div class="user-info-card">
+                        <div style="font-weight: 700; color: #1e293b;" id="user-display-name">Học sinh: ---</div>
+                        <div style="color: #64748b; font-size: 0.8rem;" id="user-display-class">Lớp: ---</div>
+                    </div>
+
+                    <div class="progress-wrap">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="progress-bar"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>Tiến độ làm bài</span>
+                            <span id="progress-percent">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="palette-title">
+                        <span>Bảng câu hỏi (40 câu)</span>
+                        <span style="font-size: 0.8rem; font-weight: 500; color: var(--primary);" id="answered-count">0/40</span>
+                    </div>
+
+                    <div class="palette-grid" id="palette-grid"></div>
+
+                    <button class="submit-btn" onclick="confirmSubmit()">
+                        <i class="fa-solid fa-paper-plane"></i> NỘP BÀI THI
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result Screen -->
+            <div id="result-screen" class="result-view" style="display: none;">
+                <div class="score-banner">
+                    <div class="score-circle">
+                        <span class="score-val" id="final-score">0.0</span>
+                        <span class="score-max">/ 10 ĐIỂM</span>
+                    </div>
+                    <h2 style="font-size: 1.5rem; color: #0f172a; margin-bottom: 0.5rem;" id="result-feedback">KẾT QUẢ BÀI LÀM CỦA BẠN</h2>
+                    <p style="color: #64748b;" id="result-detail">Thí sinh: --- | Lớp: ---</p>
+                </div>
+
+                <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+                    <h3 style="font-size: 1.1rem; color: #1e293b;">BẢNG ĐÁP ÁN & LỜI GIẢI CHI TIẾT</h3>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('all')" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Tất cả</button>
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('wrong')" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; color: var(--danger);">Chỉ câu sai</button>
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('correct')" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; color: var(--success);">Chỉ câu đúng</button>
+                    </div>
+                </div>
+
+                <div id="review-list"></div>
+
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="ctrl-btn ctrl-btn-next" onclick="location.reload()" style="margin: 0 auto;">
+                        <i class="fa-solid fa-rotate-right"></i> Làm lại bài thi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <p>© VATLI102.COM - Hệ thống Học tập & Đánh giá Năng lực Tiếng Anh THCS Chuẩn GDPT 2018.</p>
+            <div class="footer-links">
+                <a href="https://vatli102.com">Trang chủ</a> • 
+                <a href="https://vatli102.com/tieng-anh/lop-6">Tiếng Anh 6</a> • 
+                <a href="https://vatli102.com/de-thi">Ngân hàng đề thi</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC ENGINE -->
+    <script>
+        const LESSON_TITLE = "Unit 1: My New School";
+        const QUESTIONS = [{"num": 1, "topic": "Listening Part 1: First Day at School", "audio_file": "Test 1 - Unit 1 - Full Audio Listening.mp3", "passage": null, "title": "What is the name of Phong and Vy's new school?", "options": {"A": "Sunflower International School", "B": "An Son Lower Secondary School", "C": "Da Lat Junior High School", "D": "Green Valley Secondary School"}, "correct": "B", "exp": "Trong bài nghe, Vy nói: <i>'I\\'m so excited about our first day at An Son Lower Secondary School.'</i>"}, {"num": 2, "topic": "Listening Part 1: School Facilities", "audio_file": "Test 1 - Unit 1 - Full Audio Listening.mp3", "passage": null, "title": "How many classrooms are there in their new school?", "options": {"A": "Twenty classrooms", "B": "Twenty-five classrooms", "C": "Thirty classrooms", "D": "Forty classrooms"}, "correct": "C", "exp": "Phong nói: <i>'There are thirty classrooms, two large computer rooms, and a huge library...'</i> (Có 30 phòng học)."}, {"num": 3, "topic": "Listening Part 1: School Clubs", "audio_file": "Test 1 - Unit 1 - Full Audio Listening.mp3", "passage": null, "title": "Which school club is Phong going to join?", "options": {"A": "The science club", "B": "The art club", "C": "The music club", "D": "The judo club"}, "correct": "D", "exp": "Phong chia sẻ: <i>'I\\'m going to join the judo club because I love martial arts.'</i>"}, {"num": 4, "topic": "Listening Part 1: School Location", "audio_file": "Test 1 - Unit 1 - Full Audio Listening.mp3", "passage": null, "title": "Where is their new English classroom located?", "options": {"A": "On the ground floor", "B": "On the first floor", "C": "On the second floor", "D": "Next to the school gate"}, "correct": "C", "exp": "Phong bảo: <i>'Let\\'s go to our new English classroom on the second floor!'</i>"}, {"num": 5, "topic": "Listening Part 2: Boarding School", "audio_file": "Test 1 - Unit 1 - Full Audio Listening.mp3", "passage": null, "title": "Where is Sunflower International Boarding School situated?", "options": {"A": "In the center of Ho Chi Minh City", "B": "In a peaceful green valley near Da Lat", "C": "Near the beach in Da Nang", "D": "In an old town in Ha Noi"}, "correct": "B", "exp": "Duy giới thiệu: <i>'My school is situated in a peaceful green valley near Da Lat.'</i>"}, {"num": 6, "topic": "Listening Part 2: School Schedule", "audio_file": "Test 1 - Unit 1 - Full Audio Listening.mp3", "passage": null, "title": "When do students live and study at the boarding school?", "options": {"A": "Every day including weekends", "B": "Only on Saturdays and Sundays", "C": "From Monday to Friday", "D": "From Tuesday to Saturday"}, "correct": "C", "exp": "Duy nói: <i>'Because it is a boarding school, all students live and study here from Monday to Friday.'</i>"}, {"num": 7, "topic": "Listening Part 2: Afternoon Activities", "audio_file": "Test 1 - Unit 1 - Full Audio Listening.mp3", "passage": null, "title": "What do students do in the afternoons at Sunflower School?", "options": {"A": "Take formal written examinations", "B": "Do creative outdoor activities and sports", "C": "Stay inside and sleep all afternoon", "D": "Go home to their families immediately"}, "correct": "B", "exp": "Duy chia sẻ: <i>'In the afternoons, we do many creative outdoor activities...'</i>"}, {"num": 8, "topic": "Listening Part 2: Teachers and Friends", "audio_file": "Test 1 - Unit 1 - Full Audio Listening.mp3", "passage": null, "title": "Why does Duy really love his new boarding school?", "options": {"A": "Because there is no homework at all", "B": "Because the school has no rules", "C": "Because teachers are helpful and he has made many friends", "D": "Because the tuition fee is free"}, "correct": "C", "exp": "Duy kết luận: <i>'I really love my new school because my teachers are very helpful and I have made many wonderful friends...'</i>"}, {"num": 9, "topic": "Phát âm: Âm /ɑː/ và /ʌ/", "passage": null, "title": "Choose the word whose underlined part is pronounced differently from that of the others.", "options": {"A": "sm<u>a</u>rt", "B": "<u>a</u>rt", "C": "cl<u>a</u>ss", "D": "s<u>u</u>bject"}, "correct": "D", "exp": "A, B, C phát âm là /ɑː/ (smart /smɑːt/, art /ɑːt/, class /klɑːs/); D phát âm là /ʌ/ (subject /ˈsʌbdʒɪkt/)."}, {"num": 10, "topic": "Phát âm: Âm /ɑː/ và /ʌ/", "passage": null, "title": "Choose the word whose underlined part is pronounced differently from that of the others.", "options": {"A": "r<u>u</u>bber", "B": "c<u>o</u>mpass", "C": "st<u>u</u>dy", "D": "st<u>a</u>r"}, "correct": "D", "exp": "A, B, C phát âm là /ʌ/ (rubber /ˈrʌbə/, compass /ˈkʌmpəs/, study /ˈstʌdi/); D phát âm là /ɑː/ (star /stɑː/)."}, {"num": 11, "topic": "Trọng âm: Từ 2 âm tiết", "passage": null, "title": "Choose the word that differs from the other three in the position of primary stress.", "options": {"A": "compass", "B": "pencil", "C": "rubber", "D": "maintain"}, "correct": "D", "exp": "Trọng âm: compass /ˈkʌmpəs/ (1), pencil /ˈpensl/ (1), rubber /ˈrʌbə/ (1), maintain /meɪnˈteɪn/ (2). Chọn D."}, {"num": 12, "topic": "Trọng âm: Từ 2 âm tiết", "passage": null, "title": "Choose the word that differs from the other three in the position of primary stress.", "options": {"A": "uniform", "B": "calculator", "C": "activity", "D": "boarding"}, "correct": "C", "exp": "activity /ækˈtɪvəti/ có trọng âm rơi vào âm tiết thứ 2, trong khi uniform /ˈjuːnɪfɔːm/ (1), calculator /ˈkælkjuleɪtə/ (1), boarding /ˈbɔːdɪŋ/ (1)."}, {"num": 13, "topic": "Cụm từ cố định: Động từ 'do'", "passage": null, "title": "Students in my class always ________ their homework carefully before going to school.", "options": {"A": "do", "B": "make", "C": "play", "D": "study"}, "correct": "A", "exp": "Kết hợp từ: <b>do homework</b> (làm bài tập về nhà). Chủ ngữ số nhiều 'Students' đi với động từ nguyên thể 'do'."}, {"num": 14, "topic": "Cụm từ cố định: Động từ 'play'", "passage": null, "title": "Nick and his classmates usually ________ football in the school playground during break time.", "options": {"A": "do", "B": "play", "C": "have", "D": "study"}, "correct": "B", "exp": "Kết hợp từ chỉ môn thể thao đồng đội: <b>play football</b> (chơi bóng đá)."}, {"num": 15, "topic": "Cụm từ cố định: Động từ 'have'", "passage": null, "title": "We ________ English and science lessons on Tuesday and Thursday mornings.", "options": {"A": "play", "B": "do", "C": "have", "D": "make"}, "correct": "C", "exp": "Kết hợp từ: <b>have lessons / have English</b> (có tiết học / học môn tiếng Anh)."}, {"num": 16, "topic": "Cụm từ cố định: Động từ 'do martial arts'", "passage": null, "title": "My brother goes to the sports club twice a week to ________ judo and karate.", "options": {"A": "play", "B": "do", "C": "study", "D": "take"}, "correct": "B", "exp": "Động từ đi với võ thuật / thể dục cá nhân: <b>do judo / do karate</b>."}, {"num": 17, "topic": "Thì Hiện tại đơn (Present Simple)", "passage": null, "title": "Lan ________ to school by bicycle every day because her house is near the school.", "options": {"A": "go", "B": "goes", "C": "is going", "D": "went"}, "correct": "B", "exp": "Thì hiện tại đơn diễn tả thói quen lặp lại có dấu hiệu 'every day'. Chủ ngữ ngôi thứ 3 số ít 'Lan' thêm -es: <b>goes</b>."}, {"num": 18, "topic": "Trạng từ chỉ tần suất (Adverbs of Frequency)", "passage": null, "title": "Our teacher is ________ helpful and patient when we have difficult exercises.", "options": {"A": "always", "B": "never", "C": "rarely", "D": "hardly"}, "correct": "A", "exp": "Vị trí của trạng từ chỉ tần suất: đứng sau động từ to be (is always). Ngữ cảnh khen giáo viên nhiệt tình, kiên nhẫn -> chọn <b>always</b>."}, {"num": 19, "topic": "Từ vựng: Đồ dùng học tập (School items)", "passage": null, "title": "You need a ________ to draw accurate circles in your geometry class.", "options": {"A": "rubber", "B": "compass", "C": "pencil sharpener", "D": "calculator"}, "correct": "B", "exp": "<b>compass</b> (cái com-pa) là dụng cụ dùng để vẽ hình tròn chính xác trong môn hình học."}, {"num": 20, "topic": "Cấu tạo từ (Word Formation): Create -> Creative", "passage": null, "title": "Students in the art club are very ________; they make beautiful paintings from dried leaves.", "options": {"A": "creative", "B": "create", "C": "creativity", "D": "creatively"}, "correct": "A", "exp": "Sau to be 'are' và trạng từ 'very' ta cần một tính từ miêu tả tính cách: <b>creative</b> (sáng tạo)."}, {"num": 21, "topic": "Cấu tạo từ (Word Formation): Friend -> Friendly", "passage": null, "title": "My new classmates are very ________ and always help me when I feel shy.", "options": {"A": "friend", "B": "friendly", "C": "friendship", "D": "friendliness"}, "correct": "B", "exp": "Cần tính từ chỉ phẩm chất tính cách sau 'are very': <b>friendly</b> (thân thiện, cởi mở)."}, {"num": 22, "topic": "Từ vựng: Loại hình trường học (School types)", "passage": null, "title": "In a ________ school, students study and live with their friends during the week.", "options": {"A": "boarding", "B": "kindergarten", "C": "primary", "D": "nursery"}, "correct": "A", "exp": "<b>boarding school</b> (trường nội trú) là nơi học sinh vừa học tập vừa sinh hoạt, ăn ở tại trường."}, {"num": 23, "topic": "Thì Hiện tại đơn: Dạng phủ định", "passage": null, "title": "Students at our school ________ school uniforms on Saturday mornings.", "options": {"A": "doesn't wear", "B": "don't wear", "C": "aren't wear", "D": "not wearing"}, "correct": "B", "exp": "Chủ ngữ số nhiều 'Students' dùng trợ động từ phủ định ở thì hiện tại đơn: <b>don't wear</b>."}, {"num": 24, "topic": "Giới từ đi kèm tính từ: Excited about", "passage": null, "title": "All the new sixth graders are very excited ________ their first science project.", "options": {"A": "about", "B": "with", "C": "at", "D": "in"}, "correct": "A", "exp": "Cấu trúc quen thuộc: <b>be excited about something</b> (hào hứng, phấn khích về điều gì)."}, {"num": 25, "topic": "Giao tiếp xã hội: Đề nghị giúp đỡ", "passage": null, "title": "Minh: 'Let me help you carry those heavy textbooks to the classroom.'\nAn: '________'", "options": {"A": "Thank you very much. That's very kind of you.", "B": "No, I don't like textbooks.", "C": "You're welcome.", "D": "It's my pleasure."}, "correct": "A", "exp": "Đáp lại lời đề nghị giúp đỡ nhiệt tình một cách lịch sự: <b>Thank you very much. That's very kind of you.</b>"}, {"num": 26, "topic": "Giao tiếp xã hội: Hỏi thời khóa biểu", "passage": null, "title": "Elena: 'What subjects do you have on Monday morning, Mai?'\nMai: '________'", "options": {"A": "I have English, maths, and geography.", "B": "I go to school by bus.", "C": "Yes, I like Monday very much.", "D": "It is ten o'clock now."}, "correct": "A", "exp": "Câu hỏi về các môn học trong thời khóa biểu ('What subjects do you have...?') -> trả lời danh sách môn học: <b>I have English, maths, and geography.</b>"}, {"num": 27, "topic": "Tìm lỗi sai: Vị trí trạng từ & chia động từ", "passage": null, "title": "He [always do] (A) his [homework] (B) before [dinner] (C) with his [family] (D).", "options": {"A": "always do", "B": "homework", "C": "dinner", "D": "family"}, "correct": "A", "exp": "Chủ ngữ 'He' ngôi thứ 3 số ít nên động từ 'do' phải chia thành <b>always does</b>."}, {"num": 28, "topic": "Tìm lỗi sai: Kết hợp từ (Collocation)", "passage": null, "title": "Nam [and] (A) his friends [study] (B) judo [in] (C) the gym [every] (D) Friday afternoon.", "options": {"A": "and", "B": "study", "C": "in", "D": "every"}, "correct": "B", "exp": "Với môn võ judo, ta dùng động từ <b>do judo</b> chứ không dùng <i>study judo</i>. Sửa <b>study</b> thành <b>do</b>."}, {"num": 29, "topic": "Tìm lỗi sai: Hòa hợp Chủ ngữ - Động từ", "passage": null, "title": "My [new] (A) school [have] (B) a [large] (C) playground and many modern [facilities] (D).", "options": {"A": "new", "B": "have", "C": "large", "D": "facilities"}, "correct": "B", "exp": "Chủ ngữ số ít 'My new school' đi với động từ <b>has</b>. Sửa <b>have</b> thành <b>has</b>."}, {"num": 30, "topic": "Tìm lỗi sai: Danh từ số nhiều bất quy tắc", "passage": null, "title": "All [the childs] (A) in [grade six] (B) are [wearing] (C) their new uniforms [proudly] (D).", "options": {"A": "the childs", "B": "grade six", "C": "wearing", "D": "proudly"}, "correct": "A", "exp": "Dạng số nhiều bất quy tắc của 'child' là <b>children</b> chứ không phải <i>childs</i>. Sửa <b>the childs</b> thành <b>the children</b>."}, {"num": 31, "topic": "Đọc điền từ (Cloze Test)", "passage": "Starting lower secondary school is a memorable milestone for every student. At secondary school, students study many new (31)________ such as physics, biology, and computer science. In addition to regular lessons, they also take part in various clubs to develop life skills. For example, joining the English club gives students opportunities to practice (32)________ with native speakers. The teachers are always caring and ready to help students overcome learning difficulties. Moreover, students learn how to manage their time (33)________ doing homework and participating in sports. (34)________ students have to wear uniforms from Monday to Friday, they feel equal and proud of their school. In conclusion, secondary school provides a wonderful environment (35)________ teenagers to learn and make lifelong friendships.", "title": "Choose the correct word to fill in blank (31):", "options": {"A": "subjects", "B": "uniforms", "C": "rubbers", "D": "pencils"}, "correct": "A", "exp": "Sau các ví dụ 'physics, biology, computer science' thì danh từ phù hợp là <b>subjects</b> (các môn học)."}, {"num": 32, "topic": "Đọc điền từ (Cloze Test)", "passage": "Starting lower secondary school is a memorable milestone for every student. At secondary school, students study many new (31)________ such as physics, biology, and computer science. In addition to regular lessons, they also take part in various clubs to develop life skills. For example, joining the English club gives students opportunities to practice (32)________ with native speakers. The teachers are always caring and ready to help students overcome learning difficulties. Moreover, students learn how to manage their time (33)________ doing homework and participating in sports. (34)________ students have to wear uniforms from Monday to Friday, they feel equal and proud of their school. In conclusion, secondary school provides a wonderful environment (35)________ teenagers to learn and make lifelong friendships.", "title": "Choose the correct word to fill in blank (32):", "options": {"A": "speaking", "B": "speak", "C": "spoken", "D": "speaks"}, "correct": "A", "exp": "Cấu trúc: <b>practice + V-ing</b> (luyện tập kỹ năng nói: practice speaking with native speakers)."}, {"num": 33, "topic": "Đọc điền từ (Cloze Test)", "passage": "Starting lower secondary school is a memorable milestone for every student. At secondary school, students study many new (31)________ such as physics, biology, and computer science. In addition to regular lessons, they also take part in various clubs to develop life skills. For example, joining the English club gives students opportunities to practice (32)________ with native speakers. The teachers are always caring and ready to help students overcome learning difficulties. Moreover, students learn how to manage their time (33)________ doing homework and participating in sports. (34)________ students have to wear uniforms from Monday to Friday, they feel equal and proud of their school. In conclusion, secondary school provides a wonderful environment (35)________ teenagers to learn and make lifelong friendships.", "title": "Choose the correct word to fill in blank (33):", "options": {"A": "between", "B": "among", "C": "with", "D": "for"}, "correct": "A", "exp": "Cặp liên từ: <b>between A and B</b> (giữa việc làm bài tập về nhà và tham gia thể thao)."}, {"num": 34, "topic": "Đọc điền từ (Cloze Test)", "passage": "Starting lower secondary school is a memorable milestone for every student. At secondary school, students study many new (31)________ such as physics, biology, and computer science. In addition to regular lessons, they also take part in various clubs to develop life skills. For example, joining the English club gives students opportunities to practice (32)________ with native speakers. The teachers are always caring and ready to help students overcome learning difficulties. Moreover, students learn how to manage their time (33)________ doing homework and participating in sports. (34)________ students have to wear uniforms from Monday to Friday, they feel equal and proud of their school. In conclusion, secondary school provides a wonderful environment (35)________ teenagers to learn and make lifelong friendships.", "title": "Choose the correct word to fill in blank (34):", "options": {"A": "Although", "B": "Because", "C": "So", "D": "But"}, "correct": "A", "exp": "Liên từ nhượng bộ <b>Although</b> (Mặc dù học sinh phải mặc đồng phục từ thứ Hai đến thứ Sáu, các em vẫn cảm thấy bình đẳng và tự hào)."}, {"num": 35, "topic": "Đọc điền từ (Cloze Test)", "passage": "Starting lower secondary school is a memorable milestone for every student. At secondary school, students study many new (31)________ such as physics, biology, and computer science. In addition to regular lessons, they also take part in various clubs to develop life skills. For example, joining the English club gives students opportunities to practice (32)________ with native speakers. The teachers are always caring and ready to help students overcome learning difficulties. Moreover, students learn how to manage their time (33)________ doing homework and participating in sports. (34)________ students have to wear uniforms from Monday to Friday, they feel equal and proud of their school. In conclusion, secondary school provides a wonderful environment (35)________ teenagers to learn and make lifelong friendships.", "title": "Choose the correct word to fill in blank (35):", "options": {"A": "for", "B": "to", "C": "at", "D": "about"}, "correct": "A", "exp": "Cấu trúc: <b>provide an environment for somebody to V</b> (tạo môi trường cho thanh thiếu niên học tập)."}, {"num": 36, "topic": "Đọc hiểu: Ý chính của bài đọc", "passage": "Dream International School is an innovative green boarding school located on the outskirts of Da Nang City. Built in 2020, the school is famous for its eco-friendly architecture and modern learning facilities. Surrounding the classroom buildings are lush gardens, an organic farm, and a solar energy park that supplies clean electricity to the entire campus.\n\nAt Dream International School, students do not just sit in traditional classrooms. Every week, they spend several hours in the outdoor science laboratory, where they conduct real experiments on soil and plant growth. In addition, the school emphasizes physical fitness and artistic creativity. Students can choose from a wide range of extracurricular clubs, such as swimming, chess, robotics, and drama.\n\nAll sixth graders live in comfortable dormitories with four students in each room. They learn how to take care of themselves, keep their rooms tidy, and cooperate with roommates. Minh, an active sixth-grade student, shares: 'Living away from home was challenging at first, but now I feel very confident and independent. My teachers and friends are like my second family.'", "title": "What is the passage mainly about?", "options": {"A": "The rules of an organic farm in Da Nang.", "B": "An innovative and eco-friendly boarding school.", "C": "How to win a national robotics competition.", "D": "The history of classroom buildings in Vietnam."}, "correct": "B", "exp": "Toàn bộ bài đọc giới thiệu về trường nội trú sinh thái Dream International School (cơ sở vật chất, hoạt động học tập và cuộc sống nội trú của học sinh)."}, {"num": 37, "topic": "Đọc hiểu: Thông tin chi tiết", "passage": "Dream International School is an innovative green boarding school located on the outskirts of Da Nang City. Built in 2020, the school is famous for its eco-friendly architecture and modern learning facilities. Surrounding the classroom buildings are lush gardens, an organic farm, and a solar energy park that supplies clean electricity to the entire campus.\n\nAt Dream International School, students do not just sit in traditional classrooms. Every week, they spend several hours in the outdoor science laboratory, where they conduct real experiments on soil and plant growth. In addition, the school emphasizes physical fitness and artistic creativity. Students can choose from a wide range of extracurricular clubs, such as swimming, chess, robotics, and drama.\n\nAll sixth graders live in comfortable dormitories with four students in each room. They learn how to take care of themselves, keep their rooms tidy, and cooperate with roommates. Minh, an active sixth-grade student, shares: 'Living away from home was challenging at first, but now I feel very confident and independent. My teachers and friends are like my second family.'", "title": "What provides clean electricity for the entire school campus?", "options": {"A": "A large coal power factory", "B": "A solar energy park", "C": "A wind turbine on the roof", "D": "An electric generator in the basement"}, "correct": "B", "exp": "Đoạn 1 nêu: <i>'...and a solar energy park that supplies clean electricity to the entire campus.'</i>"}, {"num": 38, "topic": "Đọc hiểu: Thông tin chi tiết", "passage": "Dream International School is an innovative green boarding school located on the outskirts of Da Nang City. Built in 2020, the school is famous for its eco-friendly architecture and modern learning facilities. Surrounding the classroom buildings are lush gardens, an organic farm, and a solar energy park that supplies clean electricity to the entire campus.\n\nAt Dream International School, students do not just sit in traditional classrooms. Every week, they spend several hours in the outdoor science laboratory, where they conduct real experiments on soil and plant growth. In addition, the school emphasizes physical fitness and artistic creativity. Students can choose from a wide range of extracurricular clubs, such as swimming, chess, robotics, and drama.\n\nAll sixth graders live in comfortable dormitories with four students in each room. They learn how to take care of themselves, keep their rooms tidy, and cooperate with roommates. Minh, an active sixth-grade student, shares: 'Living away from home was challenging at first, but now I feel very confident and independent. My teachers and friends are like my second family.'", "title": "How many students stay in each dormitory room?", "options": {"A": "Two students", "B": "Three students", "C": "Four students", "D": "Six students"}, "correct": "C", "exp": "Đoạn 3 chỉ rõ: <i>'All sixth graders live in comfortable dormitories with four students in each room.'</i>"}, {"num": 39, "topic": "Đọc hiểu: Từ vựng trong ngữ cảnh", "passage": "Dream International School is an innovative green boarding school located on the outskirts of Da Nang City. Built in 2020, the school is famous for its eco-friendly architecture and modern learning facilities. Surrounding the classroom buildings are lush gardens, an organic farm, and a solar energy park that supplies clean electricity to the entire campus.\n\nAt Dream International School, students do not just sit in traditional classrooms. Every week, they spend several hours in the outdoor science laboratory, where they conduct real experiments on soil and plant growth. In addition, the school emphasizes physical fitness and artistic creativity. Students can choose from a wide range of extracurricular clubs, such as swimming, chess, robotics, and drama.\n\nAll sixth graders live in comfortable dormitories with four students in each room. They learn how to take care of themselves, keep their rooms tidy, and cooperate with roommates. Minh, an active sixth-grade student, shares: 'Living away from home was challenging at first, but now I feel very confident and independent. My teachers and friends are like my second family.'", "title": "The word 'independent' in the last paragraph is closest in meaning to ________.", "options": {"A": "reliant on parents", "B": "able to do things by oneself", "C": "feeling afraid and shy", "D": "lazy and untidy"}, "correct": "B", "exp": "Từ <b>independent</b> (tự lập, tự chủ) = <i>able to do things by oneself without depending on others</i>."}, {"num": 40, "topic": "Đọc hiểu: Suy luận", "passage": "Dream International School is an innovative green boarding school located on the outskirts of Da Nang City. Built in 2020, the school is famous for its eco-friendly architecture and modern learning facilities. Surrounding the classroom buildings are lush gardens, an organic farm, and a solar energy park that supplies clean electricity to the entire campus.\n\nAt Dream International School, students do not just sit in traditional classrooms. Every week, they spend several hours in the outdoor science laboratory, where they conduct real experiments on soil and plant growth. In addition, the school emphasizes physical fitness and artistic creativity. Students can choose from a wide range of extracurricular clubs, such as swimming, chess, robotics, and drama.\n\nAll sixth graders live in comfortable dormitories with four students in each room. They learn how to take care of themselves, keep their rooms tidy, and cooperate with roommates. Minh, an active sixth-grade student, shares: 'Living away from home was challenging at first, but now I feel very confident and independent. My teachers and friends are like my second family.'", "title": "What can be inferred from the passage about students at Dream International School?", "options": {"A": "They only study theoretical books without any practical experiments.", "B": "They develop both academic knowledge and valuable life skills.", "C": "They are not allowed to join any sports activities.", "D": "They never have to clean their dormitory rooms."}, "correct": "B", "exp": "Bài đọc cho thấy học sinh vừa được làm thí nghiệm thực tế, học ngoại khóa, vừa học cách tự chăm sóc bản thân, hợp tác và tự lập -> <b>develop both academic knowledge and valuable life skills</b>."}];
+
+        let currentIdx = 0;
+        let userAnswers = new Array(QUESTIONS.length).fill(null);
+        let studentName = "";
+        let studentClass = "";
+        let timeLeft = 45 * 60;
+        let timerInterval = null;
+        let tabSwitchCount = 0;
+        let examActive = false;
+        let examSubmitted = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedName = localStorage.getItem('v102_student_name');
+            const savedClass = localStorage.getItem('v102_student_class');
+            if (savedName) document.getElementById('inp-name').value = savedName;
+            if (savedClass) document.getElementById('inp-class').value = savedClass;
+
+            initAntiCheat();
+        });
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+
+            if (tab === 'theory') {
+                document.getElementById('tab-theory').classList.add('active');
+                document.getElementById('btn-tab-theory').classList.add('active');
+            } else {
+                document.getElementById('tab-quiz').classList.add('active');
+                document.getElementById('btn-tab-quiz').classList.add('active');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function startExam() {
+            const nameInp = document.getElementById('inp-name').value.trim();
+            const classInp = document.getElementById('inp-class').value.trim();
+
+            if (!nameInp || !classInp) {
+                alert("Vui lòng điền đầy đủ Họ và tên và Lớp học để bắt đầu làm bài.");
+                return;
+            }
+
+            studentName = nameInp;
+            studentClass = classInp;
+            localStorage.setItem('v102_student_name', studentName);
+            localStorage.setItem('v102_student_class', studentClass);
+
+            document.getElementById('modal-reg').style.display = 'none';
+            document.getElementById('exam-screen').style.display = 'grid';
+            document.getElementById('user-display-name').innerText = "Học sinh: " + studentName;
+            document.getElementById('user-display-class').innerText = "Lớp: " + studentClass;
+
+            buildPalette();
+            renderQuestion(0);
+            startTimer();
+            examActive = true;
+        }
+
+        function buildPalette() {
+            const grid = document.getElementById('palette-grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'palette-cell';
+                cell.id = `palette-cell-${i}`;
+                cell.innerText = i + 1;
+                cell.onclick = () => renderQuestion(i);
+                grid.appendChild(cell);
+            }
+        }
+
+        function renderQuestion(idx) {
+            currentIdx = idx;
+            const q = QUESTIONS[idx];
+
+            document.getElementById('q-progress').innerText = `Câu ${idx + 1} / ${QUESTIONS.length}`;
+            document.getElementById('q-topic').innerText = q.topic;
+            document.getElementById('q-title').innerHTML = `<b>Câu ${idx + 1}:</b> ${q.title}`;
+
+            // Audio for Listening questions
+            const audioBox = document.getElementById('audio-container');
+            if (q.num <= 8) {
+                audioBox.style.display = 'block';
+            } else {
+                audioBox.style.display = 'none';
+            }
+
+            // Reading passage if available
+            const passBox = document.getElementById('passage-container');
+            if (q.passage) {
+                passBox.style.display = 'block';
+                document.getElementById('passage-body').innerHTML = q.passage.replace(/\n/g, '<br><br>');
+            } else {
+                passBox.style.display = 'none';
+            }
+
+            // Options
+            const optContainer = document.getElementById('opt-container');
+            optContainer.innerHTML = '';
+            ['A', 'B', 'C', 'D'].forEach(key => {
+                const optItem = document.createElement('div');
+                optItem.className = 'opt-item' + (userAnswers[idx] === key ? ' selected' : '');
+                optItem.onclick = () => selectOption(idx, key);
+                optItem.innerHTML = `
+                    <span class="opt-letter">${key}</span>
+                    <span>${q.options[key]}</span>
+                `;
+                optContainer.appendChild(optItem);
+            });
+
+            // Controls state
+            document.getElementById('btn-prev').disabled = (idx === 0);
+            document.getElementById('btn-next').disabled = (idx === QUESTIONS.length - 1);
+
+            // Palette highlight
+            document.querySelectorAll('.palette-cell').forEach((c, i) => {
+                c.classList.toggle('current', i === idx);
+            });
+        }
+
+        function selectOption(qIdx, key) {
+            if (examSubmitted) return;
+            userAnswers[qIdx] = key;
+
+            const cell = document.getElementById(`palette-cell-${qIdx}`);
+            cell.classList.add('answered');
+
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            document.getElementById('answered-count').innerText = `${answeredCount}/${QUESTIONS.length}`;
+
+            const percent = Math.round((answeredCount / QUESTIONS.length) * 100);
+            document.getElementById('progress-bar').style.width = percent + '%';
+            document.getElementById('progress-percent').innerText = percent + '%';
+
+            renderQuestion(qIdx);
+        }
+
+        function prevQuestion() {
+            if (currentIdx > 0) renderQuestion(currentIdx - 1);
+        }
+
+        function nextQuestion() {
+            if (currentIdx < QUESTIONS.length - 1) renderQuestion(currentIdx + 1);
+        }
+
+        function startTimer() {
+            const timerEl = document.getElementById('timer-display');
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Đã hết thời gian làm bài! Hệ thống tự động nộp bài thi.");
+                    submitExam();
+                    return;
+                }
+                const m = Math.floor(timeLeft / 60);
+                const s = timeLeft % 60;
+                timerEl.innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function confirmSubmit() {
+            const unanswered = userAnswers.filter(a => a === null).length;
+            let msg = "Bạn có chắc chắn muốn nộp bài thi?";
+            if (unanswered > 0) {
+                msg = `Bạn còn ${unanswered} câu chưa trả lời. Bạn có chắc chắn muốn nộp bài ngay bây giờ?`;
+            }
+            if (confirm(msg)) {
+                submitExam();
+            }
+        }
+
+        function submitExam() {
+            if (examSubmitted) return;
+            examSubmitted = true;
+            examActive = false;
+            clearInterval(timerInterval);
+
+            let correctCount = 0;
+            QUESTIONS.forEach((q, i) => {
+                if (userAnswers[i] === q.correct) correctCount++;
+            });
+
+            const score = ((correctCount / QUESTIONS.length) * 10).toFixed(1);
+
+            document.getElementById('exam-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('result-detail').innerText = 
+                `Thí sinh: ${studentName} | Lớp: ${studentClass} | Đúng: ${correctCount} / ${QUESTIONS.length} câu`;
+
+            if (score >= 8.0) {
+                document.getElementById('result-feedback').innerText = "🎉 XUẤT SẮC! BẠN ĐẠT ĐIỂM GIỎI";
+                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+            } else if (score >= 6.5) {
+                document.getElementById('result-feedback').innerText = "👍 KHÁ TỐT! HÃY TIẾP TỤC PHÁT HUY";
+            } else if (score >= 5.0) {
+                document.getElementById('result-feedback').innerText = "📚 ĐẠT YÊU CẦU - CẦN CỐ GẮNG THÊM";
+            } else {
+                document.getElementById('result-feedback').innerText = "⚠️ CẦN ÔN TẬP LẠI LÝ THUYẾT TRỌNG TÂM";
+            }
+
+            buildReviewList();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function buildReviewList() {
+            const container = document.getElementById('review-list');
+            container.innerHTML = '';
+
+            QUESTIONS.forEach((q, i) => {
+                const isCorrect = (userAnswers[i] === q.correct);
+                const item = document.createElement('div');
+                item.className = `review-item ${isCorrect ? 'correct' : 'incorrect'}`;
+                item.setAttribute('data-status', isCorrect ? 'correct' : 'wrong');
+
+                item.innerHTML = `
+                    <div class="review-header">
+                        <span>Câu ${i + 1}: ${q.title}</span>
+                        <span style="color: ${isCorrect ? 'var(--success)' : 'var(--danger)'};">
+                            ${isCorrect ? '✓ Đúng' : '✗ Sai'}
+                        </span>
+                    </div>
+                    <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">
+                        <b>Đáp án của bạn:</b> ${userAnswers[i] ? userAnswers[i] + '. ' + q.options[userAnswers[i]] : 'Chưa chọn'} <br>
+                        <b>Đáp án đúng:</b> <span style="color: var(--success); font-weight: 700;">${q.correct}. ${q.options[q.correct]}</span>
+                    </div>
+                    <div class="review-exp">
+                        <b>Giải thích chi tiết:</b> ${q.exp}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function filterReview(status) {
+            const items = document.querySelectorAll('.review-item');
+            items.forEach(el => {
+                if (status === 'all') {
+                    el.style.display = 'block';
+                } else {
+                    el.style.display = (el.getAttribute('data-status') === status) ? 'block' : 'none';
+                }
+            });
+        }
+
+        function initAntiCheat() {
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', e => {
+                if ((e.ctrlKey && (e.key === 'c' || e.key === 'u' || e.key === 'a' || e.key === 's' || e.key === 'v')) || e.key === 'F12') {
+                    e.preventDefault();
+                }
+            });
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden && examActive && !examSubmitted) {
+                    tabSwitchCount++;
+                    if (tabSwitchCount >= 3) {
+                        alert("CẢNH BÁO VI PHẠM QUY CHẾ: Bạn đã chuyển màn hình 3 lần. Hệ thống tự động nộp bài thi!");
+                        submitExam();
+                    } else {
+                        alert(`CẢNH BÁO: Không được rời màn hình làm bài! (Lần ${tabSwitchCount}/3). Vi phạm 3 lần sẽ bị tự động nộp bài.`);
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

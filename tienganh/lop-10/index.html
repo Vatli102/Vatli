@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiếng Anh 10 (Global Success) - vatli102.com</title>
+    <link rel="icon" type="image/svg+xml" href="unit-1/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-light: #e0e7ff;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .sticky-header {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+        .header-container {
+            max-width: 1200px; margin: 0 auto; padding: 12px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .site-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .logo-text {
+            font-size: 1.3rem; font-weight: 800;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .nav-links { display: flex; gap: 16px; align-items: center; }
+        .nav-item {
+            text-decoration: none; color: #475569; font-weight: 600; font-size: 0.9rem;
+            display: inline-flex; align-items: center; gap: 6px; transition: color 0.2s;
+        }
+        .nav-item:hover { color: var(--primary); }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+            color: white; padding: 48px 20px; text-align: center;
+        }
+        .hero-title {
+            font-size: 2.2rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 8px; letter-spacing: -0.5px;
+        }
+        .hero-sub {
+            font-size: 1.05rem; opacity: 0.9; max-width: 760px; margin: 0 auto;
+        }
+
+        .main-container {
+            max-width: 1200px; width: 100%; margin: 32px auto; padding: 0 20px; flex: 1;
+        }
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid #e2e8f0;
+        }
+        .section-title {
+            font-size: 1.4rem; font-weight: 800; color: #1e293b; display: flex; align-items: center; gap: 10px;
+        }
+        .schedule-badge {
+            background: #ede9fe; color: #6d28d9; padding: 6px 14px; border-radius: 9999px;
+            font-size: 0.85rem; font-weight: 700;
+        }
+
+        .units-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 20px;
+        }
+        .unit-card {
+            background: white; border-radius: var(--radius-lg); border: 1px solid var(--border);
+            padding: 24px; box-shadow: var(--shadow-md); display: flex; flex-direction: column;
+            justify-content: space-between; transition: all 0.2s ease;
+        }
+        .unit-card:hover {
+            transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-color: #c7d2fe;
+        }
+        .unit-card.published {
+            border-left: 5px solid var(--success);
+        }
+        .unit-card.scheduled {
+            border-left: 5px solid var(--warning); opacity: 0.88;
+        }
+
+        .unit-badge {
+            display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 700;
+            text-transform: uppercase; margin-bottom: 12px;
+        }
+        .badge-live { background: #dcfce7; color: #166534; }
+        .badge-coming { background: #fef3c7; color: #92400e; }
+
+        .unit-name { font-size: 1.2rem; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
+        .unit-desc { font-size: 0.9rem; color: #64748b; line-height: 1.5; margin-bottom: 16px; }
+
+        .unit-meta {
+            display: flex; gap: 12px; font-size: 0.82rem; color: #475569; margin-bottom: 20px;
+            background: #f8fafc; padding: 8px 12px; border-radius: 8px;
+        }
+        .unit-meta span { display: flex; align-items: center; gap: 4px; }
+
+        .btn-study {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            background: var(--primary); color: white; text-decoration: none; padding: 10px 18px;
+            border-radius: var(--radius-md); font-weight: 700; font-size: 0.95rem; transition: background 0.2s;
+        }
+        .btn-study:hover { background: var(--primary-dark); }
+        .btn-disabled {
+            background: #cbd5e1; color: #64748b; cursor: not-allowed;
+        }
+        .btn-disabled:hover { background: #cbd5e1; }
+
+        .site-footer {
+            background: white; border-top: 1px solid var(--border); padding: 24px; text-align: center;
+            color: var(--text-muted); font-size: 0.88rem; margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header class="sticky-header">
+        <div class="header-container">
+            <a href="https://vatli102.com" class="site-logo">
+                <img src="unit-1/favicon.svg" alt="Logo" class="logo-img" style="width: 32px; height: 32px;">
+                <span class="logo-text">vatli102.com</span>
+            </a>
+            <div class="nav-links">
+                <a href="https://vatli102.com" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
+                <a href="https://vatli102.com/tienganh/lop-10" class="nav-item" style="color: var(--primary);"><i class="fa-solid fa-graduation-cap"></i> Tiếng Anh 10</a>
+                <a href="https://vatli102.com/tienganh/lop-11" class="nav-item"><i class="fa-solid fa-graduation-cap"></i> Tiếng Anh 11</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero-banner">
+        <h1 class="hero-title">TIẾNG ANH 10 - GLOBAL SUCCESS</h1>
+        <p class="hero-sub">Hệ thống Tổng hợp Lý thuyết trọng tâm & Ngân hàng Bài tập củng cố trắc nghiệm tương tác chuẩn cấu trúc GDPT 2018</p>
+    </div>
+
+    <div class="main-container">
+        <div class="section-header">
+            <h2 class="section-title"><i class="fa-solid fa-book-open"></i> Danh mục các đơn vị bài học (Units)</h2>
+            <span class="schedule-badge"><i class="fa-solid fa-check-circle"></i> Sẵn sàng ôn tập</span>
+        </div>
+
+        <div class="units-grid">
+            <!-- Unit 1 -->
+            <div class="unit-card published">
+                <div>
+                    <span class="unit-badge badge-live"><i class="fa-solid fa-circle-check"></i> Đã xuất bản</span>
+                    <h3 class="unit-name">Unit 1: Family Life</h3>
+                    <p class="unit-desc">Tìm hiểu từ vựng cuộc sống gia đình, phân chia việc nhà, cấu tạo từ responsibility/financial, ngữ pháp Hiện tại đơn vs. Hiện tại tiếp diễn (Stative Verbs) và ngữ âm /br/, /kr/, /tr/.</p>
+                    <div class="unit-meta">
+                        <span><i class="fa-solid fa-headphones"></i> 8 câu Nghe</span>
+                        <span><i class="fa-solid fa-pen-nib"></i> 40 câu trắc nghiệm</span>
+                        <span><i class="fa-regular fa-clock"></i> 45 phút</span>
+                    </div>
+                </div>
+                <a href="unit-1/index.html" class="btn-study">
+                    <i class="fa-solid fa-book-open-reader"></i> Học & Làm bài ngay
+                </a>
+            </div>
+
+            <!-- Unit 2 Placeholder -->
+            <div class="unit-card scheduled">
+                <div>
+                    <span class="unit-badge badge-coming"><i class="fa-solid fa-clock"></i> Kế hoạch tiếp theo</span>
+                    <h3 class="unit-name">Unit 2: Humans and The Environment</h3>
+                    <p class="unit-desc">Chủ đề bảo vệ môi trường, dấu chân carbon, lối sống xanh (Green living), ngữ pháp Tương lai đơn với 'will' vs. 'be going to' và thể bị động.</p>
+                    <div class="unit-meta">
+                        <span><i class="fa-solid fa-headphones"></i> 8 câu Nghe</span>
+                        <span><i class="fa-solid fa-pen-nib"></i> 40 câu trắc nghiệm</span>
+                        <span><i class="fa-regular fa-clock"></i> 45 phút</span>
+                    </div>
+                </div>
+                <button class="btn-study btn-disabled" disabled>
+                    <i class="fa-solid fa-lock"></i> Đang biên soạn
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <p>© VATLI102.COM - Hệ thống Học tập & Đánh giá Năng lực Tiếng Anh THPT Chuẩn GDPT 2018.</p>
+    </footer>
+</body>
+</html>
