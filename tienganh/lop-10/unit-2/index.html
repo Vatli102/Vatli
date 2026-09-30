@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 2: Humans and the Environment - Tiếng Anh 10 (Global Success)</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --primary-light: #e0e7ff;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #4f46e5;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
+        .sticky-header { position: sticky; top: 0; z-index: 1000; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.04); }
+        .header-container { max-width: 1200px; margin: 0 auto; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; }
+        .site-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .logo-img { width: 32px; height: 32px; border-radius: 8px; object-fit: contain; }
+        .logo-text { font-size: 1.25rem; font-weight: 800; background: linear-gradient(135deg, #4f46e5, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 14px; align-items: center; }
+        .nav-item { text-decoration: none; color: #475569; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s; }
+        .nav-item:hover { color: #4f46e5; }
+        .nav-tabs { display: flex; gap: 0.4rem; background: #f1f5f9; padding: 0.25rem; border-radius: 0.5rem; border: 1px solid var(--border); }
+        .nav-btn { background: transparent; border: none; color: #475569; padding: 0.45rem 0.9rem; font-weight: 700; font-size: 0.88rem; border-radius: 0.375rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+        .nav-btn.active { background: #4f46e5; color: white; box-shadow: var(--shadow-sm); }
+        @media (max-width: 768px) { .header-container { padding: 8px 12px; flex-direction: column; gap: 8px; } .nav-links { width: 100%; justify-content: space-between; } }
+        .main-container { max-width: 1200px; width: 100%; margin: 1.5rem auto; padding: 0 1rem; flex: 1; }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
+        .theory-wrapper { background: var(--card-bg); border-radius: 1rem; padding: 2.25rem; box-shadow: var(--shadow-md); border: 1px solid var(--border); }
+        .theory-content { text-align: justify; line-height: 1.7; }
+        .theory-card { background: white; border-radius: 14px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .theory-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid #f1f5f9; }
+        .theory-icon { width: 36px; height: 36px; border-radius: 8px; background: #e0e7ff; color: #4338ca; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+        .theory-title { font-size: 1.15rem; font-weight: 800; color: #1e1b4b; }
+        .vocab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 10px; }
+        .vocab-card { background: #f8fafc; border-left: 4px solid var(--primary); padding: 10px 14px; border-radius: 8px; }
+        .vocab-word { font-weight: 700; color: #1e293b; font-size: 0.95rem; }
+        .vocab-pos { font-size: 0.8rem; color: #64748b; font-style: italic; }
+        .vocab-meaning { font-size: 0.88rem; color: #475569; margin-top: 2px; }
+        .vocab-example { font-size: 0.82rem; color: #0284c7; font-style: italic; margin-top: 4px; }
+        .grammar-box { background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 14px 16px; margin-top: 12px; }
+        .rule-title { font-weight: 700; color: #166534; font-size: 0.92rem; margin-bottom: 6px; }
+        .rule-formula { background: white; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-weight: 700; color: #0f172a; border: 1px solid #bbf7d0; margin: 4px 0; font-size: 0.9rem; }
+        .jump-btn-container { text-align: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px dashed var(--border); }
+        .jump-btn { background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%); color: white; font-size: 1.1rem; font-weight: 800; padding: 1rem 2.5rem; border-radius: 9999px; border: none; cursor: pointer; box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.35); transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px; }
+        .jump-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px 0 rgba(79, 70, 229, 0.45); }
+        .exam-grid { display: grid; grid-template-columns: 1fr 340px; gap: 1.5rem; align-items: start; }
+        @media (max-width: 900px) { .exam-grid { grid-template-columns: 1fr; } }
+        .exam-panel { background: var(--card-bg); border-radius: 1rem; padding: 2rem; box-shadow: var(--shadow-md); border: 1px solid var(--border); }
+        .exam-meta-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+        .badge-topic { background: var(--primary-light); color: var(--primary-dark); font-size: 0.8rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 9999px; text-transform: uppercase; }
+        .audio-player-card { background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 0.75rem; padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
+        .audio-label { font-size: 0.9rem; color: #166534; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 6px; }
+        .audio-player-card audio { width: 100%; height: 40px; border-radius: 6px; outline: none; }
+        .passage-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 0.75rem; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; font-size: 0.95rem; text-align: justify; max-height: 280px; overflow-y: auto; line-height: 1.7; }
+        .passage-title { font-weight: 700; color: var(--primary-dark); margin-bottom: 0.5rem; font-size: 0.9rem; text-transform: uppercase; }
+        .question-title { font-size: 1.15rem; font-weight: 600; color: #0f172a; margin-bottom: 1.5rem; text-align: justify; line-height: 1.6; }
+        .options-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .opt-label { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; background: white; border: 1.5px solid var(--border); border-radius: 0.75rem; cursor: pointer; transition: all 0.2s; text-align: justify; }
+        .opt-label:hover { border-color: var(--primary); background: #f8fafc; }
+        .opt-label.selected { border-color: var(--primary); background: #eff6ff; }
+        .opt-circle { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #94a3b8; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: #64748b; flex-shrink: 0; transition: all 0.2s; }
+        .opt-label.selected .opt-circle { border-color: var(--primary); background: var(--primary); color: white; }
+        .opt-text { font-size: 1rem; color: #1e293b; }
+        .question-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 1rem; }
+        .ctrl-btn { padding: 0.75rem 1.5rem; font-weight: 600; border-radius: 0.5rem; border: none; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem; }
+        .ctrl-btn-prev { background: #f1f5f9; color: #475569; }
+        .ctrl-btn-prev:hover { background: #e2e8f0; }
+        .ctrl-btn-next { background: var(--primary); color: white; }
+        .ctrl-btn-next:hover { background: var(--primary-dark); }
+        .palette-panel { background: var(--card-bg); border-radius: 1rem; padding: 1.5rem; box-shadow: var(--shadow-md); border: 1px solid var(--border); position: sticky; top: 5.5rem; }
+        .timer-card { background: #0f172a; color: white; padding: 1rem; border-radius: 0.75rem; text-align: center; margin-bottom: 1.25rem; }
+        .timer-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-bottom: 0.25rem; }
+        .timer-val { font-family: 'Space Grotesk', monospace; font-size: 1.8rem; font-weight: 700; color: #38bdf8; }
+        .user-info-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 1.25rem; font-size: 0.85rem; }
+        .progress-wrap { margin-bottom: 1.25rem; }
+        .progress-bar-bg { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; margin-bottom: 0.4rem; }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #4f46e5, #06b6d4); width: 0%; transition: width 0.3s; }
+        .progress-text { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+        .palette-title { font-size: 0.9rem; font-weight: 700; color: #475569; margin-bottom: 0.75rem; display: flex; justify-content: space-between; }
+        .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; margin-bottom: 1.5rem; }
+        .pal-btn { height: 38px; border-radius: 0.375rem; border: 1.5px solid var(--border); background: white; font-weight: 600; font-size: 0.85rem; color: #475569; cursor: pointer; transition: all 0.15s; }
+        .pal-btn:hover { border-color: var(--primary); }
+        .pal-btn.answered { background: var(--primary-light); border-color: var(--primary); color: var(--primary-dark); }
+        .pal-btn.current { border-color: #0f172a; box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.2); font-weight: 800; }
+        .submit-btn { width: 100%; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; font-weight: 700; padding: 0.875rem; border-radius: 0.5rem; border: none; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2); transition: all 0.2s; }
+        .submit-btn:hover { background: linear-gradient(135deg, #059669 0%, #047857 100%); transform: translateY(-1px); }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+        .modal-card { background: white; border-radius: 1rem; max-width: 480px; width: 100%; padding: 2rem; box-shadow: var(--shadow-lg); }
+        .modal-header { text-align: center; margin-bottom: 1.5rem; }
+        .modal-title { font-size: 1.35rem; font-weight: 700; color: #0f172a; }
+        .modal-input-group { margin-bottom: 1.25rem; }
+        .modal-label { display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.375rem; }
+        .modal-input { width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 0.5rem; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+        .modal-notes { background: #fffbeb; border-left: 4px solid var(--accent); padding: 0.75rem 1rem; border-radius: 0 0.375rem 0.375rem 0; font-size: 0.825rem; color: #92400e; margin-bottom: 1.5rem; }
+        .modal-btn { width: 100%; background: var(--primary); color: white; font-weight: 700; padding: 0.875rem; border-radius: 0.5rem; border: none; cursor: pointer; font-size: 1rem; }
+        .result-view { background: white; border-radius: 1rem; padding: 2.5rem; box-shadow: var(--shadow-md); }
+        .score-banner { text-align: center; padding-bottom: 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
+        .score-circle { width: 130px; height: 130px; border-radius: 50%; background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 1rem; box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.5); }
+        .score-val { font-size: 2.4rem; font-weight: 800; line-height: 1; }
+        .score-max { font-size: 0.85rem; opacity: 0.85; }
+        .review-item { border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.25rem; margin-bottom: 1rem; background: #fafafa; }
+        .review-item.correct { border-left: 5px solid var(--success); }
+        .review-item.incorrect { border-left: 5px solid var(--danger); }
+        .review-header { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+        .review-exp { margin-top: 0.75rem; padding: 0.75rem; background: #f1f5f9; border-radius: 0.5rem; font-size: 0.9rem; color: #1e293b; line-height: 1.5; }
+        .site-footer { width: 100%; text-align: center; padding: 25px 15px; background: #ffffff; border-top: 1px solid var(--border); margin-top: 40px; color: #64748b; font-size: 0.88rem; }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+    <header class="sticky-header">
+        <div class="header-container">
+            <a href="https://vatli102.com" class="site-logo">
+                <img src="favicon.svg" alt="Logo" class="logo-img">
+                <span class="logo-text">vatli102.com</span>
+            </a>
+            <div class="nav-links">
+                <a href="https://vatli102.com" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
+                <a href="https://vatli102.com/tienganh/lop-10" class="nav-item"><i class="fa-solid fa-graduation-cap"></i> Tiếng Anh 10</a>
+                <div class="nav-tabs">
+                    <button class="nav-btn active" id="btn-tab-theory" onclick="switchTab('theory')">
+                        <i class="fa-solid fa-book-open"></i> Lý thuyết trọng tâm
+                    </button>
+                    <button class="nav-btn" id="btn-tab-quiz" onclick="switchTab('quiz')">
+                        <i class="fa-solid fa-pen-to-square"></i> Làm bài tập củng cố
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- TAB 1: LÝ THUYẾT TRỌNG TÂM -->
+        <div id="tab-theory" class="tab-pane active">
+            <div class="theory-wrapper">
+                <div class="theory-content">
+                    
+            <article class="theory-wrapper">
+                <header style="margin-bottom: 25px; border-bottom: 2px solid var(--border); padding-bottom: 15px;">
+                    <h1 style="color: var(--primary-dark); font-size: 1.8rem; font-weight: 800; margin-bottom: 8px;">
+                        TỔNG HỢP KIẾN THỨC TRỌNG TÂM: UNIT 2 - HUMANS AND THE ENVIRONMENT
+                    </h1>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">
+                        Chương trình Tiếng Anh 10 Global Success - Khung GDPT 2018 | Từ vựng Môi trường, Lối sống xanh, Cấu tạo từ, Ngữ pháp Tương lai đơn (Will) vs. Tương lai gần (Be going to) & Thể bị động (Passive Voice), Ngữ âm phụ âm ghép /kl/, /pl/, /gr/, /pr/.
+                    </p>
+                </header>
+
+                <!-- SECTION 1: VOCABULARY & COLLOCATIONS -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-leaf"></i></div>
+                        <div class="theory-title">1. Từ vựng & Cụm từ trọng tâm (Vocabulary & Collocations)</div>
+                    </div>
+                    <div class="vocab-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-word">carbon footprint <span class="vocab-pos">/ˌkɑːbən ˈfʊtprɪnt/ (n)</span></div>
+                            <div class="vocab-meaning">dấu chân carbon (lượng phát thải khí nhà kính từ hoạt động của con người)</div>
+                            <div class="vocab-example">Cycling to school helps reduce your daily carbon footprint.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">eco-friendly <span class="vocab-pos">/ˌiːkəʊ ˈfrendli/ (adj)</span></div>
+                            <div class="vocab-meaning">thân thiện với môi trường sinh thái</div>
+                            <div class="vocab-example">We should switch to eco-friendly cleaning products made from natural enzymes.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">sustainable lifestyle <span class="vocab-pos">/səˈsteɪnəbl ˈlaɪfstaɪl/ (n)</span></div>
+                            <div class="vocab-meaning">lối sống bền vững, bảo tồn tài nguyên</div>
+                            <div class="vocab-example">Adopting a sustainable lifestyle involves minimizing waste and conserving energy.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">single-use plastic <span class="vocab-pos">/ˌsɪŋɡl juːs ˈplæstɪk/ (n)</span></div>
+                            <div class="vocab-meaning">nhựa dùng một lần (ống hút, túi nilon, chai nước)</div>
+                            <div class="vocab-example">Many supermarkets have banned single-use plastic bags to protect marine life.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">renewable energy <span class="vocab-pos">/rɪˈnjuːəbl ˈenədʒi/ (n)</span></div>
+                            <div class="vocab-meaning">năng lượng tái tạo (mặt trời, gió, thủy triều)</div>
+                            <div class="vocab-example">Solar and wind power are reliable sources of renewable energy.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">cut down on <span class="vocab-pos">/kʌt daʊn ɒn/ (phr v)</span></div>
+                            <div class="vocab-meaning">cắt giảm (tiêu thụ điện nước, phát thải)</div>
+                            <div class="vocab-example">Turning off unused appliances helps cut down on electricity consumption.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 2: WORD FORMATION -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-diagram-project"></i></div>
+                        <div class="theory-title">2. Cấu tạo từ / Dạng của từ (Word Formation)</div>
+                    </div>
+                    <div class="vocab-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-word">pollute &rarr; pollution &rarr; pollutant &rarr; polluted</div>
+                            <div class="vocab-meaning">
+                                - <b>pollute (v):</b> làm ô nhiễm.<br>
+                                - <b>pollution (n):</b> sự ô nhiễm.<br>
+                                - <b>pollutant (n):</b> chất gây ô nhiễm.<br>
+                                - <b>polluted (adj):</b> bị ô nhiễm.
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">sustain &rarr; sustainability &rarr; sustainable &rarr; sustainably</div>
+                            <div class="vocab-meaning">
+                                - <b>sustain (v):</b> duy trì, chống đỡ.<br>
+                                - <b>sustainability (n):</b> tính bền vững.<br>
+                                - <b>sustainable (adj):</b> bền vững.<br>
+                                - <b>sustainably (adv):</b> một cách bền vững.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 3: CONFUSING WORDS -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-arrows-split-up-and-left"></i></div>
+                        <div class="theory-title">3. Phân biệt các từ dễ gây nhầm lẫn (Confusing Words)</div>
+                    </div>
+                    <div class="vocab-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-word">Renewable vs. Non-renewable</div>
+                            <div class="vocab-meaning">
+                                <b>- Renewable:</b> Tái tạo được, vô tận từ thiên nhiên (<i>solar, wind</i>).<br>
+                                <b>- Non-renewable:</b> Không thể tái tạo, hữu hạn và cạn kiệt (<i>coal, oil, gas</i>).
+                            </div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">Pollutant vs. Pollution</div>
+                            <div class="vocab-meaning">
+                                <b>- Pollutant:</b> Chất/tác nhân trực tiếp gây ra ô nhiễm (khói độc, rác nhựa).<br>
+                                <b>- Pollution:</b> Hiện tượng/quá trình môi trường bị ô nhiễm nói chung.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 4: GRAMMAR -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-spell-check"></i></div>
+                        <div class="theory-title">4. Ngữ pháp: Will vs. Be going to & Câu bị động (Passive Voice)</div>
+                    </div>
+                    <div class="grammar-box">
+                        <div class="rule-title">A. Will vs. Be going to</div>
+                        <p><b>1. Will + V-inf:</b> Quyết định tức thì tại thời điểm nói, lời hứa, đề nghị giúp đỡ, dự đoán chủ quan.<br><i>Ví dụ: It's cold outside. I will close the window.</i></p>
+                        <p style="margin-top: 6px;"><b>2. Be going to + V-inf:</b> Kế hoạch/dự định đã được lên lịch trước, dự đoán có căn cứ hiện tại.<br><i>Ví dụ: Look at those dark clouds! It is going to rain.</i></p>
+                    </div>
+                    <div class="grammar-box" style="margin-top: 14px; background: #eff6ff; border-color: #93c5fd;">
+                        <div class="rule-title" style="color: #1e40af;">B. Thể bị động (The Passive Voice)</div>
+                        <div class="rule-formula" style="border-color: #bfdbfe;">Cấu trúc chung: S + be + V3/ed (+ by O)</div>
+                        <p style="font-size: 0.88rem; margin-top: 4px;">- Hiện tại đơn: <code>am/is/are + V3/ed</code><br>- Quá khứ đơn: <code>was/were + V3/ed</code><br>- Tương lai đơn / Modals: <code>will be + V3/ed | can/must/should be + V3/ed</code></p>
+                    </div>
+                </section>
+
+                <!-- SECTION 5: PRONUNCIATION -->
+                <section class="theory-card">
+                    <div class="theory-card-header">
+                        <div class="theory-icon"><i class="fa-solid fa-volume-high"></i></div>
+                        <div class="theory-title">5. Ngữ âm: Phụ âm ghép /kl/, /pl/, /gr/, /pr/</div>
+                    </div>
+                    <div class="vocab-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-word">Âm /kl/ & /pl/</div>
+                            <div class="vocab-meaning">- <b>/kl/:</b> clean, climate, club, clever.<br>- <b>/pl/:</b> plastic, planet, plant, please.</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-word">Âm /gr/ & /pr/</div>
+                            <div class="vocab-meaning">- <b>/gr/:</b> green, grow, ground, group.<br>- <b>/pr/:</b> protect, practice, produce, present.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="jump-btn-container">
+                    <button class="jump-btn" onclick="switchTab('quiz')">
+                        <i class="fa-solid fa-pen-to-square"></i> Làm bài tập củng cố
+                    </button>
+                </div>
+            </article>
+    
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: LÀM BÀI TẬP CỦNG CỐ -->
+        <div id="tab-quiz" class="tab-pane">
+            <div id="modal-start" class="modal-overlay">
+                <div class="modal-card">
+                    <div class="modal-header">
+                        <div style="width: 50px; height: 50px; background: #eff6ff; color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 10px;">
+                            <i class="fa-solid fa-user-graduate"></i>
+                        </div>
+                        <h3 class="modal-title">THÔNG TIN HỌC SINH</h3>
+                        <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.25rem;">Unit 2: Humans and the Environment (40 câu / 45 phút)</p>
+                    </div>
+                    <div class="modal-input-group">
+                        <label class="modal-label">Họ và tên của bạn (*)</label>
+                        <input type="text" id="inp-name" class="modal-input" placeholder="Ví dụ: Nguyễn Văn A">
+                    </div>
+                    <div class="modal-input-group">
+                        <label class="modal-label">Lớp / Trường (*)</label>
+                        <input type="text" id="inp-class" class="modal-input" placeholder="Ví dụ: 10A1 - THPT Chuyên">
+                    </div>
+                    <div class="modal-notes">
+                        <b><i class="fa-solid fa-shield-halved"></i> QUY ĐỊNH BẢO MẬT & CHỐNG GIAN LẬN:</b><br>
+                        • 40 câu trắc nghiệm (có 8 câu Audio Nghe), thời gian 45 phút.<br>
+                        • Khóa copy, chuột phải và phím tắt F12.<br>
+                        • Rời tab quá 3 lần hệ thống sẽ tự động thu bài!
+                    </div>
+                    <button class="modal-btn" onclick="startExam()">BẮT ĐẦU LÀM BÀI</button>
+                </div>
+            </div>
+
+            <div id="exam-screen" class="exam-grid" style="display: none;">
+                <div class="exam-panel">
+                    <div class="exam-meta-bar">
+                        <span class="badge-topic" id="q-topic">Chủ điểm kiến thức</span>
+                        <span style="font-weight: 700; color: var(--primary-dark);" id="q-progress">Câu 1 / 40</span>
+                    </div>
+
+                    <div id="audio-container" class="audio-player-card" style="display: none;">
+                        <div class="audio-label">
+                            <i class="fa-solid fa-headphones-simple"></i> <b>Audio phần Nghe (Listening Comprehension - Câu 1 đến 8):</b>
+                        </div>
+                        <audio id="audio-player" controls preload="auto">
+                            <source src="Unit 2 - Listening.mp3" type="audio/mpeg">
+                        </audio>
+                    </div>
+
+                    <div id="passage-container" class="passage-box" style="display: none;">
+                        <div class="passage-title" id="passage-title">ĐOẠN VĂN</div>
+                        <div id="passage-body"></div>
+                    </div>
+
+                    <div class="question-title" id="q-title">Nội dung câu hỏi đang được tải...</div>
+                    <div class="options-list" id="opt-container"></div>
+
+                    <div class="question-footer">
+                        <button class="ctrl-btn ctrl-btn-prev" id="btn-prev" onclick="prevQuestion()">
+                            <i class="fa-solid fa-arrow-left"></i> Câu trước
+                        </button>
+                        <button class="ctrl-btn ctrl-btn-next" id="btn-next" onclick="nextQuestion()">
+                            Câu tiếp theo <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="palette-panel">
+                    <div class="timer-card">
+                        <div class="timer-label"><i class="fa-regular fa-clock"></i> THỜI GIAN CÒN LẠI</div>
+                        <div class="timer-val" id="timer-display">45:00</div>
+                    </div>
+                    <div class="user-info-card">
+                        <div style="font-weight: 700; color: #1e293b;" id="user-display-name">Học sinh: ---</div>
+                        <div style="color: #64748b; font-size: 0.8rem;" id="user-display-class">Lớp: ---</div>
+                    </div>
+                    <div class="progress-wrap">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="progress-bar"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>Tiến độ làm bài</span>
+                            <span id="progress-percent">0%</span>
+                        </div>
+                    </div>
+                    <div class="palette-title">
+                        <span>Bảng câu hỏi (40 câu)</span>
+                        <span style="font-size: 0.8rem; font-weight: 500; color: var(--primary);" id="answered-count">0/40</span>
+                    </div>
+                    <div class="palette-grid" id="palette-grid"></div>
+                    <button class="submit-btn" onclick="confirmSubmit()">
+                        <i class="fa-solid fa-paper-plane"></i> NỘP BÀI THI
+                    </button>
+                </div>
+            </div>
+
+            <div id="result-screen" class="result-view" style="display: none;">
+                <div class="score-banner">
+                    <div class="score-circle">
+                        <div class="score-val" id="final-score">0.0</div>
+                        <div class="score-max">/ 10 ĐIỂM</div>
+                    </div>
+                    <h2 style="font-size: 1.5rem; font-weight: 800; color: #1e293b; margin-bottom: 0.5rem;">KẾT QUẢ BÀI LÀM CỦNG CỐ</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;" id="result-detail">Thí sinh: ...</p>
+                    <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('all')">Tất cả</button>
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('wrong')">Câu sai</button>
+                        <button class="ctrl-btn ctrl-btn-prev" onclick="filterReview('correct')">Câu đúng</button>
+                    </div>
+                </div>
+                <div class="review-list" id="review-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <p>© VATLI102.COM - Hệ thống Học tập & Đánh giá Năng lực Tiếng Anh THPT Chuẩn GDPT 2018.</p>
+    </footer>
+
+    <script>
+        const LESSON_TITLE = "Unit 2: Humans and the Environment";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec";
+        const QUESTIONS = [{"num": 1, "topic": "Nghe hiểu - Chiến dịch trường học", "passageId": null, "audio_file": "Unit 2 - Listening.mp3", "title": "What campaign has Mai and Kevin's school recently launched?", "options": {"A": "The Sports and Fitness Club", "B": "The 'Go Green' campaign", "C": "The Digital Technology Festival", "D": "The International Food Fair"}, "correct": "B", "exp": "Kevin nêu rõ: <i>'Our school has just launched the 'Go Green' campaign to encourage students to adopt a sustainable lifestyle.'</i>", "translation": "Trường của Mai và Kevin vừa phát động chiến dịch gì? -> Chiến dịch 'Go Green' (Sống xanh)."}, {"num": 2, "topic": "Nghe hiểu - Hành động của Kevin", "passageId": null, "audio_file": "Unit 2 - Listening.mp3", "title": "What specific action will Kevin take to reduce single-use plastic?", "options": {"A": "Stop drinking water at school completely", "B": "Carry his own refillable stainless steel bottle", "C": "Buy disposable plastic cups everyday", "D": "Throw plastic bottles into regular trash bins"}, "correct": "B", "exp": "Kevin nói: <i>'I'm going to stop buying bottled water and carry my own refillable stainless steel bottle instead.'</i>", "translation": "Kevin sẽ làm gì để giảm đồ nhựa dùng một lần? -> Mang theo bình nước inox có thể tái sử dụng."}, {"num": 3, "topic": "Nghe hiểu - Phương tiện đi lại", "passageId": null, "audio_file": "Unit 2 - Listening.mp3", "title": "How is Mai planning to travel to school to reduce emissions?", "options": {"A": "By private car", "B": "By motorbike", "C": "By bicycle", "D": "By airplane"}, "correct": "C", "exp": "Mai nói: <i>'I'm also going to travel to school by bicycle rather than asking my parents to drive me on their motorbike.'</i>", "translation": "Mai dự định đến trường bằng phương tiện gì? -> Bằng xe đạp."}, {"num": 4, "topic": "Nghe hiểu - Giảm rác thải giấy", "passageId": null, "audio_file": "Unit 2 - Listening.mp3", "title": "How will Mai and her classmates reduce paper waste in class?", "options": {"A": "By taking digital notes on tablets and reusing one-sided paper", "B": "By burning old textbooks after exams", "C": "By throwing all paper into rivers", "D": "By refusing to do any homework"}, "correct": "A", "exp": "Mai chia sẻ: <i>'We decided to take digital notes on our tablets and reuse old one-sided printed paper for rough calculations.'</i>", "translation": "Mai và các bạn sẽ giảm rác thải giấy bằng cách nào? -> Ghi chú điện tử trên máy tính bảng và tái sử dụng giấy 1 mặt."}, {"num": 5, "topic": "Nghe hiểu - Chủ đề bài nói", "passageId": null, "audio_file": "Unit 2 - Listening.mp3", "title": "What is the main topic of Dr. Harrison's environmental talk?", "options": {"A": "The financial cost of coal mining", "B": "The global transition towards renewable energy sources", "C": "The extinction of rare bird species", "D": "The construction of luxury seaside resorts"}, "correct": "B", "exp": "Bác sĩ Harrison mở đầu: <i>'Today, we examine the urgent global shift from fossil fuels to renewable energy.'</i>", "translation": "Chủ đề chính bài nói của Tiến sĩ Harrison là gì? -> Sự chuyển dịch toàn cầu sang các nguồn năng lượng tái tạo."}, {"num": 6, "topic": "Nghe hiểu - Tác hại nhiên liệu hóa thạch", "passageId": null, "audio_file": "Unit 2 - Listening.mp3", "title": "According to the speaker, what is the major problem caused by burning fossil fuels?", "options": {"A": "It releases billions of tons of greenhouse gases annually.", "B": "It makes solar panels stop working.", "C": "It eliminates all forms of air pollution.", "D": "It cools down the Earth's atmosphere."}, "correct": "A", "exp": "Bác sĩ nêu rõ: <i>'their combustion releases billions of tons of greenhouse gases annually, driving catastrophic global warming'</i>.", "translation": "Vấn đề lớn do đốt nhiên liệu hóa thạch là gì? -> Thải ra hàng tỷ tấn khí nhà kính mỗi năm gây nóng lên toàn cầu."}, {"num": 7, "topic": "Nghe hiểu - Đột phá năng lượng mặt trời", "passageId": null, "audio_file": "Unit 2 - Listening.mp3", "title": "What breakthrough in solar energy does the speaker highlight?", "options": {"A": "Solar panels are now more affordable and efficient than ever.", "B": "Solar energy can only be used during winter.", "C": "Solar panels are no longer produced.", "D": "Solar energy causes extreme air pollution."}, "correct": "A", "exp": "Trong bài: <i>'Solar energy, in particular, has seen massive technological breakthroughs, making rooftop solar panels more affordable and efficient than ever.'</i>", "translation": "Đột phá nào về năng lượng mặt trời được nhấn mạnh? -> Tấm pin mặt trời ngày càng rẻ hơn và đạt hiệu suất cao hơn bao giờ hết."}, {"num": 8, "topic": "Nghe hiểu - Lợi ích kinh tế xã hội", "passageId": null, "audio_file": "Unit 2 - Listening.mp3", "title": "Besides environmental protection, what benefit does green energy bring?", "options": {"A": "It permanently eliminates all jobs.", "B": "It creates millions of sustainable green jobs in manufacturing and engineering.", "C": "It increases the price of drinking water.", "D": "It forces people to stop using electricity."}, "correct": "B", "exp": "Diễn giả nêu: <i>'it also creates millions of sustainable green jobs in manufacturing and engineering.'</i>", "translation": "Ngoài bảo vệ môi trường, năng lượng xanh đem lại lợi ích gì? -> Tạo ra hàng triệu việc làm xanh bền vững."}, {"num": 9, "topic": "Phát âm phụ âm ghép /kl/ vs /pl/", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word whose underlined part differs from the other three in pronunciation:", "options": {"A": "<u>cl</u>ean", "B": "<u>cl</u>imate", "C": "<u>pl</u>astic", "D": "<u>cl</u>ub"}, "correct": "C", "exp": "Từ <b>plastic</b> phát âm là <b>/pl/</b> (/ˈplæstɪk/). Các từ <i>clean</i> /kliːn/, <i>climate</i> /ˈklaɪmət/, <i>club</i> /klʌb/ đều phát âm là <b>/kl/</b>.", "translation": "Phát âm: plastic (/pl/) khác với clean, climate, club (/kl/)."}, {"num": 10, "topic": "Phát âm phụ âm ghép /gr/ vs /pr/", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word whose underlined part differs from the other three in pronunciation:", "options": {"A": "<u>gr</u>een", "B": "<u>gr</u>ow", "C": "<u>gr</u>ound", "D": "<u>pr</u>otect"}, "correct": "D", "exp": "Từ <b>protect</b> phát âm là <b>/pr/</b> (/prəˈtekt/). Các từ <i>green</i>, <i>grow</i>, <i>ground</i> đều phát âm là <b>/gr/</b>.", "translation": "Phát âm: protect (/pr/) khác với green, grow, ground (/gr/)."}, {"num": 11, "topic": "Trọng âm 2 âm tiết", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word that differs from the other three in the position of primary stress:", "options": {"A": "planet", "B": "pollute", "C": "footprint", "D": "bottle"}, "correct": "B", "exp": "<b>pollute</b> có trọng âm rơi vào âm tiết thứ 2 (/pəˈluːt/). Các từ <i>planet</i> /ˈplænɪt/, <i>footprint</i> /ˈfʊtprɪnt/, <i>bottle</i> /ˈbɒtl/ đều có trọng âm rơi vào âm tiết thứ 1.", "translation": "Trọng âm: pollute (âm 2) khác với planet, footprint, bottle (âm 1)."}, {"num": 12, "topic": "Trọng âm 3-4 âm tiết", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word that differs from the other three in the position of primary stress:", "options": {"A": "energy", "B": "chemical", "C": "sustainable", "D": "article"}, "correct": "C", "exp": "<b>sustainable</b> có trọng âm rơi vào âm tiết thứ 2 (/səˈsteɪnəbl/). Các từ <i>energy</i> /ˈenədʒi/, <i>chemical</i> /ˈkemɪkl/, <i>article</i> /ˈɑːtɪkl/ đều rơi vào âm tiết thứ 1.", "translation": "Trọng âm: sustainable (âm 2) khác với energy, chemical, article (âm 1)."}, {"num": 13, "topic": "Từ vựng - Lối sống xanh", "passageId": null, "title": "More and more young people are adopting a ______ lifestyle by recycling waste and saving electricity.", "options": {"A": "sustainable", "B": "wasteful", "C": "harmful", "D": "destructive"}, "correct": "A", "exp": "<b>sustainable lifestyle</b> (n): lối sống bền vững, thân thiện với môi trường.", "translation": "Ngày càng nhiều bạn trẻ áp dụng lối sống bền vững bằng cách tái chế rác và tiết kiệm điện."}, {"num": 14, "topic": "Cụm danh từ Dấu chân carbon", "passageId": null, "title": "Using public transport like electric buses helps reduce the carbon ______ of urban commuters.", "options": {"A": "footprint", "B": "fingerprint", "C": "handprint", "D": "footstep"}, "correct": "A", "exp": "Thuật ngữ môi trường học: <b>carbon footprint</b> (dấu chân carbon).", "translation": "Sử dụng phương tiện công cộng như xe buýt điện giúp giảm dấu chân carbon của người dân đô thị."}, {"num": 15, "topic": "Tương lai gần - Dự đoán có căn cứ", "passageId": null, "title": "Look at those thick black fumes rising from the chemical factory! The air quality ______ rapidly.", "options": {"A": "is going to deteriorate", "B": "will deteriorate", "C": "deteriorates", "D": "has deteriorated"}, "correct": "A", "exp": "Dự đoán hiện tượng trong tương lai dựa trên bằng chứng rõ ràng trước mắt (<i>'Look at those thick black fumes...'</i>) -> Dùng <b>Be going to (is going to deteriorate)</b>.", "translation": "Nhìn những làn khói đen kịt bốc lên từ nhà máy hóa chất kìa! Chất lượng không khí sắp sửa suy giảm nhanh chóng đấy."}, {"num": 16, "topic": "Tương lai đơn - Quyết định tức thì", "passageId": null, "title": "Peter: 'It's very hot in this room.' - Mary: 'I ______ on the solar-powered ceiling fan for you.'", "options": {"A": "will turn", "B": "am going to turn", "C": "turn", "D": "have turned"}, "correct": "A", "exp": "Quyết định đưa ra ngay tại thời điểm nói / lời đề nghị giúp đỡ -> Dùng <b>Will (will turn)</b>.", "translation": "Peter: 'Trong phòng này nóng quá.' - Mary: 'Mình sẽ bật quạt trần dùng điện mặt trời cho bạn nhé.'"}, {"num": 17, "topic": "Câu bị động Hiện tại đơn", "passageId": null, "title": "Millions of plastic bottles ______ by recycling facilities across the country every month.", "options": {"A": "are processed", "B": "process", "C": "is processed", "D": "are processing"}, "correct": "A", "exp": "Chủ ngữ số nhiều <i>'Millions of plastic bottles'</i> bị tác động bởi hành động tái chế hàng tháng -> Bị động thì Hiện tại đơn: <b>are processed</b>.", "translation": "Hàng triệu chai nhựa được xử lý bởi các cơ sở tái chế trên toàn quốc mỗi tháng."}, {"num": 18, "topic": "Câu bị động với Modal Verb", "passageId": null, "title": "Household organic waste ______ properly to produce rich fertilizer for community gardens.", "options": {"A": "should be sorted", "B": "should sort", "C": "should have sorted", "D": "should be sorting"}, "correct": "A", "exp": "Cấu trúc bị động với động từ khuyết thiếu: <b>should be + V3/ed (should be sorted)</b>.", "translation": "Rác thải hữu cơ gia đình cần được phân loại đúng cách để sản xuất phân bón màu mỡ cho các khu vườn cộng đồng."}, {"num": 19, "topic": "Từ đồng nghĩa (Closest Meaning)", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word(s) CLOSEST in meaning to the underlined word:\nSupermarkets should encourage shoppers to use <u>eco-friendly</u> reusable cloth bags.", "options": {"A": "environmentally friendly", "B": "harmful", "C": "expensive", "D": "disposable"}, "correct": "A", "exp": "<b>eco-friendly</b> (adj) = <b>environmentally friendly</b> (thân thiện với môi trường).", "translation": "Từ đồng nghĩa: eco-friendly = environmentally friendly."}, {"num": 20, "topic": "Từ trái nghĩa (Opposite Meaning)", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the word(s) OPPOSITE in meaning to the underlined word:\nSolar power is a <u>renewable</u> energy resource that will never run out.", "options": {"A": "non-renewable", "B": "sustainable", "C": "infinite", "D": "abundant"}, "correct": "A", "exp": "<b>renewable</b> (có thể tái tạo) >< <b>non-renewable</b> (không thể tái tạo / hữu hạn).", "translation": "Từ trái nghĩa: renewable >< non-renewable."}, {"num": 21, "topic": "Cấu tạo từ (Word Formation)", "passageId": null, "title": "The government is investing in clean technology to reduce air ______ in major cities.", "options": {"A": "pollute", "B": "pollution", "C": "pollutant", "D": "polluted"}, "correct": "B", "exp": "Cụm danh từ <b>air pollution</b> (sự ô nhiễm không khí).", "translation": "Chính phủ đang đầu tư vào công nghệ sạch để giảm thiểu ô nhiễm không khí tại các thành phố lớn."}, {"num": 22, "topic": "Phân biệt Pollutant vs. Pollution", "passageId": null, "title": "Chemical fertilizers and pesticides act as dangerous ______ that contaminate groundwater.", "options": {"A": "pollutants", "B": "pollutions", "C": "polluted", "D": "polluting"}, "correct": "A", "exp": "Phân bón và thuốc trừ sâu là những <i>tác nhân / chất gây ô nhiễm cụ thể</i> -> Dùng danh từ đếm được số nhiều <b>pollutants</b>.", "translation": "Phân bón hóa học và thuốc trừ sâu đóng vai trò là những chất gây ô nhiễm nguy hiểm làm nhiễm độc nguồn nước ngầm."}, {"num": 23, "topic": "Giao tiếp - Khen ngợi ý tưởng", "passageId": null, "title": "John: 'I think our class should collect used batteries for safe disposal.' - Linda: '______! That will prevent toxic chemicals from leaking into the soil.'", "options": {"A": "What a splendid idea", "B": "I don't think that works", "C": "You must be wrong", "D": "It doesn't matter at all"}, "correct": "A", "exp": "Lời khen ngợi và đồng thuận nhiệt tình: <b>'What a splendid idea!'</b> (Ý tưởng thật tuyệt vời!).", "translation": "Giao tiếp: John: 'Tôi nghĩ lớp mình nên thu gom pin cũ để xử lý an toàn.' - Linda: 'Ý tưởng thật tuyệt vời!...'"}, {"num": 24, "topic": "Giao tiếp - Đưa ra cảnh báo thân thiện", "passageId": null, "title": "Tom: 'Don't forget to turn off the air conditioner when you leave the classroom.' - Nam: '______'", "options": {"A": "Thanks, I will do it right away.", "B": "No, I like it.", "C": "You are so boring.", "D": "It's none of your business."}, "correct": "A", "exp": "Đáp lại lời nhắc nhở lịch sự: <b>'Thanks, I will do it right away.'</b> (Cảm ơn bạn, mình sẽ tắt ngay đây).", "translation": "Giao tiếp: Tom: 'Đừng quên tắt điều hòa khi ra khỏi lớp học nhé.' - Nam: 'Cảm ơn bạn, mình sẽ làm ngay.'"}, {"num": 25, "topic": "Đọc điền từ - Động từ xả thải", "passageId": "cloze", "title": "Choose the best answer for blank (25):", "options": {"A": "discharged", "B": "repaired", "C": "planted", "D": "recycled"}, "correct": "A", "exp": "<b>discharged / released into</b>: bị xả thải, đổ ra sông biển.", "translation": "Điền vào chỗ trống (25): discharged (bị xả thải)."}, {"num": 26, "topic": "Đọc điền từ - Danh từ thói quen", "passageId": "cloze", "title": "Choose the best answer for blank (26):", "options": {"A": "habits", "B": "conflicts", "C": "diseases", "D": "chores"}, "correct": "A", "exp": "Cụm từ <b>eco-friendly habits</b>: thói quen thân thiện với môi trường.", "translation": "Điền vào chỗ trống (26): habits (thói quen sinh hoạt)."}, {"num": 27, "topic": "Đọc điền từ - Cụm động từ cắt giảm", "passageId": "cloze", "title": "Choose the best answer for blank (27):", "options": {"A": "cut", "B": "put", "C": "break", "D": "fall"}, "correct": "A", "exp": "Cụm từ <b>cut down on</b>: cắt giảm việc sử dụng bao bì.", "translation": "Điền vào chỗ trống (27): cut (trong cụm cut down on = cắt giảm)."}, {"num": 28, "topic": "Đọc điền từ - Động từ cấm", "passageId": "cloze", "title": "Choose the best answer for blank (28):", "options": {"A": "ban", "B": "encourage", "C": "support", "D": "create"}, "correct": "A", "exp": "Chính phủ áp dụng chính sách <b>ban non-biodegradable plastics</b> (nghiêm cấm đồ nhựa không thể phân hủy sinh học).", "translation": "Điền vào chỗ trống (28): ban (cấm)."}, {"num": 29, "topic": "Đọc điền từ - Đại từ quan hệ chỉ cả mệnh đề", "passageId": "cloze", "title": "Choose the best answer for blank (29):", "options": {"A": "which", "B": "whom", "C": "who", "D": "whose"}, "correct": "A", "exp": "Dùng <b>which</b> sau dấu phẩy thay thế cho toàn bộ hành động phía trước.", "translation": "Điền vào chỗ trống (29): which (điều này giúp bảo tồn đa dạng sinh học)."}, {"num": 30, "topic": "Đọc hiểu - Ý chính bài đọc", "passageId": "reading", "title": "What is the main idea of the passage?", "options": {"A": "The financial cost of constructing traditional coal mines", "B": "The imperative shift from fossil fuels to renewable energy and its challenges", "C": "The historical causes of drought in tropical regions", "D": "The manufacture of private electric passenger vehicles"}, "correct": "B", "exp": "Bài đọc phân tích tính cấp thiết của việc chuyển từ nhiên liệu hóa thạch sang năng lượng tái tạo, lợi ích và thách thức: <b>'The imperative shift from fossil fuels to renewable energy and its challenges'</b>.", "translation": "Ý chính của đoạn văn là gì? -> Sự chuyển dịch cấp thiết từ nhiên liệu hóa thạch sang năng lượng tái tạo cùng các thách thức."}, {"num": 31, "topic": "Đọc hiểu - Chi tiết nguyên nhân ô nhiễm", "passageId": "reading", "title": "According to paragraph 1, what has the extensive combustion of fossil fuels caused?", "options": {"A": "It has cooled down global ocean temperatures permanently.", "B": "It has pumped trillions of tons of carbon dioxide and pollutants into the atmosphere.", "C": "It has eliminated all harmful greenhouse gases.", "D": "It has stopped polar glaciers from melting."}, "correct": "B", "exp": "Đoạn 1 nêu: <i>'their extensive combustion has pumped trillions of tons of carbon dioxide and hazardous pollutants into the Earth's atmosphere'</i>.", "translation": "Theo đoạn 1, việc đốt nhiên liệu hóa thạch đã gây ra điều gì? -> Thải hàng nghìn tỷ tấn CO2 và chất ô nhiễm vào khí quyển."}, {"num": 32, "topic": "Đọc hiểu - Từ vựng theo ngữ cảnh", "passageId": "reading", "title": "The word 'accelerated' in paragraph 1 is closest in meaning to ______.", "options": {"A": "sped up", "B": "delayed", "C": "prevented", "D": "stopped"}, "correct": "A", "exp": "<b>accelerated</b> (thúc đẩy nhanh chóng) = <b>sped up</b>. <i>Delayed</i>: trì hoãn; <i>prevented</i>: ngăn chặn.", "translation": "Từ 'accelerated' trong đoạn 1 đồng nghĩa với từ nào? -> sped up (thúc đẩy nhanh)."}, {"num": 33, "topic": "Đọc hiểu - Từ trái nghĩa trong bài", "passageId": "reading", "title": "The word 'finite' in paragraph 2 is OPPOSITE in meaning to ______.", "options": {"A": "limited", "B": "infinite", "C": "scarce", "D": "exhausted"}, "correct": "B", "exp": "<b>finite</b> (hữu hạn, có giới hạn) >< <b>infinite</b> (vô hạn, không bao giờ cạn).", "translation": "Từ 'finite' (hữu hạn) trong đoạn 2 trái nghĩa với từ nào? -> infinite (vô hạn)."}, {"num": 34, "topic": "Đọc hiểu - Thách thức năng lượng tái tạo", "passageId": "reading", "title": "According to paragraph 3, why is developing battery storage systems vital?", "options": {"A": "Because solar and wind generation depend on daylight and weather conditions", "B": "Because batteries can extract more coal from deep underground", "C": "Because batteries completely replace the need for electric power grids", "D": "Because fossil fuels require large battery packs to burn"}, "correct": "A", "exp": "Đoạn 3 chỉ rõ: <i>'Because solar and wind generation depend on daylight and weather conditions, developing high-capacity battery storage systems is vital'</i>.", "translation": "Theo đoạn 3, tại sao phát triển hệ thống lưu trữ pin lại thiết yếu? -> Vì năng lượng gió và mặt trời phụ thuộc vào thời tiết và ban ngày."}, {"num": 35, "topic": "Đọc hiểu - Suy luận (Inference)", "passageId": "reading", "title": "Which of the following can be inferred from the passage?", "options": {"A": "Fossil fuels will naturally disappear within the next two months.", "B": "Transitioning to clean energy offers both environmental benefits and new economic avenues.", "C": "Renewable energy has no technical challenges whatsoever.", "D": "Governments should avoid investing in scientific research."}, "correct": "B", "exp": "Đoạn cuối nhấn mạnh: <i>'transitioning to clean energy is not solely an environmental imperative; it is an economic opportunity that promises cleaner air, sustainable jobs...'</i>", "translation": "Điều nào có thể suy ra từ bài đọc? -> Chuyển dịch sang năng lượng sạch vừa mang lại lợi ích môi trường vừa mở ra cơ hội kinh tế mới."}, {"num": 36, "topic": "Biến đổi câu - Câu chủ động sang bị động", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the sentence that is closest in meaning to the original sentence:\nVolunteers will clean up the local riverbank next Saturday.", "options": {"A": "The local riverbank will be cleaned up by volunteers next Saturday.", "B": "The local riverbank will clean up volunteers next Saturday.", "C": "The local riverbank was cleaned up by volunteers next Saturday.", "D": "The local riverbank is being cleaned up next Saturday."}, "correct": "A", "exp": "Chuyển từ câu chủ động thì Tương lai đơn sang bị động: <b>S + will be + V3/ed (+ by O)</b>.", "translation": "Biến đổi câu: Tình nguyện viên sẽ dọn sạch bờ sông = Bờ sông địa phương sẽ được dọn sạch bởi các tình nguyện viên vào thứ Bảy tới."}, {"num": 37, "topic": "Biến đổi câu - Dự định với Be going to", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the sentence that is closest in meaning to the original sentence:\nOur school plans to install solar panels on the roof next month.", "options": {"A": "Our school is going to install solar panels on the roof next month.", "B": "Our school installed solar panels on the roof last month.", "C": "Our school refuses to install solar panels on the roof next month.", "D": "Our school has already installed solar panels on the roof."}, "correct": "A", "exp": "Cấu trúc <i>'plan to V'</i> (lên kế hoạch thực hiện) tương đương với <b>'be going to + V-inf'</b>.", "translation": "Biến đổi câu: Trường chúng tôi lên kế hoạch lắp pin mặt trời = Trường chúng tôi dự định sẽ lắp pin mặt trời..."}, {"num": 38, "topic": "Kết hợp câu - Mệnh đề quan hệ chỉ lý do / nguyên nhân", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the sentence that best combines each pair of sentences:\nWe should plant more trees in urban areas. Trees absorb harmful carbon dioxide emissions.", "options": {"A": "We should plant more trees in urban areas because they absorb harmful carbon dioxide emissions.", "B": "We should plant more trees in urban areas although they absorb carbon dioxide.", "C": "We should plant more trees in urban areas unless they absorb carbon dioxide.", "D": "Because trees absorb carbon dioxide, we should stop planting them in urban areas."}, "correct": "A", "exp": "Liên từ <b>because</b> thể hiện mối quan hệ nguyên nhân - kết quả chuẩn xác.", "translation": "Kết hợp câu: Chúng ta nên trồng nhiều cây xanh ở đô thị vì chúng hấp thụ khí thải CO2 độc hại."}, {"num": 39, "topic": "Tìm lỗi sai - Thể bị động thiếu be", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the underlined part that needs correction:\nThousands of <u>trees</u> <u>are planted</u> in the national park <u>every year</u> to <u>protection</u> the wildlife habitat.", "options": {"A": "trees", "B": "are planted", "C": "every year", "D": "protection"}, "correct": "D", "exp": "Sau <i>to</i> chỉ mục đích cần một động từ nguyên thể (<i>to-infinitive</i>). Sửa danh từ <i>'protection'</i> thành động từ <b>'protect'</b> (to protect the wildlife habitat).", "translation": "Tìm lỗi sai: Cần động từ 'protect' sau 'to' chỉ mục đích, không dùng danh từ 'protection'."}, {"num": 40, "topic": "Tìm lỗi sai - Phân biệt Will vs. Be going to", "passageId": null, "title": "Mark the letter A, B, C, or D to indicate the underlined part that needs correction:\nLook at those <u>dark clouds</u> in the sky! It <u>will rain</u> <u>heavily</u> in a few <u>minutes</u>.", "options": {"A": "dark clouds", "B": "will rain", "C": "heavily", "D": "minutes"}, "correct": "B", "exp": "Dự đoán có căn cứ cụ thể trước mắt (<i>'Look at those dark clouds...'</i>) phải dùng <b>is going to rain</b> thay vì <i>'will rain'</i>.", "translation": "Tìm lỗi sai: Dự đoán dựa trên bằng chứng trước mắt phải dùng 'is going to rain', không dùng 'will rain'."}];
+        const PASSAGES = {"cloze": "Plastic pollution has emerged as one of the most critical environmental challenges of our time. Every year, millions of tons of single-use plastic items are (25) ______ into oceans and rivers, endangering marine wildlife and contaminating food chains. To combat this crisis, communities across the globe are adopting eco-friendly (26) ______ to minimize synthetic waste. Consumers are strongly encouraged to bring reusable canvas bags, carry refillable bottles, and (27) ______ down on packaging materials. Furthermore, progressive governments are implementing strict policies to (28) ______ non-biodegradable plastics and promote sustainable alternatives, (29) ______ will help protect biodiversity for future generations.", "reading": "The transition to renewable energy represents one of humanity's most crucial endeavors in combating global climate change. For centuries, industrial economies have relied overwhelmingly on burning fossil fuels such as coal, petroleum, and natural gas. While fossil fuels accelerated economic expansion and technological advancement, their extensive combustion has pumped trillions of tons of carbon dioxide and hazardous pollutants into the Earth's atmosphere. This has intensified the greenhouse effect, resulting in soaring global temperatures, melting polar glaciers, and devastating droughts.\n\nIn response to this ecological crisis, renewable energy technologies have advanced with unprecedented speed. Solar photovoltaic panels and offshore wind turbines are now producing electricity at a fraction of their historical cost, often undercutting traditional fossil-fuel power plants in terms of financial competitiveness. Unlike finite fossil reserves that cause irreversible damage upon extraction, renewable sources naturally replenish themselves without producing toxic emissions during operation.\n\nNevertheless, fully integrating renewable energy into existing power grids presents technical hurdles. Because solar and wind generation depend on daylight and weather conditions, developing high-capacity battery storage systems is vital to maintain grid stability. Governments and private corporations must collaborate to modernize transmission infrastructure and invest in energy research. Ultimately, transitioning to clean energy is not solely an environmental imperative; it is an economic opportunity that promises cleaner air, sustainable jobs, and a resilient planet."};
+
+        let currentIdx = 0;
+        let userAnswers = new Array(QUESTIONS.length).fill(null);
+        let timerInterval = null;
+        let timeLeft = 45 * 60;
+        let examSubmitted = false;
+        let tabSwitchCount = 0;
+        let studentName = "";
+        let studentClass = "";
+
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F12' || (e.ctrlKey && ['u','c','v','s','a','p'].includes(e.key.toLowerCase()))) {
+                e.preventDefault();
+            }
+        });
+        window.addEventListener('blur', () => {
+            if (!examSubmitted && document.getElementById('exam-screen').style.display !== 'none') {
+                tabSwitchCount++;
+                if (tabSwitchCount >= 3) {
+                    alert("CẢNH BÁO: Bạn đã chuyển tab 3 lần. Hệ thống tự động thu bài!");
+                    finishExam();
+                } else {
+                    alert(`CẢNH BÁO: Bạn vừa rời khỏi màn hình thi (${tabSwitchCount}/3 lần). Rời quá 3 lần hệ thống sẽ tự động nộp bài!`);
+                }
+            }
+        });
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            if (tabId === 'theory') {
+                document.getElementById('tab-theory').classList.add('active');
+                document.getElementById('btn-tab-theory').classList.add('active');
+            } else {
+                document.getElementById('tab-quiz').classList.add('active');
+                document.getElementById('btn-tab-quiz').classList.add('active');
+                if (!examSubmitted && document.getElementById('exam-screen').style.display === 'none' && document.getElementById('result-screen').style.display === 'none') {
+                    const savedName = localStorage.getItem('student_name') || '';
+                    const savedClass = localStorage.getItem('student_class') || '';
+                    if (savedName) document.getElementById('inp-name').value = savedName;
+                    if (savedClass) document.getElementById('inp-class').value = savedClass;
+                    document.getElementById('modal-start').style.display = 'flex';
+                }
+            }
+        }
+
+        function startExam() {
+            const name = document.getElementById('inp-name').value.trim();
+            const cls = document.getElementById('inp-class').value.trim();
+            if (!name || !cls) {
+                alert("Vui lòng nhập đầy đủ Họ tên và Lớp học trước khi làm bài!");
+                return;
+            }
+            studentName = name;
+            studentClass = cls;
+            localStorage.setItem('student_name', name);
+            localStorage.setItem('student_class', cls);
+
+            document.getElementById('user-display-name').textContent = "Học sinh: " + studentName;
+            document.getElementById('user-display-class').textContent = "Lớp: " + studentClass;
+            document.getElementById('modal-start').style.display = 'none';
+            document.getElementById('exam-screen').style.display = 'grid';
+
+            initPalette();
+            renderQuestion(0);
+            startTimer();
+        }
+
+        function initPalette() {
+            const grid = document.getElementById('palette-grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'pal-btn';
+                btn.id = `pal-${i}`;
+                btn.textContent = i + 1;
+                btn.onclick = () => renderQuestion(i);
+                grid.appendChild(btn);
+            }
+        }
+
+        function renderQuestion(idx) {
+            currentIdx = idx;
+            const q = QUESTIONS[idx];
+
+            document.getElementById('q-topic').textContent = q.topic || "Luyện tập";
+            document.getElementById('q-progress').textContent = `Câu ${idx + 1} / ${QUESTIONS.length}`;
+            document.getElementById('q-title').innerHTML = `<b>Câu ${idx + 1}:</b> ` + q.title.replace(/\n/g, '<br>');
+
+            const audioBox = document.getElementById('audio-container');
+            const audioPlayer = document.getElementById('audio-player');
+            if (q.audio_file) {
+                audioBox.style.display = 'block';
+            } else {
+                audioBox.style.display = 'none';
+                if (!audioPlayer.paused) audioPlayer.pause();
+            }
+
+            const passBox = document.getElementById('passage-container');
+            if (q.passageId && PASSAGES[q.passageId]) {
+                passBox.style.display = 'block';
+                document.getElementById('passage-title').textContent = q.passageId === 'cloze' ? 'Đoạn văn điền từ (Questions 25 - 29)' : 'Đoạn văn đọc hiểu (Questions 30 - 35)';
+                document.getElementById('passage-body').innerHTML = PASSAGES[q.passageId].replace(/\n/g, '<br><br>');
+            } else {
+                passBox.style.display = 'none';
+            }
+
+            const optContainer = document.getElementById('opt-container');
+            optContainer.innerHTML = '';
+            for (const [key, val] of Object.entries(q.options)) {
+                const label = document.createElement('label');
+                label.className = `opt-label ${userAnswers[idx] === key ? 'selected' : ''}`;
+                label.innerHTML = `
+                    <div class="opt-circle">${key}</div>
+                    <div class="opt-text"><b>${key}.</b> ${val}</div>
+                `;
+                label.onclick = () => selectOption(idx, key);
+                optContainer.appendChild(label);
+            }
+
+            document.getElementById('btn-prev').disabled = (idx === 0);
+            document.getElementById('btn-next').innerHTML = (idx === QUESTIONS.length - 1) ? `Đến câu đầu <i class="fa-solid fa-arrow-up"></i>` : `Câu tiếp theo <i class="fa-solid fa-arrow-right"></i>`;
+
+            document.querySelectorAll('.pal-btn').forEach((btn, i) => {
+                btn.classList.toggle('current', i === idx);
+            });
+        }
+
+        function selectOption(qIdx, optKey) {
+            if (examSubmitted) return;
+            userAnswers[qIdx] = optKey;
+            
+            const labels = document.querySelectorAll('.opt-label');
+            labels.forEach(l => l.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+
+            const palBtn = document.getElementById(`pal-${qIdx}`);
+            if (palBtn) palBtn.classList.add('answered');
+
+            updateProgress();
+        }
+
+        function prevQuestion() {
+            if (currentIdx > 0) renderQuestion(currentIdx - 1);
+        }
+
+        function nextQuestion() {
+            if (currentIdx < QUESTIONS.length - 1) {
+                renderQuestion(currentIdx + 1);
+            } else {
+                renderQuestion(0);
+            }
+        }
+
+        function updateProgress() {
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            const pct = Math.round((answeredCount / QUESTIONS.length) * 100);
+            document.getElementById('progress-bar').style.width = pct + '%';
+            document.getElementById('progress-percent').textContent = pct + '%';
+            document.getElementById('answered-count').textContent = `${answeredCount}/${QUESTIONS.length}`;
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const min = Math.floor(timeLeft / 60);
+                const sec = timeLeft % 60;
+                document.getElementById('timer-display').textContent = 
+                    `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Hết giờ làm bài! Hệ thống tự động thu bài.");
+                    finishExam();
+                }
+            }, 1000);
+        }
+
+        function confirmSubmit() {
+            const unanswered = userAnswers.filter(a => a === null).length;
+            let msg = "Bạn có chắc chắn muốn nộp bài thi?";
+            if (unanswered > 0) {
+                msg = `Bạn còn ${unanswered} câu chưa trả lời. Bạn có chắc chắn muốn nộp bài không?`;
+            }
+            if (confirm(msg)) {
+                finishExam();
+            }
+        }
+
+        function finishExam() {
+            if (examSubmitted) return;
+            examSubmitted = true;
+            clearInterval(timerInterval);
+
+            let correctCount = 0;
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                if (userAnswers[i] === QUESTIONS[i].correct) {
+                    correctCount++;
+                }
+            }
+            const score10 = ((correctCount / QUESTIONS.length) * 10).toFixed(1);
+
+            document.getElementById('exam-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            document.getElementById('final-score').textContent = score10;
+            document.getElementById('result-detail').textContent = 
+                `Thí sinh: ${studentName} | Lớp: ${studentClass} | Đúng: ${correctCount}/${QUESTIONS.length} câu (${Math.round(correctCount/QUESTIONS.length*100)}%)`;
+
+            if (score10 >= 8.0 && typeof confetti === 'function') {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+
+            renderReview('all');
+
+            try {
+                const timeSpent = 45 * 60 - timeLeft;
+                const minSpent = Math.floor(timeSpent / 60);
+                const secSpent = timeSpent % 60;
+                const payload = {
+                    timestamp: new Date().toISOString(),
+                    lesson: LESSON_TITLE,
+                    name: studentName,
+                    className: studentClass,
+                    score: score10,
+                    correct: `${correctCount}/${QUESTIONS.length}`,
+                    timeUsed: `${minSpent}m ${secSpent}s`
+                };
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                }).catch(e => console.log(e));
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        function renderReview(filter) {
+            const list = document.getElementById('review-list');
+            list.innerHTML = '';
+
+            QUESTIONS.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = (userAns === q.correct);
+
+                if (filter === 'correct' && !isCorrect) return;
+                if (filter === 'wrong' && isCorrect) return;
+
+                const card = document.createElement('div');
+                card.className = `review-item ${isCorrect ? 'correct' : 'incorrect'}`;
+                card.innerHTML = `
+                    <div class="review-header">
+                        <span>Câu ${idx + 1}: ${q.topic || ''}</span>
+                        <span style="color: ${isCorrect ? 'var(--success)' : 'var(--danger)'}">
+                            ${isCorrect ? '<i class="fa-solid fa-check"></i> ĐÚNG' : '<i class="fa-solid fa-xmark"></i> SAI'}
+                        </span>
+                    </div>
+                    <div style="font-weight: 600; margin-bottom: 0.5rem; text-align: justify;">${q.title.replace(/\n/g, '<br>')}</div>
+                    <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">
+                        <div>• Lựa chọn của bạn: <b>${userAns || 'Chưa trả lời'}</b></div>
+                        <div>• Đáp án chính xác: <b style="color: var(--success);">${q.correct}</b> - ${q.options[q.correct]}</div>
+                    </div>
+                    <div class="review-exp">
+                        <b><i class="fa-solid fa-lightbulb"></i> Giải thích chi tiết:</b> ${q.exp}
+                        ${q.translation ? `<div style="margin-top: 4px; font-style: italic; color: #475569;"><b>Dịch nghĩa:</b> ${q.translation}</div>` : ''}
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function filterReview(type) {
+            renderReview(type);
+        }
+    </script>
+</body>
+</html>
