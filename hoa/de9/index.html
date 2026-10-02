@@ -151,6 +151,28 @@
         .short-input.input-correct { border-color: #22c55e !important; background: #f0fdf4 !important; color: #166534 !important; }
         .short-input.input-incorrect { border-color: #ef4444 !important; background: #fef2f2 !important; color: #991c1c !important; }
 
+        .question-context {
+            background: #f1f5f9;
+            border-left: 4px solid var(--secondary);
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 0.92rem;
+            color: #1e293b;
+            margin: 8px 0 14px 0;
+            line-height: 1.6;
+            text-align: justify;
+        }
+        .tf-btn:disabled { cursor: not-allowed; }
+        .tf-btn.correct-choice {
+            box-shadow: 0 0 0 2.5px #22c55e !important;
+            font-weight: 800;
+        }
+        .tf-btn.incorrect-choice {
+            box-shadow: 0 0 0 2.5px #ef4444 !important;
+            opacity: 0.7;
+            text-decoration: line-through;
+        }
+
         .option-item.correct {
             background: #dcfce7 !important; border-color: #22c55e !important; color: #15803d !important; font-weight: 700;
         }
@@ -307,6 +329,7 @@
                         <div class="summary-num" style="color: #0d9488;" id="timeSpentText">--:--</div>
                         <div class="summary-label">Thời gian làm bài</div>
                     </div>
+                </div>
                 <div id="sheetSyncStatus" style="display: none; margin: 15px auto; padding: 12px 18px; border-radius: 10px; font-size: 0.92rem; font-weight: 600; background: #f0fdf4; border: 1.5px solid #86efac; color: #166534; max-width: 550px; text-align: center;"></div>
             </div>
         </div>
@@ -477,14 +500,25 @@
             let html = '';
             part2Data.forEach((q, idx) => {
                 if (!userPart2[q.id]) userPart2[q.id] = {};
+                const stmts = q.statements || q.subitems || q.sub_items || {};
+                const qTitle = q.context || q.title || `Câu ${idx + 1}`;
+                const qContextText = q.statement || (q.context && q.title ? q.context : '');
+                
+                let expContent = '';
+                if (q.explanation) {
+                    expContent = formatContent(q.explanation);
+                } else if (q.explanations) {
+                    expContent = Object.entries(q.explanations).map(([k, exp]) => `<strong>${k})</strong> ${formatContent(exp)}`).join('<br>');
+                }
+
                 html += `
                 <div class="question-card" id="card-p2-${q.id}">
                     <div class="question-title">
-                        <span class="question-num">Câu ${idx + 1}:</span> <strong>${formatContent(q.title || '')}</strong>
+                        <span class="question-num">Câu ${idx + 1}:</span> <strong>${formatContent(qTitle)}</strong>
                     </div>
-                    ${q.context ? `<div class="question-context">${formatContent(q.context)}</div>` : ''}
+                    ${qContextText ? `<div class="question-context">${formatContent(qContextText)}</div>` : ''}
                     <div class="tf-table">
-                        ${Object.entries(q.statements).map(([k, text]) => `
+                        ${Object.entries(stmts).map(([k, text]) => `
                             <div class="tf-row">
                                 <div style="font-size: 0.92rem; line-height: 1.55;"><strong>${k})</strong> ${formatContent(text)}</div>
                                 <div class="tf-btns">
@@ -495,8 +529,7 @@
                         `).join('')}
                     </div>
                     <div class="explanation-box" id="exp-p2-${q.id}">
-                        <strong>💡 Hướng dẫn giải chi tiết:</strong><br>
-                        ${Object.entries(q.explanations || {}).map(([k, exp]) => `<strong>${k})</strong> ${formatContent(exp)}`).join('<br>')}
+                        <strong>💡 Hướng dẫn giải chi tiết:</strong><br>${expContent}
                     </div>
                 </div>`;
             });
@@ -505,15 +538,16 @@
 
         function selectPart2(qId, key, val) {
             if (examSubmitted) return;
+            if (!userPart2[qId]) userPart2[qId] = {};
             userPart2[qId][key] = val;
             const btnT = document.getElementById(`btn-tf-${qId}-${key}-true`);
             const btnF = document.getElementById(`btn-tf-${qId}-${key}-false`);
             if (val === 'Đ') {
-                btnT.classList.add('active-true');
-                btnF.classList.remove('active-false');
+                if (btnT) btnT.classList.add('active-true');
+                if (btnF) btnF.classList.remove('active-false');
             } else {
-                btnF.classList.add('active-false');
-                btnT.classList.remove('active-true');
+                if (btnF) btnF.classList.add('active-false');
+                if (btnT) btnT.classList.remove('active-true');
             }
             updateProgress();
         }
@@ -595,17 +629,32 @@
             const p2Scale = [0, 0.1, 0.25, 0.5, 1.0];
             part2Data.forEach(q => {
                 let subCorrect = 0;
-                Object.entries(q.answers).forEach(([k, correctVal]) => {
+                const answers = q.answers || {};
+                Object.entries(answers).forEach(([k, correctVal]) => {
                     const userVal = (userPart2[q.id] && userPart2[q.id][k]) ? userPart2[q.id][k] : '';
+                    const btnT = document.getElementById(`btn-tf-${q.id}-${k}-true`);
+                    const btnF = document.getElementById(`btn-tf-${q.id}-${k}-false`);
+                    if (btnT) btnT.disabled = true;
+                    if (btnF) btnF.disabled = true;
+
                     if (userVal === correctVal) {
                         subCorrect++;
                         totalCorrectItems++;
                     } else {
                         totalIncorrectItems++;
                     }
+
+                    if (correctVal === 'Đ') {
+                        if (btnT) btnT.classList.add('active-true', 'correct-choice');
+                        if (userVal === 'S' && btnF) btnF.classList.add('incorrect-choice');
+                    } else if (correctVal === 'S') {
+                        if (btnF) btnF.classList.add('active-false', 'correct-choice');
+                        if (userVal === 'Đ' && btnT) btnT.classList.add('incorrect-choice');
+                    }
                 });
                 totalPoints += p2Scale[subCorrect];
-                document.getElementById(`exp-p2-${q.id}`).classList.add('show');
+                const expEl = document.getElementById(`exp-p2-${q.id}`);
+                if (expEl) expEl.classList.add('show');
             });
 
             const p3Weight = 0.25;
