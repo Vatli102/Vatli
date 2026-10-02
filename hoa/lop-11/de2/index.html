@@ -330,22 +330,41 @@
         let totalTimeSeconds = 45 * 60;
         let timeRemaining = totalTimeSeconds;
 
-        let lastResultData = null;
-        let isSyncing = false;
+                let lastResultData = null;
+        let hasSentResults = false;
 
         function retrySync() {
             if (lastResultData) {
-                isSyncing = false;
+                hasSentResults = false;
                 sendResultsToGoogleSheet(lastResultData);
             }
         }
 
         function sendResultsToGoogleSheet(data) {
+            // QUY ĐỊNH BẮT BUỘC: CHỈ TỔNG HỢP TRÊN WEBSITE VATLI102.COM
+            // Tuyệt đối không gửi từ GitHub Pages (github.io), localhost hoặc các domain thử nghiệm khác
+            const host = window.location.hostname.toLowerCase();
+            const isVatli102 = (host === 'vatli102.com' || host === 'www.vatli102.com');
+            if (!isVatli102) {
+                console.warn("Chặn tổng hợp Google Sheet: Tên miền " + host + " không phải vatli102.com");
+                const statusEl = document.getElementById("sheetSyncStatus");
+                if (statusEl) {
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-info" style="color: #0284c7;"></i> <strong>Thông báo:</strong> Hệ thống chỉ ghi nhận kết quả chính thức khi học sinh làm bài trên website <strong>vatli102.com</strong> (không tổng hợp từ GitHub Pages).';
+                    statusEl.style.display = 'block';
+                }
+                return;
+            }
+
+            if (hasSentResults) {
+                console.warn("Kết quả đã được gửi trước đó, bỏ qua để tránh trùng lặp.");
+                return;
+            }
+
             if (!GOOGLE_SHEET_URL || GOOGLE_SHEET_URL.trim() === "" || GOOGLE_SHEET_URL.includes("DAN_LINK")) {
                 return;
             }
-            if (isSyncing) return;
-            isSyncing = true;
+
+            hasSentResults = true;
             lastResultData = data;
             const statusEl = document.getElementById("sheetSyncStatus");
             if (statusEl) {
@@ -354,8 +373,6 @@
             }
 
             const jsonStr = JSON.stringify(data);
-
-            
 
             fetch(GOOGLE_SHEET_URL, {
                 method: 'POST',
@@ -371,11 +388,7 @@
             .catch((err) => {
                 console.error("Lỗi đồng bộ Google Sheet:", err);
                 if (statusEl) {
-                    if (window.location.protocol === 'file:') {
-                        statusEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color: #f59e0b;"></i> <strong>Lưu ý:</strong> Bạn đang mở đề thi từ file nội bộ (<code>file:///</code>). Để dữ liệu tự động đồng bộ vào Google Sheet của giáo viên, vui lòng làm bài trên link web online (GitHub Pages).<br><button onclick="retrySync()" style="margin-top: 8px; padding: 5px 12px; background: #0284c7; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fa-solid fa-rotate-right"></i> Thử gửi lại</button>';
-                    } else {
-                        statusEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> Đã gửi kết quả bài làm vào hệ thống. <button onclick="retrySync()" style="margin-left: 10px; padding: 3px 10px; font-size: 0.8rem; background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fa-solid fa-rotate"></i> Thử lại</button>';
-                    }
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> Đã gửi kết quả bài làm vào hệ thống. <button onclick="retrySync()" style="margin-left: 10px; padding: 3px 10px; font-size: 0.8rem; background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fa-solid fa-rotate"></i> Thử lại</button>';
                 }
             });
         }
@@ -552,7 +565,8 @@
         }
 
         function submitExam() {
-            examSubmitted = true;
+            if (examSubmitted) return;
+examSubmitted = true;
             clearInterval(timerInterval);
             document.getElementById('btnSubmit').style.display = 'none';
 
