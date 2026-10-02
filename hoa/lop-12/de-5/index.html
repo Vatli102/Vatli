@@ -331,9 +331,11 @@
         let timeRemaining = totalTimeSeconds;
 
         let lastResultData = null;
+        let isSyncing = false;
 
         function retrySync() {
             if (lastResultData) {
+                isSyncing = false;
                 sendResultsToGoogleSheet(lastResultData);
             }
         }
@@ -342,6 +344,8 @@
             if (!GOOGLE_SHEET_URL || GOOGLE_SHEET_URL.trim() === "" || GOOGLE_SHEET_URL.includes("DAN_LINK")) {
                 return;
             }
+            if (isSyncing) return;
+            isSyncing = true;
             lastResultData = data;
             const statusEl = document.getElementById("sheetSyncStatus");
             if (statusEl) {
@@ -351,14 +355,7 @@
 
             const jsonStr = JSON.stringify(data);
 
-            if (navigator.sendBeacon) {
-                try {
-                    const blob = new Blob([jsonStr], { type: 'text/plain;charset=utf-8' });
-                    navigator.sendBeacon(GOOGLE_SHEET_URL, blob);
-                } catch (e) {
-                    console.warn("sendBeacon error:", e);
-                }
-            }
+            
 
             fetch(GOOGLE_SHEET_URL, {
                 method: 'POST',
