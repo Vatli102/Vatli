@@ -113,18 +113,18 @@
       <p class="text-slate-300 text-sm md:text-base mb-6 leading-relaxed">
         Khởi động bước vào <strong class="text-cyan-400 font-bold">BÀI 4: ĐỘ DỊCH CHUYỂN VÀ QUÃNG ĐƯỜNG ĐI ĐƯỢC</strong>.<br>
         Ôn nhanh 10 câu hỏi cốt lõi để kích hoạt tư duy.<br>
-        <span class="text-blue-400 font-bold">Nghiêng đầu sang Trái</span> hoặc <span class="text-emerald-400 font-bold">Nghiêng đầu sang Phải</span> và <strong>giữ yên 1.0 giây</strong> để chốt đáp án.<br>
-        <em class="text-xs text-slate-400">(Hệ thống tự động cân chỉnh vị trí ngồi để nhận diện mượt mà trên mọi thiết bị)</em>
+        <span class="text-blue-400 font-bold">Nghiêng đầu sang Trái</span> hoặc <span class="text-emerald-400 font-bold">Nghiêng đầu sang Phải</span> và <strong>giữ yên 0.75 giây</strong> để chốt đáp án.<br>
+        <em class="text-xs text-slate-400">(Hỗ trợ đầy đủ: Camera AI, Rê chuột trên camera, Bấm trực tiếp vào thẻ hoặc Phím ← / →)</em>
       </p>
 
       <div class="grid grid-cols-2 gap-4 mb-6 text-left text-xs md:text-sm text-slate-300">
         <div class="bg-blue-950/40 p-4 rounded-2xl border border-blue-500/40 shadow">
           <div class="font-extrabold text-blue-400 text-sm mb-1 flex items-center gap-1">👈 Nghiêng TRÁI</div>
-          <p>Nghiêng đầu hoặc bấm phím ← để chọn phương án bên Trái.</p>
+          <p>Nghiêng đầu sang trái hoặc bấm phím ← để chọn phương án bên Trái.</p>
         </div>
         <div class="bg-emerald-950/40 p-4 rounded-2xl border border-emerald-500/40 shadow">
           <div class="font-extrabold text-emerald-400 text-sm mb-1 flex items-center gap-1">👉 Nghiêng PHẢI</div>
-          <p>Nghiêng đầu hoặc bấm phím → để chọn phương án bên Phải.</p>
+          <p>Nghiêng đầu sang phải hoặc bấm phím → để chọn phương án bên Phải.</p>
         </div>
       </div>
 
@@ -139,7 +139,7 @@
       <h3 class="text-2xl font-black text-white mb-2">CÂN CHỈNH VỊ TRÍ NGỒI</h3>
       <p class="text-slate-300 text-sm mb-6 leading-relaxed">
         Vui lòng <strong class="text-cyan-400">ngồi thẳng lưng</strong> và <strong class="text-cyan-400">nhìn thẳng vào giữa camera</strong>.<br>
-        Hệ thống AI đang học góc ngồi của bạn...
+        Hệ thống AI đang tự động đặt tâm cân bằng đối xứng...
       </p>
       
       <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-tr from-cyan-600 to-blue-600 flex items-center justify-center border-4 border-cyan-300 shadow-xl">
@@ -394,14 +394,15 @@
     let videoStream = null;
 
     // --- TRACKING & CALIBRATION STATE ---
-    let baselineCenterX = 40.0;
+    let baselineCenterX = 40.0; // Mặc định 40px (tâm chuẩn khung 80px)
     let smoothedTilt = 0.0;
     let currentDetectedRawX = 40.0;
     let holdStartTime = null;
     let currentHoldChoice = null;
-    const REQUIRED_HOLD_MS = 1000; // Giữ nghiêng chắc chắn đúng 1 giây
+    const REQUIRED_HOLD_MS = 750; // 0.75 giây giữ đầu rõ ràng để chốt đáp án
+    const TILT_THRESHOLD = 0.30;  // Ngưỡng nghiêng nhạy bén, hoàn hảo cả 2 bên
     let mustReturnToCenter = true; // Bắt buộc về giữa trước khi nhận câu tiếp theo
-    let centerHoldCount = 0; // Đếm số frame ở giữa để xác nhận về tâm
+    let centerHoldCount = 0;
     let isCalibrating = false;
     let calibrationSamples = [];
 
@@ -445,7 +446,7 @@
       isUserHovering = true;
       const rect = document.getElementById('cam-container').getBoundingClientRect();
       const relativeX = (e.clientX - rect.left) / rect.width; // 0 (Trái) -> 1 (Phải)
-      const hoverTilt = (relativeX - 0.5) * 2.4;
+      const hoverTilt = (relativeX - 0.5) * 2.2;
       updateTiltVisuals(hoverTilt);
     }
 
@@ -493,9 +494,9 @@
     function manualRecalibrate() {
       if (calibrationSamples.length > 5) {
         const sum = calibrationSamples.reduce((a, b) => a + b, 0);
-        baselineCenterX = sum / calibrationSamples.length;
-      } else if (currentDetectedRawX >= 15 && currentDetectedRawX <= 65) {
-        baselineCenterX = currentDetectedRawX;
+        baselineCenterX = Math.max(34.0, Math.min(46.0, sum / calibrationSamples.length));
+      } else if (currentDetectedRawX >= 20 && currentDetectedRawX <= 60) {
+        baselineCenterX = Math.max(34.0, Math.min(46.0, currentDetectedRawX));
       } else {
         baselineCenterX = 40.0;
       }
@@ -524,51 +525,49 @@
           let sumX = 0;
           let totalWeight = 0;
 
-          // Quét vùng tập trung khuôn mặt (Y: 10->50, X: 12->68)
-          for (let y = 10; y < 50; y++) {
-            for (let x = 12; x < 68; x++) {
+          // Quét toàn dải X: 2->78, Y: 4->56 (đối xứng tuyệt đối, không bị cắt xén biên)
+          for (let y = 4; y < 56; y++) {
+            for (let x = 2; x < 78; x++) {
               const idx = (y * 80 + x) * 4;
               const r = data[idx];
               const g = data[idx + 1];
               const b = data[idx + 2];
-              const total = r + g + b + 1;
 
-              // Normalized Chromaticity chuẩn quốc tế (Chống nhiễu ánh sáng đèn phòng, tường vàng)
-              const nr = r / total;
-              const ng = g / total;
-              const isSkin = (nr >= 0.36 && nr <= 0.58 && ng >= 0.26 && ng <= 0.38 && r > g && g > b && (r - b) > 15);
+              // Thuật toán lọc màu da và khuôn mặt thích ứng đa ánh sáng (Symmetric Lighting Robust Filter)
+              const isSkin = (r > 35 && (r > b || g > b) && (r + g > 1.8 * b) && (r + g + b) > 60 && (r + g + b) < 730);
 
               if (isSkin) {
-                // Trọng số tập trung vùng đỉnh đầu và trán (y nhỏ hơn)
-                const weight = 1.0 + (50 - y) / 15.0;
+                // Trọng số ưu tiên vùng đầu trên (y nhỏ hơn)
+                const weight = 1.0 + (56 - y) / 12.0;
                 sumX += x * weight;
                 totalWeight += weight;
               }
             }
           }
 
-          if (totalWeight > 40) {
+          if (totalWeight > 20) {
             const rawX = sumX / totalWeight;
             currentDetectedRawX = rawX;
 
             if (isCalibrating) {
               calibrationSamples.push(rawX);
-              if (calibrationSamples.length > 40) calibrationSamples.shift();
+              if (calibrationSamples.length > 30) calibrationSamples.shift();
             }
 
-            // Trục màn hình lật gương (mirror view): rawX lệch trái thì trên màn hình lệch phải
-            const screenX = 80 - rawX;
-            const screenBaseline = 80 - baselineCenterX;
+            // Trục màn hình lật gương (mirror view):
+            // rawX > baselineCenterX (di chuyển sang phải của camera) -> người dùng nghiêng sang TRÁI của màn hình
+            // rawX < baselineCenterX (di chuyển sang trái của camera) -> người dùng nghiêng sang PHẢI của màn hình
+            const diffX = baselineCenterX - rawX; // >0: Nghiêng PHẢI, <0: Nghiêng TRÁI
             
-            // Tính góc nghiêng chuẩn hóa: lệch 12 pixel tương đương 1.0 full tilt
-            const rawTilt = (screenX - screenBaseline) / 12.0;
+            // Độ nhạy chuẩn hóa: 6.5 pixel tương đương 1.0 full tilt
+            const rawTilt = diffX / 6.5;
             
-            // Exponential smoothing (alpha = 0.25 để mượt mà và chống giật)
-            smoothedTilt = smoothedTilt * 0.75 + rawTilt * 0.25;
+            // Exponential smoothing (alpha = 0.35 cho độ phản hồi nhanh tức thì)
+            smoothedTilt = smoothedTilt * 0.65 + rawTilt * 0.35;
             updateTiltVisuals(smoothedTilt);
           } else {
-            // Nếu không tìm thấy mặt rõ ràng, giữ ở trung tâm, KHÔNG tự ý nghiêng
-            smoothedTilt = smoothedTilt * 0.85;
+            // Nếu không tìm thấy, từ từ hồi về tâm
+            smoothedTilt = smoothedTilt * 0.8;
             updateTiltVisuals(smoothedTilt);
           }
         } catch (e) {}
@@ -599,12 +598,12 @@
       const badge = document.getElementById('feedback-badge');
 
       // 1. KIỂM TRA ĐIỀU KIỆN TRỞ VỀ TÂM (Return to center)
-      if (Math.abs(clamped) <= 0.25) {
+      if (Math.abs(clamped) <= 0.22) {
         centerHoldCount++;
-        if (mustReturnToCenter && centerHoldCount >= 8) {
+        if (mustReturnToCenter && centerHoldCount >= 5) {
           mustReturnToCenter = false;
           if (!isAnsweringLocked && badge) {
-            badge.innerText = '👉 Sẵn sàng! Hãy nghiêng đầu và GIỮ YÊN 1.0s';
+            badge.innerText = '👉 Sẵn sàng! Nghiêng đầu sang Trái hoặc Phải để chọn';
             badge.className = 'text-xs md:text-sm font-bold px-4 py-1 rounded-full bg-slate-800 text-cyan-300 border border-cyan-700 shadow';
           }
         }
@@ -612,8 +611,8 @@
         centerHoldCount = 0;
       }
 
-      // 2. XỬ LÝ TRẠNG THÁI NGHIÊNG
-      if (clamped < -0.42) {
+      // 2. XỬ LÝ TRẠNG THÁI NGHIÊNG ĐỐI XỨNG CẢ 2 BÊN
+      if (clamped < -TILT_THRESHOLD) {
         // ĐANG NGHIÊNG TRÁI
         if (label) {
           label.innerText = '👈 ĐANG NGHIÊNG TRÁI';
@@ -627,7 +626,7 @@
         if (!isAnsweringLocked && !mustReturnToCenter) {
           handleHoldProgress('A');
         }
-      } else if (clamped > 0.42) {
+      } else if (clamped > TILT_THRESHOLD) {
         // ĐANG NGHIÊNG PHẢI
         if (label) {
           label.innerText = '👉 ĐANG NGHIÊNG PHẢI';
@@ -749,10 +748,10 @@
           clearInterval(cdInterval);
           isCalibrating = false;
           
-          // Tính trung bình baseline vị trí ngồi
+          // Tính trung bình baseline vị trí ngồi (giới hạn an toàn [34, 46])
           if (calibrationSamples.length > 5) {
             const sum = calibrationSamples.reduce((a, b) => a + b, 0);
-            baselineCenterX = sum / calibrationSamples.length;
+            baselineCenterX = Math.max(34.0, Math.min(46.0, sum / calibrationSamples.length));
           } else {
             baselineCenterX = 40.0;
           }
@@ -761,7 +760,7 @@
           document.getElementById('game-screen').classList.remove('hidden');
           startGameCore();
         }
-      }, 900);
+      }, 850);
     }
 
     function startGameCore() {
@@ -797,18 +796,18 @@
       cardLeft.className = 'cursor-pointer md:col-span-4 bg-slate-900/85 border-2 border-slate-700 hover:border-blue-500 rounded-3xl p-6 text-center transition-all duration-150 flex flex-col justify-between min-h-[250px] shadow-lg relative overflow-hidden group';
       cardRight.className = 'cursor-pointer md:col-span-4 bg-slate-900/85 border-2 border-slate-700 hover:border-emerald-500 rounded-3xl p-6 text-center transition-all duration-150 flex flex-col justify-between min-h-[250px] shadow-lg relative overflow-hidden group';
 
-      // Khóa 1.5 giây để học sinh đọc đề bài
+      // Khóa 1.2 giây để học sinh đọc đề bài
       setTimeout(() => {
         isAnsweringLocked = false;
-        if (Math.abs(smoothedTilt) <= 0.35) {
+        if (Math.abs(smoothedTilt) <= TILT_THRESHOLD) {
           mustReturnToCenter = false;
-          badge.innerText = '👉 Nghiêng đầu và GIỮ YÊN 1.0s để chốt đáp án!';
+          badge.innerText = '👉 Nghiêng đầu và GIỮ YÊN 0.75s để chốt đáp án!';
           badge.className = 'text-xs md:text-sm font-bold px-4 py-1 rounded-full bg-slate-800 text-cyan-300 border border-slate-700 shadow';
         } else {
           badge.innerText = '⚠️ Hãy nhìn thẳng vào giữa để mở khóa chọn!';
           badge.className = 'text-xs md:text-sm font-bold px-4 py-1 rounded-full bg-amber-950 text-amber-300 border border-amber-600 shadow';
         }
-      }, 1500);
+      }, 1200);
 
       clearInterval(timerInterval);
       timerInterval = setInterval(() => {
