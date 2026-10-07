@@ -9,9 +9,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trò chơi Khởi động: Nghiêng Đầu Bắt Nhịp - BÀI 4: BÀI TẬP VỀ DAO ĐỘNG ĐIỀU HÒA | Vatli102.com</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google MediaPipe FaceMesh & Camera Utils -->
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
 
   <style>
     .mirror-view {
@@ -92,10 +89,10 @@
         <span id="score-display" class="text-xl font-extrabold text-amber-400">0</span>
       </div>
 
-      <!-- Thời gian đếm ngược -->
+      <!-- Thời gian đếm ngược (Chuẩn 12s) -->
       <div class="px-3.5 py-1.5 bg-slate-800/90 rounded-xl border border-slate-700 flex items-center gap-2">
         <span class="text-xs text-slate-400 font-semibold">THỜI GIAN:</span>
-        <span id="timer-display" class="text-xl font-extrabold text-cyan-400">15s</span>
+        <span id="timer-display" class="text-xl font-extrabold text-cyan-400">12s</span>
       </div>
 
       <!-- Nút bật tắt Camera -->
@@ -114,9 +111,9 @@
       <h2 class="text-2xl md:text-3xl font-black text-white mb-2">THỬ THÁCH NGHIÊNG ĐẦU AI</h2>
       <p class="text-slate-300 text-sm md:text-base mb-6 leading-relaxed">
         Khởi động bước vào <strong class="text-cyan-400 font-bold">BÀI 4: BÀI TẬP VỀ DAO ĐỘNG ĐIỀU HÒA</strong>.<br>
-        Ôn nhanh 10 câu hỏi cốt lõi với công nghệ nhận diện chuyển động AI thông minh.<br>
-        <span class="text-blue-400 font-bold">Nghiêng đầu sang Trái</span> hoặc <span class="text-emerald-400 font-bold">Nghiêng đầu sang Phải</span> và <strong>giữ yên 0.65 giây</strong> để chọn đáp án.<br>
-        <em class="text-xs text-slate-400">(Hỗ trợ đồng thời: Camera AI, Bấm trực tiếp vào thẻ, Bấm phím ← / → hoặc 1 / 2)</em>
+        Ôn nhanh 10 câu hỏi cốt lõi với công nghệ nhận diện cử chỉ thông minh.<br>
+        <span class="text-blue-400 font-bold">Nghiêng nhẹ sang Trái</span> hoặc <span class="text-emerald-400 font-bold">Nghiêng nhẹ sang Phải</span> (giữ <strong>0.5 giây</strong>) để chọn đáp án.<br>
+        <em class="text-xs text-slate-400">(Hỗ trợ đầy đủ: Camera AI, Rê chuột trên camera, Bấm trực tiếp vào thẻ hoặc Phím ← / →)</em>
       </p>
 
       <div class="grid grid-cols-2 gap-4 mb-6 text-left text-xs md:text-sm text-slate-300">
@@ -141,7 +138,7 @@
       <h3 class="text-2xl font-black text-white mb-2">CÂN CHỈNH VỊ TRÍ NGỒI</h3>
       <p class="text-slate-300 text-sm mb-6 leading-relaxed">
         Vui lòng <strong class="text-cyan-400">ngồi thẳng lưng</strong> và <strong class="text-cyan-400">nhìn thẳng vào giữa camera</strong>.<br>
-        AI đang kết nối và đặt tâm đối xứng...
+        Hệ thống đang tự động cân bằng tâm đối xứng...
       </p>
       
       <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-tr from-cyan-600 to-blue-600 flex items-center justify-center border-4 border-cyan-300 shadow-xl">
@@ -160,7 +157,7 @@
       <div class="w-full bg-slate-900/95 border-2 border-slate-700/80 rounded-3xl p-5 md:p-6 text-center shadow-xl backdrop-blur-md">
         <div class="flex items-center justify-between mb-2">
           <span id="question-index" class="text-xs md:text-sm font-extrabold text-cyan-400 px-3.5 py-1 bg-cyan-950/80 rounded-full border border-cyan-800 shadow">CÂU 1 / 10</span>
-          <span id="feedback-badge" class="text-xs md:text-sm font-bold px-4 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700 shadow">Hãy nhìn thẳng để mở khóa câu hỏi!</span>
+          <span id="feedback-badge" class="text-xs md:text-sm font-bold px-4 py-1 rounded-full bg-slate-800 text-cyan-300 border border-cyan-700 shadow">👉 Nghiêng đầu sang Trái hoặc Phải để chọn!</span>
         </div>
         <h2 id="question-text" class="text-lg md:text-2xl font-black text-white leading-snug">
           Câu hỏi đang tải...
@@ -197,10 +194,7 @@
             <!-- Video Camera ngầm định -->
             <video id="webcam" autoplay playsinline muted class="w-full h-full object-cover mirror-view"></video>
             
-            <!-- Canvas vẽ Face Landmarks AI -->
-            <canvas id="face-canvas" class="absolute inset-0 w-full h-full pointer-events-none mirror-view"></canvas>
-            
-            <!-- Canvas xử lí phụ -->
+            <!-- Canvas xử lí quang học 60fps -->
             <canvas id="proc-canvas" width="80" height="60" class="hidden"></canvas>
 
             <!-- Khi chưa bật Camera -->
@@ -231,9 +225,9 @@
               </div>
             </div>
 
-            <!-- AI Engine Badge -->
+            <!-- AI Engine Status Badge -->
             <div id="ai-engine-badge" class="absolute bottom-1 right-1.5 z-20 px-1.5 py-0.5 bg-slate-900/80 rounded border border-slate-700 text-[9px] text-cyan-300 font-mono">
-              AI: MediaPipe
+              AI: Optical Slant ⚡
             </div>
 
           </div>
@@ -404,27 +398,21 @@
     let currentQIndex = 0;
     let score = 0;
     let correctCount = 0;
-    let timer = 15;
+    let timer = 12; // CHUẨN 12 GIÂY
     let timerInterval = null;
     let isAnsweringLocked = true;
     let cameraActive = false;
     let videoStream = null;
 
-    // --- TRACKING & CALIBRATION STATE ---
-    let baselineCenterX = 40.0;
-    let baselineRollAngle = 0.0;
+    // --- TRACKING STATE ---
+    let baselineOffset = 0.0;
     let smoothedTilt = 0.0;
-    let currentDetectedRawX = 40.0;
     let holdStartTime = null;
     let currentHoldChoice = null;
-    const REQUIRED_HOLD_MS = 650; // 0.65 giây giữ đầu rõ ràng để chốt đáp án
-    const TILT_THRESHOLD = 0.28;  // Ngưỡng nghiêng nhạy bén
-    let mustReturnToCenter = true;
-    let centerHoldCount = 0;
+    const REQUIRED_HOLD_MS = 500; // 0.50 GIÂY: SIÊU NHẸ NHÀNG, KHÔNG LO MỎI CỔ!
+    const TILT_THRESHOLD = 0.22;  // Ngưỡng nghiêng cực nhạy (chỉ cần nghiêng nhẹ là nhận)
     let isCalibrating = false;
-    let isMediaPipeActive = false;
-    let faceMesh = null;
-    let cameraUtil = null;
+    let calibSlantSamples = [];
 
     // --- AUDIO SYNTHESIS ---
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -462,11 +450,11 @@
     // --- CỬ CHỈ RÊ CHUỘT / CHẠM TRỰC TIẾP TRÊN KHUNG CAMERA ---
     let isUserHovering = false;
     function handleInteractiveHover(e) {
-      if (isAnsweringLocked || mustReturnToCenter) return;
+      if (isAnsweringLocked) return;
       isUserHovering = true;
       const rect = document.getElementById('cam-container').getBoundingClientRect();
       const relativeX = (e.clientX - rect.left) / rect.width;
-      const hoverTilt = (relativeX - 0.5) * 2.4;
+      const hoverTilt = (relativeX - 0.5) * 2.2;
       updateTiltVisuals(hoverTilt);
     }
 
@@ -477,104 +465,10 @@
       }
     }
 
-    // --- MEDIAPIPE FACE MESH & OPTICAL CV ENGINE ---
+    // --- OPTICAL DUAL-BAND HEAD TRACKING (60 FPS, ZERO-LAG, ZERO NETWORK DEPENDENCY) ---
     const video = document.getElementById('webcam');
-    const faceCanvas = document.getElementById('face-canvas');
-    const faceCtx = faceCanvas ? faceCanvas.getContext('2d') : null;
     const procCanvas = document.getElementById('proc-canvas');
     const procCtx = procCanvas.getContext('2d', { willReadFrequently: true });
-
-    function initMediaPipe() {
-      try {
-        if (typeof FaceMesh !== 'undefined' && !faceMesh) {
-          faceMesh = new FaceMesh({
-            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
-          });
-          faceMesh.setOptions({
-            maxNumFaces: 1,
-            refineLandmarks: false,
-            minDetectionConfidence: 0.5,
-            minTrackingConfidence: 0.5
-          });
-          faceMesh.onResults(onFaceMeshResults);
-          console.log('MediaPipe FaceMesh initialized successfully');
-        }
-      } catch (err) {
-        console.warn('MediaPipe initialization warning:', err);
-      }
-    }
-
-    function onFaceMeshResults(results) {
-      if (!cameraActive || isUserHovering) return;
-      
-      if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
-        isMediaPipeActive = true;
-        const badge = document.getElementById('ai-engine-badge');
-        if (badge) badge.innerText = 'AI: FaceMesh ⚡';
-
-        const landmarks = results.multiFaceLandmarks[0];
-        // 33: Mắt phải người dùng (xuất hiện bên trái ảnh unmirrored)
-        // 263: Mắt trái người dùng (xuất hiện bên phải ảnh unmirrored)
-        const pRightEye = landmarks[33];
-        const pLeftEye = landmarks[263];
-        const pNose = landmarks[1];
-        const pForehead = landmarks[10];
-        const pChin = landmarks[152];
-
-        // Góc nghiêng đầu roll (radians)
-        const dx = pLeftEye.x - pRightEye.x;
-        const dy = pLeftEye.y - pRightEye.y;
-        const rawRoll = Math.atan2(dy, dx) - baselineRollAngle;
-
-        // Vẽ visual mesh tối giản đẹp mắt lên canvas
-        if (faceCanvas && faceCtx) {
-          if (faceCanvas.width !== video.videoWidth || faceCanvas.height !== video.videoHeight) {
-            faceCanvas.width = video.videoWidth || 320;
-            faceCanvas.height = video.videoHeight || 240;
-          }
-          faceCtx.clearRect(0, 0, faceCanvas.width, faceCanvas.height);
-          
-          // Vẽ các điểm mốc chính
-          faceCtx.fillStyle = '#06b6d4';
-          [pRightEye, pLeftEye, pNose, pForehead, pChin].forEach(p => {
-            faceCtx.beginPath();
-            faceCtx.arc(p.x * faceCanvas.width, p.y * faceCanvas.height, 3, 0, 2 * Math.PI);
-            faceCtx.fill();
-          });
-
-          // Vẽ đường nối 2 mắt
-          faceCtx.strokeStyle = 'rgba(6, 182, 212, 0.6)';
-          faceCtx.lineWidth = 2;
-          faceCtx.beginPath();
-          faceCtx.moveTo(pRightEye.x * faceCanvas.width, pRightEye.y * faceCanvas.height);
-          faceCtx.lineTo(pLeftEye.x * faceCanvas.width, pLeftEye.y * faceCanvas.height);
-          faceCtx.stroke();
-        }
-
-        // Khi người dùng nghiêng đầu sang TRÁI (về vai trái của họ):
-        // Mắt trái (263) thấp hơn mắt phải (33) -> dy > 0 -> rawRoll > 0.
-        // Ta muốn nghiêng TRÁI cho ra giá trị âm (clamped < -0.28 để kích hoạt Card A Trái).
-        // Ngược lại nghiêng PHẢI cho ra giá trị dương (clamped > +0.28 để kích hoạt Card B Phải).
-        const angleScale = 0.18; // ~10 độ nghiêng là đạt full trigger
-        const rollTilt = - (rawRoll / angleScale);
-
-        // Kết hợp độ dịch chuyển ngang của đầu (head translation)
-        const midX = (pLeftEye.x + pRightEye.x) / 2;
-        const transTilt = (0.5 - midX) * 3.0;
-
-        const calculatedTilt = rollTilt * 0.85 + transTilt * 0.15;
-
-        // Smooth
-        smoothedTilt = smoothedTilt * 0.45 + calculatedTilt * 0.55;
-        updateTiltVisuals(smoothedTilt);
-
-      } else {
-        // Không phát hiện khuôn mặt
-        if (faceCanvas && faceCtx) {
-          faceCtx.clearRect(0, 0, faceCanvas.width, faceCanvas.height);
-        }
-      }
-    }
 
     async function toggleCamera() {
       if (cameraActive) {
@@ -596,24 +490,7 @@
             cameraActive = true;
             document.getElementById('cam-fallback').classList.add('hidden');
             document.getElementById('cam-status-text').innerText = 'Tắt Camera';
-            
-            initMediaPipe();
-
-            // Vòng lặp gửi frame tới MediaPipe và chạy fallback song song
-            const sendFrame = async () => {
-              if (!cameraActive) return;
-              if (faceMesh && video.readyState >= 2) {
-                try {
-                  await faceMesh.send({ image: video });
-                } catch (e) {}
-              }
-              // Nếu MediaPipe chưa sẵn sàng, chạy fallback quang học
-              if (!isMediaPipeActive) {
-                processFallbackFrame();
-              }
-              requestAnimationFrame(sendFrame);
-            };
-            requestAnimationFrame(sendFrame);
+            requestAnimationFrame(processVideoLoop);
           };
         } catch (err) {
           console.warn('Không thể mở Camera:', err);
@@ -622,53 +499,102 @@
       }
     }
 
-    function processFallbackFrame() {
-      if (!cameraActive || video.paused || video.ended || isUserHovering) return;
-      try {
-        procCtx.drawImage(video, 0, 0, 80, 60);
-        const imgData = procCtx.getImageData(0, 0, 80, 60);
-        const data = imgData.data;
+    function processVideoLoop() {
+      if (!cameraActive || video.paused || video.ended) return;
 
-        let sumX = 0;
-        let totalWeight = 0;
+      if (!isUserHovering) {
+        try {
+          procCtx.drawImage(video, 0, 0, 80, 60);
+          const imgData = procCtx.getImageData(0, 0, 80, 60);
+          const data = imgData.data;
 
-        for (let y = 6; y < 54; y++) {
-          for (let x = 6; x < 74; x++) {
-            const idx = (y * 80 + x) * 4;
-            const r = data[idx];
-            const g = data[idx + 1];
-            const b = data[idx + 2];
+          // Tính toán trọng tâm 2 dải: Dải trên (Đầu/Tóc) và Dải dưới (Cổ/Ngực)
+          let upperSumX = 0, upperWeight = 0;
+          let lowerSumX = 0, lowerWeight = 0;
 
-            // Bộ lọc màu da Kovac chuẩn hóa
-            const isSkin = (r > 80 && g > 35 && b > 20 && (r - g) > 10 && (r - b) > 10 && r > g && g > b);
+          // Dải trên: Y từ 8 đến 28 (Khu vực đầu và mắt)
+          for (let y = 8; y <= 28; y++) {
+            for (let x = 6; x < 74; x++) {
+              const idx = (y * 80 + x) * 4;
+              const r = data[idx];
+              const g = data[idx + 1];
+              const b = data[idx + 2];
 
-            if (isSkin) {
-              const weight = 1.0 + (54 - y) / 10.0;
-              sumX += x * weight;
-              totalWeight += weight;
+              // Trọng số pixel tương phản đầu/khuôn mặt/tóc
+              const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+              const isSkinOrHair = (r > 45 && (r > b || g > b)) || (lum < 75);
+              if (isSkinOrHair) {
+                const w = 1.0 + (28 - y) / 8.0;
+                upperSumX += x * w;
+                upperWeight += w;
+              }
             }
           }
-        }
 
-        if (totalWeight > 15) {
-          const rawX = sumX / totalWeight;
-          const diffX = baselineCenterX - rawX;
-          const rawTilt = diffX / 5.5;
-          smoothedTilt = smoothedTilt * 0.6 + rawTilt * 0.4;
-          updateTiltVisuals(smoothedTilt);
-        }
-      } catch (e) {}
+          // Dải dưới: Y từ 34 đến 54 (Khu vực cằm/cổ)
+          for (let y = 34; y <= 54; y++) {
+            for (let x = 6; x < 74; x++) {
+              const idx = (y * 80 + x) * 4;
+              const r = data[idx];
+              const g = data[idx + 1];
+              const b = data[idx + 2];
+
+              const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+              const isBody = (r > 45 && (r > b || g > b)) || (lum < 75);
+              if (isBody) {
+                lowerSumX += x;
+                lowerWeight += 1.0;
+              }
+            }
+          }
+
+          if (upperWeight > 15 && lowerWeight > 15) {
+            const upperX = upperSumX / upperWeight;
+            const lowerX = lowerSumX / lowerWeight;
+
+            // Vectơ độ nghiêng trục đầu (Head Slant Angle):
+            // Trong video mirror:
+            // Người dùng nghiêng đầu sang TRÁI (màn hình) => upperX dịch sang phải camera (upperX > lowerX) => slant > 0
+            // Người dùng nghiêng đầu sang PHẢI (màn hình) => upperX dịch sang trái camera (upperX < lowerX) => slant < 0
+            const slant = upperX - lowerX;
+
+            if (isCalibrating) {
+              calibSlantSamples.push(slant);
+              if (calibSlantSamples.length > 25) calibSlantSamples.shift();
+            }
+
+            const netSlant = slant - baselineOffset;
+
+            // Độ nhạy chuẩn: 2.2 pixel lệch trục = 1.0 full tilt
+            // netSlant > 0 => Nghiêng TRÁI (muốn tilt < -0.22)
+            // netSlant < 0 => Nghiêng PHẢI (muốn tilt > +0.22)
+            const rawTilt = - (netSlant / 2.2);
+
+            // Exponential smoothing nhanh tức thì (alpha = 0.45)
+            smoothedTilt = smoothedTilt * 0.55 + rawTilt * 0.45;
+            updateTiltVisuals(smoothedTilt);
+          } else {
+            smoothedTilt = smoothedTilt * 0.8;
+            updateTiltVisuals(smoothedTilt);
+          }
+        } catch (e) {}
+      }
+
+      requestAnimationFrame(processVideoLoop);
     }
 
     function manualRecalibrate() {
-      baselineRollAngle = 0.0;
-      baselineCenterX = 40.0;
+      if (calibSlantSamples.length > 5) {
+        const sum = calibSlantSamples.reduce((a, b) => a + b, 0);
+        baselineOffset = sum / calibSlantSamples.length;
+      } else {
+        baselineOffset = 0.0;
+      }
       smoothedTilt = 0;
       updateTiltVisuals(0);
-      mustReturnToCenter = false;
       
       const label = document.getElementById('tilt-status-label');
-      label.innerText = '✅ Đã cân giữa vị trí!';
+      label.innerText = '✅ Đã căn giữa vị trí!';
       label.className = 'text-[11px] text-cyan-400 font-bold';
       setTimeout(() => {
         label.innerText = 'Vị trí: Cân bằng ở giữa';
@@ -695,25 +621,10 @@
       const zoneRight = document.getElementById('zone-right');
       const cardLeft = document.getElementById('card-left');
       const cardRight = document.getElementById('card-right');
-      const badge = document.getElementById('feedback-badge');
 
-      // 1. KIỂM TRA ĐIỀU KIỆN TRỞ VỀ TÂM (Return to center)
-      if (Math.abs(clamped) <= 0.18) {
-        centerHoldCount++;
-        if (mustReturnToCenter && centerHoldCount >= 3) {
-          mustReturnToCenter = false;
-          if (!isAnsweringLocked && badge) {
-            badge.innerText = '👉 Sẵn sàng! Nghiêng đầu sang Trái hoặc Phải để chọn';
-            badge.className = 'text-xs md:text-sm font-bold px-4 py-1 rounded-full bg-slate-800 text-cyan-300 border border-cyan-700 shadow';
-          }
-        }
-      } else {
-        centerHoldCount = 0;
-      }
-
-      // 2. XỬ LÝ TRẠNG THÁI NGHIÊNG ĐỐI XỨNG CẢ 2 BÊN
+      // XỬ LÝ TRẠNG THÁI NGHIÊNG TRÁI / PHẢI
       if (clamped < -TILT_THRESHOLD) {
-        // ĐANG NGHIÊNG TRÁI
+        // ĐANG NGHIÊNG TRÁI -> CHỌN A
         if (label) {
           label.innerText = '👈 ĐANG NGHIÊNG TRÁI';
           label.className = 'text-[11px] text-blue-400 font-black animate-pulse';
@@ -723,11 +634,11 @@
         if (cardLeft) cardLeft.classList.add('active-card-left');
         if (cardRight) cardRight.classList.remove('active-card-right');
 
-        if (!isAnsweringLocked && !mustReturnToCenter) {
+        if (!isAnsweringLocked) {
           handleHoldProgress('A');
         }
       } else if (clamped > TILT_THRESHOLD) {
-        // ĐANG NGHIÊNG PHẢI
+        // ĐANG NGHIÊNG PHẢI -> CHỌN B
         if (label) {
           label.innerText = '👉 ĐANG NGHIÊNG PHẢI';
           label.className = 'text-[11px] text-emerald-400 font-black animate-pulse';
@@ -737,7 +648,7 @@
         if (cardRight) cardRight.classList.add('active-card-right');
         if (cardLeft) cardLeft.classList.remove('active-card-left');
 
-        if (!isAnsweringLocked && !mustReturnToCenter) {
+        if (!isAnsweringLocked) {
           handleHoldProgress('B');
         }
       } else {
@@ -812,6 +723,7 @@
       }
 
       isCalibrating = true;
+      calibSlantSamples = [];
       let count = 3;
       const countEl = document.getElementById('countdown-number');
       const progressFill = document.getElementById('calib-progress-fill');
@@ -865,16 +777,15 @@
       cardRight.className = "cursor-pointer md:col-span-4 bg-slate-900/85 border-2 border-slate-700 hover:border-emerald-500 rounded-3xl p-6 text-center transition-all duration-150 flex flex-col justify-between min-h-[250px] shadow-lg relative overflow-hidden group";
 
       resetHoldProgress();
-      mustReturnToCenter = true;
       isAnsweringLocked = false;
 
       const badge = document.getElementById('feedback-badge');
-      badge.innerText = '⚠️ Hãy ngồi thẳng giữa để mở khóa câu hỏi';
-      badge.className = 'text-xs md:text-sm font-bold px-4 py-1 rounded-full bg-slate-800 text-amber-300 border border-amber-600/60 shadow animate-pulse';
+      badge.innerText = '👉 Nghiêng đầu sang Trái hoặc Phải để chọn!';
+      badge.className = 'text-xs md:text-sm font-bold px-4 py-1 rounded-full bg-slate-800 text-cyan-300 border border-cyan-700 shadow';
 
-      // Khởi động đếm ngược 15s cho mỗi câu
+      // Khởi động đếm ngược 12s CHUẨN cho mỗi câu
       clearInterval(timerInterval);
-      timer = 15;
+      timer = 12;
       updateTimerUI();
       timerInterval = setInterval(() => {
         timer--;
@@ -896,7 +807,7 @@
     function updateTimerUI() {
       const tEl = document.getElementById('timer-display');
       tEl.innerText = `${timer}s`;
-      if (timer <= 5) {
+      if (timer <= 4) {
         tEl.className = 'text-xl font-extrabold text-rose-500 animate-ping';
       } else {
         tEl.className = 'text-xl font-extrabold text-cyan-400';
@@ -951,7 +862,7 @@
       setTimeout(() => {
         currentQIndex++;
         loadQuestion(currentQIndex);
-      }, 2000);
+      }, 1800);
     }
 
     function handleTimeOut() {
@@ -972,7 +883,7 @@
       setTimeout(() => {
         currentQIndex++;
         loadQuestion(currentQIndex);
-      }, 2000);
+      }, 1800);
     }
 
     function endGame() {
@@ -1005,11 +916,6 @@
       } else if (e.key === 'ArrowRight' || e.key === 'b' || e.key === 'B' || e.key === '2') {
         handleCardClick('B');
       }
-    });
-
-    // Tự động khởi tạo MediaPipe khi tải trang
-    window.addEventListener('DOMContentLoaded', () => {
-      initMediaPipe();
     });
   </script>
 </body>
