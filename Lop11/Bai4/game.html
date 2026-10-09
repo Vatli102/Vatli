@@ -7,274 +7,293 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trò chơi Khởi động: Nghiêng Đầu Bắt Nhịp - BÀI 4: BÀI TẬP VỀ DAO ĐỘNG ĐIỀU HÒA | Vatli102.com</title>
+  <title>Khởi động Nghiêng Đầu AI - BÀI 4: BÀI TẬP VỀ DAO ĐỘNG ĐIỀU HÒA | Vatli102.com</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900;1000&display=swap" rel="stylesheet">
 
   <style>
+    * {
+      font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+    }
     .mirror-view {
       transform: scaleX(-1);
     }
-    .zone-active-left {
-      background: rgba(59, 130, 246, 0.85) !important;
-      border-color: #93C5FD !important;
-      box-shadow: 0 0 35px rgba(59, 130, 246, 0.9) !important;
-      transform: scale(1.03);
+    /* Card Active Glows */
+    .active-card-blue {
+      transform: scale(1.04);
+      box-shadow: 0 0 50px rgba(14, 165, 233, 0.9), 0 20px 40px rgba(2, 132, 199, 0.4) !important;
+      border-color: #7dd3fc !important;
     }
-    .zone-active-right {
-      background: rgba(16, 185, 129, 0.85) !important;
-      border-color: #6EE7B7 !important;
-      box-shadow: 0 0 35px rgba(16, 185, 129, 0.9) !important;
-      transform: scale(1.03);
+    .active-card-orange {
+      transform: scale(1.04);
+      box-shadow: 0 0 50px rgba(249, 115, 22, 0.9), 0 20px 40px rgba(234, 88, 12, 0.4) !important;
+      border-color: #fdba74 !important;
     }
-    .active-card-left {
-      border-color: #3B82F6 !important;
-      background: linear-gradient(135deg, rgba(30, 58, 138, 0.95), rgba(15, 23, 42, 0.95)) !important;
-      transform: scale(1.03) translateX(-6px);
-      box-shadow: 0 0 45px rgba(59, 130, 246, 0.8) !important;
+    .correct-pulse {
+      animation: correctFlash 0.6s ease-in-out infinite alternate;
+      border-color: #22c55e !important;
+      box-shadow: 0 0 60px #22c55e !important;
     }
-    .active-card-right {
-      border-color: #10B981 !important;
-      background: linear-gradient(135deg, rgba(6, 78, 59, 0.95), rgba(15, 23, 42, 0.95)) !important;
-      transform: scale(1.03) translateX(6px);
-      box-shadow: 0 0 45px rgba(16, 185, 129, 0.8) !important;
+    .wrong-shake {
+      animation: wrongShake 0.4s ease-in-out;
+      border-color: #ef4444 !important;
+      box-shadow: 0 0 60px #ef4444 !important;
     }
-    .correct-anim {
-      border-color: #22C55E !important;
-      background: rgba(34, 197, 94, 0.6) !important;
-      box-shadow: 0 0 50px rgba(34, 197, 94, 1) !important;
+    @keyframes correctFlash {
+      from { filter: brightness(1); }
+      to { filter: brightness(1.25); }
     }
-    .wrong-anim {
-      border-color: #EF4444 !important;
-      background: rgba(239, 68, 68, 0.6) !important;
-      box-shadow: 0 0 50px rgba(239, 68, 68, 1) !important;
+    @keyframes wrongShake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); }
+      40%, 80% { transform: translateX(10px); }
     }
-    @keyframes pulse-glow {
-      0%, 100% { transform: scale(1); opacity: 0.9; }
-      50% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 15px #06b6d4); }
+    /* Circular Camera Halo */
+    .cam-halo-neutral {
+      box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.8), 0 15px 35px rgba(0, 0, 0, 0.5);
     }
-    .calib-pulse {
-      animation: pulse-glow 1s infinite ease-in-out;
+    .cam-halo-left {
+      box-shadow: 0 0 0 8px #38bdf8, 0 0 45px rgba(56, 189, 248, 0.9) !important;
+    }
+    .cam-halo-right {
+      box-shadow: 0 0 0 8px #fb923c, 0 0 45px rgba(251, 146, 60, 0.9) !important;
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans select-none overflow-x-hidden p-3 md:p-5">
+<body class="bg-gradient-to-br from-slate-900 via-[#0b1329] to-slate-950 text-slate-100 min-h-screen flex flex-col justify-between select-none overflow-x-hidden p-3 md:p-6">
 
-  <!-- HEADER -->
-  <header class="max-w-6xl mx-auto w-full flex flex-wrap justify-between items-center gap-3 py-2 border-b border-slate-800">
+  <!-- TOP APP BAR -->
+  <header class="max-w-7xl mx-auto w-full bg-slate-800/80 backdrop-blur-xl border border-slate-700/80 rounded-2xl md:rounded-3xl p-3 md:px-6 md:py-3.5 shadow-2xl flex flex-wrap items-center justify-between gap-3">
+    
+    <!-- Left: Brand & Lesson Info -->
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-black text-xl text-white shadow-lg shadow-cyan-500/30">
+      <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-gradient-to-tr from-sky-500 via-blue-600 to-indigo-600 flex items-center justify-center font-black text-xl md:text-2xl text-white shadow-lg shadow-sky-500/30">
         ⚡
       </div>
       <div>
         <div class="flex items-center gap-2">
-          <span class="px-2 py-0.5 bg-blue-900/80 text-blue-300 font-extrabold text-[11px] rounded-md border border-blue-700/60 uppercase">Vật lí 11</span>
-          <h1 class="font-black text-base md:text-lg text-white leading-tight">BÀI 4: BÀI TẬP VỀ DAO ĐỘNG ĐIỀU HÒA</h1>
+          <span class="px-2.5 py-0.5 bg-sky-500/20 text-sky-300 font-black text-xs md:text-sm rounded-lg border border-sky-400/40 uppercase tracking-wide">Vật lí 11</span>
+          <h1 class="font-extrabold text-base md:text-xl text-white tracking-tight">BÀI 4: BÀI TẬP VỀ DAO ĐỘNG ĐIỀU HÒA</h1>
         </div>
-        <p class="text-xs text-cyan-300 font-medium mt-0.5">Trò chơi: "Nghiêng Đầu Bắt Nhịp Cử Chỉ AI" (Khởi động ôn tập kiến thức trọng tâm)</p>
+        <p class="text-xs md:text-sm text-cyan-300 font-semibold">Trò chơi Khởi động: Nghiêng Đầu Bắt Nhịp AI (Ôn tập trọng tâm)</p>
       </div>
     </div>
 
+    <!-- Center/Right: Score, Music, Fullscreen, Timer Controls -->
     <div class="flex flex-wrap items-center gap-2 md:gap-3">
-      <!-- Nút Điều hướng nhanh -->
-      <a href="index.html" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 active:scale-95 transition text-slate-200 text-xs font-bold rounded-xl flex items-center gap-1.5 border border-slate-700 shadow">
-        <span>📖</span> <span>Bài học</span>
-      </a>
-      <a href="/" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 active:scale-95 transition text-slate-200 text-xs font-bold rounded-xl flex items-center gap-1 border border-slate-700 shadow">
-        <span>🏠</span> <span>Trang chủ</span>
-      </a>
-
-      <!-- Điểm số -->
-      <div class="px-3.5 py-1.5 bg-slate-800/90 rounded-xl border border-slate-700 flex items-center gap-2">
-        <span class="text-xs text-slate-400 font-semibold">ĐIỂM:</span>
-        <span id="score-display" class="text-xl font-extrabold text-amber-400">0</span>
+      
+      <!-- Bộ đếm đúng/sai phong cách truyền hình -->
+      <div class="flex items-center gap-1.5 bg-slate-900/90 px-3 py-1.5 rounded-xl border border-slate-700">
+        <span class="text-emerald-400 font-extrabold text-sm md:text-base flex items-center gap-1">
+          🟢 <span id="correct-badge">0</span>
+        </span>
+        <span class="text-slate-600 font-bold">|</span>
+        <span class="text-rose-400 font-extrabold text-sm md:text-base flex items-center gap-1">
+          🔴 <span id="wrong-badge">0</span>
+        </span>
       </div>
 
-      <!-- Thời gian đếm ngược (Chuẩn 12s) -->
-      <div class="px-3.5 py-1.5 bg-slate-800/90 rounded-xl border border-slate-700 flex items-center gap-2">
-        <span class="text-xs text-slate-400 font-semibold">THỜI GIAN:</span>
-        <span id="timer-display" class="text-xl font-extrabold text-cyan-400">12s</span>
+      <!-- Đồng hồ 12 giây -->
+      <div class="flex items-center gap-2 bg-slate-900/90 px-3.5 py-1.5 rounded-xl border border-slate-700">
+        <span class="text-xs text-slate-400 font-bold uppercase">Thời gian:</span>
+        <span id="timer-display" class="text-lg md:text-xl font-black text-amber-400">12s</span>
       </div>
 
-      <!-- Nút bật tắt Camera -->
-      <button id="btn-toggle-cam" onclick="toggleCamera()" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 active:scale-95 transition text-white text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-md">
+      <!-- Nhạc nền Bật/Tắt -->
+      <button id="btn-music" onclick="toggleBgm()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 active:scale-95 text-slate-200 text-xs md:text-sm font-bold rounded-xl border border-slate-600 flex items-center gap-1.5 shadow transition">
+        <span id="music-icon">🎵</span> <span id="music-text">Nhạc: TẮT</span>
+      </button>
+
+      <!-- Toàn màn hình (Chiếu TV/Máy chiếu) -->
+      <button onclick="toggleFullscreen()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 active:scale-95 text-slate-200 text-xs md:text-sm font-bold rounded-xl border border-slate-600 flex items-center gap-1.5 shadow transition" title="Toàn màn hình">
+        <span>⛶</span> <span class="hidden sm:inline">Toàn màn hình</span>
+      </button>
+
+      <!-- Bật/Tắt Camera -->
+      <button id="btn-toggle-cam" onclick="toggleCamera()" class="px-3.5 py-1.5 bg-sky-600 hover:bg-sky-500 active:scale-95 text-white text-xs md:text-sm font-black rounded-xl flex items-center gap-1.5 shadow-lg shadow-sky-600/30 transition">
         <span>📷</span> <span id="cam-status-text">Bật Camera</span>
       </button>
+
+      <!-- Nút về trang chủ / bài học -->
+      <a href="index.html" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 text-xs font-bold rounded-xl border border-slate-700">
+        📖 Bài học
+      </a>
     </div>
+
   </header>
 
-  <!-- MAIN GAME AREA -->
-  <main class="max-w-6xl mx-auto w-full my-3 md:my-4 flex-1 flex flex-col justify-center items-center relative">
+  <!-- MAIN VIEWPORT -->
+  <main class="max-w-7xl mx-auto w-full my-auto flex-1 flex flex-col justify-center items-center py-4 relative">
     
-    <!-- START SCREEN -->
-    <div id="start-screen" class="bg-slate-900/95 border border-slate-800 rounded-3xl p-6 md:p-8 max-w-2xl w-full text-center shadow-2xl backdrop-blur-xl">
-      <div class="text-6xl mb-3 animate-bounce">🎯 ↔️ 🎮</div>
-      <h2 class="text-2xl md:text-3xl font-black text-white mb-2">THỬ THÁCH NGHIÊNG ĐẦU AI</h2>
-      <p class="text-slate-300 text-sm md:text-base mb-6 leading-relaxed">
-        Khởi động bước vào <strong class="text-cyan-400 font-bold">BÀI 4: BÀI TẬP VỀ DAO ĐỘNG ĐIỀU HÒA</strong>.<br>
-        Ôn nhanh 10 câu hỏi cốt lõi với công nghệ nhận diện cử chỉ thông minh.<br>
-        <span class="text-blue-400 font-bold">Nghiêng nhẹ sang Trái</span> hoặc <span class="text-emerald-400 font-bold">Nghiêng nhẹ sang Phải</span> (giữ <strong>0.5 giây</strong>) để chọn đáp án.<br>
-        <em class="text-xs text-slate-400">(Hỗ trợ đầy đủ: Camera AI, Rê chuột trên camera, Bấm trực tiếp vào thẻ hoặc Phím ← / →)</em>
+    <!-- 1. START SCREEN -->
+    <div id="start-screen" class="bg-slate-800/90 border-2 border-slate-700/80 rounded-3xl p-6 md:p-10 max-w-2xl w-full text-center shadow-2xl backdrop-blur-2xl">
+      <div class="text-6xl md:text-7xl mb-4 animate-bounce">🎯 ↔️ 🎮</div>
+      <h2 class="text-2xl md:text-4xl font-black text-white mb-2 tracking-tight">TRÒ CHƠI KHỞI ĐỘNG NGHIÊNG ĐẦU AI</h2>
+      <p class="text-slate-300 text-sm md:text-lg mb-6 leading-relaxed">
+        Thử thách phản xạ nhanh với <strong class="text-sky-400 font-extrabold">BÀI 4: BÀI TẬP VỀ DAO ĐỘNG ĐIỀU HÒA</strong>.<br>
+        Học sinh đứng hoặc ngồi trước camera, <span class="text-sky-400 font-black">Nghiêng sang Trái</span> hoặc <span class="text-orange-400 font-black">Nghiêng sang Phải</span> (giữ <strong>0.5 giây</strong>) để chọn đáp án đúng!
       </p>
 
-      <div class="grid grid-cols-2 gap-4 mb-6 text-left text-xs md:text-sm text-slate-300">
-        <div class="bg-blue-950/40 p-4 rounded-2xl border border-blue-500/40 shadow">
-          <div class="font-extrabold text-blue-400 text-sm mb-1 flex items-center gap-1">👈 Nghiêng TRÁI</div>
-          <p>Nghiêng đầu sang trái (hoặc bấm phím ← / phím 1) để chọn phương án bên Trái.</p>
+      <!-- 2 Cột Hướng dẫn trực quan -->
+      <div class="grid grid-cols-2 gap-4 md:gap-6 mb-8 text-left">
+        <div class="bg-gradient-to-br from-sky-900/60 to-blue-950/80 p-5 rounded-2xl border-2 border-sky-500/50 shadow-lg">
+          <div class="text-xl md:text-2xl font-black text-sky-400 mb-1 flex items-center gap-2">👈 Phương án TRÁI</div>
+          <p class="text-xs md:text-sm text-sky-100/90 font-medium">Nghiêng đầu sang Trái (hoặc bấm phím <strong>←</strong> / phím <strong>1</strong>) để chọn phương án Xanh Dương.</p>
         </div>
-        <div class="bg-emerald-950/40 p-4 rounded-2xl border border-emerald-500/40 shadow">
-          <div class="font-extrabold text-emerald-400 text-sm mb-1 flex items-center gap-1">👉 Nghiêng PHẢI</div>
-          <p>Nghiêng đầu sang phải (hoặc bấm phím → / phím 2) để chọn phương án bên Phải.</p>
+        <div class="bg-gradient-to-br from-orange-900/60 to-amber-950/80 p-5 rounded-2xl border-2 border-orange-500/50 shadow-lg">
+          <div class="text-xl md:text-2xl font-black text-orange-400 mb-1 flex items-center gap-2">👉 Phương án PHẢI</div>
+          <p class="text-xs md:text-sm text-orange-100/90 font-medium">Nghiêng đầu sang Phải (hoặc bấm phím <strong>→</strong> / phím <strong>2</strong>) để chọn phương án Màu Cam.</p>
         </div>
       </div>
 
-      <button onclick="startCountdownAndPlay()" class="w-full py-4 bg-gradient-to-r from-blue-600 via-cyan-500 to-emerald-500 hover:opacity-95 text-white font-black text-xl rounded-2xl shadow-2xl hover:shadow-cyan-500/40 transition transform active:scale-98">
+      <button onclick="startCountdownAndPlay()" class="w-full py-4 md:py-5 bg-gradient-to-r from-sky-500 via-blue-600 to-orange-500 hover:opacity-95 text-white font-black text-xl md:text-2xl rounded-2xl shadow-2xl hover:shadow-sky-500/50 transition transform active:scale-98 tracking-wide">
         BẮT ĐẦU CHƠI NGAY 🔥
       </button>
     </div>
 
-    <!-- CALIBRATION OVERLAY (3-2-1 Countdown) -->
-    <div id="calibration-screen" class="hidden bg-slate-900/98 border-2 border-cyan-500/60 rounded-3xl p-8 max-w-lg w-full text-center shadow-2xl backdrop-blur-2xl z-30">
-      <div class="text-5xl mb-3 calib-pulse">🎯</div>
-      <h3 class="text-2xl font-black text-white mb-2">CÂN CHỈNH VỊ TRÍ NGỒI</h3>
-      <p class="text-slate-300 text-sm mb-6 leading-relaxed">
-        Vui lòng <strong class="text-cyan-400">ngồi thẳng lưng</strong> và <strong class="text-cyan-400">nhìn thẳng vào giữa camera</strong>.<br>
-        Hệ thống đang tự động cân bằng tâm đối xứng...
+    <!-- 2. COUNTDOWN OVERLAY (3-2-1) -->
+    <div id="calibration-screen" class="hidden bg-slate-800/95 border-2 border-sky-500/80 rounded-3xl p-8 md:p-10 max-w-lg w-full text-center shadow-2xl backdrop-blur-2xl z-30">
+      <div class="text-6xl mb-3 animate-pulse">🎯</div>
+      <h3 class="text-2xl md:text-3xl font-black text-white mb-2">CHUẨN BỊ BƯỚC VÀO TRÒ CHƠI</h3>
+      <p class="text-slate-300 text-sm md:text-base mb-6 leading-relaxed">
+        Học sinh vui lòng <strong class="text-sky-400">nhìn thẳng vào vòng tròn camera</strong>.<br>
+        Hệ thống AI đang tự động đặt tâm cân bằng đối xứng...
       </p>
       
-      <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-tr from-cyan-600 to-blue-600 flex items-center justify-center border-4 border-cyan-300 shadow-xl">
-        <span id="countdown-number" class="text-5xl font-black text-white">3</span>
+      <div class="w-24 h-24 md:w-28 md:h-28 mx-auto mb-6 rounded-full bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center border-4 border-white shadow-2xl">
+        <span id="countdown-number" class="text-5xl md:text-6xl font-black text-white">3</span>
       </div>
 
-      <div id="calib-progress-bar" class="w-full bg-slate-800 h-3 rounded-full overflow-hidden border border-slate-700">
-        <div id="calib-progress-fill" class="h-full bg-gradient-to-r from-cyan-400 to-blue-500 transition-all duration-300" style="width: 10%;"></div>
+      <div class="w-full bg-slate-900 h-3 rounded-full overflow-hidden border border-slate-700">
+        <div id="calib-progress-fill" class="h-full bg-gradient-to-r from-sky-400 via-blue-500 to-orange-500 transition-all duration-300" style="width: 33%;"></div>
       </div>
     </div>
 
-    <!-- PLAYING GAME SCREEN -->
-    <div id="game-screen" class="hidden w-full flex flex-col items-center gap-4">
+    <!-- 3. IN-GAME SCREEN (CLASSROOM TELEVISION LAYOUT) -->
+    <div id="game-screen" class="hidden w-full flex flex-col items-center gap-4 md:gap-6">
       
-      <!-- CÂU HỎI TRUNG TÂM -->
-      <div class="w-full bg-slate-900/95 border-2 border-slate-700/80 rounded-3xl p-5 md:p-6 text-center shadow-xl backdrop-blur-md">
+      <!-- CÂU HỎI TRUNG TÂM (LỚN, NỔI BẬT, RÕ RÀNG TRÊN TIVI LỚP HỌC) -->
+      <div class="w-full bg-slate-800/90 border-2 border-slate-700 rounded-3xl p-5 md:p-7 text-center shadow-2xl backdrop-blur-md relative overflow-hidden">
         <div class="flex items-center justify-between mb-2">
-          <span id="question-index" class="text-xs md:text-sm font-extrabold text-cyan-400 px-3.5 py-1 bg-cyan-950/80 rounded-full border border-cyan-800 shadow">CÂU 1 / 10</span>
-          <span id="feedback-badge" class="text-xs md:text-sm font-bold px-4 py-1 rounded-full bg-slate-800 text-cyan-300 border border-cyan-700 shadow">👉 Nghiêng đầu sang Trái hoặc Phải để chọn!</span>
+          <span id="question-index" class="text-xs md:text-sm font-black text-sky-300 px-4 py-1.5 bg-sky-950/90 rounded-full border border-sky-700 shadow">
+            CÂU 1 / 10
+          </span>
+          <span id="feedback-badge" class="text-xs md:text-sm font-extrabold px-5 py-1.5 rounded-full bg-slate-900 text-sky-300 border border-slate-700 shadow">
+            👉 Nghiêng đầu sang Trái hoặc Phải để chọn!
+          </span>
         </div>
-        <h2 id="question-text" class="text-lg md:text-2xl font-black text-white leading-snug">
+        <h2 id="question-text" class="text-xl md:text-3xl lg:text-4xl font-black text-white leading-relaxed tracking-tight py-2">
           Câu hỏi đang tải...
         </h2>
       </div>
 
-      <!-- KHUNG ĐIỀU KHIỂN & 2 THẺ ĐÁP ÁN -->
-      <div class="w-full grid grid-cols-1 md:grid-cols-12 gap-4 items-stretch">
+      <!-- GIAO DIỆN 3 KHỐI: THẺ XANH (TRÁI) - VÒNG TRÒN CAMERA (GIỮA) - THẺ CAM (PHẢI) -->
+      <div class="w-full grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 items-center">
         
-        <!-- ĐÁP ÁN TRÁI -->
-        <div id="card-left" onclick="handleCardClick('A')" class="cursor-pointer md:col-span-4 bg-slate-900/85 border-2 border-slate-700 hover:border-blue-500 rounded-3xl p-6 text-center transition-all duration-150 flex flex-col justify-between min-h-[250px] shadow-lg relative overflow-hidden group">
-          <!-- Progress bar khi giữ đầu -->
-          <div id="progress-left" class="absolute bottom-0 left-0 right-0 h-3 bg-blue-500 transition-all duration-75" style="width: 0%;"></div>
+        <!-- THẺ TRÁI (A) - MÀU XANH DƯƠNG RỰC RỠ -->
+        <div id="card-left" onclick="handleCardClick('A')" class="cursor-pointer md:col-span-4 bg-gradient-to-br from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 border-4 border-sky-300/40 rounded-3xl p-6 md:p-8 text-center transition-all duration-150 flex flex-col justify-between min-h-[260px] md:min-h-[320px] shadow-2xl relative overflow-hidden group">
           
-          <div class="flex items-center justify-start">
-            <span class="text-2xl group-hover:scale-125 transition">👈</span>
+          <!-- Thanh tiến trình giữ đầu -->
+          <div id="progress-left" class="absolute bottom-0 left-0 right-0 h-4 bg-white/90 transition-all duration-75" style="width: 0%;"></div>
+
+          <!-- Icon chỉ tay -->
+          <div class="flex items-center justify-between">
+            <span class="text-xs md:text-sm font-black px-3 py-1 bg-black/25 text-white rounded-xl uppercase tracking-wider">LỰA CHỌN A</span>
+            <span class="text-3xl md:text-4xl group-hover:scale-125 transition transform">👈</span>
           </div>
-          <div id="option-a-text" class="text-base md:text-xl font-bold text-slate-100 my-auto py-2">
+
+          <!-- Nội dung đáp án -->
+          <div id="option-a-text" class="text-xl md:text-2xl lg:text-3xl font-black text-white my-auto py-3 leading-snug drop-shadow-md">
             Phương án Trái
           </div>
-          <div id="hold-status-left" class="text-xs font-semibold text-blue-400 bg-blue-950/70 py-2 rounded-xl border border-blue-900/60 flex items-center justify-center gap-1">
+
+          <!-- Nhãn trạng thái giữ -->
+          <div id="hold-status-left" class="text-xs md:text-sm font-extrabold text-sky-950 bg-white/90 py-2.5 rounded-2xl shadow flex items-center justify-center gap-1.5">
             <span>👈 Nghiêng TRÁI (hoặc Bấm vào đây)</span>
           </div>
         </div>
 
-        <!-- CAMERA TRUNG TÂM -->
-        <div class="md:col-span-4 flex flex-col items-center justify-center relative">
+        <!-- KHU VỰC CAMERA TRUNG TÂM (VÒNG TRÒN AVATAR NHƯ TRÊN ẢNH MẪU) -->
+        <div class="md:col-span-4 flex flex-col items-center justify-center relative py-2">
           
+          <!-- Vòng tròn Camera Avatar -->
           <div id="cam-container" 
                onmousemove="handleInteractiveHover(event)"
                onmouseleave="handleHoverLeave()"
-               class="relative w-56 h-40 md:w-64 md:h-48 rounded-2xl overflow-hidden border-2 border-slate-700 bg-slate-950 shadow-2xl flex items-center justify-center group cursor-crosshair">
+               class="relative w-48 h-48 md:w-56 md:h-56 lg:w-60 lg:h-60 rounded-full border-4 border-white/90 overflow-hidden bg-slate-950 cam-halo-neutral transition-all duration-200 flex items-center justify-center cursor-crosshair">
             
-            <!-- Video Camera ngầm định -->
+            <!-- Video Camera -->
             <video id="webcam" autoplay playsinline muted class="w-full h-full object-cover mirror-view"></video>
             
-            <!-- Canvas xử lí quang học 60fps -->
+            <!-- Canvas tính toán quang học ngầm -->
             <canvas id="proc-canvas" width="80" height="60" class="hidden"></canvas>
 
             <!-- Khi chưa bật Camera -->
-            <div id="cam-fallback" class="absolute inset-0 bg-slate-900/90 flex flex-col items-center justify-center p-4 text-center z-10">
-              <span class="text-3xl mb-1">📷</span>
-              <p class="text-xs text-slate-300 font-bold mb-2">Chưa bật camera</p>
-              <button onclick="toggleCamera()" class="px-3 py-1 bg-cyan-600 hover:bg-cyan-500 active:scale-95 text-white text-xs font-black rounded-lg shadow">
+            <div id="cam-fallback" class="absolute inset-0 bg-slate-900/95 flex flex-col items-center justify-center p-4 text-center z-10">
+              <span class="text-4xl mb-1">📷</span>
+              <p class="text-xs font-bold text-slate-300 mb-2">Chưa bật camera</p>
+              <button onclick="toggleCamera()" class="px-3.5 py-1.5 bg-sky-500 hover:bg-sky-400 active:scale-95 text-white text-xs font-black rounded-xl shadow-lg">
                 Bật Camera AI
               </button>
             </div>
 
-            <!-- CHỈ BÁO VÙNG NGHIÊNG TRÁI / PHẢI -->
-            <div class="absolute inset-0 grid grid-cols-2 pointer-events-none z-10">
-              <div id="zone-left" class="rounded-2xl border-2 border-dashed border-blue-400/60 bg-blue-950/30 flex flex-col justify-between p-2.5 transition-all duration-150">
-                <span class="text-xs font-black text-blue-300 px-2 py-0.5 bg-blue-900/90 rounded-md shadow border border-blue-500/50 self-start">👈 TRÁI (A)</span>
-                <span class="text-[10px] text-blue-200 font-bold self-start">Nghiêng sang đây</span>
-              </div>
-              <div id="zone-right" class="rounded-2xl border-2 border-dashed border-emerald-400/60 bg-emerald-950/30 flex flex-col justify-between p-2.5 transition-all duration-150 items-end">
-                <span class="text-xs font-black text-emerald-300 px-2 py-0.5 bg-emerald-900/90 rounded-md shadow border border-emerald-500/50 self-end">PHẢI (B) 👉</span>
-                <span class="text-[10px] text-emerald-200 font-bold self-end">Nghiêng sang đây</span>
+            <!-- CHẤM HỒNG ĐIỀU HƯỚNG TÂM ĐẦU -->
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+              <div id="head-dot" class="w-8 h-8 rounded-full bg-pink-500 border-2 border-white shadow-[0_0_25px_#ec4899] transition-transform duration-75 flex items-center justify-center">
+                <span class="w-2.5 h-2.5 rounded-full bg-white animate-ping"></span>
               </div>
             </div>
 
-            <!-- CHẤM TÂM THEO DÕI VỊ TRÍ ĐẦU (HEAD DOT) -->
-            <div id="head-dot-wrapper" class="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-              <div id="head-dot" class="w-7 h-7 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 border-2 border-white shadow-[0_0_20px_#ec4899] transition-transform duration-75 flex items-center justify-center">
-                <span class="w-2 h-2 rounded-full bg-white"></span>
-              </div>
-            </div>
-
-            <!-- AI Engine Status Badge -->
-            <div id="ai-engine-badge" class="absolute bottom-1 right-1.5 z-20 px-1.5 py-0.5 bg-slate-900/80 rounded border border-slate-700 text-[9px] text-cyan-300 font-mono">
-              AI: Optical Slant ⚡
+            <!-- Mũi tên chỉ hướng nghiêng động -->
+            <div id="tilt-arrow-indicator" class="absolute top-2 inset-x-0 flex justify-center text-xs font-black text-white pointer-events-none z-20">
+              <span id="tilt-indicator-text" class="px-2 py-0.5 bg-black/60 rounded-full border border-white/30 backdrop-blur-sm">CÂN BẰNG</span>
             </div>
 
           </div>
 
-          <!-- THANH ĐO ĐỘ NGHIÊNG THỰC TẾ -->
-          <div class="w-56 md:w-64 mt-2 bg-slate-900/90 rounded-xl p-2 border border-slate-800">
-            <div class="flex justify-between text-[10px] text-slate-400 font-bold mb-1 px-1">
-              <span class="text-blue-400">TRÁI (A)</span>
-              <span class="text-slate-300">CÂN BẰNG</span>
-              <span class="text-emerald-400">PHẢI (B)</span>
+          <!-- Thanh đo độ nghiêng trực quan -->
+          <div class="w-48 md:w-56 mt-3 bg-slate-800/90 rounded-2xl p-2 border border-slate-700 shadow">
+            <div class="flex justify-between text-[10px] font-black tracking-wider mb-1 px-1">
+              <span class="text-sky-400">👈 TRÁI (A)</span>
+              <span class="text-slate-400">GIỮA</span>
+              <span class="text-orange-400">PHẢI (B) 👉</span>
             </div>
-            <div class="h-2 w-full bg-slate-800 rounded-full relative overflow-hidden flex items-center">
-              <div class="absolute left-1/2 -translate-x-1/2 w-1 h-full bg-slate-600 z-10"></div>
+            <div class="h-2 w-full bg-slate-900 rounded-full relative overflow-hidden flex items-center">
+              <div class="absolute left-1/2 -translate-x-1/2 w-1 h-full bg-slate-500 z-10"></div>
               <div id="tilt-meter" class="h-3 w-4 bg-pink-500 rounded-sm shadow-md transition-all duration-75" style="margin-left: calc(50% - 8px);"></div>
             </div>
           </div>
 
-          <div class="w-56 md:w-64 flex justify-between items-center mt-1">
-            <span id="tilt-status-label" class="text-[11px] text-slate-300 font-bold">Vị trí: Cân bằng ở giữa</span>
-            <button onclick="manualRecalibrate()" class="text-[10px] text-cyan-400 hover:text-cyan-300 font-bold bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
+          <!-- Nút Căn giữa lại và Chọn Nhanh -->
+          <div class="flex items-center gap-2 mt-2 w-48 md:w-56">
+            <button onclick="manualRecalibrate()" class="flex-1 py-1 bg-slate-800 hover:bg-slate-700 active:scale-95 text-cyan-300 text-[11px] font-bold rounded-xl border border-slate-700 shadow transition">
               🎯 Căn giữa lại
             </button>
           </div>
 
-          <!-- 2 NÚT BẤM NHANH DƯỚI CAMERA -->
-          <div class="flex gap-2 mt-2 w-56 md:w-64">
-            <button onclick="handleCardClick('A')" class="flex-1 py-2 bg-blue-700 hover:bg-blue-600 active:scale-95 text-white text-xs font-extrabold rounded-xl border border-blue-400 shadow transition">
-              👈 Chọn Trái (A)
-            </button>
-            <button onclick="handleCardClick('B')" class="flex-1 py-2 bg-emerald-700 hover:bg-emerald-600 active:scale-95 text-white text-xs font-extrabold rounded-xl border border-emerald-400 shadow transition">
-              Chọn Phải (B) 👉
-            </button>
-          </div>
         </div>
 
-        <!-- ĐÁP ÁN PHẢI -->
-        <div id="card-right" onclick="handleCardClick('B')" class="cursor-pointer md:col-span-4 bg-slate-900/85 border-2 border-slate-700 hover:border-emerald-500 rounded-3xl p-6 text-center transition-all duration-150 flex flex-col justify-between min-h-[250px] shadow-lg relative overflow-hidden group">
-          <!-- Progress bar khi giữ đầu -->
-          <div id="progress-right" class="absolute bottom-0 left-0 right-0 h-3 bg-emerald-500 transition-all duration-75" style="width: 0%;"></div>
+        <!-- THẺ PHẢI (B) - MÀU CAM RỰC RỠ -->
+        <div id="card-right" onclick="handleCardClick('B')" class="cursor-pointer md:col-span-4 bg-gradient-to-br from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 border-4 border-orange-300/40 rounded-3xl p-6 md:p-8 text-center transition-all duration-150 flex flex-col justify-between min-h-[260px] md:min-h-[320px] shadow-2xl relative overflow-hidden group">
+          
+          <!-- Thanh tiến trình giữ đầu -->
+          <div id="progress-right" class="absolute bottom-0 left-0 right-0 h-4 bg-white/90 transition-all duration-75" style="width: 0%;"></div>
 
-          <div class="flex items-center justify-end">
-            <span class="text-2xl group-hover:scale-125 transition">👉</span>
+          <!-- Icon chỉ tay -->
+          <div class="flex items-center justify-between">
+            <span class="text-3xl md:text-4xl group-hover:scale-125 transition transform">👉</span>
+            <span class="text-xs md:text-sm font-black px-3 py-1 bg-black/25 text-white rounded-xl uppercase tracking-wider">LỰA CHỌN B</span>
           </div>
-          <div id="option-b-text" class="text-base md:text-xl font-bold text-slate-100 my-auto py-2">
+
+          <!-- Nội dung đáp án -->
+          <div id="option-b-text" class="text-xl md:text-2xl lg:text-3xl font-black text-white my-auto py-3 leading-snug drop-shadow-md">
             Phương án Phải
           </div>
-          <div id="hold-status-right" class="text-xs font-semibold text-emerald-400 bg-emerald-950/70 py-2 rounded-xl border border-emerald-900/60 flex items-center justify-center gap-1">
+
+          <!-- Nhãn trạng thái giữ -->
+          <div id="hold-status-right" class="text-xs md:text-sm font-extrabold text-orange-950 bg-white/90 py-2.5 rounded-2xl shadow flex items-center justify-center gap-1.5">
             <span>Nghiêng PHẢI (hoặc Bấm vào đây) 👉</span>
           </div>
         </div>
@@ -283,13 +302,13 @@
 
     </div>
 
-    <!-- RESULT SCREEN -->
-    <div id="result-screen" class="hidden bg-slate-900/95 border border-slate-800 rounded-3xl p-8 md:p-12 max-w-xl w-full text-center shadow-2xl backdrop-blur-xl">
+    <!-- 4. RESULT SCREEN (TỔNG KẾT SAU 10 CÂU) -->
+    <div id="result-screen" class="hidden bg-slate-800/95 border-2 border-slate-700 rounded-3xl p-8 md:p-12 max-w-xl w-full text-center shadow-2xl backdrop-blur-2xl">
       <div id="result-badge" class="text-7xl mb-4 animate-bounce">🏆</div>
-      <h2 class="text-3xl font-black text-white mb-2">HOÀN THÀNH KHỞI ĐỘNG!</h2>
-      <p id="result-subtitle" class="text-slate-300 text-base mb-8">Cả lớp đã sẵn sàng bước vào bài học mới!</p>
+      <h2 class="text-3xl md:text-4xl font-black text-white mb-2">HOÀN THÀNH KHỞI ĐỘNG!</h2>
+      <p id="result-subtitle" class="text-slate-300 text-base md:text-lg mb-8">Cả lớp đã sẵn sàng bước vào bài học mới!</p>
 
-      <div class="bg-slate-800/90 rounded-3xl p-6 border border-slate-700 mb-8 flex justify-around items-center shadow-inner">
+      <div class="bg-slate-900/90 rounded-3xl p-6 border border-slate-700 mb-8 flex justify-around items-center shadow-inner">
         <div>
           <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tổng điểm</div>
           <div id="final-score" class="text-5xl font-black text-amber-400 mt-2">100/100</div>
@@ -297,15 +316,15 @@
         <div class="h-14 w-px bg-slate-700"></div>
         <div>
           <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Số câu đúng</div>
-          <div id="final-correct" class="text-5xl font-black text-cyan-400 mt-2">10/10</div>
+          <div id="final-correct" class="text-5xl font-black text-sky-400 mt-2">10/10</div>
         </div>
       </div>
 
       <div class="flex flex-col sm:flex-row gap-3">
-        <button onclick="startCountdownAndPlay()" class="flex-1 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 hover:opacity-90 text-white font-black text-lg rounded-2xl shadow-xl transition active:scale-98">
+        <button onclick="startCountdownAndPlay()" class="flex-1 py-4 bg-gradient-to-r from-sky-500 via-blue-600 to-orange-500 hover:opacity-90 text-white font-black text-lg rounded-2xl shadow-xl transition active:scale-98">
           🔄 Chơi lại lượt mới
         </button>
-        <a href="index.html" class="flex-1 py-4 bg-slate-800 hover:bg-slate-700 text-white font-black text-lg rounded-2xl shadow-xl transition text-center flex items-center justify-center">
+        <a href="index.html" class="flex-1 py-4 bg-slate-700 hover:bg-slate-600 text-white font-black text-lg rounded-2xl shadow-xl transition text-center flex items-center justify-center">
           📖 Vào bài học chính
         </a>
       </div>
@@ -314,7 +333,7 @@
   </main>
 
   <!-- FOOTER -->
-  <footer class="max-w-6xl mx-auto w-full text-center text-xs text-slate-500 py-3">
+  <footer class="max-w-7xl mx-auto w-full text-center text-xs text-slate-500 py-2">
     <a href="https://vatli102.com" class="text-slate-400 hover:text-white font-semibold">Vatli102.com</a> — Nền tảng học tập & Khởi động Vật lí 11 • BÀI 4: BÀI TẬP VỀ DAO ĐỘNG ĐIỀU HÒA
   </footer>
 
@@ -398,6 +417,7 @@
     let currentQIndex = 0;
     let score = 0;
     let correctCount = 0;
+    let wrongCount = 0;
     let timer = 12; // CHUẨN 12 GIÂY
     let timerInterval = null;
     let isAnsweringLocked = true;
@@ -409,22 +429,26 @@
     let smoothedTilt = 0.0;
     let holdStartTime = null;
     let currentHoldChoice = null;
-    const REQUIRED_HOLD_MS = 500; // 0.50 GIÂY: SIÊU NHẸ NHÀNG, KHÔNG LO MỎI CỔ!
-    const TILT_THRESHOLD = 0.22;  // Ngưỡng nghiêng cực nhạy (chỉ cần nghiêng nhẹ là nhận)
+    const REQUIRED_HOLD_MS = 500; // 0.5 GIÂY SIÊU NHẠY
+    const TILT_THRESHOLD = 0.22;  // Ngưỡng nghiêng nhẹ
     let isCalibrating = false;
     let calibSlantSamples = [];
 
-    // --- AUDIO SYNTHESIS ---
+    // --- PROCEDURAL AUDIO & BACKGROUND MUSIC SYNTHESIZER ---
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playTone(freq, type, duration) {
+    let isBgmPlaying = false;
+    let bgmInterval = null;
+    let bgmStep = 0;
+
+    function playTone(freq, type, duration, vol = 0.2) {
       try {
         if (audioCtx.state === 'suspended') audioCtx.resume();
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = type;
         osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start();
@@ -433,21 +457,54 @@
     }
 
     function soundCorrect() {
-      playTone(523.25, 'sine', 0.1);
-      setTimeout(() => playTone(659.25, 'sine', 0.1), 90);
-      setTimeout(() => playTone(783.99, 'sine', 0.3), 180);
+      playTone(523.25, 'sine', 0.1, 0.3);
+      setTimeout(() => playTone(659.25, 'sine', 0.1, 0.3), 90);
+      setTimeout(() => playTone(783.99, 'sine', 0.25, 0.35), 180);
+      setTimeout(() => playTone(1046.50, 'triangle', 0.35, 0.4), 270);
     }
     function soundWrong() {
-      playTone(220, 'sawtooth', 0.35);
+      playTone(220, 'sawtooth', 0.2, 0.3);
+      setTimeout(() => playTone(174.61, 'sawtooth', 0.3, 0.3), 150);
     }
     function soundTick() {
-      playTone(440, 'triangle', 0.06);
+      playTone(480, 'triangle', 0.05, 0.1);
     }
     function soundBeep() {
-      playTone(880, 'sine', 0.1);
+      playTone(880, 'sine', 0.1, 0.25);
     }
 
-    // --- CỬ CHỈ RÊ CHUỘT / CHẠM TRỰC TIẾP TRÊN KHUNG CAMERA ---
+    // Vòng lặp nhạc nền BGM vui tươi nhẹ nhàng cho lớp học
+    const melodyNotes = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63, 293.66, 349.23, 440.00, 523.25, 440.00, 349.23];
+    function toggleBgm() {
+      if (isBgmPlaying) {
+        clearInterval(bgmInterval);
+        isBgmPlaying = false;
+        document.getElementById('music-text').innerText = 'Nhạc: TẮT';
+        document.getElementById('btn-music').classList.remove('bg-sky-600', 'text-white');
+      } else {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        isBgmPlaying = true;
+        document.getElementById('music-text').innerText = 'Nhạc: BẬT';
+        document.getElementById('btn-music').classList.add('bg-sky-600', 'text-white');
+        bgmStep = 0;
+        bgmInterval = setInterval(() => {
+          const note = melodyNotes[bgmStep % melodyNotes.length];
+          playTone(note, 'sine', 0.25, 0.05);
+          bgmStep++;
+        }, 400);
+      }
+    }
+
+    // Toàn màn hình (Fullscreen)
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    }
+
+    // --- CỬ CHỈ RÊ CHUỘT / CHẠM TRÊN KHUNG CAMERA ---
     let isUserHovering = false;
     function handleInteractiveHover(e) {
       if (isAnsweringLocked) return;
@@ -465,7 +522,7 @@
       }
     }
 
-    // --- OPTICAL DUAL-BAND HEAD TRACKING (60 FPS, ZERO-LAG, ZERO NETWORK DEPENDENCY) ---
+    // --- CAMERA COMPUTER VISION TRACKING ENGINE ---
     const video = document.getElementById('webcam');
     const procCanvas = document.getElementById('proc-canvas');
     const procCtx = procCanvas.getContext('2d', { willReadFrequently: true });
@@ -508,11 +565,10 @@
           const imgData = procCtx.getImageData(0, 0, 80, 60);
           const data = imgData.data;
 
-          // Tính toán trọng tâm 2 dải: Dải trên (Đầu/Tóc) và Dải dưới (Cổ/Ngực)
           let upperSumX = 0, upperWeight = 0;
           let lowerSumX = 0, lowerWeight = 0;
 
-          // Dải trên: Y từ 8 đến 28 (Khu vực đầu và mắt)
+          // Dải trên: Y từ 8 đến 28 (Đầu, mắt, trán)
           for (let y = 8; y <= 28; y++) {
             for (let x = 6; x < 74; x++) {
               const idx = (y * 80 + x) * 4;
@@ -520,10 +576,9 @@
               const g = data[idx + 1];
               const b = data[idx + 2];
 
-              // Trọng số pixel tương phản đầu/khuôn mặt/tóc
               const lum = 0.299 * r + 0.587 * g + 0.114 * b;
-              const isSkinOrHair = (r > 45 && (r > b || g > b)) || (lum < 75);
-              if (isSkinOrHair) {
+              const isHead = (r > 45 && (r > b || g > b)) || (lum < 75);
+              if (isHead) {
                 const w = 1.0 + (28 - y) / 8.0;
                 upperSumX += x * w;
                 upperWeight += w;
@@ -531,7 +586,7 @@
             }
           }
 
-          // Dải dưới: Y từ 34 đến 54 (Khu vực cằm/cổ)
+          // Dải dưới: Y từ 34 đến 54 (Cằm, cổ, thân trên)
           for (let y = 34; y <= 54; y++) {
             for (let x = 6; x < 74; x++) {
               const idx = (y * 80 + x) * 4;
@@ -551,11 +606,6 @@
           if (upperWeight > 15 && lowerWeight > 15) {
             const upperX = upperSumX / upperWeight;
             const lowerX = lowerSumX / lowerWeight;
-
-            // Vectơ độ nghiêng trục đầu (Head Slant Angle):
-            // Trong video mirror:
-            // Người dùng nghiêng đầu sang TRÁI (màn hình) => upperX dịch sang phải camera (upperX > lowerX) => slant > 0
-            // Người dùng nghiêng đầu sang PHẢI (màn hình) => upperX dịch sang trái camera (upperX < lowerX) => slant < 0
             const slant = upperX - lowerX;
 
             if (isCalibrating) {
@@ -564,13 +614,8 @@
             }
 
             const netSlant = slant - baselineOffset;
-
-            // Độ nhạy chuẩn: 2.2 pixel lệch trục = 1.0 full tilt
-            // netSlant > 0 => Nghiêng TRÁI (muốn tilt < -0.22)
-            // netSlant < 0 => Nghiêng PHẢI (muốn tilt > +0.22)
             const rawTilt = - (netSlant / 2.2);
 
-            // Exponential smoothing nhanh tức thì (alpha = 0.45)
             smoothedTilt = smoothedTilt * 0.55 + rawTilt * 0.45;
             updateTiltVisuals(smoothedTilt);
           } else {
@@ -593,12 +638,10 @@
       smoothedTilt = 0;
       updateTiltVisuals(0);
       
-      const label = document.getElementById('tilt-status-label');
-      label.innerText = '✅ Đã căn giữa vị trí!';
-      label.className = 'text-[11px] text-cyan-400 font-bold';
+      const badge = document.getElementById('feedback-badge');
+      badge.innerText = '✅ Đã cân giữa vị trí camera thành công!';
       setTimeout(() => {
-        label.innerText = 'Vị trí: Cân bằng ở giữa';
-        label.className = 'text-[11px] text-slate-300 font-bold';
+        badge.innerText = '👉 Nghiêng đầu sang Trái hoặc Phải để chọn!';
       }, 1200);
     }
 
@@ -607,7 +650,7 @@
       
       const headDot = document.getElementById('head-dot');
       if (headDot) {
-        headDot.style.transform = `translateX(${clamped * 85}px)`;
+        headDot.style.transform = `translateX(${clamped * 70}px)`;
       }
 
       const meterPercent = ((clamped + 1) / 2) * 100;
@@ -616,51 +659,38 @@
         meter.style.marginLeft = `calc(${meterPercent}% - 8px)`;
       }
 
-      const label = document.getElementById('tilt-status-label');
-      const zoneLeft = document.getElementById('zone-left');
-      const zoneRight = document.getElementById('zone-right');
+      const camContainer = document.getElementById('cam-container');
+      const indicatorText = document.getElementById('tilt-indicator-text');
       const cardLeft = document.getElementById('card-left');
       const cardRight = document.getElementById('card-right');
 
-      // XỬ LÝ TRẠNG THÁI NGHIÊNG TRÁI / PHẢI
+      // TRẠNG THÁI NGHIÊNG TRÁI / PHẢI
       if (clamped < -TILT_THRESHOLD) {
-        // ĐANG NGHIÊNG TRÁI -> CHỌN A
-        if (label) {
-          label.innerText = '👈 ĐANG NGHIÊNG TRÁI';
-          label.className = 'text-[11px] text-blue-400 font-black animate-pulse';
-        }
-        if (zoneLeft) zoneLeft.className = "rounded-2xl border-2 border-blue-400 bg-blue-600/80 flex flex-col justify-between p-2.5 transition-all duration-150 zone-active-left";
-        if (zoneRight) zoneRight.className = "rounded-2xl border-2 border-dashed border-emerald-400/30 bg-emerald-950/20 flex flex-col justify-between p-2.5 transition-all duration-150 items-end opacity-20";
-        if (cardLeft) cardLeft.classList.add('active-card-left');
-        if (cardRight) cardRight.classList.remove('active-card-right');
+        // NGHIÊNG TRÁI (A)
+        if (indicatorText) indicatorText.innerText = '👈 NGHIÊNG TRÁI';
+        if (camContainer) camContainer.className = "relative w-48 h-48 md:w-56 md:h-56 lg:w-60 lg:h-60 rounded-full border-4 border-sky-400 overflow-hidden bg-slate-950 cam-halo-left transition-all duration-200 flex items-center justify-center cursor-crosshair";
+        if (cardLeft) cardLeft.classList.add('active-card-blue');
+        if (cardRight) cardRight.classList.remove('active-card-orange');
 
         if (!isAnsweringLocked) {
           handleHoldProgress('A');
         }
       } else if (clamped > TILT_THRESHOLD) {
-        // ĐANG NGHIÊNG PHẢI -> CHỌN B
-        if (label) {
-          label.innerText = '👉 ĐANG NGHIÊNG PHẢI';
-          label.className = 'text-[11px] text-emerald-400 font-black animate-pulse';
-        }
-        if (zoneRight) zoneRight.className = "rounded-2xl border-2 border-emerald-400 bg-emerald-600/80 flex flex-col justify-between p-2.5 transition-all duration-150 items-end zone-active-right";
-        if (zoneLeft) zoneLeft.className = "rounded-2xl border-2 border-dashed border-blue-400/30 bg-blue-950/20 flex flex-col justify-between p-2.5 transition-all duration-150 opacity-20";
-        if (cardRight) cardRight.classList.add('active-card-right');
-        if (cardLeft) cardLeft.classList.remove('active-card-left');
+        // NGHIÊNG PHẢI (B)
+        if (indicatorText) indicatorText.innerText = 'NGHIÊNG PHẢI 👉';
+        if (camContainer) camContainer.className = "relative w-48 h-48 md:w-56 md:h-56 lg:w-60 lg:h-60 rounded-full border-4 border-orange-400 overflow-hidden bg-slate-950 cam-halo-right transition-all duration-200 flex items-center justify-center cursor-crosshair";
+        if (cardRight) cardRight.classList.add('active-card-orange');
+        if (cardLeft) cardLeft.classList.remove('active-card-blue');
 
         if (!isAnsweringLocked) {
           handleHoldProgress('B');
         }
       } else {
-        // Ở VÙNG TRUNG TÂM (NEUTRAL)
-        if (label) {
-          label.innerText = 'Vị trí: Cân bằng ở giữa';
-          label.className = 'text-[11px] text-slate-300 font-bold';
-        }
-        if (zoneLeft) zoneLeft.className = "rounded-2xl border-2 border-dashed border-blue-400/60 bg-blue-950/30 flex flex-col justify-between p-2.5 transition-all duration-150";
-        if (zoneRight) zoneRight.className = "rounded-2xl border-2 border-dashed border-emerald-400/60 bg-emerald-950/30 flex flex-col justify-between p-2.5 transition-all duration-150 items-end";
-        if (cardLeft) cardLeft.classList.remove('active-card-left');
-        if (cardRight) cardRight.classList.remove('active-card-right');
+        // CÂN BẰNG Ở GIỮA
+        if (indicatorText) indicatorText.innerText = 'CÂN BẰNG';
+        if (camContainer) camContainer.className = "relative w-48 h-48 md:w-56 md:h-56 lg:w-60 lg:h-60 rounded-full border-4 border-white/90 overflow-hidden bg-slate-950 cam-halo-neutral transition-all duration-200 flex items-center justify-center cursor-crosshair";
+        if (cardLeft) cardLeft.classList.remove('active-card-blue');
+        if (cardRight) cardRight.classList.remove('active-card-orange');
         
         resetHoldProgress();
       }
@@ -684,12 +714,12 @@
         if (progLeft) progLeft.style.width = `${pct}%`;
         if (progRight) progRight.style.width = '0%';
         const status = document.getElementById('hold-status-left');
-        if (status) status.innerHTML = `<span class="animate-pulse">⏳ Đang chọn A... ${pct}%</span>`;
+        if (status) status.innerHTML = `<span class="font-black text-sky-950">⏳ Đang chốt A... ${pct}%</span>`;
       } else if (choice === 'B') {
         if (progRight) progRight.style.width = `${pct}%`;
         if (progLeft) progLeft.style.width = '0%';
         const status = document.getElementById('hold-status-right');
-        if (status) status.innerHTML = `<span class="animate-pulse">⏳ Đang chọn B... ${pct}%</span>`;
+        if (status) status.innerHTML = `<span class="font-black text-orange-950">⏳ Đang chốt B... ${pct}%</span>`;
       }
 
       if (elapsed >= REQUIRED_HOLD_MS) {
@@ -754,6 +784,7 @@
       currentQIndex = 0;
       score = 0;
       correctCount = 0;
+      wrongCount = 0;
       updateScoreUI();
       loadQuestion(currentQIndex);
     }
@@ -770,20 +801,20 @@
       document.getElementById('option-a-text').innerText = qData.optA;
       document.getElementById('option-b-text').innerText = qData.optB;
 
-      // Reset card visual styles
+      // Reset card visual classes
       const cardLeft = document.getElementById('card-left');
       const cardRight = document.getElementById('card-right');
-      cardLeft.className = "cursor-pointer md:col-span-4 bg-slate-900/85 border-2 border-slate-700 hover:border-blue-500 rounded-3xl p-6 text-center transition-all duration-150 flex flex-col justify-between min-h-[250px] shadow-lg relative overflow-hidden group";
-      cardRight.className = "cursor-pointer md:col-span-4 bg-slate-900/85 border-2 border-slate-700 hover:border-emerald-500 rounded-3xl p-6 text-center transition-all duration-150 flex flex-col justify-between min-h-[250px] shadow-lg relative overflow-hidden group";
+      cardLeft.className = "cursor-pointer md:col-span-4 bg-gradient-to-br from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 border-4 border-sky-300/40 rounded-3xl p-6 md:p-8 text-center transition-all duration-150 flex flex-col justify-between min-h-[260px] md:min-h-[320px] shadow-2xl relative overflow-hidden group";
+      cardRight.className = "cursor-pointer md:col-span-4 bg-gradient-to-br from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 border-4 border-orange-300/40 rounded-3xl p-6 md:p-8 text-center transition-all duration-150 flex flex-col justify-between min-h-[260px] md:min-h-[320px] shadow-2xl relative overflow-hidden group";
 
       resetHoldProgress();
       isAnsweringLocked = false;
 
       const badge = document.getElementById('feedback-badge');
       badge.innerText = '👉 Nghiêng đầu sang Trái hoặc Phải để chọn!';
-      badge.className = 'text-xs md:text-sm font-bold px-4 py-1 rounded-full bg-slate-800 text-cyan-300 border border-cyan-700 shadow';
+      badge.className = 'text-xs md:text-sm font-extrabold px-5 py-1.5 rounded-full bg-slate-900 text-sky-300 border border-slate-700 shadow';
 
-      // Khởi động đếm ngược 12s CHUẨN cho mỗi câu
+      // Khởi động đếm ngược 12s
       clearInterval(timerInterval);
       timer = 12;
       updateTimerUI();
@@ -801,16 +832,17 @@
     }
 
     function updateScoreUI() {
-      document.getElementById('score-display').innerText = score;
+      document.getElementById('correct-badge').innerText = correctCount;
+      document.getElementById('wrong-badge').innerText = wrongCount;
     }
 
     function updateTimerUI() {
       const tEl = document.getElementById('timer-display');
       tEl.innerText = `${timer}s`;
       if (timer <= 4) {
-        tEl.className = 'text-xl font-extrabold text-rose-500 animate-ping';
+        tEl.className = 'text-lg md:text-xl font-black text-rose-400 animate-ping';
       } else {
-        tEl.className = 'text-xl font-extrabold text-cyan-400';
+        tEl.className = 'text-lg md:text-xl font-black text-amber-400';
       }
     }
 
@@ -838,52 +870,57 @@
         updateScoreUI();
 
         if (choice === 'A') {
-          cardLeft.classList.add('correct-anim');
+          cardLeft.classList.add('correct-pulse');
         } else {
-          cardRight.classList.add('correct-anim');
+          cardRight.classList.add('correct-pulse');
         }
 
         badge.innerText = `🎉 CHÍNH XÁC! ${qData.explain || ''}`;
-        badge.className = 'text-xs md:text-sm font-bold px-4 py-1 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500 shadow-lg';
+        badge.className = 'text-xs md:text-sm font-black px-5 py-1.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500 shadow-xl';
       } else {
         soundWrong();
+        wrongCount++;
+        updateScoreUI();
+
         if (choice === 'A') {
-          cardLeft.classList.add('wrong-anim');
-          cardRight.classList.add('correct-anim');
+          cardLeft.classList.add('wrong-shake');
+          cardRight.classList.add('correct-pulse');
         } else {
-          cardRight.classList.add('wrong-anim');
-          cardLeft.classList.add('correct-anim');
+          cardRight.classList.add('wrong-shake');
+          cardLeft.classList.add('correct-pulse');
         }
 
-        badge.innerText = `❌ CHƯA ĐÚNG! Đáp án: ${qData.correct === 'A' ? qData.optA : qData.optB}`;
-        badge.className = 'text-xs md:text-sm font-bold px-4 py-1 rounded-full bg-rose-950 text-rose-300 border border-rose-500 shadow-lg';
+        badge.innerText = `❌ CHƯA ĐÚNG! Đáp án đúng: ${qData.correct === 'A' ? qData.optA : qData.optB}`;
+        badge.className = 'text-xs md:text-sm font-black px-5 py-1.5 rounded-full bg-rose-950 text-rose-300 border border-rose-500 shadow-xl';
       }
 
       setTimeout(() => {
         currentQIndex++;
         loadQuestion(currentQIndex);
-      }, 1800);
+      }, 2000);
     }
 
     function handleTimeOut() {
       if (isAnsweringLocked) return;
       isAnsweringLocked = true;
       soundWrong();
+      wrongCount++;
+      updateScoreUI();
 
       const qData = QUESTIONS[currentQIndex];
       const badge = document.getElementById('feedback-badge');
       badge.innerText = `⏰ HẾT THỜI GIAN! Đáp án đúng: ${qData.correct === 'A' ? qData.optA : qData.optB}`;
-      badge.className = 'text-xs md:text-sm font-bold px-4 py-1 rounded-full bg-amber-950 text-amber-300 border border-amber-500 shadow-lg';
+      badge.className = 'text-xs md:text-sm font-black px-5 py-1.5 rounded-full bg-amber-950 text-amber-300 border border-amber-500 shadow-xl';
 
       const cardLeft = document.getElementById('card-left');
       const cardRight = document.getElementById('card-right');
-      if (qData.correct === 'A') cardLeft.classList.add('correct-anim');
-      else cardRight.classList.add('correct-anim');
+      if (qData.correct === 'A') cardLeft.classList.add('correct-pulse');
+      else cardRight.classList.add('correct-pulse');
 
       setTimeout(() => {
         currentQIndex++;
         loadQuestion(currentQIndex);
-      }, 1800);
+      }, 2000);
     }
 
     function endGame() {
@@ -898,17 +935,17 @@
       const sub = document.getElementById('result-subtitle');
       if (score >= 80) {
         badge.innerText = '🏆';
-        sub.innerText = 'Tuyệt vời! Bạn đã nắm rất vững kiến thức và sẵn sàng 100% cho bài học mới!';
+        sub.innerText = 'Tuyệt vời! Cả lớp đã nắm rất vững kiến thức và sẵn sàng 100% cho bài học mới!';
       } else if (score >= 50) {
         badge.innerText = '🎖️';
         sub.innerText = 'Rất tốt! Hãy cùng đào sâu thêm các nội dung trọng tâm trong bài học nhé!';
       } else {
         badge.innerText = '💪';
-        sub.innerText = 'Cố gắng lên! Bài học hôm nay sẽ giúp bạn củng cố toàn diện các lỗ hổng kiến thức.';
+        sub.innerText = 'Cố gắng lên! Bài học hôm nay sẽ giúp củng cố toàn diện các kiến thức nền tảng.';
       }
     }
 
-    // --- PHÍM TẮT BÀN PHÍM (KEYBOARD FALLBACK) ---
+    // --- PHÍM TẮT BÀN PHÍM ---
     window.addEventListener('keydown', (e) => {
       if (isAnsweringLocked) return;
       if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A' || e.key === '1') {
