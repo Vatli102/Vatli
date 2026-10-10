@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2547909591568871"
+       crossorigin="anonymous"></script>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khởi động Nghiêng Đầu AI - BÀI 4: BÀI TẬP VỀ DAO ĐỘNG ĐIỀU HÒA | Vatli102.com</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900;1000&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+    }
+    .mirror-view {
+      transform: scaleX(-1);
+    }
+    /* Card Active Glows */
+    .active-card-blue {
+      transform: scale(1.04);
+      box-shadow: 0 0 50px rgba(14, 165, 233, 0.9), 0 20px 40px rgba(2, 132, 199, 0.4) !important;
+      border-color: #7dd3fc !important;
+    }
+    .active-card-orange {
+      transform: scale(1.04);
+      box-shadow: 0 0 50px rgba(249, 115, 22, 0.9), 0 20px 40px rgba(234, 88, 12, 0.4) !important;
+      border-color: #fdba74 !important;
+    }
+    .correct-pulse {
+      animation: correctFlash 0.6s ease-in-out infinite alternate;
+      border-color: #22c55e !important;
+      box-shadow: 0 0 60px #22c55e !important;
+    }
+    .wrong-shake {
+      animation: wrongShake 0.4s ease-in-out;
+      border-color: #ef4444 !important;
+      box-shadow: 0 0 60px #ef4444 !important;
+    }
+    @keyframes correctFlash {
+      from { filter: brightness(1); }
+      to { filter: brightness(1.25); }
+    }
+    @keyframes wrongShake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); }
+      40%, 80% { transform: translateX(10px); }
+    }
+    /* Circular Camera Halo */
+    .cam-halo-neutral {
+      box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.8), 0 15px 35px rgba(0, 0, 0, 0.5);
+    }
+    .cam-halo-left {
+      box-shadow: 0 0 0 8px #38bdf8, 0 0 45px rgba(56, 189, 248, 0.9) !important;
+    }
+    .cam-halo-right {
+      box-shadow: 0 0 0 8px #fb923c, 0 0 45px rgba(251, 146, 60, 0.9) !important;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-[#0b1329] to-slate-950 text-slate-100 min-h-screen flex flex-col justify-between select-none overflow-x-hidden p-3 md:p-6">
+
+  <!-- TOP APP BAR -->
+  <header class="max-w-7xl mx-auto w-full bg-slate-800/80 backdrop-blur-xl border border-slate-700/80 rounded-2xl md:rounded-3xl p-3 md:px-6 md:py-3.5 shadow-2xl flex flex-wrap items-center justify-between gap-3">
+    
+    <!-- Left: Brand & Lesson Info -->
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-gradient-to-tr from-sky-500 via-blue-600 to-indigo-600 flex items-center justify-center font-black text-xl md:text-2xl text-white shadow-lg shadow-sky-500/30">
+        ⚡
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 bg-sky-500/20 text-sky-300 font-black text-xs md:text-sm rounded-lg border border-sky-400/40 uppercase tracking-wide">Vật lí 11</span>
+          <h1 class="font-extrabold text-base md:text-xl text-white tracking-tight">BÀI 4: BÀI TẬP VỀ DAO ĐỘNG ĐIỀU HÒA</h1>
+        </div>
+        <p class="text-xs md:text-sm text-cyan-300 font-semibold">Trò chơi Khởi động: Nghiêng Đầu Bắt Nhịp AI (Ôn tập trọng tâm)</p>
+      </div>
+    </div>
+
+    <!-- Center/Right: Score, Music, Fullscreen, Timer Controls -->
+    <div class="flex flex-wrap items-center gap-2 md:gap-3">
+      
+      <!-- Bộ đếm đúng/sai phong cách truyền hình -->
+      <div class="flex items-center gap-1.5 bg-slate-900/90 px-3 py-1.5 rounded-xl border border-slate-700">
+        <span class="text-emerald-400 font-extrabold text-sm md:text-base flex items-center gap-1">
+          🟢 <span id="correct-badge">0</span>
+        </span>
+        <span class="text-slate-600 font-bold">|</span>
+        <span class="text-rose-400 font-extrabold text-sm md:text-base flex items-center gap-1">
+          🔴 <span id="wrong-badge">0</span>
+        </span>
+      </div>
+
+      <!-- Đồng hồ 12 giây -->
+      <div class="flex items-center gap-2 bg-slate-900/90 px-3.5 py-1.5 rounded-xl border border-slate-700">
+        <span class="text-xs text-slate-400 font-bold uppercase">Thời gian:</span>
+        <span id="timer-display" class="text-lg md:text-xl font-black text-amber-400">12s</span>
+      </div>
+
+      <!-- Nhạc nền Bật/Tắt -->
+      <button id="btn-music" onclick="toggleBgm()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 active:scale-95 text-slate-200 text-xs md:text-sm font-bold rounded-xl border border-slate-600 flex items-center gap-1.5 shadow transition">
+        <span id="music-icon">🎵</span> <span id="music-text">Nhạc: TẮT</span>
+      </button>
+
+      <!-- Toàn màn hình (Chiếu TV/Máy chiếu) -->
+      <button onclick="toggleFullscreen()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 active:scale-95 text-slate-200 text-xs md:text-sm font-bold rounded-xl border border-slate-600 flex items-center gap-1.5 shadow transition" title="Toàn màn hình">
+        <span>⛶</span> <span class="hidden sm:inline">Toàn màn hình</span>
+      </button>
+
+      <!-- Bật/Tắt Camera -->
+      <button id="btn-toggle-cam" onclick="toggleCamera()" class="px-3.5 py-1.5 bg-sky-600 hover:bg-sky-500 active:scale-95 text-white text-xs md:text-sm font-black rounded-xl flex items-center gap-1.5 shadow-lg shadow-sky-600/30 transition">
+        <span>📷</span> <span id="cam-status-text">Bật Camera</span>
+      </button>
+
+      <!-- Nút về trang chủ / bài học -->
+      <a href="index.html" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 text-xs font-bold rounded-xl border border-slate-700">
+        📖 Bài học
+      </a>
+    </div>
+
+  </header>
+
+  <!-- MAIN VIEWPORT -->
+  <main class="max-w-7xl mx-auto w-full my-auto flex-1 flex flex-col justify-center items-center py-4 relative">
+    
+    <!-- 1. START SCREEN -->
+    <div id="start-screen" class="bg-slate-800/90 border-2 border-slate-700/80 rounded-3xl p-6 md:p-10 max-w-2xl w-full text-center shadow-2xl backdrop-blur-2xl">
+      <div class="text-6xl md:text-7xl mb-4 animate-bounce">🎯 ↔️ 🎮</div>
+      <h2 class="text-2xl md:text-4xl font-black text-white mb-2 tracking-tight">TRÒ CHƠI KHỞI ĐỘNG NGHIÊNG ĐẦU AI</h2>
+      <p class="text-slate-300 text-sm md:text-lg mb-6 leading-relaxed">
+        Thử thách phản xạ nhanh với <strong class="text-sky-400 font-extrabold">BÀI 4: BÀI TẬP VỀ DAO ĐỘNG ĐIỀU HÒA</strong>.<br>
+        Học sinh đứng hoặc ngồi trước camera, <span class="text-sky-400 font-black">Nghiêng sang Trái</span> hoặc <span class="text-orange-400 font-black">Nghiêng sang Phải</span> (giữ <strong>0.5 giây</strong>) để chọn đáp án đúng!
+      </p>
+
+      <!-- 2 Cột Hướng dẫn trực quan -->
+      <div class="grid grid-cols-2 gap-4 md:gap-6 mb-8 text-left">
+        <div class="bg-gradient-to-br from-sky-900/60 to-blue-950/80 p-5 rounded-2xl border-2 border-sky-500/50 shadow-lg">
+          <div class="text-xl md:text-2xl font-black text-sky-400 mb-1 flex items-center gap-2">👈 Phương án TRÁI</div>
+          <p class="text-xs md:text-sm text-sky-100/90 font-medium">Nghiêng đầu sang Trái (hoặc bấm phím <strong>←</strong> / phím <strong>1</strong>) để chọn phương án Xanh Dương.</p>
+        </div>
+        <div class="bg-gradient-to-br from-orange-900/60 to-amber-950/80 p-5 rounded-2xl border-2 border-orange-500/50 shadow-lg">
+          <div class="text-xl md:text-2xl font-black text-orange-400 mb-1 flex items-center gap-2">👉 Phương án PHẢI</div>
+          <p class="text-xs md:text-sm text-orange-100/90 font-medium">Nghiêng đầu sang Phải (hoặc bấm phím <strong>→</strong> / phím <strong>2</strong>) để chọn phương án Màu Cam.</p>
+        </div>
+      </div>
+
+      <button onclick="startCountdownAndPlay()" class="w-full py-4 md:py-5 bg-gradient-to-r from-sky-500 via-blue-600 to-orange-500 hover:opacity-95 text-white font-black text-xl md:text-2xl rounded-2xl shadow-2xl hover:shadow-sky-500/50 transition transform active:scale-98 tracking-wide">
+        BẮT ĐẦU CHƠI NGAY 🔥
+      </button>
+    </div>
+
+    <!-- 2. COUNTDOWN OVERLAY (3-2-1) -->
+    <div id="calibration-screen" class="hidden bg-slate-800/95 border-2 border-sky-500/80 rounded-3xl p-8 md:p-10 max-w-lg w-full text-center shadow-2xl backdrop-blur-2xl z-30">
+      <div class="text-6xl mb-3 animate-pulse">🎯</div>
+      <h3 class="text-2xl md:text-3xl font-black text-white mb-2">CHUẨN BỊ BƯỚC VÀO TRÒ CHƠI</h3>
+      <p class="text-slate-300 text-sm md:text-base mb-6 leading-relaxed">
+        Học sinh vui lòng <strong class="text-sky-400">nhìn thẳng vào vòng tròn camera</strong>.<br>
+        Hệ thống AI đang tự động đặt tâm cân bằng đối xứng...
+      </p>
+      
+      <div class="w-24 h-24 md:w-28 md:h-28 mx-auto mb-6 rounded-full bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center border-4 border-white shadow-2xl">
+        <span id="countdown-number" class="text-5xl md:text-6xl font-black text-white">3</span>
+      </div>
+
+      <div class="w-full bg-slate-900 h-3 rounded-full overflow-hidden border border-slate-700">
+        <div id="calib-progress-fill" class="h-full bg-gradient-to-r from-sky-400 via-blue-500 to-orange-500 transition-all duration-300" style="width: 33%;"></div>
+      </div>
+    </div>
+
+    <!-- 3. IN-GAME SCREEN (CLASSROOM TELEVISION LAYOUT) -->
+    <div id="game-screen" class="hidden w-full flex flex-col items-center gap-4 md:gap-6">
+      
+      <!-- CÂU HỎI TRUNG TÂM (LỚN, NỔI BẬT, RÕ RÀNG TRÊN TIVI LỚP HỌC) -->
+      <div class="w-full bg-slate-800/90 border-2 border-slate-700 rounded-3xl p-5 md:p-7 text-center shadow-2xl backdrop-blur-md relative overflow-hidden">
+        <div class="flex items-center justify-between mb-2">
+          <span id="question-index" class="text-xs md:text-sm font-black text-sky-300 px-4 py-1.5 bg-sky-950/90 rounded-full border border-sky-700 shadow">
+            CÂU 1 / 10
+          </span>
+          <span id="feedback-badge" class="text-xs md:text-sm font-extrabold px-5 py-1.5 rounded-full bg-slate-900 text-sky-300 border border-slate-700 shadow">
+            👉 Nghiêng đầu sang Trái hoặc Phải để chọn!
+          </span>
+        </div>
+        <h2 id="question-text" class="text-xl md:text-3xl lg:text-4xl font-black text-white leading-relaxed tracking-tight py-2">
+          Câu hỏi đang tải...
+        </h2>
+      </div>
+
+      <!-- GIAO DIỆN 3 KHỐI: THẺ XANH (TRÁI) - VÒNG TRÒN CAMERA (GIỮA) - THẺ CAM (PHẢI) -->
+      <div class="w-full grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 items-center">
+        
+        <!-- THẺ TRÁI (A) - MÀU XANH DƯƠNG RỰC RỠ -->
+        <div id="card-left" onclick="handleCardClick('A')" class="cursor-pointer md:col-span-4 bg-gradient-to-br from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 border-4 border-sky-300/40 rounded-3xl p-6 md:p-8 text-center transition-all duration-150 flex flex-col justify-between min-h-[260px] md:min-h-[320px] shadow-2xl relative overflow-hidden group">
+          
+          <!-- Thanh tiến trình giữ đầu -->
+          <div id="progress-left" class="absolute bottom-0 left-0 right-0 h-4 bg-white/90 transition-all duration-75" style="width: 0%;"></div>
+
+          <!-- Icon chỉ tay -->
+          <div class="flex items-center justify-between">
+            <span class="text-xs md:text-sm font-black px-3 py-1 bg-black/25 text-white rounded-xl uppercase tracking-wider">LỰA CHỌN A</span>
+            <span class="text-3xl md:text-4xl group-hover:scale-125 transition transform">👈</span>
+          </div>
+
+          <!-- Nội dung đáp án -->
+          <div id="option-a-text" class="text-xl md:text-2xl lg:text-3xl font-black text-white my-auto py-3 leading-snug drop-shadow-md">
+            Phương án Trái
+          </div>
+
+          <!-- Nhãn trạng thái giữ -->
+          <div id="hold-status-left" class="text-xs md:text-sm font-extrabold text-sky-950 bg-white/90 py-2.5 rounded-2xl shadow flex items-center justify-center gap-1.5">
+            <span>👈 Nghiêng TRÁI (hoặc Bấm vào đây)</span>
+          </div>
+        </div>
+
+        <!-- KHU VỰC CAMERA TRUNG TÂM (VÒNG TRÒN AVATAR NHƯ TRÊN ẢNH MẪU) -->
+        <div class="md:col-span-4 flex flex-col items-center justify-center relative py-2">
+          
+          <!-- Vòng tròn Camera Avatar -->
+          <div id="cam-container" 
+               onmousemove="handleInteractiveHover(event)"
+               onmouseleave="handleHoverLeave()"
+               class="relative w-48 h-48 md:w-56 md:h-56 lg:w-60 lg:h-60 rounded-full border-4 border-white/90 overflow-hidden bg-slate-950 cam-halo-neutral transition-all duration-200 flex items-center justify-center cursor-crosshair">
+            
+            <!-- Video Camera -->
+            <video id="webcam" autoplay playsinline muted class="w-full h-full object-cover mirror-view"></video>
+            
+            <!-- Canvas tính toán quang học ngầm -->
+            <canvas id="proc-canvas" width="80" height="60" class="hidden"></canvas>
+
+            <!-- Khi chưa bật Camera -->
+            <div id="cam-fallback" class="absolute inset-0 bg-slate-900/95 flex flex-col items-center justify-center p-4 text-center z-10">
+              <span class="text-4xl mb-1">📷</span>
+              <p class="text-xs font-bold text-slate-300 mb-2">Chưa bật camera</p>
+              <button onclick="toggleCamera()" class="px-3.5 py-1.5 bg-sky-500 hover:bg-sky-400 active:scale-95 text-white text-xs font-black rounded-xl shadow-lg">
+                Bật Camera AI
+              </button>
+            </div>
+
+            <!-- CHẤM HỒNG ĐIỀU HƯỚNG TÂM ĐẦU -->
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+              <div id="head-dot" class="w-8 h-8 rounded-full bg-pink-500 border-2 border-white shadow-[0_0_25px_#ec4899] transition-transform duration-75 flex items-center justify-center">
+                <span class="w-2.5 h-2.5 rounded-full bg-white animate-ping"></span>
+              </div>
+            </div>
+
+            <!-- Mũi tên chỉ hướng nghiêng động -->
+            <div id="tilt-arrow-indicator" class="absolute top-2 inset-x-0 flex justify-center text-xs font-black text-white pointer-events-none z-20">
+              <span id="tilt-indicator-text" class="px-2 py-0.5 bg-black/60 rounded-full border border-white/30 backdrop-blur-sm">CÂN BẰNG</span>
+            </div>
+
+          </div>
+
+          <!-- Thanh đo độ nghiêng trực quan -->
+          <div class="w-48 md:w-56 mt-3 bg-slate-800/90 rounded-2xl p-2 border border-slate-700 shadow">
+            <div class="flex justify-between text-[10px] font-black tracking-wider mb-1 px-1">
+              <span class="text-sky-400">👈 TRÁI (A)</span>
+              <span class="text-slate-400">GIỮA</span>
+              <span class="text-orange-400">PHẢI (B) 👉</span>
+            </div>
+            <div class="h-2 w-full bg-slate-900 rounded-full relative overflow-hidden flex items-center">
+              <div class="absolute left-1/2 -translate-x-1/2 w-1 h-full bg-slate-500 z-10"></div>
+              <div id="tilt-meter" class="h-3 w-4 bg-pink-500 rounded-sm shadow-md transition-all duration-75" style="margin-left: calc(50% - 8px);"></div>
+            </div>
+          </div>
+
+          <!-- Nút Căn giữa lại và Chọn Nhanh -->
+          <div class="flex items-center gap-2 mt-2 w-48 md:w-56">
+            <button onclick="manualRecalibrate()" class="flex-1 py-1 bg-slate-800 hover:bg-slate-700 active:scale-95 text-cyan-300 text-[11px] font-bold rounded-xl border border-slate-700 shadow transition">
+              🎯 Căn giữa lại
+            </button>
+          </div>
+
+        </div>
+
+        <!-- THẺ PHẢI (B) - MÀU CAM RỰC RỠ -->
+        <div id="card-right" onclick="handleCardClick('B')" class="cursor-pointer md:col-span-4 bg-gradient-to-br from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 border-4 border-orange-300/40 rounded-3xl p-6 md:p-8 text-center transition-all duration-150 flex flex-col justify-between min-h-[260px] md:min-h-[320px] shadow-2xl relative overflow-hidden group">
+          
+          <!-- Thanh tiến trình giữ đầu -->
+          <div id="progress-right" class="absolute bottom-0 left-0 right-0 h-4 bg-white/90 transition-all duration-75" style="width: 0%;"></div>
+
+          <!-- Icon chỉ tay -->
+          <div class="flex items-center justify-between">
+            <span class="text-3xl md:text-4xl group-hover:scale-125 transition transform">👉</span>
+            <span class="text-xs md:text-sm font-black px-3 py-1 bg-black/25 text-white rounded-xl uppercase tracking-wider">LỰA CHỌN B</span>
+          </div>
+
+          <!-- Nội dung đáp án -->
+          <div id="option-b-text" class="text-xl md:text-2xl lg:text-3xl font-black text-white my-auto py-3 leading-snug drop-shadow-md">
+            Phương án Phải
+          </div>
+
+          <!-- Nhãn trạng thái giữ -->
+          <div id="hold-status-right" class="text-xs md:text-sm font-extrabold text-orange-950 bg-white/90 py-2.5 rounded-2xl shadow flex items-center justify-center gap-1.5">
+            <span>Nghiêng PHẢI (hoặc Bấm vào đây) 👉</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- 4. RESULT SCREEN (TỔNG KẾT SAU 10 CÂU) -->
+    <div id="result-screen" class="hidden bg-slate-800/95 border-2 border-slate-700 rounded-3xl p-8 md:p-12 max-w-xl w-full text-center shadow-2xl backdrop-blur-2xl">
+      <div id="result-badge" class="text-7xl mb-4 animate-bounce">🏆</div>
+      <h2 class="text-3xl md:text-4xl font-black text-white mb-2">HOÀN THÀNH KHỞI ĐỘNG!</h2>
+      <p id="result-subtitle" class="text-slate-300 text-base md:text-lg mb-8">Cả lớp đã sẵn sàng bước vào bài học mới!</p>
+
+      <div class="bg-slate-900/90 rounded-3xl p-6 border border-slate-700 mb-8 flex justify-around items-center shadow-inner">
+        <div>
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tổng điểm</div>
+          <div id="final-score" class="text-5xl font-black text-amber-400 mt-2">100/100</div>
+        </div>
+        <div class="h-14 w-px bg-slate-700"></div>
+        <div>
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Số câu đúng</div>
+          <div id="final-correct" class="text-5xl font-black text-sky-400 mt-2">10/10</div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button onclick="startCountdownAndPlay()" class="flex-1 py-4 bg-gradient-to-r from-sky-500 via-blue-600 to-orange-500 hover:opacity-90 text-white font-black text-lg rounded-2xl shadow-xl transition active:scale-98">
+          🔄 Chơi lại lượt mới
+        </button>
+        <a href="index.html" class="flex-1 py-4 bg-slate-700 hover:bg-slate-600 text-white font-black text-lg rounded-2xl shadow-xl transition text-center flex items-center justify-center">
+          📖 Vào bài học chính
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="max-w-7xl mx-auto w-full text-center text-xs text-slate-500 py-2">
+    <a href="https://vatli102.com" class="text-slate-400 hover:text-white font-semibold">Vatli102.com</a> — Nền tảng học tập & Khởi động Vật lí 11 • BÀI 4: BÀI TẬP VỀ DAO ĐỘNG ĐIỀU HÒA
+  </footer>
+
+  <!-- JAVASCRIPT GAME ENGINE -->
+  <script>
+    // --- BỘ CÂU HỎI KHỞI ĐỘNG ---
+    const QUESTIONS = [
+    {
+        "q": "1. Trong dao động điều hòa, khoảng cách lớn nhất từ vị trí cân bằng đến vị trí biên được gọi là gì?",
+        "optA": "Biên độ dao động (A > 0)",
+        "optB": "Li độ tức thời (x)",
+        "correct": "A",
+        "explain": "Biên độ A là độ lệch cực đại so với vị trí cân bằng."
+    },
+    {
+        "q": "2. Trong phương trình dao động điều hòa x = A·cos(ωt + φ), đại lượng (ωt + φ) được gọi là:",
+        "optA": "Tần số dao động của vật",
+        "optB": "Pha của dao động tại thời điểm t",
+        "correct": "B",
+        "explain": "Pha dao động (ωt + φ) xác định trạng thái dao động ở thời điểm t."
+    },
+    {
+        "q": "3. Khi một chất điểm dao động điều hòa đi qua vị trí cân bằng (x = 0):",
+        "optA": "Tốc độ đạt cực đại, gia tốc bằng 0",
+        "optB": "Vận tốc bằng 0, gia tốc cực đại",
+        "correct": "A",
+        "explain": "Tại VTCB: vmax = ωA, a = -ω²x = 0."
+    },
+    {
+        "q": "4. Vectơ gia tốc trong dao động điều hòa luôn có đặc điểm nào sau đây?",
+        "optA": "Cùng hướng với chiều chuyển động",
+        "optB": "Luôn hướng về vị trí cân bằng",
+        "correct": "B",
+        "explain": "Gia tốc a = -ω²x luôn ngược chiều với li độ, tức luôn hướng về VTCB."
+    },
+    {
+        "q": "5. Hệ thức liên hệ độc lập giữa li độ x, vận tốc v, biên độ A và tần số góc ω là:",
+        "optA": "A² = x² + v² / ω²",
+        "optB": "A² = x² - v² / ω²",
+        "correct": "A",
+        "explain": "Hệ thức độc lập thời gian: A² = x² + (v/ω)²."
+    },
+    {
+        "q": "6. Trong dao động điều hòa, mối quan hệ về pha giữa gia tốc và vận tốc là:",
+        "optA": "Gia tốc ngược pha π rad so với vận tốc",
+        "optB": "Gia tốc sớm pha π/2 rad so với vận tốc",
+        "correct": "B",
+        "explain": "Gia tốc sớm pha π/2 rad so với vận tốc (và ngược pha π rad so với li độ)."
+    },
+    {
+        "q": "7. Khi vật dao động điều hòa chuyển động từ vị trí biên về vị trí cân bằng thì chuyển động là:",
+        "optA": "Nhanh dần (vectơ gia tốc cùng chiều vận tốc)",
+        "optB": "Nhanh dần đều (gia tốc không đổi)",
+        "correct": "A",
+        "explain": "Chuyển động nhanh dần (nhưng không đều vì gia tốc biến thiên điều hòa)."
+    },
+    {
+        "q": "8. Chu kì dao động T liên hệ với tần số góc ω qua biểu thức nào sau đây?",
+        "optA": "T = ω / (2π)",
+        "optB": "T = 2π / ω",
+        "correct": "B",
+        "explain": "T = 2π / ω."
+    },
+    {
+        "q": "9. Tại hai vị trí biên (x = ±A), đại lượng nào sau đây có giá trị bằng 0?",
+        "optA": "Vận tốc tức thời của vật (v = 0)",
+        "optB": "Độ lớn gia tốc của vật (|a| = 0)",
+        "correct": "A",
+        "explain": "Tại hai biên, vật dừng lại để đổi chiều nên v = 0, gia tốc đạt độ lớn cực đại amax = ω²A."
+    },
+    {
+        "q": "10. Hai dao động điều hòa cùng tần số vuông pha nhau (Δφ = π/2). Khi dao động 1 qua VTCB thì dao động 2 đang ở:",
+        "optA": "Một trong hai vị trí biên (x₂ = ±A₂)",
+        "optB": "Cùng đi qua vị trí cân bằng (x₂ = 0)",
+        "correct": "A",
+        "explain": "Khi hai dao động vuông pha: một vật ở VTCB thì vật kia bắt buộc ở vị trí biên."
+    }
+];
+
+    // --- GAME STATE ---
+    let currentQIndex = 0;
+    let score = 0;
+    let correctCount = 0;
+    let wrongCount = 0;
+    let timer = 12; // CHUẨN 12 GIÂY
+    let timerInterval = null;
+    let isAnsweringLocked = true;
+    let cameraActive = false;
+    let videoStream = null;
+
+    // --- TRACKING STATE ---
+    let baselineOffset = 0.0;
+    let smoothedTilt = 0.0;
+    let holdStartTime = null;
+    let currentHoldChoice = null;
+    const REQUIRED_HOLD_MS = 500; // 0.5 GIÂY SIÊU NHẠY
+    const TILT_THRESHOLD = 0.22;  // Ngưỡng nghiêng nhẹ
+    let isCalibrating = false;
+    let calibSlantSamples = [];
+
+    // --- PROCEDURAL AUDIO & BACKGROUND MUSIC SYNTHESIZER ---
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let isBgmPlaying = false;
+    let bgmInterval = null;
+    let bgmStep = 0;
+
+    function playTone(freq, type, duration, vol = 0.2) {
+      try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function soundCorrect() {
+      playTone(523.25, 'sine', 0.1, 0.3);
+      setTimeout(() => playTone(659.25, 'sine', 0.1, 0.3), 90);
+      setTimeout(() => playTone(783.99, 'sine', 0.25, 0.35), 180);
+      setTimeout(() => playTone(1046.50, 'triangle', 0.35, 0.4), 270);
+    }
+    function soundWrong() {
+      playTone(220, 'sawtooth', 0.2, 0.3);
+      setTimeout(() => playTone(174.61, 'sawtooth', 0.3, 0.3), 150);
+    }
+    function soundTick() {
+      playTone(480, 'triangle', 0.05, 0.1);
+    }
+    function soundBeep() {
+      playTone(880, 'sine', 0.1, 0.25);
+    }
+
+    // Vòng lặp nhạc nền BGM vui tươi nhẹ nhàng cho lớp học
+    const melodyNotes = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63, 293.66, 349.23, 440.00, 523.25, 440.00, 349.23];
+    function toggleBgm() {
+      if (isBgmPlaying) {
+        clearInterval(bgmInterval);
+        isBgmPlaying = false;
+        document.getElementById('music-text').innerText = 'Nhạc: TẮT';
+        document.getElementById('btn-music').classList.remove('bg-sky-600', 'text-white');
+      } else {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        isBgmPlaying = true;
+        document.getElementById('music-text').innerText = 'Nhạc: BẬT';
+        document.getElementById('btn-music').classList.add('bg-sky-600', 'text-white');
+        bgmStep = 0;
+        bgmInterval = setInterval(() => {
+          const note = melodyNotes[bgmStep % melodyNotes.length];
+          playTone(note, 'sine', 0.25, 0.05);
+          bgmStep++;
+        }, 400);
+      }
+    }
+
+    // Toàn màn hình (Fullscreen)
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    }
+
+    // --- CỬ CHỈ RÊ CHUỘT / CHẠM TRÊN KHUNG CAMERA ---
+    let isUserHovering = false;
+    function handleInteractiveHover(e) {
+      if (isAnsweringLocked) return;
+      isUserHovering = true;
+      const rect = document.getElementById('cam-container').getBoundingClientRect();
+      const relativeX = (e.clientX - rect.left) / rect.width;
+      const hoverTilt = (relativeX - 0.5) * 2.2;
+      updateTiltVisuals(hoverTilt);
+    }
+
+    function handleHoverLeave() {
+      isUserHovering = false;
+      if (!cameraActive) {
+        updateTiltVisuals(0);
+      }
+    }
+
+    // --- CAMERA COMPUTER VISION TRACKING ENGINE ---
+    const video = document.getElementById('webcam');
+    const procCanvas = document.getElementById('proc-canvas');
+    const procCtx = procCanvas.getContext('2d', { willReadFrequently: true });
+
+    async function toggleCamera() {
+      if (cameraActive) {
+        if (videoStream) {
+          videoStream.getTracks().forEach(track => track.stop());
+        }
+        cameraActive = false;
+        video.srcObject = null;
+        document.getElementById('cam-fallback').classList.remove('hidden');
+        document.getElementById('cam-status-text').innerText = 'Bật Camera';
+      } else {
+        try {
+          videoStream = await navigator.mediaDevices.getUserMedia({
+            video: { width: { ideal: 320 }, height: { ideal: 240 }, facingMode: "user" }
+          });
+          video.srcObject = videoStream;
+          video.onloadedmetadata = () => {
+            video.play();
+            cameraActive = true;
+            document.getElementById('cam-fallback').classList.add('hidden');
+            document.getElementById('cam-status-text').innerText = 'Tắt Camera';
+            requestAnimationFrame(processVideoLoop);
+          };
+        } catch (err) {
+          console.warn('Không thể mở Camera:', err);
+          document.getElementById('cam-fallback').classList.remove('hidden');
+        }
+      }
+    }
+
+    function processVideoLoop() {
+      if (!cameraActive || video.paused || video.ended) return;
+
+      if (!isUserHovering) {
+        try {
+          procCtx.drawImage(video, 0, 0, 80, 60);
+          const imgData = procCtx.getImageData(0, 0, 80, 60);
+          const data = imgData.data;
+
+          let upperSumX = 0, upperWeight = 0;
+          let lowerSumX = 0, lowerWeight = 0;
+
+          // Dải trên: Y từ 8 đến 28 (Đầu, mắt, trán)
+          for (let y = 8; y <= 28; y++) {
+            for (let x = 6; x < 74; x++) {
+              const idx = (y * 80 + x) * 4;
+              const r = data[idx];
+              const g = data[idx + 1];
+              const b = data[idx + 2];
+
+              const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+              const isHead = (r > 45 && (r > b || g > b)) || (lum < 75);
+              if (isHead) {
+                const w = 1.0 + (28 - y) / 8.0;
+                upperSumX += x * w;
+                upperWeight += w;
+              }
+            }
+          }
+
+          // Dải dưới: Y từ 34 đến 54 (Cằm, cổ, thân trên)
+          for (let y = 34; y <= 54; y++) {
+            for (let x = 6; x < 74; x++) {
+              const idx = (y * 80 + x) * 4;
+              const r = data[idx];
+              const g = data[idx + 1];
+              const b = data[idx + 2];
+
+              const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+              const isBody = (r > 45 && (r > b || g > b)) || (lum < 75);
+              if (isBody) {
+                lowerSumX += x;
+                lowerWeight += 1.0;
+              }
+            }
+          }
+
+          if (upperWeight > 15 && lowerWeight > 15) {
+            const upperX = upperSumX / upperWeight;
+            const lowerX = lowerSumX / lowerWeight;
+            const slant = upperX - lowerX;
+
+            if (isCalibrating) {
+              calibSlantSamples.push(slant);
+              if (calibSlantSamples.length > 25) calibSlantSamples.shift();
+            }
+
+            const netSlant = slant - baselineOffset;
+            const rawTilt = - (netSlant / 2.2);
+
+            smoothedTilt = smoothedTilt * 0.55 + rawTilt * 0.45;
+            updateTiltVisuals(smoothedTilt);
+          } else {
+            smoothedTilt = smoothedTilt * 0.8;
+            updateTiltVisuals(smoothedTilt);
+          }
+        } catch (e) {}
+      }
+
+      requestAnimationFrame(processVideoLoop);
+    }
+
+    function manualRecalibrate() {
+      if (calibSlantSamples.length > 5) {
+        const sum = calibSlantSamples.reduce((a, b) => a + b, 0);
+        baselineOffset = sum / calibSlantSamples.length;
+      } else {
+        baselineOffset = 0.0;
+      }
+      smoothedTilt = 0;
+      updateTiltVisuals(0);
+      
+      const badge = document.getElementById('feedback-badge');
+      badge.innerText = '✅ Đã cân giữa vị trí camera thành công!';
+      setTimeout(() => {
+        badge.innerText = '👉 Nghiêng đầu sang Trái hoặc Phải để chọn!';
+      }, 1200);
+    }
+
+    function updateTiltVisuals(tilt) {
+      const clamped = Math.max(-1, Math.min(1, tilt));
+      
+      const headDot = document.getElementById('head-dot');
+      if (headDot) {
+        headDot.style.transform = `translateX(${clamped * 70}px)`;
+      }
+
+      const meterPercent = ((clamped + 1) / 2) * 100;
+      const meter = document.getElementById('tilt-meter');
+      if (meter) {
+        meter.style.marginLeft = `calc(${meterPercent}% - 8px)`;
+      }
+
+      const camContainer = document.getElementById('cam-container');
+      const indicatorText = document.getElementById('tilt-indicator-text');
+      const cardLeft = document.getElementById('card-left');
+      const cardRight = document.getElementById('card-right');
+
+      // TRẠNG THÁI NGHIÊNG TRÁI / PHẢI
+      if (clamped < -TILT_THRESHOLD) {
+        // NGHIÊNG TRÁI (A)
+        if (indicatorText) indicatorText.innerText = '👈 NGHIÊNG TRÁI';
+        if (camContainer) camContainer.className = "relative w-48 h-48 md:w-56 md:h-56 lg:w-60 lg:h-60 rounded-full border-4 border-sky-400 overflow-hidden bg-slate-950 cam-halo-left transition-all duration-200 flex items-center justify-center cursor-crosshair";
+        if (cardLeft) cardLeft.classList.add('active-card-blue');
+        if (cardRight) cardRight.classList.remove('active-card-orange');
+
+        if (!isAnsweringLocked) {
+          handleHoldProgress('A');
+        }
+      } else if (clamped > TILT_THRESHOLD) {
+        // NGHIÊNG PHẢI (B)
+        if (indicatorText) indicatorText.innerText = 'NGHIÊNG PHẢI 👉';
+        if (camContainer) camContainer.className = "relative w-48 h-48 md:w-56 md:h-56 lg:w-60 lg:h-60 rounded-full border-4 border-orange-400 overflow-hidden bg-slate-950 cam-halo-right transition-all duration-200 flex items-center justify-center cursor-crosshair";
+        if (cardRight) cardRight.classList.add('active-card-orange');
+        if (cardLeft) cardLeft.classList.remove('active-card-blue');
+
+        if (!isAnsweringLocked) {
+          handleHoldProgress('B');
+        }
+      } else {
+        // CÂN BẰNG Ở GIỮA
+        if (indicatorText) indicatorText.innerText = 'CÂN BẰNG';
+        if (camContainer) camContainer.className = "relative w-48 h-48 md:w-56 md:h-56 lg:w-60 lg:h-60 rounded-full border-4 border-white/90 overflow-hidden bg-slate-950 cam-halo-neutral transition-all duration-200 flex items-center justify-center cursor-crosshair";
+        if (cardLeft) cardLeft.classList.remove('active-card-blue');
+        if (cardRight) cardRight.classList.remove('active-card-orange');
+        
+        resetHoldProgress();
+      }
+    }
+
+    function handleHoldProgress(choice) {
+      const now = Date.now();
+      if (currentHoldChoice !== choice) {
+        currentHoldChoice = choice;
+        holdStartTime = now;
+        soundTick();
+      }
+
+      const elapsed = now - holdStartTime;
+      const pct = Math.min(100, Math.floor((elapsed / REQUIRED_HOLD_MS) * 100));
+
+      const progLeft = document.getElementById('progress-left');
+      const progRight = document.getElementById('progress-right');
+
+      if (choice === 'A') {
+        if (progLeft) progLeft.style.width = `${pct}%`;
+        if (progRight) progRight.style.width = '0%';
+        const status = document.getElementById('hold-status-left');
+        if (status) status.innerHTML = `<span class="font-black text-sky-950">⏳ Đang chốt A... ${pct}%</span>`;
+      } else if (choice === 'B') {
+        if (progRight) progRight.style.width = `${pct}%`;
+        if (progLeft) progLeft.style.width = '0%';
+        const status = document.getElementById('hold-status-right');
+        if (status) status.innerHTML = `<span class="font-black text-orange-950">⏳ Đang chốt B... ${pct}%</span>`;
+      }
+
+      if (elapsed >= REQUIRED_HOLD_MS) {
+        submitAnswer(choice);
+      }
+    }
+
+    function resetHoldProgress() {
+      holdStartTime = null;
+      currentHoldChoice = null;
+      const progLeft = document.getElementById('progress-left');
+      const progRight = document.getElementById('progress-right');
+      if (progLeft) progLeft.style.width = '0%';
+      if (progRight) progRight.style.width = '0%';
+
+      const statusLeft = document.getElementById('hold-status-left');
+      const statusRight = document.getElementById('hold-status-right');
+      if (statusLeft) statusLeft.innerHTML = '<span>👈 Nghiêng TRÁI (hoặc Bấm vào đây)</span>';
+      if (statusRight) statusRight.innerHTML = '<span>Nghiêng PHẢI (hoặc Bấm vào đây) 👉</span>';
+    }
+
+    // --- GAMEPLAY CONTROLLERS ---
+    function startCountdownAndPlay() {
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.add('hidden');
+      document.getElementById('calibration-screen').classList.remove('hidden');
+      document.getElementById('game-screen').classList.add('hidden');
+
+      if (!cameraActive) {
+        toggleCamera();
+      }
+
+      isCalibrating = true;
+      calibSlantSamples = [];
+      let count = 3;
+      const countEl = document.getElementById('countdown-number');
+      const progressFill = document.getElementById('calib-progress-fill');
+      
+      soundBeep();
+      countEl.innerText = count;
+      progressFill.style.width = '33%';
+
+      const interval = setInterval(() => {
+        count--;
+        if (count > 0) {
+          soundBeep();
+          countEl.innerText = count;
+          progressFill.style.width = `${(4 - count) * 33}%`;
+        } else {
+          clearInterval(interval);
+          isCalibrating = false;
+          manualRecalibrate();
+          startGame();
+        }
+      }, 1000);
+    }
+
+    function startGame() {
+      document.getElementById('calibration-screen').classList.add('hidden');
+      document.getElementById('game-screen').classList.remove('hidden');
+
+      currentQIndex = 0;
+      score = 0;
+      correctCount = 0;
+      wrongCount = 0;
+      updateScoreUI();
+      loadQuestion(currentQIndex);
+    }
+
+    function loadQuestion(idx) {
+      if (idx >= QUESTIONS.length) {
+        endGame();
+        return;
+      }
+
+      const qData = QUESTIONS[idx];
+      document.getElementById('question-index').innerText = `CÂU ${idx + 1} / ${QUESTIONS.length}`;
+      document.getElementById('question-text').innerText = qData.q;
+      document.getElementById('option-a-text').innerText = qData.optA;
+      document.getElementById('option-b-text').innerText = qData.optB;
+
+      // Reset card visual classes
+      const cardLeft = document.getElementById('card-left');
+      const cardRight = document.getElementById('card-right');
+      cardLeft.className = "cursor-pointer md:col-span-4 bg-gradient-to-br from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 border-4 border-sky-300/40 rounded-3xl p-6 md:p-8 text-center transition-all duration-150 flex flex-col justify-between min-h-[260px] md:min-h-[320px] shadow-2xl relative overflow-hidden group";
+      cardRight.className = "cursor-pointer md:col-span-4 bg-gradient-to-br from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 border-4 border-orange-300/40 rounded-3xl p-6 md:p-8 text-center transition-all duration-150 flex flex-col justify-between min-h-[260px] md:min-h-[320px] shadow-2xl relative overflow-hidden group";
+
+      resetHoldProgress();
+      isAnsweringLocked = false;
+
+      const badge = document.getElementById('feedback-badge');
+      badge.innerText = '👉 Nghiêng đầu sang Trái hoặc Phải để chọn!';
+      badge.className = 'text-xs md:text-sm font-extrabold px-5 py-1.5 rounded-full bg-slate-900 text-sky-300 border border-slate-700 shadow';
+
+      // Khởi động đếm ngược 12s
+      clearInterval(timerInterval);
+      timer = 12;
+      updateTimerUI();
+      timerInterval = setInterval(() => {
+        timer--;
+        updateTimerUI();
+        if (timer <= 3 && timer > 0) {
+          soundBeep();
+        }
+        if (timer <= 0) {
+          clearInterval(timerInterval);
+          handleTimeOut();
+        }
+      }, 1000);
+    }
+
+    function updateScoreUI() {
+      document.getElementById('correct-badge').innerText = correctCount;
+      document.getElementById('wrong-badge').innerText = wrongCount;
+    }
+
+    function updateTimerUI() {
+      const tEl = document.getElementById('timer-display');
+      tEl.innerText = `${timer}s`;
+      if (timer <= 4) {
+        tEl.className = 'text-lg md:text-xl font-black text-rose-400 animate-ping';
+      } else {
+        tEl.className = 'text-lg md:text-xl font-black text-amber-400';
+      }
+    }
+
+    function handleCardClick(choice) {
+      if (isAnsweringLocked) return;
+      submitAnswer(choice);
+    }
+
+    function submitAnswer(choice) {
+      if (isAnsweringLocked) return;
+      isAnsweringLocked = true;
+      clearInterval(timerInterval);
+
+      const qData = QUESTIONS[currentQIndex];
+      const isCorrect = (choice === qData.correct);
+
+      const cardLeft = document.getElementById('card-left');
+      const cardRight = document.getElementById('card-right');
+      const badge = document.getElementById('feedback-badge');
+
+      if (isCorrect) {
+        soundCorrect();
+        score += 10;
+        correctCount++;
+        updateScoreUI();
+
+        if (choice === 'A') {
+          cardLeft.classList.add('correct-pulse');
+        } else {
+          cardRight.classList.add('correct-pulse');
+        }
+
+        badge.innerText = `🎉 CHÍNH XÁC! ${qData.explain || ''}`;
+        badge.className = 'text-xs md:text-sm font-black px-5 py-1.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500 shadow-xl';
+      } else {
+        soundWrong();
+        wrongCount++;
+        updateScoreUI();
+
+        if (choice === 'A') {
+          cardLeft.classList.add('wrong-shake');
+          cardRight.classList.add('correct-pulse');
+        } else {
+          cardRight.classList.add('wrong-shake');
+          cardLeft.classList.add('correct-pulse');
+        }
+
+        badge.innerText = `❌ CHƯA ĐÚNG! Đáp án đúng: ${qData.correct === 'A' ? qData.optA : qData.optB}`;
+        badge.className = 'text-xs md:text-sm font-black px-5 py-1.5 rounded-full bg-rose-950 text-rose-300 border border-rose-500 shadow-xl';
+      }
+
+      setTimeout(() => {
+        currentQIndex++;
+        loadQuestion(currentQIndex);
+      }, 2000);
+    }
+
+    function handleTimeOut() {
+      if (isAnsweringLocked) return;
+      isAnsweringLocked = true;
+      soundWrong();
+      wrongCount++;
+      updateScoreUI();
+
+      const qData = QUESTIONS[currentQIndex];
+      const badge = document.getElementById('feedback-badge');
+      badge.innerText = `⏰ HẾT THỜI GIAN! Đáp án đúng: ${qData.correct === 'A' ? qData.optA : qData.optB}`;
+      badge.className = 'text-xs md:text-sm font-black px-5 py-1.5 rounded-full bg-amber-950 text-amber-300 border border-amber-500 shadow-xl';
+
+      const cardLeft = document.getElementById('card-left');
+      const cardRight = document.getElementById('card-right');
+      if (qData.correct === 'A') cardLeft.classList.add('correct-pulse');
+      else cardRight.classList.add('correct-pulse');
+
+      setTimeout(() => {
+        currentQIndex++;
+        loadQuestion(currentQIndex);
+      }, 2000);
+    }
+
+    function endGame() {
+      clearInterval(timerInterval);
+      document.getElementById('game-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.remove('hidden');
+
+      document.getElementById('final-score').innerText = `${score}/${QUESTIONS.length * 10}`;
+      document.getElementById('final-correct').innerText = `${correctCount}/${QUESTIONS.length}`;
+
+      const badge = document.getElementById('result-badge');
+      const sub = document.getElementById('result-subtitle');
+      if (score >= 80) {
+        badge.innerText = '🏆';
+        sub.innerText = 'Tuyệt vời! Cả lớp đã nắm rất vững kiến thức và sẵn sàng 100% cho bài học mới!';
+      } else if (score >= 50) {
+        badge.innerText = '🎖️';
+        sub.innerText = 'Rất tốt! Hãy cùng đào sâu thêm các nội dung trọng tâm trong bài học nhé!';
+      } else {
+        badge.innerText = '💪';
+        sub.innerText = 'Cố gắng lên! Bài học hôm nay sẽ giúp củng cố toàn diện các kiến thức nền tảng.';
+      }
+    }
+
+    // --- PHÍM TẮT BÀN PHÍM ---
+    window.addEventListener('keydown', (e) => {
+      if (isAnsweringLocked) return;
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A' || e.key === '1') {
+        handleCardClick('A');
+      } else if (e.key === 'ArrowRight' || e.key === 'b' || e.key === 'B' || e.key === '2') {
+        handleCardClick('B');
+      }
+    });
+  </script>
+</body>
+</html>

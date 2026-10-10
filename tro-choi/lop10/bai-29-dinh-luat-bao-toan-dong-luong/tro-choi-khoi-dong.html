@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khởi động Bài 29: Định luật Bảo toàn Động lượng - Trò chơi Nghiêng đầu</title>
+    <style>
+        :root {
+            --primary: #2563EB;
+            --secondary: #7C3AED;
+            --left-color: #059669;
+            --right-color: #DC2626;
+            --bg: #0F172A;
+            --card-bg: rgba(30, 41, 59, 0.85);
+            --text: #F8FAFC;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
+        header { text-align: center; padding: 15px; background: rgba(15, 23, 42, 0.95); width: 100%; border-bottom: 2px solid #334155; }
+        h1 { font-size: 1.6rem; color: #60A5FA; margin-bottom: 4px; }
+        .subtitle { font-size: 0.95rem; color: #94A3B8; }
+        
+        .main-container { display: flex; width: 95%; max-width: 1200px; gap: 20px; margin-top: 15px; flex: 1; margin-bottom: 20px; }
+        .camera-panel { width: 340px; display: flex; flex-direction: column; align-items: center; background: var(--card-bg); border-radius: 16px; padding: 15px; border: 1px solid #334155; }
+        .cam-wrapper { position: relative; width: 300px; height: 225px; border-radius: 12px; overflow: hidden; border: 2px solid var(--primary); background: #000; }
+        #webcam { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        #canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: scaleX(-1); }
+        .sensor-zones { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; pointer-events: none; }
+        .zone-left, .zone-right { flex: 1; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: bold; opacity: 0.35; transition: 0.2s; }
+        .zone-left { background: rgba(5, 150, 105, 0.4); color: #34D399; }
+        .zone-right { background: rgba(220, 38, 38, 0.4); color: #F87171; }
+        .zone-active { opacity: 0.85 !important; }
+
+        .cam-controls { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        .btn { padding: 10px 16px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 0.95rem; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #1D4ED8; }
+        .manual-btn-group { display: flex; gap: 8px; width: 100%; margin-top: 5px; }
+        .btn-left { flex: 1; background: var(--left-color); color: white; }
+        .btn-right { flex: 1; background: var(--right-color); color: white; }
+        .btn-left:hover { opacity: 0.9; }
+        .btn-right:hover { opacity: 0.9; }
+
+        .game-panel { flex: 1; display: flex; flex-direction: column; background: var(--card-bg); border-radius: 16px; padding: 20px; border: 1px solid #334155; position: relative; }
+        .progress-bar-container { width: 100%; height: 8px; background: #334155; border-radius: 4px; overflow: hidden; margin-bottom: 15px; }
+        .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #3B82F6, #10B981); transition: width 0.3s; }
+        .score-board { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 15px; color: #94A3B8; font-size: 1.05rem; }
+        .score-val { color: #F59E0B; font-size: 1.2rem; }
+        
+        .question-box { background: rgba(15, 23, 42, 0.9); border: 1px solid #475569; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 20px; min-height: 90px; display: flex; align-items: center; justify-content: center; }
+        .question-text { font-size: 1.35rem; font-weight: 600; color: #FFFFFF; line-height: 1.5; }
+
+        .options-container { display: flex; gap: 20px; flex: 1; align-items: stretch; }
+        .option-card { flex: 1; border-radius: 14px; padding: 25px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: all 0.25s; border: 2px solid transparent; }
+        .option-left { background: rgba(5, 150, 105, 0.15); border-color: #059669; }
+        .option-right { background: rgba(220, 38, 38, 0.15); border-color: #DC2626; }
+        .option-left:hover, .option-left.selected { background: rgba(5, 150, 105, 0.4); transform: translateY(-4px); box-shadow: 0 8px 24px rgba(5, 150, 105, 0.3); }
+        .option-right:hover, .option-right.selected { background: rgba(220, 38, 38, 0.4); transform: translateY(-4px); box-shadow: 0 8px 24px rgba(220, 38, 38, 0.3); }
+        .opt-icon { font-size: 2.2rem; margin-bottom: 12px; }
+        .opt-text { font-size: 1.25rem; font-weight: bold; line-height: 1.4; }
+
+        .feedback-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); border-radius: 16px; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10; padding: 25px; text-align: center; }
+        .feedback-title { font-size: 2rem; font-weight: bold; margin-bottom: 10px; }
+        .feedback-correct { color: #10B981; }
+        .feedback-wrong { color: #EF4444; }
+        .feedback-expl { font-size: 1.15rem; color: #CBD5E1; max-width: 600px; margin-bottom: 20px; line-height: 1.5; }
+
+        .result-screen { display: none; flex-direction: column; align-items: center; justify-content: center; flex: 1; text-align: center; }
+        .result-title { font-size: 2.2rem; color: #F59E0B; margin-bottom: 15px; }
+        .result-score { font-size: 1.5rem; margin-bottom: 25px; color: #E2E8F0; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>⚡ KHỞI ĐỘNG: ĐỊNH LUẬT BẢO TOÀN ĐỘNG LƯỢNG</h1>
+        <div class="subtitle">Ôn tập Động lượng, Xung lượng & Dẫn dắt vào Bài 29 (Vật lí 10 - KNTT)</div>
+    </header>
+
+    <div class="main-container">
+        <div class="camera-panel">
+            <div class="cam-wrapper">
+                <video id="webcam" autoplay playsinline muted></video>
+                <canvas id="canvas-overlay"></canvas>
+                <div class="sensor-zones">
+                    <div class="zone-left" id="zone-left">TRÁI 👈</div>
+                    <div class="zone-right" id="zone-right">👉 PHẢI</div>
+                </div>
+            </div>
+            <div class="cam-controls">
+                <button class="btn btn-primary" id="btn-toggle-cam" onclick="toggleCamera()">📷 Bật Camera AI</button>
+                <div class="manual-btn-group">
+                    <button class="btn btn-left" onclick="makeChoice('left')">👈 Chọn vế Trái</button>
+                    <button class="btn btn-right" onclick="makeChoice('right')">Chọn vế Phải 👉</button>
+                </div>
+            </div>
+            <div style="font-size: 0.8rem; color: #64748B; margin-top: 10px; text-align: center;">
+                💡 Mẹo: Nghiêng đầu sang trái/phải, dùng phím <b>A/D</b> hoặc mũi tên <b>←/→</b>
+            </div>
+        </div>
+
+        <div class="game-panel">
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="score-board">
+                <span>Câu: <span id="q-index" class="score-val">1</span>/10</span>
+                <span>Điểm: <span id="score" class="score-val">0</span></span>
+            </div>
+
+            <div id="play-area" style="display: flex; flex-direction: column; flex: 1;">
+                <div class="question-box">
+                    <div class="question-text" id="q-text">Đang tải câu hỏi...</div>
+                </div>
+                <div class="options-container">
+                    <div class="option-card option-left" id="card-left" onclick="makeChoice('left')">
+                        <div class="opt-icon">👈</div>
+                        <div class="opt-text" id="opt-left-text">Đáp án Trái</div>
+                    </div>
+                    <div class="option-card option-right" id="card-right" onclick="makeChoice('right')">
+                        <div class="opt-icon">👉</div>
+                        <div class="opt-text" id="opt-right-text">Đáp án Phải</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feedback-overlay" id="feedback-overlay">
+                <div class="feedback-title" id="fb-title">CHÍNH XÁC!</div>
+                <div class="feedback-expl" id="fb-expl">Giải thích chi tiết...</div>
+                <button class="btn btn-primary" onclick="nextQuestion()">Tiếp tục ➔</button>
+            </div>
+
+            <div class="result-screen" id="result-screen">
+                <div class="result-title">🎉 HOÀN THÀNH KHỞI ĐỘNG!</div>
+                <div class="result-score" id="res-score-text">Bạn đạt 10/10 điểm!</div>
+                <button class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 24px;" onclick="restartGame()">🔄 Chơi lại</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "Động lượng của một vật được tính bằng công thức nào?",
+                left: "p = m · v",
+                right: "p = 1/2 · m · v²",
+                correct: "left",
+                expl: "Động lượng: p = m·v."
+            },
+            {
+                q: "Đơn vị đo của động lượng trong hệ SI là gì?",
+                left: "kg · m/s²",
+                right: "kg · m/s (hoặc N·s)",
+                correct: "right",
+                expl: "Đơn vị động lượng là kg·m/s hoặc N·s."
+            },
+            {
+                q: "Một hệ vật được gọi là 'Hệ kín' (hệ cô lập) khi nào?",
+                left: "Không chịu ngoại lực tác dụng hoặc tổng các ngoại lực bằng không",
+                right: "Các vật trong hệ luôn đứng yên tuyệt đối",
+                correct: "left",
+                expl: "Hệ kín là hệ không có ngoại lực tác dụng hoặc tổng ngoại lực triệt tiêu lẫn nhau."
+            },
+            {
+                q: "Trong một hệ kín, đại lượng vật lí tổng cộng nào luôn được bảo toàn (không đổi theo thời gian)?",
+                left: "Tổng thế năng của hệ",
+                right: "Tổng vectơ động lượng của hệ",
+                correct: "right",
+                expl: "Định luật bảo toàn động lượng: Tổng vectơ động lượng của hệ kín là không đổi."
+            },
+            {
+                q: "Va chạm mà sau khi va chạm hai vật dính liền vào nhau và chuyển động cùng vận tốc gọi là gì?",
+                left: "Va chạm mềm",
+                right: "Va chạm đàn hồi",
+                correct: "left",
+                expl: "Va chạm mềm là va chạm mà sau đó 2 vật dính vào nhau chuyển động với cùng vận tốc V."
+            },
+            {
+                q: "Trong va chạm đàn hồi lí tưởng, ngoài động lượng được bảo toàn thì đại lượng nào cũng được bảo toàn?",
+                left: "Độ biến dạng của vật",
+                right: "Tổng động năng của hệ",
+                correct: "right",
+                expl: "Va chạm đàn hồi bảo toàn cả động lượng và tổng động năng của hệ."
+            },
+            {
+                q: "Hiện tượng súng bị giật lùi về phía sau khi bắn một viên đạn ra phía trước là hệ quả của định luật nào?",
+                left: "Định luật bảo toàn động lượng",
+                right: "Định luật khúc xạ ánh sáng",
+                correct: "left",
+                expl: "Trước khi bắn p = 0. Sau khi bắn: M·V + m·v = 0 => Súng giật lùi ngược chiều đạn bay."
+            },
+            {
+                q: "Nguyên lí hoạt động của tên lửa vũ trụ và mực ống phun nước để bơi nhanh dựa trên nguyên lí nào?",
+                left: "Chuyển động bằng phản lực",
+                right: "Hiện tượng cảm ứng điện từ",
+                correct: "left",
+                expl: "Tên lửa phụt khí có khối lượng m với vận tốc v về phía sau để thân tên lửa M bay về phía trước."
+            },
+            {
+                q: "Hai hòn bi có cùng khối lượng m chuyển động ngược chiều nhau với cùng vận tốc v tới va chạm mềm dính vào nhau. Vận tốc của hệ sau va chạm bằng bao nhiêu?",
+                left: "V = 0",
+                right: "V = 2v",
+                correct: "left",
+                expl: "Tổng động lượng trước va chạm: p = mv - mv = 0. Sau va chạm dính nhau: (2m)V = 0 => V = 0 (hệ đứng yên)."
+            },
+            {
+                q: "Một khẩu pháo khối lượng 1000 kg bắn một viên đạn 10 kg với vận tốc 500 m/s. Vận tốc giật lùi của khẩu pháo bằng bao nhiêu m/s?",
+                left: "5 m/s",
+                right: "50 m/s",
+                correct: "left",
+                expl: "Bảo toàn động lượng: 1000 · V + 10 · 500 = 0 => V = -5000 / 1000 = -5 m/s (giật lùi 5 m/s)."
+            }
+        ];
+
+        let currentIndex = 0;
+        let score = 0;
+        let isLocked = false;
+        let video = document.getElementById('webcam');
+        let stream = null;
+        let audioCtx = null;
+
+        function playBeep(isCorrect) {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.frequency.value = isCorrect ? 587.33 : 220;
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            } catch(e) {}
+        }
+
+        function renderQuestion() {
+            isLocked = true;
+            const q = questions[currentIndex];
+            document.getElementById('q-index').innerText = currentIndex + 1;
+            document.getElementById('progress-bar').style.width = ((currentIndex) / questions.length * 100) + '%';
+            document.getElementById('q-text').innerText = q.q;
+            document.getElementById('opt-left-text').innerText = q.left;
+            document.getElementById('opt-right-text').innerText = q.right;
+            document.getElementById('feedback-overlay').style.display = 'none';
+            document.getElementById('card-left').classList.remove('selected');
+            document.getElementById('card-right').classList.remove('selected');
+            
+            setTimeout(() => { isLocked = false; }, 1000);
+        }
+
+        function makeChoice(side) {
+            if (isLocked) return;
+            isLocked = true;
+            
+            const q = questions[currentIndex];
+            const isCorrect = (side === q.correct);
+            if (isCorrect) score++;
+            document.getElementById('score').innerText = score;
+            playBeep(isCorrect);
+
+            const overlay = document.getElementById('feedback-overlay');
+            const title = document.getElementById('fb-title');
+            const expl = document.getElementById('fb-expl');
+            
+            if (isCorrect) {
+                title.innerText = "CHÍNH XÁC! 👏";
+                title.className = "feedback-title feedback-correct";
+            } else {
+                title.innerText = "CHƯA CHÍNH XÁC! 💡";
+                title.className = "feedback-title feedback-wrong";
+            }
+            expl.innerText = q.expl;
+            overlay.style.display = 'flex';
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < questions.length) {
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('progress-bar').style.width = '100%';
+            document.getElementById('play-area').style.display = 'none';
+            document.getElementById('feedback-overlay').style.display = 'none';
+            const resScreen = document.getElementById('result-screen');
+            resScreen.style.display = 'flex';
+            document.getElementById('res-score-text').innerText = `Bạn đã trả lời đúng ${score}/${questions.length} câu! Chúc mừng bạn đã nắm vững kiến thức!`;
+        }
+
+        function restartGame() {
+            currentIndex = 0;
+            score = 0;
+            document.getElementById('score').innerText = '0';
+            document.getElementById('play-area').style.display = 'flex';
+            document.getElementById('result-screen').style.display = 'none';
+            renderQuestion();
+        }
+
+        async function toggleCamera() {
+            const btn = document.getElementById('btn-toggle-cam');
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                video.srcObject = null;
+                stream = null;
+                btn.innerText = "📷 Bật Camera AI";
+                return;
+            }
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 } });
+                video.srcObject = stream;
+                btn.innerText = "🛑 Tắt Camera";
+                trackMovement();
+            } catch (err) {
+                alert("Không thể truy cập camera. Bạn có thể dùng phím A/D hoặc click trực tiếp.");
+            }
+        }
+
+        let tiltHold = 0;
+        function trackMovement() {
+            if (!stream) return;
+            const canvas = document.getElementById('canvas-overlay');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 80;
+            canvas.height = 60;
+            
+            function process() {
+                if (!stream) return;
+                ctx.drawImage(video, 0, 0, 80, 60);
+                const frame = ctx.getImageData(0, 0, 80, 60).data;
+                
+                let leftBrightness = 0, rightBrightness = 0;
+                for (let y = 10; y < 50; y++) {
+                    for (let x = 5; x < 35; x++) {
+                        const idx = (y * 80 + x) * 4;
+                        leftBrightness += (frame[idx] + frame[idx+1] + frame[idx+2]) / 3;
+                    }
+                    for (let x = 45; x < 75; x++) {
+                        const idx = (y * 80 + x) * 4;
+                        rightBrightness += (frame[idx] + frame[idx+1] + frame[idx+2]) / 3;
+                    }
+                }
+                
+                const diff = (leftBrightness - rightBrightness) / (leftBrightness + rightBrightness + 1e-5);
+                const zoneL = document.getElementById('zone-left');
+                const zoneR = document.getElementById('zone-right');
+
+                if (diff > 0.16) {
+                    zoneL.classList.add('zone-active');
+                    zoneR.classList.remove('zone-active');
+                    if (!isLocked) {
+                        tiltHold++;
+                        if (tiltHold > 6) { makeChoice('left'); tiltHold = 0; }
+                    }
+                } else if (diff < -0.16) {
+                    zoneR.classList.add('zone-active');
+                    zoneL.classList.remove('zone-active');
+                    if (!isLocked) {
+                        tiltHold++;
+                        if (tiltHold > 6) { makeChoice('right'); tiltHold = 0; }
+                    }
+                } else {
+                    zoneL.classList.remove('zone-active');
+                    zoneR.classList.remove('zone-active');
+                    tiltHold = 0;
+                }
+                requestAnimationFrame(process);
+            }
+            process();
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') makeChoice('left');
+            if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') makeChoice('right');
+            if (e.key === 'Enter' || e.key === ' ') {
+                if (document.getElementById('feedback-overlay').style.display === 'flex') nextQuestion();
+            }
+        });
+
+        renderQuestion();
+    </script>
+</body>
+</html>

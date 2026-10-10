@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trò Chơi Khởi Động: Đấu Trường Nghiêng Đầu - Vật Lí 10 Bài 10</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 15px; overflow-x: hidden; }
+        .header { text-align: center; margin-bottom: 10px; }
+        .header h1 { font-size: 24px; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 12px rgba(56, 189, 248, 0.5); }
+        .header p { font-size: 14px; color: #94a3b8; }
+        .hud { display: flex; justify-content: space-between; width: 100%; max-width: 950px; background: rgba(30, 41, 59, 0.8); padding: 10px 20px; border-radius: 12px; border: 1px solid #334155; font-size: 16px; font-weight: bold; margin-bottom: 10px; }
+        .hud-score { color: #facc15; }
+        .hud-question { color: #38bdf8; }
+        .hud-streak { color: #4ade80; }
+        .main-container { display: flex; width: 100%; max-width: 950px; gap: 15px; align-items: stretch; height: 380px; }
+        .card { flex: 1; background: rgba(30, 41, 59, 0.6); border: 3px solid #334155; border-radius: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; cursor: pointer; transition: all 0.25s ease; position: relative; backdrop-filter: blur(8px); }
+        .card:hover { transform: translateY(-4px); border-color: #64748b; }
+        .card.left { border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); }
+        .card.right { border-color: #ec4899; box-shadow: 0 0 15px rgba(236, 72, 153, 0.2); }
+        .card.active-tilt { transform: scale(1.04); }
+        .card.left.active-tilt { background: rgba(59, 130, 246, 0.3); border-color: #60a5fa; box-shadow: 0 0 30px rgba(59, 130, 246, 0.7); }
+        .card.right.active-tilt { background: rgba(236, 72, 153, 0.3); border-color: #f472b6; box-shadow: 0 0 30px rgba(236, 72, 153, 0.7); }
+        .card-icon { font-size: 36px; margin-bottom: 12px; }
+        .card-text { font-size: 19px; font-weight: 600; line-height: 1.4; color: #f8fafc; }
+        .camera-wrapper { width: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        .camera-container { width: 240px; height: 180px; border-radius: 14px; overflow: hidden; border: 2px solid #475569; position: relative; background: #000; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
+        #webcam { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        #canvas-process { display: none; }
+        .tilt-indicator { position: absolute; top: 8px; left: 8px; right: 8px; display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; pointer-events: none; }
+        .tilt-indicator .lbl-left { background: rgba(59, 130, 246, 0.8); padding: 2px 6px; border-radius: 4px; }
+        .tilt-indicator .lbl-right { background: rgba(236, 72, 153, 0.8); padding: 2px 6px; border-radius: 4px; }
+        .tilt-bar-bg { width: 100%; height: 8px; background: #334155; border-radius: 4px; margin-top: 10px; overflow: hidden; position: relative; }
+        .tilt-bar-fill { height: 100%; width: 50%; background: #38bdf8; transition: width 0.1s linear; }
+        .cam-controls { margin-top: 8px; display: flex; gap: 6px; width: 100%; }
+        .btn-cam { flex: 1; padding: 6px 10px; font-size: 12px; font-weight: bold; background: #1e293b; border: 1px solid #475569; border-radius: 6px; color: #cbd5e1; cursor: pointer; transition: all 0.2s; }
+        .btn-cam:hover { background: #334155; color: #fff; }
+        .btn-cam.active { background: #0284c7; border-color: #38bdf8; color: #fff; }
+        .question-box { width: 100%; max-width: 950px; background: rgba(15, 23, 42, 0.95); border: 2px solid #38bdf8; border-radius: 14px; padding: 16px 22px; text-align: center; margin-top: 12px; box-shadow: 0 4px 20px rgba(56, 189, 248, 0.2); }
+        .question-title { font-size: 14px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .question-content { font-size: 20px; font-weight: bold; color: #ffffff; line-height: 1.4; }
+        .bottom-actions { display: flex; gap: 15px; margin-top: 10px; width: 100%; max-width: 950px; justify-content: center; }
+        .action-btn { padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; border: none; transition: 0.2s; }
+        .btn-left { background: #2563eb; color: #fff; }
+        .btn-right { background: #db2777; color: #fff; }
+        .btn-restart { background: #475569; color: #fff; }
+        .action-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(6px); }
+        .modal-content { background: #1e293b; border: 2px solid #38bdf8; border-radius: 18px; padding: 30px; text-align: center; max-width: 500px; width: 90%; }
+        .modal-title { font-size: 24px; color: #38bdf8; margin-bottom: 12px; font-weight: bold; }
+        .modal-desc { font-size: 15px; color: #cbd5e1; line-height: 1.6; margin-bottom: 20px; }
+        .modal-btn { padding: 12px 28px; font-size: 16px; font-weight: bold; background: #0284c7; color: #fff; border: none; border-radius: 8px; cursor: pointer; }
+        .feedback { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.5); font-size: 60px; font-weight: 900; z-index: 90; opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-shadow: 0 0 20px rgba(0,0,0,0.8); }
+        .feedback.show { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+        .feedback.correct { color: #4ade80; }
+        .feedback.wrong { color: #f87171; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>ĐẤU TRƯỜNG NGHIÊNG ĐẦU — VẬT LÍ 10 BÀI 10</h1>
+        <p>Khởi động: Ôn tập Chuyển động thẳng biến đổi đều (Nghiêng đầu Trái / Phải)</p>
+    </div>
+
+    <div class="hud">
+        <div class="hud-question">CÂU HỎI: <span id="q-index">1</span>/10</div>
+        <div class="hud-streak">CHUỖI ĐÚNG: <span id="streak">0</span> 🔥</div>
+        <div class="hud-score">ĐIỂM: <span id="score">0</span></div>
+    </div>
+
+    <div class="main-container">
+        <!-- Card Trái -->
+        <div class="card left" id="card-left" onclick="selectAnswer('left')">
+            <div class="card-icon">👈</div>
+            <div class="card-text" id="text-left">Đáp án vế Trái</div>
+        </div>
+
+        <!-- Khung Camera AI -->
+        <div class="camera-wrapper">
+            <div class="camera-container" id="cam-box">
+                <video id="webcam" autoplay playsinline muted></video>
+                <canvas id="canvas-process" width="80" height="60"></canvas>
+                <div class="tilt-indicator">
+                    <span class="lbl-left">TRÁI 👈</span>
+                    <span class="lbl-right">👉 PHẢI</span>
+                </div>
+            </div>
+            <div class="tilt-bar-bg">
+                <div class="tilt-bar-fill" id="tilt-bar"></div>
+            </div>
+            <div class="cam-controls">
+                <button class="btn-cam active" id="btn-toggle-cam" onclick="toggleCamera()">Bật Camera AI</button>
+            </div>
+        </div>
+
+        <!-- Card Phải -->
+        <div class="card right" id="card-right" onclick="selectAnswer('right')">
+            <div class="card-icon">👉</div>
+            <div class="card-text" id="text-right">Đáp án vế Phải</div>
+        </div>
+    </div>
+
+    <div class="question-box">
+        <div class="question-title">NỘI DUNG THỬ THÁCH</div>
+        <div class="question-content" id="question-text">Đang tải câu hỏi...</div>
+    </div>
+
+    <div class="bottom-actions">
+        <button class="action-btn btn-left" onclick="selectAnswer('left')">👈 Chọn vế Trái (Phím A / ←)</button>
+        <button class="action-btn btn-restart" onclick="restartGame()">Chơi Lại 🔄</button>
+        <button class="action-btn btn-right" onclick="selectAnswer('right')">Chọn vế Phải 👉 (Phím D / →)</button>
+    </div>
+
+    <div class="feedback" id="feedback">ĐÚNG!</div>
+
+    <!-- Modal Hướng Dẫn / Kết Quả -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-title" id="modal-title">HƯỚNG DẪN KHỞI ĐỘNG</div>
+            <div class="modal-desc" id="modal-desc">
+                Chào mừng các em đến với <b>Bài 10: Sự rơi tự do</b>!<br><br>
+                Hệ thống gồm <b>10 câu hỏi</b> ôn luyện kiến thức CĐT BĐĐ (Bài 9).<br>
+                • <b>Nghiêng đầu sang Trái</b> hoặc <b>bấm phím A / ←</b> để chọn vế Trái.<br>
+                • <b>Nghiêng đầu sang Phải</b> hoặc <b>bấm phím D / →</b> để chọn vế Phải.
+            </div>
+            <button class="modal-btn" onclick="startGame()">BẮT ĐẦU NGAY</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "Công thức liên hệ giữa vận tốc, gia tốc và độ dịch chuyển không chứa thời gian là:",
+                left: "v² - v0² = 2ad",
+                right: "v² + v0² = 2ad",
+                correct: "left"
+            },
+            {
+                q: "Một vật chuyển động nhanh dần đều không vận tốc đầu (v0 = 0), công thức tính quãng đường là:",
+                left: "d = a . t",
+                right: "d = (1/2) . a . t²",
+                correct: "right"
+            },
+            {
+                q: "Khi thả một vật rơi từ trên cao xuống đất, chuyển động của vật là:",
+                left: "Nhanh dần đều theo phương thẳng đứng",
+                right: "Chậm dần đều theo phương thẳng đứng",
+                correct: "left"
+            },
+            {
+                q: "Nếu vận tốc ban đầu v0 = 0, công thức vận tốc theo thời gian là:",
+                left: "v = a / t",
+                right: "v = a . t",
+                correct: "right"
+            },
+            {
+                q: "Yếu tố nào làm cho lông chim rơi chậm hơn hòn sỏi trong không khí ngoài trời?",
+                left: "Sức cản của không khí",
+                right: "Khối lượng của lông chim quá nhỏ",
+                correct: "left"
+            },
+            {
+                q: "Trong chân không (hút hết không khí), hòn sỏi và tờ giấy sẽ rơi như thế nào?",
+                left: "Hòn sỏi vẫn rơi nhanh hơn",
+                right: "Rơi nhanh như nhau và chạm đáy cùng lúc",
+                correct: "right"
+            },
+            {
+                q: "Một vật rơi tự do với gia tốc a = 10 m/s² từ trạng thái nghỉ. Sau 2 giây, vận tốc của vật là:",
+                left: "20 m/s",
+                right: "10 m/s",
+                correct: "left"
+            },
+            {
+                q: "Sau 2 giây rơi tự do với a = 10 m/s² (v0 = 0), quãng đường vật rơi được là:",
+                left: "10 m",
+                right: "20 m",
+                correct: "right"
+            },
+            {
+                q: "Trọng lực tác dụng lên một vật ở gần mặt đất có phương và chiều như thế nào?",
+                left: "Phương thẳng đứng, chiều từ trên xuống dưới",
+                right: "Phương nằm ngang, chiều từ trái sang phải",
+                correct: "left"
+            },
+            {
+                q: "Một vật rơi tự do chạm đất với vận tốc 30 m/s (lấy g = 10 m/s²). Độ cao thả vật lúc ban đầu là:",
+                left: "30 m",
+                right: "45 m",
+                correct: "right"
+            }
+        ];
+
+        let currentIndex = 0;
+        let score = 0;
+        let streak = 0;
+        let isLocked = false;
+        let cameraActive = true;
+        let tiltHold = 0;
+        let currentTilt = 0;
+        let video = document.getElementById('webcam');
+        let canvas = document.getElementById('canvas-process');
+        let ctx = canvas.getContext('2d');
+        let stream = null;
+        let audioCtx = null;
+
+        function playBeep(freq, type, duration) {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e) {}
+        }
+
+        function startGame() {
+            document.getElementById('modal').style.display = 'none';
+            currentIndex = 0;
+            score = 0;
+            streak = 0;
+            updateHUD();
+            loadQuestion();
+            initCamera();
+        }
+
+        function restartGame() {
+            document.getElementById('modal').style.display = 'flex';
+            document.getElementById('modal-title').innerText = "HƯỚNG DẪN KHỞI ĐỘNG";
+            document.getElementById('modal-desc').innerHTML = "Chào mừng các em đến với <b>Bài 10: Sự rơi tự do</b>!<br><br>• Nghiêng đầu sang Trái hoặc bấm phím A / ←.<br>• Nghiêng đầu sang Phải hoặc bấm phím D / →.";
+        }
+
+        function updateHUD() {
+            document.getElementById('q-index').innerText = (currentIndex + 1);
+            document.getElementById('streak').innerText = streak;
+            document.getElementById('score').innerText = score;
+        }
+
+        function loadQuestion() {
+            if (currentIndex >= questions.length) {
+                endGame();
+                return;
+            }
+            isLocked = true;
+            updateHUD();
+            let q = questions[currentIndex];
+            document.getElementById('question-text').innerText = q.q;
+            document.getElementById('text-left').innerText = q.left;
+            document.getElementById('text-right').innerText = q.right;
+
+            document.getElementById('card-left').classList.remove('active-tilt');
+            document.getElementById('card-right').classList.remove('active-tilt');
+            tiltHold = 0;
+
+            setTimeout(() => { isLocked = false; }, 900);
+        }
+
+        function selectAnswer(choice) {
+            if (isLocked) return;
+            isLocked = true;
+
+            let q = questions[currentIndex];
+            let isCorrect = (choice === q.correct);
+            let fb = document.getElementById('feedback');
+
+            if (isCorrect) {
+                score += 10 + streak * 2;
+                streak++;
+                fb.innerText = "CHÍNH XÁC! 🎉";
+                fb.className = "feedback correct show";
+                playBeep(600, 'sine', 0.2);
+            } else {
+                streak = 0;
+                fb.innerText = "CHƯA ĐÚNG! 💥";
+                fb.className = "feedback wrong show";
+                playBeep(200, 'square', 0.3);
+            }
+
+            setTimeout(() => {
+                fb.className = "feedback";
+                currentIndex++;
+                loadQuestion();
+            }, 1100);
+        }
+
+        function endGame() {
+            let modal = document.getElementById('modal');
+            let mTitle = document.getElementById('modal-title');
+            let mDesc = document.getElementById('modal-desc');
+            mTitle.innerText = "XUẤT SẮC HOÀN THÀNH!";
+            mDesc.innerHTML = `Bạn đã hoàn thành 10 câu hỏi khởi động Bài 10!<br><br>Điểm tổng kết: <b style="color:#facc15; font-size:24px;">${score}</b> điểm.<br>Chuỗi đúng tối đa đạt được: <b style="color:#4ade80;">${streak}</b> câu.<br><br>Sẵn sàng bước vào bài học <b>Sự rơi tự do</b>!`;
+            modal.style.display = 'flex';
+        }
+
+        async function initCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 } });
+                video.srcObject = stream;
+                requestAnimationFrame(processVideoFrame);
+            } catch (err) {
+                console.log("Camera not accessible", err);
+                document.getElementById('btn-toggle-cam').innerText = "Dùng Phím / Chuột";
+                document.getElementById('btn-toggle-cam').classList.remove('active');
+            }
+        }
+
+        function toggleCamera() {
+            cameraActive = !cameraActive;
+            let btn = document.getElementById('btn-toggle-cam');
+            if (cameraActive) {
+                btn.innerText = "Tắt Camera AI";
+                btn.classList.add('active');
+            } else {
+                btn.innerText = "Bật Camera AI";
+                btn.classList.remove('active');
+            }
+        }
+
+        function processVideoFrame() {
+            if (cameraActive && video.readyState === video.HAVE_ENOUGH_DATA) {
+                ctx.drawImage(video, 0, 0, 80, 60);
+                let frame = ctx.getImageData(0, 0, 80, 60);
+                let data = frame.data;
+                
+                let leftWeight = 0, rightWeight = 0;
+                for (let y = 5; y < 45; y++) {
+                    for (let x = 5; x < 75; x++) {
+                        let i = (y * 80 + x) * 4;
+                        let r = data[i], g = data[i+1], b = data[i+2];
+                        let brightness = (r + g + b) / 3;
+                        if (brightness > 40 && brightness < 220) {
+                            if (x < 40) leftWeight += (40 - x);
+                            else rightWeight += (x - 40);
+                        }
+                    }
+                }
+                
+                let diff = (rightWeight - leftWeight) / (leftWeight + rightWeight + 1);
+                currentTilt = currentTilt * 0.65 + diff * 0.35;
+                let barFill = Math.max(0, Math.min(100, (currentTilt + 0.35) / 0.7 * 100));
+                document.getElementById('tilt-bar').style.width = barFill + "%";
+
+                let cardL = document.getElementById('card-left');
+                let cardR = document.getElementById('card-right');
+
+                if (currentTilt < -0.15) {
+                    cardL.classList.add('active-tilt');
+                    cardR.classList.remove('active-tilt');
+                    tiltHold++;
+                    if (tiltHold > 12 && !isLocked) {
+                        selectAnswer('left');
+                        tiltHold = 0;
+                    }
+                } else if (currentTilt > 0.15) {
+                    cardR.classList.add('active-tilt');
+                    cardL.classList.remove('active-tilt');
+                    tiltHold++;
+                    if (tiltHold > 12 && !isLocked) {
+                        selectAnswer('right');
+                        tiltHold = 0;
+                    }
+                } else {
+                    cardL.classList.remove('active-tilt');
+                    cardR.classList.remove('active-tilt');
+                    tiltHold = 0;
+                }
+            }
+            requestAnimationFrame(processVideoFrame);
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') selectAnswer('left');
+            if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') selectAnswer('right');
+        });
+    </script>
+</body>
+</html>

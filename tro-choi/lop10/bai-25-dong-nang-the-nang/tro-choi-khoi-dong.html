@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khởi động Bài 25: Động năng. Thế năng - Trò chơi Nghiêng đầu</title>
+    <style>
+        :root {
+            --primary: #2563EB;
+            --secondary: #7C3AED;
+            --left-color: #059669;
+            --right-color: #DC2626;
+            --bg: #0F172A;
+            --card-bg: rgba(30, 41, 59, 0.85);
+            --text: #F8FAFC;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
+        header { text-align: center; padding: 15px; background: rgba(15, 23, 42, 0.95); width: 100%; border-bottom: 2px solid #334155; }
+        h1 { font-size: 1.6rem; color: #60A5FA; margin-bottom: 4px; }
+        .subtitle { font-size: 0.95rem; color: #94A3B8; }
+        
+        .main-container { display: flex; width: 95%; max-width: 1200px; gap: 20px; margin-top: 15px; flex: 1; margin-bottom: 20px; }
+        .camera-panel { width: 340px; display: flex; flex-direction: column; align-items: center; background: var(--card-bg); border-radius: 16px; padding: 15px; border: 1px solid #334155; }
+        .cam-wrapper { position: relative; width: 300px; height: 225px; border-radius: 12px; overflow: hidden; border: 2px solid var(--primary); background: #000; }
+        #webcam { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        #canvas-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: scaleX(-1); }
+        .sensor-zones { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; pointer-events: none; }
+        .zone-left, .zone-right { flex: 1; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: bold; opacity: 0.35; transition: 0.2s; }
+        .zone-left { background: rgba(5, 150, 105, 0.4); color: #34D399; }
+        .zone-right { background: rgba(220, 38, 38, 0.4); color: #F87171; }
+        .zone-active { opacity: 0.85 !important; }
+
+        .cam-controls { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        .btn { padding: 10px 16px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 0.95rem; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #1D4ED8; }
+        .manual-btn-group { display: flex; gap: 8px; width: 100%; margin-top: 5px; }
+        .btn-left { flex: 1; background: var(--left-color); color: white; }
+        .btn-right { flex: 1; background: var(--right-color); color: white; }
+        .btn-left:hover { opacity: 0.9; }
+        .btn-right:hover { opacity: 0.9; }
+
+        .game-panel { flex: 1; display: flex; flex-direction: column; background: var(--card-bg); border-radius: 16px; padding: 20px; border: 1px solid #334155; position: relative; }
+        .progress-bar-container { width: 100%; height: 8px; background: #334155; border-radius: 4px; overflow: hidden; margin-bottom: 15px; }
+        .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #3B82F6, #10B981); transition: width 0.3s; }
+        .score-board { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 15px; color: #94A3B8; font-size: 1.05rem; }
+        .score-val { color: #F59E0B; font-size: 1.2rem; }
+        
+        .question-box { background: rgba(15, 23, 42, 0.9); border: 1px solid #475569; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 20px; min-height: 90px; display: flex; align-items: center; justify-content: center; }
+        .question-text { font-size: 1.35rem; font-weight: 600; color: #FFFFFF; line-height: 1.5; }
+
+        .options-container { display: flex; gap: 20px; flex: 1; align-items: stretch; }
+        .option-card { flex: 1; border-radius: 14px; padding: 25px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: all 0.25s; border: 2px solid transparent; }
+        .option-left { background: rgba(5, 150, 105, 0.15); border-color: #059669; }
+        .option-right { background: rgba(220, 38, 38, 0.15); border-color: #DC2626; }
+        .option-left:hover, .option-left.selected { background: rgba(5, 150, 105, 0.4); transform: translateY(-4px); box-shadow: 0 8px 24px rgba(5, 150, 105, 0.3); }
+        .option-right:hover, .option-right.selected { background: rgba(220, 38, 38, 0.4); transform: translateY(-4px); box-shadow: 0 8px 24px rgba(220, 38, 38, 0.3); }
+        .opt-icon { font-size: 2.2rem; margin-bottom: 12px; }
+        .opt-text { font-size: 1.25rem; font-weight: bold; line-height: 1.4; }
+
+        .feedback-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); border-radius: 16px; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10; padding: 25px; text-align: center; }
+        .feedback-title { font-size: 2rem; font-weight: bold; margin-bottom: 10px; }
+        .feedback-correct { color: #10B981; }
+        .feedback-wrong { color: #EF4444; }
+        .feedback-expl { font-size: 1.15rem; color: #CBD5E1; max-width: 600px; margin-bottom: 20px; line-height: 1.5; }
+
+        .result-screen { display: none; flex-direction: column; align-items: center; justify-content: center; flex: 1; text-align: center; }
+        .result-title { font-size: 2.2rem; color: #F59E0B; margin-bottom: 15px; }
+        .result-score { font-size: 1.5rem; margin-bottom: 25px; color: #E2E8F0; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>⚡ KHỞI ĐỘNG: ĐỘNG NĂNG & THẾ NĂNG</h1>
+        <div class="subtitle">Ôn tập kiến thức Công và Công suất & Dẫn dắt vào Bài 25 (Vật lí 10 - KNTT)</div>
+    </header>
+
+    <div class="main-container">
+        <!-- Panel Camera AI -->
+        <div class="camera-panel">
+            <div class="cam-wrapper">
+                <video id="webcam" autoplay playsinline muted></video>
+                <canvas id="canvas-overlay"></canvas>
+                <div class="sensor-zones">
+                    <div class="zone-left" id="zone-left">TRÁI 👈</div>
+                    <div class="zone-right" id="zone-right">👉 PHẢI</div>
+                </div>
+            </div>
+            <div class="cam-controls">
+                <button class="btn btn-primary" id="btn-toggle-cam" onclick="toggleCamera()">📷 Bật Camera AI</button>
+                <div class="manual-btn-group">
+                    <button class="btn btn-left" onclick="makeChoice('left')">👈 Chọn vế Trái</button>
+                    <button class="btn btn-right" onclick="makeChoice('right')">Chọn vế Phải 👉</button>
+                </div>
+            </div>
+            <div style="font-size: 0.8rem; color: #64748B; margin-top: 10px; text-align: center;">
+                💡 Mẹo: Nghiêng đầu sang trái/phải, dùng phím <b>A/D</b> hoặc mũi tên <b>←/→</b>
+            </div>
+        </div>
+
+        <!-- Panel Game & Câu hỏi -->
+        <div class="game-panel">
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="score-board">
+                <span>Câu: <span id="q-index" class="score-val">1</span>/10</span>
+                <span>Điểm: <span id="score" class="score-val">0</span></span>
+            </div>
+
+            <div id="play-area" style="display: flex; flex-direction: column; flex: 1;">
+                <div class="question-box">
+                    <div class="question-text" id="q-text">Đang tải câu hỏi...</div>
+                </div>
+                <div class="options-container">
+                    <div class="option-card option-left" id="card-left" onclick="makeChoice('left')">
+                        <div class="opt-icon">👈</div>
+                        <div class="opt-text" id="opt-left-text">Đáp án Trái</div>
+                    </div>
+                    <div class="option-card option-right" id="card-right" onclick="makeChoice('right')">
+                        <div class="opt-icon">👉</div>
+                        <div class="opt-text" id="opt-right-text">Đáp án Phải</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feedback-overlay" id="feedback-overlay">
+                <div class="feedback-title" id="fb-title">CHÍNH XÁC!</div>
+                <div class="feedback-expl" id="fb-expl">Giải thích chi tiết...</div>
+                <button class="btn btn-primary" onclick="nextQuestion()">Tiếp tục ➔</button>
+            </div>
+
+            <div class="result-screen" id="result-screen">
+                <div class="result-title">🎉 HOÀN THÀNH KHỞI ĐỘNG!</div>
+                <div class="result-score" id="res-score-text">Bạn đạt 10/10 điểm!</div>
+                <button class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 24px;" onclick="restartGame()">🔄 Chơi lại</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "Công cơ học được tính bằng công thức nào khi lực F hợp với hướng dịch chuyển góc α?",
+                left: "A = F · s · cosα",
+                right: "A = F · s · sinα",
+                correct: "left",
+                expl: "Công cơ học thực hiện bởi lực không đổi: A = F·s·cosα."
+            },
+            {
+                q: "Đơn vị chuẩn của công và năng lượng trong hệ SI là gì?",
+                left: "Oát (W)",
+                right: "Jun (J)",
+                correct: "right",
+                expl: "Công và năng lượng đều có đơn vị chuẩn là Jun (kí hiệu là J). 1 J = 1 N·m."
+            },
+            {
+                q: "Khi lực tác dụng vuông góc với hướng chuyển động (α = 90°) thì công của lực bằng bao nhiêu?",
+                left: "A = 0",
+                right: "A cực đại",
+                correct: "left",
+                expl: "Vì cos90° = 0 nên lực vuông góc với phương chuyển động không sinh công (A = 0)."
+            },
+            {
+                q: "Đại lượng đặc trưng cho tốc độ sinh công của lực trong một đơn vị thời gian gọi là gì?",
+                left: "Động lượng",
+                right: "Công suất",
+                correct: "right",
+                expl: "Công suất P = A / t là đại lượng đo tốc độ thực hiện công."
+            },
+            {
+                q: "Dạng năng lượng mà một vật có được do nó đang chuyển động gọi là gì?",
+                left: "Động năng",
+                right: "Thế năng",
+                correct: "left",
+                expl: "Động năng là dạng năng lượng của vật có được do đang chuyển động."
+            },
+            {
+                q: "Công thức tính động năng của vật có khối lượng m chuyển động với vận tốc v là gì?",
+                left: "Wđ = m · v²",
+                right: "Wđ = 1/2 · m · v²",
+                correct: "right",
+                expl: "Động năng của vật: Wđ = 1/2 · m · v²."
+            },
+            {
+                q: "Dạng năng lượng tương tác giữa Trái Đất và vật, phụ thuộc vào vị trí độ cao của vật gọi là gì?",
+                left: "Thế năng trọng trường",
+                right: "Điện thế năng",
+                correct: "left",
+                expl: "Thế năng trọng trường là năng lượng tương tác giữa vật và Trái Đất phụ thuộc vào độ cao z."
+            },
+            {
+                q: "Công thức xác định thế năng trọng trường của vật khối lượng m ở độ cao z so với mốc thế năng là gì?",
+                left: "Wt = 1/2 · m · g · z",
+                right: "Wt = m · g · z",
+                correct: "right",
+                expl: "Thế năng trọng trường: Wt = m·g·z (hoặc Wt = m·g·h)."
+            },
+            {
+                q: "Khi một vật rơi tự do từ trên cao xuống thì thế năng và động năng biến đổi như thế nào?",
+                left: "Thế năng giảm, động năng tăng",
+                right: "Thế năng tăng, động năng giảm",
+                correct: "left",
+                expl: "Khi rơi, độ cao giảm nên thế năng giảm, vận tốc tăng nên động năng tăng (chuyển hoá thế năng thành động năng)."
+            },
+            {
+                q: "Một ô tô đang chạy với vận tốc 10 m/s. Nếu người lái xe tăng tốc để vận tốc tăng gấp 2 lần (lên 20 m/s) thì động năng của ô tô tăng gấp mấy lần?",
+                left: "Tăng gấp 2 lần",
+                right: "Tăng gấp 4 lần",
+                correct: "right",
+                expl: "Vì Wđ tỉ lệ thuận với bình phương vận tốc (v²). Khi vận tốc tăng 2 lần thì động năng tăng 2² = 4 lần."
+            }
+        ];
+
+        let currentIndex = 0;
+        let score = 0;
+        let isLocked = false;
+        let video = document.getElementById('webcam');
+        let stream = null;
+        let audioCtx = null;
+
+        function playBeep(isCorrect) {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.frequency.value = isCorrect ? 587.33 : 220;
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            } catch(e) {}
+        }
+
+        function renderQuestion() {
+            isLocked = true;
+            const q = questions[currentIndex];
+            document.getElementById('q-index').innerText = currentIndex + 1;
+            document.getElementById('progress-bar').style.width = ((currentIndex) / questions.length * 100) + '%';
+            document.getElementById('q-text').innerText = q.q;
+            document.getElementById('opt-left-text').innerText = q.left;
+            document.getElementById('opt-right-text').innerText = q.right;
+            document.getElementById('feedback-overlay').style.display = 'none';
+            document.getElementById('card-left').classList.remove('selected');
+            document.getElementById('card-right').classList.remove('selected');
+            
+            setTimeout(() => { isLocked = false; }, 1000);
+        }
+
+        function makeChoice(side) {
+            if (isLocked) return;
+            isLocked = true;
+            
+            const q = questions[currentIndex];
+            const isCorrect = (side === q.correct);
+            if (isCorrect) score++;
+            document.getElementById('score').innerText = score;
+            playBeep(isCorrect);
+
+            const overlay = document.getElementById('feedback-overlay');
+            const title = document.getElementById('fb-title');
+            const expl = document.getElementById('fb-expl');
+            
+            if (isCorrect) {
+                title.innerText = "CHÍNH XÁC! 👏";
+                title.className = "feedback-title feedback-correct";
+            } else {
+                title.innerText = "CHƯA CHÍNH XÁC! 💡";
+                title.className = "feedback-title feedback-wrong";
+            }
+            expl.innerText = q.expl;
+            overlay.style.display = 'flex';
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < questions.length) {
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('progress-bar').style.width = '100%';
+            document.getElementById('play-area').style.display = 'none';
+            document.getElementById('feedback-overlay').style.display = 'none';
+            const resScreen = document.getElementById('result-screen');
+            resScreen.style.display = 'flex';
+            document.getElementById('res-score-text').innerText = `Bạn đã trả lời đúng ${score}/${questions.length} câu! Chúc mừng bạn đã nắm chắc kiến thức!`;
+        }
+
+        function restartGame() {
+            currentIndex = 0;
+            score = 0;
+            document.getElementById('score').innerText = '0';
+            document.getElementById('play-area').style.display = 'flex';
+            document.getElementById('result-screen').style.display = 'none';
+            renderQuestion();
+        }
+
+        async function toggleCamera() {
+            const btn = document.getElementById('btn-toggle-cam');
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                video.srcObject = null;
+                stream = null;
+                btn.innerText = "📷 Bật Camera AI";
+                return;
+            }
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 } });
+                video.srcObject = stream;
+                btn.innerText = "🛑 Tắt Camera";
+                trackMovement();
+            } catch (err) {
+                alert("Không thể truy cập camera. Bạn có thể dùng phím A/D hoặc click trực tiếp.");
+            }
+        }
+
+        let tiltHold = 0;
+        function trackMovement() {
+            if (!stream) return;
+            const canvas = document.getElementById('canvas-overlay');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 80;
+            canvas.height = 60;
+            
+            function process() {
+                if (!stream) return;
+                ctx.drawImage(video, 0, 0, 80, 60);
+                const frame = ctx.getImageData(0, 0, 80, 60).data;
+                
+                let leftBrightness = 0, rightBrightness = 0;
+                for (let y = 10; y < 50; y++) {
+                    for (let x = 5; x < 35; x++) {
+                        const idx = (y * 80 + x) * 4;
+                        leftBrightness += (frame[idx] + frame[idx+1] + frame[idx+2]) / 3;
+                    }
+                    for (let x = 45; x < 75; x++) {
+                        const idx = (y * 80 + x) * 4;
+                        rightBrightness += (frame[idx] + frame[idx+1] + frame[idx+2]) / 3;
+                    }
+                }
+                
+                const diff = (leftBrightness - rightBrightness) / (leftBrightness + rightBrightness + 1e-5);
+                const zoneL = document.getElementById('zone-left');
+                const zoneR = document.getElementById('zone-right');
+
+                if (diff > 0.16) {
+                    zoneL.classList.add('zone-active');
+                    zoneR.classList.remove('zone-active');
+                    if (!isLocked) {
+                        tiltHold++;
+                        if (tiltHold > 6) { makeChoice('left'); tiltHold = 0; }
+                    }
+                } else if (diff < -0.16) {
+                    zoneR.classList.add('zone-active');
+                    zoneL.classList.remove('zone-active');
+                    if (!isLocked) {
+                        tiltHold++;
+                        if (tiltHold > 6) { makeChoice('right'); tiltHold = 0; }
+                    }
+                } else {
+                    zoneL.classList.remove('zone-active');
+                    zoneR.classList.remove('zone-active');
+                    tiltHold = 0;
+                }
+                requestAnimationFrame(process);
+            }
+            process();
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') makeChoice('left');
+            if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') makeChoice('right');
+            if (e.key === 'Enter' || e.key === ' ') {
+                if (document.getElementById('feedback-overlay').style.display === 'flex') nextQuestion();
+            }
+        });
+
+        renderQuestion();
+    </script>
+</body>
+</html>

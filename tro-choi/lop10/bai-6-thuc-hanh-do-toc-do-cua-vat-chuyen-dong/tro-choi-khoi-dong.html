@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khởi động Bài 6 Vật lí 10: Nghiêng Đầu Bắt Nhịp Tốc Độ</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    .mirror-view { transform: scaleX(-1); }
+    .zone-active-left { background: rgba(59, 130, 246, 0.75) !important; border-color: #93C5FD !important; transform: scale(1.04); }
+    .zone-active-right { background: rgba(16, 185, 129, 0.75) !important; border-color: #6EE7B7 !important; transform: scale(1.04); }
+    .active-card-left { border-color: #3B82F6 !important; background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(30, 58, 138, 0.7)) !important; transform: scale(1.04) translateX(-8px); }
+    .active-card-right { border-color: #10B981 !important; background: linear-gradient(135deg, rgba(16, 185, 129, 0.4), rgba(6, 78, 59, 0.7)) !important; transform: scale(1.04) translateX(8px); }
+    .correct-anim { border-color: #22C55E !important; background: rgba(34, 197, 94, 0.55) !important; }
+    .wrong-anim { border-color: #EF4444 !important; background: rgba(239, 68, 68, 0.55) !important; opacity: 0.5; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between p-3 md:p-5 select-none">
+  <header class="max-w-6xl mx-auto w-full flex flex-wrap items-center justify-between gap-3 py-3 px-6 bg-slate-900/95 border border-slate-800 rounded-2xl shadow-xl">
+    <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 to-emerald-500 flex items-center justify-center font-black text-2xl shadow-lg">⏱️</div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 bg-blue-900/80 text-blue-300 font-extrabold text-[11px] rounded-md uppercase">Vật lí 10</span>
+          <h1 class="font-black text-base md:text-lg text-white">KHỞI ĐỘNG BÀI 6: THỰC HÀNH ĐO TỐC ĐỘ</h1>
+        </div>
+        <p class="text-xs text-amber-300 font-medium">Trò chơi: "Nghiêng Đầu Đo Vận Tốc" (Ôn tập kiến thức cốt lõi Bài 5)</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="px-3 py-1 bg-slate-800 rounded-xl border border-slate-700 text-xs">ĐIỂM: <b id="score-display" class="text-amber-400 text-lg">0</b></div>
+      <div class="px-3 py-1 bg-slate-800 rounded-xl border border-slate-700 text-xs">THỜI GIAN: <b id="timer-display" class="text-cyan-400 text-lg">12s</b></div>
+      <button id="btn-toggle-cam" onclick="toggleCamera()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl shadow">📷 Bật Camera</button>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto w-full flex-1 flex flex-col justify-center my-3">
+    <div id="start-screen" class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 md:p-10 text-center max-w-2xl mx-auto shadow-2xl">
+      <div class="w-20 h-20 mx-auto mb-4 rounded-3xl bg-amber-600/20 border border-amber-500/40 flex items-center justify-center text-4xl">⏱️</div>
+      <div class="inline-block px-3 py-1 bg-blue-950 text-blue-300 font-bold text-xs rounded-full border border-blue-700/60 mb-2 uppercase">Môn Vật lí 10 — Sách Kết nối tri thức</div>
+      <h2 class="text-2xl md:text-3xl font-black text-white mb-2">KHỞI ĐỘNG BÀI 6 THỰC HÀNH</h2>
+      <p class="text-slate-300 text-sm mb-6">Thử thách 10 câu hỏi ôn tập Tốc độ & Vận tốc từ Bài 5.<br>Hãy <b class="text-blue-400">Nghiêng Trái 👈</b> hoặc <b class="text-emerald-400">Nghiêng Phải 👉</b> để chọn đáp án!</p>
+      <button onclick="startGame()" class="w-full py-4 bg-gradient-to-r from-amber-500 via-blue-600 to-emerald-500 text-white font-extrabold text-lg rounded-2xl shadow-xl">🚀 BẮT ĐẦU VÀO TRÒ CHƠI</button>
+    </div>
+
+    <div id="gameplay-screen" class="hidden flex flex-col gap-4">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 shadow-xl">
+        <div class="flex items-center justify-between mb-2">
+          <span id="question-index" class="text-xs font-bold uppercase text-cyan-400 bg-cyan-950 px-3 py-1 rounded-full border border-cyan-800">Câu 1 / 10</span>
+          <span id="feedback-badge" class="hidden text-xs font-extrabold px-3 py-1 rounded-full"></span>
+        </div>
+        <h3 id="question-text" class="text-lg md:text-2xl font-black text-white min-h-[56px] flex items-center"></h3>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-11 gap-4 items-stretch">
+        <div id="card-left" onclick="chooseAnswer('A')" class="cursor-pointer md:col-span-4 bg-slate-900/85 border-2 border-slate-700 rounded-3xl p-6 text-center flex flex-col justify-between min-h-[240px] relative overflow-hidden">
+          <div id="progress-left" class="absolute bottom-0 left-0 right-0 h-2 bg-blue-500" style="width: 0%;"></div>
+          <div class="text-2xl text-left">👈</div>
+          <div id="option-a-text" class="text-base md:text-lg font-bold text-slate-100 my-auto"></div>
+          <div class="text-xs font-semibold text-blue-400 bg-blue-950/70 py-1.5 rounded-xl">👈 Nghiêng TRÁI (hoặc Bấm vào đây)</div>
+        </div>
+        <div class="md:col-span-3 flex flex-col items-center justify-center bg-slate-900/90 border border-slate-800 rounded-3xl p-3">
+          <div id="cam-container" onmousemove="handleInteractiveHover(event)" onmouseleave="handleHoverLeave()" class="relative w-56 h-56 rounded-3xl overflow-hidden border-4 border-slate-700 bg-slate-900 flex items-center justify-center cursor-crosshair">
+            <video id="webcam" class="w-full h-full object-cover mirror-view" autoplay playsinline muted></video>
+            <canvas id="proc-canvas" width="80" height="60" class="hidden"></canvas>
+            <div class="absolute inset-0 grid grid-cols-2 p-2 gap-2">
+              <div id="zone-left" onclick="chooseAnswer('A')" class="cursor-pointer rounded-2xl border-2 border-dashed border-blue-400/60 flex flex-col justify-between p-2"><span class="text-[10px] font-black text-blue-200">TRÁI 👈</span></div>
+              <div id="zone-right" onclick="chooseAnswer('B')" class="cursor-pointer rounded-2xl border-2 border-dashed border-emerald-400/60 flex flex-col justify-between p-2 items-end"><span class="text-[10px] font-black text-emerald-200">👉 PHẢI</span></div>
+            </div>
+            <div id="head-dot" class="absolute w-8 h-8 rounded-full bg-cyan-400 border-2 border-white pointer-events-none flex items-center justify-center text-xs text-slate-900 z-10">👤</div>
+            <div id="cam-fallback" class="absolute inset-0 bg-slate-900/95 flex flex-col items-center justify-center p-3 text-center z-20">
+              <div class="text-2xl mb-1">📷</div>
+              <p class="text-xs text-slate-300 font-bold mb-2">Chưa bật Camera</p>
+              <button onclick="toggleCamera()" class="px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-lg">Bật Camera</button>
+            </div>
+          </div>
+          <div class="w-56 mt-2 bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-700 relative">
+            <div id="tilt-meter" class="h-full bg-cyan-400" style="width: 16px; margin-left: 50%;"></div>
+          </div>
+          <div class="flex gap-2 mt-2 w-56">
+            <button onclick="chooseAnswer('A')" class="flex-1 py-1.5 bg-blue-700 text-white text-xs font-bold rounded-lg">👈 Chọn Trái</button>
+            <button onclick="chooseAnswer('B')" class="flex-1 py-1.5 bg-emerald-700 text-white text-xs font-bold rounded-lg">Chọn Phải 👉</button>
+          </div>
+        </div>
+        <div id="card-right" onclick="chooseAnswer('B')" class="cursor-pointer md:col-span-4 bg-slate-900/85 border-2 border-slate-700 rounded-3xl p-6 text-center flex flex-col justify-between min-h-[240px] relative overflow-hidden">
+          <div id="progress-right" class="absolute bottom-0 left-0 right-0 h-2 bg-emerald-500" style="width: 0%;"></div>
+          <div class="text-2xl text-right">👉</div>
+          <div id="option-b-text" class="text-base md:text-lg font-bold text-slate-100 my-auto"></div>
+          <div class="text-xs font-semibold text-emerald-400 bg-emerald-950/70 py-1.5 rounded-xl">Nghiêng PHẢI (hoặc Bấm vào đây) 👉</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="result-screen" class="hidden bg-slate-900/95 border border-slate-800 rounded-3xl p-8 max-w-lg w-full text-center mx-auto">
+      <div class="text-6xl mb-3">🏆</div>
+      <h2 class="text-2xl font-black text-white mb-2">HOÀN THÀNH KHỞI ĐỘNG!</h2>
+      <p class="text-slate-300 text-sm mb-6">Sẵn sàng bước vào Bài 6: Thực hành đo tốc độ!</p>
+      <div class="bg-slate-800 rounded-2xl p-4 mb-6 flex justify-around">
+        <div><div class="text-xs text-slate-400">TỔNG ĐIỂM</div><div id="final-score" class="text-4xl font-black text-amber-400">100/100</div></div>
+        <div><div class="text-xs text-slate-400">SỐ CÂU ĐÚNG</div><div id="final-correct" class="text-4xl font-black text-cyan-400">10/10</div></div>
+      </div>
+      <button onclick="startGame()" class="w-full py-3 bg-blue-600 text-white font-bold rounded-xl">🔄 Chơi lại</button>
+    </div>
+  </main>
+
+  <script>
+    const quizData = [
+      {
+        q: "1. Tốc độ trung bình của một vật chuyển động được xác định bằng công thức nào?",
+        optA: "v = s / t (quãng đường chia thời gian)",
+        optB: "v = s × t (quãng đường nhân thời gian)",
+        correct: "A",
+        explain: "Tốc độ trung bình v = s / t là đại lượng vô hướng đặc trưng cho độ nhanh chậm."
+      },
+      {
+        q: "2. Trong hệ đơn vị SI chuẩn quốc tế, đơn vị hợp pháp của tốc độ là gì?",
+        optA: "Kilômét trên giờ (km/h)",
+        optB: "Mét trên giây (m/s)",
+        correct: "B",
+        explain: "Đơn vị cơ bản của tốc độ trong hệ SI là m/s (1 m/s = 3,6 km/h)."
+      },
+      {
+        q: "3. Đồng hồ đo tốc độ (tốc kế) gắn trên xe máy, ô tô cho biết đại lượng nào?",
+        optA: "Tốc độ tức thời tại thời điểm quan sát",
+        optB: "Tốc độ trung bình trên toàn chặng đường",
+        correct: "A",
+        explain: "Tốc kế chỉ tốc độ tức thời của xe tại đúng thời điểm đang chạy."
+      },
+      {
+        q: "4. Vận tốc trung bình là một đại lượng vectơ được tính bằng thương số giữa:",
+        optA: "Quãng đường đi được và thời gian",
+        optB: "Độ dịch chuyển và khoảng thời gian",
+        correct: "B",
+        explain: "Vận tốc trung bình vectơ v = d / Δt đặc trưng cho cả độ nhanh chậm và hướng chuyển động."
+      },
+      {
+        q: "5. Một người bơi một vòng bể bơi rồi quay lại vị trí xuất phát ban đầu. Vận tốc trung bình của người đó là:",
+        optA: "Bằng 0 m/s (vì độ dịch chuyển d = 0)",
+        optB: "Luôn lớn hơn 0 m/s",
+        correct: "A",
+        explain: "Vì quay về vị trí ban đầu nên d = 0 => vận tốc trung bình v = 0 m/s."
+      },
+      {
+        q: "6. Quy tắc đổi đơn vị tốc độ chuẩn xác: 1 m/s tương đương với bao nhiêu km/h?",
+        optA: "1 m/s = 0,36 km/h",
+        optB: "1 m/s = 3,6 km/h",
+        correct: "B",
+        explain: "1 m/s = (1/1000 km) / (1/3600 h) = 3,6 km/h."
+      },
+      {
+        q: "7. Biểu thức chuẩn của công thức cộng vận tốc (vật 1, HQC chuyển động 2, HQC đứng yên 3) là:",
+        optA: "v₁₃ = v₁₂ + v₂₃ (cộng vectơ)",
+        optB: "v₁₃ = v₁₂ - v₂₃",
+        correct: "A",
+        explain: "Công thức cộng vận tốc vectơ: v₁₃ = v₁₂ + v₂₃."
+      },
+      {
+        q: "8. Một chiếc thuyền chạy xuôi dòng nước. Vận tốc của thuyền đối với bờ sông có độ lớn bằng:",
+        optA: "v₁₃ = v₁₂ - v₂₃",
+        optB: "v₁₃ = v₁₂ + v₂₃",
+        correct: "B",
+        explain: "Khi xuôi dòng, vận tốc thuyền đối với bờ bằng tổng vận tốc thuyền đối với nước và vận tốc dòng nước."
+      },
+      {
+        q: "9. Một canô chạy ngược dòng sông có vận tốc canô đối với nước là 15 km/h, dòng nước chảy 3 km/h. Vận tốc canô với bờ là:",
+        optA: "12 km/h (lấy 15 - 3)",
+        optB: "18 km/h (lấy 15 + 3)",
+        correct: "A",
+        explain: "Khi ngược dòng: v₁₃ = 15 - 3 = 12 km/h."
+      },
+      {
+        q: "10. Để đo thời gian một viên bi chuyển động rất nhanh qua cổng quang điện với độ chính xác 0,001s, ta dùng:",
+        optA: "Đồng hồ bấm giây cơ học thủ công",
+        optB: "Đồng hồ đo thời gian hiện số tự động",
+        correct: "B",
+        explain: "Đồng hồ đo thời gian hiện số kết hợp cổng quang điện ngắt tia hồng ngoại tự động loại trừ sai số phản xạ con người."
+      }
+    ];
+
+    let currentQIndex = 0, score = 0, correctCount = 0, timer = 12, timerInterval = null, isLocked = false;
+    let cameraActive = false, videoStream = null, isUserHovering = false, smoothedTilt = 0, baselineCenterX = 40, holdCount = 0, currentHoldChoice = null;
+
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playTone(freq, type, duration) {
+      try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+        osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function startGame() {
+      currentQIndex = 0; score = 0; correctCount = 0;
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.add('hidden');
+      document.getElementById('gameplay-screen').classList.remove('hidden');
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      if (currentQIndex >= quizData.length) { finishGame(); return; }
+      const q = quizData[currentQIndex];
+      document.getElementById('question-index').innerText = `Câu ${currentQIndex + 1} / ${quizData.length}`;
+      document.getElementById('question-text').innerText = q.q;
+      document.getElementById('option-a-text').innerText = q.optA;
+      document.getElementById('option-b-text').innerText = q.optB;
+      document.getElementById('feedback-badge').classList.add('hidden');
+      document.getElementById('card-left').className = 'cursor-pointer md:col-span-4 bg-slate-900/85 border-2 border-slate-700 rounded-3xl p-6 text-center flex flex-col justify-between min-h-[240px] relative overflow-hidden';
+      document.getElementById('card-right').className = 'cursor-pointer md:col-span-4 bg-slate-900/85 border-2 border-slate-700 rounded-3xl p-6 text-center flex flex-col justify-between min-h-[240px] relative overflow-hidden';
+      document.getElementById('progress-left').style.width = '0%';
+      document.getElementById('progress-right').style.width = '0%';
+      isLocked = true;
+      setTimeout(() => { isLocked = false; }, 1000);
+      timer = 12;
+      document.getElementById('timer-display').innerText = `${timer}s`;
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        timer--; document.getElementById('timer-display').innerText = `${timer}s`;
+        if (timer <= 0) { clearInterval(timerInterval); chooseAnswer('TIME_OUT'); }
+      }, 1000);
+    }
+
+    function chooseAnswer(ans) {
+      if (isLocked) return;
+      isLocked = true; clearInterval(timerInterval);
+      const q = quizData[currentQIndex], isCorrect = (ans === q.correct);
+      const badge = document.getElementById('feedback-badge');
+      if (isCorrect) {
+        playTone(523.25, 'sine', 0.1); setTimeout(() => playTone(659.25, 'sine', 0.2), 90);
+        score += 10; correctCount++;
+        document.getElementById('score-display').innerText = score;
+        badge.innerText = 'CHÍNH XÁC! +10'; badge.className = 'text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-700 block';
+        if (ans === 'A') document.getElementById('card-left').classList.add('correct-anim');
+        else document.getElementById('card-right').classList.add('correct-anim');
+      } else {
+        playTone(220, 'sawtooth', 0.3);
+        badge.innerText = 'CHƯA ĐÚNG!'; badge.className = 'text-xs font-extrabold px-3 py-1 rounded-full bg-rose-950 text-rose-300 border border-rose-700 block';
+        if (q.correct === 'A') document.getElementById('card-left').classList.add('correct-anim');
+        else document.getElementById('card-right').classList.add('correct-anim');
+      }
+      setTimeout(() => { currentQIndex++; loadQuestion(); }, 1800);
+    }
+
+    function finishGame() {
+      clearInterval(timerInterval);
+      document.getElementById('gameplay-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.remove('hidden');
+      document.getElementById('final-score').innerText = `${score}/100`;
+      document.getElementById('final-correct').innerText = `${correctCount}/10`;
+    }
+
+    function handleInteractiveHover(e) {
+      if (isLocked) return;
+      isUserHovering = true;
+      const rect = document.getElementById('cam-container').getBoundingClientRect();
+      const tilt = ((e.clientX - rect.left) / rect.width - 0.5) * 2.4;
+      updateVisuals(tilt);
+    }
+    function handleHoverLeave() { isUserHovering = false; if (!cameraActive) updateVisuals(0); }
+
+    const video = document.getElementById('webcam'), procCanvas = document.getElementById('proc-canvas'), procCtx = procCanvas.getContext('2d', { willReadFrequently: true });
+    async function toggleCamera() {
+      if (cameraActive) {
+        if (videoStream) videoStream.getTracks().forEach(t => t.stop());
+        cameraActive = false; video.srcObject = null;
+        document.getElementById('cam-fallback').classList.remove('hidden');
+        document.getElementById('btn-toggle-cam').innerText = '📷 Bật Camera';
+      } else {
+        try {
+          videoStream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 } });
+          video.srcObject = videoStream;
+          video.onloadedmetadata = () => {
+            video.play(); cameraActive = true;
+            document.getElementById('cam-fallback').classList.add('hidden');
+            document.getElementById('btn-toggle-cam').innerText = 'Tắt Camera';
+            requestAnimationFrame(processFrame);
+          };
+        } catch (err) { alert('Không thể bật camera!'); }
+      }
+    }
+
+    function processFrame() {
+      if (!cameraActive || video.paused || video.ended) return;
+      if (!isUserHovering) {
+        try {
+          procCtx.drawImage(video, 0, 0, 80, 60);
+          const data = procCtx.getImageData(0, 0, 80, 60).data;
+          let sumX = 0, count = 0;
+          for (let y = 5; y < 35; y++) {
+            for (let x = 10; x < 70; x++) {
+              const idx = (y * 80 + x) * 4;
+              if (data[idx] > 60 && data[idx+1] > 40 && data[idx+2] > 20 && data[idx] > data[idx+2]) { sumX += x; count++; }
+            }
+          }
+          if (count > 30) {
+            const rawX = sumX / count;
+            smoothedTilt = smoothedTilt * 0.65 + (((80 - rawX) - 40) / 22) * 0.35;
+            updateVisuals(smoothedTilt);
+          }
+        } catch (e) {}
+      }
+      requestAnimationFrame(processFrame);
+    }
+
+    function updateVisuals(tilt) {
+      const c = Math.max(-1, Math.min(1, tilt));
+      document.getElementById('tilt-meter').style.marginLeft = `${(c + 1) * 50}%`;
+      document.getElementById('head-dot').style.transform = `translateX(${c * 80}px)`;
+      document.getElementById('zone-left').classList.remove('zone-active-left');
+      document.getElementById('zone-right').classList.remove('zone-active-right');
+      if (isLocked) return;
+      if (c < -0.18) {
+        document.getElementById('zone-left').classList.add('zone-active-left');
+        holdCount = (currentHoldChoice === 'A') ? holdCount + 1 : 1; currentHoldChoice = 'A';
+        document.getElementById('progress-left').style.width = `${Math.min(100, (holdCount / 5) * 100)}%`;
+        if (holdCount >= 5) { chooseAnswer('A'); holdCount = 0; currentHoldChoice = null; }
+      } else if (c > 0.18) {
+        document.getElementById('zone-right').classList.add('zone-active-right');
+        holdCount = (currentHoldChoice === 'B') ? holdCount + 1 : 1; currentHoldChoice = 'B';
+        document.getElementById('progress-right').style.width = `${Math.min(100, (holdCount / 5) * 100)}%`;
+        if (holdCount >= 5) { chooseAnswer('B'); holdCount = 0; currentHoldChoice = null; }
+      } else { holdCount = 0; currentHoldChoice = null; document.getElementById('progress-left').style.width = '0%'; document.getElementById('progress-right').style.width = '0%'; }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (isLocked) return;
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') chooseAnswer('A');
+      else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') chooseAnswer('B');
+    });
+  </script>
+</body>
+</html>

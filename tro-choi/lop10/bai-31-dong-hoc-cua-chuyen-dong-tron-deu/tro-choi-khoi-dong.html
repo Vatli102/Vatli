@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khởi động Bài 31: Động học Chuyển động Tròn đều - Trò chơi Nghiêng đầu</title>
+    <style>
+        :root {
+            --primary: #2563EB;
+            --secondary: #7C3AED;
+            --left-color: #059669;
+            --right-color: #DC2626;
+            --bg: #0F172A;
+            --card-bg: rgba(30, 41, 59, 0.85);
+            --text: #F8FAFC;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 10px; overflow-x: hidden; }
+        header { text-align: center; margin-bottom: 10px; }
+        h1 { font-size: 1.3rem; color: #38BDF8; margin-bottom: 4px; }
+        p.sub { font-size: 0.85rem; color: #94A3B8; }
+        #game-container { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 10px; }
+        #cam-section { position: relative; width: 100%; height: 210px; background: #000; border-radius: 12px; overflow: hidden; display: flex; justify-content: center; align-items: center; border: 2px solid #334155; }
+        video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        canvas#debug-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: scaleX(-1); pointer-events: none; }
+        .cam-overlay { position: absolute; top: 8px; left: 0; right: 0; display: flex; justify-content: space-between; padding: 0 15px; pointer-events: none; }
+        .zone-label { font-size: 0.85rem; font-weight: bold; padding: 4px 10px; border-radius: 6px; }
+        .zone-left { background: rgba(5, 150, 105, 0.8); color: white; }
+        .zone-right { background: rgba(220, 38, 38, 0.8); color: white; }
+        #tilt-indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.6); padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; color: #38BDF8; font-weight: bold; }
+        #question-card { background: var(--card-bg); border-radius: 12px; padding: 12px 18px; border: 1px solid #475569; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        #q-index { font-size: 0.85rem; font-weight: bold; color: #F59E0B; text-transform: uppercase; margin-bottom: 5px; }
+        #q-text { font-size: 1.05rem; font-weight: 600; line-height: 1.35; color: #FFFFFF; min-height: 48px; display: flex; align-items: center; justify-content: center; }
+        #answers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .ans-card { background: rgba(30, 41, 59, 0.9); border-radius: 10px; padding: 14px; border: 2px solid transparent; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
+        .ans-card.left { border-color: #059669; }
+        .ans-card.right { border-color: #DC2626; }
+        .ans-card.active-hover { transform: scale(1.02); filter: brightness(1.2); }
+        .ans-card.selected-correct { background: #059669 !important; border-color: #34D399 !important; color: white !important; }
+        .ans-card.selected-wrong { background: #DC2626 !important; border-color: #F87171 !important; color: white !important; }
+        .ans-icon { font-size: 1.3rem; margin-bottom: 4px; }
+        .ans-text { font-size: 0.95rem; font-weight: 600; }
+        .progress-bar { width: 100%; height: 6px; background: #334155; border-radius: 3px; overflow: hidden; margin-top: 6px; }
+        .progress-fill { height: 100%; width: 0%; background: #38BDF8; transition: width 0.1s linear; }
+        #manual-controls { display: flex; justify-content: center; gap: 15px; margin-top: 5px; }
+        .btn-ctrl { background: #334155; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        .btn-ctrl:hover { background: #475569; }
+        #score-board { display: none; text-align: center; padding: 25px; background: var(--card-bg); border-radius: 12px; border: 1px solid #38BDF8; }
+        #score-board h2 { font-size: 1.6rem; color: #38BDF8; margin-bottom: 8px; }
+        #score-board p { font-size: 1.1rem; color: #E2E8F0; margin-bottom: 15px; }
+        .btn-restart { background: #2563EB; color: white; border: none; padding: 10px 24px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>⚡ KHỞI ĐỘNG BÀI 31: ĐỘNG HỌC CHUYỂN ĐỘNG TRÒN ĐỀU</h1>
+        <p class="sub">Nghiêng đầu sang Trái hoặc Phải (hoặc bấm phím A/D hoặc click trực tiếp) để chọn câu trả lời đúng!</p>
+    </header>
+
+    <div id="game-container">
+        <div id="cam-section">
+            <video id="webcam" autoplay playsinline muted></video>
+            <canvas id="debug-canvas"></canvas>
+            <div class="cam-overlay">
+                <div class="zone-label zone-left">TRÁI 👈</div>
+                <div class="zone-label zone-right">👉 PHẢI</div>
+            </div>
+            <div id="tilt-indicator">Trạng thái: Đang căn chỉnh...</div>
+        </div>
+
+        <div id="play-area">
+            <div id="question-card">
+                <div id="q-index">CÂU HỎI 1 / 10</div>
+                <div id="q-text">Đang tải câu hỏi...</div>
+                <div class="progress-bar"><div id="hold-progress" class="progress-fill"></div></div>
+            </div>
+
+            <div id="answers-grid" style="margin-top: 10px;">
+                <div id="card-left" class="ans-card left" onclick="handleSelect('LEFT')">
+                    <div class="ans-icon">👈</div>
+                    <div id="text-left" class="ans-text">Đáp án bên Trái</div>
+                </div>
+                <div id="card-right" class="ans-card right" onclick="handleSelect('RIGHT')">
+                    <div class="ans-icon">👉</div>
+                    <div id="text-right" class="ans-text">Đáp án bên Phải</div>
+                </div>
+            </div>
+
+            <div id="manual-controls">
+                <button class="btn-ctrl" onclick="handleSelect('LEFT')">👈 Chọn vế Trái (Phím A / ←)</button>
+                <button class="btn-ctrl" onclick="handleSelect('RIGHT')">Chọn vế Phải 👉 (Phím D / →)</button>
+            </div>
+        </div>
+
+        <div id="score-board">
+            <h2>KẾT THÚC KHỞI ĐỘNG!</h2>
+            <p id="final-score">Bạn trả lời đúng: 0/10 câu</p>
+            <button class="btn-restart" onclick="restartGame()">Chơi lại</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "1. Trong chuyển động tròn đều, quỹ đạo của vật chuyển động là hình gì?",
+                left: "Đường tròn và tốc độ chuyển động không đổi",
+                right: "Đường elip với tốc độ thay đổi liên tục",
+                correct: "LEFT"
+            },
+            {
+                q: "2. Đơn vị đo của tốc độ góc ω trong hệ đơn vị SI là:",
+                left: "Độ trên giây (°/s)",
+                right: "Radian trên giây (rad/s)",
+                correct: "RIGHT"
+            },
+            {
+                q: "3. Công thức liên hệ giữa tốc độ dài v, tốc độ góc ω và bán kính r là:",
+                left: "v = ω . r",
+                right: "v = ω / r",
+                correct: "LEFT"
+            },
+            {
+                q: "4. Chu kì T của chuyển động tròn đều là thời gian để vật quay được:",
+                left: "Nửa vòng tròn",
+                right: "Đúng một vòng tròn (2π rad)",
+                correct: "RIGHT"
+            },
+            {
+                q: "5. Tần số f (số vòng quay trong 1 giây) có quan hệ với chu kì T qua hệ thức:",
+                left: "f = 1 / T",
+                right: "f = 2π . T",
+                correct: "LEFT"
+            },
+            {
+                q: "6. Vectơ vận tốc v trong chuyển động tròn đều có phương như thế nào?",
+                left: "Luôn hướng vào tâm đường tròn",
+                right: "Có phương tiếp tuyến với đường tròn quỹ đạo",
+                correct: "RIGHT"
+            },
+            {
+                q: "7. Trong chuyển động tròn đều, vectơ gia tốc a_ht có đặc điểm gì?",
+                left: "Luôn hướng vào tâm quỹ đạo (gia tốc hướng tâm)",
+                right: "Luôn tiếp tuyến cùng chiều với vectơ vận tốc",
+                correct: "LEFT"
+            },
+            {
+                q: "8. Độ lớn của gia tốc hướng tâm a_ht được tính bằng biểu thức:",
+                left: "a_ht = v . r",
+                right: "a_ht = v^2 / r = ω^2 . r",
+                correct: "RIGHT"
+            },
+            {
+                q: "9. Hai điểm A và B trên cùng một cánh quạt đang quay đều (r_B = 2 r_A). So sánh tốc độ dài:",
+                left: "v_B = 2 v_A (càng xa trục, tốc độ dài càng lớn)",
+                right: "v_B = v_A (bằng nhau vì cùng trên một cánh quạt)",
+                correct: "LEFT"
+            },
+            {
+                q: "10. Kim phút của đồng hồ có chu kì quay T = 3600 s. Tốc độ góc của đầu kim phút là:",
+                left: "ω = π / 3600 rad/s",
+                right: "ω = 2π / 3600 = π / 1800 rad/s",
+                correct: "RIGHT"
+            }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+        let isLocked = false;
+        let holdTimer = null;
+        let holdTime = 0;
+        let selectedSide = null;
+        const HOLD_TARGET = 350;
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playTone(freq, duration, type='sine') {
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e){}
+        }
+
+        function loadQuestion() {
+            if (currentQ >= questions.length) {
+                showScore();
+                return;
+            }
+            isLocked = true;
+            holdTime = 0;
+            updateHoldProgress(0);
+            selectedSide = null;
+
+            const q = questions[currentQ];
+            document.getElementById('q-index').innerText = `CÂU HỎI ${currentQ + 1} / ${questions.length}`;
+            document.getElementById('q-text').innerText = q.q;
+            document.getElementById('text-left').innerText = q.left;
+            document.getElementById('text-right').innerText = q.right;
+
+            document.getElementById('card-left').className = 'ans-card left';
+            document.getElementById('card-right').className = 'ans-card right';
+
+            setTimeout(() => { isLocked = false; }, 1000);
+        }
+
+        function handleSelect(side) {
+            if (isLocked) return;
+            isLocked = true;
+
+            const q = questions[currentQ];
+            const isCorrect = (side === q.correct);
+
+            const chosenCard = document.getElementById(side === 'LEFT' ? 'card-left' : 'card-right');
+            const oppCard = document.getElementById(side === 'LEFT' ? 'card-right' : 'card-left');
+
+            if (isCorrect) {
+                score++;
+                chosenCard.classList.add('selected-correct');
+                playTone(600, 0.15, 'triangle');
+                setTimeout(() => playTone(800, 0.25, 'triangle'), 150);
+            } else {
+                chosenCard.classList.add('selected-wrong');
+                oppCard.classList.add('selected-correct');
+                playTone(250, 0.3, 'sawtooth');
+            }
+
+            setTimeout(() => {
+                currentQ++;
+                loadQuestion();
+            }, 1400);
+        }
+
+        function updateHoldProgress(pct) {
+            document.getElementById('hold-progress').style.width = pct + '%';
+        }
+
+        function showScore() {
+            document.getElementById('play-area').style.display = 'none';
+            document.getElementById('cam-section').style.display = 'none';
+            document.getElementById('score-board').style.display = 'block';
+            document.getElementById('final-score').innerText = `Bạn đã trả lời đúng ${score} / ${questions.length} câu!`;
+            playTone(523, 0.2);
+            setTimeout(() => playTone(659, 0.2), 200);
+            setTimeout(() => playTone(784, 0.4), 400);
+        }
+
+        function restartGame() {
+            currentQ = 0;
+            score = 0;
+            document.getElementById('play-area').style.display = 'block';
+            document.getElementById('cam-section').style.display = 'flex';
+            document.getElementById('score-board').style.display = 'none';
+            loadQuestion();
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') handleSelect('LEFT');
+            if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') handleSelect('RIGHT');
+        });
+
+        const video = document.getElementById('webcam');
+        const debugCanvas = document.getElementById('debug-canvas');
+        const dCtx = debugCanvas.getContext('2d');
+        const tiltLabel = document.getElementById('tilt-indicator');
+
+        let smoothedTilt = 0;
+
+        async function initWebcam() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 } });
+                video.srcObject = stream;
+                video.onloadedmetadata = () => {
+                    debugCanvas.width = 80;
+                    debugCanvas.height = 60;
+                    requestAnimationFrame(processVideo);
+                };
+            } catch (err) {
+                tiltLabel.innerText = "Không mở được camera (dùng phím A/D hoặc click chuột)";
+            }
+        }
+
+        function processVideo() {
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                dCtx.drawImage(video, 0, 0, 80, 60);
+                const frame = dCtx.getImageData(0, 0, 80, 60);
+                
+                let leftWeight = 0;
+                let rightWeight = 0;
+                const d = frame.data;
+                for (let y = 5; y < 35; y++) {
+                    for (let x = 0; x < 80; x++) {
+                        const idx = (y * 80 + x) * 4;
+                        const r = d[idx], g = d[idx+1], b = d[idx+2];
+                        const lum = 0.299*r + 0.587*g + 0.114*b;
+                        if (lum > 60 && lum < 220) {
+                            if (x < 40) leftWeight += (40 - x);
+                            else rightWeight += (x - 40);
+                        }
+                    }
+                }
+                const total = leftWeight + rightWeight + 1;
+                const rawTilt = (rightWeight - leftWeight) / total;
+                smoothedTilt = smoothedTilt * 0.65 + rawTilt * 0.35;
+
+                let state = "Thẳng đầu";
+                let currentSide = null;
+                if (smoothedTilt > 0.18) {
+                    state = "👈 NGHIÊNG TRÁI";
+                    currentSide = 'LEFT';
+                } else if (smoothedTilt < -0.18) {
+                    state = "👉 NGHIÊNG PHẢI";
+                    currentSide = 'RIGHT';
+                }
+                tiltLabel.innerText = `Trạng thái: ${state}`;
+
+                if (!isLocked && currentSide) {
+                    if (selectedSide === currentSide) {
+                        holdTime += 33;
+                        updateHoldProgress(Math.min(100, (holdTime / HOLD_TARGET) * 100));
+                        if (holdTime >= HOLD_TARGET) {
+                            handleSelect(currentSide);
+                        }
+                    } else {
+                        selectedSide = currentSide;
+                        holdTime = 0;
+                    }
+                } else {
+                    selectedSide = null;
+                    holdTime = 0;
+                    if (!isLocked) updateHoldProgress(0);
+                }
+            }
+            requestAnimationFrame(processVideo);
+        }
+
+        initWebcam();
+        loadQuestion();
+    </script>
+</body>
+</html>
