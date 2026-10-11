@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phiếu Bài Tập Bài 11: Ôn tập chương 3 — Hóa học 12</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --border: #e2e8f0;
+      --gray-light: #f1f5f9;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 1.5rem 1rem; line-height: 1.6; }
+    .container { max-width: 900px; margin: 0 auto; background: var(--card-bg); border-radius: 1rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid var(--border); overflow: hidden; }
+    header { background: linear-gradient(135deg, #3730a3, #4f46e5); color: #fff; padding: 2rem 1.5rem; text-align: center; }
+    header h1 { font-size: 1.7rem; font-weight: 800; margin-bottom: 0.5rem; }
+    header p { font-size: 0.95rem; opacity: 0.9; }
+    
+    .info-bar { background: #eef2ff; border-bottom: 1px solid #c7d2fe; padding: 1rem 1.5rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; }
+    .info-inputs { display: flex; flex-wrap: wrap; gap: 0.75rem; flex: 1; }
+    .info-inputs input { padding: 0.5rem 0.75rem; border: 1px solid #a5b4fc; border-radius: 0.375rem; font-size: 0.9rem; min-width: 160px; outline: none; }
+    .timer-badge { font-weight: bold; font-size: 1.1rem; color: #4338ca; background: #fff; padding: 0.5rem 1rem; border-radius: 9999px; border: 1px solid #c7d2fe; }
+
+    .quiz-body { padding: 1.5rem; }
+    .section-title { font-size: 1.25rem; font-weight: 700; color: #1e1b4b; border-left: 4px solid var(--primary); padding-left: 0.75rem; margin: 2rem 0 1rem 0; }
+    .section-desc { font-size: 0.9rem; color: #64748b; font-style: italic; margin-bottom: 1.25rem; }
+
+    .question-card { background: #fff; border: 1px solid var(--border); border-radius: 0.5rem; padding: 1.25rem; margin-bottom: 1.25rem; transition: border-color 0.2s; }
+    .question-card:hover { border-color: #cbd5e1; }
+    .q-number { font-weight: 700; color: #4f46e5; margin-right: 0.5rem; }
+    .q-text { font-weight: 600; margin-bottom: 0.75rem; }
+    
+    .options-grid { display: grid; grid-template-columns: 1fr; gap: 0.5rem; }
+    @media (min-width: 640px) { .options-grid { grid-template-columns: 1fr 1fr; } }
+    .option-item { display: flex; align-items: center; padding: 0.65rem 0.85rem; border: 1px solid var(--border); border-radius: 0.375rem; cursor: pointer; transition: all 0.2s; user-select: none; }
+    .option-item:hover { background: #f8fafc; border-color: #94a3b8; }
+    .option-item.selected { background: #e0e7ff; border-color: #6366f1; color: #3730a3; font-weight: 600; }
+    
+    .tf-table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; }
+    .tf-table th, .tf-table td { border: 1px solid var(--border); padding: 0.65rem 0.75rem; font-size: 0.92rem; }
+    .tf-table th { background: var(--gray-light); text-align: center; }
+    .tf-table td.tf-action { text-align: center; width: 120px; }
+    .btn-tf { padding: 0.35rem 0.75rem; border-radius: 0.25rem; border: 1px solid #cbd5e1; background: #fff; cursor: pointer; font-size: 0.85rem; font-weight: 600; margin: 0 0.15rem; }
+    .btn-tf.selected-true { background: #dcfce7; border-color: #22c55e; color: #15803d; }
+    .btn-tf.selected-false { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
+
+    .input-short { width: 100%; max-width: 250px; padding: 0.5rem 0.75rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; font-size: 1rem; outline: none; margin-top: 0.5rem; }
+    .input-short:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2); }
+
+    .submit-section { text-align: center; margin: 2.5rem 0 1.5rem 0; }
+    .btn-submit { background: var(--primary); color: #fff; font-size: 1.15rem; font-weight: 700; padding: 0.85rem 2.5rem; border: none; border-radius: 0.5rem; cursor: pointer; transition: background 0.2s, transform 0.1s; box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.3); }
+    .btn-submit:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    .btn-submit:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .result-box { display: none; background: #f0fdf4; border: 1px solid #86efac; border-radius: 0.75rem; padding: 1.5rem; margin-top: 2rem; text-align: center; }
+    .result-score { font-size: 2.2rem; font-weight: 800; color: #166534; margin: 0.5rem 0; }
+    .explanation-card { display: none; margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 0.375rem; background: #f8fafc; border-left: 4px solid #6366f1; font-size: 0.9rem; line-height: 1.5; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>PHIẾU BÀI TẬP VÀ ĐÁNH GIÁ ĐỊNH KỲ — HÓA HỌC 12</h1>
+    <p>BÀI 11: ÔN TẬP CHƯƠNG 3 — HỢP CHẤT CHỨA NITROGEN (KẾT NỐI TRI THỨC)</p>
+  </header>
+
+  <div class="info-bar">
+    <div class="info-inputs">
+      <input type="text" id="hsName" placeholder="Họ và tên học sinh (*)" required>
+      <input type="text" id="hsClass" placeholder="Lớp (Ví dụ: 12A1) (*)" required>
+    </div>
+    <div class="timer-badge" id="timerDisplay">Thời gian: 50:00</div>
+  </div>
+
+  <div class="quiz-body" id="quizContainer">
+    <!-- Part 1 -->
+    <div class="section-title">PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn</div>
+    <div class="section-desc">Thí sinh trả lời từ Câu 1 đến Câu 18. Mỗi câu chỉ chọn một đáp án đúng nhất (4,5 điểm).</div>
+    <div id="part1Container"></div>
+
+    <!-- Part 2 -->
+    <div class="section-title">PHẦN II. Câu trắc nghiệm đúng sai</div>
+    <div class="section-desc">Thí sinh trả lời từ Câu 1 đến Câu 4. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn Đúng hoặc Sai (4,0 điểm).</div>
+    <div id="part2Container"></div>
+
+    <!-- Part 3 -->
+    <div class="section-title">PHẦN III. Câu trắc nghiệm trả lời ngắn</div>
+    <div class="section-desc">Thí sinh trả lời từ Câu 1 đến Câu 6. Viết kết quả dưới dạng số vào ô trống (1,5 điểm).</div>
+    <div id="part3Container"></div>
+
+    <div class="submit-section">
+      <button class="btn-submit" id="btnSubmit" onclick="submitExam()">NỘP BÀI THI</button>
+    </div>
+
+    <div class="result-box" id="resultBox">
+      <h2>KẾT QUẢ BÀI LÀM TRẮC NGHIỆM ONLINE</h2>
+      <div class="result-score" id="scoreDisplay">0.0 / 10 Điểm</div>
+      <p id="resultDetail"></p>
+      <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.5rem;">Kết quả trắc nghiệm đã được tự động đồng bộ vào Google Sheets của Giáo viên môn Hóa.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const QUIZ_DATA = {
+  "title": "Bài 11: Ôn tập chương 3 (Hợp chất chứa nitrogen) - Hóa học 12 (KNTT)",
+  "duration": 50,
+  "submit_url": "https://script.google.com/macros/s/AKfycbwRRiM81mghvA7cInvJgb4rPLzWOAE3s44wer0BJcURQ4hWwoykS19pkNQ9LyzH6Q8lTQ/exec",
+  "part1": [
+    {
+      "id": 1,
+      "question": "Chất nào sau đây thuộc loại amine bậc hai?",
+      "options": [
+        "A. CH₃NHCH₃.",
+        "B. CH₃CH₂NH₂.",
+        "C. (CH₃)₃N.",
+        "D. C₆H₅NH₂."
+      ],
+      "answer": "A",
+      "explanation": "Dimethylamine (CH₃NHCH₃) có 2 nguyên tử H trong phân tử NH₃ bị thay thế bởi 2 gốc methyl nên là amine bậc hai. CH₃CH₂NH₂ và C₆H₅NH₂ là amine bậc một; (CH₃)₃N là amine bậc ba."
+    },
+    {
+      "id": 2,
+      "question": "Ở điều kiện thường, chất nào sau đây là chất lỏng, ít tan trong nước và tạo kết tủa trắng khi tác dụng với nước bromine?",
+      "options": [
+        "A. Methylamine.",
+        "B. Aniline.",
+        "C. Glycine.",
+        "D. Ethylamine."
+      ],
+      "answer": "B",
+      "explanation": "Aniline (C₆H₅NH₂) là chất lỏng không màu, rất ít tan trong nước. Do ảnh hưởng của nhóm -NH₂ đẩy electron vào vòng benzene nên aniline dễ tham gia phản ứng thế với nước bromine tạo kết tủa trắng 2,4,6-tribromoaniline."
+    },
+    {
+      "id": 3,
+      "question": "Dung dịch chất nào sau đây làm quỳ tím chuyển sang màu xanh?",
+      "options": [
+        "A. Aniline.",
+        "B. Glycine.",
+        "C. Lysine.",
+        "D. Glutamic acid."
+      ],
+      "answer": "C",
+      "explanation": "Phân tử Lysine có 2 nhóm -NH₂ và chỉ có 1 nhóm -COOH nên dung dịch có môi trường base và làm quỳ tím hóa xanh. Glutamic acid làm quỳ tím hóa đỏ; Glycine và Aniline không làm đổi màu quỳ tím."
+    },
+    {
+      "id": 4,
+      "question": "Trong tinh thể và trong dung dịch trung tính, các amino acid tồn tại chủ yếu ở dạng nào sau đây?",
+      "options": [
+        "A. Phân tử không phân cực.",
+        "B. Cation tích điện dương.",
+        "C. Anion tích điện âm.",
+        "D. Ion lưỡng cực."
+      ],
+      "answer": "D",
+      "explanation": "Do nhóm -COOH nhường H⁺ cho nhóm -NH₂ trong cùng phân tử nên amino acid tồn tại chủ yếu ở dạng ion lưỡng cực ⁺H₃N-CH(R)-COO⁻."
+    },
+    {
+      "id": 5,
+      "question": "Dãy các chất được sắp xếp theo chiều tăng dần lực base trong dung dịch nước là",
+      "options": [
+        "A. C₆H₅NH₂ < NH₃ < CH₃NH₂ < (CH₃)₂NH.",
+        "B. NH₃ < C₆H₅NH₂ < CH₃NH₂ < (CH₃)₂NH.",
+        "C. (CH₃)₂NH < CH₃NH₂ < NH₃ < C₆H₅NH₂.",
+        "D. C₆H₅NH₂ < CH₃NH₂ < NH₃ < (CH₃)₂NH."
+      ],
+      "answer": "A",
+      "explanation": "Gốc phenyl (-C₆H₅) hút electron làm lực base của aniline yếu hơn NH₃; gốc alkyl (-CH₃) đẩy electron làm lực base của alkylamine mạnh hơn NH₃, và amine bậc hai (CH₃)₂NH có lực base mạnh hơn amine bậc một CH₃NH₂."
+    },
+    {
+      "id": 6,
+      "question": "Số liên kết peptide có trong một phân tử tetrapeptide mạch hở Ala-Gly-Val-Ala là",
+      "options": [
+        "A. 4.",
+        "B. 3.",
+        "C. 2.",
+        "D. 1."
+      ],
+      "answer": "B",
+      "explanation": "Tetrapeptide mạch hở được tạo thành từ 4 đơn vị α-amino acid nên có số liên kết peptide là n - 1 = 4 - 1 = 3."
+    },
+    {
+      "id": 7,
+      "question": "Thuốc thử dùng để phân biệt dung dịch dipeptide Gly-Ala và dung dịch tripeptide Gly-Ala-Val là",
+      "options": [
+        "A. dung dịch NaCl.",
+        "B. dung dịch HCl.",
+        "C. Cu(OH)₂ trong môi trường kiềm.",
+        "D. giấy quỳ tím."
+      ],
+      "answer": "C",
+      "explanation": "Tripeptide Gly-Ala-Val có 2 liên kết peptide nên phản ứng với Cu(OH)₂ trong môi trường kiềm tạo phức chất màu tím (phản ứng màu biuret), còn dipeptide Gly-Ala chỉ có 1 liên kết peptide nên không có phản ứng này."
+    },
+    {
+      "id": 8,
+      "question": "Thủy phân hoàn toàn protein đơn giản bằng dung dịch acid hoặc kiềm đun nóng thu được sản phẩm là",
+      "options": [
+        "A. các acid béo và glycerol.",
+        "B. các monosaccharide.",
+        "C. các amine bậc một.",
+        "D. các α-amino acid."
+      ],
+      "answer": "D",
+      "explanation": "Protein đơn giản được cấu tạo hoàn toàn từ các chuỗi polypeptide, khi thủy phân đến cùng sẽ thu được hỗn hợp các α-amino acid (hoặc muối của chúng nếu dùng acid/kiềm dư)."
+    },
+    {
+      "id": 9,
+      "question": "Chất nào sau đây thuộc loại protein hình cầu, tan tốt trong nước tạo thành dung dịch keo?",
+      "options": [
+        "A. Albumin (có trong lòng trắng trứng).",
+        "B. Keratin (có trong tóc, móng).",
+        "C. Fibroin (có trong tơ tằm).",
+        "D. Collagen (có trong da, sụn)."
+      ],
+      "answer": "A",
+      "explanation": "Albumin (lòng trắng trứng) và hemoglobin (máu) là các protein hình cầu tan được trong nước tạo dung dịch keo; còn keratin, fibroin và collagen là các protein hình sợi không tan trong nước."
+    },
+    {
+      "id": 10,
+      "question": "Nhỏ vài giọt dung dịch HNO₃ đặc vào ống nghiệm đựng dung dịch lòng trắng trứng rồi đun nóng nhẹ, hiện tượng quan sát được là",
+      "options": [
+        "A. xuất hiện dung dịch màu xanh lam thẫm.",
+        "B. xuất hiện kết tủa màu vàng.",
+        "C. xuất hiện kết tủa màu đỏ gạch.",
+        "D. sủi bọt khí mùi khai."
+      ],
+      "answer": "B",
+      "explanation": "Lòng trắng trứng chứa các gốc amino acid có vòng thơm (như tyrosine, phenylalanine) tham gia phản ứng thế nitro với HNO₃ đặc tạo hợp chất polynitro kết tủa màu vàng (phản ứng xanthoproteic)."
+    },
+    {
+      "id": 11,
+      "question": "Đặt hỗn hợp gồm ba amino acid: lysine (pI = 9,74), alanine (pI = 6,00) và glutamic acid (pI = 3,20) trong điện trường ở pH = 6,00. Phát biểu nào sau đây đúng?",
+      "options": [
+        "A. Alanine di chuyển về phía cực dương (anode).",
+        "B. Cả ba amino acid đều di chuyển về phía cực âm (cathode).",
+        "C. Lysine di chuyển về phía cực âm (cathode), glutamic acid di chuyển về phía cực dương (anode).",
+        "D. Lysine di chuyển về phía cực dương (anode), glutamic acid đứng yên."
+      ],
+      "answer": "C",
+      "explanation": "Ở pH = 6,00: Alanine tồn tại chủ yếu ở dạng ion lưỡng cực trung hòa điện nên hầu như không di chuyển; Lysine (pI > 6,0) nhận H⁺ tạo cation tích điện dương nên di chuyển về cực âm (cathode); Glutamic acid (pI < 6,0) nhường H⁺ tạo anion tích điện âm nên di chuyển về cực dương (anode)."
+    },
+    {
+      "id": 12,
+      "question": "Phát biểu nào sau đây KHÔNG đúng khi nói về enzyme?",
+      "options": [
+        "A. Hầu hết các enzyme có bản chất là protein.",
+        "B. Enzyme có khả năng xúc tác làm tăng tốc độ phản ứng sinh hóa.",
+        "C. Mỗi enzyme thường chỉ xúc tác cho một hoặc một số phản ứng nhất định.",
+        "D. Tất cả các enzyme đều hoạt động tốt nhất ở nhiệt độ sôi của nước (100°C)."
+      ],
+      "answer": "D",
+      "explanation": "Hầu hết enzyme có bản chất là protein nên ở nhiệt độ cao (như 100°C) cấu trúc không gian của enzyme bị biến tính nhiệt dẫn đến mất hoàn toàn hoạt tính xúc tác."
+    },
+    {
+      "id": 13,
+      "question": "Khi đun nóng ε-aminocaproic acid (H₂N-[CH₂]₅-COOH), xảy ra phản ứng trùng ngưng tạo thành polymer dùng để sản xuất tơ capron. Polymer đó thuộc loại",
+      "options": [
+        "A. polyamide.",
+        "B. polyester.",
+        "C. polyalkene.",
+        "D. polysaccharide."
+      ],
+      "answer": "A",
+      "explanation": "Phản ứng trùng ngưng giữa nhóm -NH₂ và nhóm -COOH của các phân tử ε-aminocaproic acid tạo ra các liên kết amide (-CO-NH-) nối tiếp nhau nên sản phẩm thuộc loại polyamide."
+    },
+    {
+      "id": 14,
+      "question": "Cho 0,1 mol α-amino acid X (chỉ chứa 1 nhóm -NH₂ và 1 nhóm -COOH) tác dụng vừa đủ với dung dịch HCl thu được 11,15 gam muối khan. Tên gọi của X là",
+      "options": [
+        "A. alanine.",
+        "B. glycine.",
+        "C. valine.",
+        "D. lysine."
+      ],
+      "answer": "B",
+      "explanation": "Phản ứng: H₂N-R-COOH + HCl → ClH₃N-R-COOH. Ta có M(muối) = 11,15 / 0,1 = 111,5 g/mol → M(X) = 111,5 - 36,5 = 75 g/mol. Vậy X là glycine (H₂N-CH₂-COOH)."
+    },
+    {
+      "id": 15,
+      "question": "Số đồng phân cấu tạo thuộc loại amine bậc một ứng với công thức phân tử C₃H₉N là",
+      "options": [
+        "A. 4.",
+        "B. 3.",
+        "C. 2.",
+        "D. 1."
+      ],
+      "answer": "C",
+      "explanation": "C₃H₉N có 4 đồng phân amine tất cả, trong đó có 2 amine bậc một là CH₃-CH₂-CH₂-NH₂ (propan-1-amine) và CH₃-CH(NH₂)-CH₃ (propan-2-amine)."
+    },
+    {
+      "id": 16,
+      "question": "Cho 0,15 mol glutamic acid (HOOC-CH₂-CH₂-CH(NH₂)-COOH) vào 200 mL dung dịch HCl 1,0 M, thu được dung dịch X. Cho dung dịch NaOH dư vào dung dịch X. Sau khi các phản ứng xảy ra hoàn toàn, số mol NaOH đã phản ứng là",
+      "options": [
+        "A. 0,35 mol.",
+        "B. 0,30 mol.",
+        "C. 0,45 mol.",
+        "D. 0,50 mol."
+      ],
+      "answer": "D",
+      "explanation": "Trong dung dịch X có 0,15 mol glutamic acid (chứa 2 nhóm -COOH) và 0,20 mol HCl. Khi cho NaOH dư vào X, NaOH trung hòa toàn bộ HCl và 2 nhóm -COOH của glutamic acid: n(NaOH) = 2 × n(Glu) + n(HCl) = 2 × 0,15 + 0,20 = 0,50 mol."
+    },
+    {
+      "id": 17,
+      "question": "Thủy phân không hoàn toàn một pentapeptide mạch hở X thu được hỗn hợp sản phẩm có chứa các dipeptide: Ala-Gly, Gly-Ala, Val-Ala và tripeptide Gly-Val-Ala. Cấu tạo của pentapeptide X là",
+      "options": [
+        "A. Ala-Gly-Val-Ala-Gly.",
+        "B. Gly-Ala-Val-Gly-Ala.",
+        "C. Val-Ala-Gly-Ala-Gly.",
+        "D. Ala-Val-Gly-Ala-Gly."
+      ],
+      "answer": "A",
+      "explanation": "Ghép chồng khít các đoạn mảnh: có tripeptide Gly-Val-Ala, kết hợp với Ala-Gly ở đầu N và Ala-Gly ở đầu C → Trình tự thỏa mãn đầy đủ Ala-Gly, Gly-Val-Ala, Val-Ala, Ala-Gly là Ala-Gly-Val-Ala-Gly."
+    },
+    {
+      "id": 18,
+      "question": "Cho các chất sau: ethylamine, aniline, glycine, tripeptide Gly-Ala-Gly, lòng trắng trứng. Số chất tác dụng được với dung dịch HCl ở điều kiện thích hợp là",
+      "options": [
+        "A. 3.",
+        "B. 5.",
+        "C. 4.",
+        "D. 2."
+      ],
+      "answer": "B",
+      "explanation": "Cả 5 chất đều tác dụng được với dung dịch HCl: ethylamine và aniline tạo muối alkyl/phenylammonium; glycine tạo muối ClH₃N-CH₂-COOH; Gly-Ala-Gly và lòng trắng trứng bị thủy phân trong dung dịch HCl đun nóng tạo muối của các α-amino acid."
+    }
+  ],
+  "part2": [
+    {
+      "id": 1,
+      "context": "Mùi tanh của cá chủ yếu do các amine bay hơi gây ra, nhiều nhất là trimethylamine ((CH₃)₃N). Trong dân gian, khi sơ chế cá trước khi nấu, người đầu bếp thường dùng nước cốt chanh (chứa citric acid), giấm ăn (chứa acetic acid) hoặc mẻ chua (chứa lactic acid) để chà xát rửa cá giúp khử mùi tanh hiệu quả.",
+      "subquestions": [
+        {
+          "label": "a)",
+          "text": "Trimethylamine có công thức cấu tạo (CH₃)₃N và thuộc loại amine bậc ba.",
+          "answer": true,
+          "explanation": "Trong phân tử (CH₃)₃N, cả 3 nguyên tử H của NH₃ đều bị thay thế bởi 3 gốc methyl (-CH₃) nên đây là amine bậc ba."
+        },
+        {
+          "label": "b)",
+          "text": "Ở điều kiện thường, trimethylamine là chất khí có mùi khai tanh và tan rất tốt trong nước.",
+          "answer": true,
+          "explanation": "4 amine là methylamine, dimethylamine, trimethylamine và ethylamine đều là chất khí ở điều kiện thường và tan nhiều trong nước."
+        },
+        {
+          "label": "c)",
+          "text": "Việc dùng chanh hoặc giấm khử mùi tanh của cá dựa trên phản ứng trung hòa giữa tính base của amine với tính acid của chanh, giấm tạo thành muối tan dễ rửa trôi và không bay hơi.",
+          "answer": true,
+          "explanation": "(CH₃)₃N có tính base nên phản ứng với H⁺ trong acid hữu cơ tạo muối (CH₃)₃NH⁺ dạng ion không bay hơi và dễ tan trong nước rửa."
+        },
+        {
+          "label": "d)",
+          "text": "Dung dịch trimethylamine trong nước không làm đổi màu giấy quỳ tím và phenolphthalein.",
+          "answer": false,
+          "explanation": "Trimethylamine là một alkylamine có lực base mạnh hơn NH₃ nên dung dịch của nó làm quỳ tím hóa xanh và làm hồng phenolphthalein."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "context": "Glutamic acid (HOOC-CH₂-CH₂-CH(NH₂)-COOH) là một α-amino acid quan trọng hỗ trợ dẫn truyền thần kinh. Trong công nghiệp thực phẩm, người ta trung hòa đúng một nhóm carboxyl của glutamic acid bằng dung dịch NaOH để sản xuất mì chính (bột ngọt - monosodium glutamate, viết tắt là MSG).",
+      "subquestions": [
+        {
+          "label": "a)",
+          "text": "Phân tử glutamic acid có 2 nhóm carboxyl (-COOH) và 1 nhóm amino (-NH₂), dung dịch glutamic acid làm quỳ tím chuyển sang màu đỏ.",
+          "answer": true,
+          "explanation": "Do số nhóm -COOH (2 nhóm) nhiều hơn số nhóm -NH₂ (1 nhóm) nên dung dịch glutamic acid có tính acid và làm quỳ tím hóa đỏ (hồng)."
+        },
+        {
+          "label": "b)",
+          "text": "Công thức hóa học của bột ngọt (monosodium glutamate) là NaOOC-CH₂-CH₂-CH(NH₂)-COONa.",
+          "answer": false,
+          "explanation": "Monosodium glutamate chỉ chứa 1 nguyên tử Na (công thức là HOOC-CH₂-CH₂-CH(NH₂)-COONa), không phải muối disodium."
+        },
+        {
+          "label": "c)",
+          "text": "Khi đặt trong điện trường ở pH = 7,0, glutamic acid tồn tại chủ yếu ở dạng anion và di chuyển về phía cực dương (anode).",
+          "answer": true,
+          "explanation": "Điểm đẳng điện của glutamic acid là pI ≈ 3,2. Ở pH = 7,0 > pI, phân tử nhường H⁺ tạo ion mang điện tích âm (anion) nên di chuyển về phía cực dương (anode)."
+        },
+        {
+          "label": "d)",
+          "text": "Glutamic acid là chất rắn kết tinh ở điều kiện thường, dễ tan trong nước vì tồn tại ở dạng ion lưỡng cực.",
+          "answer": true,
+          "explanation": "Các amino acid đều tồn tại ở dạng ion lưỡng cực có tương tác tĩnh điện mạnh nên là chất rắn kết tinh và phân cực mạnh nên dễ tan trong nước."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "context": "Một học sinh tiến hành thí nghiệm phân biệt 3 ống nghiệm mất nhãn đựng riêng biệt các dung dịch không màu: ống (1) đựng dung dịch dipeptide Gly-Ala, ống (2) đựng dung dịch tripeptide Gly-Ala-Val, ống (3) đựng dung dịch lòng trắng trứng (albumin). Học sinh nhỏ vào mỗi ống nghiệm 1 mL dung dịch NaOH 10% và vài giọt dung dịch CuSO₄ 2%, lắc đều ở nhiệt độ thường.",
+      "subquestions": [
+        {
+          "label": "a)",
+          "text": "Khi trộn dung dịch NaOH với dung dịch CuSO₄, bước đầu tiên tạo ra kết tủa Cu(OH)₂ màu xanh lam nhạt.",
+          "answer": true,
+          "explanation": "Phản ứng: CuSO₄ + 2NaOH → Cu(OH)₂↓ (xanh) + Na₂SO₄."
+        },
+        {
+          "label": "b)",
+          "text": "Cả 3 ống nghiệm (1), (2) và (3) đều xuất hiện dung dịch phức chất màu tím đặc trưng của phản ứng biuret.",
+          "answer": false,
+          "explanation": "Ống (1) chứa dipeptide Gly-Ala chỉ có 1 liên kết peptide nên KHÔNG cho phản ứng màu biuret. Chỉ có ống (2) và ống (3) mới tạo phức màu tím."
+        },
+        {
+          "label": "c)",
+          "text": "Nếu đun sôi nhẹ 3 mẫu dung dịch ban đầu trước khi thử thuốc thử, chỉ có ống nghiệm (3) đựng lòng trắng trứng xuất hiện hiện tượng đông tụ tạo vẩn đục trắng.",
+          "answer": true,
+          "explanation": "Lòng trắng trứng là protein hình cầu sẽ bị biến tính và đông tụ khi đun nóng; còn các peptide ngắn như Gly-Ala và Gly-Ala-Val không bị đông tụ bởi nhiệt."
+        },
+        {
+          "label": "d)",
+          "text": "Khi thủy phân hoàn toàn hỗn hợp cả 3 ống nghiệm trong dung dịch HCl dư đun nóng, các liên kết peptide đều bị cắt đứt tạo thành muối hydrochloride của các α-amino acid.",
+          "answer": true,
+          "explanation": "Cả peptide và protein khi đun nóng với dung dịch HCl dư đều bị thủy phân hoàn toàn cắt đứt liên kết -CO-NH- tạo muối ClH₃N-CH(R)-COOH."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "context": "Trong công nghiệp chế biến nước mắm truyền thống của Việt Nam, cá cơm tươi được trộn đều với muối ăn (NaCl) theo tỉ lệ thích hợp rồi ủ trong các thùng gỗ lớn từ 12 đến 18 tháng. Dưới tác dụng của hệ enzyme protease có sẵn trong ruột cá, protein trong thịt cá bị phân giải dần thành các peptide ngắn và cuối cùng là các α-amino acid tự do tạo nên độ đạm và hương vị đậm đà của nước mắm.",
+      "subquestions": [
+        {
+          "label": "a)",
+          "text": "Quá trình ủ chượp làm nước mắm thực chất là quá trình thủy phân protein của cá nhờ xúc tác sinh học là enzyme protease.",
+          "answer": true,
+          "explanation": "Enzyme protease xúc tác cắt đứt các liên kết peptide trong chuỗi polypeptide của thịt cá thành các amino acid hòa tan."
+        },
+        {
+          "label": "b)",
+          "text": "Độ đạm của nước mắm phản ánh hàm lượng nitrogen tổng số, trong đó giá trị dinh dưỡng cao nhất đến từ hàm lượng nitrogen của các α-amino acid.",
+          "answer": true,
+          "explanation": "Đạm toàn phần và đặc biệt là đạm acid amin (amino acid) quyết định chất lượng dinh dưỡng và vị ngọt hậu của nước mắm truyền thống."
+        },
+        {
+          "label": "c)",
+          "text": "Nếu đun sôi thật kĩ cá tươi trước khi đem ủ muối thì tốc độ phân giải protein thành nước mắm sẽ diễn ra nhanh gấp nhiều lần.",
+          "answer": false,
+          "explanation": "Nếu đun sôi cá trước khi ủ, các enzyme protease tự nhiên trong cá sẽ bị biến tính nhiệt và mất hoàn toàn hoạt tính xúc tác, làm quá trình thủy phân không thể diễn ra."
+        },
+        {
+          "label": "d)",
+          "text": "Các α-amino acid tạo thành trong nước mắm có tính chất lưỡng tính, vừa có khả năng tác dụng với acid mạnh vừa tác dụng với base mạnh.",
+          "answer": true,
+          "explanation": "Mọi α-amino acid đều chứa nhóm -NH₂ (tính base) và nhóm -COOH (tính acid) nên đều có tính chất lưỡng tính."
+        }
+      ]
+    }
+  ],
+  "part3": [
+    {
+      "id": 1,
+      "question": "Ứng với công thức phân tử C₄H₁₁N có bao nhiêu đồng phân amine bậc một?",
+      "answer": "4",
+      "explanation": "Amine bậc một C₄H₉-NH₂ có số đồng phân bằng số đồng phân gốc butyl (-C₄H₉) là 4 đồng phân (butan-1-amine, butan-2-amine, 2-methylpropan-1-amine, 2-methylpropan-2-amine)."
+    },
+    {
+      "id": 2,
+      "question": "Từ 3 α-amino acid khác nhau là Glycine (Gly), Alanine (Ala) và Valine (Val), có thể tạo ra tối đa bao nhiêu đồng phân tripeptide mạch hở mà trong mỗi phân tử đều chứa đủ cả 3 gốc amino acid trên?",
+      "answer": "6",
+      "explanation": "Số đồng phân tripeptide chứa đồng thời 3 gốc α-amino acid khác nhau bằng số hoán vị của 3 phần tử: 3! = 3 × 2 × 1 = 6 đồng phân."
+    },
+    {
+      "id": 3,
+      "question": "Cho 13,95 gam aniline (C₆H₅NH₂) phản ứng hoàn toàn với lượng dư nước bromine, thu được m gam kết tủa trắng 2,4,6-tribromoaniline. Biết hiệu suất phản ứng đạt 100%. Giá trị của m là bao nhiêu?",
+      "answer": "49,5",
+      "explanation": "Ta có n(aniline) = 13,95 / 93 = 0,15 mol. Phương trình: C₆H₅NH₂ + 3Br₂ → C₆H₂Br₃NH₂↓ + 3HBr. Số mol kết tủa = 0,15 mol → m = 0,15 × 330 = 49,5 gam."
+    },
+    {
+      "id": 4,
+      "question": "Thủy phân hoàn toàn 0,1 mol dipeptide mạch hở Gly-Ala trong dung dịch NaOH vừa đủ, cô cạn dung dịch sau phản ứng thu được bao nhiêu gam hỗn hợp muối khan?",
+      "answer": "20,8",
+      "explanation": "Phương trình: Gly-Ala + 2NaOH → Gly-Na + Ala-Na + H₂O. Thu được 0,1 mol H₂N-CH₂-COONa (M = 97) và 0,1 mol H₂N-CH(CH₃)-COONa (M = 111). Khối lượng muối = 0,1 × 97 + 0,1 × 111 = 20,8 gam."
+    },
+    {
+      "id": 5,
+      "question": "Một phân tử chuỗi polypeptide mạch hở chỉ cấu tạo từ các gốc Alanine có phân tử khối là 7118 amu. Biết phân tử khối của Alanine là 89 amu. Số liên kết peptide có trong phân tử chuỗi polypeptide đó là bao nhiêu?",
+      "answer": "99",
+      "explanation": "Gọi n là số gốc Alanine trong chuỗi: M(peptide) = 89n - 18(n - 1) = 71n + 18 = 7118 → 71n = 7100 → n = 100 gốc Alanine. Số liên kết peptide trong chuỗi = n - 1 = 100 - 1 = 99 liên kết."
+    },
+    {
+      "id": 6,
+      "question": "Cho các chất: methylamine, aniline, glycine, glutamic acid, lysine, tripeptide Ala-Gly-Val, albumin. Có bao nhiêu chất trong dãy trên làm đổi màu giấy quỳ tím ẩm?",
+      "answer": "3",
+      "explanation": "Có 3 chất làm đổi màu quỳ tím ẩm: methylamine (hóa xanh), lysine (hóa xanh) và glutamic acid (hóa đỏ). Các chất aniline, glycine, Ala-Gly-Val và albumin không làm đổi màu quỳ tím."
+    }
+  ]
+};
+
+let studentAnswers = {
+  part1: {},
+  part2: {},
+  part3: {}
+};
+
+let isSubmitted = false;
+let timeLeft = QUIZ_DATA.duration * 60;
+let timerInterval = null;
+
+function renderQuiz() {
+  // Render Part 1
+  const p1Container = document.getElementById('part1Container');
+  QUIZ_DATA.part1.forEach(q => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = `q_p1_${q.id}`;
+    
+    let optHtml = '';
+    q.options.forEach(opt => {
+      const optVal = opt.charAt(0);
+      optHtml += `
+        <div class="option-item" onclick="selectOption1(${q.id}, '${optVal}', this)">
+          ${opt}
+        </div>
+      `;
+    });
+
+    card.innerHTML = `
+      <div class="q-text"><span class="q-number">Câu ${q.id}:</span>${q.question}</div>
+      <div class="options-grid" id="opt_grid_${q.id}">${optHtml}</div>
+      <div class="explanation-card" id="exp_p1_${q.id}">
+        <strong>Giải thích:</strong> Đáp án đúng là <strong>${q.answer}</strong>. ${q.explanation}
+      </div>
+    `;
+    p1Container.appendChild(card);
+  });
+
+  // Render Part 2
+  const p2Container = document.getElementById('part2Container');
+  QUIZ_DATA.part2.forEach(q => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = `q_p2_${q.id}`;
+
+    let rowsHtml = '';
+    q.subquestions.forEach((sub, sIdx) => {
+      rowsHtml += `
+        <tr>
+          <td><strong>${sub.label}</strong> ${sub.text}</td>
+          <td class="tf-action">
+            <button type="button" class="btn-tf" id="btn_tf_${q.id}_${sIdx}_T" onclick="selectTF(${q.id}, ${sIdx}, true)">Đúng</button>
+            <button type="button" class="btn-tf" id="btn_tf_${q.id}_${sIdx}_F" onclick="selectTF(${q.id}, ${sIdx}, false)">Sai</button>
+          </td>
+        </tr>
+      `;
+    });
+
+    card.innerHTML = `
+      <div class="q-text"><span class="q-number">Câu ${q.id}:</span>${q.context}</div>
+      <table class="tf-table">
+        <thead>
+          <tr>
+            <th>Phát biểu / Nội dung</th>
+            <th>Lựa chọn</th>
+          </tr>
+        </thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+      <div class="explanation-card" id="exp_p2_${q.id}">
+        <strong>Giải thích chi tiết:</strong><br>
+        ${q.subquestions.map(s => `${s.label} [<strong>${s.answer ? 'Đúng' : 'Sai'}</strong>]: ${s.explanation}`).join('<br>')}
+      </div>
+    `;
+    p2Container.appendChild(card);
+  });
+
+  // Render Part 3
+  const p3Container = document.getElementById('part3Container');
+  QUIZ_DATA.part3.forEach(q => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = `q_p3_${q.id}`;
+
+    card.innerHTML = `
+      <div class="q-text"><span class="q-number">Câu ${q.id}:</span>${q.question}</div>
+      <input type="text" class="input-short" id="input_p3_${q.id}" placeholder="Nhập đáp số (dạng số)..." onchange="recordInput3(${q.id}, this.value)">
+      <div class="explanation-card" id="exp_p3_${q.id}">
+        <strong>Đáp số chuẩn:</strong> <strong>${q.answer}</strong>. ${q.explanation}
+      </div>
+    `;
+    p3Container.appendChild(card);
+  });
+
+  startTimer();
+}
+
+function selectOption1(qId, val, elem) {
+  if (isSubmitted) return;
+  studentAnswers.part1[qId] = val;
+  const parent = document.getElementById(`opt_grid_${qId}`);
+  parent.querySelectorAll('.option-item').forEach(it => it.classList.remove('selected'));
+  elem.classList.add('selected');
+}
+
+function selectTF(qId, sIdx, val) {
+  if (isSubmitted) return;
+  if (!studentAnswers.part2[qId]) {
+    studentAnswers.part2[qId] = {};
+  }
+  studentAnswers.part2[qId][sIdx] = val;
+
+  const btnT = document.getElementById(`btn_tf_${qId}_${sIdx}_T`);
+  const btnF = document.getElementById(`btn_tf_${qId}_${sIdx}_F`);
+  if (val) {
+    btnT.className = 'btn-tf selected-true';
+    btnF.className = 'btn-tf';
+  } else {
+    btnF.className = 'btn-tf selected-false';
+    btnT.className = 'btn-tf';
+  }
+}
+
+function recordInput3(qId, val) {
+  if (isSubmitted) return;
+  studentAnswers.part3[qId] = val.trim();
+}
+
+function startTimer() {
+  const timerDisplay = document.getElementById('timerDisplay');
+  timerInterval = setInterval(() => {
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      alert('Đã hết thời gian làm bài! Hệ thống tự động nộp bài.');
+      submitExam();
+      return;
+    }
+    timeLeft--;
+    const m = Math.floor(timeLeft / 60);
+    const s = timeLeft % 60;
+    timerDisplay.innerText = `Thời gian: ${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+  }, 1000);
+}
+
+function calculateScore() {
+  let p1Correct = 0;
+  QUIZ_DATA.part1.forEach(q => {
+    if (studentAnswers.part1[q.id] === q.answer) p1Correct++;
+  });
+  const score1 = (p1Correct / 18) * 4.5;
+
+  let score2 = 0;
+  QUIZ_DATA.part2.forEach(q => {
+    let correctInQ = 0;
+    const qAns = studentAnswers.part2[q.id] || {};
+    q.subquestions.forEach((sub, sIdx) => {
+      if (qAns[sIdx] === sub.answer) correctInQ++;
+    });
+    if (correctInQ === 1) score2 += 0.1;
+    else if (correctInQ === 2) score2 += 0.25;
+    else if (correctInQ === 3) score2 += 0.5;
+    else if (correctInQ === 4) score2 += 1.0;
+  });
+
+  let p3Correct = 0;
+  QUIZ_DATA.part3.forEach(q => {
+    const userVal = (studentAnswers.part3[q.id] || '').replace(',', '.').toLowerCase();
+    const correctVal = q.answer.replace(',', '.').toLowerCase();
+    if (userVal === correctVal) p3Correct++;
+  });
+  const score3 = p3Correct * 0.25;
+
+  const totalScore = Math.min(10, Math.round((score1 + score2 + score3) * 100) / 100);
+  return {
+    totalScore,
+    score1: Math.round(score1 * 100) / 100,
+    score2: Math.round(score2 * 100) / 100,
+    score3: Math.round(score3 * 100) / 100,
+    p1Correct,
+    p3Correct
+  };
+}
+
+async function submitExam() {
+  if (isSubmitted) return;
+  const name = document.getElementById('hsName').value.trim();
+  const cls = document.getElementById('hsClass').value.trim();
+
+  if (!name || !cls) {
+    alert('Vui lòng điền đầy đủ Họ và tên cùng Lớp trước khi nộp bài!');
+    return;
+  }
+
+  if (!confirm('Bạn có chắc chắn muốn nộp bài? Sau khi nộp bài, hệ thống sẽ chấm điểm và hiển thị giải thích chi tiết.')) {
+    return;
+  }
+
+  isSubmitted = true;
+  clearInterval(timerInterval);
+  document.getElementById('btnSubmit').disabled = true;
+
+  const res = calculateScore();
+  document.getElementById('scoreDisplay').innerText = `${res.totalScore} / 10 Điểm`;
+  document.getElementById('resultDetail').innerText = 
+    `Phần I: ${res.score1}/4.5 điểm (${res.p1Correct}/18 câu) | Phần II: ${res.score2}/4.0 điểm | Phần III: ${res.score3}/1.5 điểm (${res.p3Correct}/6 câu)`;
+  document.getElementById('resultBox').style.display = 'block';
+
+  document.querySelectorAll('.explanation-card').forEach(el => el.style.display = 'block');
+
+  try {
+    const payload = {
+      ho_ten: name,
+      lop: cls,
+      diem: res.totalScore,
+      chi_tiet: `P1: ${res.p1Correct}/18; P2: ${res.score2}đ; P3: ${res.p3Correct}/6`,
+      thoi_gian: new Date().toLocaleString('vi-VN'),
+      bai_thi: QUIZ_DATA.title
+    };
+
+    await fetch(QUIZ_DATA.submit_url, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    console.log('Đã gửi dữ liệu kết quả thành công về Google Sheets.');
+  } catch (e) {
+    console.warn('Lỗi khi gửi kết quả về Google Sheet:', e);
+  }
+
+  document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
+}
+
+window.addEventListener('DOMContentLoaded', renderQuiz);
+</script>
+
+</body>
+</html>

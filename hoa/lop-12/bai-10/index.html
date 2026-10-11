@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phiếu Bài Tập Bài 10: Protein và Enzyme — Hóa học 12</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --border: #e2e8f0;
+      --gray-light: #f1f5f9;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 1.5rem 1rem; line-height: 1.6; }
+    .container { max-width: 900px; margin: 0 auto; background: var(--card-bg); border-radius: 1rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid var(--border); overflow: hidden; }
+    header { background: linear-gradient(135deg, #3730a3, #4f46e5); color: #fff; padding: 2rem 1.5rem; text-align: center; }
+    header h1 { font-size: 1.7rem; font-weight: 800; margin-bottom: 0.5rem; }
+    header p { font-size: 0.95rem; opacity: 0.9; }
+    
+    .info-bar { background: #eef2ff; border-bottom: 1px solid #c7d2fe; padding: 1rem 1.5rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; }
+    .info-inputs { display: flex; flex-wrap: wrap; gap: 0.75rem; flex: 1; }
+    .info-inputs input { padding: 0.5rem 0.75rem; border: 1px solid #a5b4fc; border-radius: 0.375rem; font-size: 0.9rem; min-width: 160px; outline: none; }
+    .timer-badge { font-weight: bold; font-size: 1.1rem; color: #4338ca; background: #fff; padding: 0.5rem 1rem; border-radius: 9999px; border: 1px solid #c7d2fe; }
+
+    .quiz-body { padding: 1.5rem; }
+    .section-title { font-size: 1.25rem; font-weight: 700; color: #1e1b4b; border-left: 4px solid var(--primary); padding-left: 0.75rem; margin: 2rem 0 1rem 0; }
+    .section-desc { font-size: 0.9rem; color: #64748b; font-style: italic; margin-bottom: 1.25rem; }
+
+    .question-card { background: #fff; border: 1px solid var(--border); border-radius: 0.5rem; padding: 1.25rem; margin-bottom: 1.25rem; transition: border-color 0.2s; }
+    .question-card:hover { border-color: #cbd5e1; }
+    .q-number { font-weight: 700; color: #4f46e5; margin-right: 0.5rem; }
+    .q-text { font-weight: 600; margin-bottom: 0.75rem; }
+    
+    .options-grid { display: grid; grid-template-columns: 1fr; gap: 0.5rem; }
+    @media (min-width: 640px) { .options-grid { grid-template-columns: 1fr 1fr; } }
+    .option-item { display: flex; align-items: center; padding: 0.65rem 0.85rem; border: 1px solid var(--border); border-radius: 0.375rem; cursor: pointer; transition: all 0.2s; user-select: none; }
+    .option-item:hover { background: #f8fafc; border-color: #94a3b8; }
+    .option-item.selected { background: #e0e7ff; border-color: #6366f1; color: #3730a3; font-weight: 600; }
+    
+    .tf-table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; }
+    .tf-table th, .tf-table td { border: 1px solid var(--border); padding: 0.65rem 0.75rem; font-size: 0.92rem; }
+    .tf-table th { background: var(--gray-light); text-align: center; }
+    .tf-table td.tf-action { text-align: center; width: 120px; }
+    .btn-tf { padding: 0.35rem 0.75rem; border-radius: 0.25rem; border: 1px solid #cbd5e1; background: #fff; cursor: pointer; font-size: 0.85rem; font-weight: 600; margin: 0 0.15rem; }
+    .btn-tf.selected-true { background: #dcfce7; border-color: #22c55e; color: #15803d; }
+    .btn-tf.selected-false { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
+
+    .input-short { width: 100%; max-width: 250px; padding: 0.5rem 0.75rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; font-size: 1rem; outline: none; margin-top: 0.5rem; }
+    .input-short:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2); }
+
+    .submit-section { text-align: center; margin: 2.5rem 0 1.5rem 0; }
+    .btn-submit { background: var(--primary); color: #fff; font-size: 1.15rem; font-weight: 700; padding: 0.85rem 2.5rem; border: none; border-radius: 0.5rem; cursor: pointer; transition: background 0.2s, transform 0.1s; box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.3); }
+    .btn-submit:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    .btn-submit:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .result-box { display: none; background: #f0fdf4; border: 1px solid #86efac; border-radius: 0.75rem; padding: 1.5rem; margin-top: 2rem; text-align: center; }
+    .result-score { font-size: 2.2rem; font-weight: 800; color: #166534; margin: 0.5rem 0; }
+    .explanation-card { display: none; margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 0.375rem; background: #f8fafc; border-left: 4px solid #6366f1; font-size: 0.9rem; line-height: 1.5; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>PHIẾU BÀI TẬP VÀ ĐÁNH GIÁ ĐỊNH KỲ — HÓA HỌC 12</h1>
+    <p>BÀI 10: PROTEIN VÀ ENZYME (BỘ SÁCH KẾT NỐI TRI THỨC VỚI CUỘC SỐNG)</p>
+  </header>
+
+  <div class="info-bar">
+    <div class="info-inputs">
+      <input type="text" id="hsName" placeholder="Họ và tên học sinh (*)" required>
+      <input type="text" id="hsClass" placeholder="Lớp (Ví dụ: 12A1) (*)" required>
+    </div>
+    <div class="timer-badge" id="timerDisplay">Thời gian: 50:00</div>
+  </div>
+
+  <div class="quiz-body" id="quizContainer">
+    <!-- Part 1 -->
+    <div class="section-title">PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn</div>
+    <div class="section-desc">Thí sinh trả lời từ Câu 1 đến Câu 18. Mỗi câu chỉ chọn một đáp án đúng nhất (4,5 điểm).</div>
+    <div id="part1Container"></div>
+
+    <!-- Part 2 -->
+    <div class="section-title">PHẦN II. Câu trắc nghiệm đúng sai</div>
+    <div class="section-desc">Thí sinh trả lời từ Câu 1 đến Câu 4. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn Đúng hoặc Sai (4,0 điểm).</div>
+    <div id="part2Container"></div>
+
+    <!-- Part 3 -->
+    <div class="section-title">PHẦN III. Câu trắc nghiệm trả lời ngắn</div>
+    <div class="section-desc">Thí sinh trả lời từ Câu 1 đến Câu 6. Viết kết quả dưới dạng số vào ô trống (1,5 điểm).</div>
+    <div id="part3Container"></div>
+
+    <div class="submit-section">
+      <button class="btn-submit" id="btnSubmit" onclick="submitExam()">NỘP BÀI THI</button>
+    </div>
+
+    <div class="result-box" id="resultBox">
+      <h2>KẾT QUẢ BÀI LÀM TRẮC NGHIỆM ONLINE</h2>
+      <div class="result-score" id="scoreDisplay">0.0 / 10 Điểm</div>
+      <p id="resultDetail"></p>
+      <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.5rem;">Kết quả trắc nghiệm đã được tự động đồng bộ vào Google Sheets của Giáo viên môn Hóa.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const QUIZ_DATA = {
+  "title": "Bài 10: Protein và Enzyme - Hóa học 12 (KNTT)",
+  "duration": 50,
+  "submit_url": "https://script.google.com/macros/s/AKfycbwRRiM81mghvA7cInvJgb4rPLzWOAE3s44wer0BJcURQ4hWwoykS19pkNQ9LyzH6Q8lTQ/exec",
+  "part1": [
+    {
+      "id": 1,
+      "question": "Protein là hợp chất cao phân tử được hình thành từ một hay nhiều chuỗi",
+      "options": [
+        "A. polypeptide.",
+        "B. polyamide tổng hợp.",
+        "C. polynucleotide.",
+        "D. polysaccharide."
+      ],
+      "answer": "A",
+      "explanation": "Protein là hợp chất cao phân tử thiên nhiên được cấu tạo từ một hay nhiều chuỗi polypeptide gồm các gốc α-amino acid liên kết bởi liên kết peptide."
+    },
+    {
+      "id": 2,
+      "question": "Phân tử protein được tạo nên từ các đơn phân nào sau đây?",
+      "options": [
+        "A. Các α-amino acid.",
+        "B. Các β-amino acid.",
+        "C. Các amine thơm.",
+        "D. Các acid béo no."
+      ],
+      "answer": "A",
+      "explanation": "Mọi protein trong cơ thể sinh vật đều được cấu tạo từ khoảng 20 loại α-amino acid tiêu chuẩn."
+    },
+    {
+      "id": 3,
+      "question": "Chất nào sau đây thuộc loại protein đơn giản?",
+      "options": [
+        "A. Albumin (trong lòng trắng trứng).",
+        "B. Hemoglobin (trong hồng cầu).",
+        "C. Glycoprotein.",
+        "D. Lipoprotein."
+      ],
+      "answer": "A",
+      "explanation": "Albumin là protein đơn giản vì khi thủy phân hoàn toàn chỉ sinh ra các α-amino acid. Hemoglobin là protein phức tạp chứa thêm nhân Heme phi protein."
+    },
+    {
+      "id": 4,
+      "question": "Chất nào sau đây là protein hình sợi không tan trong nước?",
+      "options": [
+        "A. Keratin (trong móng tay, sợi tóc).",
+        "B. Albumin (trong lòng trắng trứng).",
+        "C. Hemoglobin (trong máu).",
+        "D. Insulin (trong tuyến tụy)."
+      ],
+      "answer": "A",
+      "explanation": "Keratin (tóc, móng), collagen (da, gân) và fibroin (tơ tằm) là các protein hình sợi, có độ bền cơ học cao và không tan trong nước."
+    },
+    {
+      "id": 5,
+      "question": "Thuốc thử dùng để nhận biết liên kết peptide trong phân tử protein qua phản ứng màu biuret là",
+      "options": [
+        "A. Cu(OH)₂ trong môi trường kiềm.",
+        "B. dung dịch AgNO₃ trong NH₃.",
+        "C. dung dịch I₂.",
+        "D. nước bromine."
+      ],
+      "answer": "A",
+      "explanation": "Protein tác dụng với Cu(OH)₂ trong môi trường kiềm (tạo ra từ CuSO₄ + NaOH) cho phức chất màu tím đặc trưng gọi là phản ứng màu biuret."
+    },
+    {
+      "id": 6,
+      "question": "Dung dịch protein tác dụng với dung dịch HNO₃ đặc, đun nóng nhẹ xuất hiện kết tủa màu gì?",
+      "options": [
+        "A. Màu vàng (phản ứng xanthoproteic).",
+        "B. Màu tím.",
+        "C. Màu xanh lam thẫm.",
+        "D. Màu đỏ gạch."
+      ],
+      "answer": "A",
+      "explanation": "Các gốc amino acid chứa vòng thơm (tyrosine, phenylalanine) trong protein bị nitro hóa bởi HNO₃ đặc tạo dẫn xuất polynitro có màu vàng (phản ứng xanthoproteic)."
+    },
+    {
+      "id": 7,
+      "question": "Hầu hết các enzyme trong cơ thể sinh vật có bản chất hóa học là",
+      "options": [
+        "A. protein.",
+        "B. lipid.",
+        "C. carbohydrate.",
+        "D. muối vô cơ."
+      ],
+      "answer": "A",
+      "explanation": "Hầu hết các enzyme là các protein hình cầu, đóng vai trò là chất xúc tác sinh học cho các phản ứng chuyển hóa."
+    },
+    {
+      "id": 8,
+      "question": "Khi đun sôi nhẹ dung dịch lòng trắng trứng, hiện tượng quan sát được là",
+      "options": [
+        "A. lòng trắng trứng đông tụ lại tạo thành khối rắn màu trắng.",
+        "B. dung dịch chuyển sang màu tím thẫm.",
+        "C. có khí mùi khai thoát ra.",
+        "D. dung dịch đổi sang màu hồng."
+      ],
+      "answer": "A",
+      "explanation": "Nhiệt độ cao làm phá vỡ các liên kết hydro và tương tác giữ cấu trúc không gian bậc cao, khiến chuỗi polypeptide bị biến tính và đông tụ tạo thành khối rắn màu trắng."
+    },
+    {
+      "id": 9,
+      "question": "Thủy phân hoàn toàn 1 mol protein đơn giản X thu được hỗn hợp sản phẩm gồm",
+      "options": [
+        "A. các α-amino acid.",
+        "B. các glucose và fructose.",
+        "C. các acid béo và glycerol.",
+        "D. các amine và carboxylic acid."
+      ],
+      "answer": "A",
+      "explanation": "Protein đơn giản được tạo nên hoàn toàn từ các gốc α-amino acid, do đó khi thủy phân hoàn toàn chỉ thu được hỗn hợp các α-amino acid."
+    },
+    {
+      "id": 10,
+      "question": "Phản ứng màu xanthoproteic xảy ra khi phân tử protein có chứa các gốc amino acid nào sau đây?",
+      "options": [
+        "A. Chứa vòng benzene (vòng thơm).",
+        "B. Chứa hai nhóm amino (-NH₂).",
+        "C. Chứa hai nhóm carboxyl (-COOH).",
+        "D. Chứa nguyên tử lưu huỳnh (-SH)."
+      ],
+      "answer": "A",
+      "explanation": "Phản ứng màu xanthoproteic là phản ứng thế nitro vào vòng thơm của các gốc amino acid như Phenylalanine, Tyrosine."
+    },
+    {
+      "id": 11,
+      "question": "Hiện tượng đông tụ protein KHÔNG xảy ra khi cho chất nào sau đây vào dung dịch lòng trắng trứng?",
+      "options": [
+        "A. Nước cất ở nhiệt độ phòng (25°C).",
+        "B. Cồn y tế (alcohol 70°).",
+        "C. Dung dịch acid acetic (giấm ăn).",
+        "D. Dung dịch muối chì Pb(NO₃)₂."
+      ],
+      "answer": "A",
+      "explanation": "Lòng trắng trứng (albumin) là protein hình cầu tan được trong nước cất ở nhiệt độ phòng tạo dung dịch keo bền vững mà không bị đông tụ."
+    },
+    {
+      "id": 12,
+      "question": "Đặc tính xúc tác quan trọng nhất của enzyme so với các chất xúc tác vô cơ thông thường là",
+      "options": [
+        "A. có tính chọn lọc và độ đặc hiệu rất cao, hoạt động ở điều kiện êm dịu.",
+        "B. hoạt động tốt nhất ở nhiệt độ rất cao trên 100°C.",
+        "C. xúc tác được cho mọi loại phản ứng hóa học khác nhau.",
+        "D. bị tiêu hao một lượng lớn sau khi phản ứng kết thúc."
+      ],
+      "answer": "A",
+      "explanation": "Enzyme có tính đặc hiệu rất cao (mỗi enzyme chỉ xúc tác cho một phản ứng hoặc một cơ chất nhất định theo mô hình ổ khóa – chìa khóa) và hoạt động ở điều kiện sinh lí êm dịu (thân nhiệt 37°C, pH trung tính)."
+    },
+    {
+      "id": 13,
+      "question": "Trong hệ tiêu hóa của người, enzyme pepsin trong dạ dày xúc tác cho phản ứng nào sau đây?",
+      "options": [
+        "A. Thủy phân protein thành các chuỗi polypeptide ngắn hơn.",
+        "B. Thủy phân tinh bột thành maltose.",
+        "C. Phân giải chất béo thành glycerol và acid béo.",
+        "D. Tổng hợp glucose thành glycogen."
+      ],
+      "answer": "A",
+      "explanation": "Pepsin là một enzyme protease hoạt động trong môi trường acid dạ dày (pH ≈ 1,5 - 2) xúc tác quá trình thủy phân liên kết peptide trong protein thức ăn."
+    },
+    {
+      "id": 14,
+      "question": "Cho các chất: Gly-Ala, lòng trắng trứng, tinh bột, glucose, tripeptide Ala-Gly-Val. Số chất cho phản ứng màu biuret với Cu(OH)₂ là",
+      "options": [
+        "A. 2.",
+        "B. 3.",
+        "C. 1.",
+        "D. 4."
+      ],
+      "answer": "A",
+      "explanation": "Chỉ có 2 chất cho phản ứng màu biuret là lòng trắng trứng (protein) và Ala-Gly-Val (tripeptide). Gly-Ala là dipeptide không phản ứng; glucose và tinh bột không phải peptide."
+    },
+    {
+      "id": 15,
+      "question": "Khi làm sữa chua tại nhà, hiện tượng sữa chuyển từ dạng lỏng sang dạng đông sệt là do tác nhân nào sau đây gây ra?",
+      "options": [
+        "A. Acid lactic sinh ra từ quá trình lên men làm giảm pH gây đông tụ protein casein.",
+        "B. Nhiệt độ của tủ lạnh làm đông đặc chất béo.",
+        "C. Sự bay hơi của nước trong sữa tươi.",
+        "D. Sự kết tinh của đường lactose."
+      ],
+      "answer": "A",
+      "explanation": "Vi khuẩn lactic lên men đường lactose thành acid lactic, làm giảm pH của sữa xuống điểm đẳng điện của protein casein khiến casein bị đông tụ tạo thành khối sữa chua sánh mịn."
+    },
+    {
+      "id": 16,
+      "question": "Để phân biệt vải dệt bằng sợi tơ tằm tự nhiên (bản chất protein) và sợi bông cotton (bản chất cellulose), người ta dùng phương pháp đơn giản nào?",
+      "options": [
+        "A. Đốt mẫu vải: tơ tằm cháy có mùi khét như tóc cháy, sợi bông cháy có mùi giấy khét.",
+        "B. Nhỏ vài giọt nước cất lên bề mặt vải.",
+        "C. Ngâm vào dung dịch nước muối loãng.",
+        "D. Dùng nam châm hút."
+      ],
+      "answer": "A",
+      "explanation": "Tơ tằm là protein (chứa N, S) khi cháy sinh ra mùi khét đặc trưng như mùi tóc cháy và tro vón tròn xốp dễ bóp vụn. Sợi bông là cellulose khi cháy có mùi giấy khét và tro tàn mịn."
+    },
+    {
+      "id": 17,
+      "question": "Thủy phân hoàn toàn 1 mol pentapeptide mạch hở X cấu tạo từ các amino acid Gly và Ala. Số liên kết peptide trong phân tử X là",
+      "options": [
+        "A. 4.",
+        "B. 5.",
+        "C. 3.",
+        "D. 2."
+      ],
+      "answer": "A",
+      "explanation": "Pentapeptide là chuỗi gồm 5 gốc α-amino acid, số liên kết peptide bằng n - 1 = 5 - 1 = 4."
+    },
+    {
+      "id": 18,
+      "question": "Khi giặt quần áo bằng bột giặt sinh học có chứa enzyme, nhà sản xuất khuyến cáo không nên giặt bằng nước quá nóng (> 60°C) vì lí do nào?",
+      "options": [
+        "A. Nhiệt độ cao làm enzyme bị biến tính và mất hoàn toàn hoạt tính xúc tác tẩy rửa.",
+        "B. Nhiệt độ cao làm enzyme phản ứng dữ dội gây cháy nổ.",
+        "C. Nhiệt độ cao làm enzyme hòa tan sợi vải.",
+        "D. Nhiệt độ cao làm xà phòng bị đông cứng."
+      ],
+      "answer": "A",
+      "explanation": "Enzyme là protein, khi ở nhiệt độ cao (> 60°C) cấu trúc không gian của enzyme bị phá hủy (biến tính nhiệt) làm mất trung tâm hoạt động và mất hoạt tính xúc tác."
+    }
+  ],
+  "part2": [
+    {
+      "id": 1,
+      "context": "Trong ẩm thực Việt Nam, món canh cua đồng nấu rau đay mồng tơi rất được ưa chuộng. Khi nấu, người ta giã nhuyễn cua đồng, lọc lấy phần nước cốt rồi đun lửa nhỏ. Khi nước sôi lăn tăn, các mảng riêu cua kết tụ nổi lên mặt nước. Tương tự, khi làm đậu phụ (đậu hũ) từ sữa đậu nành, người làm thường cho thêm nước chua (chứa acid lactic) hoặc thạch cao thực phẩm để tạo kết tủa.",
+      "subquestions": [
+        {
+          "label": "a)",
+          "text": "Thịt cua đồng và sữa đậu nành đều là những nguồn thực phẩm chứa hàm lượng protein rất phong phú.",
+          "answer": true,
+          "explanation": "Thịt cua đồng giàu protein động vật và đậu nành giàu protein thực vật, là nguồn đạm quan trọng trong dinh dưỡng."
+        },
+        {
+          "label": "b)",
+          "text": "Hiện tượng riêu cua nổi mảng khi đun sôi là do protein trong nước cua bị đông tụ dưới tác dụng của nhiệt độ cao.",
+          "answer": true,
+          "explanation": "Nhiệt độ đun sôi làm biến tính và đông tụ protein hòa tan trong nước cua tạo thành các mảng riêu xốp nhẹ nổi lên mặt nước."
+        },
+        {
+          "label": "c)",
+          "text": "Sự đông tụ protein trong quá trình làm đậu phụ bằng nước chua là do tác nhân acid làm thay đổi pH của môi trường.",
+          "answer": true,
+          "explanation": "Acid trong nước chua đưa pH của sữa đậu nành về điểm đẳng điện của protein đậu nành (glycinin) làm protein kết tủa tạo thành hoa đậu phụ."
+        },
+        {
+          "label": "d)",
+          "text": "Khi protein bị đông tụ bởi nhiệt độ hoặc acid, các liên kết peptide trong chuỗi polypeptide đã bị thủy phân hoàn toàn thành các amino acid.",
+          "answer": false,
+          "explanation": "Sự đông tụ (biến tính) chỉ làm biến đổi cấu trúc không gian bậc 2, 3, 4; các liên kết peptide bậc 1 vẫn được giữ nguyên vẹn, không bị thủy phân."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "context": "Trong y học lâm sàng, xét nghiệm protein toàn phần trong huyết thanh và protein niệu (protein trong nước tiểu) là những chỉ số sinh hóa quan trọng để đánh giá chức năng gan, thận. Bình thường màng lọc cầu thận giữ lại protein hình cầu có kích thước lớn như albumin. Khi cầu thận bị tổn thương, albumin lọt vào nước tiểu. Bác sĩ thường sử dụng phản ứng màu biuret hoặc thử đông tụ với acid để định lượng nhanh protein.",
+      "subquestions": [
+        {
+          "label": "a)",
+          "text": "Albumin là một protein hình sợi, không tan trong nước và có khối lượng phân tử rất nhỏ.",
+          "answer": false,
+          "explanation": "Albumin là protein hình cầu, tan tốt trong nước tạo thành dung dịch keo và có phân tử khối rất lớn (khoảng 66.500 amu)."
+        },
+        {
+          "label": "b)",
+          "text": "Phản ứng màu biuret của protein với Cu(OH)₂ trong môi trường kiềm tạo ra dung dịch có màu tím đặc trưng, giúp định lượng nồng độ protein trong mẫu dịch sinh học.",
+          "answer": true,
+          "explanation": "Màu tím tạo thành từ phản ứng biuret có độ đậm nhạt tỷ lệ thuận với nồng độ liên kết peptide (nồng độ protein), cho phép đo quang phổ định lượng chính xác."
+        },
+        {
+          "label": "c)",
+          "text": "Khi nhỏ vài giọt dung dịch HNO₃ đặc vào mẫu nước tiểu có chứa protein rồi hơ nóng, nếu xuất hiện kết tủa màu vàng thì chứng tỏ mẫu có chứa protein.",
+          "answer": true,
+          "explanation": "Đây là phản ứng màu xanthoproteic đặc trưng của protein chứa amino acid vòng thơm khi tác dụng với acid nitric đặc."
+        },
+        {
+          "label": "d)",
+          "text": "Khi bệnh nhân bị ngộ độc muối chì (Pb²⁺) hoặc thủy ngân (Hg²⁺), các ion kim loại nặng này kết hợp với protein tế bào làm biến tính không thuận nghịch dẫn đến tổn thương gan thận nghiêm trọng.",
+          "answer": true,
+          "explanation": "Ion kim loại nặng (Pb²⁺, Hg²⁺, Cd²⁺) liên kết chặt chẽ với các nhóm —SH và carboxyl của protein gây kết tủa biến tính và làm tê liệt enzyme tế bào."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "context": "Bột giặt sinh học hiện đại thường được bổ sung một lượng nhỏ hỗn hợp các enzyme như protease (phân hủy chất đạm từ máu, trứng, sữa), amylase (phân hủy vết bẩn tinh bột), lipase (phân hủy dầu mỡ thức ăn). Việc sử dụng enzyme giúp nâng cao hiệu quả giặt tẩy ở nhiệt độ thường, tiết kiệm năng lượng và giảm thiểu lượng hóa chất xút kiềm gây hại môi trường.",
+      "subquestions": [
+        {
+          "label": "a)",
+          "text": "Các enzyme protease, lipase, amylase trong bột giặt sinh học hầu hết có bản chất là các phân tử protein.",
+          "answer": true,
+          "explanation": "Hầu hết các enzyme xúc tác sinh học đều là các đại phân tử protein hình cầu được tinh chế từ vi sinh vật."
+        },
+        {
+          "label": "b)",
+          "text": "Enzyme protease có khả năng xúc tác thủy phân các vết bẩn dầu mỡ thực vật bám trên sợi vải.",
+          "answer": false,
+          "explanation": "Protease chỉ xúc tác thủy phân protein (vết máu, sữa, thịt); enzyme xúc tác thủy phân dầu mỡ lipid là lipase."
+        },
+        {
+          "label": "c)",
+          "text": "Hiệu quả tẩy rửa của bột giặt sinh học sẽ tăng lên mức tối đa khi ngâm và giặt quần áo trong nước sôi 100°C.",
+          "answer": false,
+          "explanation": "Ở 100°C, các enzyme sinh học bị biến tính nhiệt và mất hoàn toàn hoạt tính xúc tác khiến hiệu quả tẩy rửa bị giảm sút nghiêm trọng."
+        },
+        {
+          "label": "d)",
+          "text": "Việc ứng dụng enzyme trong bột giặt là một giải pháp công nghệ xanh giúp giảm lượng phosphat và chất hoạt động bề mặt gây ô nhiễm nguồn nước thải sinh hoạt.",
+          "answer": true,
+          "explanation": "Enzyme có khả năng tự phân hủy sinh học tự nhiên, thay thế các hóa chất tẩy rửa vô cơ độc hại, rất thân thiện với môi trường."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "context": "Insulin là một hormone có bản chất protein gồm 51 gốc amino acid chia làm 2 chuỗi polypeptide (chuỗi A gồm 21 amino acid, chuỗi B gồm 30 amino acid) liên kết với nhau bằng các cầu disunfua (—S—S—). Hemoglobin là protein phức tạp gồm 4 chuỗi polypeptide kết hợp với 4 nhóm Heme chứa ion Fe²⁺.",
+      "subquestions": [
+        {
+          "label": "a)",
+          "text": "Cấu trúc bậc 1 của phân tử protein được giữ vững chủ yếu nhờ các liên kết peptide —CO—NH—.",
+          "answer": true,
+          "explanation": "Cấu trúc bậc 1 là trình tự các gốc amino acid liên kết với nhau bằng liên kết cộng hóa trị peptide bền vững."
+        },
+        {
+          "label": "b)",
+          "text": "Cầu disunfua (—S—S—) giữa các gốc amino acid cysteine đóng vai trò quan trọng trong việc duy trì cấu trúc không gian bậc 3 của chuỗi polypeptide.",
+          "answer": true,
+          "explanation": "Liên kết cộng hóa trị disunfua —S—S— nối các đoạn chuỗi lại với nhau, giữ cho phân tử protein cuộn lại theo hình dạng 3D đặc thù."
+        },
+        {
+          "label": "c)",
+          "text": "Khi đun nóng dung dịch insulin trong dung dịch HCl đặc, thu được hỗn hợp gồm 51 phân tử amino acid và sản phẩm này vẫn giữ nguyên hoạt tính hạ đường huyết của insulin.",
+          "answer": false,
+          "explanation": "Khi bị thủy phân thành các amino acid riêng rẽ, cấu trúc không gian đặc thù bị phá hủy hoàn toàn nên sản phẩm mất hoàn toàn hoạt tính sinh học của insulin."
+        },
+        {
+          "label": "d)",
+          "text": "Cả insulin và hemoglobin đều cho phản ứng màu biuret với thuốc thử Cu(OH)₂ trong môi trường kiềm tạo phức chất màu tím.",
+          "answer": true,
+          "explanation": "Insulin (51 gốc) và hemoglobin (hàng trăm gốc) đều chứa rất nhiều liên kết peptide nên đều cho phản ứng màu biuret tím đặc trưng."
+        }
+      ]
+    }
+  ],
+  "part3": [
+    {
+      "id": 1,
+      "question": "Một phân tử protein đơn giản có phân tử khối là 66 000 amu. Giả sử khối lượng phân tử trung bình của một gốc amino acid trong phân tử protein đó là 110 amu. Số lượng gốc amino acid có trong phân tử protein trên là bao nhiêu?",
+      "answer": "600",
+      "explanation": "Số gốc amino acid = 66 000 / 110 = 600 gốc."
+    },
+    {
+      "id": 2,
+      "question": "Một chuỗi polypeptide mạch hở gồm 120 gốc α-amino acid liên kết với nhau. Số liên kết peptide có trong chuỗi polypeptide đó là bao nhiêu?",
+      "answer": "119",
+      "explanation": "Chuỗi gồm n gốc α-amino acid mạch hở có số liên kết peptide = n - 1 = 120 - 1 = 119 liên kết."
+    },
+    {
+      "id": 3,
+      "question": "Thủy phân hoàn toàn 0,05 mol một chuỗi oligopeptide mạch hở X (cấu tạo từ các amino acid no chỉ chứa 1 nhóm -NH₂ và 1 nhóm -COOH) cần vừa đủ 0,2 mol NaOH. Số liên kết peptide có trong một phân tử X là bao nhiêu?",
+      "answer": "3",
+      "explanation": "Tỉ lệ n_NaOH / n_X = 0,2 / 0,05 = 4 → X là tetrapeptide (gồm 4 gốc amino acid). Số liên kết peptide = 4 - 1 = 3."
+    },
+    {
+      "id": 4,
+      "question": "Cho các dung dịch sau: lòng trắng trứng, hồ tinh bột, glycerol, glucose, Gly-Ala-Val, Gly-Ala. Có bao nhiêu dung dịch cho phản ứng tạo phức màu tím với thuốc thử Cu(OH)₂ trong môi trường kiềm?",
+      "answer": "2",
+      "explanation": "Chỉ có 2 chất cho phản ứng màu biuret màu tím: lòng trắng trứng (protein) và Gly-Ala-Val (tripeptide). Glycerol và glucose tạo dung dịch màu xanh lam thẫm; hồ tinh bột không phản ứng; Gly-Ala là dipeptide không cho phản ứng biuret."
+    },
+    {
+      "id": 5,
+      "question": "Thủy phân hoàn toàn 1 mol peptide mạch hở Y thu được 2 mol Glycine, 1 mol Alanine và 1 mol Valine. Số phân tử nước (H₂O) tham gia vào phản ứng thủy phân trên là bao nhiêu phân tử?",
+      "answer": "3",
+      "explanation": "Tổng số gốc amino acid trong Y = 2 + 1 + 1 = 4 (tetrapeptide). Thủy phân hoàn toàn 1 phân tử tetrapeptide cần 3 phân tử H₂O."
+    },
+    {
+      "id": 6,
+      "question": "Cho các nhận định sau:\n(1) Protein là hợp chất cao phân tử thiên nhiên được tạo thành từ các chuỗi polypeptide.\n(2) Tất cả các protein đều tan tốt trong nước tạo thành dung dịch trong suốt.\n(3) Dung dịch protein có phản ứng màu biuret với Cu(OH)₂ tạo phức màu tím.\n(4) Khi nấu canh cua, riêu cua nổi lên là hiện tượng đông tụ protein do nhiệt độ.\n(5) Hầu hết các enzyme có bản chất là protein và hoạt động xúc tác có tính chọn lọc cao.\n(6) Khi bị acid nitric đặc dính vào da, da bị vàng là do phản ứng màu của lipid.\nSố nhận định đúng là bao nhiêu?",
+      "answer": "4",
+      "explanation": "Có 4 nhận định đúng: (1), (3), (4), (5). Nhận định (2) sai vì protein hình sợi không tan trong nước; (6) sai vì da bị vàng do phản ứng xanthoproteic của protein ở da với HNO₃ đặc, không phải của lipid."
+    }
+  ]
+};
+
+let studentAnswers = {
+  part1: {},
+  part2: {},
+  part3: {}
+};
+
+let isSubmitted = false;
+let timeLeft = QUIZ_DATA.duration * 60;
+let timerInterval = null;
+
+function renderQuiz() {
+  // Render Part 1
+  const p1Container = document.getElementById('part1Container');
+  QUIZ_DATA.part1.forEach(q => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = `q_p1_${q.id}`;
+    
+    let optHtml = '';
+    q.options.forEach(opt => {
+      const optVal = opt.charAt(0);
+      optHtml += `
+        <div class="option-item" onclick="selectOption1(${q.id}, '${optVal}', this)">
+          ${opt}
+        </div>
+      `;
+    });
+
+    card.innerHTML = `
+      <div class="q-text"><span class="q-number">Câu ${q.id}:</span>${q.question}</div>
+      <div class="options-grid" id="opt_grid_${q.id}">${optHtml}</div>
+      <div class="explanation-card" id="exp_p1_${q.id}">
+        <strong>Giải thích:</strong> Đáp án đúng là <strong>${q.answer}</strong>. ${q.explanation}
+      </div>
+    `;
+    p1Container.appendChild(card);
+  });
+
+  // Render Part 2
+  const p2Container = document.getElementById('part2Container');
+  QUIZ_DATA.part2.forEach(q => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = `q_p2_${q.id}`;
+
+    let rowsHtml = '';
+    q.subquestions.forEach((sub, sIdx) => {
+      rowsHtml += `
+        <tr>
+          <td><strong>${sub.label}</strong> ${sub.text}</td>
+          <td class="tf-action">
+            <button type="button" class="btn-tf" id="btn_tf_${q.id}_${sIdx}_T" onclick="selectTF(${q.id}, ${sIdx}, true)">Đúng</button>
+            <button type="button" class="btn-tf" id="btn_tf_${q.id}_${sIdx}_F" onclick="selectTF(${q.id}, ${sIdx}, false)">Sai</button>
+          </td>
+        </tr>
+      `;
+    });
+
+    card.innerHTML = `
+      <div class="q-text"><span class="q-number">Câu ${q.id}:</span>${q.context}</div>
+      <table class="tf-table">
+        <thead>
+          <tr>
+            <th>Phát biểu / Nội dung</th>
+            <th>Lựa chọn</th>
+          </tr>
+        </thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+      <div class="explanation-card" id="exp_p2_${q.id}">
+        <strong>Giải thích chi tiết:</strong><br>
+        ${q.subquestions.map(s => `${s.label} [<strong>${s.answer ? 'Đúng' : 'Sai'}</strong>]: ${s.explanation}`).join('<br>')}
+      </div>
+    `;
+    p2Container.appendChild(card);
+  });
+
+  // Render Part 3
+  const p3Container = document.getElementById('part3Container');
+  QUIZ_DATA.part3.forEach(q => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = `q_p3_${q.id}`;
+
+    card.innerHTML = `
+      <div class="q-text"><span class="q-number">Câu ${q.id}:</span>${q.question}</div>
+      <input type="text" class="input-short" id="input_p3_${q.id}" placeholder="Nhập đáp số (dạng số)..." onchange="recordInput3(${q.id}, this.value)">
+      <div class="explanation-card" id="exp_p3_${q.id}">
+        <strong>Đáp số chuẩn:</strong> <strong>${q.answer}</strong>. ${q.explanation}
+      </div>
+    `;
+    p3Container.appendChild(card);
+  });
+
+  startTimer();
+}
+
+function selectOption1(qId, val, elem) {
+  if (isSubmitted) return;
+  studentAnswers.part1[qId] = val;
+  const parent = document.getElementById(`opt_grid_${qId}`);
+  parent.querySelectorAll('.option-item').forEach(it => it.classList.remove('selected'));
+  elem.classList.add('selected');
+}
+
+function selectTF(qId, sIdx, val) {
+  if (isSubmitted) return;
+  if (!studentAnswers.part2[qId]) {
+    studentAnswers.part2[qId] = {};
+  }
+  studentAnswers.part2[qId][sIdx] = val;
+
+  const btnT = document.getElementById(`btn_tf_${qId}_${sIdx}_T`);
+  const btnF = document.getElementById(`btn_tf_${qId}_${sIdx}_F`);
+  if (val) {
+    btnT.className = 'btn-tf selected-true';
+    btnF.className = 'btn-tf';
+  } else {
+    btnF.className = 'btn-tf selected-false';
+    btnT.className = 'btn-tf';
+  }
+}
+
+function recordInput3(qId, val) {
+  if (isSubmitted) return;
+  studentAnswers.part3[qId] = val.trim();
+}
+
+function startTimer() {
+  const timerDisplay = document.getElementById('timerDisplay');
+  timerInterval = setInterval(() => {
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      alert('Đã hết thời gian làm bài! Hệ thống tự động nộp bài.');
+      submitExam();
+      return;
+    }
+    timeLeft--;
+    const m = Math.floor(timeLeft / 60);
+    const s = timeLeft % 60;
+    timerDisplay.innerText = `Thời gian: ${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+  }, 1000);
+}
+
+function calculateScore() {
+  let p1Correct = 0;
+  QUIZ_DATA.part1.forEach(q => {
+    if (studentAnswers.part1[q.id] === q.answer) p1Correct++;
+  });
+  const score1 = (p1Correct / 18) * 4.5;
+
+  let score2 = 0;
+  QUIZ_DATA.part2.forEach(q => {
+    let correctInQ = 0;
+    const qAns = studentAnswers.part2[q.id] || {};
+    q.subquestions.forEach((sub, sIdx) => {
+      if (qAns[sIdx] === sub.answer) correctInQ++;
+    });
+    if (correctInQ === 1) score2 += 0.1;
+    else if (correctInQ === 2) score2 += 0.25;
+    else if (correctInQ === 3) score2 += 0.5;
+    else if (correctInQ === 4) score2 += 1.0;
+  });
+
+  let p3Correct = 0;
+  QUIZ_DATA.part3.forEach(q => {
+    const userVal = (studentAnswers.part3[q.id] || '').replace(',', '.').toLowerCase();
+    const correctVal = q.answer.replace(',', '.').toLowerCase();
+    if (userVal === correctVal) p3Correct++;
+  });
+  const score3 = p3Correct * 0.25;
+
+  const totalScore = Math.min(10, Math.round((score1 + score2 + score3) * 100) / 100);
+  return {
+    totalScore,
+    score1: Math.round(score1 * 100) / 100,
+    score2: Math.round(score2 * 100) / 100,
+    score3: Math.round(score3 * 100) / 100,
+    p1Correct,
+    p3Correct
+  };
+}
+
+async function submitExam() {
+  if (isSubmitted) return;
+  const name = document.getElementById('hsName').value.trim();
+  const cls = document.getElementById('hsClass').value.trim();
+
+  if (!name || !cls) {
+    alert('Vui lòng điền đầy đủ Họ và tên cùng Lớp trước khi nộp bài!');
+    return;
+  }
+
+  if (!confirm('Bạn có chắc chắn muốn nộp bài? Sau khi nộp bài, hệ thống sẽ chấm điểm và hiển thị giải thích chi tiết.')) {
+    return;
+  }
+
+  isSubmitted = true;
+  clearInterval(timerInterval);
+  document.getElementById('btnSubmit').disabled = true;
+
+  const res = calculateScore();
+  document.getElementById('scoreDisplay').innerText = `${res.totalScore} / 10 Điểm`;
+  document.getElementById('resultDetail').innerText = 
+    `Phần I: ${res.score1}/4.5 điểm (${res.p1Correct}/18 câu) | Phần II: ${res.score2}/4.0 điểm | Phần III: ${res.score3}/1.5 điểm (${res.p3Correct}/6 câu)`;
+  document.getElementById('resultBox').style.display = 'block';
+
+  document.querySelectorAll('.explanation-card').forEach(el => el.style.display = 'block');
+
+  try {
+    const payload = {
+      ho_ten: name,
+      lop: cls,
+      diem: res.totalScore,
+      chi_tiet: `P1: ${res.p1Correct}/18; P2: ${res.score2}đ; P3: ${res.p3Correct}/6`,
+      thoi_gian: new Date().toLocaleString('vi-VN'),
+      bai_thi: QUIZ_DATA.title
+    };
+
+    await fetch(QUIZ_DATA.submit_url, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    console.log('Đã gửi dữ liệu kết quả thành công về Google Sheets.');
+  } catch (e) {
+    console.warn('Lỗi khi gửi kết quả về Google Sheet:', e);
+  }
+
+  document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
+}
+
+window.addEventListener('DOMContentLoaded', renderQuiz);
+</script>
+
+</body>
+</html>
