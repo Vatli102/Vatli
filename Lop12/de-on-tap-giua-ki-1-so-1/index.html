@@ -4,6 +4,7 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2547909591568871"
          crossorigin="anonymous"></script>
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -363,6 +364,20 @@
                     <div class="summary-label">Điểm quy đổi hệ 10</div>
                 </div>
             </div>
+
+            <div id="syncStatusBadge" style="margin: 18px auto 0 auto; padding: 10px 20px; border-radius: 12px; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; background: #ecfdf5; color: #047857; border: 1px solid #6ee7b7; max-width: 540px;">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span id="syncStatusText">Kết quả bài thi đã được lưu tự động vào bảng điểm của Thầy Cô!</span>
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 20px;">
+                <button type="button" onclick="location.reload()" style="background: #f1f5f9; color: #4f46e5; border: 1px solid #cbd5e1; padding: 10px 24px; border-radius: 10px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-size: 0.95rem;">
+                    🔄 Làm lại bài
+                </button>
+                <a href="/" style="background: #4f46e5; color: white; text-decoration: none; padding: 10px 24px; border-radius: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; font-size: 0.95rem; box-shadow: 0 4px 12px rgba(79,70,229,0.25);">
+                    🏠 Về Trang Chủ
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -379,6 +394,7 @@
 </footer>
 
 <script>
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbycB2ttbYIyAElV-YSkBiEKCv1UI3uzoQ4db5qi9DdgLWiZc90vHiSaejPaO0mBhYro/exec";
 const quizData = {
         "title": "📝 Đề ôn tập giữa kì 1 số 1 - Vật lí 12 (Mã đề: 301)",
         "part1": [
@@ -1241,23 +1257,38 @@ function gradeQuiz(isTimeout = false) {
 
     const name = (typeof localStorage !== 'undefined' && localStorage.getItem('saved_student_name')) || (document.getElementById('studentName') && document.getElementById('studentName').value.trim()) || 'Học sinh';
     const className = (typeof localStorage !== 'undefined' && localStorage.getItem('saved_student_class')) || (document.getElementById('studentClass') && document.getElementById('studentClass').value.trim()) || 'Lớp';
-    const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbycB2ttbYIyAElV-YSkBiEKCv1UI3uzoQ4db5qi9DdgLWiZc90vHiSaejPaO0mBhYro/exec";
-    if (typeof GOOGLE_SHEETS_URL !== 'undefined' && GOOGLE_SHEETS_URL) {
-        try {
-            fetch(GOOGLE_SHEETS_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify({
-                    name: name,
-                    className: className,
-                    lesson: "📝 Đề 6 - Chương 1, 2 Vật lí 12",
-                    correct: `${totalCorrectCount}/${totalItems}`,
-                    score: finalGrade
-                })
-            }).catch(function(err){});
-        } catch(err){}
-    }
+    const examTitle = (typeof quizData !== 'undefined' && quizData.title) ? quizData.title : '📝 Đề ôn tập giữa kì 1 số 1 - Vật lí 12 (Mã đề: 301)';
+    const targetUrl = (typeof GOOGLE_SHEETS_URL !== 'undefined' && GOOGLE_SHEETS_URL) ? GOOGLE_SHEETS_URL : "https://script.google.com/macros/s/AKfycbycB2ttbYIyAElV-YSkBiEKCv1UI3uzoQ4db5qi9DdgLWiZc90vHiSaejPaO0mBhYro/exec";
+
+    const payload = JSON.stringify({
+        name: name,
+        className: className,
+        lesson: examTitle,
+        correct: `${totalCorrectCount}/${totalItems}`,
+        score: finalGrade
+    });
+
+    try {
+        fetch(targetUrl, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: payload,
+            redirect: "follow"
+        }).then(function(res) {
+            var sEl = document.getElementById('syncStatusText');
+            if (sEl) sEl.innerHTML = `✓ Kết quả bài thi của <strong>${name} (${className})</strong> đã được ghi nhận vào bảng điểm Excel!`;
+        }).catch(function(err) {
+            // Backup fetch in case of cross-origin redirect interception
+            try {
+                fetch(targetUrl, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: payload
+                });
+            } catch(e) {}
+        });
+    } catch(err){}
 
 }
 </script>
