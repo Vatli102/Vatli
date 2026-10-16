@@ -340,6 +340,8 @@
         let userPart2 = {};
         let userPart3 = {};
         let examSubmitted = false;
+        let sName = '';
+        let sClass = '';
         let timerInterval = null;
         let totalTimeSeconds = 60 * 60;
         let timeRemaining = totalTimeSeconds;
@@ -404,6 +406,10 @@
         }
 
         function startExam() {
+            sName = document.getElementById('studentName').value.trim();
+            sClass = document.getElementById('studentClass').value.trim();
+            window.sName = sName;
+            window.sClass = sClass;
             const name = document.getElementById('studentName').value.trim();
             const sClass = document.getElementById('studentClass').value.trim();
             if (!name || !sClass) {
@@ -660,17 +666,53 @@
             const name = document.getElementById('studentName').value.trim();
             const sClass = document.getElementById('studentClass').value.trim();
 
+            const examName = "Đề ôn tập về nhà: pH & Thủy phân muối - Hóa học 11 (Đề 03)";
+            const scoreVal = totalPoints.toFixed(2);
+
             const resultPayload = {
-                timestamp: new Date().toLocaleString('vi-VN'),
-                hoTen: name,
-                lop: sClass,
-                deThi: "Đề ôn tập về nhà: pH & Thủy phân muối - Hóa học 11 (Đề 03)",
+                timestamp: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
+                subject: "Hóa học",
                 monHoc: "Hóa học",
                 chuyenMuc: "vatli102.com/hoa/",
-                diemSo: totalPoints.toFixed(2),
-                thoiGianLamBai: timeSpent,
+                sourceUrl: window.location.href,
+                sourceDomain: window.location.hostname,
+
+                // Tên học sinh (toàn bộ các alias):
+                name: name,
+                studentName: name,
+                hoTen: name,
+                fullName: name,
+
+                // Lớp học (toàn bộ các alias):
+                className: sClass,
+                studentClass: sClass,
+                class: sClass,
+                lop: sClass,
+
+                // Tên bài thi (toàn bộ các alias):
+                lesson: examName,
+                examTitle: examName,
+                tenBai: examName,
+                deThi: examName,
+
+                // Điểm số:
+                score: scoreVal,
+                totalScore: scoreVal,
+                diem: scoreVal,
+                diemSo: scoreVal,
+                grade: scoreVal,
+
+                // Số câu đúng / sai:
+                correct: totalCorrectItems,
+                correctCount: totalCorrectItems,
                 soCauDung: totalCorrectItems,
-                soCauSai: totalIncorrectItems
+                soCauSai: totalIncorrectItems,
+                incorrectCount: totalIncorrectItems,
+
+                // Thời gian làm bài:
+                timeSpent: timeSpent,
+                thoiGian: timeSpent,
+                thoiGianLamBai: timeSpent
             };
 
             sendResultsToGoogleSheet(resultPayload);
