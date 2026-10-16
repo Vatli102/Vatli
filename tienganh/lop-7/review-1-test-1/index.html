@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review 1 (Units 1 - 2 - 3) - Test 1 | Tiếng Anh 7 Global Success</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            text-align: justify;
+        }
+        .palette-btn.active {
+            border-color: #4f46e5;
+            background-color: #4f46e5;
+            color: #ffffff;
+        }
+        .palette-btn.answered {
+            background-color: #e0e7ff;
+            color: #3730a3;
+            border-color: #c7d2fe;
+        }
+        .palette-btn.wrong {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-color: #fca5a5;
+        }
+        .palette-btn.correct {
+            background-color: #dcfce7;
+            color: #166534;
+            border-color: #86efac;
+        }
+        .tab-btn.active {
+            border-bottom: 3px solid #4f46e5;
+            color: #4f46e5;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between">
+
+    <!-- Modal Nhập Họ Tên Trước Khi Làm Bài -->
+    <div id="modal-start" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 space-y-6 border border-slate-100 transform transition-all text-left">
+            <div class="text-center space-y-2">
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 text-2xl font-black mb-1">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-black text-slate-900">THÔNG TIN HỌC SINH</h3>
+                <p class="text-xs text-slate-500">Đề kiểm tra: <b>Review 1 (Units 1-2-3) — Test 1 (Tiếng Anh 7)</b></p>
+            </div>
+            <div class="space-y-4 text-xs font-semibold">
+                <div>
+                    <label class="block text-slate-700 mb-1.5 font-bold">Họ và tên học sinh <span class="text-rose-500">*</span></label>
+                    <input type="text" id="input-fullname" placeholder="Ví dụ: Nguyễn Văn An" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium">
+                </div>
+                <div>
+                    <label class="block text-slate-700 mb-1.5 font-bold">Lớp học <span class="text-rose-500">*</span></label>
+                    <input type="text" id="input-class" placeholder="Ví dụ: 7A1" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium">
+                </div>
+            </div>
+            <div class="pt-2">
+                <button onclick="startExam()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-indigo-200 transition-all flex items-center justify-center gap-2">
+                    <span>BẮT ĐẦU LÀM BÀI THI</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="/tienganh/" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-chevron-left text-sm"></i>
+                </a>
+                <div>
+                    <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-indigo-100 text-indigo-800">Review 1 • Test 1</span>
+                    <h1 class="text-sm sm:text-base font-extrabold text-slate-900 leading-tight">Tiếng Anh 7: Tổng ôn Units 1 - 2 - 3</h1>
+                </div>
+            </div>
+
+            <!-- Tab Switcher -->
+            <div class="flex items-center gap-2 sm:gap-6 border-b sm:border-0 border-slate-100 text-xs sm:text-sm font-bold">
+                <button id="tab-btn-theory" onclick="switchTab('theory')" class="tab-btn py-4 px-2 text-slate-500 hover:text-slate-800 transition-all">
+                    <i class="fa-solid fa-book-open mr-1 text-indigo-500"></i> Lý thuyết trọng tâm
+                </button>
+                <button id="tab-btn-quiz" onclick="switchTab('quiz')" class="tab-btn active py-4 px-2 text-indigo-600 transition-all">
+                    <i class="fa-solid fa-pen-to-square mr-1 text-indigo-500"></i> Làm bài tập củng cố
+                </button>
+            </div>
+
+            <!-- Timer / Profile pill -->
+            <div class="hidden sm:flex items-center gap-3">
+                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-black">
+                    <i class="fa-solid fa-clock text-indigo-600"></i>
+                    <span id="timer-display">45:00</span>
+                </div>
+                <div class="text-right">
+                    <div id="header-student-name" class="text-xs font-extrabold text-slate-800">Thí sinh</div>
+                    <div id="header-student-class" class="text-[10px] font-semibold text-slate-500">Lớp 7</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 w-full flex-1">
+        
+        <!-- Tab 1: Lý Thuyết Trọng Tâm -->
+        <section id="tab-theory" class="hidden max-w-5xl mx-auto">
+            
+<div class="theory-container space-y-8 text-slate-800">
+    <div class="bg-gradient-to-r from-indigo-900 via-blue-900 to-slate-900 text-white p-6 rounded-2xl shadow-md">
+        <div class="inline-block px-3 py-1 bg-indigo-500/30 border border-indigo-400/40 rounded-full text-xs font-extrabold uppercase tracking-wider text-indigo-300 mb-2">
+            GLOBAL SUCCESS 7 • TỔNG ÔN TRỌNG TÂM REVIEW 1 (UNITS 1 - 2 - 3)
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black tracking-tight">Lý Thuyết Trọng Tâm: Review 1</h2>
+        <p class="text-indigo-200 text-sm mt-1">Tổng hợp toàn diện kiến thức từ vựng, ngữ pháp, ngữ âm và kỹ năng thực hành của Unit 1 (Hobbies), Unit 2 (Healthy Living) và Unit 3 (Community Service).</p>
+    </div>
+
+    <!-- 1. TỪ VỰNG & CỤM TỪ TRỌNG TÂM -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">1</span>
+            <h3 class="text-lg font-black text-slate-900">Từ vựng & Cụm từ (Vocabulary & Collocations)</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <h4 class="font-extrabold text-indigo-700 text-sm flex items-center gap-1.5"><i class="fa-solid fa-palette"></i> Unit 1: Hobbies</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>gardening</b>: làm vườn</li>
+                    <li>• <b>horse riding</b>: cưỡi ngựa</li>
+                    <li>• <b>collect stamps / coins</b>: sưu tầm tem / tiền xu</li>
+                    <li>• <b>make pottery / models</b>: làm gốm / làm mô hình</li>
+                    <li>• <b>fold origami</b>: gấp giấy origami</li>
+                    <li>• <b>take up a hobby</b>: bắt đầu một sở thích</li>
+                    <li>• <b>find sth interesting / useful</b>: thấy cái gì hay / bổ ích</li>
+                </ul>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <h4 class="font-extrabold text-emerald-700 text-sm flex items-center gap-1.5"><i class="fa-solid fa-heart-pulse"></i> Unit 2: Healthy Living</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>healthy lifestyle</b>: lối sống lành mạnh</li>
+                    <li>• <b>dim light</b>: ánh sáng yếu / mờ</li>
+                    <li>• <b>sunburn</b>: cháy nắng / bỏng nắng</li>
+                    <li>• <b>acne</b>: mụn trứng cá</li>
+                    <li>• <b>chapped lips</b>: môi khô nứt nẻ</li>
+                    <li>• <b>stay in shape / keep fit</b>: giữ dáng, giữ thể lực</li>
+                    <li>• <b>eye drops</b>: thuốc nhỏ mắt</li>
+                    <li>• <b>avoid fast food / soft drinks</b>: tránh đồ ăn nhanh / nước ngọt</li>
+                </ul>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <h4 class="font-extrabold text-amber-700 text-sm flex items-center gap-1.5"><i class="fa-solid fa-hand-holding-heart"></i> Unit 3: Community Service</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>volunteer</b> (n/v): tình nguyện viên / làm tình nguyện</li>
+                    <li>• <b>donate blood / clothes / books</b>: hiến máu / quyên góp quần áo, sách</li>
+                    <li>• <b>community service</b>: dịch vụ / lao động công ích vì cộng đồng</li>
+                    <li>• <b>tutor homeless children</b>: dạy kèm trẻ em nghèo</li>
+                    <li>• <b>nursing home</b>: viện dưỡng lão</li>
+                    <li>• <b>pick up litter / rubbish</b>: nhặt rác</li>
+                    <li>• <b>plant trees</b>: trồng cây xanh</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. CẤU TẠO TỪ -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">2</span>
+            <h3 class="text-lg font-black text-slate-900">Cấu tạo từ / Dạng của từ (Word Formation)</h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left text-slate-700 border-collapse">
+                <thead class="bg-indigo-50 text-indigo-900 font-extrabold">
+                    <tr>
+                        <th class="p-2.5 border border-indigo-100">Động từ (Verb)</th>
+                        <th class="p-2.5 border border-indigo-100">Danh từ (Noun)</th>
+                        <th class="p-2.5 border border-indigo-100">Tính từ (Adjective)</th>
+                        <th class="p-2.5 border border-indigo-100">Trạng từ (Adverb)</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    <tr>
+                        <td class="p-2.5 border border-slate-100 font-bold">—</td>
+                        <td class="p-2.5 border border-slate-100"><b>health</b> (sức khỏe)</td>
+                        <td class="p-2.5 border border-slate-100"><b>healthy</b> / <b>unhealthy</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>healthily</b></td>
+                    </tr>
+                    <tr class="bg-slate-50/50">
+                        <td class="p-2.5 border border-slate-100 font-bold"><b>help</b> (giúp đỡ)</td>
+                        <td class="p-2.5 border border-slate-100"><b>help</b> / <b>helper</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>helpful</b> (hữu ích) / <b>helpless</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>helpfully</b></td>
+                    </tr>
+                    <tr>
+                        <td class="p-2.5 border border-slate-100 font-bold"><b>volunteer</b> (tình nguyện)</td>
+                        <td class="p-2.5 border border-slate-100"><b>volunteer</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>voluntary</b> (tự nguyện)</td>
+                        <td class="p-2.5 border border-slate-100"><b>voluntarily</b></td>
+                    </tr>
+                    <tr class="bg-slate-50/50">
+                        <td class="p-2.5 border border-slate-100 font-bold"><b>collect</b> (sưu tầm)</td>
+                        <td class="p-2.5 border border-slate-100"><b>collection</b> / <b>collector</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>collective</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>collectively</b></td>
+                    </tr>
+                    <tr>
+                        <td class="p-2.5 border border-slate-100 font-bold"><b>differ</b> (khác biệt)</td>
+                        <td class="p-2.5 border border-slate-100"><b>difference</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>different</b></td>
+                        <td class="p-2.5 border border-slate-100"><b>differently</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 3. PHÂN BIỆT TỪ DỄ NHẦM LẪN -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">3</span>
+            <h3 class="text-lg font-black text-slate-900">Phân biệt các từ dễ gây nhầm lẫn (Confusing Words)</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200 space-y-1.5">
+                <h4 class="font-extrabold text-amber-900">1. Lend vs. Borrow vs. Donate</h4>
+                <p>• <b>Lend (sb sth)</b>: Cho ai mượn cái gì (sẽ lấy lại sau một thời gian).</p>
+                <p>• <b>Borrow (sth from sb)</b>: Mượn cái gì từ ai (có nghĩa vụ phải trả lại).</p>
+                <p>• <b>Donate (sth to sb)</b>: Quyên góp, hiến tặng từ thiện (cho đi vĩnh viễn không nhận lại).</p>
+            </div>
+            <div class="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200 space-y-1.5">
+                <h4 class="font-extrabold text-emerald-900">2. Healthy vs. Healthful vs. Fit</h4>
+                <p>• <b>Healthy</b>: Khỏe mạnh (về con người) hoặc tốt cho sức khỏe (lối sống, chế độ ăn: <i>healthy food</i>).</p>
+                <p>• <b>Fit</b>: Thể lực săn chắc, khỏe khoắn nhờ chăm chỉ rèn luyện thể thao (<i>stay in shape / keep fit</i>).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. NGỮ PHÁP TRỌNG TÂM -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">4</span>
+            <h3 class="text-lg font-black text-slate-900">Ngữ pháp trọng tâm (Grammar Focus)</h3>
+        </div>
+        <div class="space-y-4 text-xs">
+            <!-- Grammar 1 -->
+            <div class="p-4 rounded-xl bg-indigo-50/50 border border-indigo-100 space-y-2">
+                <h4 class="font-black text-indigo-900 text-sm">A. Động từ chỉ sự yêu thích / ghét + Danh động từ (V-ing)</h4>
+                <div class="p-3 bg-white rounded-lg border border-indigo-200 font-mono text-indigo-950 font-bold">
+                    S + like / love / enjoy / fancy / prefer / hate / dislike / detest + V-ing
+                </div>
+                <p class="text-slate-600"><i>Ví dụ:</i> Lan <b>enjoys gardening</b> and <b>loves collecting</b> stamps.</p>
+            </div>
+
+            <!-- Grammar 2 -->
+            <div class="p-4 rounded-xl bg-blue-50/50 border border-blue-100 space-y-2">
+                <h4 class="font-black text-blue-900 text-sm">B. Phân biệt thì Hiện tại đơn (Present Simple) & Quá khứ đơn (Past Simple)</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="p-3 bg-white rounded-lg border border-blue-200">
+                        <div class="font-bold text-blue-900 mb-1">Hiện tại đơn (Thói quen / Sự thật)</div>
+                        <div class="font-mono text-[11px] text-slate-700">S + V(s/es) | S + do/does not + V_inf</div>
+                        <div class="text-[11px] text-slate-500 mt-1">Dấu hiệu: <i>always, usually, often, every day...</i></div>
+                    </div>
+                    <div class="p-3 bg-white rounded-lg border border-blue-200">
+                        <div class="font-bold text-blue-900 mb-1">Quá khứ đơn (Đã xảy ra & chấm dứt)</div>
+                        <div class="font-mono text-[11px] text-slate-700">S + V2/ed | S + did not + V_inf</div>
+                        <div class="text-[11px] text-slate-500 mt-1">Dấu hiệu: <i>yesterday, last week, ago, in 2023...</i></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grammar 3 -->
+            <div class="p-4 rounded-xl bg-purple-50/50 border border-purple-100 space-y-2">
+                <h4 class="font-black text-purple-900 text-sm">C. Câu đơn & Liên từ kết hợp (Coordinating Conjunctions: and, but, or, so)</h4>
+                <ul class="space-y-1 text-slate-700">
+                    <li>• <b>and</b> (và): Bổ sung thêm thông tin cùng chiều (<i>I like apples, and my sister likes oranges.</i>)</li>
+                    <li>• <b>but</b> (nhưng): Diễn tả sự đối lập, tương phản (<i>He is very tired, but he still helps his mother.</i>)</li>
+                    <li>• <b>or</b> (hoặc / hay là): Đưa ra sự lựa chọn (<i>You can walk to school or ride a bicycle.</i>)</li>
+                    <li>• <b>so</b> (vì vậy / cho nên): Diễn tả kết quả của mệnh đề trước (<i>It was raining heavily, so we stayed at home.</i>)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. NGỮ ÂM -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm">5</span>
+            <h3 class="text-lg font-black text-slate-900">Ngữ âm: Quy tắc phát âm trọng tâm Units 1 - 3</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                <h4 class="font-bold text-slate-900 mb-1">Âm /ə/ & /ɜː/ (Unit 1)</h4>
+                <p>• <b>/ə/</b>: <i><u>a</u>bout, c<u>a</u>mera, <u>a</u>way</i></p>
+                <p>• <b>/ɜː/</b>: <i>b<u>ir</u>d, l<u>ear</u>n, pref<u>er</u></i></p>
+            </div>
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                <h4 class="font-bold text-slate-900 mb-1">Âm /f/ & /v/ (Unit 2)</h4>
+                <p>• <b>/f/</b>: <i><u>f</u>at, <u>f</u>ood, lau<u>gh</u>, <u>ph</u>oto</i></p>
+                <p>• <b>/v/</b>: <i><u>v</u>itamin, li<u>ve</u>, ha<u>ve</u></i></p>
+            </div>
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                <h4 class="font-bold text-slate-900 mb-1">Phát âm đuôi -ed (Unit 3)</h4>
+                <p>• <b>/ɪd/</b>: sau âm /t/, /d/ (<i>donated, planted, needed</i>)</p>
+                <p>• <b>/t/</b>: sau âm vô thanh /p, k, f, s, ʃ, tʃ/ (<i>helped, looked, washed</i>)</p>
+                <p>• <b>/d/</b>: các âm hữu thanh còn lại (<i>cleaned, played, loved</i>)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nút làm bài tập -->
+    <div class="text-center pt-4 pb-2">
+        <button onclick="switchTab('quiz')" class="px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-extrabold text-sm rounded-xl shadow-md shadow-indigo-200 transition-all transform hover:-translate-y-0.5 inline-flex items-center gap-2">
+            <span>Làm bài tập củng cố</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </button>
+    </div>
+</div>
+
+        </section>
+
+        <!-- Tab 2: Làm Bài Tập Củng Cố (CBT 2-Column Mode) -->
+        <section id="tab-quiz" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Left Column: Single Question Card & Passage Area (8 cols) -->
+            <div class="lg:col-span-8 space-y-4">
+                
+                <!-- Audio Player Widget (Always available for listening questions) -->
+                <div id="audio-player-card" class="bg-gradient-to-r from-indigo-900 to-blue-900 text-white rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-cyan-300 text-lg shrink-0">
+                            <i class="fa-solid fa-headphones"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-cyan-300 uppercase tracking-wider">Audio Bài Nghe (Questions 1 - 8)</div>
+                            <div class="text-xs text-slate-200">Listening Part 1 & Part 2 — Voice Chuẩn Bản Ngữ</div>
+                        </div>
+                    </div>
+                    <audio id="exam-audio" controls class="w-full sm:w-72 h-9 rounded-lg outline-none">
+                        <source src="Test 1 - Review 1 - Full Audio Listening.mp3" type="audio/mpeg">
+                        Trình duyệt của bạn không hỗ trợ phát âm thanh.
+                    </audio>
+                </div>
+
+                <!-- Main Question Card -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6 min-h-[420px] flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <div class="flex items-center gap-2">
+                                <span id="q-badge" class="px-3 py-1 rounded-full text-xs font-black bg-indigo-100 text-indigo-800">Câu 1 / 40</span>
+                                <span id="q-topic" class="text-xs font-bold text-slate-500">Listening Part 1</span>
+                            </div>
+                            <span class="text-xs font-extrabold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-100">0.25 điểm</span>
+                        </div>
+
+                        <!-- Passage Box if applicable -->
+                        <div id="q-passage-container" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs sm:text-sm leading-relaxed text-slate-700 max-h-60 overflow-y-auto">
+                            <div id="q-passage-content"></div>
+                        </div>
+
+                        <!-- Question Title -->
+                        <div id="q-title" class="text-sm sm:text-base font-extrabold text-slate-900 leading-relaxed pt-1">
+                            Loading question...
+                        </div>
+
+                        <!-- Options List -->
+                        <div id="q-options" class="space-y-2.5 pt-2">
+                            <!-- Injected by JS -->
+                        </div>
+
+                        <!-- Explanation Area (Only shown after submit) -->
+                        <div id="q-explanation-box" class="hidden bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-xs leading-relaxed text-emerald-950 space-y-1">
+                            <div class="font-bold text-emerald-800 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-check"></i> Lời giải chi tiết:
+                            </div>
+                            <div id="q-explanation-text"></div>
+                        </div>
+                    </div>
+
+                    <!-- Question Navigation Controls -->
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+                        <button onclick="prevQuestion()" id="btn-prev" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-50 transition-colors flex items-center gap-1.5">
+                            <i class="fa-solid fa-arrow-left"></i> <span>Câu trước</span>
+                        </button>
+
+                        <div class="text-xs font-bold text-slate-400">
+                            Tiến độ: <span id="progress-text" class="text-indigo-600 font-black">0/40</span>
+                        </div>
+
+                        <button onclick="nextQuestion()" id="btn-next" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition-colors flex items-center gap-1.5 shadow-sm shadow-indigo-200">
+                            <span>Câu tiếp theo</span> <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Sidebar (Palette & Actions) (4 cols) -->
+            <div class="lg:col-span-4 space-y-4">
+                
+                <!-- Student Card & Submit Button -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Học sinh dự thi</div>
+                            <div id="sidebar-student-name" class="text-sm font-black text-slate-900">Nguyễn Văn An</div>
+                            <div id="sidebar-student-class" class="text-xs font-semibold text-slate-500">Lớp 7A1</div>
+                        </div>
+                        <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-black text-sm">
+                            7
+                        </div>
+                    </div>
+
+                    <!-- Progress bar -->
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between text-[11px] font-bold text-slate-500">
+                            <span>Đã hoàn thành</span>
+                            <span id="percent-text">0%</span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div id="progress-bar-fill" class="h-full bg-indigo-600 transition-all duration-300 w-0"></div>
+                        </div>
+                    </div>
+
+                    <button onclick="confirmSubmit()" id="btn-submit-exam" class="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-emerald-200 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>NỘP BÀI THI</span>
+                    </button>
+                </div>
+
+                <!-- Palette Grid (40 Questions) -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider">Bảng 40 Câu Hỏi</h4>
+                        <span class="text-[10px] text-slate-400 font-bold">Nhấn số để chuyển câu</span>
+                    </div>
+
+                    <div id="palette-grid" class="grid grid-cols-5 sm:grid-cols-8 lg:grid-cols-5 gap-2 pt-1">
+                        <!-- 40 buttons injected by JS -->
+                    </div>
+
+                    <!-- Review Filter (Only visible after submit) -->
+                    <div id="review-filter-box" class="hidden pt-3 border-t border-slate-100 space-y-2">
+                        <div class="text-[11px] font-bold text-slate-500">Lọc xem kết quả:</div>
+                        <div class="grid grid-cols-3 gap-1.5 text-[10px] font-bold">
+                            <button onclick="filterReview('all')" class="py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">Tất cả</button>
+                            <button onclick="filterReview('wrong')" class="py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 transition-colors">Chỉ câu sai</button>
+                            <button onclick="filterReview('correct')" class="py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 transition-colors">Chỉ câu đúng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Báo Cáo Kết Quả Sau Khi Nộp -->
+    <div id="modal-result" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 space-y-6 border border-slate-100 text-center transform transition-all">
+            <div class="space-y-2">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 text-3xl font-black mb-1">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h3 class="text-2xl font-black text-slate-900">KẾT QUẢ BÀI THI</h3>
+                <p class="text-xs text-slate-500">Review 1 (Units 1-2-3) — Test 1 (Tiếng Anh 7 Global Success)</p>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-indigo-50 border border-indigo-100 space-y-3">
+                <div class="text-4xl sm:text-5xl font-black text-indigo-700" id="result-score">
+                    0.0 <span class="text-lg font-bold text-slate-400">/ 10</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs font-bold text-slate-700 pt-2 border-t border-indigo-200/60">
+                    <div>Số câu đúng: <span id="result-correct-count" class="text-emerald-600 font-extrabold text-sm">0/40</span></div>
+                    <div>Thời gian: <span id="result-time-spent" class="text-indigo-600 font-extrabold text-sm">00:00</span></div>
+                </div>
+            </div>
+
+            <p id="result-feedback" class="text-xs font-semibold text-slate-600">
+                Chúc mừng bạn đã hoàn thành bài kiểm tra! Toàn bộ lời giải chi tiết đã được mở khóa.
+            </p>
+
+            <div class="flex gap-3">
+                <button onclick="closeResultModal()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-indigo-200 transition-all">
+                    XEM LỜI GIẢI CHI TIẾT
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Logic -->
+    <script>
+        const QUESTIONS = [
+  {
+    "num": 1,
+    "topic": "Listening Part 1: Weekend Activity",
+    "audio_file": "Test 1 - Review 1 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What community service did Mai do with the Green Youth Club last weekend?",
+    "options": {
+      "A": "Painted classroom walls",
+      "B": "Cleaned up the local park and planted trees",
+      "C": "Collected plastic bottles at the beach",
+      "D": "Cooked meals for elderly people"
+    },
+    "correct": "B",
+    "exp": "Trong bài nghe, Mai nói: <i>'We cleaned up the local park and planted over thirty young trees.'</i> (Dọn dẹp công viên địa phương và trồng hơn 30 cây con)."
+  },
+  {
+    "num": 2,
+    "topic": "Listening Part 1: Hobbies & Health",
+    "audio_file": "Test 1 - Review 1 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What did Alex do in the afternoon to avoid sitting for too long?",
+    "options": {
+      "A": "He went swimming",
+      "B": "He played badminton",
+      "C": "He went jogging for 40 minutes",
+      "D": "He rode a bicycle to school"
+    },
+    "correct": "C",
+    "exp": "Trong bài nghe, Alex chia sẻ: <i>'I also went jogging for forty minutes in the afternoon to avoid sitting for too long.'</i>"
+  },
+  {
+    "num": 3,
+    "topic": "Listening Part 1: Health Benefit",
+    "audio_file": "Test 1 - Review 1 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "According to Mai, what is outdoor exercise especially good for?",
+    "options": {
+      "A": "Our eyes and physical health",
+      "B": "Saving money",
+      "C": "Making new friends online",
+      "D": "Building houses"
+    },
+    "correct": "A",
+    "exp": "Mai khẳng định: <i>'Outdoor exercise is really good for our eyes and physical health.'</i> (Tập thể dục ngoài trời rất tốt cho mắt và thể lực)."
+  },
+  {
+    "num": 4,
+    "topic": "Listening Part 1: Future Plan",
+    "audio_file": "Test 1 - Review 1 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What will Alex and Mai do together next weekend?",
+    "options": {
+      "A": "Plant flowers at their school garden",
+      "B": "Donate old comic books at the children's hospital",
+      "C": "Go camping in the mountains",
+      "D": "Make paper models for a competition"
+    },
+    "correct": "B",
+    "exp": "Mai hỏi: <i>'...would you like to donate some old comic books with me at the children's hospital?'</i> và Alex hào hứng đồng ý."
+  },
+  {
+    "num": 5,
+    "topic": "Listening Part 2: Campaign Target",
+    "audio_file": "Test 1 - Review 1 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "How many children in the community shelter does the 'Bright Smiles' project support?",
+    "options": {
+      "A": "18 children",
+      "B": "50 children",
+      "C": "80 children",
+      "D": "100 children"
+    },
+    "correct": "C",
+    "exp": "Người nói thông báo: <i>'This year, our primary goal is to support eighty children living in the local community shelter.'</i> (80 trẻ em)."
+  },
+  {
+    "num": 6,
+    "topic": "Listening Part 2: Donated Items",
+    "audio_file": "Test 1 - Review 1 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What items are students encouraged to donate?",
+    "options": {
+      "A": "Warm clothes, unused notebooks, and school bags",
+      "B": "Electronic games and headphones",
+      "C": "Old furniture and broken computers",
+      "D": "Fast food and fizzy drinks"
+    },
+    "correct": "A",
+    "exp": "Trong bài nghe: <i>'First, we are collecting warm clothes, unused notebooks, and school bags.'</i>"
+  },
+  {
+    "num": 7,
+    "topic": "Listening Part 2: Tutoring Schedule",
+    "audio_file": "Test 1 - Review 1 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "When will student volunteers organize tutoring classes for younger children?",
+    "options": {
+      "A": "Every Monday morning",
+      "B": "Every Saturday afternoon",
+      "C": "Every Friday evening",
+      "D": "Every Sunday night"
+    },
+    "correct": "B",
+    "exp": "Người nói nêu rõ: <i>'Second, our student volunteers will organize free tutoring classes every Saturday afternoon...'</i>"
+  },
+  {
+    "num": 8,
+    "topic": "Listening Part 2: Fundraising Activity",
+    "audio_file": "Test 1 - Review 1 - Full Audio Listening.mp3",
+    "passage": null,
+    "title": "What activity will be hosted next Sunday to raise funds?",
+    "options": {
+      "A": "A music concert",
+      "B": "A charity fun run around the school lake",
+      "C": "A food festival",
+      "D": "A photography exhibition"
+    },
+    "correct": "B",
+    "exp": "Người nói thông báo: <i>'Finally, next Sunday we will host a charity fun run around the school lake to raise funds.'</i>"
+  },
+  {
+    "num": 9,
+    "topic": "Pronunciation: Vowel Sound /ə/ vs /ɜː/",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose underlined part is pronounced differently from the others.",
+    "options": {
+      "A": "<u>a</u>bout",
+      "B": "<u>a</u>way",
+      "C": "b<u>ir</u>d",
+      "D": "c<u>a</u>mera"
+    },
+    "correct": "C",
+    "exp": "<b>bird</b> phát âm là /ɜː/ (/bɜːd/), trong khi <b>about</b>, <b>away</b>, <b>camera</b> đều có phần gạch chân phát âm là âm /ə/ ngắn."
+  },
+  {
+    "num": 10,
+    "topic": "Pronunciation: Sound /f/ vs /v/",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose underlined part is pronounced differently from the others.",
+    "options": {
+      "A": "<u>f</u>at",
+      "B": "<u>f</u>it",
+      "C": "<u>v</u>itamin",
+      "D": "<u>ph</u>oto"
+    },
+    "correct": "C",
+    "exp": "<b>vitamin</b> có âm đầu là /v/, các từ <b>fat</b>, <b>fit</b>, <b>photo</b> đều có âm đầu phát âm là /f/."
+  },
+  {
+    "num": 11,
+    "topic": "Pronunciation: -ed ending",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose underlined part is pronounced differently from the others.",
+    "options": {
+      "A": "donat<u>ed</u>",
+      "B": "plant<u>ed</u>",
+      "C": "help<u>ed</u>",
+      "D": "need<u>ed</u>"
+    },
+    "correct": "C",
+    "exp": "<b>helped</b> có đuôi -ed phát âm là /t/ (sau âm vô thanh /p/). Các từ <b>donated</b>, <b>planted</b>, <b>needed</b> kết thúc bằng âm /t/ hoặc /d/ nên đuôi -ed phát âm là /ɪd/."
+  },
+  {
+    "num": 12,
+    "topic": "Word Stress: Two-syllable Words",
+    "audio_file": null,
+    "passage": null,
+    "title": "Choose the word whose primary stress is positioned differently from the others.",
+    "options": {
+      "A": "hobby",
+      "B": "garden",
+      "C": "collect",
+      "D": "patient"
+    },
+    "correct": "C",
+    "exp": "<b>collect</b> có trọng âm rơi vào âm tiết thứ 2 (/kəˈlekt/). Các từ <b>hobby</b> (/ˈhɒbi/), <b>garden</b> (/ˈɡɑːdn/), <b>patient</b> (/ˈpeɪʃnt/) đều có trọng âm rơi vào âm tiết thứ 1."
+  },
+  {
+    "num": 13,
+    "topic": "Grammar: Verbs of liking + V-ing",
+    "audio_file": null,
+    "passage": null,
+    "title": "My younger sister really enjoys ________ teddy bears and colourful dolls in her free time.",
+    "options": {
+      "A": "collect",
+      "B": "collecting",
+      "C": "collected",
+      "D": "to collecting"
+    },
+    "correct": "B",
+    "exp": "Cấu trúc với động từ chỉ sở thích: <i>enjoy + V-ing</i> (thích làm gì). Do đó chọn <b>collecting</b>."
+  },
+  {
+    "num": 14,
+    "topic": "Grammar: Simple Past vs Present Simple",
+    "audio_file": null,
+    "passage": null,
+    "title": "Last Sunday, our school club ________ over two hundred warm blankets to poor children in the northern mountains.",
+    "options": {
+      "A": "donates",
+      "B": "donating",
+      "C": "donated",
+      "D": "will donate"
+    },
+    "correct": "C",
+    "exp": "Dấu hiệu thời gian trong quá khứ <i>'Last Sunday'</i> (Chủ nhật tuần trước) yêu cầu dùng thì Quá khứ đơn (Past Simple): <b>donated</b>."
+  },
+  {
+    "num": 15,
+    "topic": "Grammar: Compound sentence with Conjunctions",
+    "audio_file": null,
+    "passage": null,
+    "title": "He loves playing outdoor sports, ________ he always puts on sunscreen to avoid sunburn.",
+    "options": {
+      "A": "so",
+      "B": "but",
+      "C": "or",
+      "D": "although"
+    },
+    "correct": "A",
+    "exp": "Liên từ chỉ kết quả: <b>so</b> (vì vậy/cho nên). Anh ấy thích chơi thể thao ngoài trời, <i>vì vậy</i> anh ấy luôn thoa kem chống nắng để tránh bị cháy nắng."
+  },
+  {
+    "num": 16,
+    "topic": "Vocabulary: Healthy Living",
+    "audio_file": null,
+    "passage": null,
+    "title": "Reading books in ________ light can cause eye strain and harm your eyesight.",
+    "options": {
+      "A": "dim",
+      "B": "bright",
+      "C": "sun",
+      "D": "fresh"
+    },
+    "correct": "A",
+    "exp": "Cụm từ cố định: <b>dim light</b> (ánh sáng yếu/mờ). Đọc sách trong điều kiện thiếu sáng có thể gây mỏi mắt và giảm thị lực."
+  },
+  {
+    "num": 17,
+    "topic": "Vocabulary: Community Service",
+    "audio_file": null,
+    "passage": null,
+    "title": "Many university students spend their summer vacations ________ homeless children in remote rural villages.",
+    "options": {
+      "A": "tutoring",
+      "B": "spending",
+      "C": "raising",
+      "D": "making"
+    },
+    "correct": "A",
+    "exp": "Cụm từ: <b>tutor homeless children</b> (dạy kèm/phụ đạo học tập cho trẻ em nghèo/vô gia cư)."
+  },
+  {
+    "num": 18,
+    "topic": "Grammar: Present Simple for Habit",
+    "audio_file": null,
+    "passage": null,
+    "title": "My father usually ________ up at 5:30 a.m. and does morning exercise to keep fit.",
+    "options": {
+      "A": "wakes",
+      "B": "woke",
+      "C": "waking",
+      "D": "wake"
+    },
+    "correct": "A",
+    "exp": "Trạng từ tần suất <i>usually</i> chỉ thói quen thường nhật, chủ ngữ số ít <i>My father</i> -> chia thì Hiện tại đơn: <b>wakes</b>."
+  },
+  {
+    "num": 19,
+    "topic": "Confusing Words: Lend vs Borrow vs Donate",
+    "audio_file": null,
+    "passage": null,
+    "title": "Local people were encouraged to ________ blood and non-perishable food to help flood victims.",
+    "options": {
+      "A": "borrow",
+      "B": "donate",
+      "C": "lend",
+      "D": "rent"
+    },
+    "correct": "B",
+    "exp": "<b>donate</b> (hiến tặng, quyên góp) mang ý nghĩa từ thiện không hoàn lại (donate blood/food), khác với <i>borrow</i> (mượn) hay <i>lend</i> (cho mượn)."
+  },
+  {
+    "num": 20,
+    "topic": "Word Formation: Health (n) -> Healthy (adj)",
+    "audio_file": null,
+    "passage": null,
+    "title": "Eating plenty of fresh vegetables and drinking pure water are essential for maintaining a ________ lifestyle.",
+    "options": {
+      "A": "health",
+      "B": "healthily",
+      "C": "healthy",
+      "D": "unhealthy"
+    },
+    "correct": "C",
+    "exp": "Vị trí trước danh từ <i>lifestyle</i> cần một tính từ mang nghĩa tích cực: <b>healthy</b> (lối sống lành mạnh)."
+  },
+  {
+    "num": 21,
+    "topic": "Vocabulary: Health Problem Collocations",
+    "audio_file": null,
+    "passage": null,
+    "title": "During dry winter months, remember to apply lip balm regularly to prevent ________ lips.",
+    "options": {
+      "A": "sunburn",
+      "B": "chapped",
+      "C": "acne",
+      "D": "flu"
+    },
+    "correct": "B",
+    "exp": "Cụm từ y tế quen thuộc trong Unit 2: <b>chapped lips</b> (môi khô nứt nẻ)."
+  },
+  {
+    "num": 22,
+    "topic": "Grammar: Verbs of liking with Find sth + Adj",
+    "audio_file": null,
+    "passage": null,
+    "title": "Most students find making cardboard models ________ because it stimulates their creativity.",
+    "options": {
+      "A": "interest",
+      "B": "interested",
+      "C": "interesting",
+      "D": "interestingly"
+    },
+    "correct": "C",
+    "exp": "Cấu trúc: <i>find + sth + adj</i> (thấy cái gì như thế nào đối với bản thân). Mô hình làm bằng bìa carton mang đặc điểm gây hứng thú nên dùng tính từ đuôi -ing: <b>interesting</b>."
+  },
+  {
+    "num": 23,
+    "topic": "Communication: Giving Advice on Health",
+    "audio_file": null,
+    "passage": null,
+    "title": "Tom: 'My face is covered in acne and my skin feels oily.' - Doctor: '________'",
+    "options": {
+      "A": "You should wash your face twice daily with mild soap and avoid touching it.",
+      "B": "You had better stay up late and play video games.",
+      "C": "Never drink water in the morning.",
+      "D": "Congratulations! That is wonderful."
+    },
+    "correct": "A",
+    "exp": "Lời khuyên y tế chuẩn xác cho da mụn: Rửa mặt 2 lần mỗi ngày với sữa rửa mặt dịu nhẹ và tránh đưa tay sờ lên mặt."
+  },
+  {
+    "num": 24,
+    "topic": "Communication: Responding to an Invitation",
+    "audio_file": null,
+    "passage": null,
+    "title": "Lan: 'Would you like to join our community cleanup this Saturday?' - Nick: '________'",
+    "options": {
+      "A": "Yes, I'd love to! What time do we meet?",
+      "B": "No, I don't like eating vegetables.",
+      "C": "I think it is very boring.",
+      "D": "You are welcome."
+    },
+    "correct": "A",
+    "exp": "Lời đáp đồng ý lịch sự và nhiệt tình trước lời mời tham gia hoạt động cộng đồng: <i>'Yes, I'd love to! What time do we meet?'</i>"
+  },
+  {
+    "num": 25,
+    "topic": "Public Notice: School Community Clean-up",
+    "audio_file": null,
+    "passage": null,
+    "title": "What does this notice tell students to do?<br><div style='background:#f8fafc; border:2px dashed #0284c7; padding:10px; border-radius:8px; margin:8px 0; font-family:sans-serif;'><b>NOTICE: COMMUNITY CLEANUP DAY</b><br>Please bring your own reusable water bottles and working gloves. Single-use plastic cups are prohibited.</div>",
+    "options": {
+      "A": "Students must buy single-use plastic cups at the school gate.",
+      "B": "Students should prepare personal water bottles and protective gloves.",
+      "C": "The cleanup activity is cancelled due to heavy rain.",
+      "D": "Students can only work inside the computer laboratory."
+    },
+    "correct": "B",
+    "exp": "Thông báo yêu cầu mang theo bình nước cá nhân tái sử dụng (*reusable water bottles*) và găng tay lao động (*working gloves*)."
+  },
+  {
+    "num": 26,
+    "topic": "Public Sign: Hospital Quiet Zone",
+    "audio_file": null,
+    "passage": null,
+    "title": "What does this sign mean in a healthcare center?<br><div style='background:#fef2f2; border:2px solid #ef4444; padding:10px; border-radius:8px; margin:8px 0; font-family:sans-serif; text-align:center;'><b>QUIET ZONE: PLEASE TURN OFF OR SILENCE MOBILE PHONES</b></div>",
+    "options": {
+      "A": "Visitors are allowed to make loud phone calls anywhere.",
+      "B": "People must keep quiet and mute their electronic devices to not disturb patients.",
+      "C": "Mobile phones are sold at a discounted price here.",
+      "D": "Doctors are not working today."
+    },
+    "correct": "B",
+    "exp": "Biển báo yêu cầu giữ trật tự và tắt chuông điện thoại trong khu vực khám chữa bệnh để không làm phiền bệnh nhân."
+  },
+  {
+    "num": 27,
+    "topic": "Guided Cloze: The Value of Hobbies & Well-being",
+    "audio_file": null,
+    "passage": "Having a hobby is extremely beneficial for both mental and physical health. Many teenagers enjoy (27)________ hobbies such as football, cycling, and swimming. These activities not only help them build muscle strength but also (28)________ them from sitting passively in front of electronic screens for hours. On the other hand, creative indoor pastimes like painting, playing a musical instrument, or (29)________ origami cultivate patience and imagination. In addition, when young people join hobby clubs, they have wonderful opportunities to make friends who (30)________ similar interests. Research shows that teenagers with regular hobbies feel less stressed (31)________ they have a positive way to relax after long school days. Therefore, parents and teachers should actively (32)________ teenagers to discover and pursue their passions.",
+    "title": "Choose the best option for blank (27):",
+    "options": {
+      "A": "outdoor",
+      "B": "indoors",
+      "C": "bored",
+      "D": "harmful"
+    },
+    "correct": "A",
+    "exp": "Các môn bóng đá, đạp xe, bơi lội thuộc nhóm sở thích ngoài trời: <b>outdoor hobbies</b>."
+  },
+  {
+    "num": 28,
+    "topic": "Guided Cloze: Blank (28)",
+    "audio_file": null,
+    "passage": "Having a hobby is extremely beneficial for both mental and physical health. Many teenagers enjoy (27)________ hobbies such as football, cycling, and swimming. These activities not only help them build muscle strength but also (28)________ them from sitting passively in front of electronic screens for hours. On the other hand, creative indoor pastimes like painting, playing a musical instrument, or (29)________ origami cultivate patience and imagination. In addition, when young people join hobby clubs, they have wonderful opportunities to make friends who (30)________ similar interests. Research shows that teenagers with regular hobbies feel less stressed (31)________ they have a positive way to relax after long school days. Therefore, parents and teachers should actively (32)________ teenagers to discover and pursue their passions.",
+    "title": "Choose the best option for blank (28):",
+    "options": {
+      "A": "prevent",
+      "B": "encourage",
+      "C": "cause",
+      "D": "make"
+    },
+    "correct": "A",
+    "exp": "Cấu trúc: <i>prevent somebody from doing something</i> (ngăn ngừa ai khỏi làm việc gì có hại)."
+  },
+  {
+    "num": 29,
+    "topic": "Guided Cloze: Blank (29)",
+    "audio_file": null,
+    "passage": "Having a hobby is extremely beneficial for both mental and physical health. Many teenagers enjoy (27)________ hobbies such as football, cycling, and swimming. These activities not only help them build muscle strength but also (28)________ them from sitting passively in front of electronic screens for hours. On the other hand, creative indoor pastimes like painting, playing a musical instrument, or (29)________ origami cultivate patience and imagination. In addition, when young people join hobby clubs, they have wonderful opportunities to make friends who (30)________ similar interests. Research shows that teenagers with regular hobbies feel less stressed (31)________ they have a positive way to relax after long school days. Therefore, parents and teachers should actively (32)________ teenagers to discover and pursue their passions.",
+    "title": "Choose the best option for blank (29):",
+    "options": {
+      "A": "folding",
+      "B": "building",
+      "C": "collecting",
+      "D": "planting"
+    },
+    "correct": "A",
+    "exp": "Cụm từ quen thuộc trong Unit 1: <b>folding origami</b> (gấp giấy nghệ thuật origami)."
+  },
+  {
+    "num": 30,
+    "topic": "Guided Cloze: Blank (30)",
+    "audio_file": null,
+    "passage": "Having a hobby is extremely beneficial for both mental and physical health. Many teenagers enjoy (27)________ hobbies such as football, cycling, and swimming. These activities not only help them build muscle strength but also (28)________ them from sitting passively in front of electronic screens for hours. On the other hand, creative indoor pastimes like painting, playing a musical instrument, or (29)________ origami cultivate patience and imagination. In addition, when young people join hobby clubs, they have wonderful opportunities to make friends who (30)________ similar interests. Research shows that teenagers with regular hobbies feel less stressed (31)________ they have a positive way to relax after long school days. Therefore, parents and teachers should actively (32)________ teenagers to discover and pursue their passions.",
+    "title": "Choose the best option for blank (30):",
+    "options": {
+      "A": "share",
+      "B": "divide",
+      "C": "lose",
+      "D": "refuse"
+    },
+    "correct": "A",
+    "exp": "Cụm từ: <b>share similar interests</b> (chia sẻ những sở thích tương đồng)."
+  },
+  {
+    "num": 31,
+    "topic": "Guided Cloze: Blank (31)",
+    "audio_file": null,
+    "passage": "Having a hobby is extremely beneficial for both mental and physical health. Many teenagers enjoy (27)________ hobbies such as football, cycling, and swimming. These activities not only help them build muscle strength but also (28)________ them from sitting passively in front of electronic screens for hours. On the other hand, creative indoor pastimes like painting, playing a musical instrument, or (29)________ origami cultivate patience and imagination. In addition, when young people join hobby clubs, they have wonderful opportunities to make friends who (30)________ similar interests. Research shows that teenagers with regular hobbies feel less stressed (31)________ they have a positive way to relax after long school days. Therefore, parents and teachers should actively (32)________ teenagers to discover and pursue their passions.",
+    "title": "Choose the best option for blank (31):",
+    "options": {
+      "A": "because",
+      "B": "so",
+      "C": "although",
+      "D": "but"
+    },
+    "correct": "A",
+    "exp": "Liên từ chỉ nguyên nhân: <b>because</b> (bởi vì họ có phương thức tích cực để thư giãn)."
+  },
+  {
+    "num": 32,
+    "topic": "Guided Cloze: Blank (32)",
+    "audio_file": null,
+    "passage": "Having a hobby is extremely beneficial for both mental and physical health. Many teenagers enjoy (27)________ hobbies such as football, cycling, and swimming. These activities not only help them build muscle strength but also (28)________ them from sitting passively in front of electronic screens for hours. On the other hand, creative indoor pastimes like painting, playing a musical instrument, or (29)________ origami cultivate patience and imagination. In addition, when young people join hobby clubs, they have wonderful opportunities to make friends who (30)________ similar interests. Research shows that teenagers with regular hobbies feel less stressed (31)________ they have a positive way to relax after long school days. Therefore, parents and teachers should actively (32)________ teenagers to discover and pursue their passions.",
+    "title": "Choose the best option for blank (32):",
+    "options": {
+      "A": "encourage",
+      "B": "punish",
+      "C": "prevent",
+      "D": "ignore"
+    },
+    "correct": "A",
+    "exp": "Cấu trúc: <i>encourage someone to do something</i> (khuyến khích, động viên ai làm gì)."
+  },
+  {
+    "num": 33,
+    "topic": "Reading Comprehension: Main Idea",
+    "audio_file": null,
+    "passage": "Community service refers to unpaid work performed by an individual or group to benefit their local community. Across Vietnam, secondary school students are participating in various volunteer initiatives with great enthusiasm.<br><br>One remarkable example is the 'Green Bamboo Club' founded by seventh-grade students in Da Nang. Every weekend, the members gather at central parks and sandy beaches to pick up plastic waste, glass bottles, and aluminium cans. Afterward, they sort the recyclable materials and sell them to local recycling factories. With the money raised, the club buys notebooks, pens, and warm sweaters for disadvantaged pupils living in mountainous communes.<br><br>Besides environmental protection, many students also volunteer at nursing homes. They spend Saturday mornings reading newspapers, singing traditional folk songs, and preparing healthy meals for elderly residents. This compassionate work brings immense joy to lonely seniors and helps adolescents develop deep empathy, social communication skills, and gratitude for life.<br><br>Volunteering does not require large financial donations; even small acts of kindness like sharing old books, planting a flower, or teaching a younger child can make a world of difference.",
+    "title": "What is the primary topic of the passage?",
+    "options": {
+      "A": "How to earn high salaries in modern technology companies",
+      "B": "The active participation and positive impact of student community service",
+      "C": "The history of recycling factories in Da Nang",
+      "D": "The rules of traditional folk singing competitions"
+    },
+    "correct": "B",
+    "exp": "Bài đọc xoay quanh sự tham gia nhiệt huyết và những tác động tích cực to lớn của các hoạt động tình nguyện vì cộng đồng của học sinh."
+  },
+  {
+    "num": 34,
+    "topic": "Reading Comprehension: Detail Retrieval",
+    "audio_file": null,
+    "passage": "Community service refers to unpaid work performed by an individual or group to benefit their local community. Across Vietnam, secondary school students are participating in various volunteer initiatives with great enthusiasm.<br><br>One remarkable example is the 'Green Bamboo Club' founded by seventh-grade students in Da Nang. Every weekend, the members gather at central parks and sandy beaches to pick up plastic waste, glass bottles, and aluminium cans. Afterward, they sort the recyclable materials and sell them to local recycling factories. With the money raised, the club buys notebooks, pens, and warm sweaters for disadvantaged pupils living in mountainous communes.<br><br>Besides environmental protection, many students also volunteer at nursing homes. They spend Saturday mornings reading newspapers, singing traditional folk songs, and preparing healthy meals for elderly residents. This compassionate work brings immense joy to lonely seniors and helps adolescents develop deep empathy, social communication skills, and gratitude for life.<br><br>Volunteering does not require large financial donations; even small acts of kindness like sharing old books, planting a flower, or teaching a younger child can make a world of difference.",
+    "title": "Who founded the 'Green Bamboo Club'?",
+    "options": {
+      "A": "Local recycling factory managers",
+      "B": "Seventh-grade students in Da Nang",
+      "C": "Elderly people in nursing homes",
+      "D": "Professional singers"
+    },
+    "correct": "B",
+    "exp": "Đoạn 2 nêu rõ: <i>'One remarkable example is the \"Green Bamboo Club\" founded by seventh-grade students in Da Nang.'</i>"
+  },
+  {
+    "num": 35,
+    "topic": "Reading Comprehension: Detail Retrieval",
+    "audio_file": null,
+    "passage": "Community service refers to unpaid work performed by an individual or group to benefit their local community. Across Vietnam, secondary school students are participating in various volunteer initiatives with great enthusiasm.<br><br>One remarkable example is the 'Green Bamboo Club' founded by seventh-grade students in Da Nang. Every weekend, the members gather at central parks and sandy beaches to pick up plastic waste, glass bottles, and aluminium cans. Afterward, they sort the recyclable materials and sell them to local recycling factories. With the money raised, the club buys notebooks, pens, and warm sweaters for disadvantaged pupils living in mountainous communes.<br><br>Besides environmental protection, many students also volunteer at nursing homes. They spend Saturday mornings reading newspapers, singing traditional folk songs, and preparing healthy meals for elderly residents. This compassionate work brings immense joy to lonely seniors and helps adolescents develop deep empathy, social communication skills, and gratitude for life.<br><br>Volunteering does not require large financial donations; even small acts of kindness like sharing old books, planting a flower, or teaching a younger child can make a world of difference.",
+    "title": "How does the Green Bamboo Club raise money to buy sweaters and school supplies?",
+    "options": {
+      "A": "By asking for money from tourists",
+      "B": "By selling collected recyclable materials to factories",
+      "C": "By organizing expensive rock concerts",
+      "D": "By running an online bookstore"
+    },
+    "correct": "B",
+    "exp": "Đoạn 2: <i>'Afterward, they sort the recyclable materials and sell them to local recycling factories. With the money raised, the club buys notebooks...'</i>"
+  },
+  {
+    "num": 36,
+    "topic": "Reading Comprehension: Vocabulary in Context",
+    "audio_file": null,
+    "passage": "Community service refers to unpaid work performed by an individual or group to benefit their local community. Across Vietnam, secondary school students are participating in various volunteer initiatives with great enthusiasm.<br><br>One remarkable example is the 'Green Bamboo Club' founded by seventh-grade students in Da Nang. Every weekend, the members gather at central parks and sandy beaches to pick up plastic waste, glass bottles, and aluminium cans. Afterward, they sort the recyclable materials and sell them to local recycling factories. With the money raised, the club buys notebooks, pens, and warm sweaters for disadvantaged pupils living in mountainous communes.<br><br>Besides environmental protection, many students also volunteer at nursing homes. They spend Saturday mornings reading newspapers, singing traditional folk songs, and preparing healthy meals for elderly residents. This compassionate work brings immense joy to lonely seniors and helps adolescents develop deep empathy, social communication skills, and gratitude for life.<br><br>Volunteering does not require large financial donations; even small acts of kindness like sharing old books, planting a flower, or teaching a younger child can make a world of difference.",
+    "title": "The word <b>'compassionate'</b> in paragraph 3 is closest in meaning to:",
+    "options": {
+      "A": "caring and kind",
+      "B": "careless and rude",
+      "C": "costly and luxurious",
+      "D": "noisy and crowded"
+    },
+    "correct": "A",
+    "exp": "<b>compassionate</b> mang nghĩa giàu lòng nhân ái, thấu hiểu và quan tâm: <b>caring and kind</b>."
+  },
+  {
+    "num": 37,
+    "topic": "Reading Comprehension: Detail Retrieval",
+    "audio_file": null,
+    "passage": "Community service refers to unpaid work performed by an individual or group to benefit their local community. Across Vietnam, secondary school students are participating in various volunteer initiatives with great enthusiasm.<br><br>One remarkable example is the 'Green Bamboo Club' founded by seventh-grade students in Da Nang. Every weekend, the members gather at central parks and sandy beaches to pick up plastic waste, glass bottles, and aluminium cans. Afterward, they sort the recyclable materials and sell them to local recycling factories. With the money raised, the club buys notebooks, pens, and warm sweaters for disadvantaged pupils living in mountainous communes.<br><br>Besides environmental protection, many students also volunteer at nursing homes. They spend Saturday mornings reading newspapers, singing traditional folk songs, and preparing healthy meals for elderly residents. This compassionate work brings immense joy to lonely seniors and helps adolescents develop deep empathy, social communication skills, and gratitude for life.<br><br>Volunteering does not require large financial donations; even small acts of kindness like sharing old books, planting a flower, or teaching a younger child can make a world of difference.",
+    "title": "What do student volunteers do when visiting nursing homes?",
+    "options": {
+      "A": "Read newspapers, sing folk songs, and prepare healthy meals",
+      "B": "Sell electronic devices to seniors",
+      "C": "Build large brick buildings",
+      "D": "Take medical examinations"
+    },
+    "correct": "A",
+    "exp": "Đoạn 3 chỉ rõ: <i>'They spend Saturday mornings reading newspapers, singing traditional folk songs, and preparing healthy meals for elderly residents.'</i>"
+  },
+  {
+    "num": 38,
+    "topic": "Reading Comprehension: Reference Word",
+    "audio_file": null,
+    "passage": "Community service refers to unpaid work performed by an individual or group to benefit their local community. Across Vietnam, secondary school students are participating in various volunteer initiatives with great enthusiasm.<br><br>One remarkable example is the 'Green Bamboo Club' founded by seventh-grade students in Da Nang. Every weekend, the members gather at central parks and sandy beaches to pick up plastic waste, glass bottles, and aluminium cans. Afterward, they sort the recyclable materials and sell them to local recycling factories. With the money raised, the club buys notebooks, pens, and warm sweaters for disadvantaged pupils living in mountainous communes.<br><br>Besides environmental protection, many students also volunteer at nursing homes. They spend Saturday mornings reading newspapers, singing traditional folk songs, and preparing healthy meals for elderly residents. This compassionate work brings immense joy to lonely seniors and helps adolescents develop deep empathy, social communication skills, and gratitude for life.<br><br>Volunteering does not require large financial donations; even small acts of kindness like sharing old books, planting a flower, or teaching a younger child can make a world of difference.",
+    "title": "The word <b>'them'</b> in paragraph 2 refers to:",
+    "options": {
+      "A": "recyclable materials",
+      "B": "central parks",
+      "C": "plastic bags",
+      "D": "seventh-grade students"
+    },
+    "correct": "A",
+    "exp": "Từ <b>'them'</b> trong câu: <i>'sort the recyclable materials and sell them to local recycling factories'</i> thay thế cho <b>recyclable materials</b> (các vật liệu tái chế)."
+  },
+  {
+    "num": 39,
+    "topic": "Reading Comprehension: Skill and Personality Development",
+    "audio_file": null,
+    "passage": "Community service refers to unpaid work performed by an individual or group to benefit their local community. Across Vietnam, secondary school students are participating in various volunteer initiatives with great enthusiasm.<br><br>One remarkable example is the 'Green Bamboo Club' founded by seventh-grade students in Da Nang. Every weekend, the members gather at central parks and sandy beaches to pick up plastic waste, glass bottles, and aluminium cans. Afterward, they sort the recyclable materials and sell them to local recycling factories. With the money raised, the club buys notebooks, pens, and warm sweaters for disadvantaged pupils living in mountainous communes.<br><br>Besides environmental protection, many students also volunteer at nursing homes. They spend Saturday mornings reading newspapers, singing traditional folk songs, and preparing healthy meals for elderly residents. This compassionate work brings immense joy to lonely seniors and helps adolescents develop deep empathy, social communication skills, and gratitude for life.<br><br>Volunteering does not require large financial donations; even small acts of kindness like sharing old books, planting a flower, or teaching a younger child can make a world of difference.",
+    "title": "According to paragraph 3, how does community work benefit adolescents?",
+    "options": {
+      "A": "Helps them become famous movie stars",
+      "B": "Develops empathy, social communication skills, and gratitude for life",
+      "C": "Makes them avoid studying school subjects",
+      "D": "Provides them with free smartphones"
+    },
+    "correct": "B",
+    "exp": "Đoạn 3: <i>'...helps adolescents develop deep empathy, social communication skills, and gratitude for life.'</i>"
+  },
+  {
+    "num": 40,
+    "topic": "Reading Comprehension: Inference",
+    "audio_file": null,
+    "passage": "Community service refers to unpaid work performed by an individual or group to benefit their local community. Across Vietnam, secondary school students are participating in various volunteer initiatives with great enthusiasm.<br><br>One remarkable example is the 'Green Bamboo Club' founded by seventh-grade students in Da Nang. Every weekend, the members gather at central parks and sandy beaches to pick up plastic waste, glass bottles, and aluminium cans. Afterward, they sort the recyclable materials and sell them to local recycling factories. With the money raised, the club buys notebooks, pens, and warm sweaters for disadvantaged pupils living in mountainous communes.<br><br>Besides environmental protection, many students also volunteer at nursing homes. They spend Saturday mornings reading newspapers, singing traditional folk songs, and preparing healthy meals for elderly residents. This compassionate work brings immense joy to lonely seniors and helps adolescents develop deep empathy, social communication skills, and gratitude for life.<br><br>Volunteering does not require large financial donations; even small acts of kindness like sharing old books, planting a flower, or teaching a younger child can make a world of difference.",
+    "title": "Which statement can be inferred from the final paragraph?",
+    "options": {
+      "A": "Only wealthy people can participate in meaningful community service.",
+      "B": "Anyone can contribute positively to society through simple, everyday actions.",
+      "C": "Volunteering is compulsory for all citizens in Vietnam.",
+      "D": "Planting flowers does not bring any benefits."
+    },
+    "correct": "B",
+    "exp": "Đoạn cuối nhấn mạnh: <i>'even small acts of kindness... can make a world of difference'</i> -> Bất kỳ ai cũng có thể đóng góp tích cực cho xã hội thông qua những hành động giản dị thường ngày."
+  }
+];
+
+        let currentQIndex = 0;
+        let userAnswers = new Array(QUESTIONS.length).fill(null);
+        let isSubmitted = false;
+        let timerInterval = null;
+        let secondsLeft = 45 * 60;
+        let secondsSpent = 0;
+        let cheatWarnings = 0;
+
+        // Init on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedName = localStorage.getItem('ta7_fullname') || '';
+            const savedClass = localStorage.getItem('ta7_class') || '';
+            if (savedName) document.getElementById('input-fullname').value = savedName;
+            if (savedClass) document.getElementById('input-class').value = savedClass;
+            
+            initPalette();
+            renderQuestion(0);
+        });
+
+        // Anti-Cheat Protection
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if ((e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'u' || e.key === 'a')) || e.key === 'F12') {
+                e.preventDefault();
+            }
+        });
+
+        window.addEventListener('blur', () => {
+            if (!isSubmitted && document.getElementById('modal-start').classList.contains('hidden')) {
+                cheatWarnings++;
+                if (cheatWarnings < 3) {
+                    alert(`CẢNH BÁO GIAN LẬN (${cheatWarnings}/3): Bạn vừa rời khỏi màn hình làm bài! Lần thứ 3 hệ thống sẽ tự động nộp bài.`);
+                } else if (cheatWarnings === 3) {
+                    alert('HỆ THỐNG TỰ ĐỘNG NỘP BÀI: Bạn đã rời khỏi màn hình quá 3 lần quy định!');
+                    submitExam();
+                }
+            }
+        });
+
+        function startExam() {
+            const name = document.getElementById('input-fullname').value.trim();
+            const cls = document.getElementById('input-class').value.trim();
+            if (!name || !cls) {
+                alert('Vui lòng nhập đầy đủ Họ và tên cùng Lớp học!');
+                return;
+            }
+            localStorage.setItem('ta7_fullname', name);
+            localStorage.setItem('ta7_class', cls);
+            
+            document.getElementById('header-student-name').innerText = name;
+            document.getElementById('header-student-class').innerText = cls;
+            document.getElementById('sidebar-student-name').innerText = name;
+            document.getElementById('sidebar-student-class').innerText = cls;
+
+            document.getElementById('modal-start').classList.add('hidden');
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (secondsLeft > 0) {
+                    secondsLeft--;
+                    secondsSpent++;
+                    const m = Math.floor(secondsLeft / 60).toString().padStart(2, '0');
+                    const s = (secondsLeft % 60).toString().padStart(2, '0');
+                    document.getElementById('timer-display').innerText = `${m}:${s}`;
+                } else {
+                    clearInterval(timerInterval);
+                    alert('Hết thời gian làm bài! Hệ thống đang tự động nộp bài...');
+                    submitExam();
+                }
+            }, 1000);
+        }
+
+        function initPalette() {
+            const container = document.getElementById('palette-grid');
+            container.innerHTML = '';
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const btn = document.createElement('button');
+                btn.id = `palette-btn-${i}`;
+                btn.className = 'palette-btn h-8 rounded-lg border border-slate-200 text-xs font-black text-slate-700 hover:bg-slate-100 transition-all';
+                btn.innerText = i + 1;
+                btn.onclick = () => renderQuestion(i);
+                container.appendChild(btn);
+            }
+        }
+
+        function renderQuestion(index) {
+            // Audio Player Visibility (Only show for Listening Questions 1 to 8)
+            const audioCard = document.getElementById('audio-player-card');
+            const audioEl = document.getElementById('exam-audio');
+            if (audioCard) {
+                if (index < 8) {
+                    audioCard.classList.remove('hidden');
+                } else {
+                    audioCard.classList.add('hidden');
+                    if (audioEl && !audioEl.paused) {
+                        audioEl.pause();
+                    }
+                }
+            }
+            currentQIndex = index;
+            const q = QUESTIONS[index];
+
+            // Badge & Topic
+            document.getElementById('q-badge').innerText = `Câu ${q.num} / ${QUESTIONS.length}`;
+            document.getElementById('q-topic').innerText = q.topic;
+
+            // Passage
+            const passContainer = document.getElementById('q-passage-container');
+            if (q.passage) {
+                passContainer.classList.remove('hidden');
+                document.getElementById('q-passage-content').innerHTML = q.passage;
+            } else {
+                passContainer.classList.add('hidden');
+            }
+
+            // Title
+            document.getElementById('q-title').innerHTML = q.title;
+
+            // Options
+            const optsContainer = document.getElementById('q-options');
+            optsContainer.innerHTML = '';
+            
+            const letters = ['A', 'B', 'C', 'D'];
+            letters.forEach(letter => {
+                const optText = q.options[letter];
+                const optBtn = document.createElement('div');
+                optBtn.className = `p-3.5 rounded-xl border text-xs sm:text-sm font-semibold cursor-pointer transition-all flex items-center gap-3 ${
+                    userAnswers[index] === letter 
+                        ? 'border-indigo-600 bg-indigo-50/70 text-indigo-950 ring-2 ring-indigo-500/20' 
+                        : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-800'
+                }`;
+                
+                if (isSubmitted) {
+                    optBtn.classList.remove('cursor-pointer', 'hover:bg-slate-50');
+                    if (letter === q.correct) {
+                        optBtn.className = 'p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-950 text-xs sm:text-sm font-bold flex items-center gap-3';
+                    } else if (userAnswers[index] === letter && letter !== q.correct) {
+                        optBtn.className = 'p-3.5 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-950 text-xs sm:text-sm font-bold flex items-center gap-3';
+                    }
+                } else {
+                    optBtn.onclick = () => selectOption(letter);
+                }
+
+                optBtn.innerHTML = `
+                    <span class="w-6 h-6 rounded-lg ${
+                        userAnswers[index] === letter ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700'
+                    } flex items-center justify-center font-black text-xs shrink-0">${letter}</span>
+                    <span class="flex-1">${optText}</span>
+                `;
+                optsContainer.appendChild(optBtn);
+            });
+
+            // Explanation
+            const expBox = document.getElementById('q-explanation-box');
+            if (isSubmitted) {
+                expBox.classList.remove('hidden');
+                document.getElementById('q-explanation-text').innerHTML = q.exp;
+            } else {
+                expBox.classList.add('hidden');
+            }
+
+            // Palette Active update
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const pBtn = document.getElementById(`palette-btn-${i}`);
+                if (pBtn) {
+                    if (i === index) pBtn.classList.add('ring-2', 'ring-indigo-600');
+                    else pBtn.classList.remove('ring-2', 'ring-indigo-600');
+                }
+            }
+
+            // Prev/Next buttons
+            document.getElementById('btn-prev').disabled = (index === 0);
+            document.getElementById('btn-prev').classList.toggle('opacity-40', index === 0);
+            document.getElementById('btn-next').disabled = (index === QUESTIONS.length - 1);
+            document.getElementById('btn-next').classList.toggle('opacity-40', index === QUESTIONS.length - 1);
+        }
+
+        function selectOption(letter) {
+            if (isSubmitted) return;
+            userAnswers[currentQIndex] = letter;
+            
+            // Update Palette
+            const pBtn = document.getElementById(`palette-btn-${currentQIndex}`);
+            if (pBtn) pBtn.classList.add('answered');
+
+            // Update Progress
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            document.getElementById('progress-text').innerText = `${answeredCount}/${QUESTIONS.length}`;
+            const pct = Math.round((answeredCount / QUESTIONS.length) * 100);
+            document.getElementById('percent-text').innerText = `${pct}%`;
+            document.getElementById('progress-bar-fill').style.width = `${pct}%`;
+
+            renderQuestion(currentQIndex);
+        }
+
+        function prevQuestion() {
+            if (currentQIndex > 0) renderQuestion(currentQIndex - 1);
+        }
+
+        function nextQuestion() {
+            if (currentQIndex < QUESTIONS.length - 1) renderQuestion(currentQIndex + 1);
+        }
+
+        function switchTab(tab) {
+            if (tab === 'theory') {
+                document.getElementById('tab-theory').classList.remove('hidden');
+                document.getElementById('tab-quiz').classList.add('hidden');
+                document.getElementById('tab-btn-theory').classList.add('active');
+                document.getElementById('tab-btn-quiz').classList.remove('active');
+            } else {
+                document.getElementById('tab-theory').classList.add('hidden');
+                document.getElementById('tab-quiz').classList.remove('hidden');
+                document.getElementById('tab-btn-theory').classList.remove('active');
+                document.getElementById('tab-btn-quiz').classList.add('active');
+            }
+        }
+
+        function confirmSubmit() {
+            if (isSubmitted) return;
+            const unanswered = userAnswers.filter(a => a === null).length;
+            if (unanswered > 0) {
+                if (!confirm(`Bạn còn ${unanswered} câu chưa hoàn thành. Bạn có chắc chắn muốn nộp bài ngay không?`)) {
+                    return;
+                }
+            } else {
+                if (!confirm('Bạn đã hoàn thành 40/40 câu hỏi. Bạn có chắc chắn muốn nộp bài để xem kết quả?')) {
+                    return;
+                }
+            }
+            submitExam();
+        }
+
+        function submitExam() {
+            if (isSubmitted) return;
+            isSubmitted = true;
+            clearInterval(timerInterval);
+
+            // Calculate Score
+            let correctCount = 0;
+            for (let i = 0; i < QUESTIONS.length; i++) {
+                const pBtn = document.getElementById(`palette-btn-${i}`);
+                if (userAnswers[i] === QUESTIONS[i].correct) {
+                    correctCount++;
+                    if (pBtn) {
+                        pBtn.className = 'palette-btn correct h-8 rounded-lg border text-xs font-black';
+                    }
+                } else {
+                    if (pBtn) {
+                        pBtn.className = 'palette-btn wrong h-8 rounded-lg border text-xs font-black';
+                    }
+                }
+            }
+
+            const rawScore = (correctCount * 10) / QUESTIONS.length;
+            const finalScore = rawScore.toFixed(2);
+
+            const mSpent = Math.floor(secondsSpent / 60).toString().padStart(2, '0');
+            const sSpent = (secondsSpent % 60).toString().padStart(2, '0');
+
+            document.getElementById('result-score').innerHTML = `${finalScore} <span class="text-lg font-bold text-slate-400">/ 10</span>`;
+            document.getElementById('result-correct-count').innerText = `${correctCount} / ${QUESTIONS.length}`;
+            document.getElementById('result-time-spent').innerText = `${mSpent}:${sSpent}`;
+
+            document.getElementById('btn-submit-exam').classList.add('hidden');
+            document.getElementById('review-filter-box').classList.remove('hidden');
+            document.getElementById('modal-result').classList.remove('hidden');
+
+            if (rawScore >= 8.0) {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+
+            // Sync to Google Sheets
+            syncGoogleSheets(finalScore, correctCount, `${mSpent}:${sSpent}`);
+            renderQuestion(currentQIndex);
+        }
+
+        function closeResultModal() {
+            document.getElementById('modal-result').classList.add('hidden');
+        }
+
+        function filterReview(type) {
+            if (type === 'all') {
+                renderQuestion(0);
+            } else if (type === 'wrong') {
+                const wrongIdx = userAnswers.findIndex((ans, idx) => ans !== QUESTIONS[idx].correct);
+                if (wrongIdx !== -1) renderQuestion(wrongIdx);
+                else alert('Chúc mừng! Bạn không làm sai câu nào.');
+            } else if (type === 'correct') {
+                const corrIdx = userAnswers.findIndex((ans, idx) => ans === QUESTIONS[idx].correct);
+                if (corrIdx !== -1) renderQuestion(corrIdx);
+            }
+        }
+
+        function syncGoogleSheets(score, correct, time) {
+            const name = localStorage.getItem('ta7_fullname') || 'Ẩn danh';
+            const cls = localStorage.getItem('ta7_class') || '7';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbymRYarQYUQL8IdoD8zcxcYenLwY5kgo4d90M5bj1_bQ7QYHKPSuiTg1cibA-TyI8go/exec';
+
+            const payload = {
+                ho_ten: name,
+                lop: cls,
+                mon_hoc: 'Tiếng Anh 7',
+                ten_bai: 'Review 1 (Units 1-2-3) - Test 1',
+                diem: score,
+                so_cau_dung: `${correct}/${QUESTIONS.length}`,
+                thoi_gian: time,
+                timestamp: new Date().toISOString()
+            };
+
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).catch(err => console.log('Sync note:', err));
+        }
+    </script>
+</body>
+</html>
