@@ -353,15 +353,23 @@
         let remainingSeconds = 90 * 60; // 90 phút
 
         function startExam() {
-            const name = document.getElementById('studentName').value.trim();
-            const sClass = document.getElementById('studentClass').value.trim();
+            const nameInput = document.getElementById('studentName');
+            const classInput = document.getElementById('studentClass');
+            const name = nameInput ? nameInput.value.trim() : '';
+            const sClass = classInput ? classInput.value.trim() : '';
             if (!name || !sClass) {
                 alert('Vui lòng nhập đầy đủ Họ tên và Lớp để bắt đầu làm bài!');
                 return;
             }
 
-            document.getElementById('displayName').textContent = name;
-            document.getElementById('displayClass').textContent = sClass;
+            window.sName = name;
+            window.sClass = sClass;
+
+            const dispName = document.getElementById('displayName');
+            const dispClass = document.getElementById('displayClass');
+            if (dispName) dispName.textContent = name;
+            if (dispClass) dispClass.textContent = sClass;
+
             document.getElementById('loginCard').style.display = 'none';
             document.getElementById('examBody').style.display = 'block';
             document.getElementById('navPanel').style.display = 'block';
@@ -557,26 +565,55 @@
             if (hasSentResults) return;
             hasSentResults = true;
 
-            const name = document.getElementById('studentName').value.trim();
-            const sClass = document.getElementById('studentClass').value.trim();
+            const sName = (typeof window.sName !== 'undefined' && window.sName)
+                       || (document.getElementById('displayName') && document.getElementById('displayName').innerText.trim())
+                       || (document.getElementById('studentName') && document.getElementById('studentName').value.trim())
+                       || 'Học sinh';
+            const sClass = (typeof window.sClass !== 'undefined' && window.sClass)
+                        || (document.getElementById('displayClass') && document.getElementById('displayClass').innerText.trim())
+                        || (document.getElementById('studentClass') && document.getElementById('studentClass').value.trim())
+                        || '12';
             const sheetUrl = "https://script.google.com/macros/s/AKfycbwRRiM81mghvA7cInvJgb4rPLzWOAE3s44wer0BJcURQ4hWwoykS19pkNQ9LyzH6Q8lTQ/exec";
+            const examTitle = "Đề số 17: Chuyên đề Polymer và Vật liệu Polymer (81 câu)";
+            const wrongCount = rawQuestions.length - correctCount;
 
             const payload = {
-                hoTen: name,
-                lop: sClass,
+                timestamp: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
+                subject: "Hóa học",
                 monHoc: "Hóa học",
                 chuyenMuc: "vatli102.com/hoa/",
-                tenBai: "Đề số 17: Chuyên đề Polymer và Vật liệu Polymer (81 câu)",
-                diemSo: score,
-                soCauDung: correctCount,
-                tongSoCau: rawQuestions.length,
+                sourceUrl: window.location.href,
+                sourceDomain: window.location.hostname,
+                name: sName,
+                studentName: sName,
+                hoTen: sName,
+                fullName: sName,
+                className: sClass,
+                studentClass: sClass,
+                class: sClass,
+                lop: sClass,
+                lesson: examTitle,
+                examTitle: examTitle,
+                tenBai: examTitle,
+                deThi: examTitle,
+                score: String(score),
+                totalScore: String(score),
+                diem: String(score),
+                diemSo: String(score),
+                grade: String(score),
+                correct: `${correctCount}/${rawQuestions.length}`,
+                correctCount: String(correctCount),
+                soCauDung: String(correctCount),
+                tongSoCau: String(rawQuestions.length),
+                soCauSai: String(wrongCount),
+                incorrectCount: String(wrongCount),
                 thoiGianNop: new Date().toLocaleString('vi-VN')
             };
 
             fetch(sheetUrl, {
                 method: 'POST',
                 mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify(payload)
             }).catch(e => console.log('Sheet sync status:', e));
         }
