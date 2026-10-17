@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📝 Đề Số 17: Bài Tập Ôn Tập Chuyên Đề Polymer — Hóa Học 12 | Vatli102.com</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary: #1e40af;
+            --primary-hover: #1d4ed8;
+            --secondary: #0d9488;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.65;
+            padding-bottom: 60px;
+        }
+
+        p, .question-title, .explanation-box, .score-desc {
+            text-align: justify;
+        }
+
+        .sticky-header {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        }
+        .header-container {
+            max-width: 980px; margin: 0 auto; padding: 10px 15px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .site-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .logo-text {
+            font-size: 1.25rem; font-weight: 800;
+            background: linear-gradient(135deg, #1e40af, #0d9488);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .nav-links { display: flex; align-items: center; gap: 15px; }
+        .nav-item {
+            text-decoration: none; color: #475569; font-weight: 700; font-size: 0.88rem;
+            display: inline-flex; align-items: center; gap: 5px; transition: color 0.2s;
+        }
+        .nav-item:hover { color: var(--primary); }
+        .timer-badge {
+            background: #fee2e2; color: #ef4444; padding: 5px 14px; border-radius: 10px;
+            font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;
+        }
+
+        .quiz-container { max-width: 980px; margin: 20px auto; padding: 0 15px; }
+
+        .exam-banner {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb, #0d9488); color: white;
+            padding: 2.2rem 1.5rem; border-radius: 20px; text-align: center; margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.25);
+        }
+        .exam-banner h1 { font-size: 1.65rem; font-weight: 800; margin-bottom: 8px; }
+        .exam-banner p { font-size: 0.95rem; color: #e0f2fe; text-align: center; }
+        .badge-exam { display: inline-block; background: rgba(255,255,255,0.2); padding: 4px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; margin-top: 10px; }
+
+        .login-card {
+            background: white; border-radius: 16px; padding: 30px 20px; text-align: center;
+            border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 30px;
+        }
+        .login-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; color: var(--text-dark); }
+        .login-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; }
+        .input-row { display: flex; gap: 15px; max-width: 500px; margin: 0 auto 20px; flex-wrap: wrap; }
+        .input-control {
+            flex: 1; min-width: 200px; padding: 12px 16px; border: 1.5px solid var(--border);
+            border-radius: 10px; font-size: 0.95rem; outline: none; transition: 0.2s;
+        }
+        .input-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.15); }
+        .btn-start {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white; border: none; padding: 12px 36px; border-radius: 12px; font-weight: 700;
+            font-size: 1rem; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
+        }
+        .btn-start:hover { opacity: 0.95; transform: translateY(-2px); }
+
+        .student-info-bar {
+            background: #dbeafe; color: #1e40af; border-radius: 12px; padding: 12px 20px;
+            margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;
+            font-weight: 700; font-size: 0.92rem; border: 1px solid #bfdbfe;
+        }
+
+        .progress-card {
+            background: white; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px;
+            border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;
+        }
+        .progress-bar-bg { flex: 1; height: 10px; background: #e2e8f0; border-radius: 5px; margin: 0 15px; overflow: hidden; }
+        .progress-bar-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #1e40af, #0d9488); transition: width 0.3s ease; }
+
+        .question-card {
+            background: white; border-radius: 16px; padding: 22px; margin-bottom: 20px;
+            border: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .question-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.05); }
+        .question-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .q-badge {
+            display: inline-block; padding: 4px 12px; border-radius: 8px; font-weight: 800;
+            font-size: 0.82rem; background: #dbeafe; color: #1e40af;
+        }
+        .source-badge {
+            font-size: 0.78rem; font-weight: 700; padding: 3px 10px; border-radius: 6px;
+            background: #f1f5f9; color: #475569;
+        }
+        .question-title { font-size: 1rem; font-weight: 600; line-height: 1.6; margin-bottom: 16px; color: var(--text-dark); }
+
+        .q-img-wrap { text-align: center; margin: 12px 0 16px 0; }
+        .q-img { max-width: 100%; height: auto; border-radius: 10px; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+
+        /* Tùy chọn A, B, C, D */
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .opt-btn {
+            display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px;
+            border: 1.5px solid var(--border); border-radius: 12px; background: white;
+            font-size: 0.95rem; cursor: pointer; transition: all 0.2s; text-align: left;
+        }
+        .opt-btn:hover { border-color: var(--primary); background: #f0fdf4; }
+        .opt-letter {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 28px; height: 28px; border-radius: 50%; background: #f1f5f9;
+            font-weight: 700; color: #475569; flex-shrink: 0; transition: 0.2s;
+        }
+        .opt-text { flex: 1; padding-top: 2px; text-align: justify; }
+
+        .opt-btn.selected {
+            border-color: var(--primary); background: #eff6ff; font-weight: 600;
+        }
+        .opt-btn.selected .opt-letter {
+            background: var(--primary); color: white;
+        }
+
+        /* Trạng thái sau nộp bài */
+        .opt-btn.correct {
+            border-color: #10b981 !important; background: #ecfdf5 !important;
+        }
+        .opt-btn.correct .opt-letter {
+            background: #10b981 !important; color: white !important;
+        }
+        .opt-btn.wrong {
+            border-color: #ef4444 !important; background: #fef2f2 !important;
+        }
+        .opt-btn.wrong .opt-letter {
+            background: #ef4444 !important; color: white !important;
+        }
+
+        .explanation-box {
+            margin-top: 15px; padding: 14px 18px; border-radius: 12px;
+            background: #f8fafc; border-left: 4px solid var(--secondary);
+            font-size: 0.92rem; display: none;
+        }
+        .explanation-box.show { display: block; }
+        .exp-title { font-weight: 700; color: var(--secondary); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+
+        /* Bảng hoa tiêu câu hỏi (Navigator) */
+        .nav-panel {
+            position: fixed; bottom: 20px; right: 20px; z-index: 990;
+        }
+        .btn-toggle-nav {
+            width: 50px; height: 50px; border-radius: 50%; background: var(--primary);
+            color: white; border: none; font-size: 1.2rem; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.4); display: flex; align-items: center; justify-content: center;
+        }
+        .nav-popup {
+            display: none; position: absolute; bottom: 60px; right: 0; width: 340px;
+            max-height: 400px; background: white; border-radius: 16px; padding: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 1px solid var(--border); overflow-y: auto;
+        }
+        .nav-popup.show { display: block; }
+        .nav-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 10px; }
+        .nav-pill {
+            padding: 6px 0; text-align: center; border-radius: 8px; border: 1px solid var(--border);
+            font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: 0.2s;
+        }
+        .nav-pill:hover { background: #f1f5f9; }
+        .nav-pill.answered { background: #dbeafe; color: #1e40af; border-color: #93c5fd; }
+        .nav-pill.correct { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
+        .nav-pill.wrong { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+
+        /* Nút nộp bài */
+        .submit-wrap { text-align: center; margin: 40px 0 20px 0; }
+        .btn-submit {
+            background: linear-gradient(135deg, #10b981, #0d9488);
+            color: white; border: none; padding: 14px 45px; border-radius: 14px;
+            font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.2s;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35); display: inline-flex; align-items: center; gap: 10px;
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.45); }
+
+        /* Modal kết quả */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000;
+            display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-overlay.show { display: flex; }
+        .result-card {
+            background: white; border-radius: 24px; padding: 35px 25px; max-width: 480px; width: 100%;
+            text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2); animation: popIn 0.3s ease;
+        }
+        @keyframes popIn {
+            from { transform: scale(0.85); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .score-circle {
+            width: 120px; height: 120px; border-radius: 50%;
+            background: linear-gradient(135deg, #1e40af, #0d9488); color: white;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            margin: 0 auto 16px auto; box-shadow: 0 8px 20px rgba(30, 64, 175, 0.3);
+        }
+        .score-val { font-size: 2.2rem; font-weight: 800; line-height: 1; }
+        .score-total { font-size: 0.85rem; opacity: 0.9; }
+        .score-stat { font-size: 1rem; color: #475569; margin-bottom: 20px; }
+        .btn-review {
+            background: var(--primary); color: white; border: none; padding: 12px 28px;
+            border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.2s;
+        }
+        .btn-review:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+
+    <!-- Header cố định -->
+    <header class="sticky-header">
+        <div class="header-container">
+            <a href="/" class="site-logo">
+                <i class="fa-solid fa-atom fa-spin-pulse" style="color: var(--primary); font-size: 1.4rem;"></i>
+                <span class="logo-text">Vatli102.com</span>
+            </a>
+            <div class="nav-links">
+                <div class="timer-badge" id="timerBadge">
+                    <i class="fa-regular fa-clock"></i>
+                    <span id="timerText">90:00</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="quiz-container">
+        <!-- Banner đề thi -->
+        <div class="exam-banner">
+            <h1>BÀI TẬP ÔN TẬP CHUYÊN ĐỀ: POLYMER</h1>
+            <p>Hóa học 12 - Chương trình GDPT 2018 (Hệ thống 81 câu trắc nghiệm trọng tâm từ các Sở và Trường Chuyên)</p>
+            <span class="badge-exam"><i class="fa-solid fa-award"></i> Đề Số 17 • Chuyên Đề Polymer</span>
+        </div>
+
+        <!-- Card đăng ký thông tin học sinh -->
+        <div class="login-card" id="loginCard">
+            <h2 class="login-title">Thông Tin Thí Sinh Làm Bài</h2>
+            <p class="login-desc">Vui lòng nhập họ tên và lớp trước khi bắt đầu làm bài trắc nghiệm.</p>
+            <div class="input-row">
+                <input type="text" id="studentName" class="input-control" placeholder="Họ và tên thí sinh *" required>
+                <input type="text" id="studentClass" class="input-control" placeholder="Lớp học *" required>
+            </div>
+            <button class="btn-start" id="btnStart" onclick="startExam()">
+                <i class="fa-solid fa-play"></i> BẮT ĐẦU LÀM BÀI
+            </button>
+        </div>
+
+        <!-- Khung làm bài (Ẩn ban đầu) -->
+        <div id="examBody" style="display: none;">
+            <!-- Thanh thông tin học sinh -->
+            <div class="student-info-bar">
+                <span><i class="fa-solid fa-user-graduate"></i> Thí sinh: <strong id="displayName"></strong> - Lớp: <strong id="displayClass"></strong></span>
+                <span id="answeredCounter"><i class="fa-solid fa-check-circle"></i> Đã làm: 0/81</span>
+            </div>
+
+            <!-- Thanh tiến độ -->
+            <div class="progress-card">
+                <span style="font-weight: 700; font-size: 0.88rem; color: #475569;">Tiến độ:</span>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                </div>
+                <span style="font-weight: 800; font-size: 0.9rem; color: var(--primary);" id="progressText">0%</span>
+            </div>
+
+            <!-- Danh sách 81 câu hỏi -->
+            <div id="questionsList"></div>
+
+            <!-- Nút Nộp bài -->
+            <div class="submit-wrap">
+                <button class="btn-submit" id="btnSubmit" onclick="confirmSubmit()">
+                    <i class="fa-solid fa-paper-plane"></i> NỘP BÀI THI
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hoa tiêu câu hỏi -->
+    <div class="nav-panel" id="navPanel" style="display: none;">
+        <button class="btn-toggle-nav" onclick="toggleNavPopup()" title="Danh sách câu hỏi">
+            <i class="fa-solid fa-list-ol"></i>
+        </button>
+        <div class="nav-popup" id="navPopup">
+            <h4 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 8px; color: var(--primary);">Bảng Câu Hỏi (81 Câu)</h4>
+            <div class="nav-grid" id="navGrid"></div>
+        </div>
+    </div>
+
+    <!-- Modal Kết Quả -->
+    <div class="modal-overlay" id="resultModal">
+        <div class="result-card">
+            <div class="score-circle">
+                <span class="score-val" id="scoreVal">0.0</span>
+                <span class="score-total">/ 10 ĐIỂM</span>
+            </div>
+            <h3 style="font-size: 1.35rem; font-weight: 800; margin-bottom: 8px;" id="resultTitle">Chúc Mừng Bạn!</h3>
+            <p class="score-stat" id="scoreStat">Đúng 0 / 81 câu hỏi</p>
+            <p class="score-desc" style="font-size: 0.88rem; color: #64748b; margin-bottom: 20px;">
+                Kết quả bài thi của bạn đã được ghi nhận. Bạn có thể xem lại đáp án và lời giải chi tiết cho từng câu bên dưới.
+            </p>
+            <button class="btn-review" onclick="closeResultModal()">
+                <i class="fa-solid fa-magnifying-glass"></i> XEM LỜI GIẢI CHI TIẾT
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // DỮ LIỆU CÂU HỎI
+        const rawQuestions = [{"id": 1, "source": "Sở Yên Bái - L1", "question": "Tên gọi của polymer (-CH₂-CH=CH-CH₂-)ₙ là", "image": null, "options": {"A": "cao su buna.", "B": "cao su buna-S.", "C": "cao su buna-N.", "D": "cao su isoprene."}, "answer": "A", "explanation": "Polymer (-CH₂-CH=CH-CH₂-)ₙ (polybuta-1,3-diene) có tên thông thường là cao su buna, được điều chế bằng phản ứng trùng hợp buta-1,3-diene có xúc tác Na."}, {"id": 2, "source": "Sở Yên Bái - L1", "question": "Cho phản ứng nhiệt phân polystyrene: [-CH₂-CH(C₆H₅)-]ₙ --(t°)--> nCH₂=CH-C₆H₅. Phản ứng trên thuộc loại", "image": null, "options": {"A": "phản ứng trùng hợp polymer.", "B": "phản ứng tăng mạch polymer.", "C": "phản ứng cắt mạch polymer.", "D": "phản ứng giữ nguyên mạch polymer."}, "answer": "C", "explanation": "Phản ứng nhiệt phân polystyrene phân cắt các liên kết trong mạch polymer để tạo lại monomer ban đầu (styrene), đây là phản ứng giải trùng hợp (depolymerization) thuộc loại phản ứng phân cắt mạch polymer."}, {"id": 3, "source": "Nam Định – L1 - 2025", "question": "Phản ứng chuyển hóa vinyl chloride thành poly(vinyl chloride) (có mặt chất xúc tác, đun nóng) được gọi là", "image": null, "options": {"A": "phản ứng ester hóa.", "B": "phản ứng thủy phân.", "C": "phản ứng trùng ngưng.", "D": "phản ứng trùng hợp."}, "answer": "D", "explanation": "Phương trình: nCH₂=CH-Cl --(t°, xt, p)--> [-CH₂-CH(Cl)-]ₙ. Phản ứng kết hợp nhiều phân tử nhỏ (monomer) giống nhau thành phân tử lớn (polymer) nhờ bẻ gãy liên kết đôi C=C được gọi là phản ứng trùng hợp."}, {"id": 4, "source": "VIP 12", "question": "Phát biểu nào sau đây đúng?", "image": null, "options": {"A": "Những polymer khi đun nóng không bị nóng chảy mà bị phân huỷ thì được gọi là chất nhiệt rắn.", "B": "Các polymer thường là chất rắn, nóng chảy ở một nhiệt độ xác định.", "C": "Tất cả các polymer đều khá bền với dung dịch acid hoặc base.", "D": "Tất cả các polymer đều tham gia phản ứng phân cắt mạch polymer."}, "answer": "A", "explanation": "A đúng: Polymer nhiệt rắn (như nhựa bakelite) khi đun nóng không nóng chảy mà bị phân hủy. B sai vì polymer không có nhiệt độ nóng chảy xác định mà nóng chảy trong một khoảng nhiệt độ khá rộng. C sai vì các polymer có nhóm chức ester, amide dễ bị thủy phân trong acid hoặc base. D sai vì không phải tất cả polymer đều tham gia phản ứng phân cắt mạch."}, {"id": 5, "source": "VIP 13 - 2025", "question": "Cho cấu tạo của một đoạn mạch trong phân tử polymer X như hình dưới đây:\nTên gọi của polymer X là", "image": "/hoa/lop-12/de-17/images/cau5_cau_tao_x.png", "options": {"A": "poly(methyl methacrylate).", "B": "polyethylene.", "C": "poly(vinyl chloride).", "D": "polypropylene."}, "answer": "D", "explanation": "Đoạn mạch lặp lại đơn vị -CH₂-CH(CH₃)-, mắt xích cấu tạo từ monomer propylene (CH₂=CH-CH₃). Do đó polymer X là polypropylene (PP)."}, {"id": 6, "source": "Sở GD&ĐT Thái Nguyên", "question": "Tên gọi của polymer có công thức cấu tạo cho dưới đây là", "image": "/hoa/lop-12/de-17/images/cau6_pvc.png", "options": {"A": "poly(methyl methacrylate).", "B": "poly(vinyl chloride).", "C": "polyethylene.", "D": "polystyrene."}, "answer": "B", "explanation": "Công thức [-CH₂-CH(Cl)-]ₙ có mắt xích vinyl chloride (-CH₂-CH(Cl)-), tên polymer là poly(vinyl chloride) (viết tắt là PVC)."}, {"id": 7, "source": "Cụm trường THPT Hưng Yên – L2", "question": "Cho cấu tạo của một đoạn mạch trong phân tử polymer X như hình bên:\nTên gọi của polymer X là", "image": "/hoa/lop-12/de-17/images/cau7_cau_tao_x.png", "options": {"A": "polypropylene.", "B": "poly(vinyl chloride).", "C": "poly(methyl methacrylate).", "D": "polyethylene."}, "answer": "A", "explanation": "Đoạn mạch gồm các mắt xích -CH₂-CH(CH₃)- nối tiếp nhau, tương ứng với sản phẩm trùng hợp propylene (CH₂=CH-CH₃), có tên là polypropylene (PP)."}, {"id": 8, "source": "Sở GD Quảng Ninh – L1", "question": "PE là một polymer thông dụng, dùng làm chất dẻo (chất dẻo chứa PE chiếm gần 1/3 tổng lượng chất dẻo được sản xuất hàng năm). Trong đời sống, PE được dùng làm màng bọc thực phẩm, túi nylon, bao gói, chai lọ đựng hoá mĩ phẩm,... PE được điều chế từ monomer có tên gọi là", "image": null, "options": {"A": "styrene.", "B": "vinyl chloride.", "C": "ethylene.", "D": "propylene."}, "answer": "C", "explanation": "PE là viết tắt của polyethylene, có công thức (-CH₂-CH₂-)ₙ, được tổng hợp bằng phản ứng trùng hợp ethylene (CH₂=CH₂)."}, {"id": 9, "source": "Cụm trường Thanh Hoá - L1", "question": "Tên gọi của polymer có công thức cho dưới đây là", "image": "/hoa/lop-12/de-17/images/cau9_isoprene.png", "options": {"A": "Polyisoprene (cao su isoprene).", "B": "Polybuta–1,3–diene (cao su buna).", "C": "Cao su lưu hóa.", "D": "Polychloroprene (cao su chloroprene)."}, "answer": "A", "explanation": "Công thức biểu diễn mắt xích dạng cis của -[-CH₂-C(CH₃)=CH-CH₂-]-ₙ, đây là cấu trúc của polyisoprene (thành phần chính của cao su thiên nhiên / cao su isoprene)."}, {"id": 10, "source": "Sở GD Bắc Giang – L1", "question": "Polymer X có công thức cho dưới đây:\nTên của X là", "image": "/hoa/lop-12/de-17/images/cau10_ps.png", "options": {"A": "poly(vinyl chloride).", "B": "polyethylene.", "C": "polystyrene.", "D": "poly(methyl methacrylate)."}, "answer": "C", "explanation": "Polymer có mắt xích -CH(C₆H₅)-CH₂- (hoặc -CH₂-CH(C₆H₅)-), được tạo thành từ monomer styrene (C₆H₅-CH=CH₂), tên gọi là polystyrene (PS)."}, {"id": 11, "source": "Sở GD Hòa Bình – L1", "question": "Trùng hợp chất nào sau đây thu được cao su buna?", "image": null, "options": {"A": "CH₂=C(CH₃)-CH=CH₂.", "B": "CH₂=CH-CH=CH₂.", "C": "CH₃-CH=C=CH₂.", "D": "CH₃-CH(Cl)-CH=CH₂."}, "answer": "B", "explanation": "Trùng hợp buta-1,3-diene (CH₂=CH-CH=CH₂) với xúc tác Na thu được polybuta-1,3-diene (cao su buna)."}, {"id": 12, "source": "Sở Yên Bái - L2", "question": "Tên gọi của polymer (-CH₂-CH=CH-CH₂-)ₙ là", "image": null, "options": {"A": "cao su buna.", "B": "cao su buna-S.", "C": "cao su buna-N.", "D": "cao su isoprene."}, "answer": "A", "explanation": "Polymer (-CH₂-CH=CH-CH₂-)ₙ có tên gọi là polybuta-1,3-diene hay cao su buna."}, {"id": 13, "source": "Sở GD Hậu Giang – L1", "question": "Tơ nitron dai, bền với nhiệt, giữ nhiệt tốt, thường được dùng để dệt vải và may quần áo ấm. Trùng hợp chất nào sau đây tạo thành polymer dùng để sản xuất tơ nitron?", "image": null, "options": {"A": "CH₂=CH-CH₃.", "B": "H₂N-[CH₂]₆-NH₂.", "C": "CH₂=CH-CN.", "D": "H₂N-[CH₂]₅-COOH."}, "answer": "C", "explanation": "Tơ nitron (hay tơ olon) được tổng hợp bằng phản ứng trùng hợp vinyl cyanide (acrylonitrile: CH₂=CH-CN)."}, {"id": 14, "source": "Liên trường Quỳnh Lưu- Nghệ An – L1", "question": "Monomer được dùng để điều chế polypropylene (PP) là", "image": null, "options": {"A": "CH₂=CH-CH₃.", "B": "CH₂=CH₂.", "C": "CH≡CH.", "D": "CH₂=CH-CH=CH₂."}, "answer": "A", "explanation": "Polypropylene (PP) được điều chế bằng phản ứng trùng hợp propylene (propene, CH₂=CH-CH₃)."}, {"id": 15, "source": "Sở Tây Ninh- L1", "question": "Polystyrene (PS) là chất nhiệt dẻo thường được sử dụng để sản xuất đồ nhựa như: cốc, chén dùng một lần hoặc hộp đựng thức ăn mang về tại các cửa hàng. Monomer được dùng để điều chế PS là", "image": null, "options": {"A": "C₆H₅CH=CH₂.", "B": "CH₂=CH–CH=CH₂.", "C": "CH₂=CH₂.", "D": "CH₂=CH–CH₃."}, "answer": "A", "explanation": "Polystyrene (PS) được điều chế bằng phản ứng trùng hợp monomer styrene (vinylbenzene, C₆H₅CH=CH₂)."}, {"id": 16, "source": "Liên trường Nghệ An- L1 - 2025", "question": "PE là một polymer thông dụng, dùng làm chất dẻo (chất dẻo chứa PE chiếm gần 1/3 tổng lượng chất dẻo được sản xuất hàng năm). Trong đời sống, PE được dùng làm màng bọc thực phẩm, túi nylon, bao gói, chai lọ đựng hoá mĩ phẩm,... PE được điều chế từ monomer nào sau đây?", "image": null, "options": {"A": "Propylene.", "B": "Vinyl chloride.", "C": "Ethylene.", "D": "Styrene."}, "answer": "C", "explanation": "Polyethylene (PE) được điều chế từ monomer ethylene (ethene: CH₂=CH₂)."}, {"id": 17, "source": "Sở Quảng Bình - L1", "question": "Poly(vinyl chloride) có công thức là", "image": null, "options": {"A": "(-CH₂-CHCl-)ₙ.", "B": "(-CH₂-CCl=CH-CH₂-)ₙ.", "C": "(-CH₂-CH(CH₃)-)ₙ.", "D": "(-CH₂-CH=CH-CH₂-)ₙ."}, "answer": "A", "explanation": "Poly(vinyl chloride) (PVC) có công thức cấu tạo thu gọn là (-CH₂-CHCl-)ₙ."}, {"id": 18, "source": "Sở GD Hải Dương – L1", "question": "Cây cao su là loại cây công nghiệp có giá trị kinh tế lớn, được đưa vào trồng ở nước ta từ cuối thế kỉ 19. Chất lỏng thu được từ cây cao su giống như nhựa cây (gọi là mủ cao su) là nguyên liệu để sản xuất cao su tự nhiên. Loại polymer là thành phần chính trong mủ cây cao su có tên gọi là", "image": null, "options": {"A": "polystyrene.", "B": "polybutadiene.", "C": "polypropylene.", "D": "polyisoprene."}, "answer": "D", "explanation": "Thành phần chính của cao su thiên nhiên là cis-1,4-polyisoprene (chiếm khoảng 90-95% hàm lượng chất khô trong mủ cao su)."}, {"id": 19, "source": "Sở GD Vĩnh Phúc – L1", "question": "Cao su buna-S (hay còn gọi là cao su SBR) là loại cao su tổng hợp được sử dụng rất phổ biến, ước tính 50% lốp xe được làm từ SBR. Thực hiện phản ứng trùng hợp các chất nào dưới đây thu được sản phẩm là cao su buna-S?", "image": null, "options": {"A": "CH₂=CH-CH=CH₂ và CH₂=CH-CN.", "B": "CH₂=CH-CH=CH₂ và sulfur.", "C": "CH₂=CH-CH=CH₂ và CH₂=CHCl.", "D": "CH₂=CH-CH=CH₂ và C₆H₅CH=CH₂."}, "answer": "D", "explanation": "Cao su buna-S là sản phẩm đồng trùng hợp giữa buta-1,3-diene (CH₂=CH-CH=CH₂) và styrene (C₆H₅CH=CH₂)."}, {"id": 20, "source": "Sở GD Bắc Ninh – L1", "question": "Polyethylene là sản phẩm của phản ứng trùng hợp chất nào dưới đây?", "image": null, "options": {"A": "CH₂=CH-Cl.", "B": "CH₂=CH-C₆H₅.", "C": "CH₂=CH-CH₃.", "D": "CH₂=CH₂."}, "answer": "D", "explanation": "Polyethylene (PE) thu được từ phản ứng trùng hợp ethylene (CH₂=CH₂): nCH₂=CH₂ --(t°, xt, p)--> (-CH₂-CH₂-)ₙ."}, {"id": 21, "source": "Sở GD Bắc Giang – L1", "question": "Polymer dùng để sản xuất cao su buna-N được tổng hợp bằng phản ứng trùng hợp chất nào sau đây với buta-1,3-diene?", "image": null, "options": {"A": "Styrene.", "B": "Caprolactam.", "C": "Isoprene.", "D": "Acrylonitrile."}, "answer": "D", "explanation": "Cao su buna-N được tạo thành do phản ứng đồng trùng hợp buta-1,3-diene với acrylonitrile (CH₂=CH-CN)."}, {"id": 22, "source": "Sở GD Nam Định - KS CL HK II", "question": "Nhựa ABS được sử dụng rộng rãi để sản xuất đồ chơi trẻ em, có công thức cấu tạo như sau:\nĐể sản xuất ABS, không cần sử dụng loại nguyên liệu nào dưới đây?", "image": "/hoa/lop-12/de-17/images/cau22_abs.png", "options": {"A": "Isoprene.", "B": "Buta-1,3-diene.", "C": "Styrene.", "D": "Acrylonitrile."}, "answer": "A", "explanation": "Nhựa ABS là polymer đồng trùng hợp từ 3 monomer: Acrylonitrile (A), Buta-1,3-diene (B) và Styrene (S). Do đó không cần sử dụng nguyên liệu isoprene."}, {"id": 23, "source": "Sở GD Ninh Bình – L1", "question": "Trùng hợp ethylene tạo thành polymer nào sau đây?", "image": null, "options": {"A": "Cellulose.", "B": "Poly(vinyl chloride).", "C": "Polyacrylonitrile.", "D": "Polyethylene."}, "answer": "D", "explanation": "Trùng hợp monomer ethylene tạo thành polyethylene (PE)."}, {"id": 24, "source": "Sở GD Vĩnh Phúc – L2", "question": "Poly(methyl methacrylate) cho ánh sáng truyền qua trên 90%, được sử dụng làm thuỷ tinh hữu cơ. Thực hiện phản ứng trùng hợp monomer nào sau đây thu được poly(methyl methacrylate)?", "image": null, "options": {"A": "CH₂=C(CH₃)COOCH₃.", "B": "CH₂=CHC₆H₅.", "C": "CH₂=CHCOOCH₃.", "D": "CH₂=CHCl."}, "answer": "A", "explanation": "Poly(methyl methacrylate) (plexiglas) được điều chế bằng cách trùng hợp methyl methacrylate: CH₂=C(CH₃)COOCH₃."}, {"id": 25, "source": "Sở GD&ĐT Đà Nẵng", "question": "Phát biểu nào sau đây đúng?", "image": null, "options": {"A": "Polymer thường tan nhiều trong nước.", "B": "Polymer có nhiệt độ nóng chảy xác định.", "C": "Polymer thường dễ bay hơi.", "D": "Polymer bị nóng chảy khi đun nóng gọi là polymer nhiệt dẻo."}, "answer": "D", "explanation": "D đúng vì polymer nhiệt dẻo là loại polymer bị nóng chảy khi đun nóng và đóng rắn lại khi nguội. A, B, C sai: polymer hầu như không tan trong nước, không có nhiệt độ nóng chảy xác định và không bay hơi do phân tử khối rất lớn."}, {"id": 26, "source": "Sở GD Hải Phòng – L1", "question": "Tơ nylon-6,6 dùng để dệt vải may mặc, vải lót săm lốp xe, dệt bít tất, bện làm dây cáp, dây dù, đan lưới,… Công thức cấu tạo của tơ nylon-6,6 được biểu diễn ở hình dưới đây:\nPhát biểu nào sau đây là không đúng khi nói về tơ nylon-6,6?", "image": "/hoa/lop-12/de-17/images/cau26_nylon66.png", "options": {"A": "Thuộc loại tơ polyamide.", "B": "Có tên gọi khác là poly(hexamethylene adipamide).", "C": "Được điều chế từ hexamethylenediamine và adipic acid bằng phản ứng trùng ngưng.", "D": "Bền với nhiệt, với acid và kiềm."}, "answer": "D", "explanation": "Tơ nylon-6,6 chứa nhóm liên kết amide (-CO-NH-) trong mạch phân tử nên kém bền với nhiệt và rất dễ bị thủy phân trong môi trường acid hoặc môi trường kiềm."}, {"id": 27, "source": "Khảo sát THPT lần 1.2025 – Thanh Hoá", "question": "Phát biểu nào sau đây đúng?", "image": null, "options": {"A": "Cao su lưu hóa có tính đàn hồi kém hơn cao su chưa lưu hóa.", "B": "Tơ polyamide rất bền trong môi trường acid.", "C": "Tơ cellulose acetate thuộc loại tơ bán tổng hợp.", "D": "Polyethylene được điều chế bằng phản ứng trùng ngưng ethylene."}, "answer": "C", "explanation": "C đúng: Tơ cellulose acetate được chế biến từ cellulose thiên nhiên qua phản ứng hóa học (với acetic anhydride) nên thuộc loại tơ bán tổng hợp (tơ nhân tạo). A sai vì cao su lưu hóa có tính đàn hồi và chịu nhiệt tốt hơn cao su sống. B sai vì tơ polyamide có nhóm -CO-NH- dễ bị thủy phân trong acid. D sai vì PE được điều chế bằng phản ứng trùng hợp."}, {"id": 28, "source": "Khảo sát THPT lần 1.2025 – Thanh Hoá", "question": "Phát biểu nào sau đây đúng?", "image": null, "options": {"A": "Poly(vinyl chloride) được điều chế bằng phản ứng cộng HCl vào ethylene.", "B": "Amylose có cấu trúc mạch phân nhánh.", "C": "Polybuta-1,3-diene được dùng để sản xuất cao su buna.", "D": "Polyacrylonitrile được điều chế bằng phản ứng trùng ngưng."}, "answer": "C", "explanation": "C đúng: Polybuta-1,3-diene là polymer dùng để chế tạo cao su buna. A sai: PVC điều chế từ trùng hợp vinyl chloride (CH₂=CHCl). B sai: Amylose có cấu trúc mạch không phân nhánh (dạng xoắn), còn amylopectin mới có mạch phân nhánh. D sai: Polyacrylonitrile điều chế bằng phản ứng trùng hợp acrylonitrile."}, {"id": 29, "source": "Thi thử TN THPT lần 1. 2025 – Lạng Sơn", "question": "Phát biểu nào sau đây đúng?", "image": null, "options": {"A": "Tơ nylon-6,6 được điều chế bằng phản ứng trùng ngưng các monomer tương ứng.", "B": "Trùng ngưng buta-1,3-diene với acrylonitrile có xúc tác Na được cao su buna-N.", "C": "Tơ visco là tơ tổng hợp.", "D": "Tơ nitron thuộc loại tơ polyamide."}, "answer": "A", "explanation": "A đúng: Tơ nylon-6,6 điều chế từ trùng ngưng hexamethylenediamine và adipic acid. B sai: Cao su buna-N tạo thành từ phản ứng đồng trùng hợp (không phải trùng ngưng). C sai: Tơ visco là tơ bán tổng hợp. D sai: Tơ nitron thuộc loại tơ vinylic (chuỗi carbon), không chứa liên kết amide."}, {"id": 30, "source": "Sở Tây Ninh-L1 - 2025", "question": "Phát biểu nào sau đây không đúng?", "image": null, "options": {"A": "Nylon-6,6 thuộc loại tơ tổng hợp.", "B": "Thành phần của vật liệu composite chỉ chứa polymer.", "C": "Tơ tằm thuộc loại tơ thiên nhiên.", "D": "Cao su là những vật liệu polymer có tính đàn hồi."}, "answer": "B", "explanation": "B không đúng vì vật liệu composite là vật liệu tổ hợp gồm ít nhất hai thành phần: vật liệu nền (thường là polymer) và vật liệu gia cường (vật liệu cốt như sợi thủy tinh, sợi carbon, hạt khoáng,...)."}, {"id": 31, "source": "Sở Tây Ninh-L1 - 2025", "question": "Polymer nào sau đây không chứa nguyên tố nitrogen?", "image": null, "options": {"A": "Polycaproamide.", "B": "Poly(hexamethylene adipamide).", "C": "Polyacrylonitrile.", "D": "Polyethylene."}, "answer": "D", "explanation": "Polyethylene có công thức (-CH₂-CH₂-)ₙ, phân tử chỉ cấu tạo từ carbon và hydrogen, hoàn toàn không chứa nguyên tố nitrogen."}, {"id": 32, "source": "Sở GD Đăk Nông – L1", "question": "Trồng dâu, nuôi tằm là một nghề vất vả đã được dân gian đúc kết trong câu: 'Nuôi lợn ăn cơm nằm, nuôi tằm ăn cơm đứng'. Con tằm sau khi nhả tơ tạo thành kén tằm được sử dụng để dệt thành những tấm tơ lụa đẹp, mềm mại và có giá trị kinh tế cao. Tơ tằm thuộc loại tơ nào dưới đây?", "image": null, "options": {"A": "Tơ tổng hợp.", "B": "Tơ hóa học.", "C": "Tơ thiên nhiên.", "D": "Tơ bán tổng hợp (tơ nhân tạo)."}, "answer": "C", "explanation": "Tơ tằm có sẵn trong tự nhiên do con tằm nhả ra (thành phần chính là protein fibroin), thuộc nhóm tơ thiên nhiên."}, {"id": 33, "source": "Sở GD TP HCM", "question": "Polymer nào sau đây không được dùng làm chất dẻo?", "image": null, "options": {"A": "Polyisoprene.", "B": "Poly(methyl methacrylate).", "C": "Polystyrene.", "D": "Poly(phenol formaldehyde)."}, "answer": "A", "explanation": "Polyisoprene là polymer có tính đàn hồi cao, được dùng làm vật liệu cao su chứ không dùng làm chất dẻo."}, {"id": 34, "source": "Chuyên Hạ Long – L1", "question": "Cho polymer có cấu tạo như sau: (-HN-[CH₂]₆-NHCO-[CH₂]₄-CO-)ₙ. Polymer trên được dùng sản xuất loại vật liệu polymer nào sau đây?", "image": null, "options": {"A": "Tơ.", "B": "Cao su.", "C": "Chất dẻo.", "D": "Keo dán."}, "answer": "A", "explanation": "Polymer (-HN-[CH₂]₆-NHCO-[CH₂]₄-CO-)ₙ chính là poly(hexamethylene adipamide) (nylon-6,6), chủ yếu dùng để kéo sợi dệt thành tơ sợi."}, {"id": 35, "source": "Sở Ninh Bình - L2", "question": "Những polymer nào sau đây thuộc loại polymer thiên nhiên?", "image": null, "options": {"A": "Tơ tằm, tinh bột và cellulose.", "B": "Tơ capron, tinh bột, cellulose.", "C": "Tơ capron, polystyrene, tinh bột và cellulose.", "D": "Tơ capron, polystyrene."}, "answer": "A", "explanation": "Tơ tằm, tinh bột và cellulose là các polymer có sẵn trong tự nhiên (sinh vật, thực vật tạo nên) nên là polymer thiên nhiên."}, {"id": 36, "source": "Sở GD Hà Tĩnh – L1", "question": "Polymer nào sau đây thuộc loại polymer tổng hợp?", "image": null, "options": {"A": "Tinh bột.", "B": "Tơ tằm.", "C": "Polyethylene.", "D": "Cao su thiên nhiên."}, "answer": "C", "explanation": "Polyethylene (PE) là polymer do con người tổng hợp từ monomer hóa dầu ethylene bằng phản ứng trùng hợp. Tinh bột, tơ tằm, cao su thiên nhiên là polymer tự nhiên."}, {"id": 37, "source": "Sở GD Tuyên Quang – L2", "question": "Polymer nào sau đây được sử dụng làm chất dẻo?", "image": null, "options": {"A": "Nylon-6,6.", "B": "Polybuta-1,3-diene.", "C": "Polyethylene.", "D": "Nylon-6."}, "answer": "C", "explanation": "Polyethylene (PE) là một trong những chất dẻo nhiệt phổ biến nhất. Nylon-6,6 và nylon-6 dùng làm tơ; polybuta-1,3-diene dùng làm cao su."}, {"id": 38, "source": "Sở GD Quảng Nam - L2", "question": "Loại polymer nào sau đây thuộc loại tơ?", "image": null, "options": {"A": "PVC.", "B": "Nylon-6,6.", "C": "Cao su buna.", "D": "PS."}, "answer": "B", "explanation": "Nylon-6,6 thuộc loại tơ tổng hợp (tơ polyamide). PVC và PS là chất dẻo; cao su buna là vật liệu cao su."}, {"id": 39, "source": "Sở GD Hưng Yên – L1", "question": "Polymer nào sau đây có chứa nguyên tố chlorine?", "image": null, "options": {"A": "Poly(vinyl chloride).", "B": "Polybutadiene.", "C": "Poly(methyl methacrylate).", "D": "Polyethylene."}, "answer": "A", "explanation": "Poly(vinyl chloride) (PVC) có công thức (-CH₂-CHCl-)ₙ chứa nguyên tố chlorine."}, {"id": 40, "source": "Sở GD Sóc Trăng – L1", "question": "Vật liệu polymer nào có khả năng kết dính bề mặt của hai vật liệu rắn với nhau mà không làm biến đổi bản chất các vật liệu được kết dính?", "image": null, "options": {"A": "Keo dán.", "B": "Cao su.", "C": "Tơ.", "D": "Chất dẻo."}, "answer": "A", "explanation": "Keo dán là vật liệu có khả năng kết dính bề mặt hai vật liệu rắn với nhau mà không làm thay đổi bản chất hóa học của các vật liệu được dán."}, {"id": 41, "source": "Sở GD Thanh Hoá – L2", "question": "Polymer nào sau đây thuộc loại polymer thiên nhiên?", "image": null, "options": {"A": "Cellulose trinitrate.", "B": "Tinh bột.", "C": "Polypropylene.", "D": "Polystyrene."}, "answer": "B", "explanation": "Tinh bột là polymer thiên nhiên có trong hạt ngũ cốc, củ,... Cellulose trinitrate là polymer nhân tạo (bán tổng hợp); polypropylene và polystyrene là polymer tổng hợp."}, {"id": 42, "source": "Sở GD Thái Nguyên – L2", "question": "Polymer nào sau đây được điều chế bằng phản ứng trùng ngưng?", "image": null, "options": {"A": "Poly(methyl methacrylate).", "B": "Polyethylene.", "C": "Poly(hexamethylene adipamide).", "D": "Poly(vinyl chloride)."}, "answer": "C", "explanation": "Poly(hexamethylene adipamide) (nylon-6,6) được điều chế bằng phản ứng trùng ngưng giữa hexamethylenediamine và adipic acid, giải phóng các phân tử H₂O."}, {"id": 43, "source": "Sở GD Hà Nội – L1", "question": "Tơ tằm, sợi bông, len thuộc loại tơ nào sau đây?", "image": null, "options": {"A": "Tơ nhân tạo.", "B": "Tơ tự nhiên.", "C": "Tơ bán tổng hợp.", "D": "Tơ tổng hợp."}, "answer": "B", "explanation": "Tơ tằm (từ tằm), sợi bông (từ quả bông), len (từ lông cừu, dê) đều có sẵn trong tự nhiên, thuộc loại tơ tự nhiên (tơ thiên nhiên)."}, {"id": 44, "source": "Sở GD Vĩnh Phúc – L2", "question": "Polymer nào sau đây có chứa nguyên tố nitrogen?", "image": null, "options": {"A": "Polyisoprene.", "B": "Nylon-6,6.", "C": "Poly(vinyl chloride).", "D": "Polystyrene."}, "answer": "B", "explanation": "Nylon-6,6 có công thức [-NH-(CH₂)₆-NH-CO-(CH₂)₄-CO-]ₙ chứa nguyên tố nitrogen (N). Các polymer còn lại chỉ chứa C, H hoặc C, H, Cl."}, {"id": 45, "source": "Chuyên Hạ Long – L1", "question": "Cho polymer có cấu tạo như sau: (-HN-[CH₂]₆-NHCO-[CH₂]₄-CO-)ₙ. Polymer trên được dùng sản xuất loại vật liệu polymer nào sau đây?", "image": null, "options": {"A": "Tơ.", "B": "Cao su.", "C": "Chất dẻo.", "D": "Keo dán."}, "answer": "A", "explanation": "Polymer trên là nylon-6,6, được dùng chủ yếu để sản xuất tơ sợi dệt may."}, {"id": 46, "source": "Sở GD Vĩnh Phúc – L1", "question": "Polymer nào sau đây được điều chế bằng phản ứng trùng ngưng?", "image": null, "options": {"A": "Poly(ethylene terephthalate).", "B": "Cao su buna.", "C": "Poly(vinyl chloride).", "D": "Polyethylene."}, "answer": "A", "explanation": "Poly(ethylene terephthalate) (tơ lapsan / nhựa PET) được điều chế bằng phản ứng trùng ngưng giữa terephthalic acid và ethylene glycol."}, {"id": 47, "source": "Sở GD Đăk Nông – L1", "question": "Polymer nào sau đây được điều chế bằng phản ứng trùng ngưng?", "image": null, "options": {"A": "Poly(hexamethylene adipamide).", "B": "Polybuta-1,3-diene.", "C": "Polyethylene.", "D": "Poly(vinyl chloride)."}, "answer": "A", "explanation": "Poly(hexamethylene adipamide) (nylon-6,6) được điều chế bằng phản ứng trùng ngưng hexamethylenediamine và adipic acid."}, {"id": 48, "source": "Sở GD Tuyên Quang – L1", "question": "“...(1)... là vật liệu được tổ hợp từ hai hay nhiều vật liệu khác nhau, tạo nên vật liệu mới có tính chất vượt trội so với các vật liệu thành phần. Trong đó vật liệu ….(2)…. có vai trò đảm bảo cho các thành phần cốt của composite liên kết với nhau nhằm tạo ra tính nguyên khối và thống nhất”. Nội dung phù hợp trong các ô trống (1), (2) lần lượt là", "image": null, "options": {"A": "Chất dẻo, cốt.", "B": "Chất dẻo, nền.", "C": "Vật liệu composite, nền.", "D": "Vật liệu composite, cốt."}, "answer": "C", "explanation": "(1) là 'Vật liệu composite'; (2) là 'nền' (vật liệu nền có vai trò liên kết các hạt/sợi cốt tạo thành khối thống nhất và bảo vệ cốt khỏi tác động môi trường)."}, {"id": 49, "source": "Sở GD Hà Tĩnh – L1", "question": "Nhận xét nào sau đây không đúng?", "image": null, "options": {"A": "Dựa vào nguồn gốc, polymer được chia thành: polymer thiên nhiên, polymer tổng hợp và polymer bán tổng hợp.", "B": "Vật liệu composite có nhiều tính chất vượt trội nên được dùng phổ biến để thay các vật liệu truyền thống.", "C": "Những polymer khi đun nóng không bị nóng chảy mà bị phân huỷ thì được gọi là chất nhiệt rắn.", "D": "Polymer không tan trong nước và trong bất kỳ dung môi nào."}, "answer": "D", "explanation": "D không đúng vì mặc dù polymer hầu như không tan trong nước, nhưng nhiều polymer tan được trong các dung môi hữu cơ thích hợp (ví dụ polystyrene tan trong benzene, toluene; cao su tan trong xăng dầu)."}, {"id": 50, "source": "Sở GD Đăk Nông – Đ1", "question": "Cao su thiên nhiên được khai thác từ mủ cây cao su. Cao su thiên nhiên có thành phần chính là polymer của isoprene. Cao su thiên nhiên không dẫn điện, không thấm nước và khí, có tính đàn hồi tốt nhưng tính đàn hồi chỉ tồn tại trong một khoảng nhiệt độ hẹp. Phát biểu nào sau đây không đúng?", "image": null, "options": {"A": "Lưu hóa cao su sẽ làm tăng tính đàn hồi, chịu nhiệt....của cao su thiên nhiên.", "B": "Cao su có tính đàn hồi vì mạch phân tử có cấu hình cis.", "C": "Cao su thiên nhiên tan tốt được trong nước và trong xăng, dầu.", "D": "Phân hủy cao su thiên nhiên bởi nhiệt thu được isoprene."}, "answer": "C", "explanation": "C không đúng vì cao su thiên nhiên không tan trong nước (chỉ tan hoặc trương nở trong dung môi hữu cơ không phân cực như xăng, dầu, benzene)."}, {"id": 51, "source": "Sở GD Quảng Nam - L2", "question": "Đất sét polymer là một loại đất sét dựa trên poly(vinyl chloride) (PVC). Đất sét polymer không chứa khoáng chất đất sét, nhưng khi trộn PVC với một chất lỏng sẽ thu được vật liệu giống như đất sét; do đó, thường được gọi là đất sét và được dùng để làm đồ chơi, đồ thủ công, đồ trang trí. Các ứng dụng này dựa trên tính chất nào của PVC?", "image": null, "options": {"A": "Tính cứng.", "B": "Tính không độc hại.", "C": "Tính đàn hồi.", "D": "Tính dẻo."}, "answer": "D", "explanation": "Khi trộn PVC với chất hóa dẻo, vật liệu có tính dẻo cao, dễ nặn tạo hình thủ công, đồ trang trí. Tính dẻo là tính chất bị biến dạng khi chịu tác dụng của nhiệt hoặc ngoại lực và giữ nguyên biến dạng đó khi thôi tác dụng."}, {"id": 52, "source": "Chuyên Lê Quý Đôn - Đà Nẵng", "question": "Nước ta có lịch sử lâu đời, văn hóa rực rỡ. Trong các phát biểu sau về việc kế thừa và phát huy di sản phi vật thể:\n(a) Trong quá trình sản xuất tơ lụa dân gian, lụa Vạn Phúc, loại tơ tằm thuộc loại tơ tự nhiên.\n(b) Giấy bản của người Dao Đỏ, thành phần chính của giấy bản là cellulose.\n(c) Nước mắm Nam Ô được làm từ cá cơm và muối ăn, trong nước mắm có chứa amino acid.\n(d) “Thương mía đường thơm, tô mì gạo mới\", thành phần chính của gạo là disaccharide.\n(e) Màu sắc rực rỡ của pháo hoa ở Đà Nẵng được tạo ra nhờ các muối của kim loại khác nhau.\nSố phát biểu đúng là:", "image": null, "options": {"A": "2.", "B": "3.", "C": "4.", "D": "1."}, "answer": "C", "explanation": "Các phát biểu đúng gồm: (a) đúng (tơ tằm là tơ thiên nhiên); (b) đúng (giấy làm từ vỏ cây có thành phần chính là cellulose); (c) đúng (thủy phân protein cá tạo amino acid); (e) đúng (muối các kim loại khác nhau cháy phát ra các màu sắc đặc trưng). Phát biểu (d) sai vì thành phần chính của gạo là tinh bột (polysaccharide), không phải disaccharide. Tổng số phát biểu đúng là 4."}, {"id": 53, "source": "Sở Bình Phước – Lần 1 - 2025", "question": "Chất thải nhựa và túi nylon (PE, PVC…) gây ảnh hưởng nghiêm trọng đến môi trường còn gọi là “ô nhiễm trắng”. Giải pháp nào sau đây không giúp giảm thiểu tác động của rác thải nhựa đến môi trường?", "image": null, "options": {"A": "Phân loại rác thải nhựa từ đầu nguồn để tái chế.", "B": "Tái sử dụng đồ nhựa, chai nhựa làm đồ dùng.", "C": "Thay thế túi nylon bằng túi giấy, túi vải tái sử dụng nhiều lần.", "D": "Tiêu huỷ các chất thải nhựa và túi nylon bằng phương pháp đốt hoặc chôn lấp."}, "answer": "D", "explanation": "Đốt chất thải nhựa (đặc biệt là PVC) sinh ra nhiều khí độc hại nguy hiểm như dioxin, furan, HCl, CO; còn chôn lấp làm tắc nghẽn nguồn nước, mất hàng trăm năm không phân hủy gây ô nhiễm đất nghiêm trọng. Vì vậy giải pháp D không giúp giảm thiểu tác động đến môi trường."}, {"id": 54, "source": "Chuyên Phan Bội Châu – Nghệ An – L1", "question": "Cao su thiên nhiên được khai thác từ mủ cây cao su. Cao su thiên nhiên có thành phần chính là polymer của isoprene (cấu trúc như hình bên). Cao su thiên nhiên không dẫn điện, không thấm nước và khí, có tính đàn hồi tốt nhưng tính đàn hồi chỉ tồn tại trong một khoảng nhiệt độ hẹp. Phát biểu nào sau đây sai?", "image": "/hoa/lop-12/de-17/images/cau54_isoprene.png", "options": {"A": "Cao su thiên nhiên tan tốt được trong nước và trong xăng, dầu.", "B": "Lưu hóa cao su sẽ làm tăng tính cơ lí của cao su thiên nhiên.", "C": "Phân tử polymer của cao su thiên nhiên có cấu hình cis.", "D": "Phân hủy cao su thiên nhiên bởi nhiệt thu được isoprene."}, "answer": "A", "explanation": "Cao su thiên nhiên không phân cực nên không tan trong nước, phát biểu A sai."}, {"id": 55, "source": "Cụm trường THPT Hưng Yên – L2", "question": "Cho sơ đồ lưu hóa cao su như hình bên:\nQuá trình lưu hoá cao su thuộc loại phản ứng", "image": "/hoa/lop-12/de-17/images/cau55_luu_hoa.png", "options": {"A": "giữ nguyên mạch polymer.", "B": "tăng mạch polymer.", "C": "cắt mạch polymer.", "D": "phân huỷ polymer."}, "answer": "B", "explanation": "Khi lưu hóa cao su bằng sulfur ở nhiệt độ cao, các cầu nối disulfide (-S-S-) hình thành giữa các mạch polymer thẳng, liên kết chúng lại thành mạng không gian 3 chiều. Đây là phản ứng tăng mạch polymer."}, {"id": 56, "source": "Sở GD Hà Tĩnh – L1", "question": "Các động vật ăn cỏ như trâu, bò, dê, cừu,... có thể chuyển hoá cellulose trong thức ăn thành glucose bằng enzyme cellulase để cung cấp năng lượng cho cơ thể. Phản ứng chuyển hoá cellulose thành glucose thuộc loại phản ứng nào sau đây?", "image": null, "options": {"A": "Cắt mạch polymer.", "B": "Giữ nguyên mạch polymer.", "C": "Tăng mạch polymer.", "D": "Trùng ngưng."}, "answer": "A", "explanation": "Phản ứng thủy phân cellulose (C₆H₁₀O₅)ₙ tạo thành phân tử nhỏ glucose (C₆H₁₂O₆) là phản ứng phân cắt các liên kết β-1,4-glycosidic trong mạch polymer, thuộc loại phản ứng cắt mạch polymer."}, {"id": 57, "source": "Sở GD Đăk Nông – L1", "question": "Trong các phản ứng giữa các cặp chất dưới đây ở điều kiện thích hợp, phản ứng nào làm giảm mạch polymer?", "image": null, "options": {"A": "Poly(vinyl chloride) + Cl₂.", "B": "Cao su thiên nhiên + HCl.", "C": "Tinh bột + H₂O (t°, H⁺).", "D": "Poly(vinyl acetate) + NaOH (t°)."}, "answer": "C", "explanation": "Phản ứng thủy phân tinh bột trong môi trường acid tạo ra các dextrin, maltose và cuối cùng là glucose làm giảm độ dài mạch (phân cắt mạch polymer). Các phản ứng ở A, B, D là phản ứng thế hoặc phản ứng thủy phân nhóm thế ở mạch bên, mạch chính carbon vẫn giữ nguyên (giữ nguyên mạch)."}, {"id": 58, "source": "Sở GD TP HCM", "question": "Cho phản ứng hóa học sau:\nPhản ứng trên thuộc loại phản ứng nào sau đây?", "image": "/hoa/lop-12/de-17/images/cau58_cong_hcl.png", "options": {"A": "Phản ứng phân cắt mạch polymer.", "B": "Phản ứng tăng mạch polymer.", "C": "Phản ứng giữ nguyên mạch polymer.", "D": "Phản ứng trùng ngưng."}, "answer": "C", "explanation": "HCl cộng vào liên kết đôi C=C trong từng mắt xích của phân tử polyisoprene, mạch carbon chính không bị cắt đứt cũng không tạo thêm liên kết nối giữa các mạch, do đó đây là phản ứng giữ nguyên mạch polymer."}, {"id": 59, "source": "Sở Yên Bái - L2", "question": "Cho phản ứng nhiệt phân polystyrene như sơ đồ dưới đây:\nPhản ứng trên thuộc loại", "image": "/hoa/lop-12/de-17/images/cau59_nhiet_phan_ps.png", "options": {"A": "phản ứng trùng hợp polymer.", "B": "phản ứng tăng mạch polymer.", "C": "phản ứng cắt mạch polymer.", "D": "phản ứng giữ nguyên mạch polymer."}, "answer": "C", "explanation": "Nhiệt phân polystyrene [-CH₂-CH(C₆H₅)-]ₙ bẻ gãy mạch polymer giải phóng monomer styrene (C₆H₅-CH=CH₂), thuộc loại phản ứng cắt mạch polymer (depolymerization)."}, {"id": 60, "source": "Thi thử tốt nghiệp THPT lần 1. 2025 – Lạng Sơn", "question": "Hình dưới đây là ký hiệu của 6 polymer nhiệt dẻo phổ biến có thể tái chế:\nCác ký hiệu này thường được in trên bao bì, vỏ hộp, đồ dùng,…để giúp nhận biết vật liệu polymer cũng như thuận lợi cho việc thu gom, tái chế. Polymer có ký hiệu số 6 được điều chế bằng phản ứng trùng hợp monomer là", "image": "/hoa/lop-12/de-17/images/cau60_recycling_symbols.png", "options": {"A": "CH₂=CH–C₆H₅.", "B": "CH₂=CH–Cl.", "C": "CH₂=CH–CH₃.", "D": "CH₂=CH₂."}, "answer": "A", "explanation": "Ký hiệu số 6 tương ứng với nhựa PS (Polystyrene), được tổng hợp từ monomer styrene có công thức CH₂=CH-C₆H₅."}, {"id": 61, "source": "Thi thử tốt nghiệp 2025 – Liên Trường Nghệ An", "question": "LDPE là một chất dẻo dễ tạo màng, có tính dai bền nên được sử dụng làm túi nylon, màng bọc, bao gói thực phẩm. LDPE thuộc nhóm nhựa PE (polyethylene) và thường được nhận biết qua ký hiệu đặc trưng in trên bao bì như hình bên. LDPE được tổng hợp từ monomer nào đây?", "image": "/hoa/lop-12/de-17/images/cau61_ldpe.png", "options": {"A": "CH₂=CH-Cl.", "B": "CH₂=CH₂.", "C": "CH₂=CH-CH₃.", "D": "CH₂=CH-C₆H₅."}, "answer": "B", "explanation": "LDPE (Low Density Polyethylene - polyethylene tỷ trọng thấp) được tổng hợp bằng phản ứng trùng hợp ethylene (CH₂=CH₂) ở áp suất cao."}, {"id": 62, "source": "Sở GD Hà Tĩnh – L1", "question": "Nhựa HDPE (kí hiệu ở hình bên) là loại nhựa nhiệt dẻo có đặc điểm cứng, chống chịu va đập, kéo căng tốt hơn so với nhựa thông thường. Đây là nhựa tổng hợp dùng phổ biến nhất trong sản xuất hiện nay. Nhựa HDPE được sản xuất từ polymer nào sau đây?", "image": "/hoa/lop-12/de-17/images/cau62_hdpe.png", "options": {"A": "Polyethylene.", "B": "Polystyrene.", "C": "Polypropylene.", "D": "Polyisoprene."}, "answer": "A", "explanation": "HDPE là viết tắt của High Density Polyethylene (polyethylene tỷ trọng cao), là một dạng cấu trúc mạch thẳng của polymer polyethylene."}, {"id": 63, "source": "Sở GD Nghệ An – Đ1", "question": "Hình dưới đây là ký hiệu của 6 polymer nhiệt dẻo phổ biến có thể tái chế:\nCác ký hiệu này thường được in trên bao bì, vỏ hộp, đồ dùng,… để giúp nhận biết vật liệu polymer cũng như thuận lợi cho việc thu gom, tái chế. Polymer có ký hiệu số 2 và số 4 được điều chế bằng phản ứng trùng hợp monomer nào dưới đây?", "image": "/hoa/lop-12/de-17/images/cau60_recycling_symbols.png", "options": {"A": "CH₂=CH–Cl.", "B": "CH₂=CH–C₆H₅.", "C": "CH₂=CH–CH₃.", "D": "CH₂=CH₂."}, "answer": "D", "explanation": "Số 2 là HDPE và số 4 là LDPE, cả hai đều thuộc nhóm polyethylene và được điều chế từ monomer ethylene (CH₂=CH₂)."}, {"id": 64, "source": "Sở GD Đăk Nông – Đ1", "question": "Hình dưới đây là ký hiệu của 6 polymer nhiệt dẻo phổ biến có thể tái chế:\nCác ký hiệu này thường được in trên bao bì, vỏ hộp, đồ dùng... để giúp nhận biết vật liệu polymer cũng như thuận lợi cho việc thu gom, tái chế. Polymer có ký hiệu số 5 được điều chế bằng phản ứng trùng hợp monomer nào dưới đây?", "image": "/hoa/lop-12/de-17/images/cau60_recycling_symbols.png", "options": {"A": "CH₂=CH₂.", "B": "CH₂=CH-C₆H₅.", "C": "CH₂=CH-Cl.", "D": "CH₂=CH-CH₃."}, "answer": "D", "explanation": "Ký hiệu số 5 là PP (Polypropylene), được điều chế bằng phản ứng trùng hợp propylene (CH₂=CH-CH₃)."}, {"id": 65, "source": "Sở GD Ninh Bình – L1", "question": "Cho các vật liệu polymer thuộc loại chất dẻo mô tả như hình sau:\nCác polymer này có thể tái chế được, các kí hiệu này thường được in trên bao bì, vỏ hộp, đồ dùng,… để giúp nhận biết vật liệu polymer cũng như thuận lợi trong việc thu gom và tái chế. Phát biểu nào sau đây đúng?", "image": "/hoa/lop-12/de-17/images/cau65_symbols.png", "options": {"A": "Trong 6 polymer trên, có 3 polymer nhiệt dẻo và 3 polymer nhiệt rắn.", "B": "Ba mũi tên của các kí hiệu nhựa trên tương ứng thuật ngữ 3R: Reduce (tiết giảm), Reused (tái sử dụng) và Recycle (tái chế).", "C": "Loại polymer 3 là nguyên liệu chính để sản xuất túi nylon, màng bọc thực phẩm…", "D": "Các polymer trên đều được tổng hợp từ phản ứng trùng hợp các monomer tương ứng."}, "answer": "B", "explanation": "B đúng: Biểu tượng tam giác 3 mũi tên đuổi nhau tượng trưng cho nguyên tắc 3R trong quản lý chất thải và bảo vệ môi trường: Reduce (tiết giảm), Reuse (tái sử dụng), Recycle (tái chế). A sai vì cả 6 polymer này đều là polymer nhiệt dẻo. C sai vì polymer số 3 là PVC, màng bọc/túi nilon chủ yếu làm từ PE. D sai vì PET (số 1) được tổng hợp bằng phản ứng trùng ngưng."}, {"id": 66, "source": "Cụm trường Thanh Hoá - L1", "question": "Dãy nào sau đây chỉ gồm các polymer tổng hợp?", "image": null, "options": {"A": "Polypropylene, cellulose, nylon−7, nylon−6,6.", "B": "Polypropylene, polybutadiene, nylon−7, nylon−6,6.", "C": "Polypropylene, tinh bột, nylon−7, cao su thiên nhiên.", "D": "Tinh bột, cellulose, cao su thiên nhiên, polybutadiene."}, "answer": "B", "explanation": "Polypropylene, polybutadiene, nylon-7 và nylon-6,6 đều là polymer tổng hợp do con người tổng hợp nên từ các monomer hóa học. Cellulose, tinh bột, cao su thiên nhiên là polymer thiên nhiên."}, {"id": 67, "source": "Sở Huế - L1 - 2025", "question": "Cho các polymer sau: cao su buna, tơ nylon-6,6, poly(methyl methacrylate), polyethylene, tơ olon, poly(vinyl chloride). Số polymer được điều chế bằng phản ứng trùng hợp là", "image": null, "options": {"A": "4.", "B": "3.", "C": "2.", "D": "5."}, "answer": "D", "explanation": "Có 5 polymer điều chế bằng phản ứng trùng hợp gồm: cao su buna (từ buta-1,3-diene), poly(methyl methacrylate) (từ methyl methacrylate), polyethylene (từ ethylene), tơ olon (từ vinyl cyanide) và poly(vinyl chloride) (từ vinyl chloride). Riêng nylon-6,6 điều chế bằng phản ứng trùng ngưng."}, {"id": 68, "source": "Sở Phú Thọ - L1", "question": "Cho các polymer sau: (1) tơ tằm; (2) sợi bông; (3) tơ visco; (4) tơ capron; (5) tơ cellulose acetate. Những polymer có nguồn gốc từ cellulose là", "image": null, "options": {"A": "(1), (4), (5).", "B": "(1), (2), (3).", "C": "(2), (3), (5).", "D": "(3), (4), (5)."}, "answer": "C", "explanation": "Sợi bông có thành phần chính là cellulose (gần 98%); tơ visco và tơ cellulose acetate được sản xuất từ nguyên liệu ban đầu là cellulose thiên nhiên. Tơ tằm có bản chất là protein; tơ capron là polycaproamide."}, {"id": 69, "source": "Cụm Đô Lương", "question": "Cao su tự nhiên có tính đàn hồi, không dẫn điện, chịu mài mòn, không thấm khí và nước, không tan trong nước và một số dung môi hữu cơ như ethanol,... nhưng tan trong xăng, benzene,... Do có liên kết đôi trong phân tử polymer nên cao su tự nhiên có thể tham gia các phản ứng cộng với H₂, HCl, Cl₂,... Khi cho cao su tác dụng với lưu huỳnh thu được cao su lưu hoá. Cao su sau khi lưu hoá có các cầu nối disulfide tạo mạng lưới không gian nên có các tính chất lý hoá nổi trội hơn so với cao su ban đầu,...\nCho các phát biểu sau:\n(a) Cao su tự nhiên được điều chế từ phản ứng trùng hợp isoprene C₅H₈.\n(b) Cao su lưu hóa có mạch mạng lưới không gian.\n(c) Phản ứng lưu hóa cao su thuộc loại phản ứng tăng mạch polymer.\n(d) Phản ứng cộng HCl vào cao su tự nhiên thuộc loại phản ứng tăng mạch polymer.\nCác phát biểu đúng là", "image": null, "options": {"A": "(b), (c), (d).", "B": "(a), (b), (d).", "C": "(b), (c).", "D": "(a), (b), (c)."}, "answer": "C", "explanation": "(a) sai vì cao su tự nhiên được thu hoạch trực tiếp từ mủ cây cao su, không phải điều chế bằng phản ứng trùng hợp trong công nghiệp; (b) đúng vì các cầu nối -S-S- tạo mạng lưới không gian 3 chiều; (c) đúng vì liên kết các mạch lại làm tăng phân tử khối mạch mạng lưới; (d) sai vì cộng HCl vào liên kết đôi chỉ là phản ứng giữ nguyên mạch polymer. Do đó chỉ có (b), (c) đúng."}, {"id": 70, "source": "Sở GD Hà Tĩnh – L1", "question": "Ô nhiễm môi trường do chất dẻo và rác thải nhựa đang là vấn đề được quan tâm. Cho các phát biểu sau:\n(a) Các loại nhựa được tạo ra từ chất dẻo khi thải ra môi trường mất nhiều thời gian để phân hủy.\n(b) Rác thải nhựa sau thu gom nên đốt hoặc chôn lấp để giảm thiểu lượng rác thải.\n(c) Sử dụng vật liệu phân hủy sinh học để thay thế một số loại chất dẻo.\n(d) Nên phân loại rác thải tại các nguồn để đưa ra cách xử lí.\nSố phát biểu đúng là", "image": null, "options": {"A": "1.", "B": "4.", "C": "2.", "D": "3."}, "answer": "D", "explanation": "Có 3 phát biểu đúng là (a), (c), (d). Phát biểu (b) sai vì đốt rác thải nhựa sinh ra các chất khí cực độc hại gây ô nhiễm không khí, còn chôn lấp làm suy thoái tài nguyên đất và nguồn nước ngầm."}, {"id": 71, "source": "Sở GD Bắc Ninh – L1", "question": "Cho các polymer sau: PE, PVC, cao su buna, poly(methyl methacrylate), tơ olon, tơ nylon-6,6. Số polymer được điều chế bằng phản ứng trùng hợp là", "image": null, "options": {"A": "2.", "B": "3.", "C": "5.", "D": "4."}, "answer": "C", "explanation": "Có 5 polymer điều chế bằng phản ứng trùng hợp: PE (từ ethylene), PVC (từ vinyl chloride), cao su buna (từ buta-1,3-diene), poly(methyl methacrylate) (từ methyl methacrylate), tơ olon (từ vinyl cyanide). Tơ nylon-6,6 điều chế bằng phản ứng trùng ngưng."}, {"id": 72, "source": "Chuyên ĐH Vinh – L1", "question": "Trong các loại tơ: len lông cừu, tơ tằm, tơ capron, tơ nitron, tơ visco có bao nhiêu tơ tổng hợp?", "image": null, "options": {"A": "4.", "B": "1.", "C": "5.", "D": "2."}, "answer": "D", "explanation": "Có 2 tơ tổng hợp là tơ capron và tơ nitron. Len lông cừu và tơ tằm là tơ thiên nhiên; tơ visco là tơ bán tổng hợp (nhân tạo)."}, {"id": 73, "source": "Sở Bình Phước – Lần 1 - 2025", "question": "Cho các polymer sau: PE, PVC, cao su buna, poly(methyl methacrylate), tơ olon, tơ nylon-6,6. Số polymer được điều chế bằng phản ứng trùng hợp là", "image": null, "options": {"A": "5.", "B": "2.", "C": "4.", "D": "3."}, "answer": "A", "explanation": "Tương tự câu 71, có 5 polymer được điều chế bằng phản ứng trùng hợp (PE, PVC, cao su buna, poly(methyl methacrylate), tơ olon)."}, {"id": 74, "source": "Chuyên Phan Bội Châu – Nghệ An – L1", "question": "Cho các phát biểu sau:\n(a) Chất dẻo có thành phần chính là polymer, ngoài ra còn có chất độn, chất hóa dẻo,...\n(b) Vật liệu composite thường gồm hai thành phần chính là vật liệu cốt và vật liệu nền.\n(c) Một trong những phương pháp xử lí rác thải nhựa không gây ô nhiễm môi trường là đốt cháy.\n(d) Tơ tằm, len đều có thành phần chính là protein, vì vậy chúng rất bền nhiệt và bền trong môi trường kiềm.\n(e) Keo dán epoxy gồm hai thành phần là chất hữu cơ có nhóm –COOH và -NH₂ ở hai đầu và chất đóng rắn.\nSố phát biểu đúng là", "image": null, "options": {"A": "2.", "B": "5.", "C": "3.", "D": "4."}, "answer": "A", "explanation": "Các phát biểu đúng: (a) đúng, (b) đúng. Các phát biểu sai: (c) sai vì đốt sinh dioxin, furan gây ô nhiễm nghiêm trọng; (d) sai vì protein kém bền với nhiệt và kém bền trong môi trường kiềm/acid; (e) sai vì thành phần chính của keo epoxy là hợp chất chứa 2 nhóm epoxy ở hai đầu và chất đóng rắn là polyamine. Tổng số phát biểu đúng là 2."}, {"id": 75, "source": "Sở GD Quảng Ninh – L1", "question": "Qiana là tên thương mại của một loại tơ nylon được sử dụng để sản xuất vải lụa chống nhăn cao cấp. Qiana có công thức cấu tạo sau đây:\nNhận xét nào sau đây đúng?", "image": "/hoa/lop-12/de-17/images/cau75_qiana.png", "options": {"A": "Các monomer dùng để tổng hợp Qiana có cấu tạo như sau: bis(4-aminophenyl)methane và sebacic acid.", "B": "Tơ này kém bền trong môi trường acid hoặc base mạnh.", "C": "Tơ nylon làm từ tơ Qiana thuộc loại tơ nhân tạo.", "D": "Qiana thuộc loại polyamide được điều chế từ phản ứng trùng hợp các monomer đa chức tương ứng."}, "answer": "B", "explanation": "B đúng vì tơ Qiana là polyamide chứa các liên kết peptide (-CO-NH-), do đó kém bền và dễ bị thủy phân trong môi trường acid hoặc base mạnh. A sai vì monomer của Qiana chứa vòng no cyclohexane chứ không phải vòng thơm benzene; C sai vì Qiana là tơ tổng hợp; D sai vì Qiana điều chế bằng phản ứng trùng ngưng."}, {"id": 76, "source": "Liên trường Nghệ An - L1 - 2025", "question": "Poly(ethylene terephthalate) (viết tắt là PET) được điều chế theo sơ đồ phản ứng sau:\nnHO–CH₂–CH₂–OH + nHOOC–C₆H₄–COOH --(t°)--> [-O-CH₂-CH₂-O-CO-C₆H₄-CO-]ₙ + 2nH₂O\nPET có mã số kí hiệu trên sản phẩm là số 1 và thuộc loại polymer nhiệt dẻo phổ biến nhất, có thể tái chế và được sử dụng chế tạo dệt sợi may quần áo, thảm, đồ hộp đựng chất lỏng và thực phẩm. Trong một mắt xích PET, phần trăm khối lượng oxygen là", "image": "/hoa/lop-12/de-17/images/cau76_pet.png", "options": {"A": "33,33%.", "B": "53,09%.", "C": "61,85%.", "D": "62,50%."}, "answer": "A", "explanation": "Mắt xích của PET có công thức phân tử là C₁₀H₈O₄. Phân tử khối mắt xích = 10×12 + 8×1 + 4×16 = 192 (amu). Phần trăm khối lượng oxygen: %m_O = (4 × 16 / 192) × 100% = 33,33%."}, {"id": 77, "source": "Sở GD Bà Rịa Vũng Tàu – L1", "question": "Polymer X được sử dụng trong sản xuất hộp xốp nhựa đựng thực phẩm, vỏ nhựa CD, DVD, đồ chơi trẻ em, máy vi tính, máy sấy tóc, thiết bị nhà bếp. Phân tích thành phần nguyên tố của monomer dùng điều chế X thu được kết quả: %C = 92,31%; %H = 7,69% (về khối lượng). Từ phổ khối lượng xác định được phân tử khối của monomer bằng 104. Tên của polymer X là", "image": null, "options": {"A": "Polybuta-1,3-diene.", "B": "Polyethylene.", "C": "Polypropylene.", "D": "Polystyrene."}, "answer": "D", "explanation": "Gọi công thức monomer là C_xH_y: x = (104 × 92,31%) / (12 × 100%) = 8; y = (104 × 7,69%) / (1 × 100%) = 8. Vậy monomer là C₈H₈ (styrene C₆H₅-CH=CH₂). Trùng hợp monomer styrene tạo thành polystyrene (PS)."}, {"id": 78, "source": "Sở GD Vĩnh Phúc – L1", "question": "Cho phản ứng tổng quát tổng hợp polymer sau:\nnCH₂=CH-R --(xt, t°, p)--> [-CH₂-CH(R)-]ₙ\nCho các phát biểu sau:\n(a) Polymer trên được tổng hợp theo phương pháp trùng hợp.\n(b) Khi -R lần lượt là các gốc -H, -CH₃, -Cl, -C₆H₅ (phenyl), các polymer dùng làm chất dẻo lần lượt là polyethylene, polypropylene, poly(vinyl chloride), polystyrene.\n(c) Khi -R là gốc -CN (cyanide), polymer tạo thành ứng dụng để dệt vải may quần áo ấm, vải bạt, mái hiên ngoài trời, vải làm cánh buồm, sợi gia cường, …\n(d) Khi gốc -R là gốc -OCOCH₃, polymer có khả năng bị thủy phân trong dung dịch NaOH tạo thành một phân tử polymer khác.\nSố phát biểu đúng là", "image": "/hoa/lop-12/de-17/images/cau78_pt_tong_hop.png", "options": {"A": "3.", "B": "1.", "C": "4.", "D": "2."}, "answer": "C", "explanation": "Cả 4 phát biểu đều đúng:\n(a) Đúng, đây là sơ đồ phản ứng trùng hợp monomer vinyl có liên kết đôi C=C.\n(b) Đúng, tạo ra PE, PP, PVC, PS đều là các chất dẻo thông dụng.\n(c) Đúng, tạo polyacrylonitrile (tơ nitron/olon) dùng dệt may quần áo ấm, bạt buồm, sợi gia cường.\n(d) Đúng, poly(vinyl acetate) tác dụng NaOH thủy phân tạo poly(vinyl alcohol) và CH₃COONa."}, {"id": 79, "source": "Sở GD Bắc Ninh – L1", "question": "Hemoglobin (huyết cầu tố) có phân tử khối là 14000. Mỗi phân tử hemoglobin chỉ chứa 1 nguyên tử sắt. Phần trăm về khối lượng của sắt trong hemoglobin là", "image": null, "options": {"A": "0,80%.", "B": "0,40%.", "C": "4,00%.", "D": "0,25%."}, "answer": "B", "explanation": "Phần trăm khối lượng của sắt (Fe = 56) trong hemoglobin: %m_Fe = (56 / 14000) × 100% = 0,40%."}, {"id": 80, "source": "Chuyên KHTN HN – L1", "question": "Cho các polymer sau:\n(I), (II), (III), (IV) như hình vẽ bên dưới:\nPolymer được điều chế bằng phản ứng trùng hợp methyl acrylate là", "image": "/hoa/lop-12/de-17/images/cau80_polymers.png", "options": {"A": "(I).", "B": "(II).", "C": "(III).", "D": "(IV)."}, "answer": "A", "explanation": "Methyl acrylate có công thức CH₂=CH-COOCH₃. Khi trùng hợp bẻ gãy nối đôi tạo mắt xích: -[-CH₂-CH(COOCH₃)-]-ₙ, tương ứng với cấu trúc polymer (I). Cấu trúc (II) là poly(methyl methacrylate) từ monomer CH₂=C(CH₃)COOCH₃."}, {"id": 81, "source": "Sở GD Quảng Nam - L2", "question": "Các nhà nghiên cứu thuộc Viện Công nghệ sinh học và Công nghệ Nano (IBN) của Singapore vừa phát hiện một sơ đồ hóa học mới có thể chuyển hóa đường glucose thành adipic acid như sau:\nGlucose --(enzyme, H=80%)--> Muconic acid (HOOC-CH=CH-CH=CH-COOH) --(H₂, xt, H=90%)--> Adipic acid (HOOC-(CH₂)₄-COOH) (1)\nTrong công nghiệp, adipic acid được dùng để sản xuất poly(hexamethylene adipamide) qua phản ứng trùng ngưng giữa hexamethylenediamine và adipic acid với hiệu suất đạt 90%.\nCó các phát biểu sau:\n(a) Poly(hexamethylene adipamide) thuộc loại tơ polyamide.\n(b) Poly(hexamethylene adipamide) kém bền với acid và kiềm.\n(c) Poly(hexamethylene adipamide) có tên gọi khác là nylon-6,6.\n(d) Lượng adipic acid được tạo từ 225 kg glucose theo sơ đồ (1) có thể sản xuất được 179 kg chỉ nha khoa. Biết rằng chỉ nha khoa chứa 92% về khối lượng poly(hexamethylene adipamide).\nCác phát biểu đúng là", "image": "/hoa/lop-12/de-17/images/cau81_glucose_adipic.png", "options": {"A": "(a), (b), (c).", "B": "(b), (c), (d).", "C": "(a), (b), (c), (d).", "D": "(a), (b), (d)."}, "answer": "A", "explanation": "(a), (b), (c) đều đúng vì nylon-6,6 là tơ polyamide chứa liên kết -CO-NH- kém bền với acid và kiềm.\nXét phát biểu (d):\nSơ đồ: C₆H₁₂O₆ (180) --(H₁=80%)--> Adipic acid (146) --(H₂=90%)--> Nylon-6,6 mắt xích [-NH(CH₂)₆NHCO(CH₂)₄CO-] (226).\nSố mol glucose = 225 / 180 = 1,25 kmol.\nKhối lượng nylon-6,6 lý thuyết = 1,25 × 0,80 × 0,90 × 226 = 203,4 kg (nếu hiệu suất trùng ngưng đạt 90% thì m_nylon = 183,06 kg).\nKhối lượng chỉ nha khoa (chứa 92% nylon-6,6) = 221 kg (hoặc 199 kg) ≠ 179 kg. Do đó phát biểu (d) sai.\nVậy các phát biểu đúng là (a), (b), (c)."}];
+
+        let userAnswers = {};
+        let examSubmitted = false;
+        let hasSentResults = false;
+        let timerInterval = null;
+        let remainingSeconds = 90 * 60; // 90 phút
+
+        function startExam() {
+            const name = document.getElementById('studentName').value.trim();
+            const sClass = document.getElementById('studentClass').value.trim();
+            if (!name || !sClass) {
+                alert('Vui lòng nhập đầy đủ Họ tên và Lớp để bắt đầu làm bài!');
+                return;
+            }
+
+            document.getElementById('displayName').textContent = name;
+            document.getElementById('displayClass').textContent = sClass;
+            document.getElementById('loginCard').style.display = 'none';
+            document.getElementById('examBody').style.display = 'block';
+            document.getElementById('navPanel').style.display = 'block';
+
+            renderQuestions();
+            renderNavigator();
+            startTimer();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                remainingSeconds--;
+                if (remainingSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timerText').textContent = '00:00';
+                    alert('Đã hết thời gian làm bài! Hệ thống tự động nộp bài.');
+                    submitExam();
+                    return;
+                }
+                const m = Math.floor(remainingSeconds / 60);
+                const s = remainingSeconds % 60;
+                document.getElementById('timerText').textContent = 
+                    (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+            }, 1000);
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questionsList');
+            container.innerHTML = '';
+
+            rawQuestions.forEach((q, idx) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = 'question-' + q.id;
+
+                let imgHtml = '';
+                if (q.image) {
+                    imgHtml = `<div class="q-img-wrap"><img src="${q.image}" class="q-img" alt="Hình minh họa câu ${q.id}"></div>`;
+                }
+
+                let optHtml = '<div class="options-grid">';
+                ['A', 'B', 'C', 'D'].forEach(letter => {
+                    optHtml += `
+                        <div class="opt-btn" id="opt-${q.id}-${letter}" onclick="selectOption(${q.id}, '${letter}')">
+                            <span class="opt-letter">${letter}</span>
+                            <span class="opt-text">${q.options[letter]}</span>
+                        </div>
+                    `;
+                });
+                optHtml += '</div>';
+
+                const srcText = q.source ? `<span class="source-badge">${q.source}</span>` : '';
+
+                card.innerHTML = `
+                    <div class="question-head">
+                        <span class="q-badge">Câu ${q.id}</span>
+                        ${srcText}
+                    </div>
+                    <div class="question-title">${q.question.replace(/\n/g, '<br>')}</div>
+                    ${imgHtml}
+                    ${optHtml}
+                    <div class="explanation-box" id="exp-${q.id}">
+                        <div class="exp-title"><i class="fa-solid fa-lightbulb"></i> Lời giải chi tiết (Đáp án ${q.answer}):</div>
+                        <div>${q.explanation.replace(/\n/g, '<br>')}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        function renderNavigator() {
+            const grid = document.getElementById('navGrid');
+            grid.innerHTML = '';
+            rawQuestions.forEach(q => {
+                const pill = document.createElement('div');
+                pill.className = 'nav-pill';
+                pill.id = 'nav-pill-' + q.id;
+                pill.textContent = q.id;
+                pill.onclick = () => {
+                    const el = document.getElementById('question-' + q.id);
+                    if (el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        toggleNavPopup();
+                    }
+                };
+                grid.appendChild(pill);
+            });
+        }
+
+        function toggleNavPopup() {
+            document.getElementById('navPopup').classList.toggle('show');
+        }
+
+        function selectOption(qId, letter) {
+            if (examSubmitted) return;
+            userAnswers[qId] = letter;
+
+            ['A', 'B', 'C', 'D'].forEach(l => {
+                const btn = document.getElementById(`opt-${qId}-${l}`);
+                if (btn) btn.classList.remove('selected');
+            });
+            const selectedBtn = document.getElementById(`opt-${qId}-${letter}`);
+            if (selectedBtn) selectedBtn.classList.add('selected');
+
+            const pill = document.getElementById('nav-pill-' + qId);
+            if (pill) pill.classList.add('answered');
+
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const total = rawQuestions.length;
+            const answered = Object.keys(userAnswers).length;
+            const percent = Math.round((answered / total) * 100);
+
+            document.getElementById('progressBarFill').style.width = percent + '%';
+            document.getElementById('progressText').textContent = percent + '%';
+            document.getElementById('answeredCounter').innerHTML = 
+                `<i class="fa-solid fa-check-circle"></i> Đã làm: ${answered}/${total}`;
+        }
+
+        function confirmSubmit() {
+            const total = rawQuestions.length;
+            const answered = Object.keys(userAnswers).length;
+            if (answered < total) {
+                const confirmMsg = `Bạn mới hoàn thành ${answered}/${total} câu hỏi. Bạn có chắc chắn muốn nộp bài ngay bây giờ?`;
+                if (!confirm(confirmMsg)) return;
+            } else {
+                if (!confirm('Bạn đã hoàn thành tất cả câu hỏi! Bạn có muốn nộp bài?')) return;
+            }
+            submitExam();
+        }
+
+        function submitExam() {
+            if (examSubmitted) return;
+            examSubmitted = true;
+            clearInterval(timerInterval);
+
+            let correctCount = 0;
+            rawQuestions.forEach(q => {
+                const userAns = userAnswers[q.id];
+                const isCorrect = (userAns === q.answer);
+                if (isCorrect) correctCount++;
+
+                ['A', 'B', 'C', 'D'].forEach(l => {
+                    const btn = document.getElementById(`opt-${q.id}-${l}`);
+                    if (btn) {
+                        if (l === q.answer) btn.classList.add('correct');
+                        else if (l === userAns) btn.classList.add('wrong');
+                    }
+                });
+
+                const pill = document.getElementById('nav-pill-' + q.id);
+                if (pill) {
+                    pill.classList.remove('answered');
+                    if (isCorrect) pill.classList.add('correct');
+                    else pill.classList.add('wrong');
+                }
+
+                const expBox = document.getElementById('exp-' + q.id);
+                if (expBox) expBox.classList.add('show');
+            });
+
+            const score = (correctCount / rawQuestions.length * 10).toFixed(2);
+            document.getElementById('scoreVal').textContent = score;
+            document.getElementById('scoreStat').textContent = 
+                `Đúng ${correctCount} / ${rawQuestions.length} câu hỏi (${Math.round(correctCount / rawQuestions.length * 100)}%)`;
+
+            const btnSub = document.getElementById('btnSubmit');
+            btnSub.disabled = true;
+            btnSub.innerHTML = '<i class="fa-solid fa-check"></i> ĐÃ NỘP BÀI THÀNH CÔNG';
+            btnSub.style.background = '#64748b';
+
+            document.getElementById('resultModal').classList.add('show');
+
+            if (typeof confetti === 'function' && score >= 5.0) {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+
+            syncToGoogleSheet(score, correctCount);
+        }
+
+        function syncToGoogleSheet(score, correctCount) {
+            const host = window.location.hostname.toLowerCase();
+            const isVatli102 = (host === 'vatli102.com' || host === 'www.vatli102.com');
+            if (!isVatli102) return;
+
+            if (hasSentResults) return;
+            hasSentResults = true;
+
+            const name = document.getElementById('studentName').value.trim();
+            const sClass = document.getElementById('studentClass').value.trim();
+            const sheetUrl = "https://script.google.com/macros/s/AKfycbwRRiM81mghvA7cInvJgb4rPLzWOAE3s44wer0BJcURQ4hWwoykS19pkNQ9LyzH6Q8lTQ/exec";
+
+            const payload = {
+                hoTen: name,
+                lop: sClass,
+                monHoc: "Hóa học",
+                chuyenMuc: "vatli102.com/hoa/",
+                tenBai: "Đề số 17: Chuyên đề Polymer và Vật liệu Polymer (81 câu)",
+                diemSo: score,
+                soCauDung: correctCount,
+                tongSoCau: rawQuestions.length,
+                thoiGianNop: new Date().toLocaleString('vi-VN')
+            };
+
+            fetch(sheetUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).catch(e => console.log('Sheet sync status:', e));
+        }
+
+        function closeResultModal() {
+            document.getElementById('resultModal').classList.remove('show');
+            const firstQ = document.getElementById('question-1');
+            if (firstQ) firstQ.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
