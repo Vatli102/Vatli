@@ -1,640 +1,630 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Phiếu Bài Tập Bài 5: Cấu tạo bảng tuần hoàn các nguyên tố hóa học — Hóa học 10</title>
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <style>
-    :root {
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --danger: #dc2626;
-      --success: #16a34a;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text: #0f172a;
-      --border: #e2e8f0;
-      --gray-light: #f1f5f9;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-    body { background: var(--bg); color: var(--text); padding: 1.5rem 1rem; line-height: 1.6; }
-    .container { max-width: 900px; margin: 0 auto; background: var(--card-bg); border-radius: 1rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid var(--border); overflow: hidden; }
-    header { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: #fff; padding: 2rem 1.5rem; text-align: center; }
-    header h1 { font-size: 1.65rem; font-weight: 800; margin-bottom: 0.5rem; }
-    header p { font-size: 0.95rem; opacity: 0.9; }
-    
-    .info-bar { background: #eff6ff; border-bottom: 1px solid #bfdbfe; padding: 1rem 1.5rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; }
-    .info-inputs { display: flex; flex-wrap: wrap; gap: 0.75rem; flex: 1; }
-    .info-inputs input { padding: 0.5rem 0.75rem; border: 1px solid #93c5fd; border-radius: 0.375rem; font-size: 0.9rem; min-width: 160px; outline: none; }
-    .timer-badge { font-weight: bold; font-size: 1.1rem; color: #1e40af; background: #fff; padding: 0.5rem 1rem; border-radius: 9999px; border: 1px solid #bfdbfe; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ĐỀ KIỂM TRA 15 PHÚT HÓA HỌC 10 - ĐỀ SỐ 03 | Vatli102.com</title>
+    <meta name="description" content="ĐỀ KIỂM TRA 15 PHÚT HÓA HỌC 10 - ĐỀ SỐ 03 - Chương 1: Cấu tạo nguyên tử (Mã đề 103). Tự động chấm điểm, hiển thị giải chi tiết, đồng bộ Google Sheet giáo viên.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-    .quiz-body { padding: 1.5rem; }
-    .section-title { font-size: 1.25rem; font-weight: 700; color: #1e3a8a; border-left: 4px solid var(--primary); padding-left: 0.75rem; margin: 2rem 0 1rem 0; }
-    .section-desc { font-size: 0.9rem; color: #64748b; font-style: italic; margin-bottom: 1.25rem; }
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-hover: #0369a1;
+            --secondary: #0d9488;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
 
-    .question-card { background: #fff; border: 1px solid var(--border); border-radius: 0.5rem; padding: 1.25rem; margin-bottom: 1.25rem; transition: border-color 0.2s; }
-    .question-card:hover { border-color: #cbd5e1; }
-    .q-number { font-weight: 700; color: var(--primary); margin-right: 0.5rem; }
-    .q-text { font-weight: 600; margin-bottom: 0.75rem; }
-    
-    .options-grid { display: grid; grid-template-columns: 1fr; gap: 0.5rem; }
-    @media (min-width: 640px) { .options-grid { grid-template-columns: 1fr 1fr; } }
-    .option-item { display: flex; align-items: center; padding: 0.65rem 0.85rem; border: 1px solid var(--border); border-radius: 0.375rem; cursor: pointer; transition: all 0.2s; user-select: none; }
-    .option-item:hover { background: #f8fafc; border-color: #94a3b8; }
-    .option-item.selected { background: #dbeafe; border-color: #3b82f6; color: #1e40af; font-weight: 600; }
-    
-    .tf-table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; }
-    .tf-table th, .tf-table td { border: 1px solid var(--border); padding: 0.65rem 0.75rem; font-size: 0.92rem; }
-    .tf-table th { background: var(--gray-light); text-align: center; }
-    .tf-table td.tf-action { text-align: center; width: 120px; }
-    .btn-tf { padding: 0.35rem 0.75rem; border-radius: 0.25rem; border: 1px solid #cbd5e1; background: #fff; cursor: pointer; font-size: 0.85rem; font-weight: 600; margin: 0 0.15rem; }
-    .btn-tf.selected-true { background: #dcfce7; border-color: #22c55e; color: #15803d; }
-    .btn-tf.selected-false { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .input-short { width: 100%; max-width: 250px; padding: 0.5rem 0.75rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; font-size: 1rem; outline: none; margin-top: 0.5rem; }
-    .input-short:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2); }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
 
-    .submit-section { text-align: center; margin: 2.5rem 0 1.5rem 0; }
-    .btn-submit { background: var(--primary); color: #fff; font-size: 1.15rem; font-weight: 700; padding: 0.85rem 2.5rem; border: none; border-radius: 0.5rem; cursor: pointer; transition: background 0.2s, transform 0.1s; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3); }
-    .btn-submit:hover { background: var(--primary-hover); transform: translateY(-1px); }
-    .btn-submit:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
+        .site-header {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
 
-    .result-box { display: none; background: #f0fdf4; border: 1px solid #86efac; border-radius: 0.75rem; padding: 1.5rem; margin-top: 2rem; text-align: center; }
-    .result-score { font-size: 2.2rem; font-weight: 800; color: #166534; margin: 0.5rem 0; }
-    .explanation-card { display: none; margin-top: 0.75rem; padding: 0.75rem 1rem; border-radius: 0.375rem; background: #f8fafc; border-left: 4px solid var(--primary); font-size: 0.9rem; line-height: 1.5; }
-  </style>
+        .header-container {
+            max-width: 900px; margin: 0 auto;
+            padding: 12px 16px;
+            display: flex; justify-content: space-between; align-items: center; gap: 12px;
+        }
+
+        .header-title {
+            font-size: 0.95rem; font-weight: 700; color: #0369a1;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .timer-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; background: #fee2e2; color: #b91c1c;
+            border: 1px solid #fca5a5; border-radius: 9999px;
+            font-size: 0.9rem; font-weight: 700;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .container {
+            max-width: 860px; margin: 24px auto; padding: 0 16px;
+        }
+
+        .welcome-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .welcome-title {
+            font-size: 1.35rem; font-weight: 800; color: #0284c7; margin-bottom: 8px;
+        }
+
+        .welcome-desc {
+            font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+            max-width: 520px; margin: 0 auto 20px; text-align: left;
+        }
+
+        @media (max-width: 560px) {
+            .form-grid { grid-template-columns: 1fr; }
+        }
+
+        .form-group label {
+            display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;
+        }
+
+        .form-group input {
+            width: 100%; padding: 10px 14px;
+            border: 1.5px solid #cbd5e1; border-radius: 10px;
+            font-size: 0.95rem; outline: none; transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: #ffffff; font-weight: 700; font-size: 1rem;
+            padding: 12px 32px; border: none; border-radius: 12px;
+            cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+            transition: all 0.2s;
+        }
+
+        .btn-start:hover {
+            background: linear-gradient(135deg, #0369a1, #075985);
+            transform: translateY(-1px);
+        }
+
+        .exam-area { display: none; }
+
+        .student-bar {
+            background: #f0f9ff; border: 1px solid #bae6fd;
+            border-radius: 12px; padding: 10px 16px;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.9rem; font-weight: 600; color: #0369a1;
+            margin-bottom: 20px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            transition: border-color 0.2s;
+        }
+
+        .question-card:hover { border-color: #cbd5e1; }
+
+        .question-header {
+            display: flex; gap: 8px; margin-bottom: 14px;
+            font-size: 1rem; font-weight: 600; line-height: 1.55;
+            text-align: justify;
+        }
+
+        .question-tag {
+            background: #e0f2fe; color: #0369a1;
+            font-size: 0.8rem; font-weight: 700;
+            padding: 2px 8px; border-radius: 6px; height: fit-content;
+            white-space: nowrap;
+        }
+
+        .options-grid {
+            display: flex; flex-direction: column; gap: 10px;
+        }
+
+        .option-item {
+            display: flex; align-items: flex-start; gap: 12px;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            background: #ffffff;
+            font-size: 0.95rem;
+            text-align: justify;
+        }
+
+        .option-item:hover {
+            border-color: #94a3b8;
+            background: #f8fafc;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary);
+            background: #f0f9ff;
+        }
+
+        .option-item.correct {
+            border-color: #22c55e !important;
+            background: #f0fdf4 !important;
+            color: #15803d !important;
+            font-weight: 600;
+        }
+
+        .option-item.incorrect {
+            border-color: #ef4444 !important;
+            background: #fef2f2 !important;
+            color: #b91c1c !important;
+        }
+
+        .option-label {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 26px; height: 26px; border-radius: 6px;
+            background: #f1f5f9; color: #475569;
+            font-weight: 700; font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .option-item.selected .option-label { background: var(--primary); color: #ffffff; }
+        .option-item.correct .option-label { background: #16a34a; color: #ffffff; }
+        .option-item.incorrect .option-label { background: #dc2626; color: #ffffff; }
+
+        .explanation-box {
+            display: none;
+            margin-top: 14px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            background: #f8fafc;
+            border-left: 4px solid #0284c7;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #334155;
+            text-align: justify;
+        }
+
+        .explanation-box.show { display: block; }
+
+        .explanation-title {
+            font-weight: 700; color: #0369a1; margin-bottom: 4px;
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        .submit-area { text-align: center; margin: 30px 0; }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            color: #ffffff; font-weight: 700; font-size: 1.05rem;
+            padding: 14px 40px; border: none; border-radius: 12px;
+            cursor: pointer; box-shadow: 0 4px 14px rgba(22, 163, 74, 0.3);
+            transition: all 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #15803d, #166534);
+            transform: translateY(-1px);
+        }
+
+        .result-card {
+            display: none;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 2px solid #38bdf8;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px rgba(2, 132, 199, 0.08);
+            text-align: center;
+        }
+
+        .result-score {
+            font-size: 3rem; font-weight: 800; color: #0284c7; line-height: 1;
+            margin: 12px 0 6px;
+        }
+
+        .result-detail {
+            display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
+            margin-top: 16px; font-size: 0.95rem; font-weight: 600;
+        }
+
+        .result-detail-item {
+            padding: 8px 16px; border-radius: 8px; background: #f1f5f9;
+        }
+
+        .sync-status { margin-top: 14px; font-size: 0.85rem; color: #64748b; }
+    </style>
 </head>
 <body>
 
-<div class="container">
-  <header>
-    <h1>PHIẾU BÀI TẬP VÀ ĐÁNH GIÁ NĂNG LỰC — HÓA HỌC 10</h1>
-    <p>BÀI 5: CẤU TẠO BẢNG TUẦN HOÀN CÁC NGUYÊN TỐ HÓA HỌC (KẾT NỐI TRI THỨC VỚI CUỘC SỐNG)</p>
-  </header>
-
-  <div class="info-bar">
-    <div class="info-inputs">
-      <input type="text" id="hsName" placeholder="Họ và tên học sinh (*)" required>
-      <input type="text" id="hsClass" placeholder="Lớp (Ví dụ: 10A1) (*)" required>
-    </div>
-    <div class="timer-badge" id="timerDisplay">Thời gian: 45:00</div>
-  </div>
-
-  <div class="quiz-body" id="quizContainer">
-    <!-- Part 1 -->
-    <div class="section-title">PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn</div>
-    <div class="section-desc">Thí sinh trả lời từ Câu 1 đến Câu 16. Mỗi câu chỉ chọn một đáp án đúng nhất (4,0 điểm).</div>
-    <div id="part1Container"></div>
-
-    <!-- Part 2 -->
-    <div class="section-title">PHẦN II. Câu trắc nghiệm đúng sai</div>
-    <div class="section-desc">Thí sinh trả lời Câu 1 và Câu 2. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn Đúng hoặc Sai (2,0 điểm).</div>
-    <div id="part2Container"></div>
-
-    <!-- Part 3 -->
-    <div class="section-title">PHẦN III. Câu trắc nghiệm trả lời ngắn</div>
-    <div class="section-desc">Thí sinh trả lời từ Câu 1 đến Câu 4. Viết kết quả dưới dạng số vào ô trống (2,0 điểm).</div>
-    <div id="part3Container"></div>
-
-    <div class="submit-section">
-      <button class="btn-submit" id="btnSubmit" onclick="submitExam()">NỘP BÀI THI</button>
-    </div>
-
-    <div class="result-box" id="resultBox">
-      <h2>KẾT QUẢ BÀI LÀM TRẮC NGHIỆM ONLINE</h2>
-      <div class="result-score" id="scoreDisplay">0.0 / 8.0 Điểm</div>
-      <p id="resultDetail"></p>
-      <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.5rem;">Kết quả trắc nghiệm đã được tự động đồng bộ vào Google Sheets của Giáo viên môn Hóa.</p>
-    </div>
-  </div>
-</div>
-
-<script>
-const QUIZ_DATA = {
-  "title": "Bài 5: Cấu tạo bảng tuần hoàn các nguyên tố hóa học - Hóa học 10 (KNTT)",
-  "duration": 45,
-  "submit_url": "https://script.google.com/macros/s/AKfycbwRRiM81mghvA7cInvJgb4rPLzWOAE3s44wer0BJcURQ4hWwoykS19pkNQ9LyzH6Q8lTQ/exec",
-  "part1": [
-    {
-      "id": 1,
-      "question": "Nhà bác học đầu tiên công bố Bảng tuần hoàn các nguyên tố hóa học vào năm 1869 là",
-      "options": [
-        "A. D.I. Mendeleev.",
-        "B. J.L. Meyer.",
-        "C. J. Dalton.",
-        "D. E. Rutherford."
-      ],
-      "answer": "A",
-      "explanation": "Năm 1869, nhà hóa học người Nga D.I. Mendeleev đã công bố bảng tuần hoàn đầu tiên sắp xếp 63 nguyên tố đã biết."
-    },
-    {
-      "id": 2,
-      "question": "Trong bảng tuần hoàn hiện đại, các nguyên tố hóa học được sắp xếp theo chiều tăng dần của đại lượng nào sau đây?",
-      "options": [
-        "A. Khối lượng nguyên tử.",
-        "B. Điện tích hạt nhân nguyên tử.",
-        "C. Số khối của hạt nhân.",
-        "D. Bán kính nguyên tử."
-      ],
-      "answer": "B",
-      "explanation": "Nguyên tắc 1 của bảng tuần hoàn hiện đại: Các nguyên tố được sắp xếp theo chiều tăng dần của điện tích hạt nhân nguyên tử (số hiệu nguyên tử Z)."
-    },
-    {
-      "id": 3,
-      "question": "Số thứ tự của một ô nguyên tố trong bảng tuần hoàn bằng đại lượng nào sau đây?",
-      "options": [
-        "A. Số hạt neutron.",
-        "B. Số khối (A).",
-        "C. Số hiệu nguyên tử (Z).",
-        "D. Số lớp electron."
-      ],
-      "answer": "C",
-      "explanation": "Số thứ tự ô = Số hiệu nguyên tử (Z) = Số proton = Số electron trong nguyên tử."
-    },
-    {
-      "id": 4,
-      "question": "Đại lượng nào sau đây quyết định số thứ tự chu kì của một nguyên tố trong bảng tuần hoàn?",
-      "options": [
-        "A. Số electron hóa trị.",
-        "B. Số electron ở phân lớp ngoài cùng.",
-        "C. Số hiệu nguyên tử.",
-        "D. Số lớp electron của nguyên tử."
-      ],
-      "answer": "D",
-      "explanation": "Các nguyên tố có cùng số lớp electron trong nguyên tử được xếp thành một hàng gọi là chu kì. Do đó: Số thứ tự chu kì = Số lớp electron."
-    },
-    {
-      "id": 5,
-      "question": "Bảng tuần hoàn các nguyên tố hóa học hiện nay gồm có bao nhiêu chu kì và bao nhiêu cột?",
-      "options": [
-        "A. 8 chu kì và 18 cột.",
-        "B. 7 chu kì và 18 cột.",
-        "C. 7 chu kì và 16 cột.",
-        "D. 6 chu kì và 8 cột."
-      ],
-      "answer": "B",
-      "explanation": "Bảng tuần hoàn hiện nay gồm 7 chu kì (đánh số từ 1 đến 7) và 18 cột (được chia thành 8 nhóm A và 8 nhóm B)."
-    },
-    {
-      "id": 6,
-      "question": "Các chu kì nhỏ trong bảng tuần hoàn các nguyên tố hóa học là",
-      "options": [
-        "A. chu kì 1, 2, 3.",
-        "B. chu kì 1, 2.",
-        "C. chu kì 2, 3, 4.",
-        "D. chu kì 1, 3, 5."
-      ],
-      "answer": "A",
-      "explanation": "Chu kì nhỏ là các chu kì chứa ít nguyên tố, gồm: chu kì 1 (2 nguyên tố), chu kì 2 (8 nguyên tố) và chu kì 3 (8 nguyên tố)."
-    },
-    {
-      "id": 7,
-      "question": "Đối với các nguyên tố thuộc nhóm A, số thứ tự của nhóm bằng số lượng electron nào?",
-      "options": [
-        "A. Tổng số electron trong nguyên tử.",
-        "B. Số electron ở phân lớp sát ngoài cùng.",
-        "C. Số electron độc thân.",
-        "D. Số electron ở lớp ngoài cùng."
-      ],
-      "answer": "D",
-      "explanation": "Với các nguyên tố nhóm A, electron hóa trị chính là electron ở lớp ngoài cùng. Do đó: Số thứ tự nhóm A = Số electron lớp ngoài cùng."
-    },
-    {
-      "id": 8,
-      "question": "Nguyên tử của nguyên tố X có cấu hình electron: 1s² 2s² 2p⁶ 3s¹. Vị trí của X trong bảng tuần hoàn là",
-      "options": [
-        "A. Ô 11, chu kì 1, nhóm IIIA.",
-        "B. Ô 12, chu kì 3, nhóm IIA.",
-        "C. Ô 11, chu kì 3, nhóm IA.",
-        "D. Ô 11, chu kì 3, nhóm IB."
-      ],
-      "answer": "C",
-      "explanation": "X có Z = 11 → Ô 11; có 3 lớp electron → Chu kì 3; lớp ngoài cùng có 1 electron (3s¹) và là nguyên tố s → Nhóm IA."
-    },
-    {
-      "id": 9,
-      "question": "Nguyên tố nào sau đây thuộc khối nguyên tố p trong bảng tuần hoàn?",
-      "options": [
-        "A. Sodium (Z = 11: [Ne] 3s¹).",
-        "B. Aluminium (Z = 13: [Ne] 3s² 3p¹).",
-        "C. Calcium (Z = 20: [Ar] 4s²).",
-        "D. Helium (Z = 2: 1s²)."
-      ],
-      "answer": "B",
-      "explanation": "Aluminium có electron cuối cùng điền vào phân lớp 3p (3p¹) nên là nguyên tố p. Sodium và Calcium là nguyên tố s. Helium tuy ở cột VIIIA nhưng có cấu hình 1s² nên thuộc khối s."
-    },
-    {
-      "id": 10,
-      "question": "Nguyên tử của nguyên tố Y có cấu hình electron lớp ngoài cùng là 4s² 4p⁵. Vị trí của Y trong bảng tuần hoàn là",
-      "options": [
-        "A. Chu kì 4, nhóm VIIA.",
-        "B. Chu kì 4, nhóm VA.",
-        "C. Chu kì 5, nhóm IVA.",
-        "D. Chu kì 4, nhóm VIIB."
-      ],
-      "answer": "A",
-      "explanation": "Lớp ngoài cùng là lớp thứ 4 (n=4) → Chu kì 4. Tổng số electron lớp ngoài cùng là 2 + 5 = 7 electron; electron cuối cùng ở phân lớp p → Nhóm VIIA (Bromine)."
-    },
-    {
-      "id": 11,
-      "question": "Nguyên tố Sắt (Iron, Fe) có Z = 26 và cấu hình electron là [Ar] 3d⁶ 4s². Nguyên tố Fe thuộc nhóm nào trong bảng tuần hoàn?",
-      "options": [
-        "A. Nhóm IIB.",
-        "B. Nhóm VIB.",
-        "C. Nhóm VIIIA.",
-        "D. Nhóm VIIIB."
-      ],
-      "answer": "D",
-      "explanation": "Fe là nguyên tố d có cấu hình electron hóa trị (n-1)d⁶ ns². Tổng số electron hóa trị S = 6 + 2 = 8. Theo quy tắc nhóm B: S = 8, 9, 10 thuộc nhóm VIIIB."
-    },
-    {
-      "id": 12,
-      "question": "Nhóm VIIIA trong bảng tuần hoàn gồm các nguyên tố nào sau đây?",
-      "options": [
-        "A. Các kim loại kiềm.",
-        "B. Các halogen phi kim.",
-        "C. Các khí hiếm (He, Ne, Ar, Kr, Xe, Rn, Og).",
-        "D. Các kim loại kiềm thổ."
-      ],
-      "answer": "C",
-      "explanation": "Nhóm VIIIA (cột số 18) gồm các nguyên tố khí hiếm có 8 electron lớp ngoài cùng bền vững (riêng He có 2 electron)."
-    },
-    {
-      "id": 13,
-      "question": "Nguyên tử của nguyên tố nào sau đây có tính chất hóa học là kim loại?",
-      "options": [
-        "A. Sodium (Z = 11: 1s² 2s² 2p⁶ 3s¹).",
-        "B. Chlorine (Z = 17: 1s² 2s² 2p⁶ 3s² 3p⁵).",
-        "C. Neon (Z = 10: 1s² 2s² 2p⁶).",
-        "D. Oxygen (Z = 8: 1s² 2s² 2p⁴)."
-      ],
-      "answer": "A",
-      "explanation": "Sodium có 1 electron ở lớp ngoài cùng, dễ nhường 1e trong các phản ứng hóa học nên mang tính chất kim loại mạnh."
-    },
-    {
-      "id": 14,
-      "question": "Nguyên tử của nguyên tố M tạo được ion M²⁺ có cấu hình electron là 1s² 2s² 2p⁶. Vị trí của nguyên tố M trong bảng tuần hoàn là",
-      "options": [
-        "A. Ô 10, chu kì 2, nhóm VIIIA.",
-        "B. Ô 12, chu kì 3, nhóm IIA.",
-        "C. Ô 8, chu kì 2, nhóm VIA.",
-        "D. Ô 12, chu kì 2, nhóm IIA."
-      ],
-      "answer": "B",
-      "explanation": "M²⁺ có 10 electron → Nguyên tử M có 10 + 2 = 12 electron. Cấu hình electron của M: 1s² 2s² 2p⁶ 3s². M thuộc ô 12, chu kì 3, nhóm IIA (Magnesium)."
-    },
-    {
-      "id": 15,
-      "question": "Hai nguyên tố X và Y đứng kế tiếp nhau trong cùng một chu kì của bảng tuần hoàn có tổng số hạt proton trong hai hạt nhân là 27. Kí hiệu của X và Y lần lượt là",
-      "options": [
-        "A. Mg và Al.",
-        "B. Na và Mg.",
-        "C. Al và Si.",
-        "D. Si và P."
-      ],
-      "answer": "C",
-      "explanation": "Hai nguyên tố kế tiếp nhau trong cùng chu kì có Z_Y - Z_X = 1. Theo đề bài: Z_X + Z_Y = 27. Giải hệ được Z_X = 13 (Al) và Z_Y = 14 (Si)."
-    },
-    {
-      "id": 16,
-      "question": "Nguyên tử của nguyên tố R có tổng số hạt cơ bản (p, n, e) là 40, trong đó số hạt mang điện nhiều hơn số hạt không mang điện là 12 hạt. Vị trí của R trong bảng tuần hoàn là",
-      "options": [
-        "A. Ô 14, chu kì 3, nhóm IVA.",
-        "B. Ô 12, chu kì 3, nhóm IIA.",
-        "C. Ô 13, chu kì 4, nhóm IIIA.",
-        "D. Ô 13, chu kì 3, nhóm IIIA."
-      ],
-      "answer": "D",
-      "explanation": "Trong nguyên tử: 2Z + N = 40 và 2Z - N = 12. Cộng hai phương trình: 4Z = 52 → Z = 13. Cấu hình e của R (Z=13): 1s² 2s² 2p⁶ 3s² 3p¹. R thuộc ô 13, chu kì 3, nhóm IIIA (Aluminium)."
-    }
-  ],
-  "part2": [
-    {
-      "id": 1,
-      "context": "Năm 1869, khi nhà bác học D.I. Mendeleev công bố Bảng tuần hoàn đầu tiên, ông đã sắp xếp 63 nguyên tố đã biết theo chiều tăng dần của khối lượng nguyên tử. Điểm thiên tài của Mendeleev là ông đã dũng cảm để lại nhiều ô trống trong bảng tuần hoàn và dự đoán trước tính chất của các nguyên tố chưa được phát hiện, tiêu biểu là nguyên tố 'Eka-aluminium' (sau này là Gallium được nhà hóa học Lecoq de Boisbaudran tìm ra năm 1875) và 'Eka-silicon' (Germanium tìm ra năm 1886).",
-      "subquestions": [
-        {
-          "label": "a)",
-          "text": "Mendeleev đã sắp xếp các nguyên tố hóa học trong bảng tuần hoàn đầu tiên dựa trên chiều tăng dần của điện tích hạt nhân nguyên tử.",
-          "answer": false,
-          "explanation": "Năm 1869, Mendeleev sắp xếp dựa trên chiều tăng dần của khối lượng nguyên tử vì thời điểm đó khái niệm điện tích hạt nhân nguyên tử chưa được phát minh."
-        },
-        {
-          "label": "b)",
-          "text": "Nguyên tố Gallium (Z = 31) có cấu hình electron [Ar] 3d¹⁰ 4s² 4p¹ thuộc chu kì 4, nhóm IIIA trong bảng tuần hoàn hiện đại.",
-          "answer": true,
-          "explanation": "Ga có 4 lớp electron nên thuộc chu kì 4; có 3 electron lớp ngoài cùng (4s² 4p¹) và electron cuối cùng ở phân lớp p nên thuộc nhóm IIIA."
-        },
-        {
-          "label": "c)",
-          "text": "Sự phát hiện ra các nguyên tố Gallium và Germanium với tính chất thực nghiệm trùng khớp dự đoán của Mendeleev đã chứng minh tính đúng đắn và quy luật khách quan của Định luật tuần hoàn.",
-          "answer": true,
-          "explanation": "Việc dự đoán chính xác sự tồn tại và tính chất của các nguyên tố chưa biết là thắng lợi rực rỡ nhất khẳng định giá trị khoa học của Bảng tuần hoàn Mendeleev."
-        },
-        {
-          "label": "d)",
-          "text": "Trong bảng tuần hoàn hiện nay, mọi nguyên tố có khối lượng nguyên tử lớn hơn đều đứng sau nguyên tố có khối lượng nguyên tử nhỏ hơn.",
-          "answer": false,
-          "explanation": "Bảng tuần hoàn hiện đại sắp xếp theo chiều tăng dần của điện tích hạt nhân (Z). Có một số ngoại lệ về khối lượng nguyên tử, ví dụ Argon (M = 39,95 amu, Z = 18) đứng trước Potassium (M = 39,10 amu, Z = 19)."
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "context": "Trong nông nghiệp hiện đại, các nguyên tố dinh dưỡng đa lượng thiết yếu cho cây trồng gồm Đạm (Nitrogen - N), Lân (Phosphorus - P) và Kali (Potassium - K). Ngoài ra, các nguyên tố trung lượng như Calcium (Ca), Magnesium (Mg) và vi lượng như Sắt (Iron - Fe), Kẽm (Zinc - Zn) đóng vai trò xúc tác sinh học không thể thiếu cho sự phát triển của thực vật.",
-      "subquestions": [
-        {
-          "label": "a)",
-          "text": "Nitrogen (Z = 7) và Phosphorus (Z = 15) cùng thuộc nhóm VA trong bảng tuần hoàn nên có cấu hình electron lớp ngoài cùng tương tự nhau (ns² np³).",
-          "answer": true,
-          "explanation": "N (1s² 2s² 2p³) và P ([Ne] 3s² 3p³) đều có 5 electron lớp ngoài cùng dạng ns² np³, cùng thuộc nhóm VA."
-        },
-        {
-          "label": "b)",
-          "text": "Potassium (Z = 19) thuộc chu kì 4, nhóm IA, là một phi kim hoạt động hóa học rất mạnh.",
-          "answer": false,
-          "explanation": "Potassium (K) có cấu hình [Ar] 4s¹ là kim loại kiềm điển hình có tính khử rất mạnh, không phải phi kim."
-        },
-        {
-          "label": "c)",
-          "text": "Magnesium (Z = 12) và Calcium (Z = 20) đều thuộc khối nguyên tố s và thuộc nhóm IIA (nhóm kim loại kiềm thổ).",
-          "answer": true,
-          "explanation": "Mg ([Ne] 3s²) và Ca ([Ar] 4s²) đều có electron cuối cùng điền vào phân lớp s, có 2 electron ngoài cùng nên thuộc nhóm IIA."
-        },
-        {
-          "label": "d)",
-          "text": "Iron (Z = 26) và Zinc (Z = 30) đều là các nguyên tố kim loại chuyển tiếp thuộc các nhóm B trong bảng tuần hoàn.",
-          "answer": true,
-          "explanation": "Fe ([Ar] 3d⁶ 4s²) thuộc nhóm VIIIB và Zn ([Ar] 3d¹⁰ 4s²) thuộc nhóm IIB; cả hai đều là kim loại chuyển tiếp khối d thuộc nhóm B."
-        }
-      ]
-    }
-  ],
-  "part3": [
-    {
-      "id": 1,
-      "question": "Nguyên tử của nguyên tố Chlorine có số hiệu nguyên tử Z = 17. Số electron ở lớp ngoài cùng của nguyên tử chlorine là bao nhiêu?",
-      "answer": "7",
-      "explanation": "Cấu hình e của Cl (Z = 17): 1s² 2s² 2p⁶ 3s² 3p⁵. Lớp ngoài cùng là lớp thứ 3 có 2 + 5 = 7 electron."
-    },
-    {
-      "id": 2,
-      "question": "Bảng tuần hoàn các nguyên tố hóa học hiện nay có bao nhiêu chu kì lớn?",
-      "answer": "4",
-      "explanation": "Bảng tuần hoàn có 7 chu kì, trong đó chu kì 1, 2, 3 là chu kì nhỏ; chu kì 4, 5, 6, 7 là chu kì lớn (tổng cộng có 4 chu kì lớn)."
-    },
-    {
-      "id": 3,
-      "question": "Trong chu kì 3 của bảng tuần hoàn, có bao nhiêu nguyên tố hóa học có tính chất là phi kim?",
-      "answer": "4",
-      "explanation": "Chu kì 3 gồm 8 nguyên tố: Na (kim loại), Mg (kim loại), Al (kim loại), Si (phi kim/bán dẫn), P (phi kim), S (phi kim), Cl (phi kim), Ar (khí hiếm). Có 4 nguyên tố phi kim là Si, P, S, Cl."
-    },
-    {
-      "id": 4,
-      "question": "Tổng số hạt proton trong hai nguyên tử của hai nguyên tố X và Y thuộc cùng một phân nhóm chính (nhóm A) và ở hai chu kì liên tiếp là 22. Số hiệu nguyên tử của nguyên tố có khối lượng lớn hơn trong hai nguyên tố đó là bao nhiêu?",
-      "answer": "15",
-      "explanation": "Vì X và Y ở hai chu kì liên tiếp thuộc nhóm A và tổng Z_X + Z_Y = 22 < 30 nên hiệu Z_Y - Z_X = 8. Ta có hệ: Z_X + Z_Y = 22 và Z_Y - Z_X = 8 → Z_X = 7 (N) và Z_Y = 15 (P). Số hiệu nguyên tử lớn hơn là 15."
-    }
-  ]
-};
-
-let studentAnswers = {
-  part1: {},
-  part2: {},
-  part3: {}
-};
-
-let isSubmitted = false;
-let timeLeft = QUIZ_DATA.duration * 60;
-let timerInterval = null;
-
-function renderQuiz() {
-  // Render Part 1
-  const p1Container = document.getElementById('part1Container');
-  QUIZ_DATA.part1.forEach(q => {
-    const card = document.createElement('div');
-    card.className = 'question-card';
-    card.id = `q_p1_${q.id}`;
-    
-    let optHtml = '';
-    q.options.forEach(opt => {
-      const optVal = opt.charAt(0);
-      optHtml += `
-        <div class="option-item" onclick="selectOption1(${q.id}, '${optVal}', this)">
-          ${opt}
+    <header class="site-header">
+        <div class="header-container">
+            <div class="header-title">
+                <a href="/hoa/lop-10/" style="color: inherit; text-decoration: none;">
+                    <i class="fa-solid fa-flask text-sky-600"></i> Hóa Học 10
+                </a>
+                <span style="color: #cbd5e1;">/</span>
+                <span>Đề 3 (Mã đề 103)</span>
+            </div>
+            <div id="timerBadge" class="timer-badge" style="display: none;">
+                <i class="fa-solid fa-stopwatch"></i>
+                <span id="timerText">15:00</span>
+            </div>
         </div>
-      `;
-    });
+    </header>
 
-    card.innerHTML = `
-      <div class="q-text"><span class="q-number">Câu ${q.id}:</span>${q.question}</div>
-      <div class="options-grid" id="opt_grid_${q.id}">${optHtml}</div>
-      <div class="explanation-card" id="exp_p1_${q.id}">
-        <strong>Giải thích:</strong> Đáp án đúng là <strong>${q.answer}</strong>. ${q.explanation}
-      </div>
-    `;
-    p1Container.appendChild(card);
-  });
+    <div class="container">
 
-  // Render Part 2
-  const p2Container = document.getElementById('part2Container');
-  QUIZ_DATA.part2.forEach(q => {
-    const card = document.createElement('div');
-    card.className = 'question-card';
-    card.id = `q_p2_${q.id}`;
+        <div id="welcomeBox" class="welcome-card">
+            <h1 class="welcome-title">ĐỀ KIỂM TRA 15 PHÚT HÓA HỌC 10 - ĐỀ SỐ 03</h1>
+            <p class="welcome-desc">Chủ đề: Chương 1: Cấu tạo nguyên tử (Mã đề 103) • Thời gian: 15 phút • Số lượng: 12 câu trắc nghiệm</p>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="studentName">Họ và tên học sinh <span style="color: #dc2626;">*</span></label>
+                    <input type="text" id="studentName" placeholder="Ví dụ: Nguyễn Văn A" autocomplete="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentClass">Lớp <span style="color: #dc2626;">*</span></label>
+                    <input type="text" id="studentClass" placeholder="Ví dụ: 10A1" required>
+                </div>
+            </div>
 
-    let rowsHtml = '';
-    q.subquestions.forEach((sub, sIdx) => {
-      rowsHtml += `
-        <tr>
-          <td><strong>${sub.label}</strong> ${sub.text}</td>
-          <td class="tf-action">
-            <button type="button" class="btn-tf" id="btn_tf_${q.id}_${sIdx}_T" onclick="selectTF(${q.id}, ${sIdx}, true)">Đúng</button>
-            <button type="button" class="btn-tf" id="btn_tf_${q.id}_${sIdx}_F" onclick="selectTF(${q.id}, ${sIdx}, false)">Sai</button>
-          </td>
-        </tr>
-      `;
-    });
+            <button type="button" class="btn-start" onclick="startExam()">
+                <i class="fa-solid fa-play"></i> BẮT ĐẦU LÀM BÀI
+            </button>
+        </div>
 
-    card.innerHTML = `
-      <div class="q-text"><span class="q-number">Câu ${q.id}:</span>${q.context}</div>
-      <table class="tf-table">
-        <thead>
-          <tr>
-            <th>Phát biểu / Nội dung</th>
-            <th>Lựa chọn</th>
-          </tr>
-        </thead>
-        <tbody>${rowsHtml}</tbody>
-      </table>
-      <div class="explanation-card" id="exp_p2_${q.id}">
-        <strong>Giải thích chi tiết:</strong><br>
-        ${q.subquestions.map(s => `${s.label} [<strong>${s.answer ? 'Đúng' : 'Sai'}</strong>]: ${s.explanation}`).join('<br>')}
-      </div>
-    `;
-    p2Container.appendChild(card);
-  });
+        <div id="resultCard" class="result-card">
+            <h2 style="font-size: 1.3rem; font-weight: 700; color: #0f172a;">KẾT QUẢ BÀI LÀM</h2>
+            <div id="resultScore" class="result-score">0.00</div>
+            <p id="resultFeedback" style="font-size: 1rem; font-weight: 600; color: #475569;"></p>
+            
+            <div class="result-detail">
+                <div class="result-detail-item" style="color: #15803d; background: #dcfce7;">
+                    <i class="fa-solid fa-circle-check"></i> Đúng: <span id="correctNum">0</span>/12 câu
+                </div>
+                <div class="result-detail-item" style="color: #b91c1c; background: #fee2e2;">
+                    <i class="fa-solid fa-circle-xmark"></i> Sai: <span id="incorrectNum">0</span>/12 câu
+                </div>
+                <div class="result-detail-item" style="color: #0369a1; background: #e0f2fe;">
+                    <i class="fa-solid fa-clock"></i> Thời gian: <span id="timeSpent">00:00</span>
+                </div>
+            </div>
 
-  // Render Part 3
-  const p3Container = document.getElementById('part3Container');
-  QUIZ_DATA.part3.forEach(q => {
-    const card = document.createElement('div');
-    card.className = 'question-card';
-    card.id = `q_p3_${q.id}`;
+            <div id="sheetSyncStatus" class="sync-status"></div>
+        </div>
 
-    card.innerHTML = `
-      <div class="q-text"><span class="q-number">Câu ${q.id}:</span>${q.question}</div>
-      <input type="text" class="input-short" id="input_p3_${q.id}" placeholder="Nhập đáp số (dạng số)..." onchange="recordInput3(${q.id}, this.value)">
-      <div class="explanation-card" id="exp_p3_${q.id}">
-        <strong>Đáp số chuẩn:</strong> <strong>${q.answer}</strong>. ${q.explanation}
-      </div>
-    `;
-    p3Container.appendChild(card);
-  });
+        <div id="examArea" class="exam-area">
+            <div class="student-bar">
+                <div><i class="fa-solid fa-user-graduate"></i> Thí sinh: <span id="displayName"></span></div>
+                <div><i class="fa-solid fa-users-rectangle"></i> Lớp: <span id="displayClass"></span></div>
+            </div>
 
-  startTimer();
-}
+            <div id="questionsContainer"></div>
 
-function selectOption1(qId, val, elem) {
-  if (isSubmitted) return;
-  studentAnswers.part1[qId] = val;
-  const parent = document.getElementById(`opt_grid_${qId}`);
-  parent.querySelectorAll('.option-item').forEach(it => it.classList.remove('selected'));
-  elem.classList.add('selected');
-}
+            <div class="submit-area">
+                <button type="button" id="btnSubmit" class="btn-submit" onclick="confirmSubmit()">
+                    <i class="fa-solid fa-paper-plane"></i> NỘP BÀI THI
+                </button>
+            </div>
+        </div>
 
-function selectTF(qId, sIdx, val) {
-  if (isSubmitted) return;
-  if (!studentAnswers.part2[qId]) {
-    studentAnswers.part2[qId] = {};
-  }
-  studentAnswers.part2[qId][sIdx] = val;
+    </div>
 
-  const btnT = document.getElementById(`btn_tf_${qId}_${sIdx}_T`);
-  const btnF = document.getElementById(`btn_tf_${qId}_${sIdx}_F`);
-  if (val) {
-    btnT.className = 'btn-tf selected-true';
-    btnF.className = 'btn-tf';
-  } else {
-    btnF.className = 'btn-tf selected-false';
-    btnT.className = 'btn-tf';
-  }
-}
+    <script>
+        const part1Data = [{"id": 1, "question": "Hạt nhân của hầu hết các nguyên tử đều được tạo nên bởi các hạt", "options": {"A": "proton và electron.", "B": "proton và neutron.", "C": "neutron và electron.", "D": "proton, neutron và electron."}, "answer": "B", "explanation": "Ngoại trừ nguyên tử đồng vị phổ biến nhất của hydrogen (\\(^{1}_1\\text{H}\\)) chỉ có 1 proton và không có neutron, hạt nhân của hầu hết các nguyên tử đều được tạo nên bởi hai loại hạt là proton và neutron."}, {"id": 2, "question": "Hạt không mang điện trong nguyên tử là", "options": {"A": "proton.", "B": "electron.", "C": "neutron.", "D": "hạt alpha."}, "answer": "C", "explanation": "Trong ba loại hạt cơ bản, proton mang điện tích +1, electron mang điện tích -1, còn neutron là hạt trung hòa về điện (điện tích bằng 0)."}, {"id": 3, "question": "Cho kí hiệu nguyên tử \\(^{56}_{26}\\text{Fe}\\). Số electron có trong nguyên tử iron (sắt) ở trạng thái trung hòa là", "options": {"A": "26.", "B": "30.", "C": "56.", "D": "82."}, "answer": "A", "explanation": "Kí hiệu \\(^{56}_{26}\\text{Fe}\\) có số hiệu nguyên tử Z = 26. Vì nguyên tử trung hòa về điện nên số electron bằng số proton = 26."}, {"id": 4, "question": "Phát biểu nào sau đây đúng về các đồng vị của cùng một nguyên tố hóa học?", "options": {"A": "Các đồng vị có tính chất hóa học cơ bản giống nhau vì có cùng số electron ở vỏ nguyên tử.", "B": "Các đồng vị có cùng số khối A nhưng khác nhau về số hiệu nguyên tử Z.", "C": "Các đồng vị có số proton khác nhau nhưng có cùng số neutron.", "D": "Các đồng vị có khối lượng nguyên tử hoàn toàn bằng nhau."}, "answer": "A", "explanation": "Các đồng vị có cùng số proton nên có cùng số electron và cấu hình electron lớp vỏ, do đó các đồng vị của cùng một nguyên tố có tính chất hóa học cơ bản giống nhau."}, {"id": 5, "question": "Số electron tối đa có thể phân bố trong lớp thứ hai (\\(n = 2\\), lớp L) của nguyên tử là", "options": {"A": "2.", "B": "8.", "C": "18.", "D": "32."}, "answer": "B", "explanation": "Số electron tối đa trong lớp n được tính theo công thức \\(2n^2\\). Với lớp thứ hai (n = 2): số e tối đa là \\(2 \\times 2^2 = 8\\) electron (gồm phân lớp \\(2s^2\\) và \\(2p^6\\))."}, {"id": 6, "question": "Cấu hình electron nào sau đây là cấu hình electron của nguyên tử khí hiếm neon (Ne, \\(Z = 10\\)) ở trạng thái cơ bản?", "options": {"A": "\\(1s^2 2s^2 2p^6\\).", "B": "\\(1s^2 2s^2 2p^4\\).", "C": "\\(1s^2 2s^2 2p^6 3s^2\\).", "D": "\\(1s^2 2s^2 2p^5\\)."}, "answer": "A", "explanation": "Nguyên tử neon có Z = 10. Cấu hình electron ở trạng thái cơ bản là \\(1s^2 2s^2 2p^6\\). Lớp ngoài cùng (lớp 2) có 8 electron bão hòa bền vững, đặc trưng cho khí hiếm."}, {"id": 7, "question": "Cấu hình electron lớp ngoài cùng của nguyên tử calcium (Ca, \\(Z = 20\\)) ở trạng thái cơ bản là \\(4s^2\\). Bản chất nguyên tố và số electron hóa trị của calcium là", "options": {"A": "Kim loại, có 2 electron hóa trị.", "B": "Phi kim, có 2 electron hóa trị.", "C": "Khí hiếm, có 8 electron hóa trị.", "D": "Kim loại, có 4 electron hóa trị."}, "answer": "A", "explanation": "Cấu hình electron đầy đủ của Ca: \\([\\text{Ar}]4s^2\\). Lớp ngoài cùng là lớp thứ 4 có 2 electron, dễ nhường đi 2 electron trong các phản ứng hóa học nên calcium là kim loại, có 2 electron hóa trị."}, {"id": 8, "question": "Ion chloride (\\(\\text{Cl}^{-}\\)) được hình thành khi nguyên tử chlorine (\\(Z = 17\\), \\(A = 35\\)) nhận thêm 1 electron. Số hạt proton, neutron và electron trong ion \\(\\text{Cl}^{-}\\) lần lượt là", "options": {"A": "17 proton, 18 neutron, 18 electron.", "B": "17 proton, 18 neutron, 17 electron.", "C": "17 proton, 18 neutron, 16 electron.", "D": "18 proton, 18 neutron, 18 electron."}, "answer": "A", "explanation": "Hạt nhân giữ nguyên: số proton = 17, số neutron N = 35 - 17 = 18. Số electron ban đầu là 17, khi nhận thêm 1 electron tạo anion \\(\\text{Cl}^{-}\\) thì số electron là 17 + 1 = 18."}, {"id": 9, "question": "Một nguyên tử X có tổng số electron ở các phân lớp s là 6 và ở các phân lớp p là 12. Số hiệu nguyên tử của X là", "options": {"A": "18.", "B": "16.", "C": "20.", "D": "17."}, "answer": "A", "explanation": "Các phân lớp s bão hòa gồm \\(1s^2, 2s^2, 3s^2\\) (tổng 6e). Các phân lớp p bão hòa gồm \\(2p^6, 3p^6\\) (tổng 12e). Cấu hình: \\(1s^2 2s^2 2p^6 3s^2 3p^6\\). Số electron = 6 + 12 = 18 => Z = 18 (Argon)."}, {"id": 10, "question": "Trong tự nhiên, nguyên tố boron có hai đồng vị bền là \\(^{10}\\text{B}\\) (nguyên tử khối là 10) và \\(^{11}\\text{B}\\) (nguyên tử khối là 11). Biết nguyên tử khối trung bình của boron là 10,81 amu. Phần trăm số nguyên tử của đồng vị \\(^{11}\\text{B}\\) trong tự nhiên là", "options": {"A": "81,00%.", "B": "19,00%.", "C": "75,00%.", "D": "80,00%."}, "answer": "A", "explanation": "Gọi y là phần trăm số nguyên tử của đồng vị \\(^{11}\\text{B}\\) (y > 0). Khi đó phần trăm của \\(^{10}\\text{B}\\) là \\(100 - y\\).\n\\(\\bar{A} = \\frac{10(100 - y) + 11y}{100} = 10{,}81 \\Rightarrow 1000 + y = 1081 \\Rightarrow y = 81\\%\\)."}, {"id": 11, "question": "Hạt nhân nguyên tử của nguyên tố Y có tổng số hạt mang điện là 24 và số hạt không mang điện là 28. Số khối A và số electron của nguyên tử Y ở trạng thái trung hòa lần lượt là", "options": {"A": "52 và 24.", "B": "52 và 28.", "C": "50 và 24.", "D": "56 và 24."}, "answer": "A", "explanation": "Trong hạt nhân, hạt mang điện là proton nên P = 24. Hạt không mang điện là neutron nên N = 28. Số khối A = P + N = 24 + 28 = 52. Do nguyên tử trung hòa điện nên số electron E = P = 24 (Chromium, Cr)."}, {"id": 12, "question": "Trong tự nhiên, nguyên tố lithium có hai đồng vị bền là \\(^{6}\\text{Li}\\) (nguyên tử khối là 6, chiếm \\(7{,}5\\%\\)) và \\(^{7}\\text{Li}\\) (nguyên tử khối là 7, chiếm \\(92{,}5\\%\\)). Phần trăm khối lượng của đồng vị \\(^{7}\\text{Li}\\) trong hợp chất lithium chloride (\\(\\text{LiCl}\\), biết nguyên tử khối trung bình của chlorine bằng 35,5) là", "options": {"A": "15,26%.", "B": "16,38%.", "C": "1,06%.", "D": "92,50%."}, "answer": "A", "explanation": "Nguyên tử khối trung bình của Li:\n\\(\\bar{A}_{\\text{Li}} = \\frac{6 \\times 7{,}5 + 7 \\times 92{,}5}{100} = 6{,}925\\text{ amu}\\).\nKhối lượng phân tử của \\(\\text{LiCl}\\):\n\\(M = 6{,}925 + 35{,}5 = 42{,}425\\text{ g/mol}\\).\nKhối lượng của \\(^{7}\\text{Li}\\) trong 1 mol \\(\\text{LiCl}\\) là: \\(m = 1 \\times 92{,}5\\% \\times 7 = 6{,}475\\text{ gam}\\).\nPhần trăm khối lượng của \\(^{7}\\text{Li}\\) trong \\(\\text{LiCl}\\):\n\\(\\%m_{^{7}\\text{Li}} = \\frac{6{,}475}{42{,}425} \\times 100\\% \\approx 15{,}26\\%\\)."}];
+        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwRRiM81mghvA7cInvJgb4rPLzWOAE3s44wer0BJcURQ4hWwoykS19pkNQ9LyzH6Q8lTQ/exec";
 
-function recordInput3(qId, val) {
-  if (isSubmitted) return;
-  studentAnswers.part3[qId] = val.trim();
-}
+        let userPart1 = {};
+        let examSubmitted = false;
+        let timerInterval = null;
+        let totalTimeSeconds = 15 * 60;
+        let timeRemaining = totalTimeSeconds;
+        let lastResultData = null;
+        let hasSentResults = false;
 
-function startTimer() {
-  const timerDisplay = document.getElementById('timerDisplay');
-  timerInterval = setInterval(() => {
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      alert('Đã hết thời gian làm bài! Hệ thống tự động nộp bài.');
-      submitExam();
-      return;
-    }
-    timeLeft--;
-    const m = Math.floor(timeLeft / 60);
-    const s = timeLeft % 60;
-    timerDisplay.innerText = `Thời gian: ${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
-  }, 1000);
-}
+        function startExam() {
+            const nameInput = document.getElementById('studentName');
+            const classInput = document.getElementById('studentClass');
+            const name = nameInput.value.trim();
+            const sClass = classInput.value.trim();
 
-function calculateScore() {
-  let p1Correct = 0;
-  QUIZ_DATA.part1.forEach(q => {
-    if (studentAnswers.part1[q.id] === q.answer) p1Correct++;
-  });
-  const score1 = (p1Correct / 16) * 4.0;
+            if (!name) {
+                alert('Vui lòng nhập Họ và tên của bạn!');
+                nameInput.focus();
+                return;
+            }
+            if (!sClass) {
+                alert('Vui lòng nhập Tên lớp của bạn!');
+                classInput.focus();
+                return;
+            }
 
-  let score2 = 0;
-  QUIZ_DATA.part2.forEach(q => {
-    let correctInQ = 0;
-    const qAns = studentAnswers.part2[q.id] || {};
-    q.subquestions.forEach((sub, sIdx) => {
-      if (qAns[sIdx] === sub.answer) correctInQ++;
-    });
-    if (correctInQ === 1) score2 += 0.1;
-    else if (correctInQ === 2) score2 += 0.25;
-    else if (correctInQ === 3) score2 += 0.5;
-    else if (correctInQ === 4) score2 += 1.0;
-  });
+            window.sName = name;
+            window.sClass = sClass;
+            document.getElementById('displayName').innerText = name;
+            document.getElementById('displayClass').innerText = sClass;
 
-  let p3Correct = 0;
-  QUIZ_DATA.part3.forEach(q => {
-    const userVal = (studentAnswers.part3[q.id] || '').replace(',', '.').toLowerCase();
-    const correctVal = q.answer.replace(',', '.').toLowerCase();
-    if (userVal === correctVal) p3Correct++;
-  });
-  const score3 = p3Correct * 0.5;
+            document.getElementById('welcomeBox').style.display = 'none';
+            document.getElementById('examArea').style.display = 'block';
+            document.getElementById('timerBadge').style.display = 'inline-flex';
 
-  const totalScore = Math.min(8.0, Math.round((score1 + score2 + score3) * 100) / 100);
-  return {
-    totalScore,
-    score1: Math.round(score1 * 100) / 100,
-    score2: Math.round(score2 * 100) / 100,
-    score3: Math.round(score3 * 100) / 100,
-    p1Correct,
-    p3Correct
-  };
-}
+            renderQuestions();
+            startTimer();
 
-async function submitExam() {
-  if (isSubmitted) return;
-  const name = document.getElementById('hsName').value.trim();
-  const cls = document.getElementById('hsClass').value.trim();
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
 
-  if (!name || !cls) {
-    alert('Vui lòng điền đầy đủ Họ và tên cùng Lớp trước khi nộp bài!');
-    return;
-  }
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Đã hết 15 phút làm bài! Hệ thống tự động nộp bài.');
+                    submitExam();
+                    return;
+                }
+                timeRemaining--;
+                const mins = Math.floor(timeRemaining / 60);
+                const secs = timeRemaining % 60;
+                document.getElementById('timerText').innerText = 
+                    `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }, 1000);
+        }
 
-  if (!confirm('Bạn có chắc chắn muốn nộp bài trắc nghiệm online? Hệ thống sẽ chấm điểm và hiển thị giải thích chi tiết.')) {
-    return;
-  }
+        function formatContent(str) {
+            if (!str) return '';
+            return String(str).replace(/\n/g, '<br>');
+        }
 
-  isSubmitted = true;
-  clearInterval(timerInterval);
-  document.getElementById('btnSubmit').disabled = true;
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            let html = '';
+            part1Data.forEach((q, idx) => {
+                html += `
+                <div class="question-card" id="card-${q.id}">
+                    <div class="question-header">
+                        <span class="question-tag">Câu ${idx + 1}</span>
+                        <div>${formatContent(q.question)}</div>
+                    </div>
+                    <div class="options-grid">
+                        ${Object.entries(q.options).map(([k, v]) => `
+                            <div class="option-item" id="opt-${q.id}-${k}" onclick="selectOption(${q.id}, '${k}')">
+                                <span class="option-label">${k}</span>
+                                <div style="flex: 1;">${formatContent(v)}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="explanation-box" id="exp-${q.id}">
+                        <div class="explanation-title"><i class="fa-solid fa-lightbulb"></i> Hướng dẫn giải chi tiết (Đáp án ${q.answer}):</div>
+                        <div>${formatContent(q.explanation)}</div>
+                    </div>
+                </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
 
-  const res = calculateScore();
-  document.getElementById('scoreDisplay').innerText = `${res.totalScore} / 8.0 Điểm Trắc Nghiệm`;
-  document.getElementById('resultDetail').innerText = 
-    `Phần I: ${res.score1}/4.0 điểm (${res.p1Correct}/16 câu) | Phần II: ${res.score2}/2.0 điểm | Phần III: ${res.score3}/2.0 điểm (${res.p3Correct}/4 câu)`;
-  document.getElementById('resultBox').style.display = 'block';
+        function selectOption(qId, key) {
+            if (examSubmitted) return;
+            userPart1[qId] = key;
+            ['A', 'B', 'C', 'D'].forEach(k => {
+                const el = document.getElementById(`opt-${qId}-${k}`);
+                if (el) {
+                    if (k === key) el.classList.add('selected');
+                    else el.classList.remove('selected');
+                }
+            });
+        }
 
-  document.querySelectorAll('.explanation-card').forEach(el => el.style.display = 'block');
+        function confirmSubmit() {
+            const answeredCount = Object.keys(userPart1).length;
+            if (answeredCount < part1Data.length) {
+                const unans = part1Data.length - answeredCount;
+                if (!confirm(`Bạn còn ${unans} câu chưa chọn đáp án. Bạn có chắc chắn muốn nộp bài ngay không?`)) {
+                    return;
+                }
+            } else {
+                if (!confirm('Bạn có chắc chắn muốn nộp bài thi không?')) {
+                    return;
+                }
+            }
+            submitExam();
+        }
 
-  try {
-    const payload = {
-      ho_ten: name,
-      lop: cls,
-      diem: res.totalScore,
-      chi_tiet: `P1: ${res.p1Correct}/16; P2: ${res.score2}đ; P3: ${res.p3Correct}/4`,
-      thoi_gian: new Date().toLocaleString('vi-VN'),
-      bai_thi: QUIZ_DATA.title
-    };
+        function submitExam() {
+            if (examSubmitted) return;
+            examSubmitted = true;
+            clearInterval(timerInterval);
 
-    await fetch(QUIZ_DATA.submit_url, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    console.log('Đã gửi dữ liệu kết quả thành công về Google Sheets.');
-  } catch (e) {
-    console.warn('Lỗi khi gửi kết quả về Google Sheet:', e);
-  }
+            document.getElementById('btnSubmit').style.display = 'none';
 
-  document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
-}
+            let totalCorrect = 0;
+            let totalIncorrect = 0;
 
-window.addEventListener('DOMContentLoaded', renderQuiz);
-</script>
+            part1Data.forEach(q => {
+                const userAns = userPart1[q.id];
+                const isCorrect = (userAns === q.answer);
+                if (isCorrect) {
+                    totalCorrect++;
+                } else {
+                    totalIncorrect++;
+                }
 
+                Object.keys(q.options).forEach(k => {
+                    const el = document.getElementById(`opt-${q.id}-${k}`);
+                    if (el) {
+                        if (k === q.answer) el.classList.add('correct');
+                        else if (k === userAns) el.classList.add('incorrect');
+                    }
+                });
+
+                const expEl = document.getElementById(`exp-${q.id}`);
+                if (expEl) expEl.classList.add('show');
+            });
+
+            const score = ((totalCorrect / part1Data.length) * 10).toFixed(2);
+            const timeSpentSecs = totalTimeSeconds - timeRemaining;
+            const spentMins = Math.floor(timeSpentSecs / 60);
+            const spentSecs = timeSpentSecs % 60;
+            const tSpent = `${spentMins < 10 ? '0' : ''}${spentMins}:${spentSecs < 10 ? '0' : ''}${spentSecs}`;
+
+            document.getElementById('resultScore').innerText = score;
+            document.getElementById('correctNum').innerText = totalCorrect;
+            document.getElementById('incorrectNum').innerText = totalIncorrect;
+            document.getElementById('timeSpent').innerText = tSpent;
+
+            let feedback = '';
+            if (score >= 9.0) feedback = 'Xuất sắc! Bạn nắm rất vững kiến thức Cấu tạo nguyên tử!';
+            else if (score >= 7.0) feedback = 'Khá tốt! Hãy xem lại các câu giải thích để hoàn thiện hơn.';
+            else if (score >= 5.0) feedback = 'Đạt yêu cầu cơ bản. Cần ôn kỹ lại cấu hình electron và bài toán hạt.';
+            else feedback = 'Cần cố gắng nhiều hơn. Hãy đọc kỹ phần giải thích chi tiết bên dưới nhé!';
+            document.getElementById('resultFeedback').innerText = feedback;
+
+            document.getElementById('resultCard').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (score >= 8.0 && window.confetti) {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+
+            const sName = (typeof window.sName !== 'undefined' && window.sName) || 
+                          (document.getElementById('displayName') && document.getElementById('displayName').innerText.trim()) || 
+                          'Học sinh';
+            const sClass = (typeof window.sClass !== 'undefined' && window.sClass) || 
+                           (document.getElementById('displayClass') && document.getElementById('displayClass').innerText.trim()) || 
+                           '10';
+
+            const payload = {
+                timestamp: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
+                time: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
+                subject: "Hóa học",
+                monHoc: "Hóa học",
+                chuyenMuc: "vatli102.com/hoa/",
+                sourceUrl: window.location.href,
+                sourceDomain: window.location.hostname,
+                name: sName,
+                studentName: sName,
+                hoTen: sName,
+                fullName: sName,
+                className: sClass,
+                studentClass: sClass,
+                class: sClass,
+                lop: sClass,
+                score: String(score),
+                totalScore: String(score),
+                diem: String(score),
+                diemSo: String(score),
+                grade: `${score}/10`,
+                correctCount: String(totalCorrect),
+                correct: `${totalCorrect}/${part1Data.length} câu`,
+                soCauDung: String(totalCorrect),
+                incorrectCount: String(totalIncorrect),
+                soCauSai: String(totalIncorrect),
+                tongSoCau: String(part1Data.length),
+                timeSpent: tSpent,
+                thoiGian: tSpent,
+                examTitle: "ĐỀ KIỂM TRA 15 PHÚT HÓA HỌC 10 - ĐỀ SỐ 03",
+                lesson: "ĐỀ KIỂM TRA 15 PHÚT HÓA HỌC 10 - ĐỀ SỐ 03",
+                tenBai: "ĐỀ KIỂM TRA 15 PHÚT HÓA HỌC 10 - ĐỀ SỐ 03",
+                deThi: "ĐỀ KIỂM TRA 15 PHÚT HÓA HỌC 10 - ĐỀ SỐ 03"
+            };
+
+            sendResultsToGoogleSheet(payload);
+        }
+
+        function sendResultsToGoogleSheet(data) {
+            const host = window.location.hostname.toLowerCase();
+            const isVatli102 = (host === 'vatli102.com' || host === 'www.vatli102.com');
+            const statusEl = document.getElementById("sheetSyncStatus");
+
+            if (!isVatli102) {
+                console.warn("Chặn gửi Google Sheet: Domain " + host + " không thuộc vatli102.com");
+                if (statusEl) {
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-info" style="color: #0284c7;"></i> <strong>Thông báo:</strong> Kết quả lưu chính thức khi làm bài trên website <strong>vatli102.com</strong>.';
+                }
+                return;
+            }
+
+            if (hasSentResults) return;
+            hasSentResults = true;
+            lastResultData = data;
+
+            if (statusEl) {
+                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tự động lưu kết quả vào Google Sheet của giáo viên...';
+            }
+
+            fetch(GOOGLE_SHEET_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                if (statusEl) {
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> <strong>Đã lưu kết quả thành công</strong> vào sổ điểm Google Sheet của giáo viên!';
+                }
+            })
+            .catch(err => {
+                console.error("Lỗi đồng bộ Google Sheet:", err);
+                if (statusEl) {
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> Đã gửi kết quả bài làm vào hệ thống.';
+                }
+            });
+        }
+    </script>
 </body>
 </html>
