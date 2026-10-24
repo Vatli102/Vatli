@@ -731,7 +731,7 @@
         </div>
 
         <!-- Part 1 -->
-        <div class="section-header">📌 Phần I: Trắc nghiệm nhiều lựa chọn (4,5 điểm | 16 câu)</div>
+        <div class="section-header">📌 Phần I: Trắc nghiệm nhiều lựa chọn (4,5 điểm | 18 câu - mỗi câu 0,25 điểm)</div>
         <div id="part1Container"></div>
 
         <!-- Part 2 -->
@@ -1022,6 +1022,32 @@ const quizData = {
       },
       "answer": "C",
       "explanation": "Khi bị nung nóng, nhiệt độ tăng làm các phân tử dao động mạnh hơn quanh vị trí cân bằng, khoảng cách trung bình giữa các phân tử tăng lên (gây nở vì nhiệt). Kích thước của từng nguyên tử/phân tử không đổi. Do đó Hình C thể hiện đúng nhất cấu trúc vi mô khi nung nóng."
+    },
+    {
+      "id": 17,
+      "competency": "TH",
+      "question": "Trong suốt quá trình một khối chất rắn kết tinh đang nóng chảy ở nhiệt độ nóng chảy xác định, nhiệt lượng mà khối chất nhận vào được sử dụng chủ yếu để",
+      "options": {
+        "A": "làm tăng tốc độ chuyển động nhiệt hỗn loạn của các phân tử.",
+        "B": "phá vỡ cấu trúc mạng tinh thể liên kết giữa các phân tử.",
+        "C": "làm tăng thế năng tương tác đồng thời làm tăng nhiệt độ của chất rắn.",
+        "D": "làm giảm khoảng cách trung bình giữa các hạt cấu tạo nên chất rắn."
+      },
+      "answer": "B",
+      "explanation": "Trong suốt quá trình nóng chảy ở nhiệt độ xác định, nhiệt độ của vật không đổi nên động năng trung bình của các phân tử không thay đổi. Toàn bộ nhiệt lượng cung cấp cho vật được dùng để phá vỡ cấu trúc mạng tinh thể (làm suy yếu lực liên kết phân tử và làm tăng thế năng tương tác phân tử), chuyển chất từ thể rắn sang thể lỏng."
+    },
+    {
+      "id": 18,
+      "competency": "TH",
+      "question": "Phát biểu nào sau đây là <b>đúng</b> khi nói về \"Không độ tuyệt đối\" ($0\\text{ K}$) trong thang nhiệt độ Kelvin?",
+      "options": {
+        "A": "Là nhiệt độ mà tại đó nước đá bắt đầu nóng chảy ở điều kiện tiêu chuẩn.",
+        "B": "Là nhiệt độ mà tại đó toàn bộ các phân tử vật chất đều có động năng cực đại.",
+        "C": "Là nhiệt độ thấp nhất trên lí thuyết, tại đó động năng chuyển động nhiệt của các phân tử đạt giá trị cực tiểu.",
+        "D": "Là nhiệt độ mà tại đó áp suất của một lượng khí lý tưởng xác định đạt giá trị vô cùng lớn."
+      },
+      "answer": "C",
+      "explanation": "Theo thang nhiệt độ Kelvin, nhiệt độ không tuyệt đối ($0\\text{ K}$, tương ứng với $-273,15^\\circ\\text{C}$) là nhiệt độ thấp nhất trên lí thuyết mà vật chất có thể đạt tới. Tại trạng thái này, động năng chuyển động nhiệt hỗn loạn của các phân tử giảm về giá trị cực tiểu."
     }
   ],
   "part2": [
@@ -1577,9 +1603,8 @@ function gradeQuiz(isTimeout = false) {
     let earnedPoints = 0;
     let totalCorrectCount = 0;
 
-    // Grade Part 1: 16 questions -> 4.5 pts total => 4.5 / 16 per question
+    // Grade Part 1: 18 questions, each 0.25 pt => Max 4.5 pts
     if (quizData.part1) {
-        const p1ScorePerQ = 4.5 / quizData.part1.length;
         quizData.part1.forEach(q => {
             const userChoice = userAnswers.part1[q.id];
             const correctOpt = q.answer;
@@ -1596,7 +1621,7 @@ function gradeQuiz(isTimeout = false) {
 
             const pal = document.getElementById(`pal-p1-${q.id}`);
             if (userChoice === correctOpt) {
-                earnedPoints += p1ScorePerQ;
+                earnedPoints += 0.25;
                 totalCorrectCount++;
                 if (pal) pal.classList.add('correct-palette');
             } else {
@@ -1688,8 +1713,9 @@ function gradeQuiz(isTimeout = false) {
                            (quizData.part2 ? quizData.part2.reduce((acc, q) => acc + q.subQuestions.length, 0) : 0) +
                            (quizData.part3 ? quizData.part3.length : 0);
 
-    document.getElementById('scoreCircle').textContent = finalScore.toFixed(1);
-    document.getElementById('gradeText').textContent = `${finalScore.toFixed(1)}/10`;
+    const scoreStr = (finalScore % 1 === 0) ? finalScore.toFixed(1) : ((finalScore * 10) % 1 === 0 ? finalScore.toFixed(1) : finalScore.toFixed(2));
+    document.getElementById('scoreCircle').textContent = scoreStr;
+    document.getElementById('gradeText').textContent = `${scoreStr}/10`;
     document.getElementById('correctCountText').textContent = `${totalCorrectCount}/${totalQuestions}`;
     document.getElementById('incorrectCountText').textContent = `${totalQuestions - totalCorrectCount}`;
 
