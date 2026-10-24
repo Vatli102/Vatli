@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ĐỀ KIỂM TRA 15 PHÚT HÓA HỌC 10 - ĐỀ SỐ 02 | Vatli102.com</title>
+    <meta name="description" content="ĐỀ KIỂM TRA 15 PHÚT HÓA HỌC 10 - ĐỀ SỐ 02 - Chương 1: Cấu tạo nguyên tử (Mã đề 102). Tự động chấm điểm, hiển thị giải chi tiết, đồng bộ Google Sheet giáo viên.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-hover: #0369a1;
+            --secondary: #0d9488;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        .site-header {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .header-container {
+            max-width: 900px; margin: 0 auto;
+            padding: 12px 16px;
+            display: flex; justify-content: space-between; align-items: center; gap: 12px;
+        }
+
+        .header-title {
+            font-size: 0.95rem; font-weight: 700; color: #0369a1;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .timer-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; background: #fee2e2; color: #b91c1c;
+            border: 1px solid #fca5a5; border-radius: 9999px;
+            font-size: 0.9rem; font-weight: 700;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .container {
+            max-width: 860px; margin: 24px auto; padding: 0 16px;
+        }
+
+        .welcome-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .welcome-title {
+            font-size: 1.35rem; font-weight: 800; color: #0284c7; margin-bottom: 8px;
+        }
+
+        .welcome-desc {
+            font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+            max-width: 520px; margin: 0 auto 20px; text-align: left;
+        }
+
+        @media (max-width: 560px) {
+            .form-grid { grid-template-columns: 1fr; }
+        }
+
+        .form-group label {
+            display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 4px;
+        }
+
+        .form-group input {
+            width: 100%; padding: 10px 14px;
+            border: 1.5px solid #cbd5e1; border-radius: 10px;
+            font-size: 0.95rem; outline: none; transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: #ffffff; font-weight: 700; font-size: 1rem;
+            padding: 12px 32px; border: none; border-radius: 12px;
+            cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+            transition: all 0.2s;
+        }
+
+        .btn-start:hover {
+            background: linear-gradient(135deg, #0369a1, #075985);
+            transform: translateY(-1px);
+        }
+
+        .exam-area { display: none; }
+
+        .student-bar {
+            background: #f0f9ff; border: 1px solid #bae6fd;
+            border-radius: 12px; padding: 10px 16px;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.9rem; font-weight: 600; color: #0369a1;
+            margin-bottom: 20px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            transition: border-color 0.2s;
+        }
+
+        .question-card:hover { border-color: #cbd5e1; }
+
+        .question-header {
+            display: flex; gap: 8px; margin-bottom: 14px;
+            font-size: 1rem; font-weight: 600; line-height: 1.55;
+            text-align: justify;
+        }
+
+        .question-tag {
+            background: #e0f2fe; color: #0369a1;
+            font-size: 0.8rem; font-weight: 700;
+            padding: 2px 8px; border-radius: 6px; height: fit-content;
+            white-space: nowrap;
+        }
+
+        .options-grid {
+            display: flex; flex-direction: column; gap: 10px;
+        }
+
+        .option-item {
+            display: flex; align-items: flex-start; gap: 12px;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            background: #ffffff;
+            font-size: 0.95rem;
+            text-align: justify;
+        }
+
+        .option-item:hover {
+            border-color: #94a3b8;
+            background: #f8fafc;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary);
+            background: #f0f9ff;
+        }
+
+        .option-item.correct {
+            border-color: #22c55e !important;
+            background: #f0fdf4 !important;
+            color: #15803d !important;
+            font-weight: 600;
+        }
+
+        .option-item.incorrect {
+            border-color: #ef4444 !important;
+            background: #fef2f2 !important;
+            color: #b91c1c !important;
+        }
+
+        .option-label {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 26px; height: 26px; border-radius: 6px;
+            background: #f1f5f9; color: #475569;
+            font-weight: 700; font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .option-item.selected .option-label { background: var(--primary); color: #ffffff; }
+        .option-item.correct .option-label { background: #16a34a; color: #ffffff; }
+        .option-item.incorrect .option-label { background: #dc2626; color: #ffffff; }
+
+        .explanation-box {
+            display: none;
+            margin-top: 14px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            background: #f8fafc;
+            border-left: 4px solid #0284c7;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #334155;
+            text-align: justify;
+        }
+
+        .explanation-box.show { display: block; }
+
+        .explanation-title {
+            font-weight: 700; color: #0369a1; margin-bottom: 4px;
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        .submit-area { text-align: center; margin: 30px 0; }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            color: #ffffff; font-weight: 700; font-size: 1.05rem;
+            padding: 14px 40px; border: none; border-radius: 12px;
+            cursor: pointer; box-shadow: 0 4px 14px rgba(22, 163, 74, 0.3);
+            transition: all 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #15803d, #166534);
+            transform: translateY(-1px);
+        }
+
+        .result-card {
+            display: none;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 2px solid #38bdf8;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px rgba(2, 132, 199, 0.08);
+            text-align: center;
+        }
+
+        .result-score {
+            font-size: 3rem; font-weight: 800; color: #0284c7; line-height: 1;
+            margin: 12px 0 6px;
+        }
+
+        .result-detail {
+            display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
+            margin-top: 16px; font-size: 0.95rem; font-weight: 600;
+        }
+
+        .result-detail-item {
+            padding: 8px 16px; border-radius: 8px; background: #f1f5f9;
+        }
+
+        .sync-status { margin-top: 14px; font-size: 0.85rem; color: #64748b; }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="header-container">
+            <div class="header-title">
+                <a href="/hoa/lop-10/" style="color: inherit; text-decoration: none;">
+                    <i class="fa-solid fa-flask text-sky-600"></i> Hóa Học 10
+                </a>
+                <span style="color: #cbd5e1;">/</span>
+                <span>Đề 2 (Mã đề 102)</span>
+            </div>
+            <div id="timerBadge" class="timer-badge" style="display: none;">
+                <i class="fa-solid fa-stopwatch"></i>
+                <span id="timerText">15:00</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div id="welcomeBox" class="welcome-card">
+            <h1 class="welcome-title">ĐỀ KIỂM TRA 15 PHÚT HÓA HỌC 10 - ĐỀ SỐ 02</h1>
+            <p class="welcome-desc">Chủ đề: Chương 1: Cấu tạo nguyên tử (Mã đề 102) • Thời gian: 15 phút • Số lượng: 12 câu trắc nghiệm</p>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="studentName">Họ và tên học sinh <span style="color: #dc2626;">*</span></label>
+                    <input type="text" id="studentName" placeholder="Ví dụ: Nguyễn Văn A" autocomplete="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentClass">Lớp <span style="color: #dc2626;">*</span></label>
+                    <input type="text" id="studentClass" placeholder="Ví dụ: 10A1" required>
+                </div>
+            </div>
+
+            <button type="button" class="btn-start" onclick="startExam()">
+                <i class="fa-solid fa-play"></i> BẮT ĐẦU LÀM BÀI
+            </button>
+        </div>
+
+        <div id="resultCard" class="result-card">
+            <h2 style="font-size: 1.3rem; font-weight: 700; color: #0f172a;">KẾT QUẢ BÀI LÀM</h2>
+            <div id="resultScore" class="result-score">0.00</div>
+            <p id="resultFeedback" style="font-size: 1rem; font-weight: 600; color: #475569;"></p>
+            
+            <div class="result-detail">
+                <div class="result-detail-item" style="color: #15803d; background: #dcfce7;">
+                    <i class="fa-solid fa-circle-check"></i> Đúng: <span id="correctNum">0</span>/12 câu
+                </div>
+                <div class="result-detail-item" style="color: #b91c1c; background: #fee2e2;">
+                    <i class="fa-solid fa-circle-xmark"></i> Sai: <span id="incorrectNum">0</span>/12 câu
+                </div>
+                <div class="result-detail-item" style="color: #0369a1; background: #e0f2fe;">
+                    <i class="fa-solid fa-clock"></i> Thời gian: <span id="timeSpent">00:00</span>
+                </div>
+            </div>
+
+            <div id="sheetSyncStatus" class="sync-status"></div>
+        </div>
+
+        <div id="examArea" class="exam-area">
+            <div class="student-bar">
+                <div><i class="fa-solid fa-user-graduate"></i> Thí sinh: <span id="displayName"></span></div>
+                <div><i class="fa-solid fa-users-rectangle"></i> Lớp: <span id="displayClass"></span></div>
+            </div>
+
+            <div id="questionsContainer"></div>
+
+            <div class="submit-area">
+                <button type="button" id="btnSubmit" class="btn-submit" onclick="confirmSubmit()">
+                    <i class="fa-solid fa-paper-plane"></i> NỘP BÀI THI
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const part1Data = [{"id": 1, "question": "Nguyên tử trung hòa về điện là do trong nguyên tử có", "options": {"A": "số proton bằng số neutron.", "B": "số electron bằng số neutron.", "C": "số proton bằng số electron.", "D": "tổng số proton và neutron bằng số electron."}, "answer": "C", "explanation": "Hạt nhân mang điện dương do các proton mang điện tích +1 tạo nên, lớp vỏ mang điện âm do các electron mang điện tích -1 tạo nên. Để nguyên tử trung hòa về điện thì số hạt proton phải bằng số hạt electron (P = E)."}, {"id": 2, "question": "Trong ba loại hạt cơ bản cấu tạo nên nguyên tử (proton, neutron, electron), loại hạt có khối lượng nhỏ nhất (không đáng kể so với các hạt còn lại) là", "options": {"A": "proton.", "B": "electron.", "C": "neutron.", "D": "proton và neutron."}, "answer": "B", "explanation": "Khối lượng của electron là rất nhỏ (khoảng 0,00055 amu hay 1/1836 khối lượng của proton), do đó khối lượng nguyên tử tập trung hầu như hoàn toàn ở hạt nhân."}, {"id": 3, "question": "Cho kí hiệu nguyên tử \\(^{39}_{19}\\text{K}\\). Số proton và số neutron trong hạt nhân nguyên tử potassium lần lượt là", "options": {"A": "19 và 39.", "B": "19 và 20.", "C": "20 và 19.", "D": "39 và 19."}, "answer": "B", "explanation": "Kí hiệu \\(^{39}_{19}\\text{K}\\) cho biết số hiệu nguyên tử Z = 19 (số proton = 19) và số khối A = 39. Số neutron trong hạt nhân là N = A - Z = 39 - 19 = 20."}, {"id": 4, "question": "Cặp nguyên tử nào sau đây là đồng vị của cùng một nguyên tố hóa học?", "options": {"A": "\\(^{16}_8\\text{O}\\) và \\(^{17}_8\\text{O}\\).", "B": "\\(^{40}_{19}\\text{K}\\) và \\(^{40}_{20}\\text{Ca}\\).", "C": "\\(^{14}_6\\text{C}\\) và \\(^{14}_7\\text{N}\\).", "D": "\\(^{24}_{12}\\text{Mg}\\) và \\(^{23}_{11}\\text{Na}\\)."}, "answer": "A", "explanation": "Đồng vị là các nguyên tử có cùng số proton (cùng Z = 8) nhưng khác nhau về số neutron (số khối khác nhau: 16 và 17). Do đó \\(^{16}_8\\text{O}\\) và \\(^{17}_8\\text{O}\\) là đồng vị của oxygen."}, {"id": 5, "question": "Số electron tối đa có thể chứa trong phân lớp p là", "options": {"A": "2.", "B": "6.", "C": "10.", "D": "14."}, "answer": "B", "explanation": "Phân lớp p gồm 3 orbital nguyên tử, mỗi orbital chứa tối đa 2 electron nên số electron tối đa trong phân lớp p là 3 × 2 = 6 electron."}, {"id": 6, "question": "Nguyên tử sulfur (lưu huỳnh) có số hiệu nguyên tử \\(Z = 16\\). Cấu hình electron của nguyên tử sulfur ở trạng thái cơ bản là", "options": {"A": "\\(1s^2 2s^2 2p^6 3s^2 3p^4\\).", "B": "\\(1s^2 2s^2 2p^6 3s^2 3p^6\\).", "C": "\\(1s^2 2s^2 2p^6 3s^1 3p^5\\).", "D": "\\(1s^2 2s^2 2p^6 3s^2 3p^3\\)."}, "answer": "A", "explanation": "Nguyên tử sulfur có Z = 16 nên có 16 electron. Phân bố electron theo thứ tự mức năng lượng tăng dần: \\(1s^2 2s^2 2p^6 3s^2 3p^4\\)."}, {"id": 7, "question": "Nguyên tử của nguyên tố magnesium (Mg, \\(Z = 12\\)) có cấu hình electron ở trạng thái cơ bản là \\(1s^2 2s^2 2p^6 3s^2\\). Phát biểu nào sau đây đúng?", "options": {"A": "Magnesium là kim loại vì lớp ngoài cùng có 2 electron.", "B": "Magnesium là phi kim vì lớp ngoài cùng có 2 electron.", "C": "Magnesium là khí hiếm vì có phân lớp 3s bão hòa.", "D": "Magnesium là phi kim vì có tổng cộng 12 electron."}, "answer": "A", "explanation": "Lớp ngoài cùng là lớp thứ 3 (n = 3) có 2 electron (\\(3s^2\\)). Các nguyên tử có 1, 2, 3 electron ở lớp ngoài cùng (trừ H, He, B) đều là kim loại. Do đó magnesium là kim loại."}, {"id": 8, "question": "Ion oxide (\\(\\text{O}^{2-}\\)) được tạo thành khi nguyên tử oxygen (\\(Z = 8\\), \\(A = 16\\)) nhận thêm 2 electron. Số hạt proton, neutron và electron trong ion \\(\\text{O}^{2-}\\) lần lượt là", "options": {"A": "8 proton, 8 neutron, 10 electron.", "B": "8 proton, 8 neutron, 8 electron.", "C": "8 proton, 8 neutron, 6 electron.", "D": "10 proton, 8 neutron, 10 electron."}, "answer": "A", "explanation": "Hạt nhân không thay đổi nên số proton = 8, số neutron N = 16 - 8 = 8. Khi nguyên tử oxygen nhận thêm 2 electron tạo anion \\(\\text{O}^{2-}\\), số electron là 8 + 2 = 10 electron."}, {"id": 9, "question": "Nguyên tử của nguyên tố M có cấu hình electron lớp ngoài cùng là \\(3s^1\\). Tổng số electron trong nguyên tử M và tính chất hóa học cơ bản của M là", "options": {"A": "11 electron, là kim loại.", "B": "11 electron, là phi kim.", "C": "19 electron, là kim loại.", "D": "13 electron, là kim loại."}, "answer": "A", "explanation": "Cấu hình electron đầy đủ của M: \\(1s^2 2s^2 2p^6 3s^1\\). Tổng số electron = 2 + 2 + 6 + 1 = 11 (Z = 11, Sodium). Lớp ngoài cùng có 1 electron nên M là kim loại kiềm điển hình."}, {"id": 10, "question": "Trong tự nhiên, nguyên tố bromine có hai đồng vị bền là \\(^{79}\\text{Br}\\) (chiếm \\(50{,}69\\%\\)) và \\(^{81}\\text{Br}\\) (chiếm \\(49{,}31\\%\\)). Nguyên tử khối trung bình của bromine là", "options": {"A": "79,99 amu.", "B": "80,50 amu.", "C": "80,91 amu.", "D": "79,50 amu."}, "answer": "A", "explanation": "Áp dụng công thức tính nguyên tử khối trung bình:\n\\(\\bar{A} = \\frac{79 \\times 50{,}69 + 81 \\times 49{,}31}{100} = \\frac{4004{,}51 + 3994{,}11}{100} = 79{,}9862 \\approx 79{,}99\\text{ amu}\\)."}, {"id": 11, "question": "Nguyên tử của nguyên tố X có tổng số hạt cơ bản (proton, neutron, electron) là 58. Trong đó, số hạt mang điện nhiều hơn số hạt không mang điện là 18 hạt. Số proton của nguyên tử X là", "options": {"A": "19.", "B": "20.", "C": "18.", "D": "17."}, "answer": "A", "explanation": "Gọi số proton, neutron, electron trong X lần lượt là P, N, E (P = E).\n- Tổng số hạt: 2P + N = 58 (1)\n- Hiệu số hạt mang điện và không mang điện: 2P - N = 18 (2)\nCộng (1) và (2): 4P = 76 => P = 19 (Potassium, K). Thay vào (1) được N = 20."}, {"id": 12, "question": "Trong tự nhiên, nguyên tố carbon có hai đồng vị bền là \\(^{12}\\text{C}\\) (nguyên tử khối là 12, chiếm \\(98{,}89\\%\\)) và \\(^{13}\\text{C}\\) (nguyên tử khối là 13, chiếm \\(1{,}11\\%\\)). Phần trăm khối lượng của đồng vị \\(^{13}\\text{C}\\) trong phân tử khí carbon dioxide (\\(\\text{CO}_2\\), biết nguyên tử khối của oxygen bằng 16) là", "options": {"A": "0,33%.", "B": "1,11%.", "C": "27,29%.", "D": "1,30%."}, "answer": "A", "explanation": "Nguyên tử khối trung bình của carbon:\n\\(\\bar{A}_{\\text{C}} = \\frac{12 \\times 98{,}89 + 13 \\times 1{,}11}{100} = 12{,}0111\\text{ amu}\\).\nKhối lượng phân tử của \\(\\text{CO}_2\\):\n\\(M = 12{,}0111 + 2 \\times 16 = 44{,}0111\\text{ g/mol}\\).\nKhối lượng của \\(^{13}\\text{C}\\) trong 1 mol \\(\\text{CO}_2\\) là: \\(m = 1 \\times 1{,}11\\% \\times 13 = 0{,}1443\\text{ gam}\\).\nPhần trăm khối lượng của \\(^{13}\\text{C}\\) trong \\(\\text{CO}_2\\):\n\\(\\%m_{^{13}\\text{C}} = \\frac{0{,}1443}{44{,}0111} \\times 100\\% \\approx 0{,}33\\%\\)."}];
+        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwRRiM81mghvA7cInvJgb4rPLzWOAE3s44wer0BJcURQ4hWwoykS19pkNQ9LyzH6Q8lTQ/exec";
+
+        let userPart1 = {};
+        let examSubmitted = false;
+        let timerInterval = null;
+        let totalTimeSeconds = 15 * 60;
+        let timeRemaining = totalTimeSeconds;
+        let lastResultData = null;
+        let hasSentResults = false;
+
+        function startExam() {
+            const nameInput = document.getElementById('studentName');
+            const classInput = document.getElementById('studentClass');
+            const name = nameInput.value.trim();
+            const sClass = classInput.value.trim();
+
+            if (!name) {
+                alert('Vui lòng nhập Họ và tên của bạn!');
+                nameInput.focus();
+                return;
+            }
+            if (!sClass) {
+                alert('Vui lòng nhập Tên lớp của bạn!');
+                classInput.focus();
+                return;
+            }
+
+            window.sName = name;
+            window.sClass = sClass;
+            document.getElementById('displayName').innerText = name;
+            document.getElementById('displayClass').innerText = sClass;
+
+            document.getElementById('welcomeBox').style.display = 'none';
+            document.getElementById('examArea').style.display = 'block';
+            document.getElementById('timerBadge').style.display = 'inline-flex';
+
+            renderQuestions();
+            startTimer();
+
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Đã hết 15 phút làm bài! Hệ thống tự động nộp bài.');
+                    submitExam();
+                    return;
+                }
+                timeRemaining--;
+                const mins = Math.floor(timeRemaining / 60);
+                const secs = timeRemaining % 60;
+                document.getElementById('timerText').innerText = 
+                    `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }, 1000);
+        }
+
+        function formatContent(str) {
+            if (!str) return '';
+            return String(str).replace(/\n/g, '<br>');
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            let html = '';
+            part1Data.forEach((q, idx) => {
+                html += `
+                <div class="question-card" id="card-${q.id}">
+                    <div class="question-header">
+                        <span class="question-tag">Câu ${idx + 1}</span>
+                        <div>${formatContent(q.question)}</div>
+                    </div>
+                    <div class="options-grid">
+                        ${Object.entries(q.options).map(([k, v]) => `
+                            <div class="option-item" id="opt-${q.id}-${k}" onclick="selectOption(${q.id}, '${k}')">
+                                <span class="option-label">${k}</span>
+                                <div style="flex: 1;">${formatContent(v)}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="explanation-box" id="exp-${q.id}">
+                        <div class="explanation-title"><i class="fa-solid fa-lightbulb"></i> Hướng dẫn giải chi tiết (Đáp án ${q.answer}):</div>
+                        <div>${formatContent(q.explanation)}</div>
+                    </div>
+                </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function selectOption(qId, key) {
+            if (examSubmitted) return;
+            userPart1[qId] = key;
+            ['A', 'B', 'C', 'D'].forEach(k => {
+                const el = document.getElementById(`opt-${qId}-${k}`);
+                if (el) {
+                    if (k === key) el.classList.add('selected');
+                    else el.classList.remove('selected');
+                }
+            });
+        }
+
+        function confirmSubmit() {
+            const answeredCount = Object.keys(userPart1).length;
+            if (answeredCount < part1Data.length) {
+                const unans = part1Data.length - answeredCount;
+                if (!confirm(`Bạn còn ${unans} câu chưa chọn đáp án. Bạn có chắc chắn muốn nộp bài ngay không?`)) {
+                    return;
+                }
+            } else {
+                if (!confirm('Bạn có chắc chắn muốn nộp bài thi không?')) {
+                    return;
+                }
+            }
+            submitExam();
+        }
+
+        function submitExam() {
+            if (examSubmitted) return;
+            examSubmitted = true;
+            clearInterval(timerInterval);
+
+            document.getElementById('btnSubmit').style.display = 'none';
+
+            let totalCorrect = 0;
+            let totalIncorrect = 0;
+
+            part1Data.forEach(q => {
+                const userAns = userPart1[q.id];
+                const isCorrect = (userAns === q.answer);
+                if (isCorrect) {
+                    totalCorrect++;
+                } else {
+                    totalIncorrect++;
+                }
+
+                Object.keys(q.options).forEach(k => {
+                    const el = document.getElementById(`opt-${q.id}-${k}`);
+                    if (el) {
+                        if (k === q.answer) el.classList.add('correct');
+                        else if (k === userAns) el.classList.add('incorrect');
+                    }
+                });
+
+                const expEl = document.getElementById(`exp-${q.id}`);
+                if (expEl) expEl.classList.add('show');
+            });
+
+            const score = ((totalCorrect / part1Data.length) * 10).toFixed(2);
+            const timeSpentSecs = totalTimeSeconds - timeRemaining;
+            const spentMins = Math.floor(timeSpentSecs / 60);
+            const spentSecs = timeSpentSecs % 60;
+            const tSpent = `${spentMins < 10 ? '0' : ''}${spentMins}:${spentSecs < 10 ? '0' : ''}${spentSecs}`;
+
+            document.getElementById('resultScore').innerText = score;
+            document.getElementById('correctNum').innerText = totalCorrect;
+            document.getElementById('incorrectNum').innerText = totalIncorrect;
+            document.getElementById('timeSpent').innerText = tSpent;
+
+            let feedback = '';
+            if (score >= 9.0) feedback = 'Xuất sắc! Bạn nắm rất vững kiến thức Cấu tạo nguyên tử!';
+            else if (score >= 7.0) feedback = 'Khá tốt! Hãy xem lại các câu giải thích để hoàn thiện hơn.';
+            else if (score >= 5.0) feedback = 'Đạt yêu cầu cơ bản. Cần ôn kỹ lại cấu hình electron và bài toán hạt.';
+            else feedback = 'Cần cố gắng nhiều hơn. Hãy đọc kỹ phần giải thích chi tiết bên dưới nhé!';
+            document.getElementById('resultFeedback').innerText = feedback;
+
+            document.getElementById('resultCard').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (score >= 8.0 && window.confetti) {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+
+            const sName = (typeof window.sName !== 'undefined' && window.sName) || 
+                          (document.getElementById('displayName') && document.getElementById('displayName').innerText.trim()) || 
+                          'Học sinh';
+            const sClass = (typeof window.sClass !== 'undefined' && window.sClass) || 
+                           (document.getElementById('displayClass') && document.getElementById('displayClass').innerText.trim()) || 
+                           '10';
+
+            const payload = {
+                timestamp: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
+                time: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
+                subject: "Hóa học",
+                monHoc: "Hóa học",
+                chuyenMuc: "vatli102.com/hoa/",
+                sourceUrl: window.location.href,
+                sourceDomain: window.location.hostname,
+                name: sName,
+                studentName: sName,
+                hoTen: sName,
+                fullName: sName,
+                className: sClass,
+                studentClass: sClass,
+                class: sClass,
+                lop: sClass,
+                score: String(score),
+                totalScore: String(score),
+                diem: String(score),
+                diemSo: String(score),
+                grade: `${score}/10`,
+                correctCount: String(totalCorrect),
+                correct: `${totalCorrect}/${part1Data.length} câu`,
+                soCauDung: String(totalCorrect),
+                incorrectCount: String(totalIncorrect),
+                soCauSai: String(totalIncorrect),
+                tongSoCau: String(part1Data.length),
+                timeSpent: tSpent,
+                thoiGian: tSpent,
+                examTitle: "ĐỀ KIỂM TRA 15 PHÚT HÓA HỌC 10 - ĐỀ SỐ 02",
+                lesson: "ĐỀ KIỂM TRA 15 PHÚT HÓA HỌC 10 - ĐỀ SỐ 02",
+                tenBai: "ĐỀ KIỂM TRA 15 PHÚT HÓA HỌC 10 - ĐỀ SỐ 02",
+                deThi: "ĐỀ KIỂM TRA 15 PHÚT HÓA HỌC 10 - ĐỀ SỐ 02"
+            };
+
+            sendResultsToGoogleSheet(payload);
+        }
+
+        function sendResultsToGoogleSheet(data) {
+            const host = window.location.hostname.toLowerCase();
+            const isVatli102 = (host === 'vatli102.com' || host === 'www.vatli102.com');
+            const statusEl = document.getElementById("sheetSyncStatus");
+
+            if (!isVatli102) {
+                console.warn("Chặn gửi Google Sheet: Domain " + host + " không thuộc vatli102.com");
+                if (statusEl) {
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-info" style="color: #0284c7;"></i> <strong>Thông báo:</strong> Kết quả lưu chính thức khi làm bài trên website <strong>vatli102.com</strong>.';
+                }
+                return;
+            }
+
+            if (hasSentResults) return;
+            hasSentResults = true;
+            lastResultData = data;
+
+            if (statusEl) {
+                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tự động lưu kết quả vào Google Sheet của giáo viên...';
+            }
+
+            fetch(GOOGLE_SHEET_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                if (statusEl) {
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> <strong>Đã lưu kết quả thành công</strong> vào sổ điểm Google Sheet của giáo viên!';
+                }
+            })
+            .catch(err => {
+                console.error("Lỗi đồng bộ Google Sheet:", err);
+                if (statusEl) {
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> Đã gửi kết quả bài làm vào hệ thống.';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
