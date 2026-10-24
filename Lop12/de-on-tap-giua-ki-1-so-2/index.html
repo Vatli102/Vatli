@@ -19,8 +19,15 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
         window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
-            options: { ignoreHtmlClass: 'tex2jax_ignore', processHtmlClass: 'tex2jax_process' }
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            }
         };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -36,6 +43,9 @@
             --text-dark: #0f172a;
             --text-muted: #64748b;
             --border: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
         }
 
         body {
@@ -50,213 +60,598 @@
             text-align: justify;
         }
 
+        /* Header Navigation */
         .sticky-header {
-            position: sticky; top: 0; z-index: 1000;
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
         }
         .header-container {
-            max-width: 920px; margin: 0 auto; padding: 10px 15px;
-            display: flex; justify-content: space-between; align-items: center;
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-        .site-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
-        .logo-img { width: 32px; height: 32px; border-radius: 8px; object-fit: contain; }
-        .logo-text {
-            font-size: 1.25rem; font-weight: 800;
-            background: linear-gradient(135deg, #4f46e5, #06b6d4);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        .site-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 800;
+            font-size: 1.15rem;
         }
-        .nav-links { display: flex; gap: 18px; align-items: center; }
-        .nav-item {
-            text-decoration: none; color: #475569; font-weight: 600; font-size: 0.9rem;
-            display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s;
-        }
-        .nav-item:hover { color: #4f46e5; }
-        @media (max-width: 480px) {
-            .header-container { padding: 8px 12px; }
-            .logo-text { font-size: 1.1rem; }
-            .nav-links { gap: 10px; }
-            .nav-item { font-size: 0.8rem; }
-        }
-
-        .quiz-container { max-width: 920px; margin: 20px auto; padding: 0 15px; min-height: 80vh; }
-
-        .exam-banner {
-            background: linear-gradient(135deg, #0f172a, #1e3a8a, #0369a1); color: white;
-            padding: 2.2rem 1.5rem; border-radius: 20px; text-align: center; margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(15,23,42,0.35);
-        }
-        .exam-banner h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; }
-        .exam-banner p { font-size: 0.95rem; color: #bae6fd; text-align: center; }
-        .badge-exam { display: inline-block; background: rgba(255,255,255,0.2); padding: 4px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; margin-top: 10px; }
-
-        .login-card {
-            background: white; border-radius: 16px; padding: 30px 20px; text-align: center;
-            border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 30px;
-        }
-        .form-group { margin-bottom: 15px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
-        .form-group label { display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 5px; color: #334155; }
-        .form-control { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; outline: none; box-sizing: border-box; }
-        .btn-start {
-            background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; border: none;
-            padding: 12px 30px; border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer;
-            box-shadow: 0 4px 14px rgba(79,70,229,0.3); transition: all 0.2s; width: 100%; max-width: 400px; margin-top: 10px;
-        }
-        .btn-start:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(79,70,229,0.4); }
-
-        .section-header {
-            background: linear-gradient(135deg, #e0e7ff, #c7d2fe); color: #3730a3; padding: 12px 18px;
-            border-radius: 12px; font-weight: 800; font-size: 1.1rem; margin: 30px 0 15px 0; border-left: 5px solid var(--primary);
-        }
-
-        .question-card {
-            background: white; border-radius: 14px; padding: 20px; margin-bottom: 20px;
-            border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-        }
-        .question-title { font-weight: 700; font-size: 1.02rem; color: var(--text-dark); margin-bottom: 14px; line-height: 1.65; }
-        .question-diagram { max-width: 100%; margin: 14px auto; display: flex; justify-content: center; }
-
-        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-        @media (min-width: 600px) { .options-grid { grid-template-columns: 1fr 1fr; } }
-        
-        .option-card {
-            background: #f8fafc; border: 1.5px solid var(--border); padding: 12px 15px; border-radius: 10px;
-            cursor: pointer; font-size: 0.95rem; text-align: justify; transition: all 0.15s; display: flex; align-items: flex-start; gap: 10px;
-            color: var(--text-dark); line-height: 1.55;
-        }
-        .option-card:hover { background: #f1f5f9; border-color: rgba(79, 70, 229, 0.4); }
-        .option-card.selected { background: #e0e7ff; border-color: var(--primary); font-weight: 700; color: #3730a3; }
-        .option-card.correct { border-color: #22c55e !important; background: #dcfce7 !important; color: #15803d !important; }
-        .option-card.incorrect { border-color: #ef4444 !important; background: #fee2e2 !important; color: #b91c1c !important; }
-
-        .option-letter {
-            background: white; border: 1px solid #cbd5e1; width: 28px; height: 28px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.82rem; flex-shrink: 0; margin-top: 2px;
-        }
-        .option-card.selected .option-letter { background: var(--primary); color: white; border-color: var(--primary); }
-
-        .tf-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 8px; border-bottom: 1px solid var(--border); gap: 10px; line-height: 1.55; }
-        @media (max-width: 600px) {
-            .tf-row { flex-direction: column; align-items: flex-start; gap: 8px; }
-            .tf-buttons { align-self: flex-end; }
-        }
-        .tf-buttons { display: flex; gap: 8px; flex-shrink: 0; }
-        .tf-btn { padding: 6px 16px; border-radius: 8px; border: 1.5px solid var(--border); background: white; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.15s; }
-        .tf-btn.selected-true { background: #dcfce7; border-color: #22c55e; color: #15803d; }
-        .tf-btn.selected-false { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
-
-        .short-answer-input {
-            width: 100%; max-width: 250px; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.95rem; outline: none;
-        }
-        .short-answer-input.input-correct { border-color: #22c55e !important; background: #f0fdf4 !important; }
-        .short-answer-input.input-incorrect { border-color: #ef4444 !important; background: #fef2f2 !important; }
-
-        .explanation-box {
-            background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 14px 16px;
-            margin-top: 15px; font-size: 0.9rem; color: #0369a1; display: none; line-height: 1.65; text-align: justify;
-        }
-
-        .results-panel {
-            background: white; border-radius: 20px; padding: 30px; text-align: center;
-            border: 2px solid var(--primary); box-shadow: 0 15px 35px rgba(79,70,229,0.15); margin-top: 30px; display: none;
-        }
-        .score-circle {
-            width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            margin: 0 auto 15px auto; box-shadow: 0 8px 20px rgba(79,70,229,0.3);
-            font-size: 2.2rem; font-weight: 800; line-height: 1;
-        }
-        .score-title { font-size: 1.4rem; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
-        .score-desc { font-size: 0.95rem; color: #64748b; margin-bottom: 20px; text-align: center; }
-
-        .details-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 15px; margin-bottom: 20px; }
-        @media (max-width: 480px) { .details-summary { grid-template-columns: 1fr; } }
-        .summary-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
-        .summary-num { font-size: 1.4rem; font-weight: 800; margin-bottom: 2px; }
-        .summary-label { font-size: 0.8rem; color: #64748b; }
-
-        .competency-tag { font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; margin-right: 0.5rem; vertical-align: middle; }
-        .tag-ntvl { background: #e0e7ff; color: #4338ca; border: 1px solid #c7d2fe; }
-        .tag-thtn { background: #ecfeff; color: #0e7490; border: 1px solid #c5f2f7; }
-        .tag-vdkt { background: #d1fae5; color: #047857; border: 1px solid #a7f3d0; }
-
-        .progress-container { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; }
-        .progress-bar-bg { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #4f46e5, #06b6d4); transition: width 0.3s ease; }
-        .progress-text { display: flex; justify-content: space-between; font-size: 0.85rem; color: #64748b; margin-top: 6px; font-weight: 600; }
-
-        .site-footer {
-            width: 100%; text-align: center; padding: 25px 15px; background: #ffffff;
-            border-top: 1px solid var(--border); margin-top: 40px; color: #64748b; font-size: 0.88rem;
-        }
-        .footer-container { max-width: 920px; margin: 0 auto; }
-        .footer-links { margin-top: 8px; font-size: 0.82rem; }
-        .footer-links a { color: #4f46e5; text-decoration: none; margin: 0 4px; transition: color 0.2s; }
-        .footer-links a:hover { text-decoration: underline; color: #3730a3; }
-
-        /* Countdown Timer & Student Bar */
+        .logo-img { width: 34px; height: 34px; }
         .header-timer-badge {
             display: none;
             align-items: center;
             gap: 6px;
-            background: #eff6ff;
-            color: #1d4ed8;
-            border: 1.5px solid #93c5fd;
+            background: #eef2ff;
+            color: var(--primary);
             padding: 5px 12px;
             border-radius: 20px;
-            font-size: 0.88rem;
+            font-size: 0.9rem;
             font-weight: 700;
             font-family: monospace;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
         }
-        .student-info-bar {
+        .nav-links { display: flex; gap: 18px; align-items: center; }
+        .nav-item {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            background: white;
+            gap: 5px;
+            transition: color 0.2s;
+        }
+        .nav-item:hover { color: var(--primary); }
+
+        @media (max-width: 640px) {
+            .header-container { padding: 8px 12px; }
+            .logo-text { display: none; }
+            .nav-links { gap: 10px; }
+            .nav-item { font-size: 0.8rem; }
+        }
+
+        /* Main Container */
+        .quiz-container {
+            max-width: 900px;
+            margin: 24px auto;
+            padding: 0 16px;
+        }
+
+        /* Banner */
+        .exam-banner {
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 24px 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.2);
+            text-align: center;
+        }
+        .exam-banner h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        .exam-banner p {
+            font-size: 0.95rem;
+            opacity: 0.95;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .badge-exam {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Student Login Card */
+        .login-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 28px 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border);
+            max-width: 460px;
+            margin: 0 auto 30px auto;
+        }
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+        .btn-start {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        }
+        .btn-start:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        /* Student info bar & Floating Timer */
+        .student-info-bar {
+            background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 12px 18px;
-            margin-bottom: 18px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            padding: 10px 18px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
         .student-info-name {
-            font-weight: 700;
-            color: #1e293b;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--text-dark);
             display: flex;
             align-items: center;
             gap: 8px;
         }
         .floating-timer {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 8px;
-            background: #f8fafc;
-            color: #4338ca;
-            border: 2px solid #818cf8;
-            padding: 6px 14px;
-            border-radius: 9999px;
-            font-weight: 700;
+            gap: 6px;
             font-size: 0.95rem;
-            transition: all 0.3s ease;
+            font-weight: 700;
+            color: var(--primary);
+            background: #eef2ff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid #c7d2fe;
         }
-        .timer-warning {
-            border-color: #f59e0b !important;
-            color: #b45309 !important;
-            background: #fffbeb !important;
+
+        /* Progress Bar */
+        .progress-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 18px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
-        .timer-danger {
-            border-color: #ef4444 !important;
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 6px;
+            transition: width 0.3s ease;
+        }
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* Question Palette */
+        .palette-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        .palette-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .palette-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .palette-btn {
+            width: 44px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            color: var(--text-dark);
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+        .palette-btn:hover {
+            background: #e2e8f0;
+        }
+        .palette-btn.answered {
+            background: #dbeafe;
+            color: #1d4ed8;
+            border-color: #93c5fd;
+        }
+        .palette-btn.correct-palette {
+            background: #dcfce7 !important;
+            color: #15803d !important;
+            border-color: #86efac !important;
+        }
+        .palette-btn.wrong-palette {
+            background: #fee2e2 !important;
             color: #b91c1c !important;
-            background: #fef2f2 !important;
-            animation: pulseTimer 1s infinite;
+            border-color: #fca5a5 !important;
         }
-        @keyframes pulseTimer {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.03); }
+
+        /* Section Header */
+        .section-header {
+            background: white;
+            border-left: 4px solid var(--primary);
+            padding: 12px 18px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            border-radius: 8px;
+            margin: 28px 0 16px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            border-top: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Question Card */
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            transition: border-color 0.2s;
+        }
+        .question-title {
+            font-weight: 700;
+            font-size: 1.02rem;
+            color: var(--text-dark);
+            margin-bottom: 14px;
+            line-height: 1.6;
+        }
+        .question-num {
+            color: var(--primary);
+            font-weight: 800;
+            margin-right: 4px;
+        }
+        .comp-tag {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 4px;
+            margin-right: 6px;
+            vertical-align: middle;
+            text-transform: uppercase;
+        }
+        .comp-ntvl { background: #e0e7ff; color: #4338ca; }
+        .comp-thvl { background: #ecfdf5; color: #047857; }
+        .comp-vdkt { background: #fef3c7; color: #b45309; }
+
+        /* Question Image */
+        .question-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 14px 0;
+        }
+        .question-img {
+            max-width: 100%;
+            max-height: 380px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            object-fit: contain;
+        }
+
+        /* Options Grid (Part 1) */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .option-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1.5px solid var(--border);
+            background: #fafafa;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .option-card:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+        .option-card.selected {
+            background: #eef2ff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+        }
+        .option-card.correct {
+            background: #ecfdf5 !important;
+            border-color: var(--success) !important;
+            color: #065f46 !important;
+        }
+        .option-card.incorrect {
+            background: #fef2f2 !important;
+            border-color: var(--danger) !important;
+            color: #991b1b !important;
+        }
+        .option-letter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            color: var(--text-dark);
+            font-weight: 700;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .option-card.selected .option-letter {
+            background: var(--primary);
+            color: white;
+        }
+        .option-card.correct .option-letter {
+            background: var(--success);
+            color: white;
+        }
+        .option-card.incorrect .option-letter {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* True/False Row (Part 2) */
+        .tf-row {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
+        @media (max-width: 640px) {
+            .tf-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+        .tf-buttons {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .btn-tf {
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: 1.5px solid var(--border);
+            background: white;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .btn-tf:hover { background: #f1f5f9; }
+        .btn-tf.selected-true {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1d4ed8;
+        }
+        .btn-tf.selected-false {
+            background: #fed7aa;
+            border-color: #f97316;
+            color: #c2410c;
+        }
+        .btn-tf.correct-ans {
+            background: var(--success) !important;
+            border-color: var(--success) !important;
+            color: white !important;
+        }
+        .btn-tf.wrong-ans {
+            background: var(--danger) !important;
+            border-color: var(--danger) !important;
+            color: white !important;
+        }
+
+        /* Short Answer (Part 3) */
+        .short-answer-box {
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .short-answer-input {
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: inherit;
+            width: 180px;
+            text-align: center;
+            color: var(--primary);
+            transition: all 0.2s;
+        }
+        .short-answer-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+        .short-answer-input.correct {
+            border-color: var(--success) !important;
+            background: #ecfdf5 !important;
+            color: #065f46 !important;
+        }
+        .short-answer-input.incorrect {
+            border-color: var(--danger) !important;
+            background: #fef2f2 !important;
+            color: #991b1b !important;
+        }
+        .short-answer-feedback {
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            display: none;
+            margin-top: 14px;
+            padding: 14px 18px;
+            border-radius: 10px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        /* Results Panel */
+        .results-panel {
+            display: none;
+            background: white;
+            border-radius: 16px;
+            padding: 30px 24px;
+            margin: 28px 0;
+            border: 2px solid #818cf8;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.15);
+            text-align: center;
+        }
+        .score-circle {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px auto;
+            font-size: 2.2rem;
+            font-weight: 800;
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3);
+        }
+        .score-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+        .score-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .details-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .summary-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 10px;
+        }
+        .summary-num {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+        .summary-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .site-footer {
+            background: white;
+            border-top: 1px solid var(--border);
+            padding: 24px 20px;
+            margin-top: 50px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .footer-links {
+            margin-top: 8px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+        .footer-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -269,7 +664,7 @@
             <span class="logo-text">Vatli102.com</span>
         </a>
         <div id="headerTimerBadge" class="header-timer-badge">
-            <i class="fa-solid fa-stopwatch"></i> <span id="timerText">45:00</span>
+            <i class="fa-solid fa-stopwatch"></i> <span id="timerText">50:00</span>
         </div>
         <nav class="nav-links">
             <a href="/" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
@@ -282,35 +677,37 @@
 <div class="quiz-container">
     <div class="exam-banner">
         <h1>📝 Đề ôn tập giữa kì 1 số 2 - Vật lí 12 (Mã đề: 302)</h1>
-        <p>Kiến thức trọng tâm: Vật lí nhiệt & Khí lí tưởng (Chuẩn GDPT 2018)</p>
-        <span class="badge-exam">⏱ Thời gian làm bài: 45 Phút | Trắc Nghiệm Online 3 Phần</span>
+        <p>Nội dung trọng tâm: Vật lí nhiệt & Khí lí tưởng (Chuẩn GDPT 2018)</p>
+        <span class="badge-exam">⏱ Thời gian làm bài: 50 Phút | Thang điểm 10,0</span>
     </div>
 
+    <!-- Student Login -->
     <div id="studentLoginCard" class="login-card">
         <div style="width: 50px; height: 50px; background: #e0e7ff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 12px auto;">📝</div>
-        <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; color: #0f172a;">THÔNG TIN HỌC SINH LÀM BÀI</h2>
-        <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 20px; text-align: center;">Điền Họ tên và Lớp để bắt đầu làm bài thi & tự động lưu điểm số.</p>
+        <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; color: #0f172a; text-align: center;">THÔNG TIN THÍ SINH</h2>
+        <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 20px; text-align: center;">Vui lòng điền Họ tên và Lớp để bắt đầu làm bài và lưu kết quả.</p>
         
         <div class="form-group">
-            <label>Họ và tên học sinh <span style="color:red;">*</span></label>
+            <label>Họ và tên thí sinh <span style="color:red;">*</span></label>
             <input type="text" id="studentName" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
         </div>
         <div class="form-group">
-            <label>Lớp <span style="color:red;">*</span></label>
+            <label>Lớp học <span style="color:red;">*</span></label>
             <input type="text" id="studentClass" class="form-control" placeholder="Ví dụ: 12A1" required>
         </div>
         <button type="button" class="btn-start" id="btnStartQuiz" onclick="startQuizExam()">🚀 BẮT ĐẦU LÀM BÀI THI</button>
     </div>
 
+    <!-- Quiz Content -->
     <div id="quizContent" class="tex2jax_process" style="display: none;">
         <div class="student-info-bar">
             <div class="student-info-name">
-                <i class="fa-solid fa-user-graduate text-indigo-600"></i>
+                <i class="fa-solid fa-user-graduate" style="color: var(--primary);"></i>
                 <span id="displayStudentInfo">Thí sinh: <strong>---</strong> &nbsp;|&nbsp; Lớp: <strong>---</strong></span>
             </div>
             <div class="floating-timer" id="mainTimerBox">
                 <i class="fa-solid fa-clock"></i>
-                <span>Thời gian còn lại: <strong id="timerDisplay" style="font-family: monospace; font-size: 1.05rem;">45:00</strong></span>
+                <span>Thời gian: <strong id="timerDisplay" style="font-family: monospace; font-size: 1.05rem;">50:00</strong></span>
             </div>
         </div>
 
@@ -319,26 +716,39 @@
                 <div class="progress-bar-fill" id="progressBar"></div>
             </div>
             <div class="progress-text">
-                <span>Tiến độ làm bài</span>
-                <span id="progressLabel">0/0 ý hoàn thành</span>
+                <span>Tiến độ bài làm</span>
+                <span id="progressLabel">0/26 câu hoàn thành</span>
             </div>
         </div>
 
-        <div class="section-header">📌 Phần 1: Trắc nghiệm nhiều lựa chọn (4.5 điểm, 18 câu)</div>
+        <!-- Palette Grid -->
+        <div class="palette-card">
+            <div class="palette-title">
+                <span><i class="fa-solid fa-table-cells"></i> Danh mục câu hỏi</span>
+                <span style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted);">Bấm vào số câu để chuyển nhanh</span>
+            </div>
+            <div class="palette-grid" id="paletteGrid"></div>
+        </div>
+
+        <!-- Part 1 -->
+        <div class="section-header">📌 Phần I: Trắc nghiệm nhiều lựa chọn (4,5 điểm | 16 câu)</div>
         <div id="part1Container"></div>
 
-        <div class="section-header">📌 Phần 2: Trắc nghiệm đúng sai (4.0 điểm; 4 câu, 16 ý)</div>
+        <!-- Part 2 -->
+        <div class="section-header">📌 Phần II: Trắc nghiệm đúng sai (4,0 điểm | 4 câu, 16 lệnh hỏi)</div>
         <div id="part2Container"></div>
 
-        <div class="section-header">📌 Phần 3: Trắc nghiệm trả lời ngắn (1.5 điểm, 6 câu)</div>
+        <!-- Part 3 -->
+        <div class="section-header">📌 Phần III: Trắc nghiệm trả lời ngắn (1,5 điểm | 6 câu)</div>
         <div id="part3Container"></div>
 
-        <div style="text-align: center; margin-top: 30px;">
-            <button type="button" id="btnSubmitQuiz" onclick="confirmSubmitQuiz()" style="background: linear-gradient(135deg, #059669, #10b981); color: white; border: none; padding: 14px 40px; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; box-shadow: 0 6px 20px rgba(16,185,129,0.3); transition: all 0.2s;">
+        <div style="text-align: center; margin: 34px 0;">
+            <button type="button" id="btnSubmitQuiz" onclick="confirmSubmitQuiz()" style="background: linear-gradient(135deg, #059669, #10b981); color: white; border: none; padding: 14px 44px; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; box-shadow: 0 6px 20px rgba(16,185,129,0.3); transition: all 0.2s;">
                 ✅ NỘP BÀI THI & CHẤM ĐIỂM
             </button>
         </div>
 
+        <!-- Results Panel -->
         <div id="resultsPanel" class="results-panel">
             <div class="score-circle">
                 <span id="scoreCircle">0.0</span>
@@ -361,18 +771,18 @@
                 </div>
                 <div class="summary-card">
                     <div class="summary-num" style="color: #4f46e5;" id="gradeText">0.0/10</div>
-                    <div class="summary-label">Điểm quy đổi hệ 10</div>
+                    <div class="summary-label">Điểm số quy đổi</div>
                 </div>
             </div>
 
             <div id="syncStatusBadge" style="margin: 18px auto 0 auto; padding: 10px 20px; border-radius: 12px; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; background: #ecfdf5; color: #047857; border: 1px solid #6ee7b7; max-width: 540px;">
                 <i class="fa-solid fa-cloud-arrow-up"></i>
-                <span id="syncStatusText">Kết quả bài thi đã được lưu tự động vào bảng điểm của Thầy Cô!</span>
+                <span id="syncStatusText">Kết quả bài thi đã được tự động đồng bộ về Google Sheets của Giáo viên!</span>
             </div>
 
-            <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 20px;">
+            <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 24px;">
                 <button type="button" onclick="location.reload()" style="background: #f1f5f9; color: #4f46e5; border: 1px solid #cbd5e1; padding: 10px 24px; border-radius: 10px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-size: 0.95rem;">
-                    🔄 Làm lại bài
+                    🔄 Làm lại đề thi
                 </button>
                 <a href="/" style="background: #4f46e5; color: white; text-decoration: none; padding: 10px 24px; border-radius: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; font-size: 0.95rem; box-shadow: 0 4px 12px rgba(79,70,229,0.25);">
                     🏠 Về Trang Chủ
@@ -396,559 +806,521 @@
 <script>
 const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbycB2ttbYIyAElV-YSkBiEKCv1UI3uzoQ4db5qi9DdgLWiZc90vHiSaejPaO0mBhYro/exec";
 const quizData = {
-        "title": "📝 Đề ôn tập giữa kì 1 số 2 - Vật lí 12 (Mã đề: 302)",
-        "part1": [
-                {
-                        "id": 1,
-                        "competency": "NTVL",
-                        "question": "Các phân tử trong chất lỏng có đặc điểm chuyển động nào sau đây?",
-                        "options": {
-                                "A": "Chuyển động hoàn toàn hỗn loạn và tự do như các phân tử chất khí.",
-                                "B": "Dao động xung quanh các vị trí cân bằng tạm thời và các vị trí này luôn dịch chuyển.",
-                                "C": "Dao động quanh vị trí cân bằng cố định xác định trong không gian.",
-                                "D": "Đứng yên hoàn toàn tại các nút mạng tinh thể."
-                        },
-                        "answer": "B",
-                        "explanation": "Phương án đúng là <b>B</b>: Dao động xung quanh các vị trí cân bằng tạm thời và các vị trí này luôn dịch chuyển."
-                },
-                {
-                        "id": 2,
-                        "competency": "NTVL",
-                        "question": "Khi các phân tử chất lỏng chuyển động nhiệt hỗn loạn tiến lại gần nhau quá mức thì giữa chúng sẽ",
-                        "options": {
-                                "A": "triệt tiêu hoàn toàn tương tác phân tử.",
-                                "B": "xuất hiện lực đẩy phân tử chiếm ưu thế.",
-                                "C": "chỉ xuất hiện lực hút phân tử rất mạnh.",
-                                "D": "tự động chuyển thể ngay lập tức thành chất khí."
-                        },
-                        "answer": "B",
-                        "explanation": "Phương án đúng là <b>B</b>: xuất hiện lực đẩy phân tử chiếm ưu thế."
-                },
-                {
-                        "id": 3,
-                        "competency": "NTVL",
-                        "question": "Hiện tượng bay hơi của một chất lỏng xảy ra ở",
-                        "options": {
-                                "A": "trong lòng khối chất lỏng ở nhiệt độ đông đặc.",
-                                "B": "chỉ tại nhiệt độ sôi của chất lỏng đó.",
-                                "C": "chỉ khi có quạt gió thổi qua mặt thoáng.",
-                                "D": "bề mặt thoáng của chất lỏng ở mọi nhiệt độ."
-                        },
-                        "answer": "D",
-                        "explanation": "Phương án đúng là <b>D</b>: bề mặt thoáng của chất lỏng ở mọi nhiệt độ."
-                },
-                {
-                        "id": 4,
-                        "competency": "NTVL",
-                        "question": "Chuyển động nhiệt hỗn loạn của các hạt bụi mịn quan sát được trong chùm tia nắng xiên qua khe cửa là do",
-                        "options": {
-                                "A": "sự va chạm không cân bằng của các phân tử không khí vào các phía của hạt bụi.",
-                                "B": "tác dụng của điện trường khí quyển đẩy các hạt bụi.",
-                                "C": "ánh sáng mặt trời đẩy các hạt bụi theo một quỹ đạo sóng.",
-                                "D": "các hạt bụi tự phóng thích năng lượng chuyển động."
-                        },
-                        "answer": "A",
-                        "explanation": "Phương án đúng là <b>A</b>: sự va chạm không cân bằng của các phân tử không khí vào các phía của hạt bụi."
-                },
-                {
-                        "id": 5,
-                        "competency": "NTVL",
-                        "question": "Một viên đạn chì đang bay với vận tốc lớn cắm phập vào bao cát và dừng lại hẳn. Trong hiện tượng này,",
-                        "options": {
-                                "A": "cơ năng của viên đạn đã chuyển hóa thành nội năng của đạn và cát làm nhiệt độ của chúng tăng.",
-                                "B": "nội năng của viên đạn chuyển hóa hoàn toàn thành thế năng hấp dẫn.",
-                                "C": "động năng của viên đạn bị tiêu diệt hoàn toàn không chuyển hóa thành dạng năng lượng nào.",
-                                "D": "viên đạn tỏa toàn bộ nhiệt lượng ra ngoài mà không làm tăng nội năng."
-                        },
-                        "answer": "A",
-                        "explanation": "Phương án đúng là <b>A</b>: cơ năng của viên đạn đã chuyển hóa thành nội năng của đạn và cát làm nhiệt độ của chúng tăng."
-                },
-                {
-                        "id": 6,
-                        "competency": "NTVL",
-                        "question": "Độ biến thiên nội năng của một lượng khí lí tưởng trong một chu trình biến đổi được tính theo biểu thức nào sau đây?",
-                        "options": {
-                                "A": "$\\Delta U = A - Q$.",
-                                "B": "$\\Delta U = A + Q$.",
-                                "C": "$\\Delta U = \\frac{Q}{A}$.",
-                                "D": "$\\Delta U = Q - A$."
-                        },
-                        "answer": "B",
-                        "explanation": "Phương án đúng là <b>B</b>: $\\Delta U = A + Q$."
-                },
-                {
-                        "id": 7,
-                        "competency": "NTVL",
-                        "question": "Một lượng khí trong bình nhận công $120\\text{ J}$ từ môi trường và truyền ra môi trường nhiệt lượng $50\\text{ J}$. Nội năng của khối khí biến thiên như thế nào?",
-                        "options": {
-                                "A": "Giảm đi $70\\text{ J}$.",
-                                "B": "Giảm đi $170\\text{ J}$.",
-                                "C": "Tăng thêm $70\\text{ J}$.",
-                                "D": "Tăng thêm $170\\text{ J}$."
-                        },
-                        "answer": "C",
-                        "explanation": "Phương án đúng là <b>C</b>: Tăng thêm $70\\text{ J}$."
-                },
-                {
-                        "id": 8,
-                        "competency": "NTVL",
-                        "question": "Quá trình biến đổi trạng thái trong đó chất khí không trao đổi nhiệt lượng với bên ngoài ($Q = 0$) được gọi là",
-                        "options": {
-                                "A": "quá trình đẳng áp.",
-                                "B": "quá trình đẳng nhiệt.",
-                                "C": "quá trình đoạn nhiệt.",
-                                "D": "quá trình đẳng tích."
-                        },
-                        "answer": "C",
-                        "explanation": "Phương án đúng là <b>C</b>: quá trình đoạn nhiệt."
-                },
-                {
-                        "id": 9,
-                        "competency": "NTVL",
-                        "question": "Khoảng chia độ trong thang nhiệt độ Kelvin có độ lớn",
-                        "options": {
-                                "A": "bằng đúng khoảng chia độ trong thang nhiệt độ Celsius ($1\\text{ K} = 1^\\circ\\text{C}$ về độ biến thiên).",
-                                "B": "bằng một nửa khoảng chia độ trong thang Celsius.",
-                                "C": "thay đổi tùy theo áp suất của môi trường đo.",
-                                "D": "gấp 1,8 lần khoảng chia độ trong thang Celsius."
-                        },
-                        "answer": "A",
-                        "explanation": "Phương án đúng là <b>A</b>: bằng đúng khoảng chia độ trong thang nhiệt độ Celsius ($1\\text{ K} = 1^\\circ\\text{C}$ về độ biến thiên)."
-                },
-                {
-                        "id": 10,
-                        "competency": "NTVL",
-                        "question": "Thang đo nhiệt độ Fahrenheit quy ước nhiệt độ đóng băng của nước tinh khiết ở áp suất chuẩn là",
-                        "options": {
-                                "A": "$212^\\circ\\text{F}$.",
-                                "B": "$0^\\circ\\text{F}$.",
-                                "C": "$32^\\circ\\text{F}$.",
-                                "D": "$100^\\circ\\text{F}$."
-                        },
-                        "answer": "C",
-                        "explanation": "Phương án đúng là <b>C</b>: $32^\\circ\\text{F}$."
-                },
-                {
-                        "id": 11,
-                        "competency": "NTVL",
-                        "question": "Nhiệt kế kim loại (lưỡng kim) hoạt động dựa trên hiện tượng vật lí nào sau đây?",
-                        "options": {
-                                "A": "Sự thay đổi điện trở của dây kim loại theo nhiệt độ.",
-                                "B": "Sự bay hơi của chất lỏng bám trên mặt kim loại.",
-                                "C": "Sự bức xạ hồng ngoại của kim loại nóng sáng.",
-                                "D": "Sự nở vì nhiệt khác nhau của hai thanh kim loại khác bản chất được ghép chặt vào nhau."
-                        },
-                        "answer": "D",
-                        "explanation": "Phương án đúng là <b>D</b>: Sự nở vì nhiệt khác nhau của hai thanh kim loại khác bản chất được ghép chặt vào nhau."
-                },
-                {
-                        "id": 12,
-                        "competency": "NTVL",
-                        "question": "Đơn vị đo của nhiệt dung riêng trong hệ đơn vị quốc tế SI là",
-                        "options": {
-                                "A": "$\\text{cal/g}$.",
-                                "B": "$\\text{J}\\cdot\\text{K}$.",
-                                "C": "$\\text{J/(kg}\\cdot\\text{K)}$.",
-                                "D": "$\\text{J/kg}$."
-                        },
-                        "answer": "C",
-                        "explanation": "Phương án đúng là <b>C</b>: $\\text{J/(kg}\\cdot\\text{K)}$."
-                },
-                {
-                        "id": 13,
-                        "competency": "THTN",
-                        "question": "Nhiệt nóng chảy riêng của một chất rắn kết tinh là nhiệt lượng cần thiết để",
-                        "options": {
-                                "A": "làm nóng chảy hoàn toàn $1\\text{ kg}$ chất đó ở nhiệt độ nóng chảy.",
-                                "B": "làm tăng nhiệt độ của $1\\text{ kg}$ chất đó lên thêm $1\\text{ K}$.",
-                                "C": "làm hóa hơi hoàn toàn $1\\text{ kg}$ chất lỏng ở nhiệt độ sôi.",
-                                "D": "đốt cháy hoàn toàn $1\\text{ kg}$ chất rắn trong không khí."
-                        },
-                        "answer": "A",
-                        "explanation": "Phương án đúng là <b>A</b>: làm nóng chảy hoàn toàn $1\\text{ kg}$ chất đó ở nhiệt độ nóng chảy."
-                },
-                {
-                        "id": 14,
-                        "competency": "THTN",
-                        "question": "Nhiệt hóa hơi riêng của ethanol là $0{,}9 \\cdot 10^6\\text{ J/kg}$. Để làm bay hơi hoàn toàn $0{,}2\\text{ kg}$ ethanol ở nhiệt độ sôi cần cung cấp nhiệt lượng là",
-                        "options": {
-                                "A": "$1{,}8 \\cdot 10^5\\text{ J}$.",
-                                "B": "$0{,}9 \\cdot 10^5\\text{ J}$.",
-                                "C": "$4{,}5 \\cdot 10^5\\text{ J}$.",
-                                "D": "$3{,}6 \\cdot 10^5\\text{ J}$."
-                        },
-                        "answer": "A",
-                        "explanation": "Phương án đúng là <b>A</b>: $1{,}8 \\cdot 10^5\\text{ J}$."
-                },
-                {
-                        "id": 15,
-                        "competency": "THTN",
-                        "question": "Tại sao khi đun nước trên đỉnh núi Phan Xi Păng (cao hơn $3140\\text{ m}$), nước lại sôi ở nhiệt độ dưới $90^\\circ\\text{C}$?",
-                        "options": {
-                                "A": "Vì nhiệt dung riêng của nước giảm đi khi ở trên độ cao lớn.",
-                                "B": "Vì nước trên núi chứa ít muối khoáng hòa tan hơn.",
-                                "C": "Vì không khí trên núi cao loãng hơn làm ngọn lửa cháy yếu hơn.",
-                                "D": "Vì áp suất khí quyển trên núi cao nhỏ hơn áp suất chuẩn ở đồng bằng."
-                        },
-                        "answer": "D",
-                        "explanation": "Phương án đúng là <b>D</b>: Vì áp suất khí quyển trên núi cao nhỏ hơn áp suất chuẩn ở đồng bằng."
-                },
-                {
-                        "id": 16,
-                        "competency": "VDKT",
-                        "question": "Băng phiến (long não) đặt trong tủ quần áo sau một thời gian biến mất dần mà không thấy chảy lỏng là do",
-                        "options": {
-                                "A": "băng phiến bị vi khuẩn ăn hết.",
-                                "B": "hiện tượng đông đặc ngược chiều.",
-                                "C": "hiện tượng ngưng tụ thành các giọt vô hình.",
-                                "D": "hiện tượng thăng hoa trực tiếp từ thể rắn sang thể khí."
-                        },
-                        "answer": "D",
-                        "explanation": "Phương án đúng là <b>D</b>: hiện tượng thăng hoa trực tiếp từ thể rắn sang thể khí."
-                },
-                {
-                        "id": 17,
-                        "competency": "VDKT",
-                        "question": "Khối khí lí tưởng trong bình kín được hơ nóng từ từ. Do thể tích bình không đổi ($A = 0$), nhiệt lượng cung cấp cho khối khí dùng để",
-                        "options": {
-                                "A": "triệt tiêu chuyển động nhiệt của các phân tử.",
-                                "B": "làm tăng toàn bộ nội năng của khối khí ($\\Delta U = Q$).",
-                                "C": "làm giảm áp suất của khối khí bên trong.",
-                                "D": "sinh công đẩy thành bình dãn nở."
-                        },
-                        "answer": "B",
-                        "explanation": "Phương án đúng là <b>B</b>: làm tăng toàn bộ nội năng của khối khí ($\\Delta U = Q$)."
-                },
-                {
-                        "id": 18,
-                        "competency": "VDKT",
-                        "question": "Cửa sổ hai lớp kính chân không có khả năng cách nhiệt tuyệt vời cho các tòa nhà hiện đại vì",
-                        "options": {
-                                "A": "lớp chân không tạo ra lực hút giữ nhiệt bên trong phòng.",
-                                "B": "chân không ngăn chặn hoàn toàn phương thức truyền nhiệt bằng dẫn nhiệt và đối lưu.",
-                                "C": "chân không hấp thụ toàn bộ tia bức xạ mặt trời chiếu tới.",
-                                "D": "kính chân không có nhiệt dung riêng lớn gấp hàng ngàn lần kính thường."
-                        },
-                        "answer": "B",
-                        "explanation": "Phương án đúng là <b>B</b>: chân không ngăn chặn hoàn toàn phương thức truyền nhiệt bằng dẫn nhiệt và đối lưu."
-                }
-        ],
-        "part2": [
-                {
-                        "id": 1,
-                        "context": "Một nhóm học sinh tiến hành thí nghiệm đo nhiệt hóa hơi riêng của nước bằng ấm đun có gắn oát kế (wattmeter) và cân điện tử:",
-                        "subQuestions": [
-                                {
-                                        "key": "a",
-                                        "competency": "NTVL",
-                                        "text": "Trong suốt thời gian nước sôi mạnh ở $100^\\circ\\text{C}$ dưới áp suất tiêu chuẩn, nhiệt độ của nước duy trì ổn định không đổi.",
-                                        "answer": "Đ",
-                                        "explanation": "Phát biểu (a) là <b>ĐÚNG</b> theo kiến thức chuẩn SGK Vật lí 12 Kết nối tri thức."
-                                },
-                                {
-                                        "key": "b",
-                                        "competency": "NTVL",
-                                        "text": "Nhiệt lượng do dòng điện qua dây nung cung cấp trong giai đoạn nước sôi chủ yếu dùng để làm tăng khoảng cách giữa các phân tử nước và chuyển nước từ thể lỏng sang thể hơi.",
-                                        "answer": "Đ",
-                                        "explanation": "Phát biểu (b) là <b>ĐÚNG</b> theo kiến thức chuẩn SGK Vật lí 12 Kết nối tri thức."
-                                },
-                                {
-                                        "key": "c",
-                                        "competency": "VDKT",
-                                        "text": "Nếu một phần hơi nước ngưng tụ trên nắp ấm rồi rơi trở lại vào bình, khối lượng nước bay hơi thực tế thoát ra ngoài sẽ nhỏ hơn độ giảm khối lượng đo được.",
-                                        "answer": "Đ",
-                                        "explanation": "Phát biểu (c) là <b>ĐÚNG</b> theo kiến thức chuẩn SGK Vật lí 12 Kết nối tri thức."
-                                },
-                                {
-                                        "key": "d",
-                                        "competency": "VDKT",
-                                        "text": "Nếu trong quá trình thí nghiệm có một phần nhiệt lượng hao phí tỏa ra môi trường xung quanh mà nhóm không tính đến, thì giá trị nhiệt hóa hơi riêng tính toán được sẽ lớn hơn giá trị thực tế.",
-                                        "answer": "S",
-                                        "explanation": "Phát biểu (d) là <b>SAI</b> theo kiến thức chuẩn SGK Vật lí 12 Kết nối tri thức."
-                                }
-                        ]
-                },
-                {
-                        "id": 2,
-                        "context": "Tủ lạnh gia đình hoạt động làm lạnh dựa trên chu trình nhiệt động khép kín tuần hoàn của môi chất lạnh:",
-                        "subQuestions": [
-                                {
-                                        "key": "a",
-                                        "competency": "NTVL",
-                                        "text": "Máy nén tiêu thụ điện năng để nén môi chất từ thể hơi ở áp suất thấp lên áp suất cao và nhiệt độ cao.",
-                                        "answer": "Đ",
-                                        "explanation": "Phát biểu (a) là <b>ĐÚNG</b> theo kiến thức chuẩn SGK Vật lí 12 Kết nối tri thức."
-                                },
-                                {
-                                        "key": "b",
-                                        "competency": "NTVL",
-                                        "text": "Tại dàn ngưng tụ (thường bố trí phía sau hoặc bên hông tủ), môi chất tỏa nhiệt lượng ra không khí bên ngoài phòng và chuyển sang thể lỏng.",
-                                        "answer": "Đ",
-                                        "explanation": "Phát biểu (b) là <b>ĐÚNG</b> theo kiến thức chuẩn SGK Vật lí 12 Kết nối tri thức."
-                                },
-                                {
-                                        "key": "c",
-                                        "competency": "VDKT",
-                                        "text": "Tại dàn bay hơi (bên trong các ngăn tủ), môi chất lỏng sau khi qua van tiết lưu sẽ bay hơi và hấp thụ nhiệt lượng từ thực phẩm bên trong tủ.",
-                                        "answer": "Đ",
-                                        "explanation": "Phát biểu (c) là <b>ĐÚNG</b> theo kiến thức chuẩn SGK Vật lí 12 Kết nối tri thức."
-                                },
-                                {
-                                        "key": "d",
-                                        "competency": "VDKT",
-                                        "text": "Quá trình làm lạnh của tủ lạnh diễn ra hoàn toàn tự phát mà không cần tiêu tốn năng lượng từ bên ngoài, phù hợp với nguyên lí II của nhiệt động lực học.",
-                                        "answer": "S",
-                                        "explanation": "Phát biểu (d) là <b>SAI</b> theo kiến thức chuẩn SGK Vật lí 12 Kết nối tri thức."
-                                }
-                        ]
-                },
-                {
-                        "id": 3,
-                        "context": "Bình xịt khí nén (dùng để xịt vệ sinh bụi trên các linh kiện điện tử) khi bấm xả khí liên tục:",
-                        "subQuestions": [
-                                {
-                                        "key": "a",
-                                        "competency": "NTVL",
-                                        "text": "Khi bấm giữ vòi xịt liên tục, vỏ kim loại của bình xịt trở nên rất lạnh và có thể xuất hiện các giọt nước li ti ngưng tụ ở mặt ngoài vỏ bình.",
-                                        "answer": "Đ",
-                                        "explanation": "Phát biểu (a) là <b>ĐÚNG</b> theo kiến thức chuẩn SGK Vật lí 12 Kết nối tri thức."
-                                },
-                                {
-                                        "key": "b",
-                                        "competency": "NTVL",
-                                        "text": "Vỏ bình lạnh đi nhanh chóng là do khí nén bên trong dãn nở sinh công và lượng chất lỏng trong bình bay hơi mạnh đã thu nhiệt lượng từ chính bình xịt.",
-                                        "answer": "Đ",
-                                        "explanation": "Phát biểu (b) là <b>ĐÚNG</b> theo kiến thức chuẩn SGK Vật lí 12 Kết nối tri thức."
-                                },
-                                {
-                                        "key": "c",
-                                        "competency": "VDKT",
-                                        "text": "Luồng khí phun mạnh ra khỏi vòi xịt có nhiệt độ cao hơn nhiệt độ môi trường xung quanh do có ma sát giữa dòng khí và đầu vòi phun.",
-                                        "answer": "S",
-                                        "explanation": "Phát biểu (c) là <b>SAI</b> theo kiến thức chuẩn SGK Vật lí 12 Kết nối tri thức."
-                                },
-                                {
-                                        "key": "d",
-                                        "competency": "VDKT",
-                                        "text": "Để duy trì áp suất phun ổn định và tránh làm bình quá lạnh, nhà sản xuất khuyến cáo người dùng nên xịt từng đợt ngắt quãng thay vì bấm giữ vòi liên tục.",
-                                        "answer": "Đ",
-                                        "explanation": "Phát biểu (d) là <b>ĐÚNG</b> theo kiến thức chuẩn SGK Vật lí 12 Kết nối tri thức."
-                                }
-                        ]
-                },
-                {
-                        "id": 4,
-                        "context": "Hiện tượng tuyết tan và sự thay đổi nhiệt độ của môi trường xung quanh vào cuối mùa đông:",
-                        "subQuestions": [
-                                {
-                                        "key": "a",
-                                        "competency": "NTVL",
-                                        "text": "Vào những ngày băng tuyết bắt đầu tan chảy, người ta thường cảm thấy không khí lạnh buốt hơn so với những ngày tuyết đang rơi.",
-                                        "answer": "Đ",
-                                        "explanation": "Phát biểu (a) là <b>ĐÚNG</b> theo kiến thức chuẩn SGK Vật lí 12 Kết nối tri thức."
-                                },
-                                {
-                                        "key": "b",
-                                        "competency": "NTVL",
-                                        "text": "Quá trình tuyết tan là quá trình chuyển thể từ thể rắn sang thể lỏng (nóng chảy), cần thu một nhiệt lượng rất lớn từ không khí xung quanh.",
-                                        "answer": "Đ",
-                                        "explanation": "Phát biểu (b) là <b>ĐÚNG</b> theo kiến thức chuẩn SGK Vật lí 12 Kết nối tri thức."
-                                },
-                                {
-                                        "key": "c",
-                                        "competency": "VDKT",
-                                        "text": "Khi tuyết rơi, các phân tử nước trong mây chuyển thể ngưng kết tỏa nhiệt lượng ra môi trường không khí xung quanh.",
-                                        "answer": "Đ",
-                                        "explanation": "Phát biểu (c) là <b>ĐÚNG</b> theo kiến thức chuẩn SGK Vật lí 12 Kết nối tri thức."
-                                },
-                                {
-                                        "key": "d",
-                                        "competency": "VDKT",
-                                        "text": "Người ta rắc muối hạt lên mặt đường phủ băng tuyết để làm tăng nhiệt độ nóng chảy của băng tuyết, giúp tuyết giữ được thể rắn lâu hơn.",
-                                        "answer": "S",
-                                        "explanation": "Phát biểu (d) là <b>SAI</b> theo kiến thức chuẩn SGK Vật lí 12 Kết nối tri thức."
-                                }
-                        ]
-                }
-        ],
-        "part3": [
-                {
-                        "id": 1,
-                        "competency": "VDKT",
-                        "question": "Một người đo thân nhiệt bằng nhiệt kế điện tử hiển thị $38^\\circ\\text{C}$. Trong thang nhiệt độ Kelvin, giá trị nhiệt độ này là bao nhiêu Kelvin? (Điền số nguyên).",
-                        "answer": "311",
-                        "explanation": "Đáp số chính xác: <b>311</b>."
-                },
-                {
-                        "id": 2,
-                        "competency": "VDKT",
-                        "question": "Một khối khí lí tưởng bị nén trong xi lanh cách nhiệt nhận một công $180\\text{ J}$. Vì xilanh cách nhiệt hoàn toàn ($Q = 0$), độ biến thiên nội năng $\\Delta U$ của khối khí bằng bao nhiêu Joule? (Điền số nguyên).",
-                        "answer": "180",
-                        "explanation": "Đáp số chính xác: <b>180</b>."
-                },
-                {
-                        "id": 3,
-                        "competency": "VDKT",
-                        "question": "Một miếng nhôm có khối lượng $0{,}4\\text{ kg}$ ở nhiệt độ nóng chảy của nó ($660^\\circ\\text{C}$). Biết nhiệt nóng chảy riêng của nhôm là $\\lambda = 3{,}9 \\cdot 10^5\\text{ J/kg}$. Cần cung cấp nhiệt lượng bằng bao nhiêu kiloJoule (kJ) để làm nóng chảy hoàn toàn miếng nhôm này? (Điền số nguyên).",
-                        "answer": "156",
-                        "explanation": "Đáp số chính xác: <b>156</b>."
-                },
-                {
-                        "id": 4,
-                        "competency": "VDKT",
-                        "question": "Người ta đổ $0{,}3\\text{ kg}$ nước ở nhiệt độ $80^\\circ\\text{C}$ vào một bình chứa $0{,}2\\text{ kg}$ nước ở nhiệt độ $20^\\circ\\text{C}$. Bỏ qua nhiệt dung của bình và hao phí nhiệt ra môi trường. Nhiệt độ cân bằng của hỗn hợp nước là bao nhiêu $^\\circ\\text{C}$? (Điền số nguyên).",
-                        "answer": "56",
-                        "explanation": "Đáp số chính xác: <b>56</b>."
-                },
-                {
-                        "id": 5,
-                        "competency": "VDKT",
-                        "question": "Một ấm đun nước điện có công suất $2000\\text{ W}$, hiệu suất đun sôi đạt $80\\%$. Đun $1\\text{ kg}$ nước từ $20^\\circ\\text{C}$ đến khi sôi ở $100^\\circ\\text{C}$. Cho biết nhiệt dung riêng của nước là $c = 4200\\text{ J/(kg}\\cdot\\text{K)}$. Thời gian đun sôi nước là bao nhiêu giây? (Điền số nguyên).",
-                        "answer": "210",
-                        "explanation": "Đáp số chính xác: <b>210</b>."
-                },
-                {
-                        "id": 6,
-                        "competency": "VDKT",
-                        "question": "Một lượng cồn y tế khối lượng $0{,}5\\text{ kg}$ đang sôi ở nhiệt độ $78^\\circ\\text{C}$. Nhiệt lượng cần thiết để làm hóa hơi hoàn toàn lượng cồn này là bao nhiêu kiloJoule (kJ)? Biết nhiệt hóa hơi riêng của cồn là $L = 0{,}9 \\cdot 10^6\\text{ J/kg}$. (Điền số nguyên).",
-                        "answer": "450",
-                        "explanation": "Đáp số chính xác: <b>450</b>."
-                }
-        ]
-};
-let userAnswers = { part1: {}, part2: {}, part3: {} };
-let isSubmitted = false;
-const EXAM_DURATION_SECONDS = 45 * 60; // 45 phút = 2700 giây
-let timeRemaining = EXAM_DURATION_SECONDS;
-let examTimerInterval = null;
-
-document.addEventListener('DOMContentLoaded', () => {
-    const savedName = localStorage.getItem('saved_student_name');
-    const savedClass = localStorage.getItem('saved_student_class');
-    if (savedName) document.getElementById('studentName').value = savedName;
-    if (savedClass) document.getElementById('studentClass').value = savedClass;
-});
-
-function startQuizExam() {
-    try {
-        const nameInput = document.getElementById('studentName');
-        const classInput = document.getElementById('studentClass');
-        const name = nameInput ? nameInput.value.trim() : "";
-        const className = classInput ? classInput.value.trim() : "";
-
-        if (!name || !className) {
-            alert("Vui lòng điền đầy đủ Họ và tên và Lớp để bắt đầu làm bài!");
-            return;
-        }
-
-        localStorage.setItem('saved_student_name', name);
-        localStorage.setItem('saved_student_class', className);
-
-        const infoEl = document.getElementById('displayStudentInfo');
-        if (infoEl) infoEl.innerHTML = `Thí sinh: <strong style="color: #1e40af;">${name}</strong> &nbsp;|&nbsp; Lớp: <strong style="color: #1e40af;">${className}</strong>`;
-
-        const loginCard = document.getElementById('studentLoginCard');
-        if (loginCard) loginCard.style.display = 'none';
-
-        const quizContent = document.getElementById('quizContent');
-        if (quizContent) quizContent.style.display = 'block';
-
-        const headerTimer = document.getElementById('headerTimerBadge');
-        if (headerTimer) headerTimer.style.display = 'flex';
-
-        renderQuizQuestions();
-        updateProgress();
-
-        if (window.MathJax && window.MathJax.typesetPromise) {
-            window.MathJax.typesetPromise();
-        }
-
-        // Bắt đầu đếm ngược 45 phút
-        startTimerCountdown();
-    } catch (e) {
-        console.error("Lỗi khởi động bài thi:", e);
+  "title": "📝 Đề ôn tập giữa kì 1 số 2 - Vật lí 12 (Mã đề: 302)",
+  "description": "Nội dung trọng tâm: Vật lí nhiệt & Khí lí tưởng (Chuẩn GDPT 2018)",
+  "duration": 50,
+  "part1": [
+    {
+      "id": 1,
+      "competency": "NTVL",
+      "question": "Để làm nóng chảy hoàn toàn $2\\text{ kg}$ nhôm thì cần cung cấp một nhiệt lượng là $7,94 \\cdot 10^5\\text{ J}$. Nhiệt nóng chảy riêng của nhôm là",
+      "options": {
+        "A": "$3,97 \\cdot 10^5\\text{ J/kg}$.",
+        "B": "$7,94 \\cdot 10^5\\text{ J/kg}$.",
+        "C": "$15,88 \\cdot 10^5\\text{ J/kg}$.",
+        "D": "$1,98 \\cdot 10^5\\text{ J/kg}$."
+      },
+      "answer": "A",
+      "explanation": "Nhiệt nóng chảy riêng của nhôm là: $\\lambda = \\frac{Q}{m} = \\frac{7,94 \\cdot 10^5}{2} = 3,97 \\cdot 10^5\\text{ J/kg}$."
+    },
+    {
+      "id": 2,
+      "competency": "NTVL",
+      "question": "Trong chất khí, nếu phân tử khí chuyển động càng nhanh thì nhiệt độ chất khí",
+      "options": {
+        "A": "càng tăng.",
+        "B": "càng giảm.",
+        "C": "không đổi.",
+        "D": "tăng rồi giảm."
+      },
+      "answer": "A",
+      "explanation": "Theo thuyết động học phân tử, nhiệt độ tuyệt đối của khối khí tỉ lệ với động năng tịnh tiến trung bình của các phân tử khí ($\\bar{E}_đ = \\frac{3}{2}kT$). Do đó, các phân tử khí chuyển động càng nhanh thì nhiệt độ của chất khí càng tăng."
+    },
+    {
+      "id": 3,
+      "competency": "NTVL",
+      "question": "Hình bên biểu diễn mô hình cấu tạo phân tử của các chất A, B, C và D. Từ mô hình đã cho, hãy cho biết chất nào là chất rắn có nhiệt độ nóng chảy xác định?",
+      "image": "./cau3_part1_mo_hinh_phan_tu.png",
+      "options": {
+        "A": "Hình A",
+        "B": "Hình B",
+        "C": "Hình C",
+        "D": "Hình D"
+      },
+      "answer": "A",
+      "explanation": "Chất rắn có nhiệt độ nóng chảy xác định là chất rắn kết tinh. Chất rắn kết tinh có cấu trúc tinh thể với trật tự sắp xếp tuần hoàn trong không gian (như mô tả ở Hình A). Hình B là chất rắn vô định hình, Hình C là chất khí và Hình D là chất lỏng."
+    },
+    {
+      "id": 4,
+      "competency": "NTVL",
+      "question": "Khi dùng nhiệt kế để đo nhiệt độ của chính cơ thể mình, người ta phải thực hiện các thao tác sau (chưa được sắp xếp theo đúng thứ tự):<br>a. Đặt nhiệt kế vào nách trái, rồi kẹp cánh tay lại để giữ nhiệt kế.<br>b. Lấy nhiệt kế ra khỏi nách để đọc nhiệt kế.<br>c. Dùng bông lau sạch thân và bầu nhiệt kế.<br>d. Kiểm tra xem thủy ngân đã tụt hết xuống bầu nhiệt kế chưa. Nếu chưa thì vẩy nhiệt kế cho thủy ngân tụt xuống.<br>Hãy sắp xếp các thao tác trên theo thứ tự hợp lí nhất:",
+      "options": {
+        "A": "a, b, c, d",
+        "B": "d, c, a, b",
+        "C": "d, c, b, a",
+        "D": "b, a, c, d"
+      },
+      "answer": "B",
+      "explanation": "Thứ tự thao tác chuẩn khi đo thân nhiệt bằng nhiệt kế thủy ngân:<br>1. (d) Kiểm tra và vẩy nhiệt kế cho thủy ngân tụt xuống bầu.<br>2. (c) Dùng bông y tế lau sạch thân và bầu nhiệt kế.<br>3. (a) Đặt nhiệt kế vào nách và kẹp chặt cánh tay lại để giữ cố định.<br>4. (b) Sau 3-5 phút, lấy nhiệt kế ra đọc kết quả.<br>Thứ tự đúng là: <b>d, c, a, b</b>."
+    },
+    {
+      "id": 5,
+      "competency": "NTVL",
+      "question": "Đại lượng nào sau đây là không cần thiết khi đo nhiệt dung riêng của một chất lỏng?",
+      "options": {
+        "A": "Khối lượng chất lỏng.",
+        "B": "Nhiệt độ chất lỏng.",
+        "C": "Áp suất chất lỏng.",
+        "D": "Nhiệt lượng truyền cho chất lỏng."
+      },
+      "answer": "C",
+      "explanation": "Để đo nhiệt dung riêng theo hệ thức $c = \\frac{Q}{m \\Delta T}$, ta cần xác định khối lượng $m$, nhiệt độ để tính $\\Delta T$, và nhiệt lượng $Q$. Áp suất chất lỏng không tham gia vào công thức và không cần đo."
+    },
+    {
+      "id": 6,
+      "competency": "NTVL",
+      "question": "Gọi lực liên kết giữa các phân tử trong chất rắn, chất lỏng, chất khí lần lượt là $F_1, F_2, F_3$ thì",
+      "options": {
+        "A": "$F_1 = F_2 = F_3$.",
+        "B": "$F_1 > F_2 > F_3$.",
+        "C": "$F_1 < F_2 = F_3$.",
+        "D": "$F_1 > F_2 = F_3$."
+      },
+      "answer": "B",
+      "explanation": "Trong chất rắn các phân tử rất gần nhau nên lực tương tác mạnh nhất ($F_1$). Trong chất lỏng lực tương tác yếu hơn ($F_2$). Trong chất khí các phân tử ở xa nhau nên lực tương tác rất yếu ($F_3$). Do đó: $F_1 > F_2 > F_3$."
+    },
+    {
+      "id": 7,
+      "competency": "NTVL",
+      "question": "Nội năng của vật có đơn vị là",
+      "options": {
+        "A": "Joule (J).",
+        "B": "Watt (W).",
+        "C": "Newton (N).",
+        "D": "mét (m)."
+      },
+      "answer": "A",
+      "explanation": "Nội năng là tổng động năng chuyển động nhiệt của các phân tử và thế năng tương tác giữa chúng. Vì nội năng là một dạng năng lượng nên có đơn vị là Joule (J)."
+    },
+    {
+      "id": 8,
+      "competency": "THVL",
+      "question": "Một vật chuyển từ trạng thái 1 có nội năng $6\\text{ J}$ đến trạng thái 2 có nội năng $8\\text{ J}$ thì độ biến thiên nội năng của vật bằng",
+      "options": {
+        "A": "$14\\text{ J}$.",
+        "B": "$7\\text{ J}$.",
+        "C": "$2\\text{ J}$.",
+        "D": "$10\\text{ J}$."
+      },
+      "answer": "C",
+      "explanation": "Độ biến thiên nội năng của vật là: $\\Delta U = U_2 - U_1 = 8 - 6 = 2\\text{ J}$."
+    },
+    {
+      "id": 9,
+      "competency": "THVL",
+      "question": "Người ta truyền cho khí trong xilanh kín một nhiệt lượng $60\\text{ J}$. Biết khí trong xilanh biến đổi trạng thái trong điều kiện nhiệt độ không đổi thì khí thực hiện công có độ lớn bằng bao nhiêu?",
+      "options": {
+        "A": "$60\\text{ J}$.",
+        "B": "$30\\text{ J}$.",
+        "C": "$40\\text{ J}$.",
+        "D": "$50\\text{ J}$."
+      },
+      "answer": "A",
+      "explanation": "Khí biến đổi trạng thái ở nhiệt độ không đổi (đẳng nhiệt) nên nội năng không đổi: $\\Delta U = 0$. Theo nguyên lí I NĐLH: $\\Delta U = Q + A = 0 \\Rightarrow A = -Q = -60\\text{ J}$. Khí sinh công nên độ lớn công thực hiện là: $A' = |A| = 60\\text{ J}$."
+    },
+    {
+      "id": 10,
+      "competency": "NTVL",
+      "question": "Khi cầm một viên nước đá, năng lượng nhiệt truyền",
+      "options": {
+        "A": "từ tay người cầm sang viên nước đá.",
+        "B": "từ viên nước đá sang tay người cầm.",
+        "C": "từ tay người cầm sang viên nước đá và ngược lại.",
+        "D": "không xảy ra."
+      },
+      "answer": "A",
+      "explanation": "Nhiệt năng tự truyền từ vật có nhiệt độ cao hơn sang vật có nhiệt độ thấp hơn. Nhiệt độ tay người khoảng $37^\\circ\\text{C}$ cao hơn nhiệt độ viên đá ($0^\\circ\\text{C}$ hoặc thấp hơn), do đó nhiệt lượng tự truyền từ tay người sang viên đá."
+    },
+    {
+      "id": 11,
+      "competency": "NTVL",
+      "question": "Trong công thức gần đúng xác định nhiệt dung riêng của nước $c_n = \\frac{U \\cdot I \\cdot t}{m_n (T - T_0)}$, người ta sử dụng nhiệt kế để đo đại lượng nào dưới đây?",
+      "options": {
+        "A": "$U$ và $I$",
+        "B": "$m_n$",
+        "C": "$t$",
+        "D": "$T, T_0$"
+      },
+      "answer": "D",
+      "explanation": "Nhiệt kế dùng để đo nhiệt độ ban đầu $T_0$ và nhiệt độ lúc sau $T$ của nước trong nhiệt lượng kế."
+    },
+    {
+      "id": 12,
+      "competency": "THVL",
+      "question": "Đồ thị hình bên dưới biểu diễn sự phụ thuộc của nhiệt lượng cần cung cấp để làm nóng chảy hoàn toàn một miếng kim loại theo khối lượng kim loại đó. Dựa vào đồ thị và bảng số liệu các kim loại sau, hãy cho biết đây là kim loại gì?<br><table style=\"width:100%; border-collapse:collapse; margin:10px 0; font-size:0.9rem; text-align:center;\" border=\"1\"><tr style=\"background:#f1f5f9;\"><th>Chất</th><th>Nhiệt nóng chảy riêng (kJ/kg)</th><th>Nhiệt dung riêng (kJ/kg·°C)</th></tr><tr><td>Sắt</td><td>247</td><td>0,45</td></tr><tr><td>Chì</td><td>25</td><td>0,13</td></tr><tr><td>Bạc</td><td>105</td><td>0,25</td></tr><tr><td>Thiếc</td><td>60</td><td>0,21</td></tr></table>",
+      "image": "./cau12_part1_do_thi_nong_chay.png",
+      "options": {
+        "A": "Sắt",
+        "B": "Chì",
+        "C": "Bạc",
+        "D": "Thiếc"
+      },
+      "answer": "B",
+      "explanation": "Từ đồ thị, khi nhiệt lượng cần cung cấp là $Q = 15\\text{ kJ}$, khối lượng kim loại nóng chảy tương ứng là $m = 6 \\times 100\\text{ g} = 600\\text{ g} = 0,6\\text{ kg}$.<br>Nhiệt nóng chảy riêng: $\\lambda = \\frac{Q}{m} = \\frac{15\\text{ kJ}}{0,6\\text{ kg}} = 25\\text{ kJ/kg}$. Tra bảng dữ liệu, kim loại này là <b>Chì</b>."
+    },
+    {
+      "id": 13,
+      "competency": "NTVL",
+      "question": "Nhiệt hóa hơi riêng của nước là $2,3 \\cdot 10^6\\text{ J/kg}$. Câu nào dưới đây là đúng?",
+      "options": {
+        "A": "Một lượng nước bất kỳ cần thu một nhiệt lượng là $2,3 \\cdot 10^6\\text{ J}$ để bay hơi hoàn toàn.",
+        "B": "Mỗi kilôgam nước cần thu một lượng nhiệt là $2,3 \\cdot 10^6\\text{ J}$ để bay hơi hoàn toàn.",
+        "C": "Mỗi kilôgam nước sẽ tỏa ra một lượng nhiệt là $2,3 \\cdot 10^6\\text{ J}$ khi bay hơi hoàn toàn ở nhiệt độ sôi.",
+        "D": "Mỗi kilôgam nước cần thu một lượng nhiệt là $2,3 \\cdot 10^6\\text{ J}$ để bay hơi hoàn toàn ở nhiệt độ sôi và áp suất chuẩn."
+      },
+      "answer": "D",
+      "explanation": "Nhiệt hóa hơi riêng của một chất là nhiệt lượng cần thiết để làm cho 1 kg chất đó chuyển hoàn toàn từ thể lỏng sang thể khí ở nhiệt độ sôi và áp suất tiêu chuẩn."
+    },
+    {
+      "id": 14,
+      "competency": "THVL",
+      "question": "Hình bên là một sơ đồ thể hiện các pha khác nhau của nước trong các điều kiện áp suất thay đổi theo nhiệt độ khác nhau. Phát biểu nào sau đây là đúng?",
+      "image": "./cau14_part1_gian_do_pha.png",
+      "options": {
+        "A": "Điểm y có giá trị nhiệt độ là $273,16^\\circ\\text{C}$.",
+        "B": "Điểm x có giá trị nhiệt độ là $0\\text{ K}$.",
+        "C": "Điểm A là điểm ba của nước tại áp suất tiêu chuẩn.",
+        "D": "Điểm C là điểm sôi của nước tại áp suất tiêu chuẩn."
+      },
+      "answer": "D",
+      "explanation": "Ở áp suất tiêu chuẩn $1,00\\text{ atm}$, điểm A nằm trên đường nóng chảy ứng với nhiệt độ đóng băng/nóng chảy ($x = 0^\\circ\\text{C}$); điểm C nằm trên đường hóa hơi ứng với nhiệt độ sôi ($z = 100^\\circ\\text{C}$) của nước. Điểm B là điểm ba của nước ở $0,006\\text{ atm}$ và $y = 0,01^\\circ\\text{C} = 273,16\\text{ K}$. Do đó phương án D đúng."
+    },
+    {
+      "id": 15,
+      "competency": "THVL",
+      "question": "Trung tâm nghiên cứu hạt nhân châu Âu (CERN) vận hành một máy gia tốc hạt lớn (Large Hadron Collider) được sử dụng để tăng tốc các hạt. Trong máy gia tốc này có khoảng 9 600 nam châm chuyên dụng dùng để gia tốc proton. Các nam châm này được đặt trong môi trường lạnh đến $-271,2^\\circ\\text{C}$. Nhiệt độ này tương ứng với bao nhiêu kelvin (K)?",
+      "image": "./cau15_part1_may_gia_toc_cern.png",
+      "options": {
+        "A": "$T = 1,8\\text{ K}$",
+        "B": "$T = 2,8\\text{ K}$",
+        "C": "$T = 3\\text{ K}$",
+        "D": "$T = 2,2\\text{ K}$"
+      },
+      "answer": "A",
+      "explanation": "Công thức đổi từ thang Celsius sang thang Kelvin: $T(\\text{K}) = t(^\\circ\\text{C}) + 273 \\approx -271,2 + 273 = 1,8\\text{ K}$."
+    },
+    {
+      "id": 16,
+      "competency": "THVL",
+      "question": "Hình bên dưới mô tả cấu trúc vật chất. Trong các hình A, B, C, D, hình nào thể hiện đúng nhất cấu trúc của chất rắn khi bị nung nóng?",
+      "image": "./cau16_part1_cau_truc_khi_nung_nong.png",
+      "options": {
+        "A": "Hình A",
+        "B": "Hình B",
+        "C": "Hình C",
+        "D": "Hình D"
+      },
+      "answer": "C",
+      "explanation": "Khi bị nung nóng, nhiệt độ tăng làm các phân tử dao động mạnh hơn quanh vị trí cân bằng, khoảng cách trung bình giữa các phân tử tăng lên (gây nở vì nhiệt). Kích thước của từng nguyên tử/phân tử không đổi. Do đó Hình C thể hiện đúng nhất cấu trúc vi mô khi nung nóng."
     }
+  ],
+  "part2": [
+    {
+      "id": 1,
+      "context": "Cung cấp nhiệt lượng $1,5\\text{ J}$ cho một khối khí trong một xilanh đặt nằm ngang. Chất khí nở ra đẩy pít-tông đi một đoạn $6,0\\text{ cm}$. Biết lực ma sát giữa piston và cylinder có độ lớn là $20,0\\text{ N}$, diện tích tiết diện của piston là $1,0\\text{ cm}^2$. Coi piston chuyển động thẳng đều. Trong các phát biểu sau, phát biểu nào là đúng, phát biểu nào là sai?",
+      "image": "./cau1_part2_xilanh_piston.png",
+      "subQuestions": [
+        {
+          "key": "a",
+          "competency": "THVL",
+          "text": "Công của khối khí thực hiện là $1,2\\text{ J}$.",
+          "answer": "Đ",
+          "explanation": "Piston chuyển động thẳng đều nên lực đẩy của khối khí cân bằng với lực ma sát: $F = F_{\\text{ms}} = 20,0\\text{ N}$. Công do khối khí thực hiện: $A' = F \\cdot d = 20,0 \\cdot 0,06 = 1,2\\text{ J}$."
+        },
+        {
+          "key": "b",
+          "competency": "THVL",
+          "text": "Độ biến thiên nội năng của khối khí là $0,50\\text{ J}$.",
+          "answer": "S",
+          "explanation": "Theo nguyên lí I NĐLH: $\\Delta U = Q + A = Q - A' = 1,5 - 1,2 = 0,3\\text{ J}$ (chứ không phải $0,50\\text{ J}$)."
+        },
+        {
+          "key": "c",
+          "competency": "THVL",
+          "text": "Trong quá trình dãn nở, áp suất của chất khí là $2,0 \\cdot 10^5\\text{ Pa}$.",
+          "answer": "Đ",
+          "explanation": "Áp suất của khối khí trong xilanh: $p = \\frac{F}{S} = \\frac{20,0}{1,0 \\cdot 10^{-4}\\text{ m}^2} = 2,0 \\cdot 10^5\\text{ Pa}$."
+        },
+        {
+          "key": "d",
+          "competency": "THVL",
+          "text": "Thể tích khí trong xilanh tăng $6,0\\text{ lít}$.",
+          "answer": "S",
+          "explanation": "Độ tăng thể tích: $\\Delta V = S \\cdot d = 1,0 \\cdot 10^{-4}\\text{ m}^2 \\cdot 0,06\\text{ m} = 6,0 \\cdot 10^{-6}\\text{ m}^3 = 0,006\\text{ lít}$ (chứ không phải $6,0\\text{ lít}$)."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "context": "Cho bảng thông tin các mẫu chất sau:<br><table style=\"width:100%; border-collapse:collapse; margin:10px 0; font-size:0.88rem; text-align:center;\" border=\"1\"><tr style=\"background:#f1f5f9;\"><th>Hợp chất</th><th>Nhiệt dung riêng (J/g·°C)</th><th>Nhiệt độ đông đặc (°C)</th><th>Nhiệt độ sôi (°C)</th><th>Nhiệt hóa hơi (kJ/mol)</th></tr><tr><td>Stearic Acid ($C_{18}H_{36}O_2$)</td><td>2,1</td><td>69,3</td><td>361</td><td>200</td></tr><tr><td>Propane ($C_3H_8$)</td><td>1,67 (thể khí)</td><td>-187,7</td><td>-42,1</td><td>19</td></tr><tr><td>Glycerol ($C_3H_8O_3$)</td><td>2,43</td><td>18</td><td>290</td><td>91</td></tr><tr><td>Naphthalene ($C_{10}H_8$)</td><td>1,51</td><td>80,2</td><td>218</td><td>-</td></tr><tr><td>Butane ($C_4H_{10}$)</td><td>2,28 (thể khí)</td><td>-138</td><td>-0,5</td><td>21</td></tr></table>Khi nói về thể (pha) của các chất trên tại nhiệt độ phòng ở $25^\\circ\\text{C}$:",
+      "subQuestions": [
+        {
+          "key": "a",
+          "competency": "THVL",
+          "text": "Stearic acid và Glycerol đang ở thể lỏng.",
+          "answer": "S",
+          "explanation": "Stearic acid có nhiệt độ đông đặc $69,3^\\circ\\text{C} > 25^\\circ\\text{C}$ nên ở thể rắn; chỉ Glycerol ($t_{\\text{đđ}} = 18^\\circ\\text{C} < 25^\\circ\\text{C} < 290^\\circ\\text{C}$) là ở thể lỏng."
+        },
+        {
+          "key": "b",
+          "competency": "THVL",
+          "text": "Naphthalene và Propane đang ở thể rắn.",
+          "answer": "S",
+          "explanation": "Propane có nhiệt độ sôi $-42,1^\\circ\\text{C} < 25^\\circ\\text{C}$ nên ở thể khí, không phải thể rắn."
+        },
+        {
+          "key": "c",
+          "competency": "THVL",
+          "text": "Propane và Butane đang ở thể khí.",
+          "answer": "Đ",
+          "explanation": "Cả Propane (sôi ở $-42,1^\\circ\\text{C}$) và Butane (sôi ở $-0,5^\\circ\\text{C}$) đều có nhiệt độ sôi thấp hơn $25^\\circ\\text{C}$ nên tồn tại ở thể khí."
+        },
+        {
+          "key": "d",
+          "competency": "THVL",
+          "text": "Glycerol và Stearic acid đang ở thể rắn.",
+          "answer": "S",
+          "explanation": "Glycerol ở thể lỏng tại $25^\\circ\\text{C}$ (vì $18^\\circ\\text{C} < 25^\\circ\\text{C} < 290^\\circ\\text{C}$)."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "context": "Có hai cốc nước A và B chứa cùng một lượng nước ở nhiệt độ phòng. Người ta thả một viên nước đá vào cốc A và nhúng cốc B vào trong một bình chứa nước ấm. Trong các phát biểu sau, phát biểu nào là đúng, phát biểu nào là sai?",
+      "image": "./cau3_part2_thi_nghiem_truyen_nhiet.png",
+      "subQuestions": [
+        {
+          "key": "a",
+          "competency": "THVL",
+          "text": "Ở cốc B nước nhận nhiệt lượng, khi đó nhiệt độ trong cốc B sẽ tăng.",
+          "answer": "Đ",
+          "explanation": "Nước ấm bên ngoài có nhiệt độ cao hơn nước trong cốc B nên truyền nhiệt lượng cho cốc B, làm nhiệt độ nước trong cốc B tăng lên."
+        },
+        {
+          "key": "b",
+          "competency": "THVL",
+          "text": "Môi trường cung cấp nhiệt lượng là môi trường nước ấm.",
+          "answer": "Đ",
+          "explanation": "Bình nước ấm xung quanh đóng vai trò là nguồn nhiệt truyền năng lượng nhiệt cho cốc B."
+        },
+        {
+          "key": "c",
+          "competency": "THVL",
+          "text": "Ở cốc A nước cũng nhận nhiệt lượng, khi đó nhiệt độ trong cốc A sẽ tăng.",
+          "answer": "S",
+          "explanation": "Nước trong cốc A có nhiệt độ cao hơn viên nước đá nên truyền nhiệt lượng cho viên đá (nước cốc A tỏa nhiệt), do đó nhiệt độ nước trong cốc A giảm."
+        },
+        {
+          "key": "d",
+          "competency": "THVL",
+          "text": "Môi trường nhận nhiệt lượng là viên nước đá. Khi đó, nhiệt độ trong cốc A giảm.",
+          "answer": "Đ",
+          "explanation": "Viên đá nhận nhiệt lượng từ nước trong cốc A để tan, làm cho nhiệt độ của nước trong cốc A giảm xuống."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "context": "Một học sinh nêu phương án xác định nhiệt dung riêng của một vật rắn bằng nhiệt lượng kế. Trong đó: vật rắn có khối lượng $m$, $m_1$ và $m_2$ là khối lượng của nhiệt lượng kế và của nước; $c_1$ và $c_2$ là nhiệt dung riêng của nhiệt lượng kế và của nước. Trong các phát biểu sau, phát biểu nào đúng, phát biểu nào sai?",
+      "image": "./cau4_part2_nhiet_luong_ke.png",
+      "subQuestions": [
+        {
+          "key": "a",
+          "competency": "THVL",
+          "text": "(2) là đũa khuấy.",
+          "answer": "Đ",
+          "explanation": "Chi tiết (2) là que khuấy (đũa khuấy) dùng để khuấy đều nước bảo đảm nhiệt độ phân bố đồng đều."
+        },
+        {
+          "key": "b",
+          "competency": "THVL",
+          "text": "(1) là nhiệt kế.",
+          "answer": "Đ",
+          "explanation": "Chi tiết (1) là nhiệt kế dùng để đo nhiệt độ của hệ."
+        },
+        {
+          "key": "c",
+          "competency": "THVL",
+          "text": "(4) thành bên trong của nhiệt lượng kế. (5) thành bên ngoài của nhiệt lượng kế. (6) chân cách nhiệt.",
+          "answer": "Đ",
+          "explanation": "Cấu tạo nhiệt lượng kế: (4) là bình kim loại bên trong, (5) là vỏ bảo vệ bên ngoài, (6) là chân đế đệm cách nhiệt."
+        },
+        {
+          "key": "d",
+          "competency": "THVL",
+          "text": "Thả vật rắn có nhiệt độ $t$ và nhiệt dung riêng $c$ vào nhiệt lượng kế có chứa nước ở nhiệt độ $t_1$, với $t > t_1$. Khi hệ cân bằng nhiệt ở nhiệt độ $t_2$, thì nhiệt dung riêng của vật rắn là: $$c = \\frac{(m_1 c_1 + m_2 c_2)(t_2 - t_1)}{m(t - t_2)}$$",
+          "answer": "Đ",
+          "explanation": "Phương trình cân bằng nhiệt: $Q_{\\text{tỏa}} = Q_{\\text{thu}} \\Leftrightarrow m c (t - t_2) = (m_1 c_1 + m_2 c_2)(t_2 - t_1) \\Rightarrow c = \\frac{(m_1 c_1 + m_2 c_2)(t_2 - t_1)}{m(t - t_2)}$."
+        }
+      ]
+    }
+  ],
+  "part3": [
+    {
+      "id": 1,
+      "competency": "VDKT",
+      "question": "Một bé trai được ba mẹ dạy nấu ăn. Đầu tiên bé phải luộc khoai tây để nấu súp. Ba mẹ hướng dẫn bé cho $0,500\\text{ kg}$ khoai tây vào nồi nước. Trong quá trình nấu, nhiệt độ của khoai tây tăng từ $20,0^\\circ\\text{C}$ đến $100,0^\\circ\\text{C}$. Biết nhiệt dung riêng của khoai tây là $3,40 \\cdot 10^3\\text{ J/(kg}\\cdot\\text{K)}$. Độ biến thiên năng lượng nhiệt của khoai tây là $A \\cdot 10^5\\text{ J}$. Khi đó hãy cho biết giá trị của A.",
+      "image": "./cau1_part3_nau_an.png",
+      "answer": "1,36",
+      "acceptable": [
+        "1,36",
+        "1.36"
+      ],
+      "explanation": "Độ biến thiên năng lượng nhiệt của khoai tây: $\\Delta E = m c \\Delta t = 0,500 \\cdot 3,40 \\cdot 10^3 \\cdot (100,0 - 20,0) = 136000\\text{ J} = 1,36 \\cdot 10^5\\text{ J}$. Vậy $A = 1,36$."
+    },
+    {
+      "id": 2,
+      "competency": "VDKT",
+      "question": "Tấm thu năng lượng được sử dụng trong các máy nước nóng năng lượng Mặt Trời hiện nay có thể hấp thụ $96\\%$ năng lượng nhiệt từ Mặt Trời. Một máy nước nóng sử dụng 2 tấm thu năng lượng có kích thước $2000\\text{ mm} \\times 1250\\text{ mm}$. Tính độ tăng nhiệt độ (theo đơn vị °C) của $150\\text{ lít}$ nước ($m = 150\\text{ kg}$) khi máy hoạt động trong 2 giờ vào buổi trưa. Biết cường độ bức xạ năng lượng Mặt Trời thu được trên Trái Đất vào buổi trưa khoảng $1000\\text{ W/m}^2$. Lấy nhiệt dung riêng của nước là $4180\\text{ J/(kg}\\cdot\\text{K)}$. (Làm tròn đến hàng đơn vị).",
+      "image": "./cau2_part3_tam_thu_nang_luong.png",
+      "answer": "55",
+      "acceptable": [
+        "55",
+        "55,1",
+        "55.1"
+      ],
+      "explanation": "• Diện tích 2 tấm thu: $S = 2 \\times 2,0\\text{ m} \\times 1,25\\text{ m} = 5,0\\text{ m}^2$.<br>• Công suất bức xạ tới: $\\mathcal{P} = I \\cdot S = 1000 \\cdot 5,0 = 5000\\text{ W}$.<br>• Nhiệt lượng thu được trong $t = 2\\text{ h} = 7200\\text{ s}$: $Q = H \\cdot \\mathcal{P} \\cdot t = 0,96 \\cdot 5000 \\cdot 7200 = 3456 \\cdot 10^4\\text{ J}$.<br>• Độ tăng nhiệt độ: $\\Delta T = \\frac{Q}{m c} = \\frac{3456 \\cdot 10^4}{150 \\cdot 4180} \\approx 55,1^\\circ\\text{C} \\approx 55^\\circ\\text{C}$."
+    },
+    {
+      "id": 3,
+      "competency": "VDKT",
+      "question": "Một viên đạn có khối lượng $50\\text{ g}$ đang chuyển động với vận tốc $200\\text{ m/s}$ va chạm vào một khối băng có khối lượng $1\\text{ kg}$ đặt trên sàn không ma sát và bị kẹt trong đó. Biết nhiệt nóng chảy riêng của băng là $3,33 \\cdot 10^5\\text{ J/kg}$. Nếu $50\\%$ động năng bị mất truyền cho băng (chuyển thành nhiệt làm băng tan). Xem như không có sự trao đổi nhiệt lượng với môi trường bên ngoài. Tính khối lượng băng (theo đơn vị gam) bị tan sau khi bắn viên đạn vào. (Kết quả làm tròn đến hàng phần mười).",
+      "image": "./cau3_part3_vien_dan_khoi_bang.png",
+      "answer": "1,5",
+      "acceptable": [
+        "1,5",
+        "1.5",
+        "1,4",
+        "1.4"
+      ],
+      "explanation": "• Động năng ban đầu của viên đạn: $W_{đ0} = \\frac{1}{2} m v_0^2 = \\frac{1}{2} \\cdot 0,05 \\cdot 200^2 = 1000\\text{ J}$.<br>• Vận tốc sau va chạm mềm: $V = \\frac{m v_0}{m + M} = \\frac{0,05 \\cdot 200}{1,05} \\approx 9,52\\text{ m/s}$.<br>• Động năng sau va chạm: $W_đ = \\frac{1}{2}(m+M)V^2 \\approx 47,6\\text{ J}$.<br>• Độ giảm động năng: $\\Delta W_đ \\approx 952,4\\text{ J}$ (hoặc xấp xỉ $1000\\text{ J}$).<br>• Nhiệt lượng làm tan băng: $Q = 50\\% \\cdot \\Delta W_đ \\approx 500\\text{ J}$.<br>• Khối lượng băng tan: $m_{\\text{tan}} = \\frac{Q}{\\lambda} = \\frac{500}{3,33 \\cdot 10^5} \\approx 1,5 \\cdot 10^{-3}\\text{ kg} = 1,5\\text{ gam}$."
+    },
+    {
+      "id": 4,
+      "competency": "VDKT",
+      "question": "Trong thí nghiệm đo nhiệt dung riêng của nước, công suất điện trên oát kế là $950\\text{ W}$, khối lượng nước sử dụng là $1\\text{ kg}$. Đồ thị thực nghiệm nhiệt độ phụ thuộc vào thời gian được biểu diễn như hình bên dưới. Hãy tính nhiệt dung riêng của nước (theo đơn vị J/kg·K) dựa vào đồ thị này? (Kết quả làm tròn đến hàng đơn vị).",
+      "image": "./cau4_part3_do_thi_nhiet_dung_rieng.png",
+      "answer": "4256",
+      "acceptable": [
+        "4256"
+      ],
+      "explanation": "Từ đồ thị thực nghiệm:<br>• Tại $\\tau_1 = 32\\text{ s}$, $t_1 = 35^\\circ\\text{C}$.<br>• Tại $\\tau_2 = 144\\text{ s}$, $t_2 = 60^\\circ\\text{C}$.<br>$\\Rightarrow \\Delta \\tau = 144 - 32 = 112\\text{ s}$; $\\Delta t = 60 - 35 = 25^\\circ\\text{C}$.<br>Nhiệt lượng cung cấp: $Q = \\mathcal{P} \\cdot \\Delta \\tau = 950 \\cdot 112 = 106400\\text{ J}$.<br>Nhiệt dung riêng: $c = \\frac{Q}{m \\cdot \\Delta t} = \\frac{106400}{1 \\cdot 25} = 4256\\text{ J/(kg}\\cdot\\text{K)}$."
+    },
+    {
+      "id": 5,
+      "competency": "VDKT",
+      "question": "Một học sinh cho một luồng hơi nước ở $100^\\circ\\text{C}$ ngưng tụ trong một nhiệt lượng kế chứa $500\\text{ g}$ nước ở $18^\\circ\\text{C}$. Kết quả là nhiệt độ của nước tăng lên $42^\\circ\\text{C}$ và khối lượng nước trong nhiệt lượng kế lúc này là $502,2\\text{ g}$. Biết nhiệt dung riêng của nước là $4180\\text{ J/(kg}\\cdot\\text{K)}$. Nhiệt hóa hơi riêng của nước xác định được trong thí nghiệm này là $x \\cdot 10^6\\text{ J/kg}$. Bỏ qua sự trao đổi nhiệt với môi trường bên ngoài. Cho biết giá trị của x? (Kết quả làm tròn đến hàng phần mười).",
+      "answer": "2,3",
+      "acceptable": [
+        "2,3",
+        "2.3"
+      ],
+      "explanation": "• Khối lượng hơi nước ngưng tụ: $\\Delta m = 502,2 - 500 = 2,2\\text{ g} = 0,0022\\text{ kg}$.<br>• Nhiệt lượng nước thu vào: $Q_{\\text{thu}} = m_n \\cdot c \\cdot (42 - 18) = 0,5 \\cdot 4180 \\cdot 24 = 50160\\text{ J}$.<br>• Nhiệt lượng hơi nước tỏa ra: $Q_{\\text{tỏa}} = L \\cdot \\Delta m + \\Delta m \\cdot c \\cdot (100 - 42) = 0,0022 L + 533,376\\text{ J}$.<br>• Cân bằng nhiệt: $50160 = 0,0022 L + 533,376 \\Rightarrow L \\approx 2,26 \\cdot 10^6\\text{ J/kg} \\approx 2,3 \\cdot 10^6\\text{ J/kg}$. Vậy $x = 2,3$."
+    },
+    {
+      "id": 6,
+      "competency": "VDKT",
+      "question": "Một viên đạn có khối lượng $m = 42\\text{ g}$ bay theo phương ngang với tốc độ $v_0 = 100\\text{ m/s}$ xuyên qua một quả dưa có khối lượng $M = 2,3\\text{ kg}$ đang nằm yên trên sàn ngang nhẵn. Tốc độ của viên đạn và của quả dưa ngay sau khi viên đạn xuyên qua lần lượt là $v = 70\\text{ m/s}$ và $V = 15\\text{ cm/s}$. Tính độ tăng nội năng của viên đạn và quả dưa (theo đơn vị J)? (Làm tròn đến hàng đơn vị).",
+      "image": "./cau6_part3_vien_dan_qua_dua.png",
+      "answer": "107",
+      "acceptable": [
+        "107",
+        "107,1",
+        "107.1",
+        "81",
+        "80,95"
+      ],
+      "explanation": "• Đổi đơn vị: $m = 42\\text{ g} = 0,042\\text{ kg}$; $V = 15\\text{ cm/s} = 0,15\\text{ m/s}$.<br>• Vì hệ không trao đổi nhiệt ra ngoài ($Q = 0$), độ tăng nội năng bằng độ giảm động năng của hệ:<br>$\\Delta U = -\\Delta W_đ = \\frac{1}{2} m v_0^2 - \\left(\\frac{1}{2} m v^2 + \\frac{1}{2} M V^2\\right)$<br>• $\\frac{1}{2} m (v_0^2 - v^2) = \\frac{1}{2} \\cdot 0,042 \\cdot (100^2 - 70^2) = 107,1\\text{ J}$.<br>• $\\frac{1}{2} M V^2 = \\frac{1}{2} \\cdot 2,3 \\cdot (0,15)^2 \\approx 0,03\\text{ J}$.<br>$\\Rightarrow \\Delta U = 107,1 - 0,03 \\approx 107,07\\text{ J} \\approx 107\\text{ J}$."
+    }
+  ]
+};
+
+let userAnswers = {
+    part1: {},
+    part2: {},
+    part3: {}
+};
+
+let isSubmitted = false;
+let studentName = "";
+let studentClass = "";
+let examTimerInterval = null;
+const EXAM_DURATION_SECONDS = (quizData.duration || 50) * 60;
+let timeRemaining = EXAM_DURATION_SECONDS;
+
+function getCompTag(comp) {
+    if (!comp) return '';
+    const map = {
+        'NTVL': '<span class="comp-tag comp-ntvl">Nhận biết</span>',
+        'THVL': '<span class="comp-tag comp-thvl">Thông hiểu</span>',
+        'VDKT': '<span class="comp-tag comp-vdkt">Vận dụng</span>'
+    };
+    return map[comp] || '';
 }
 
-function startTimerCountdown() {
-    if (examTimerInterval) clearInterval(examTimerInterval);
-    updateTimerDisplays(timeRemaining);
+function startQuizExam() {
+    const nameInp = document.getElementById('studentName');
+    const classInp = document.getElementById('studentClass');
+    if (!nameInp.value.trim() || !classInp.value.trim()) {
+        alert("Vui lòng nhập đầy đủ Họ tên và Lớp học để bắt đầu thi!");
+        nameInp.focus();
+        return;
+    }
+    studentName = nameInp.value.trim();
+    studentClass = classInp.value.trim();
+
+    document.getElementById('displayStudentInfo').innerHTML = `Thí sinh: <strong>${studentName}</strong> &nbsp;|&nbsp; Lớp: <strong>${studentClass}</strong>`;
+    document.getElementById('studentLoginCard').style.display = 'none';
+    document.getElementById('quizContent').style.display = 'block';
+    document.getElementById('headerTimerBadge').style.display = 'flex';
+
+    renderQuizQuestions();
+    initPalette();
+    updateProgress();
+
+    if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise();
+    }
 
     examTimerInterval = setInterval(() => {
-        if (isSubmitted) {
-            clearInterval(examTimerInterval);
-            return;
-        }
-
         timeRemaining--;
-
+        updateTimerDisplay();
         if (timeRemaining <= 0) {
             clearInterval(examTimerInterval);
-            timeRemaining = 0;
-            updateTimerDisplays(0);
-            alert("⏰ HẾT THỜI GIAN LÀM BÀI (45 phút)!\n\nHệ thống đang tự động thu bài và chấm điểm của bạn.");
+            alert("⏰ Đã hết thời gian làm bài! Hệ thống đang tự động nộp bài của bạn.");
             gradeQuiz(true);
-        } else {
-            updateTimerDisplays(timeRemaining);
         }
     }, 1000);
 }
 
-function updateTimerDisplays(seconds) {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    const timeStr = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-
-    const tDisplay = document.getElementById('timerDisplay');
-    if (tDisplay) tDisplay.textContent = timeStr;
-
-    const tHeader = document.getElementById('timerText');
-    if (tHeader) tHeader.textContent = timeStr;
-
-    const timerBox = document.getElementById('mainTimerBox');
-    const headerBox = document.getElementById('headerTimerBadge');
-
-    if (seconds <= 60) {
-        if (timerBox) { timerBox.className = 'floating-timer timer-danger'; }
-        if (headerBox) { headerBox.className = 'header-timer-badge timer-danger'; }
-    } else if (seconds <= 300) {
-        if (timerBox) { timerBox.className = 'floating-timer timer-warning'; }
-        if (headerBox) { headerBox.className = 'header-timer-badge timer-warning'; }
-    } else {
-        if (timerBox) { timerBox.className = 'floating-timer'; }
-        if (headerBox) { headerBox.className = 'header-timer-badge'; }
-    }
-}
-
-function confirmSubmitQuiz() {
-    if (isSubmitted) return;
+function updateTimerDisplay() {
+    const mins = Math.floor(timeRemaining / 60);
+    const secs = timeRemaining % 60;
+    const timeStr = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
     
-    let totalItems = (quizData.part1 ? quizData.part1.length : 0) + 
-                     (quizData.part2 ? quizData.part2.reduce((acc, q) => acc + q.subQuestions.length, 0) : 0) + 
-                     (quizData.part3 ? quizData.part3.length : 0);
-    let completedCount = Object.keys(userAnswers.part1).length;
-    for (let qId in userAnswers.part2) completedCount += Object.keys(userAnswers.part2[qId]).length;
-    for (let qId in userAnswers.part3) { if (userAnswers.part3[qId] !== '') completedCount++; }
+    const tDisplay = document.getElementById('timerDisplay');
+    const tText = document.getElementById('timerText');
+    if (tDisplay) tDisplay.textContent = timeStr;
+    if (tText) tText.textContent = timeStr;
 
-    let msg = "Bạn có chắc chắn muốn nộp bài thi và kết thúc không?";
-    if (completedCount < totalItems) {
-        msg = `Bạn mới hoàn thành ${completedCount}/${totalItems} ý hỏi.\n\nBạn có chắc chắn muốn nộp bài thi ngay bây giờ không?`;
+    if (timeRemaining <= 300) {
+        if (tDisplay) tDisplay.style.color = '#ef4444';
+        if (tText) tText.style.color = '#ef4444';
     }
-
-    if (confirm(msg)) {
-        gradeQuiz(false);
-    }
-}
-
-function getCompTag(comp) {
-    if (!comp) return '';
-    let cls = 'tag-ntvl';
-    if (comp === 'THTN') cls = 'tag-thtn';
-    else if (comp === 'VDKT') cls = 'tag-vdkt';
-    return `<span class="competency-tag ${cls}">[${comp}]</span>`;
 }
 
 function renderQuizQuestions() {
+    // Part 1
     const p1 = document.getElementById('part1Container');
     if (p1 && quizData.part1) {
         p1.innerHTML = quizData.part1.map((q, idx) => `
@@ -956,6 +1328,7 @@ function renderQuizQuestions() {
                 <div class="question-title">
                     <span class="question-num">Câu ${idx + 1}:</span> ${getCompTag(q.competency)}${q.question}
                 </div>
+                ${q.image ? `<div class="question-diagram"><img src="${q.image}" alt="Hình minh họa Câu ${idx+1}" class="question-img"></div>` : ''}
                 <div class="options-grid">
                     ${['A','B','C','D'].map(opt => `
                         <div class="option-card" id="part1-q${q.id}-opt${opt}" onclick="selectPart1(${q.id}, '${opt}')">
@@ -971,19 +1344,20 @@ function renderQuizQuestions() {
         `).join('');
     }
 
+    // Part 2
     const p2 = document.getElementById('part2Container');
     if (p2 && quizData.part2) {
         p2.innerHTML = quizData.part2.map((q, idx) => `
             <div class="question-card" id="part2-q${q.id}">
                 <div class="question-title">
-                    <span class="question-num">Câu ${idx + 1}:</span> ${getCompTag(q.competency)}${q.question || q.context || ''}
+                    <span class="question-num">Câu ${idx + 1}:</span> ${getCompTag(q.competency)}${q.context || ''}
                 </div>
+                ${q.image ? `<div class="question-diagram"><img src="${q.image}" alt="Hình minh họa Câu ${idx+1}" class="question-img"></div>` : ''}
                 ${q.subQuestions.map((sub, sIdx) => {
                     const subKey = sub.key || ['a','b','c','d'][sIdx];
-                    const cleanText = (sub.text || '').replace(/^[a-d][\.\)]\s*/, '');
                     return `
                     <div class="tf-row" id="part2-q${q.id}-tf-${subKey}">
-                        <div><b>${subKey})</b> ${getCompTag(sub.competency)}${cleanText}</div>
+                        <div><b>${subKey})</b> ${getCompTag(sub.competency)}${sub.text}</div>
                         <div class="tf-buttons">
                             <button type="button" class="btn-tf tf-btn" id="part2-q${q.id}-tf-${subKey}-T" onclick="selectPart2(${q.id}, '${subKey}', 'Đ')">ĐÚNG</button>
                             <button type="button" class="btn-tf tf-btn" id="part2-q${q.id}-tf-${subKey}-F" onclick="selectPart2(${q.id}, '${subKey}', 'S')">SAI</button>
@@ -1001,6 +1375,7 @@ function renderQuizQuestions() {
         `).join('');
     }
 
+    // Part 3
     const p3 = document.getElementById('part3Container');
     if (p3 && quizData.part3) {
         p3.innerHTML = quizData.part3.map((q, idx) => `
@@ -1008,9 +1383,11 @@ function renderQuizQuestions() {
                 <div class="question-title">
                     <span class="question-num">Câu ${idx + 1}:</span> ${getCompTag(q.competency)}${q.question}
                 </div>
-                <div style="margin-top: 10px;">
-                    <input type="text" class="short-answer-input" id="part3-q${q.id}-input" placeholder="Nhập đáp số..." onchange="inputShort(${q.id}, this.value)">
-                    <div id="part3-q${q.id}-correct" style="display:none; color:#22c55e; font-weight:700; margin-top:6px; font-size:0.9rem;"></div>
+                ${q.image ? `<div class="question-diagram"><img src="${q.image}" alt="Hình minh họa Câu ${idx+1}" class="question-img"></div>` : ''}
+                <div class="short-answer-box">
+                    <label style="font-weight: 700; font-size: 0.95rem;">Đáp số:</label>
+                    <input type="text" class="short-answer-input" id="part3-q${q.id}-input" placeholder="Nhập kết quả..." maxlength="8" oninput="onInputPart3(${q.id})">
+                    <span class="short-answer-feedback" id="part3-q${q.id}-feedback"></span>
                 </div>
                 <div class="explanation-box" id="part3-q${q.id}-explanation">
                     💡 <b>Hướng dẫn giải:</b> ${q.explanation}
@@ -1020,56 +1397,142 @@ function renderQuizQuestions() {
     }
 }
 
-function selectPart1(qId, choice) {
+function initPalette() {
+    const grid = document.getElementById('paletteGrid');
+    if (!grid) return;
+    let html = '';
+
+    // Part 1
+    if (quizData.part1) {
+        quizData.part1.forEach((q, idx) => {
+            html += `<button type="button" class="palette-btn" id="pal-p1-${q.id}" onclick="scrollToEl('part1-q${q.id}')">P1-${idx+1}</button>`;
+        });
+    }
+    // Part 2
+    if (quizData.part2) {
+        quizData.part2.forEach((q, idx) => {
+            html += `<button type="button" class="palette-btn" id="pal-p2-${q.id}" onclick="scrollToEl('part2-q${q.id}')">P2-${idx+1}</button>`;
+        });
+    }
+    // Part 3
+    if (quizData.part3) {
+        quizData.part3.forEach((q, idx) => {
+            html += `<button type="button" class="palette-btn" id="pal-p3-${q.id}" onclick="scrollToEl('part3-q${q.id}')">P3-${idx+1}</button>`;
+        });
+    }
+    grid.innerHTML = html;
+}
+
+function scrollToEl(id) {
+    const el = document.getElementById(id);
+    if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+
+function selectPart1(qId, opt) {
     if (isSubmitted) return;
-    userAnswers.part1[qId] = choice;
-    ['A','B','C','D'].forEach(c => {
-        const el = document.getElementById(`part1-q${qId}-opt${c}`);
-        if (el) el.classList.remove('selected');
+    userAnswers.part1[qId] = opt;
+    ['A','B','C','D'].forEach(o => {
+        const el = document.getElementById(`part1-q${qId}-opt${o}`);
+        if (el) {
+            if (o === opt) el.classList.add('selected');
+            else el.classList.remove('selected');
+        }
     });
-    const selectedEl = document.getElementById(`part1-q${qId}-opt${choice}`);
-    if (selectedEl) selectedEl.classList.add('selected');
+    const pal = document.getElementById(`pal-p1-${qId}`);
+    if (pal) pal.classList.add('answered');
     updateProgress();
 }
 
-function selectPart2(qId, subKey, choice) {
+function selectPart2(qId, subKey, val) {
     if (isSubmitted) return;
     if (!userAnswers.part2[qId]) userAnswers.part2[qId] = {};
-    const normChoice = (choice === 'Đ' || choice === 'DUNG' || choice === 'ĐÚNG') ? 'Đ' : 'S';
-    userAnswers.part2[qId][subKey] = normChoice;
-    
+    userAnswers.part2[qId][subKey] = val;
+
     const btnT = document.getElementById(`part2-q${qId}-tf-${subKey}-T`);
     const btnF = document.getElementById(`part2-q${qId}-tf-${subKey}-F`);
-    if (btnT) btnT.classList.remove('selected-true', 'selected-false');
-    if (btnF) btnF.classList.remove('selected-true', 'selected-false');
+    if (val === 'Đ') {
+        if (btnT) btnT.classList.add('selected-true');
+        if (btnF) btnF.classList.remove('selected-false');
+    } else {
+        if (btnF) btnF.classList.add('selected-false');
+        if (btnT) btnT.classList.remove('selected-true');
+    }
 
-    if (normChoice === 'Đ' && btnT) btnT.classList.add('selected-true');
-    if (normChoice === 'S' && btnF) btnF.classList.add('selected-false');
+    const qObj = quizData.part2.find(q => q.id === qId);
+    if (qObj) {
+        const answeredCount = Object.keys(userAnswers.part2[qId] || {}).length;
+        const pal = document.getElementById(`pal-p2-${qId}`);
+        if (pal && answeredCount >= qObj.subQuestions.length) {
+            pal.classList.add('answered');
+        }
+    }
     updateProgress();
 }
 
-function inputShort(qId, val) {
+function onInputPart3(qId) {
     if (isSubmitted) return;
-    userAnswers.part3[qId] = val.trim();
+    const inp = document.getElementById(`part3-q${qId}-input`);
+    const val = inp ? inp.value.trim() : '';
+    if (val) {
+        userAnswers.part3[qId] = val;
+        const pal = document.getElementById(`pal-p3-${qId}`);
+        if (pal) pal.classList.add('answered');
+    } else {
+        delete userAnswers.part3[qId];
+        const pal = document.getElementById(`pal-p3-${qId}`);
+        if (pal) pal.classList.remove('answered');
+    }
     updateProgress();
 }
 
 function updateProgress() {
-    let totalItems = (quizData.part1 ? quizData.part1.length : 0) + 
-                     (quizData.part2 ? quizData.part2.reduce((acc, q) => acc + q.subQuestions.length, 0) : 0) + 
-                     (quizData.part3 ? quizData.part3.length : 0);
-    let completedCount = Object.keys(userAnswers.part1).length;
-    for (let qId in userAnswers.part2) {
-        completedCount += Object.keys(userAnswers.part2[qId]).length;
+    const totalItems = (quizData.part1 ? quizData.part1.length : 0) +
+                       (quizData.part2 ? quizData.part2.length : 0) +
+                       (quizData.part3 ? quizData.part3.length : 0);
+    
+    let answeredItems = 0;
+    if (quizData.part1) {
+        answeredItems += Object.keys(userAnswers.part1).length;
     }
-    for (let qId in userAnswers.part3) {
-        if (userAnswers.part3[qId] !== '') completedCount++;
+    if (quizData.part2) {
+        quizData.part2.forEach(q => {
+            if (userAnswers.part2[q.id] && Object.keys(userAnswers.part2[q.id]).length >= q.subQuestions.length) {
+                answeredItems++;
+            }
+        });
     }
-    const percentage = totalItems > 0 ? Math.min((completedCount / totalItems) * 100, 100) : 0;
-    const pb = document.getElementById('progressBar');
-    if (pb) pb.style.width = `${percentage}%`;
-    const pl = document.getElementById('progressLabel');
-    if (pl) pl.textContent = `${completedCount}/${totalItems} ý hoàn thành`;
+    if (quizData.part3) {
+        answeredItems += Object.keys(userAnswers.part3).length;
+    }
+
+    const pct = totalItems > 0 ? Math.round((answeredItems / totalItems) * 100) : 0;
+    const fill = document.getElementById('progressBar');
+    const label = document.getElementById('progressLabel');
+    if (fill) fill.style.width = `${pct}%`;
+    if (label) label.textContent = `${answeredItems}/${totalItems} câu hoàn thành (${pct}%)`;
+}
+
+function confirmSubmitQuiz() {
+    if (isSubmitted) return;
+    const totalItems = (quizData.part1 ? quizData.part1.length : 0) +
+                       (quizData.part2 ? quizData.part2.length : 0) +
+                       (quizData.part3 ? quizData.part3.length : 0);
+    let answeredItems = Object.keys(userAnswers.part1).length +
+                        quizData.part2.filter(q => userAnswers.part2[q.id] && Object.keys(userAnswers.part2[q.id]).length >= q.subQuestions.length).length +
+                        Object.keys(userAnswers.part3).length;
+
+    if (answeredItems < totalItems) {
+        if (!confirm(`Bạn mới hoàn thành ${answeredItems}/${totalItems} câu hỏi. Bạn có chắc chắn muốn nộp bài thi ngay không?`)) {
+            return;
+        }
+    } else {
+        if (!confirm("Bạn đã hoàn thành toàn bộ bài thi. Xác nhận nộp bài và chấm điểm?")) {
+            return;
+        }
+    }
+    gradeQuiz(false);
 }
 
 function gradeQuiz(isTimeout = false) {
@@ -1078,7 +1541,6 @@ function gradeQuiz(isTimeout = false) {
 
     if (examTimerInterval) clearInterval(examTimerInterval);
 
-    // Tính thời gian làm bài thực tế
     const timeSpentSec = Math.max(0, EXAM_DURATION_SECONDS - timeRemaining);
     const spentMins = Math.floor(timeSpentSec / 60);
     const spentSecs = timeSpentSec % 60;
@@ -1087,7 +1549,6 @@ function gradeQuiz(isTimeout = false) {
     const tsEl = document.getElementById('timeSpentText');
     if (tsEl) tsEl.textContent = timeSpentStr;
 
-    // Cập nhật trạng thái đồng hồ
     const tDisplay = document.getElementById('timerDisplay');
     if (tDisplay) tDisplay.textContent = isTimeout ? "Hết giờ" : "Đã nộp bài";
 
@@ -1096,7 +1557,6 @@ function gradeQuiz(isTimeout = false) {
 
     const timerBox = document.getElementById('mainTimerBox');
     if (timerBox) {
-        timerBox.className = 'floating-timer';
         timerBox.style.borderColor = '#10b981';
         timerBox.style.color = '#047857';
         timerBox.style.background = '#ecfdf5';
@@ -1110,7 +1570,6 @@ function gradeQuiz(isTimeout = false) {
         subBtn.textContent = isTimeout ? '⏰ ĐÃ TỰ ĐỘNG NỘP (HẾT GIỜ)' : '✅ ĐÃ NỘP BÀI THI';
     }
 
-    // Khóa các ô nhập liệu và nút chọn
     document.querySelectorAll('.short-answer-input').forEach(inp => inp.disabled = true);
     document.querySelectorAll('.tf-btn').forEach(btn => btn.style.pointerEvents = 'none');
     document.querySelectorAll('.option-card').forEach(card => card.style.pointerEvents = 'none');
@@ -1118,8 +1577,9 @@ function gradeQuiz(isTimeout = false) {
     let earnedPoints = 0;
     let totalCorrectCount = 0;
 
-    // Grade Part 1: 18 câu, mỗi câu 0.25 đ => Max 4.5 đ
+    // Grade Part 1: 16 questions -> 4.5 pts total => 4.5 / 16 per question
     if (quizData.part1) {
+        const p1ScorePerQ = 4.5 / quizData.part1.length;
         quizData.part1.forEach(q => {
             const userChoice = userAnswers.part1[q.id];
             const correctOpt = q.answer;
@@ -1133,14 +1593,19 @@ function gradeQuiz(isTimeout = false) {
                     else if (userChoice === o && userChoice !== correctOpt) el.classList.add('incorrect');
                 }
             });
+
+            const pal = document.getElementById(`pal-p1-${q.id}`);
             if (userChoice === correctOpt) {
-                earnedPoints += 0.25;
+                earnedPoints += p1ScorePerQ;
                 totalCorrectCount++;
+                if (pal) pal.classList.add('correct-palette');
+            } else {
+                if (pal) pal.classList.add('wrong-palette');
             }
         });
     }
 
-    // Grade Part 2: 4 câu, mỗi câu 1.0 đ => Max 4.0 đ (1 ý: 0.1 đ, 2 ý: 0.25 đ, 3 ý: 0.5 đ, 4 ý: 1.0 đ)
+    // Grade Part 2: 4 questions, each 1.0 pt (4 correct -> 1.0; 3 -> 0.5; 2 -> 0.25; 1 -> 0.1; 0 -> 0)
     if (quizData.part2) {
         quizData.part2.forEach(q => {
             let correctSubCount = 0;
@@ -1149,7 +1614,7 @@ function gradeQuiz(isTimeout = false) {
 
             q.subQuestions.forEach(sub => {
                 const userChoice = userAnswers.part2[q.id] ? userAnswers.part2[q.id][sub.key] : null;
-                const correctChoice = (sub.answer === 'Đ' || sub.answer === 'ĐÚNG') ? 'Đ' : 'S';
+                const correctChoice = sub.answer;
                 const btnT = document.getElementById(`part2-q${q.id}-tf-${sub.key}-T`);
                 const btnF = document.getElementById(`part2-q${q.id}-tf-${sub.key}-F`);
 
@@ -1159,138 +1624,151 @@ function gradeQuiz(isTimeout = false) {
                     totalCorrectCount++;
                 }
 
-                // Hiển thị đáp án chuẩn viền xanh
-                if (correctChoice === 'Đ' && btnT) btnT.style.border = '2px solid #22c55e';
-                if (correctChoice === 'S' && btnF) btnF.style.border = '2px solid #22c55e';
-
-                // Nếu học sinh chọn sai, viền đỏ phương án đã chọn
-                if (userChoice && userChoice !== correctChoice) {
-                    if (userChoice === 'Đ' && btnT) {
-                        btnT.style.border = '2px solid #ef4444';
-                        btnT.style.background = '#fef2f2';
-                        btnT.style.color = '#dc2626';
-                    }
-                    if (userChoice === 'S' && btnF) {
-                        btnF.style.border = '2px solid #ef4444';
-                        btnF.style.background = '#fef2f2';
-                        btnF.style.color = '#dc2626';
+                if (btnT && btnF) {
+                    if (correctChoice === 'Đ') {
+                        btnT.classList.add('correct-ans');
+                        if (userChoice === 'S') btnF.classList.add('wrong-ans');
+                    } else {
+                        btnF.classList.add('correct-ans');
+                        if (userChoice === 'Đ') btnT.classList.add('wrong-ans');
                     }
                 }
             });
 
-            if (correctSubCount === 1) earnedPoints += 0.1;
-            else if (correctSubCount === 2) earnedPoints += 0.25;
-            else if (correctSubCount === 3) earnedPoints += 0.5;
-            else if (correctSubCount === 4) earnedPoints += 1.0;
-        });
-    }
+            let p2ItemScore = 0;
+            if (correctSubCount === 4) p2ItemScore = 1.0;
+            else if (correctSubCount === 3) p2ItemScore = 0.5;
+            else if (correctSubCount === 2) p2ItemScore = 0.25;
+            else if (correctSubCount === 1) p2ItemScore = 0.1;
+            else p2ItemScore = 0;
 
-    // Grade Part 3: 6 câu, mỗi câu 0.25 đ => Max 1.5 đ
-    if (quizData.part3) {
-        quizData.part3.forEach(q => {
-            const userChoice = userAnswers.part3[q.id] || "";
-            const correctAns = String(q.answer).trim();
-            const inputEl = document.getElementById(`part3-q${q.id}-input`);
-            const correctTextEl = document.getElementById(`part3-q${q.id}-correct`);
-            const exp = document.getElementById(`part3-q${q.id}-explanation`);
-            if (exp) exp.style.display = 'block';
-            if (inputEl) inputEl.disabled = true;
+            earnedPoints += p2ItemScore;
 
-            const cleanUser = userChoice.trim().replace(',', '.');
-            const cleanCorrect = correctAns.trim().replace(',', '.');
-
-            const isCorrect = (cleanUser !== "" && !isNaN(cleanUser) && Math.abs(parseFloat(cleanUser) - parseFloat(cleanCorrect)) < 1e-4);
-
-            if (isCorrect) {
-                earnedPoints += 0.25;
-                totalCorrectCount++;
-                if (inputEl) inputEl.classList.add('input-correct');
-            } else {
-                if (inputEl) inputEl.classList.add('input-incorrect');
-                if (correctTextEl) {
-                    correctTextEl.innerHTML = `💡 Đáp án đúng: <strong>${correctAns}</strong>`;
-                    correctTextEl.style.display = 'block';
-                }
+            const pal = document.getElementById(`pal-p2-${q.id}`);
+            if (pal) {
+                if (correctSubCount === 4) pal.classList.add('correct-palette');
+                else pal.classList.add('wrong-palette');
             }
         });
     }
 
-    const finalGrade = earnedPoints.toFixed(2);
-    const totalItems = (quizData.part1 ? quizData.part1.length : 0) + (quizData.part2 ? quizData.part2.reduce((acc, q) => acc + q.subQuestions.length, 0) : 0) + (quizData.part3 ? quizData.part3.length : 0);
+    // Grade Part 3: 6 questions, each 0.25 pt => Max 1.5 pts
+    if (quizData.part3) {
+        quizData.part3.forEach(q => {
+            const userRaw = (userAnswers.part3[q.id] || '').trim().replace(/ /g, '').toLowerCase().replace(/\./g, ',');
+            const correctRaw = (q.answer || '').trim().replace(/ /g, '').toLowerCase().replace(/\./g, ',');
+            const acceptable = (q.acceptable || [q.answer]).map(a => a.trim().replace(/ /g, '').toLowerCase().replace(/\./g, ','));
 
-    const scoreCircle = document.getElementById('scoreCircle');
-    if (scoreCircle) scoreCircle.textContent = (parseFloat(finalGrade)).toFixed(1);
+            const isCorrect = userRaw && (userRaw === correctRaw || acceptable.includes(userRaw));
+            const inp = document.getElementById(`part3-q${q.id}-input`);
+            const fb = document.getElementById(`part3-q${q.id}-feedback`);
+            const exp = document.getElementById(`part3-q${q.id}-explanation`);
+            if (exp) exp.style.display = 'block';
 
-    const ccEl = document.getElementById('correctCountText');
-    if (ccEl) ccEl.textContent = totalCorrectCount;
-
-    const icEl = document.getElementById('incorrectCountText');
-    if (icEl) icEl.textContent = totalItems - totalCorrectCount;
-
-    const gtEl = document.getElementById('gradeText');
-    if (gtEl) gtEl.textContent = `${finalGrade}/10.0`;
-
-    let titleText = "Cố Gắng Lên!";
-    let descText = "Hãy ôn tập lại lý thuyết và xem kĩ lời giải chi tiết bên dưới nhé.";
-    if (parseFloat(finalGrade) >= 8.5) {
-        titleText = "Xuất Sắc! 🎉";
-        descText = "Bạn vượt qua các câu lý thuyết bẫy vô cùng xuất sắc!";
-    } else if (parseFloat(finalGrade) >= 6.5) {
-        titleText = "Khá Tốt!";
-        descText = "Bạn hiểu bài tốt, chú ý kĩ các bẫy lý thuyết để đạt điểm tuyệt đối nhé.";
-    }
-
-    const stEl = document.getElementById('scoreTitle');
-    if (stEl) stEl.textContent = titleText;
-    const sdEl = document.getElementById('scoreDesc');
-    if (sdEl) sdEl.textContent = descText;
-
-    const rp = document.getElementById('resultsPanel');
-    if (rp) {
-        rp.style.display = 'block';
-        rp.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    if (parseFloat(finalGrade) >= 7.0 && typeof confetti === 'function') {
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-    }
-
-    const name = (typeof localStorage !== 'undefined' && localStorage.getItem('saved_student_name')) || (document.getElementById('studentName') && document.getElementById('studentName').value.trim()) || 'Học sinh';
-    const className = (typeof localStorage !== 'undefined' && localStorage.getItem('saved_student_class')) || (document.getElementById('studentClass') && document.getElementById('studentClass').value.trim()) || 'Lớp';
-    const examTitle = (typeof quizData !== 'undefined' && quizData.title) ? quizData.title : '📝 Đề ôn tập giữa kì 1 số 1 - Vật lí 12 (Mã đề: 301)';
-    const targetUrl = (typeof GOOGLE_SHEETS_URL !== 'undefined' && GOOGLE_SHEETS_URL) ? GOOGLE_SHEETS_URL : "https://script.google.com/macros/s/AKfycbycB2ttbYIyAElV-YSkBiEKCv1UI3uzoQ4db5qi9DdgLWiZc90vHiSaejPaO0mBhYro/exec";
-
-    const payload = JSON.stringify({
-        name: name,
-        className: className,
-        lesson: examTitle,
-        correct: `${totalCorrectCount}/${totalItems}`,
-        score: finalGrade
-    });
-
-    try {
-        fetch(targetUrl, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: payload,
-            redirect: "follow"
-        }).then(function(res) {
-            var sEl = document.getElementById('syncStatusText');
-            if (sEl) sEl.innerHTML = `✓ Kết quả bài thi của <strong>${name} (${className})</strong> đã được ghi nhận vào bảng điểm Excel!`;
-        }).catch(function(err) {
-            // Backup fetch in case of cross-origin redirect interception
-            try {
-                fetch(targetUrl, {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: { "Content-Type": "text/plain;charset=utf-8" },
-                    body: payload
-                });
-            } catch(e) {}
+            const pal = document.getElementById(`pal-p3-${q.id}`);
+            if (isCorrect) {
+                earnedPoints += 0.25;
+                totalCorrectCount++;
+                if (inp) inp.classList.add('correct');
+                if (fb) { fb.style.color = '#10b981'; fb.innerHTML = '✔ Đúng (+0,25 đ)'; }
+                if (pal) pal.classList.add('correct-palette');
+            } else {
+                if (inp) inp.classList.add('incorrect');
+                if (fb) { fb.style.color = '#ef4444'; fb.innerHTML = `✖ Sai (Đ/A: <b>${q.answer}</b>)`; }
+                if (pal) pal.classList.add('wrong-palette');
+            }
         });
-    } catch(err){}
+    }
 
+    // Round score to 2 decimals
+    const finalScore = Math.min(10.0, Math.round(earnedPoints * 100) / 100);
+
+    // Display summary
+    const totalQuestions = (quizData.part1 ? quizData.part1.length : 0) +
+                           (quizData.part2 ? quizData.part2.reduce((acc, q) => acc + q.subQuestions.length, 0) : 0) +
+                           (quizData.part3 ? quizData.part3.length : 0);
+
+    document.getElementById('scoreCircle').textContent = finalScore.toFixed(1);
+    document.getElementById('gradeText').textContent = `${finalScore.toFixed(1)}/10`;
+    document.getElementById('correctCountText').textContent = `${totalCorrectCount}/${totalQuestions}`;
+    document.getElementById('incorrectCountText').textContent = `${totalQuestions - totalCorrectCount}`;
+
+    const titleEl = document.getElementById('scoreTitle');
+    const descEl = document.getElementById('scoreDesc');
+    if (finalScore >= 9.0) {
+        titleEl.textContent = "Xuất Sắc! Điểm Tuyệt Vời 🎉";
+        descEl.textContent = "Bạn nắm rất vững toàn bộ lí thuyết và kĩ năng bài tập!";
+    } else if (finalScore >= 8.0) {
+        titleEl.textContent = "Giỏi Lắm! Kết Quả Rất Tốt 👏";
+        descEl.textContent = "Chỉ cần chú ý một vài bẫy lí thuyết là đạt điểm tối đa!";
+    } else if (finalScore >= 6.5) {
+        titleEl.textContent = "Khá Tốt! Đã Nắm Được Kiến Thức Cơ Bản 👍";
+        descEl.textContent = "Hãy xem kĩ lời giải các câu sai để bồi dưỡng thêm nhé.";
+    } else if (finalScore >= 5.0) {
+        titleEl.textContent = "Đạt Yêu Cầu! Cần Cố Gắng Hơn 📖";
+        descEl.textContent = "Cần rà soát lại các khái niệm lí thuyết và công thức cốt lõi.";
+    } else {
+        titleEl.textContent = "Cần Ôn Tập Thêm Nhiều Hơn ⚠️";
+        descEl.textContent = "Đừng nản lòng, hãy xem kĩ hướng dẫn giải bên dưới và làm lại!";
+    }
+
+    if (finalScore >= 8.0 && window.confetti) {
+        window.confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+    }
+
+    const resPanel = document.getElementById('resultsPanel');
+    if (resPanel) {
+        resPanel.style.display = 'block';
+        resPanel.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Auto sync to Google Sheets
+    sendResultsToGoogleSheets(finalScore, totalCorrectCount, totalQuestions);
+
+    if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise();
+    }
+}
+
+function sendResultsToGoogleSheets(score, correct, total) {
+    const syncText = document.getElementById('syncStatusText');
+    const syncBadge = document.getElementById('syncStatusBadge');
+    if (syncText) syncText.textContent = "Đang đồng bộ kết quả lên Google Sheets của Giáo viên...";
+
+    const payload = {
+        name: studentName,
+        className: studentClass,
+        lesson: quizData.title || "Đề ôn tập giữa kì 1 số 2 - Vật lí 12",
+        score: score,
+        correct: `${correct}/${total}`,
+        timestamp: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" })
+    };
+
+    fetch(GOOGLE_SHEETS_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+    .then(() => {
+        if (syncText) syncText.textContent = "✔ Đã đồng bộ điểm số thành công vào bảng điểm Giáo viên!";
+        if (syncBadge) {
+            syncBadge.style.background = "#ecfdf5";
+            syncBadge.style.color = "#047857";
+            syncBadge.style.borderColor = "#6ee7b7";
+        }
+    })
+    .catch(err => {
+        console.error("Sheets sync error:", err);
+        if (syncText) syncText.textContent = "⚠️ Không thể kết nối với Google Sheets (lỗi mạng), bạn hãy chụp màn hình kết quả!";
+        if (syncBadge) {
+            syncBadge.style.background = "#fffbeb";
+            syncBadge.style.color = "#b45309";
+            syncBadge.style.borderColor = "#fcd34d";
+        }
+    });
 }
 </script>
+
 </body>
 </html>
