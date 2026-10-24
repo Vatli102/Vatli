@@ -307,6 +307,9 @@
                 </div>
             </div>
 
+            <!-- Trạng thái đồng bộ Google Sheet -->
+            <div id="sheetSyncStatus" style="display: none; margin: 15px auto; padding: 12px 18px; border-radius: 12px; font-size: 0.92rem; font-weight: 600; text-align: center; max-width: 440px;"></div>
+
             <button type="button" class="btn-review" onclick="closeResultModal()">
                 <i class="fa-solid fa-magnifying-glass"></i> XEM CHI TIẾT ĐÁP ÁN
             </button>
@@ -1321,22 +1324,32 @@
             syncToGoogleSheet(score, correctCount);
         }
 
+        let lastSyncData = null;
+
+        function retrySync() {
+            if (lastSyncData) {
+                hasSentResults = false;
+                executeSheetFetch(lastSyncData);
+            }
+        }
+
+        function forceSyncLocal() {
+            if (lastSyncData) {
+                hasSentResults = false;
+                executeSheetFetch(lastSyncData, true);
+            }
+        }
+
         function syncToGoogleSheet(score, correctCount) {
-            const host = window.location.hostname.toLowerCase();
-            const isVatli102 = (host === 'vatli102.com' || host === 'www.vatli102.com');
-            if (!isVatli102) return;
-
-            if (hasSentResults) return;
-            hasSentResults = true;
-
-            const sName = (typeof window.sName !== 'undefined' && window.sName)
-                       || (document.getElementById('displayName') && document.getElementById('displayName').innerText.trim())
+            let sName = (typeof window.sName !== 'undefined' && window.sName)
+                       || (document.getElementById('displayName') && document.getElementById('displayName').innerText.replace(/^Họ tên:\s*/i, '').trim())
                        || (document.getElementById('studentName') && document.getElementById('studentName').value.trim())
                        || 'Học sinh';
-            const sClass = (typeof window.sClass !== 'undefined' && window.sClass)
-                        || (document.getElementById('displayClass') && document.getElementById('displayClass').innerText.trim())
+            let sClass = (typeof window.sClass !== 'undefined' && window.sClass)
+                        || (document.getElementById('displayClass') && document.getElementById('displayClass').innerText.replace(/^Lớp:\s*/i, '').trim())
                         || (document.getElementById('studentClass') && document.getElementById('studentClass').value.trim())
                         || '12';
+
             const sheetUrl = "https://script.google.com/macros/s/AKfycbwRRiM81mghvA7cInvJgb4rPLzWOAE3s44wer0BJcURQ4hWwoykS19pkNQ9LyzH6Q8lTQ/exec";
             const examTitle = "Đề số 22: Bài Tập Trắc Nghiệm Chuyên Đề Pin Điện & Thế Điện Cực Chuẩn (55 câu)";
             const wrongCount = rawQuestions.length - correctCount;
@@ -1347,7 +1360,7 @@
                 monHoc: "Hóa học",
                 chuyenMuc: "vatli102.com/hoa/",
                 sourceUrl: window.location.href,
-                sourceDomain: window.location.hostname,
+                sourceDomain: window.location.hostname || "local",
                 name: sName,
                 studentName: sName,
                 hoTen: sName,
@@ -1374,12 +1387,62 @@
                 thoiGianNop: new Date().toLocaleString('vi-VN')
             };
 
+            lastSyncData = payload;
+
+            const host = window.location.hostname.toLowerCase();
+            const isVatli102 = (host === 'vatli102.com' || host === 'www.vatli102.com');
+            const statusEl = document.getElementById("sheetSyncStatus");
+
+            if (!isVatli102) {
+                if (statusEl) {
+                    statusEl.style.display = 'block';
+                    statusEl.style.background = '#f0f9ff';
+                    statusEl.style.border = '1.5px solid #bae6fd';
+                    statusEl.style.color = '#0369a1';
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-info"></i> <strong>Chế độ xem trước:</strong> Kết quả chính thức tự động đồng bộ khi học sinh làm bài trên <strong>vatli102.com</strong>.<br><button type="button" onclick="forceSyncLocal()" style="margin-top: 8px; padding: 5px 14px; font-size: 0.82rem; background: #0284c7; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700;"><i class="fa-solid fa-cloud-arrow-up"></i> Bấm để đồng bộ thử nghiệm vào Google Sheet</button>';
+                }
+                return;
+            }
+
+            executeSheetFetch(payload);
+        }
+
+        function executeSheetFetch(payload, isManual=false) {
+            if (hasSentResults) return;
+            hasSentResults = true;
+
+            const statusEl = document.getElementById("sheetSyncStatus");
+            if (statusEl) {
+                statusEl.style.display = 'block';
+                statusEl.style.background = '#fefce8';
+                statusEl.style.border = '1.5px solid #fef08a';
+                statusEl.style.color = '#854d0e';
+                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tự động lưu kết quả vào Google Sheet của giáo viên...';
+            }
+
+            const sheetUrl = "https://script.google.com/macros/s/AKfycbwRRiM81mghvA7cInvJgb4rPLzWOAE3s44wer0BJcURQ4hWwoykS19pkNQ9LyzH6Q8lTQ/exec";
+
             fetch(sheetUrl, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify(payload)
-            }).catch(e => console.log('Sheet sync status:', e));
+            }).then(() => {
+                if (statusEl) {
+                    statusEl.style.background = '#f0fdf4';
+                    statusEl.style.border = '1.5px solid #bbf7d0';
+                    statusEl.style.color = '#166534';
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> <strong>Đã lưu kết quả thành công</strong> vào sổ điểm Google Sheet của giáo viên! <button type="button" onclick="retrySync()" style="margin-left: 8px; padding: 3px 10px; font-size: 0.8rem; background: #dcfce7; color: #15803d; border: 1px solid #86efac; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fa-solid fa-rotate"></i> Gửi lại</button>';
+                }
+            }).catch(e => {
+                console.log('Sheet sync status:', e);
+                if (statusEl) {
+                    statusEl.style.background = '#fef2f2';
+                    statusEl.style.border = '1.5px solid #fecaca';
+                    statusEl.style.color = '#991b1b';
+                    statusEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Chưa thể lưu kết quả. <button type="button" onclick="retrySync()" style="margin-left: 8px; padding: 3px 10px; font-size: 0.8rem; background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fa-solid fa-rotate"></i> Thử lại</button>';
+                }
+            });
         }
 
         function closeResultModal() {
