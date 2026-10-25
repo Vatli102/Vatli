@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📝 Đề Số 26 (Bài 14): Ôn Tập Chương 4 — Polymer | Hóa Học 12 | Vatli102.com</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 50%, #f5f3ff 100%);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .option-label:hover {
+            background-color: #f0fdf4;
+            border-color: #10b981;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 pb-16">
+
+    <!-- Header Navigation -->
+    <header class="bg-white/90 backdrop-blur-md sticky top-0 z-50 shadow-sm border-b border-emerald-100">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="/hoa/lop-12/" class="w-9 h-9 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 flex items-center justify-center transition-all">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                <div>
+                    <span class="text-[11px] font-bold text-emerald-600 uppercase tracking-wider">Hóa Học 12 • Chương 4 (Polymer)</span>
+                    <h1 class="text-base sm:text-lg font-black text-slate-900 leading-tight">ĐỀ SỐ 26 (BÀI 14): ÔN TẬP CHƯƠNG 4 — POLYMER</h1>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <div id="timer-box" class="px-3.5 py-1.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 font-black text-sm flex items-center gap-2">
+                    <i class="fa-regular fa-clock"></i>
+                    <span id="timer">50:00</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-6">
+
+        <!-- Student Info Form -->
+        <div class="glass-card rounded-2xl p-5 mb-6 shadow-sm border border-emerald-200">
+            <h2 class="text-sm font-extrabold text-slate-800 mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-id-card text-emerald-600"></i> THÔNG TIN THÍ SINH
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Họ và tên học sinh *</label>
+                    <input type="text" id="student-name" placeholder="Nguyễn Văn A" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Lớp học / Trường *</label>
+                    <input type="text" id="student-class" placeholder="12A1 - THPT ..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                </div>
+            </div>
+        </div>
+
+        <!-- Sticky Progress Bar -->
+        <div class="bg-white rounded-xl p-3 mb-6 shadow-sm border border-slate-200 flex items-center justify-between text-xs font-bold text-slate-600">
+            <div class="flex items-center gap-2">
+                <span>Tiến độ làm bài:</span>
+                <span id="answered-count" class="text-emerald-600 font-extrabold">0/28</span> câu
+            </div>
+            <div class="w-1/2 bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                <div id="progress-bar" class="bg-gradient-to-r from-emerald-500 to-teal-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- PHẦN 1 -->
+        <div class="glass-card rounded-2xl p-6 mb-6 shadow-sm border-t-4 border-emerald-600">
+            <div class="flex items-center justify-between border-b pb-3 mb-5">
+                <div>
+                    <span class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-800">PHẦN I (4,5 ĐIỂM)</span>
+                    <h2 class="text-base font-extrabold text-slate-900 mt-1">Câu hỏi trắc nghiệm nhiều phương án lựa chọn</h2>
+                </div>
+                <span class="text-xs text-slate-500 font-semibold">18 câu • 0,25 đ/câu</span>
+            </div>
+            <div id="part1-container" class="space-y-6"></div>
+        </div>
+
+        <!-- PHẦN 2 -->
+        <div class="glass-card rounded-2xl p-6 mb-6 shadow-sm border-t-4 border-teal-600">
+            <div class="flex items-center justify-between border-b pb-3 mb-5">
+                <div>
+                    <span class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-teal-100 text-teal-800">PHẦN II (4,0 ĐIỂM)</span>
+                    <h2 class="text-base font-extrabold text-slate-900 mt-1">Câu trắc nghiệm Đúng / Sai bối cảnh thực tế</h2>
+                </div>
+                <span class="text-xs text-slate-500 font-semibold">4 câu • 1,0 đ/câu</span>
+            </div>
+            <div id="part2-container" class="space-y-6"></div>
+        </div>
+
+        <!-- PHẦN 3 -->
+        <div class="glass-card rounded-2xl p-6 mb-6 shadow-sm border-t-4 border-indigo-600">
+            <div class="flex items-center justify-between border-b pb-3 mb-5">
+                <div>
+                    <span class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-indigo-100 text-indigo-800">PHẦN III (1,5 ĐIỂM)</span>
+                    <h2 class="text-base font-extrabold text-slate-900 mt-1">Câu trắc nghiệm trả lời ngắn (Tính toán / Số)</h2>
+                </div>
+                <span class="text-xs text-slate-500 font-semibold">6 câu • 0,25 đ/câu</span>
+            </div>
+            <div id="part3-container" class="space-y-6"></div>
+        </div>
+
+        <!-- Submit Button Area -->
+        <div class="text-center py-6">
+            <button id="btn-submit" onclick="submitExam()" class="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black text-base shadow-lg shadow-emerald-500/25 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                <i class="fa-solid fa-paper-plane mr-2"></i> NỘP BÀI KIỂM TRA
+            </button>
+            <div id="submit-loading" class="hidden text-emerald-600 font-bold mt-3 text-sm flex items-center justify-center gap-2">
+                <i class="fa-solid fa-spinner fa-spin"></i> Đang nộp bài và đồng bộ điểm về máy chủ giáo viên...
+            </div>
+        </div>
+
+        <!-- Result Modal Box (Hidden until submitted) -->
+        <div id="result-box" class="hidden glass-card rounded-3xl p-8 mb-8 border-2 border-emerald-500 shadow-2xl animate-fade-in">
+            <div class="text-center max-w-lg mx-auto">
+                <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl font-black mb-3">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h3 class="text-2xl font-black text-slate-900 mb-1">KẾT QUẢ BÀI THI</h3>
+                <p id="res-student-info" class="text-sm font-semibold text-slate-500 mb-4"></p>
+                <div class="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-5 mb-6">
+                    <div class="text-4xl font-black text-emerald-600 mb-1" id="res-score">0.0 / 10</div>
+                    <p class="text-xs font-bold text-slate-600" id="res-detail">Đúng: 0 | Sai: 0</p>
+                </div>
+                <p class="text-xs text-slate-400">Đáp án và lời giải chi tiết của từng câu hỏi đã được hiển thị trực tiếp bên dưới mỗi câu.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-slate-400 py-6 border-t border-slate-200">
+        <p>© 2026 Vatli102.com — Cổng Học Liệu Khoa Học Phổ Thông GDPT 2018</p>
+    </footer>
+
+    <!-- App Logic Script -->
+    <script>
+        const QUIZ_DATA = {"title": "BÀI 14: ÔN TẬP CHƯƠNG 4 — POLYMER (HÓA HỌC 12)", "grade": "12", "subject": "Hóa học", "part1": [{"id": 1, "question": "Mắt xích cấu trúc lặp lại của polyethylene (PE) là", "options": ["A. -CH2-CH2-.", "B. -CH2-CH(CH3)-.", "C. -CH2-CH(Cl)-.", "D. -CH2-CH(C6H5)-."], "answer": "A", "explanation": "Polyethylene (PE) có công thức là (-CH2-CH2-)n, được điều chế từ monome ethylene (CH2=CH2). Do đó, mắt xích cơ sở lặp đi lặp lại là -CH2-CH2-."}, {"id": 2, "question": "Monome dùng để trùng hợp tạo thành poly(vinyl chloride) (PVC) là", "options": ["A. CH2=CH2.", "B. CH2=CH-Cl.", "C. CH2=CH-CN.", "D. CF2=CF2."], "answer": "B", "explanation": "Vinyl chloride có công thức cấu tạo là CH2=CH-Cl. Khi trùng hợp monome này ở nhiệt độ, áp suất và xúc tác thích hợp thu được poly(vinyl chloride) (PVC)."}, {"id": 3, "question": "Polymer nào sau đây có nguồn gốc từ thiên nhiên?", "options": ["A. Poly(methyl methacrylate).", "B. Tơ nylon-6,6.", "C. Cellulose.", "D. Tơ visco."], "answer": "C", "explanation": "Cellulose là polymer tự nhiên có sẵn trong bông, đay, gỗ và thực vật. Poly(methyl methacrylate) và tơ nylon-6,6 là polymer tổng hợp; tơ visco là polymer bán tổng hợp (nhân tạo)."}, {"id": 4, "question": "Polymer nào sau đây có cấu trúc mạng không gian (mạng lưới)?", "options": ["A. Cao su lưu hóa.", "B. Polyethylene (PE).", "C. Amylopectin.", "D. Polystyrene (PS)."], "answer": "A", "explanation": "Cao su lưu hóa và nhựa rezit (nhựa bakelite) có cấu trúc mạng không gian. Amylopectin và glycogen có mạch phân nhánh; PE, PS, amylose, cellulose có cấu trúc mạch không phân nhánh."}, {"id": 5, "question": "Chất nào sau đây có cấu trúc mạch phân nhánh?", "options": ["A. Amylose.", "B. Cellulose.", "C. Tơ tằm.", "D. Amylopectin."], "answer": "D", "explanation": "Trong tinh bột, thành phần amylose có mạch không phân nhánh xoắn lò xo, còn amylopectin có cấu trúc mạch phân nhánh nhờ các liên kết alpha-1,6-glycosidic bên cạnh liên kết alpha-1,4-glycosidic."}, {"id": 6, "question": "Polymer nào sau đây được điều chế bằng phản ứng trùng hợp?", "options": ["A. Tơ lapsan (PET).", "B. Polypropylene (PP).", "C. Tơ nylon-6,6.", "D. Nhựa rezol."], "answer": "B", "explanation": "Polypropylene (PP) được điều chế bằng phản ứng trùng hợp propylene (CH2=CH-CH3). Tơ lapsan, tơ nylon-6,6 và nhựa rezol đều được điều chế bằng phản ứng trùng ngưng."}, {"id": 7, "question": "Polymer nào sau đây được điều chế bằng phản ứng trùng ngưng?", "options": ["A. Tơ nylon-6,6.", "B. Polybutadiene.", "C. Poly(vinyl chloride).", "D. Polystyrene."], "answer": "A", "explanation": "Tơ nylon-6,6 được điều chế bằng phản ứng trùng ngưng giữa hexamethylenediamine H2N-(CH2)6-NH2 và adipic acid HOOC-(CH2)4-COOH, đồng thời tách ra các phân tử H<sub>2</sub>O."}, {"id": 8, "question": "Tơ nào sau đây thuộc loại tơ bán tổng hợp (tơ nhân tạo)?", "options": ["A. Tơ tằm.", "B. Tơ nylon-6.", "C. Tơ visco.", "D. Tơ nitron."], "answer": "C", "explanation": "Tơ bán tổng hợp (nhân tạo) là tơ được chế hóa bằng phương pháp hóa học từ các polymer tự nhiên (chủ yếu là cellulose), điển hình gồm: tơ visco và tơ cellulose acetate."}, {"id": 9, "question": "Tơ nào sau đây thuộc loại tơ polyamide (chứa liên kết -CO-NH-)?", "options": ["A. Tơ lapsan.", "B. Tơ nitron.", "C. Tơ cellulose acetate.", "D. Tơ capron."], "answer": "D", "explanation": "Tơ capron (nylon-6) và tơ nylon-6,6 là các tơ polyamide chứa liên kết amide -CO-NH-. Tơ lapsan là tơ polyester; tơ nitron là tơ vinylic; tơ acetate là dẫn xuất ester của cellulose."}, {"id": 10, "question": "Tơ lapsan (dacron/PET) thuộc loại tơ nào sau đây?", "options": ["A. Tơ polyamide.", "B. Tơ polyester.", "C. Tơ bán tổng hợp.", "D. Tơ vinylic."], "answer": "B", "explanation": "Tơ lapsan được điều chế bằng phản ứng trùng ngưng giữa terephthalic acid p-HOOC-C6H4-COOH và ethylene glycol HO-CH2-CH2-OH tạo thành liên kết ester -COO-, do đó thuộc loại tơ polyester."}, {"id": 11, "question": "Monome dùng để điều chế tơ nitron (olon) giữ nhiệt tốt là", "options": ["A. Acrylonitrile (CH2=CH-CN).", "B. Methyl methacrylate.", "C. Vinyl acetate.", "D. Buta-1,3-diene."], "answer": "A", "explanation": "Tơ nitron (hay olon) được điều chế bằng phản ứng trùng hợp acrylonitrile (vinyl cyanide: CH2=CH-CN). Sợi tơ nitron dai, bền nhiệt và giữ nhiệt tốt nên thường dùng dệt áo ấm, chăn len."}, {"id": 12, "question": "Thủy tinh hữu cơ plexiglas (PMMA) được điều chế bằng phản ứng trùng hợp monome nào sau đây?", "options": ["A. Methyl acrylate.", "B. Ethyl methacrylate.", "C. Methyl methacrylate.", "D. Acrylic acid."], "answer": "C", "explanation": "Poly(methyl methacrylate) (viết tắt là PMMA, hay thủy tinh hữu cơ plexiglas) được điều chế bằng phản ứng trùng hợp methyl methacrylate CH2=C(CH3)-COOCH3."}, {"id": 13, "question": "Cao su buna-S là sản phẩm của phản ứng đồng trùng hợp giữa buta-1,3-diene với monome nào sau đây?", "options": ["A. Styrene (C6H5-CH=CH2).", "B. Lưu huỳnh (Sulfur).", "C. Acrylonitrile.", "D. Isoprene."], "answer": "A", "explanation": "Chữ 'S' trong tên gọi cao su buna-S là viết tắt của Styrene (C6H5-CH=CH2). Cao su buna-S được điều chế bằng phản ứng đồng trùng hợp giữa buta-1,3-diene và styrene."}, {"id": 14, "question": "Cao su buna-N có tính chống dầu mỡ cao, được điều chế bằng phản ứng đồng trùng hợp giữa buta-1,3-diene với", "options": ["A. Toluene.", "B. Vinyl chloride.", "C. Styrene.", "D. Acrylonitrile (CH2=CH-CN)."], "answer": "D", "explanation": "Chữ 'N' trong cao su buna-N viết tắt của nhóm Nitrile trong Acrylonitrile (CH2=CH-CN). Loại cao su này có độ bền cơ học cao và đặc biệt bền với dầu mỡ, dung môi xăng dầu."}, {"id": 15, "question": "Quá trình lưu hóa cao su biến cấu trúc mạch thẳng thành cấu trúc mạng không gian nhờ sự hình thành liên kết nào?", "options": ["A. Cầu nối hydro (Hydrogen bond).", "B. Cầu nối disunfide (-S-S-).", "C. Cầu nối ester (-COO-).", "D. Cầu nối peptide (-CO-NH-)."], "answer": "B", "explanation": "Khi đun nóng cao su với lưu huỳnh ở nhiệt độ 140 - 150 °C, các nguyên tử lưu huỳnh phản ứng với liên kết đôi C=C của các mạch polymer liền kề tạo thành các cầu nối disunfide (-S-S-) liên kết các chuỗi thành mạng không gian 3 chiều."}, {"id": 16, "question": "Phản ứng nào sau đây thuộc loại phản ứng giữ nguyên mạch polymer?", "options": ["A. Thủy phân tinh bột bằng acid có đun nóng.", "B. Thủy phân tơ nylon-6,6 trong môi trường kiềm.", "C. Thủy phân poly(vinyl acetate) bằng dung dịch NaOH.", "D. Nung nóng cao su với lưu huỳnh ở 140 °C."], "answer": "C", "explanation": "Khi thủy phân poly(vinyl acetate) bằng NaOH, phản ứng chỉ cắt đứt nhóm ester nhánh tạo ra nhóm -OH gắn trực tiếp vào mạch carbon (-CH2-CH(OH)-)n (poly(vinyl alcohol)), mạch polymer chính vẫn được bảo toàn nguyên vẹn."}, {"id": 17, "question": "Phản ứng nào sau đây thuộc loại phản ứng cắt mạch polymer?", "options": ["A. Thủy phân tinh bột hoặc cellulose có xúc tác acid tạo glucose.", "B. Phản ứng lưu hóa cao su thiên nhiên.", "C. Phản ứng clo hóa poly(vinyl chloride) (PVC).", "D. Phản ứng đóng rắn nhựa rezol thành nhựa rezit."], "answer": "A", "explanation": "Phản ứng thủy phân tinh bột hoặc cellulose cắt đứt liên kết glycosidic giữa các mắt xích làm phân rã chuỗi polymer thành các phân tử monosaccharide nhỏ (glucose), do đó là phản ứng cắt mạch polymer."}, {"id": 18, "question": "Tơ tằm và tơ nylon-6,6 có đặc điểm chung nào sau đây về độ bền hóa học?", "options": ["A. Đều bền vững trong môi trường kiềm đặc và acid mạnh.", "B. Đều kém bền, dễ bị thủy phân trong môi trường acid mạnh hoặc base mạnh.", "C. Đều tan tốt trong nước và các dung môi phân cực.", "D. Đều có khả năng chống cháy và không bị co rút khi là ủi ở nhiệt độ cao."], "answer": "B", "explanation": "Tơ tằm cấu tạo từ protein (chứa liên kết peptide) và tơ nylon-6,6 là polyamide (chứa liên kết amide -CO-NH-). Cả hai loại liên kết này đều rất dễ bị thủy phân cắt mạch trong môi trường acid cũng như môi trường base, nên vải may bằng hai loại tơ này kém bền với xà phòng có tính kiềm mạnh."}], "part2": [{"id": 1, "context": "Chất dẻo là vật liệu polymer có tính dẻo, được ứng dụng rộng rãi trong đời sống và sản xuất công nghiệp, tiêu biểu như polyethylene (PE) và poly(vinyl chloride) (PVC).", "subquestions": [{"id": "a", "text": "PE và PVC đều được tổng hợp bằng phản ứng trùng hợp các monome chứa liên kết đôi C=C.", "answer": true, "explanation": "Đúng. PE được trùng hợp từ ethylene CH2=CH2; PVC được trùng hợp từ vinyl chloride CH2=CH-Cl."}, {"id": "b", "text": "Polyethylene (PE) có cấu trúc mạch phân nhánh nên có khả năng cách điện và cách nhiệt vượt trội.", "answer": false, "explanation": "Sai. PE thông thường có cấu trúc mạch không phân nhánh (hoặc phân nhánh rất ngắn tuỳ phương pháp áp suất), chứ không phải cấu trúc phân nhánh điển hình như amylopectin."}, {"id": "c", "text": "Khi đốt cháy hoặc nung nóng ống nhựa PVC ở nhiệt độ cao, ngoài CO<sub>2</sub> và H<sub>2</sub>O còn sinh ra khí hydro chloride (HCl) độc hại, gây ăn mòn và ô nhiễm môi trường.", "answer": true, "explanation": "Đúng. Vì trong mắt xích PVC (-CH2-CHCl-) có chứa nguyên tố Cl, khi cháy hoặc nhiệt phân sinh ra khí HCl gây ngạt thở và ăn mòn kim loại nghiêm trọng."}, {"id": "d", "text": "Túi ni lông làm từ PE trơ về mặt hóa học, rất khó bị vi sinh vật phân hủy trong tự nhiên, có thể tồn tại hàng trăm năm gây ra hiện tượng 'ô nhiễm trắng'.", "answer": true, "explanation": "Đúng. Mạch carbon no của PE rất bền vững, không bị vi sinh vật thông thường phân hủy sinh học, tích tụ trong đất và đại dương gây 'ô nhiễm trắng'."}]}, {"id": 2, "context": "Trong công nghiệp dệt may, tơ sợi tổng hợp đóng vai trò chủ lực thay thế tơ tự nhiên, trong đó tơ nylon-6,6 và tơ lapsan (PET) là hai loại tơ tổng hợp chiếm sản lượng hàng đầu thế giới.", "subquestions": [{"id": "a", "text": "Tơ nylon-6,6 được điều chế bằng phản ứng trùng ngưng giữa hexamethylenediamine và adipic acid.", "answer": true, "explanation": "Đúng. Phương trình: n H2N-(CH2)6-NH2 + n HOOC-(CH2)4-COOH -> [-HN-(CH2)6-NH-CO-(CH2)4-CO-]n + 2n H<sub>2</sub>O."}, {"id": "b", "text": "Tơ nylon-6,6 và tơ lapsan đều là các polymer thuộc loại tơ polyamide.", "answer": false, "explanation": "Sai. Tơ nylon-6,6 là tơ polyamide (chứa liên kết -CO-NH-), còn tơ lapsan là tơ polyester (chứa liên kết ester -COO-)."}, {"id": "c", "text": "Tơ lapsan được điều chế bằng phản ứng trùng ngưng giữa terephthalic acid và ethylene glycol.", "answer": true, "explanation": "Đúng. Phương trình trùng ngưng p-HOOC-C6H4-COOH với HO-CH2-CH2-OH tạo thành poly(ethylene terephthalate) (PET/lapsan)."}, {"id": "d", "text": "Trang phục may bằng tơ nylon-6,6 nên được giặt bằng xà phòng giặt có độ kiềm cao và là ủi ở nhiệt độ trên 250 °C để giữ nếp phẳng đẹp.", "answer": false, "explanation": "Sai. Tơ nylon-6,6 chứa liên kết amide dễ bị thủy phân trong kiềm và có nhiệt độ nóng chảy khoảng 250-260 °C, do đó giặt xà phòng kiềm mạnh và là ủi nhiệt độ cao sẽ làm co rúm hoặc hỏng sợi vải."}]}, {"id": 3, "context": "Cao su là vật liệu polymer có tính đàn hồi cao, được ứng dụng làm săm lốp ô tô, máy bay, đệm cao su và các chi tiết giảm chấn công nghiệp.", "subquestions": [{"id": "a", "text": "Cao su thiên nhiên được khai thác từ mủ cây cao su, có thành phần chính là polymer của isoprene với cấu hình cis.", "answer": true, "explanation": "Đúng. Cao su thiên nhiên là cis-polyisoprene, có tính đàn hồi cao nhờ cấu hình cis uốn khúc đều đặn."}, {"id": "b", "text": "Cao su thô chưa lưu hóa có cấu trúc mạng không gian nên chịu lực ma sát và nhiệt độ cao tốt hơn cao su lưu hóa.", "answer": false, "explanation": "Sai. Cao su thô có mạch không phân nhánh, mềm khi nóng và giòn khi lạnh. Cao su lưu hóa có cấu trúc mạng không gian mới có độ bền kéo, đàn hồi và chịu nhiệt vượt trội."}, {"id": "c", "text": "Bản chất của quá trình lưu hóa cao su là tạo ra các cầu nối disunfide (-S-S-) nối các mạch polymer liền kề thành mạng lưới không gian 3 chiều.", "answer": true, "explanation": "Đúng. Phản ứng giữa cao su với lưu huỳnh ở nhiệt độ 140 - 150 °C tạo ra các cầu nối disunfide (-S-S-)."}, {"id": "d", "text": "Cao su buna-S và cao su buna-N đều được tổng hợp bằng phản ứng đồng trùng hợp buta-1,3-diene với một monome thứ hai tương ứng.", "answer": true, "explanation": "Đúng. Cao su buna-S đồng trùng hợp với styrene; cao su buna-N đồng trùng hợp với acrylonitrile."}]}, {"id": 4, "context": "Trước thách thức ô nhiễm môi trường do chất dẻo khó phân hủy, hệ thống mã phân loại nhựa quốc tế (SPI code) được áp dụng để hỗ trợ thu gom, phân loại và tái chế rác thải nhựa.", "subquestions": [{"id": "a", "text": "Rác thải nhựa trôi nổi dưới tác động của tia tử ngoại (UV) và sóng biển bị vỡ vụn cơ học thành các hạt vi nhựa có kích thước dưới 5 mm.", "answer": true, "explanation": "Đúng. Định nghĩa vi nhựa (microplastics) là các hạt nhựa có kích thước nhỏ hơn 5 mm, dễ dàng xâm nhập chuỗi thức ăn sinh vật biển và cơ thể người."}, {"id": "b", "text": "Hộp nhựa đựng thực phẩm mang mã số 5 (nhựa PP - Polypropylene) có khả năng chịu nhiệt độ lên đến 120 - 130 °C, an toàn khi sử dụng trong lò vi sóng.", "answer": true, "explanation": "Đúng. Nhựa PP có điểm nóng chảy cao (160 °C), bền nhiệt và trơ hóa học, an toàn nhất cho thực phẩm và dùng được trong lò vi sóng."}, {"id": "c", "text": "Chai nước khoáng dùng một lần mang mã số 1 (nhựa PETE) có thể đun sôi nhiều lần để làm bình đựng nước uống lâu dài mà không lo nguy cơ thôi nhiễm hóa chất độc hại.", "answer": false, "explanation": "Sai. Nhựa PETE được thiết kế dùng 1 lần, khi tiếp xúc với nhiệt độ cao sẽ bị biến dạng và có nguy cơ thôi nhiễm kim loại antimony (Sb) hoặc phụ gia độc hại vào nước."}, {"id": "d", "text": "Nhựa sinh học PLA (poly(lactic acid)) có nguồn gốc từ tinh bột ngô/sắn có thể phân hủy sinh học hoàn toàn thành CO<sub>2</sub> và H<sub>2</sub>O trong điều kiện ủ công nghiệp.", "answer": true, "explanation": "Đúng. PLA là loại polymer nhiệt dẻo sinh học bền vững, có khả năng phân hủy sinh học hoàn toàn thành CO<sub>2</sub> và H<sub>2</sub>O thân thiện với môi trường."}]}], "part3": [{"id": 1, "question": "Một đoạn mạch poly(vinyl chloride) (PVC) có phân tử khối trung bình là 150 000 amu. Hãy xác định hệ số polymer hóa n (số mắt xích) của đoạn mạch PVC đó.", "answer": "2400", "explanation": "Khối lượng mắt xích vinyl chloride (-CH2-CH(Cl)-) là: M = 2*12 + 3*1 + 35,5 = 62,5 amu. Hệ số polymer hóa: n = 150 000 / 62,5 = 2400."}, {"id": 2, "question": "Để sản xuất 22,6 tấn tơ nylon-6,6 bằng phản ứng trùng ngưng giữa hexamethylenediamine và adipic acid với hiệu suất của toàn bộ quá trình đạt 80%, cần dùng bao nhiêu tấn adipic acid? (Biết M(adipic acid) = 146 g/mol; M(mắt xích nylon-6,6) = 226 g/mol; làm tròn đến 2 chữ số thập phân).", "answer": "18,25", "explanation": "Số mol mắt xích nylon-6,6 tạo thành = 22,6 / 226 = 0,1 Mmol = 100 kmol. Theo phương trình trùng ngưng, n(adipic acid lí thuyết) = 100 kmol. Vì hiệu suất đạt 80%, số mol adipic acid thực tế cần dùng = 100 / 0,8 = 125 kmol. Khối lượng adipic acid cần dùng = 125 * 146 = 18 250 kg = 18,25 tấn."}, {"id": 3, "question": "Từ 11,6 tấn butane (C<sub>4</sub>H<sub>10</sub>) trong khí dầu mỏ, người ta tiến hành điều chế cao su buna qua sơ đồ: C<sub>4</sub>H<sub>10</sub> -> C4H6 -> (-C4H6-)n. Biết hiệu suất toàn bộ quá trình phản ứng đạt 75%, khối lượng cao su buna thu được là bao nhiêu tấn? (Làm tròn đến 1 chữ số thập phân).", "answer": "8,1", "explanation": "Số mol C<sub>4</sub>H<sub>10</sub> = 11,6 / 58 = 0,2 Mmol. Sơ đồ: C<sub>4</sub>H<sub>10</sub> -> C4H6 -> 1/n (-C4H6-)n. Khối lượng mắt xích cao su buna C4H6 = 54 g/mol. Khối lượng cao su lí thuyết = 0,2 * 54 = 10,8 tấn. Vì hiệu suất đạt 75%, khối lượng cao su buna thực tế thu được = 10,8 * 75% = 8,1 tấn."}, {"id": 4, "question": "Một đoạn mạch tơ capron (nylon-6) có chứa 1 200 mắt xích lặp lại. Khối lượng phân tử của đoạn mạch đó theo đơn vị amu là bao nhiêu?", "answer": "135600", "explanation": "Mắt xích tơ capron có cấu tạo là -HN-(CH2)5-CO- với khối lượng phân tử: M = 14 + 1 + 5*14 + 12 + 16 = 113 amu. Khối lượng phân tử của đoạn mạch gồm 1200 mắt xích = 1200 * 113 = 135 600 amu."}, {"id": 5, "question": "Cho các phát biểu sau:\n(1) Tơ visco và tơ cellulose acetate đều thuộc loại tơ bán tổng hợp.\n(2) Nhựa rezit (bakelite) và cao su lưu hóa đều có cấu trúc mạng không gian.\n(3) Thủy phân tinh bột hoặc cellulose có xúc tác acid đều thu được glucose là phản ứng cắt mạch polymer.\n(4) Trùng hợp methyl methacrylate thu được poly(methyl methacrylate) dùng làm thủy tinh hữu cơ plexiglas.\n(5) Quần áo may bằng tơ tằm hay tơ nylon-6,6 đều rất bền trong dung dịch xà phòng có tính kiềm mạnh.\nCó bao nhiêu phát biểu đúng trong số các phát biểu trên?", "answer": "4", "explanation": "Các phát biểu (1), (2), (3), (4) đều đúng. Phát biểu (5) sai vì cả tơ tằm (protein) và tơ nylon-6,6 (polyamide) đều có liên kết amide kém bền, dễ bị thủy phân trong dung dịch kiềm mạnh. Vậy có 4 phát biểu đúng."}, {"id": 6, "question": "Cho các polymer sau: Polyethylene, Tơ lapsan, Poly(vinyl chloride), Tơ nylon-6,6, Cao su buna, Nhựa novolac. Có bao nhiêu polymer trong dãy trên được điều chế bằng phản ứng trùng ngưng?", "answer": "3", "explanation": "Các polymer được điều chế bằng phản ứng trùng ngưng gồm 3 chất: (1) Tơ lapsan (từ terephthalic acid và ethylene glycol); (2) Tơ nylon-6,6 (từ hexamethylenediamine và adipic acid); (3) Nhựa novolac (từ phenol và formaldehyde dư phenol trong môi trường acid). Các chất còn lại (PE, PVC, cao su buna) đều được điều chế bằng phản ứng trùng hợp."}]};
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRRiM81mghvA7cInvJgb4rPLzWOAE3s44wer0BJcURQ4hWwoykS19pkNQ9LyzH6Q8lTQ/exec";
+
+        let timeLeft = 50 * 60; // 50 phút
+        let timerInterval = null;
+        let isSubmitted = false;
+
+        function initQuiz() {
+            renderPart1();
+            renderPart2();
+            renderPart3();
+            startTimer();
+            updateProgress();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Đã hết thời gian làm bài 50 phút! Hệ thống sẽ tự động nộp bài.");
+                    submitExam();
+                } else {
+                    timeLeft--;
+                    let m = Math.floor(timeLeft / 60);
+                    let s = timeLeft % 60;
+                    document.getElementById("timer").innerText = 
+                        (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+                }
+            }, 1000);
+        }
+
+        function renderPart1() {
+            const c = document.getElementById("part1-container");
+            c.innerHTML = "";
+            QUIZ_DATA.part1.forEach((q, idx) => {
+                const el = document.createElement("div");
+                el.className = "p-4 rounded-xl bg-slate-50 border border-slate-200";
+                el.id = `q1-${q.id}`;
+                
+                let optHtml = "";
+                q.options.forEach((opt, oIdx) => {
+                    const ltr = String.fromCharCode(65 + oIdx);
+                    optHtml += `
+                        <label class="option-label flex items-start gap-3 p-3 rounded-xl border border-slate-200 bg-white cursor-pointer transition-all">
+                            <input type="radio" name="p1_q_${q.id}" value="${ltr}" onchange="updateProgress()" class="mt-1 text-emerald-600 focus:ring-emerald-500">
+                            <span class="text-sm text-slate-800">${opt}</span>
+                        </label>
+                    `;
+                });
+
+                el.innerHTML = `
+                    <p class="text-sm font-bold text-slate-900 mb-3"><span class="text-emerald-700">Câu ${q.id}.</span> ${q.question}</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">${optHtml}</div>
+                    <div id="p1-exp-${q.id}" class="hidden mt-3 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-slate-700"></div>
+                `;
+                c.appendChild(el);
+            });
+        }
+
+        function renderPart2() {
+            const c = document.getElementById("part2-container");
+            c.innerHTML = "";
+            QUIZ_DATA.part2.forEach((q) => {
+                const el = document.createElement("div");
+                el.className = "p-4 rounded-xl bg-slate-50 border border-slate-200";
+                el.id = `q2-${q.id}`;
+
+                let subHtml = "";
+                q.subquestions.forEach((sub) => {
+                    subHtml += `
+                        <div class="p-3 rounded-xl bg-white border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <span class="text-sm text-slate-800"><span class="font-bold text-teal-700">${sub.id})</span> ${sub.text}</span>
+                            <div class="flex items-center gap-4 shrink-0">
+                                <label class="flex items-center gap-1.5 text-xs font-bold text-emerald-700 cursor-pointer">
+                                    <input type="radio" name="p2_q_${q.id}_${sub.id}" value="Đ" onchange="updateProgress()" class="text-emerald-600 focus:ring-emerald-500"> ĐÚNG
+                                </label>
+                                <label class="flex items-center gap-1.5 text-xs font-bold text-rose-700 cursor-pointer">
+                                    <input type="radio" name="p2_q_${q.id}_${sub.id}" value="S" onchange="updateProgress()" class="text-rose-600 focus:ring-rose-500"> SAI
+                                </label>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                el.innerHTML = `
+                    <p class="text-sm font-bold text-slate-900 mb-3"><span class="text-teal-700">Câu ${q.id}.</span> ${q.context}</p>
+                    <div class="space-y-2.5">${subHtml}</div>
+                    <div id="p2-exp-${q.id}" class="hidden mt-3 p-3 rounded-xl bg-teal-50 border border-teal-200 text-xs text-slate-700"></div>
+                `;
+                c.appendChild(el);
+            });
+        }
+
+        function renderPart3() {
+            const c = document.getElementById("part3-container");
+            c.innerHTML = "";
+            QUIZ_DATA.part3.forEach((q) => {
+                const el = document.createElement("div");
+                el.className = "p-4 rounded-xl bg-slate-50 border border-slate-200";
+                el.id = `q3-${q.id}`;
+
+                el.innerHTML = `
+                    <p class="text-sm font-bold text-slate-900 mb-3"><span class="text-indigo-700">Câu ${q.id}.</span> ${q.question}</p>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-extrabold text-slate-500">Đáp số:</span>
+                        <input type="text" id="p3_in_${q.id}" oninput="updateProgress()" placeholder="Nhập số hoặc từ..." class="px-3 py-1.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-bold w-48">
+                    </div>
+                    <div id="p3-exp-${q.id}" class="hidden mt-3 p-3 rounded-xl bg-indigo-50 border border-indigo-200 text-xs text-slate-700"></div>
+                `;
+                c.appendChild(el);
+            });
+        }
+
+        function updateProgress() {
+            let answered = 0;
+            // Part 1
+            QUIZ_DATA.part1.forEach(q => {
+                if (document.querySelector(`input[name="p1_q_${q.id}"]:checked`)) answered++;
+            });
+            // Part 2
+            QUIZ_DATA.part2.forEach(q => {
+                let allSub = true;
+                q.subquestions.forEach(sub => {
+                    if (!document.querySelector(`input[name="p2_q_${q.id}_${sub.id}"]:checked`)) allSub = false;
+                });
+                if (allSub) answered++;
+            });
+            // Part 3
+            QUIZ_DATA.part3.forEach(q => {
+                const val = document.getElementById(`p3_in_${q.id}`).value.trim();
+                if (val !== "") answered++;
+            });
+
+            document.getElementById("answered-count").innerText = `${answered}/28`;
+            const pct = (answered / 28) * 100;
+            document.getElementById("progress-bar").style.width = `${pct}%`;
+        }
+
+        function submitExam() {
+            if (isSubmitted) return;
+
+            const name = document.getElementById("student-name").value.trim();
+            const sClass = document.getElementById("student-class").value.trim();
+
+            if (!name || !sClass) {
+                alert("Vui lòng điền Họ tên và Lớp trước khi nộp bài!");
+                document.getElementById("student-name").focus();
+                return;
+            }
+
+            if (!confirm("Bạn có chắc chắn muốn nộp bài để xem điểm và lời giải chi tiết?")) return;
+
+            isSubmitted = true;
+            clearInterval(timerInterval);
+            document.getElementById("btn-submit").disabled = true;
+            document.getElementById("btn-submit").classList.add("opacity-50", "cursor-not-allowed");
+            document.getElementById("submit-loading").classList.remove("hidden");
+
+            // Chấm điểm
+            let scoreP1 = 0;
+            let scoreP2 = 0;
+            let scoreP3 = 0;
+
+            // Chấm Phần 1 (0.25đ / câu)
+            QUIZ_DATA.part1.forEach(q => {
+                const checked = document.querySelector(`input[name="p1_q_${q.id}"]:checked`);
+                const userAns = checked ? checked.value : "";
+                const isCorrect = userAns === q.answer;
+                if (isCorrect) scoreP1 += 0.25;
+
+                const expEl = document.getElementById(`p1-exp-${q.id}`);
+                expEl.classList.remove("hidden");
+                expEl.innerHTML = `
+                    <div class="font-bold ${isCorrect ? 'text-emerald-700' : 'text-rose-700'} mb-1">
+                        ${isCorrect ? '✓ ĐÚNG' : '✗ SAI'} — Bạn chọn: <b>${userAns || 'Chưa chọn'}</b> | Đáp án đúng: <b>${q.answer}</b>
+                    </div>
+                    <div>${q.explanation}</div>
+                `;
+            });
+
+            // Chấm Phần 2 (Theo quy chế: 1 ý đúng = 0.1đ; 2 ý = 0.25đ; 3 ý = 0.5đ; 4 ý = 1.0đ)
+            QUIZ_DATA.part2.forEach(q => {
+                let correctSubCount = 0;
+                let expLines = [];
+
+                q.subquestions.forEach(sub => {
+                    const checked = document.querySelector(`input[name="p2_q_${q.id}_${sub.id}"]:checked`);
+                    const userVal = checked ? checked.value : "";
+                    const correctVal = sub.answer ? "Đ" : "S";
+                    const isSubOk = userVal === correctVal;
+                    if (isSubOk) correctSubCount++;
+
+                    expLines.push(`
+                        <div class="mt-1">
+                            <b>${sub.id})</b> ${sub.text} — <span class="${isSubOk ? 'text-emerald-700 font-bold' : 'text-rose-700 font-bold'}">${isSubOk ? '✓' : '✗'} (${sub.answer ? 'ĐÚNG' : 'SAI'})</span>: ${sub.explanation}
+                        </div>
+                    `);
+                });
+
+                if (correctSubCount === 1) scoreP2 += 0.1;
+                else if (correctSubCount === 2) scoreP2 += 0.25;
+                else if (correctSubCount === 3) scoreP2 += 0.5;
+                else if (correctSubCount === 4) scoreP2 += 1.0;
+
+                const expEl = document.getElementById(`p2-exp-${q.id}`);
+                expEl.classList.remove("hidden");
+                expEl.innerHTML = `
+                    <div class="font-bold text-teal-800 mb-1">Đúng ${correctSubCount}/4 ý:</div>
+                    ${expLines.join("")}
+                `;
+            });
+
+            // Chấm Phần 3 (0.25đ / câu)
+            QUIZ_DATA.part3.forEach(q => {
+                const userVal = document.getElementById(`p3_in_${q.id}`).value.trim().replace(",", ".");
+                const correctVal = q.answer.trim().replace(",", ".");
+                const isCorrect = userVal.toLowerCase() === correctVal.toLowerCase();
+                if (isCorrect) scoreP3 += 0.25;
+
+                const expEl = document.getElementById(`p3-exp-${q.id}`);
+                expEl.classList.remove("hidden");
+                expEl.innerHTML = `
+                    <div class="font-bold ${isCorrect ? 'text-indigo-700' : 'text-rose-700'} mb-1">
+                        ${isCorrect ? '✓ ĐÚNG' : '✗ SAI'} — Bạn nhập: <b>${userVal || 'Chưa nhập'}</b> | Đáp số chuẩn: <b>${q.answer}</b>
+                    </div>
+                    <div>${q.explanation}</div>
+                `;
+            });
+
+            const totalScore = Math.min(10, Math.round((scoreP1 + scoreP2 + scoreP3) * 100) / 100);
+
+            // Hiển thị kết quả
+            document.getElementById("res-student-info").innerText = `Học sinh: ${name} • Lớp: ${sClass}`;
+            document.getElementById("res-score").innerText = `${totalScore.toFixed(2)} / 10`;
+            document.getElementById("res-detail").innerText = `Phần I: ${scoreP1.toFixed(2)} đ | Phần II: ${scoreP2.toFixed(2)} đ | Phần III: ${scoreP3.toFixed(2)} đ`;
+
+            document.getElementById("result-box").classList.remove("hidden");
+            document.getElementById("result-box").scrollIntoView({ behavior: 'smooth' });
+
+            // Gửi dữ liệu điểm về Google Apps Script
+            const payload = {
+                timestamp: new Date().toLocaleString("vi-VN"),
+                studentName: name,
+                studentClass: sClass,
+                examTitle: "Bài 14 - Ôn tập Chương 4 Polymer (Hóa 12)",
+                score: totalScore,
+                part1Score: scoreP1,
+                part2Score: scoreP2,
+                part3Score: scoreP3
+            };
+
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                document.getElementById("submit-loading").innerHTML = "<i class='fa-solid fa-check text-emerald-600'></i> Đã đồng bộ kết quả thành công vào Google Sheets!";
+            }).catch(err => {
+                console.error("Lỗi đồng bộ Google Sheets:", err);
+                document.getElementById("submit-loading").innerText = "Đã ghi nhận điểm trên máy học sinh.";
+            });
+
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
