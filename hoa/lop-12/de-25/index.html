@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chuyên đề 12.1 - Bài 1: Đại Cương Về Cơ Chế Phản Ứng | Hóa Học 12 | vatli102.com</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax for Chemistry & Math formulas -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+    <style>
+        .custom-radio:checked + label {
+            border-color: #4f46e5;
+            background-color: #eef2ff;
+            color: #312e81;
+            font-weight: 600;
+        }
+        .custom-radio:checked + label .radio-circle {
+            border-color: #4f46e5;
+            background-color: #4f46e5;
+        }
+        .custom-radio:checked + label .radio-circle::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            display: block;
+        }
+        .btn-tf.active-true {
+            background-color: #10b981 !important;
+            color: white !important;
+            border-color: #059669 !important;
+        }
+        .btn-tf.active-false {
+            background-color: #ef4444 !important;
+            color: white !important;
+            border-color: #dc2626 !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Header Navigation -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <a href="/hoa/lop-12/" class="p-2 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                <div>
+                    <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Hóa Học 12 — Chuyên Đề 12.1</span>
+                    <h1 class="text-sm md:text-base font-extrabold text-slate-900 leading-tight">Bài 1: Đại Cương Về Cơ Chế Phản Ứng (Đề 25)</h1>
+                </div>
+            </div>
+            <!-- Timer Display -->
+            <div class="flex items-center space-x-2 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-xl shadow-inner">
+                <i class="fa-regular fa-clock text-indigo-600 animate-pulse"></i>
+                <span id="timer" class="font-mono font-extrabold text-indigo-700 text-sm md:text-base">50:00</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
+
+        <!-- Student Info Card -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-id-card text-indigo-600"></i> Thông Tin Học Sinh
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Họ và tên thí sinh <span class="text-rose-500">*</span></label>
+                    <input type="text" id="student-name" placeholder="Nguyễn Văn A" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Lớp / Trường học <span class="text-rose-500">*</span></label>
+                    <input type="text" id="student-class" placeholder="12A1 - THPT..." class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm outline-none transition-all">
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="flex justify-between items-center mb-1 text-xs font-bold text-slate-600">
+                <span>Tiến độ hoàn thành</span>
+                <span id="progress-text">0 / 28 câu</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Quiz Container -->
+        <form id="quiz-form" class="space-y-6">
+            <!-- PHẦN I: TRẮC NGHIỆM NHIỀU LỰA CHỌN -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                <div class="border-b border-slate-100 pb-3">
+                    <span class="text-xs font-extrabold px-2.5 py-1 rounded bg-indigo-100 text-indigo-800">PHẦN I (4,5 ĐIỂM)</span>
+                    <h3 class="text-base font-bold text-slate-900 mt-2">CÂU TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN (18 CÂU)</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Thí sinh trả lời từ Câu 1 đến Câu 18. Mỗi câu hỏi thí sinh chỉ chọn một phương án.</p>
+                </div>
+                <div id="part1-questions" class="space-y-6">
+                    <!-- Dynamic injection -->
+                </div>
+            </div>
+
+            <!-- PHẦN II: TRẮC NGHIỆM ĐÚNG / SAI -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                <div class="border-b border-slate-100 pb-3">
+                    <span class="text-xs font-extrabold px-2.5 py-1 rounded bg-emerald-100 text-emerald-800">PHẦN II (4,0 ĐIỂM)</span>
+                    <h3 class="text-base font-bold text-slate-900 mt-2">CÂU TRẮC NGHIỆM ĐÚNG / SAI (4 CÂU - 16 Ý)</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Thí sinh trả lời từ Câu 1 đến Câu 4. Trong mỗi ý a), b), c), d), thí sinh chọn Đúng hoặc Sai.</p>
+                </div>
+                <div id="part2-questions" class="space-y-6">
+                    <!-- Dynamic injection -->
+                </div>
+            </div>
+
+            <!-- PHẦN III: TRẢ LỜI NGẮN -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                <div class="border-b border-slate-100 pb-3">
+                    <span class="text-xs font-extrabold px-2.5 py-1 rounded bg-amber-100 text-amber-800">PHẦN III (1,5 ĐIỂM)</span>
+                    <h3 class="text-base font-bold text-slate-900 mt-2">CÂU TRẮC NGHIỆM TRẢ LỜI NGẮN (6 CÂU)</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Thí sinh trả lời từ Câu 1 đến Câu 6. Điền kết quả dạng số hoặc chữ số vào ô trả lời.</p>
+                </div>
+                <div id="part3-questions" class="space-y-6">
+                    <!-- Dynamic injection -->
+                </div>
+            </div>
+
+            <!-- Submit Button Card -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-center space-y-3">
+                <button type="button" id="btn-submit" onclick="submitQuiz()" class="w-full md:w-2/3 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-extrabold text-base rounded-xl shadow-lg hover:shadow-indigo-200 transition-all">
+                    <i class="fa-solid fa-paper-plane mr-2"></i> Nộp Bài Và Chấm Điểm Ngay
+                </button>
+                <p class="text-xs text-slate-400">Kết quả sẽ được hiển thị ngay kèm hướng dẫn giải chi tiết và đồng bộ về bảng điểm giáo viên.</p>
+            </div>
+        </form>
+
+        <!-- Result Box (Hidden by default) -->
+        <div id="result-box" class="hidden bg-white p-6 rounded-2xl border-2 border-indigo-500 shadow-xl space-y-5">
+            <div class="text-center space-y-2 border-b border-slate-100 pb-4">
+                <span class="inline-block p-3 bg-indigo-50 text-indigo-600 rounded-full text-2xl mb-1">
+                    <i class="fa-solid fa-trophy"></i>
+                </span>
+                <h3 class="text-xl font-black text-slate-900">KẾT QUẢ BÀI LÀM TRỰC TUYẾN</h3>
+                <p id="result-student-info" class="text-sm text-slate-600"></p>
+                <div class="flex justify-center items-center gap-6 mt-4">
+                    <div class="text-center">
+                        <span class="text-xs font-bold text-slate-400 block uppercase">Điểm Số</span>
+                        <span id="result-score" class="text-3xl font-black text-indigo-600">0.0</span>
+                        <span class="text-xs font-bold text-slate-400">/ 10,0</span>
+                    </div>
+                    <div class="h-10 w-px bg-slate-200"></div>
+                    <div class="text-center">
+                        <span class="text-xs font-bold text-slate-400 block uppercase">Số Câu Đúng</span>
+                        <span id="result-correct-count" class="text-3xl font-black text-emerald-600">0</span>
+                        <span class="text-xs font-bold text-slate-400">/ 28 câu</span>
+                    </div>
+                    <div class="h-10 w-px bg-slate-200"></div>
+                    <div class="text-center">
+                        <span class="text-xs font-bold text-slate-400 block uppercase">Thời Gian Làm</span>
+                        <span id="result-time" class="text-3xl font-black text-slate-700">00:00</span>
+                    </div>
+                </div>
+            </div>
+            <div id="sync-status" class="p-3 rounded-xl bg-slate-50 text-slate-600 text-xs text-center border border-slate-200">
+                <i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang đồng bộ kết quả lên Google Sheets giáo viên...
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+        <p>© 2026 vatli102.com • Cổng học liệu trực tuyến Hóa học 12 — Chuyên đề học tập</p>
+    </footer>
+
+    <!-- App Logic Script -->
+    <script>
+        const QUIZ_DATA = {"title": "CHUYÊN ĐỀ 12.1 — BÀI 1: ĐẠI CƯƠNG VỀ CƠ CHẾ PHẢN ỨNG HỮU CƠ", "grade": "12", "subject": "Hóa học", "part1": [{"id": 1, "question": "Cơ chế phản ứng trong hóa học hữu cơ được định nghĩa là", "options": ["A. phương trình hóa học biểu diễn tỉ lệ mol giữa các chất phản ứng và chất sản phẩm.", "B. con đường chi tiết ở cấp độ phân tử mô tả các giai đoạn sơ cấp, sự bẻ gãy liên kết cũ, tạo liên kết mới và sự hình thành các tiểu phân trung gian.", "C. tốc độ biến đổi lượng chất đầu thành sản phẩm trong một đơn vị thời gian xác định.", "D. hiệu ứng nhiệt đi kèm với phản ứng hóa học ở điều kiện tiêu chuẩn."], "answer": "B", "explanation": "Cơ chế phản ứng mô tả chi tiết con đường phân tử mà phản ứng trải qua, bao gồm các giai đoạn sơ cấp, sự chuyển dời electron, sự đứt và hình thành liên kết cũng như các tiểu phân trung gian."}, {"id": 2, "question": "Trong một phản ứng hóa học hữu cơ diễn ra qua nhiều giai đoạn nối tiếp nhau, giai đoạn quyết định tốc độ chung của toàn bộ phản ứng là giai đoạn", "options": ["A. có năng lượng hoạt hóa thấp nhất và diễn ra nhanh nhất.", "B. có năng lượng hoạt hóa cao nhất và diễn ra chậm nhất.", "C. giải phóng nhiều nhiệt lượng nhất ra môi trường.", "D. tạo thành sản phẩm cuối cùng của phản ứng."], "answer": "B", "explanation": "Giai đoạn chậm nhất (giai đoạn có rào cản năng lượng hoạt hóa cao nhất) đóng vai trò là giai đoạn quyết định tốc độ của toàn bộ quá trình phản ứng."}, {"id": 3, "question": "Sự phân cắt đồng li liên kết cộng hóa trị là quá trình", "options": ["A. cặp electron dùng chung được chia đều cho hai nguyên tử tham gia liên kết, mỗi nguyên tử giữ lại một electron.", "B. cặp electron dùng chung chuyển dịch hoàn toàn về phía nguyên tử có độ âm điện lớn hơn.", "C. cặp electron dùng chung chuyển dịch hoàn toàn về phía nguyên tử có độ âm điện nhỏ hơn.", "D. phân tử nhận thêm một electron từ môi trường bên ngoài để tạo thành anion."], "answer": "A", "explanation": "Phân cắt đồng li: Cặp electron dùng chung được chia đôi đều cho hai nguyên tử liên kết, tạo thành các gốc tự do mang electron độc thân."}, {"id": 4, "question": "Tiểu phân trung gian được tạo thành từ sự phân cắt đồng li liên kết cộng hóa trị là", "options": ["A. carbocation.", "B. carbanion.", "C. gốc tự do.", "D. phân tử trung hòa bền vững."], "answer": "C", "explanation": "Sự phân cắt đồng li sinh ra các gốc tự do (free radicals) chứa một hoặc nhiều electron độc thân và trung hòa về điện."}, {"id": 5, "question": "Sự phân cắt dị li liên kết cộng hóa trị C-X (với X là nguyên tử có độ âm điện lớn hơn carbon) tạo ra sản phẩm gồm", "options": ["A. hai gốc tự do trung hòa điện.", "B. carbocation và anion X<sup>-</sup>.", "C. carbanion và cation X+.", "D. hai ion mang điện tích cùng dấu."], "answer": "B", "explanation": "Do X có độ âm điện lớn hơn carbon nên khi phân cắt dị li, X giữ lại cả cặp electron liên kết tạo anion X<sup>-</sup>, nguyên tử carbon bị mất electron trở thành carbocation (R3C+)."}, {"id": 6, "question": "Đặc điểm cấu tạo nào sau đây của carbocation là ĐÚNG?", "options": ["A. Nguyên tử carbon mang điện tích âm và có 8 electron ở lớp ngoài cùng.", "B. Nguyên tử carbon mang điện tích dương và có 6 electron ở lớp ngoài cùng.", "C. Nguyên tử carbon trung hòa điện và có 7 electron ở lớp ngoài cùng.", "D. Nguyên tử carbon có trạng thái lai hóa sp<sup>3</sup> và cấu trúc hình chóp tam giác."], "answer": "B", "explanation": "Carbocation (R3C+) có nguyên tử carbon mang điện tích dương (+1), có 6 electron hóa trị ở lớp ngoài cùng, ở trạng thái lai hóa sp<sup>2</sup> với cấu trúc tam giác phẳng."}, {"id": 7, "question": "Tiểu phân carbanion (R3C:-) có đặc điểm cấu tạo nào sau đây?", "options": ["A. Nguyên tử carbon mang điện tích âm, có 8 electron lớp ngoài cùng và lai hóa sp<sup>3</sup>.", "B. Nguyên tử carbon mang điện tích dương, có 6 electron lớp ngoài cùng và lai hóa sp<sup>2</sup>.", "C. Nguyên tử carbon không mang điện tích và có 1 electron độc thân.", "D. Nguyên tử carbon mang điện tích âm, có 6 electron lớp ngoài cùng và cấu trúc phẳng."], "answer": "A", "explanation": "Carbanion (R3C:-) có nguyên tử carbon mang điện tích âm (-1), có 8 electron lớp ngoài cùng (bao gồm 1 cặp electron tự do không liên kết), ở trạng thái lai hóa sp<sup>3</sup> và có cấu trúc chóp tam giác."}, {"id": 8, "question": "Nguyên tử carbon trung tâm trong gốc tự do methyl (<sup>•</sup>CH<sub>3</sub>) có số electron ở lớp ngoài cùng là", "options": ["A. 6 electron.", "B. 7 electron.", "C. 8 electron.", "D. 5 electron."], "answer": "B", "explanation": "Nguyên tử carbon trong gốc tự do có 3 cặp electron liên kết (6 electron) và 1 electron độc thân, tổng cộng có 7 electron ở lớp ngoài cùng."}, {"id": 9, "question": "Dãy nào sau đây sắp xếp các gốc tự do no theo thứ tự ĐỘ BỀN TĂNG DẦN?", "options": ["A. <sup>•</sup>CH<sub>3</sub> < R-CH2• (bậc I) < R2CH• (bậc II) < R3C• (bậc III).", "B. R3C• (bậc III) < R2CH• (bậc II) < R-CH2• (bậc I) < <sup>•</sup>CH<sub>3</sub>.", "C. R2CH• (bậc II) < R-CH2• (bậc I) < R3C• (bậc III) < <sup>•</sup>CH<sub>3</sub>.", "D. <sup>•</sup>CH<sub>3</sub> < R3C• (bậc III) < R2CH• (bậc II) < R-CH2• (bậc I)."], "answer": "A", "explanation": "Các nhóm alkyl có hiệu ứng cảm ứng đẩy electron (+I) làm giải tỏa electron độc thân trên carbon, do đó bậc của carbon càng cao thì gốc tự do càng bền: methyl < bậc I < bậc II < bậc III."}, {"id": 10, "question": "Dãy nào sau đây sắp xếp các carbocation no theo thứ tự ĐỘ BỀN TĂNG DẦN?", "options": ["A. (CH<sub>3</sub>)<sub>3</sub>C<sup>+</sup> < (CH<sub>3</sub>)<sub>2</sub>CH<sup>+</sup> < CH<sub>3</sub>CH<sub>2</sub><sup>+</sup> < CH<sub>3</sub><sup>+</sup>.", "B. CH<sub>3</sub><sup>+</sup> < CH<sub>3</sub>CH<sub>2</sub><sup>+</sup> < (CH<sub>3</sub>)<sub>2</sub>CH<sup>+</sup> < (CH<sub>3</sub>)<sub>3</sub>C<sup>+</sup>.", "C. (CH<sub>3</sub>)<sub>2</sub>CH<sup>+</sup> < CH<sub>3</sub>CH<sub>2</sub><sup>+</sup> < (CH<sub>3</sub>)<sub>3</sub>C<sup>+</sup> < CH<sub>3</sub><sup>+</sup>.", "D. CH<sub>3</sub><sup>+</sup> < (CH<sub>3</sub>)<sub>3</sub>C<sup>+</sup> < (CH<sub>3</sub>)<sub>2</sub>CH<sup>+</sup> < CH<sub>3</sub>CH<sub>2</sub><sup>+</sup>."], "answer": "B", "explanation": "Các nhóm alkyl (+I) đẩy electron làm giải tỏa điện tích dương trên nguyên tử carbon, vì vậy độ bền carbocation tăng theo bậc của carbon: CH<sub>3</sub><sup>+</sup> (methyl) < bậc I (ethyl) < bậc II (isopropyl) < bậc III (tert-butyl)."}, {"id": 11, "question": "Dãy nào sau đây sắp xếp các carbanion no theo thứ tự ĐỘ BỀN GIẢM DẦN?", "options": ["A. CH3:- > R-CH2:- (bậc I) > R2CH:- (bậc II) > R3C:- (bậc III).", "B. R3C:- (bậc III) > R2CH:- (bậc II) > R-CH2:- (bậc I) > CH3:-.", "C. R2CH:- (bậc II) > R-CH2:- (bậc I) > R3C:- (bậc III) > CH3:-.", "D. CH3:- > R3C:- (bậc III) > R2CH:- (bậc II) > R-CH2:- (bậc I)."], "answer": "A", "explanation": "Do nguyên tử carbon trong carbanion mang điện tích âm, các nhóm alkyl (+I) đẩy electron làm tăng thêm mật độ điện tích âm khiến tiểu phân càng kém bền. Do đó thứ tự độ bền giảm dần: CH3:- > bậc I > bậc II > bậc III (ngược lại với carbocation)."}, {"id": 12, "question": "Phân cắt đồng li liên kết Cl-Cl trong phân tử chlorine thường diễn ra thuận lợi dưới điều kiện nào sau đây?", "options": ["A. Trong bóng tối ở nhiệt độ thấp.", "B. Trong dung môi nước có mặt chất điện li mạnh.", "C. Chiếu sáng (ánh sáng khuếch tán hoặc tia tử ngoại) hoặc đun nóng nhiệt độ cao.", "D. Sục khí chlorine qua dung dịch kiềm mạnh NaOH."], "answer": "C", "explanation": "Liên kết Cl-Cl không phân cực, năng lượng liên kết được cung cấp bởi photon ánh sáng (hv) hoặc nhiệt độ cao để phân cắt đồng li tạo hai gốc tự do <sup>•</sup>Cl."}, {"id": 13, "question": "Khi cho isobutane ((CH3)3CH) phản ứng với Cl<sub>2</sub> theo tỉ lệ mol 1:1 có chiếu sáng, sản phẩm thế chính là (CH3)3C-Cl. Cơ chế phản ứng ưu tiên tạo sản phẩm này vì", "options": ["A. gốc tự do bậc I ((CH3)2CH-CH2•) bền hơn gốc tự do bậc III ((CH<sub>3</sub>)<sub>3</sub>C<sup>•</sup>).", "B. gốc tự do bậc III ((CH<sub>3</sub>)<sub>3</sub>C<sup>•</sup>) bền hơn gốc tự do bậc I ((CH3)2CH-CH2•).", "C. carbocation bậc III được tạo thành trong phản ứng thế gốc.", "D. liên kết C-H ở carbon bậc I có năng lượng liên kết nhỏ hơn carbon bậc III."], "answer": "B", "explanation": "Gốc tự do bậc III (CH<sub>3</sub>)<sub>3</sub>C<sup>•</sup> bền hơn gốc tự do bậc I (CH3)2CH-CH2• do có 3 nhóm methyl đẩy electron, dẫn đến năng lượng hoạt hóa tạo gốc bậc III thấp hơn, tạo sản phẩm chính (CH3)3C-Cl."}, {"id": 14, "question": "Gốc tự do nào sau đây được sinh ra trong cơ thể con người có khả năng oxy hóa cực mạnh và gây hại nghiêm trọng nhất cho tế bào?", "options": ["A. Hydroxyl radical (<sup>•</sup>OH).", "B. Superoxide anion radical (O<sub>2</sub><sup>•-</sup>).", "C. Nitric oxide (•NO).", "D. Alkoxyl radical (RO•)."], "answer": "A", "explanation": "Hydroxyl radical (<sup>•</sup>OH) là một trong những gốc tự do có hoạt tính phản ứng mạnh nhất, có thể tấn công và phá hủy hầu hết các đại phân tử sinh học (lipid, protein, DNA) ngay tại vị trí sinh ra."}, {"id": 15, "question": "Hiện tượng stress oxy hóa (oxidative stress) trong cơ thể người xảy ra khi", "options": ["A. nồng độ oxygen trong máu giảm xuống dưới mức bình thường.", "B. lượng gốc tự do sinh ra vượt quá khả năng trung hòa của hệ thống chất chống oxy hóa trong cơ thể.", "C. lượng chất chống oxy hóa vượt quá nhu cầu cần thiết của tế bào.", "D. cơ thể hấp thụ quá nhiều khí CO<sub>2</sub> từ môi trường ô nhiễm."], "answer": "B", "explanation": "Stress oxy hóa là trạng thái mất cân bằng khi lượng gốc tự do (ROS) gia tăng quá mức so với hệ thống phòng thủ chống oxy hóa của cơ thể, dẫn đến tổn thương tế bào và mô."}, {"id": 16, "question": "Hậu quả nào sau đây KHÔNG PHẢI do sự tấn công của các gốc tự do dư thừa gây ra trong cơ thể người?", "options": ["A. Lão hóa da sớm và hình thành nếp nhăn do đứt gãy sợi collagen.", "B. Xơ vữa động mạch do quá trình peroxy hóa lipid màng và lipoprotein LDL.", "C. Đột biến gen và tổn thương DNA có thể dẫn đến nguy cơ ung thư.", "D. Tăng cường khả năng quang hợp và tổng hợp diệp lục ở tế bào động vật."], "answer": "D", "explanation": "Tế bào động vật không có lục lạp và không quang hợp. Các phương án A, B, C đều là tác hại nghiêm trọng đã được y học chứng minh của gốc tự do."}, {"id": 17, "question": "Trong hệ miễn dịch của cơ thể con người, gốc tự do đóng vai trò có lợi nào sau đây?", "options": ["A. Tham gia vào cấu trúc màng phospholipid của tế bào hồng cầu.", "B. Được các tế bào thực bào (bạch cầu) tiết ra như một vũ khí tự nhiên để tiêu diệt vi khuẩn, virus xâm nhập.", "C. Làm chất xúc tác enzyme chuyển hóa glucose thành glycogen.", "D. Vận chuyển khí oxygen từ phổi đến các tế bào mô."], "answer": "B", "explanation": "Bạch cầu thực bào trong cơ thể người sử dụng phản ứng 'bùng nổ hô hấp' (respiratory burst) để tạo ra các gốc tự do (O<sub>2</sub><sup>•-</sup>, <sup>•</sup>OH, HOCl) nhằm tiêu diệt vi khuẩn và mầm bệnh xâm nhập."}, {"id": 18, "question": "Cơ chế hoạt động bảo vệ tế bào của các chất chống oxy hóa (như Vitamin C, Vitamin E) là", "options": ["A. chủ động nhường electron hoặc nguyên tử H cho gốc tự do để tạo thành các phân tử ổn định và chuyển thành gốc mới kém hoạt động.", "B. kích thích gốc tự do phân chia thành các ion kim loại nặng vô hại.", "C. bao bọc hoàn toàn tế bào để ngăn cản khí oxygen tiếp xúc với màng tế bào.", "D. phá vỡ toàn bộ cấu trúc phân tử DNA để ngăn cản phản ứng dây chuyền."], "answer": "A", "explanation": "Chất chống oxy hóa (Antioxidants) hoạt động theo cơ chế nhường electron hoặc nguyên tử H cho gốc tự do, biến chúng thành dạng vô hại; bản thân chất chống oxy hóa trở thành gốc tự do mới có độ bền cao và không gây hại."}], "part2": [{"id": 1, "context": "Cho phản ứng chlor hóa methane dưới tác dụng của ánh sáng khuếch tán: CH<sub>4</sub> + Cl<sub>2</sub> -(as)-> CH<sub>3</sub>Cl + HCl. Nghiên cứu thực nghiệm chứng minh phản ứng diễn ra theo cơ chế thế gốc (SR) gồm 3 giai đoạn: Khơi mào (phân cắt Cl<sub>2</sub>), Phát triển mạch (tạo <sup>•</sup>CH<sub>3</sub> và CH<sub>3</sub>Cl), Đứt mạch (các gốc tự do kết hợp với nhau).", "subquestions": [{"id": "a", "text": "Giai đoạn khơi mào của phản ứng là sự phân cắt dị li liên kết Cl-Cl tạo ra anion Cl<sup>-</sup> và cation Cl+.", "answer": "Sai", "explanation": "Giai đoạn khơi mào là sự phân cắt ĐỒNG LI liên kết Cl-Cl dưới tác dụng của ánh sáng tạo ra hai gốc tự do chlorine (<sup>•</sup>Cl), không phải phân cắt dị li."}, {"id": "b", "text": "Tiểu phân trung gian xuất hiện trong giai đoạn phát triển mạch của phản ứng là gốc tự do methyl (<sup>•</sup>CH<sub>3</sub>).", "answer": "Đúng", "explanation": "Trong giai đoạn phát triển mạch: <sup>•</sup>Cl + CH<sub>4</sub> -> <sup>•</sup>CH<sub>3</sub> + HCl, sau đó <sup>•</sup>CH<sub>3</sub> + Cl<sub>2</sub> -> CH<sub>3</sub>Cl + <sup>•</sup>Cl. Tiểu phân trung gian chính là gốc tự do methyl."}, {"id": "c", "text": "Sự kết hợp giữa hai gốc tự do <sup>•</sup>CH<sub>3</sub> tạo thành ethane (C<sub>2</sub>H<sub>6</sub>) là một trong những phản ứng làm đứt mạch gốc.", "answer": "Đúng", "explanation": "Ở giai đoạn đứt mạch, hai gốc tự do kết hợp với nhau: <sup>•</sup>CH<sub>3</sub> + <sup>•</sup>CH<sub>3</sub> -> C<sub>2</sub>H<sub>6</sub>; <sup>•</sup>CH<sub>3</sub> + <sup>•</sup>Cl -> CH<sub>3</sub>Cl; <sup>•</sup>Cl + <sup>•</sup>Cl -> Cl<sub>2</sub>, làm triệt tiêu các electron độc thân."}, {"id": "d", "text": "Nếu tiến hành phản ứng trong bóng tối ở nhiệt độ phòng, phản ứng vẫn xảy ra nhanh do liên kết C-H trong CH<sub>4</sub> rất dễ bị phân cắt dị li.", "answer": "Sai", "explanation": "Trong bóng tối ở nhiệt độ phòng, liên kết Cl-Cl và C-H không nhận đủ năng lượng hoạt hóa để bẻ gãy nên phản ứng không xảy ra."}]}, {"id": 2, "context": "Xét cấu tạo và độ bền tương đối của các tiểu phân trung gian hữu cơ chứa 1, 2 và 3 nhóm methyl gắn vào nguyên tử carbon trung tâm: (CH<sub>3</sub>)<sub>3</sub>C<sup>+</sup>, (CH<sub>3</sub>)<sub>2</sub>CH<sup>+</sup>, CH<sub>3</sub>CH<sub>2</sub><sup>+</sup>, CH<sub>3</sub><sup>+</sup> và các carbanion tương ứng.", "subquestions": [{"id": "a", "text": "Carbocation tert-butyl ((CH<sub>3</sub>)<sub>3</sub>C<sup>+</sup>) có độ bền cao hơn carbocation isopropyl ((CH<sub>3</sub>)<sub>2</sub>CH<sup>+</sup>) do có nhiều nhóm methyl đẩy electron hơn.", "answer": "Đúng", "explanation": "Ba nhóm methyl có hiệu ứng cảm ứng (+I) đẩy electron về phía nguyên tử C mang điện tích dương, giúp giải tỏa điện tích dương tốt hơn nên (CH<sub>3</sub>)<sub>3</sub>C<sup>+</sup> bền hơn (CH<sub>3</sub>)<sub>2</sub>CH<sup>+</sup>."}, {"id": "b", "text": "Nguyên tử carbon trung tâm trong carbocation (CH<sub>3</sub>)<sub>3</sub>C<sup>+</sup> ở trạng thái lai hóa sp<sup>3</sup> và có cấu trúc hình tứ diện đều.", "answer": "Sai", "explanation": "Carbon trung tâm trong carbocation ở trạng thái lai hóa sp<sup>2</sup>, có cấu trúc tam giác phẳng với góc liên kết xấp xỉ 120°, không phải lai hóa sp<sup>3</sup>."}, {"id": "c", "text": "Carbanion methyl (CH3:-) có độ bền cao hơn carbanion tert-butyl ((CH3)3C:-).", "answer": "Đúng", "explanation": "Trong carbanion, các nhóm methyl đẩy electron làm tăng thêm mật độ điện tích âm khiến tiểu phân kém bền. Do đó carbanion methyl không có nhóm đẩy electron là bền nhất."}, {"id": "d", "text": "Carbanion có cấu trúc phẳng tương tự carbocation vì cả hai đều có 3 liên kết sigma quanh nguyên tử carbon trung tâm.", "answer": "Sai", "explanation": "Carbanion có 3 liên kết sigma và 1 cặp electron tự do không liên kết, ở trạng thái lai hóa sp<sup>3</sup> và có cấu trúc chóp tam giác (tương tự NH<sub>3</sub>), không phải cấu trúc phẳng."}]}, {"id": 3, "context": "Trong hóa học hữu cơ, phản ứng cộng hợp chất HX vào alkene bất đối xứng (như propene CH3-CH=CH2) tuân theo quy tắc Markovnikov: phần mang điện tích dương (H<sup>+</sup>) ưu tiên cộng vào nguyên tử carbon mang nhiều hydrogen hơn.", "subquestions": [{"id": "a", "text": "Giai đoạn đầu của phản ứng cộng HX vào alkene là sự tấn công của tác nhân H<sup>+</sup> vào nối đôi C=C (phân cắt dị li liên kết pi).", "answer": "Đúng", "explanation": "Đám mây electron pi giàu mật độ điện tích âm của nối đôi C=C nhận H<sup>+</sup> (tác nhân electrophile), đây là giai đoạn sơ cấp đầu tiên của cơ chế cộng electrophile AE."}, {"id": "b", "text": "Khi H<sup>+</sup> cộng vào carbon số 1 (CH2=) của propene sẽ tạo thành carbocation bậc I có độ bền cao hơn carbocation bậc II.", "answer": "Sai", "explanation": "Khi H<sup>+</sup> cộng vào C số 1 sẽ tạo carbocation bậc II (CH3-CH+-CH3), carbocation này bền hơn nhiều so với carbocation bậc I (CH3-CH2-CH2+)."}, {"id": "c", "text": "Nguyên nhân sâu xa của quy tắc Markovnikov là do phản ứng ưu tiên diễn ra qua tiểu phân trung gian carbocation bền hơn.", "answer": "Đúng", "explanation": "Hướng phản ứng đi qua carbocation bậc II bền hơn có năng lượng hoạt hóa thấp hơn, tốc độ tạo thành nhanh hơn vượt trội, tạo ra sản phẩm chính theo quy tắc Markovnikov."}, {"id": "d", "text": "Sau khi hình thành carbocation trung gian, anion X<sup>-</sup> sẽ tấn công nhanh vào carbon mang điện tích dương để tạo sản phẩm cộng.", "answer": "Đúng", "explanation": "Đây là giai đoạn sơ cấp thứ hai: Anion X<sup>-</sup> (mang điện tích âm) kết hợp với carbocation (mang điện tích dương) tạo liên kết cộng hóa trị C-X bền vững."}]}, {"id": 4, "context": "Trong cơ thể con người, quá trình chuyển hóa năng lượng tại ti thể tiêu thụ oxy nhưng đồng thời tạo ra khoảng 1 - 3% lượng gốc tự do oxy phản ứng (ROS). Khi nồng độ gốc tự do tăng cao do tia cực tím, khói thuốc lá, ô nhiễm môi trường, chúng gây tổn thương màng tế bào, enzyme và DNA.", "subquestions": [{"id": "a", "text": "Gốc tự do trong cơ thể người có thể tấn công acid béo chưa bão hòa trong màng tế bào gây phản ứng peroxy hóa lipid làm phá hủy tính toàn vẹn của màng tế bào.", "answer": "Đúng", "explanation": "Gốc tự do bứt nguyên tử H từ acid béo không no của màng phospholipid, khởi phát phản ứng dây chuyền peroxy hóa lipid làm thủng và xơ cứng màng tế bào."}, {"id": "b", "text": "Vitamin C (ascorbic acid) là chất chống oxy hóa tan trong dầu, có chức năng bảo vệ màng phospholipid bên trong nhân tế bào.", "answer": "Sai", "explanation": "Vitamin C là chất chống oxy hóa TAN TRONG NƯỚC (tan trong dịch bào và huyết tương); Vitamin E (alpha-tocopherol) mới là chất chống oxy hóa tan trong dầu bảo vệ màng lipid."}, {"id": "c", "text": "Chất chống oxy hóa bảo vệ cơ thể bằng cách nhận electron từ các phân tử sinh học để phân hủy thành CO<sub>2</sub> và H<sub>2</sub>O.", "answer": "Sai", "explanation": "Chất chống oxy hóa NHƯỜNG electron (hoặc nguyên tử H) cho gốc tự do để vô hiệu hóa gốc tự do độc hại, không phải nhận electron."}, {"id": "d", "text": "Chế độ ăn giàu rau xanh, củ quả tươi có màu sắc đậm (cà rốt, cà chua, việt quất) và trà xanh giúp cung cấp dồi dào các chất chống oxy hóa bảo vệ tế bào.", "answer": "Đúng", "explanation": "Các loại rau củ quả này chứa hàm lượng cao carotenoid, polyphenol, flavonoid và các vitamin A, C, E giúp trung hòa gốc tự do, làm chậm lão hóa và phòng ngừa bệnh tật."}]}], "part3": [{"id": 1, "question": "Tính số electron ở lớp ngoài cùng của nguyên tử carbon mang điện tích dương trong carbocation methyl (CH<sub>3</sub><sup>+</sup>).", "answer": "6", "explanation": "Trong CH<sub>3</sub><sup>+</sup>, nguyên tử carbon liên kết với 3 nguyên tử H bằng 3 liên kết sigma (mỗi liên kết có 2 e) và không có electron tự do nào, tổng số electron lớp ngoài cùng là 3 * 2 = 6 electron."}, {"id": 2, "question": "Tính số electron ở lớp ngoài cùng của nguyên tử carbon mang điện tích âm trong carbanion methyl (CH3:-).", "answer": "8", "explanation": "Trong CH3:-, nguyên tử carbon có 3 liên kết sigma C-H (6 electron) và 1 cặp electron tự do không liên kết (2 electron), tổng số electron lớp ngoài cùng là 6 + 2 = 8 electron (đạt cấu hình bát tử bền)."}, {"id": 3, "question": "Cho các tiểu phân sau: <sup>•</sup>CH<sub>3</sub>, (CH<sub>3</sub>)<sub>3</sub>C<sup>+</sup>, <sup>•</sup>OH, CH3CH2:-, Cl•, C2H5+. Có bao nhiêu tiểu phân là gốc tự do?", "answer": "3", "explanation": "Các tiểu phân là gốc tự do mang electron độc thân gồm: <sup>•</sup>CH<sub>3</sub>, <sup>•</sup>OH, Cl• (tổng cộng có 3 tiểu phân). Các tiểu phân còn lại: (CH<sub>3</sub>)<sub>3</sub>C<sup>+</sup> và C2H5+ là carbocation; CH3CH2:- là carbanion."}, {"id": 4, "question": "Cho các phát biểu sau:\n(1) Phân cắt đồng li tạo ra các tiểu phân mang điện tích dương hoặc âm.\n(2) Gốc tự do có độ bền tăng dần từ bậc I đến bậc III.\n(3) Carbocation có cấu trúc tam giác phẳng với góc liên kết khoảng 120°.\n(4) Carbanion có độ bền tăng dần từ bậc I đến bậc III.\n(5) Phân tử Cl<sub>2</sub> bị phân cắt đồng li khi hấp thụ năng lượng ánh sáng.\nCó bao nhiêu phát biểu ĐÚNG?", "answer": "3", "explanation": "Các phát biểu đúng gồm: (2), (3), (5) -> Có 3 phát biểu đúng.\nPhát biểu (1) sai vì phân cắt đồng li tạo gốc tự do trung hòa điện.\nPhát biểu (4) sai vì carbanion có độ bền GIẢM DẦN từ bậc I đến bậc III."}, {"id": 5, "question": "Cho các phát biểu sau về vai trò và tác hại của gốc tự do trong cơ thể người:\n(1) Gốc tự do có thể gây peroxy hóa màng tế bào dẫn đến phá hủy mô.\n(2) Đột biến DNA do gốc tự do tấn công là một trong những nguyên nhân gây ung thư.\n(3) Tế bào bạch cầu sử dụng gốc tự do để tiêu diệt vi khuẩn gây bệnh.\n(4) Bổ sung thực phẩm giàu Vitamin C và Vitamin E giúp tăng cường khả năng chống oxy hóa.\n(5) Khói thuốc lá và tia tử ngoại là các tác nhân ngoại sinh làm giảm lượng gốc tự do trong cơ thể.\nCó bao nhiêu phát biểu ĐÚNG?", "answer": "4", "explanation": "Các phát biểu đúng gồm: (1), (2), (3), (4) -> Có 4 phát biểu đúng.\nPhát biểu (5) sai vì khói thuốc lá và tia tử ngoại làm GIA TĂNG lượng gốc tự do trong cơ thể, không phải làm giảm."}, {"id": 6, "question": "Vitamin C (ascorbic acid) có công thức phân tử là C6H8O6. Tính phân tử khối của Vitamin C theo đơn vị amu (cho H=1, C=12, O=16).", "answer": "176", "explanation": "Phân tử khối của Vitamin C (C6H8O6) = 12 * 6 + 1 * 8 + 16 * 6 = 72 + 8 + 96 = 176 amu."}]};
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRRiM81mghvA7cInvJgb4rPLzWOAE3s44wer0BJcURQ4hWwoykS19pkNQ9LyzH6Q8lTQ/exec";
+
+        let timeLeft = 50 * 60; // 50 phút
+        let timerInterval = null;
+        let isSubmitted = false;
+
+        // Khởi tạo giao diện
+        function initQuiz() {
+            renderPart1();
+            renderPart2();
+            renderPart3();
+            startTimer();
+            updateProgress();
+        }
+
+        // Render Phần 1
+        function renderPart1() {
+            const container = document.getElementById('part1-questions');
+            container.innerHTML = QUIZ_DATA.part1.map(q => `
+                <div class="p-4 rounded-xl border border-slate-200 hover:border-slate-300 transition-all bg-slate-50/50 space-y-3" id="card-p1-${q.id}">
+                    <p class="font-bold text-sm text-slate-900 leading-snug">
+                        <span class="text-indigo-600 font-extrabold">Câu ${q.id}:</span> ${q.question}
+                    </p>
+                    <div class="grid grid-cols-1 gap-2 pt-1">
+                        ${q.options.map((opt, i) => {
+                            const letter = String.fromCharCode(65 + i);
+                            return `
+                                <div class="relative">
+                                    <input type="radio" name="p1_q${q.id}" id="p1_q${q.id}_${letter}" value="${letter}" class="custom-radio hidden" onchange="updateProgress()">
+                                    <label for="p1_q${q.id}_${letter}" class="flex items-center space-x-3 p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-sm cursor-pointer transition-all">
+                                        <div class="radio-circle w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center flex-shrink-0"></div>
+                                        <span class="flex-grow">${opt}</span>
+                                    </label>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div id="exp-p1-${q.id}" class="hidden mt-3 p-3 bg-indigo-50 border border-indigo-100 rounded-xl text-xs text-slate-700 leading-relaxed"></div>
+                </div>
+            `).join('');
+        }
+
+        // Render Phần 2
+        function renderPart2() {
+            const container = document.getElementById('part2-questions');
+            container.innerHTML = QUIZ_DATA.part2.map(q => `
+                <div class="p-4 rounded-xl border border-slate-200 hover:border-slate-300 transition-all bg-slate-50/50 space-y-4" id="card-p2-${q.id}">
+                    <p class="font-bold text-sm text-slate-900 leading-snug">
+                        <span class="text-emerald-600 font-extrabold">Câu ${q.id}:</span> ${q.context}
+                    </p>
+                    <div class="space-y-3 pt-1">
+                        ${q.subquestions.map(sub => `
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-xl bg-white border border-slate-200 gap-3">
+                                <span class="text-sm text-slate-800 flex-grow font-medium"><strong class="text-indigo-600">${sub.id})</strong> ${sub.text}</span>
+                                <div class="flex items-center space-x-2 flex-shrink-0">
+                                    <button type="button" onclick="selectTF(${q.id}, '${sub.id}', 'Đúng')" id="btn-p2-${q.id}-${sub.id}-true" class="btn-tf px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-100 transition-all">
+                                        Đúng
+                                    </button>
+                                    <button type="button" onclick="selectTF(${q.id}, '${sub.id}', 'Sai')" id="btn-p2-${q.id}-${sub.id}-false" class="btn-tf px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-100 transition-all">
+                                        Sai
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div id="exp-p2-${q.id}" class="hidden mt-3 p-3 bg-emerald-50 border border-emerald-100 rounded-xl text-xs text-slate-700 leading-relaxed"></div>
+                </div>
+            `).join('');
+        }
+
+        // Quản lý trạng thái Đúng/Sai Phần 2
+        const p2Answers = {};
+        function selectTF(qId, subId, val) {
+            if (isSubmitted) return;
+            if (!p2Answers[qId]) p2Answers[qId] = {};
+            p2Answers[qId][subId] = val;
+
+            const btnTrue = document.getElementById(`btn-p2-${qId}-${subId}-true`);
+            const btnFalse = document.getElementById(`btn-p2-${qId}-${subId}-false`);
+
+            if (val === 'Đúng') {
+                btnTrue.classList.add('active-true');
+                btnFalse.classList.remove('active-false');
+            } else {
+                btnFalse.classList.add('active-false');
+                btnTrue.classList.remove('active-true');
+            }
+            updateProgress();
+        }
+
+        // Render Phần 3
+        function renderPart3() {
+            const container = document.getElementById('part3-questions');
+            container.innerHTML = QUIZ_DATA.part3.map(q => `
+                <div class="p-4 rounded-xl border border-slate-200 hover:border-slate-300 transition-all bg-slate-50/50 space-y-3" id="card-p3-${q.id}">
+                    <p class="font-bold text-sm text-slate-900 leading-snug">
+                        <span class="text-amber-600 font-extrabold">Câu ${q.id}:</span> ${q.question}
+                    </p>
+                    <div class="pt-1 flex items-center space-x-3">
+                        <span class="text-xs font-bold text-slate-500">Đáp án của bạn:</span>
+                        <input type="text" id="p3_q${q.id}" placeholder="Nhập số..." class="w-48 px-3 py-2 border border-slate-300 rounded-xl text-sm font-bold text-indigo-700 outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all" oninput="updateProgress()">
+                    </div>
+                    <div id="exp-p3-${q.id}" class="hidden mt-3 p-3 bg-amber-50 border border-amber-100 rounded-xl text-xs text-slate-700 leading-relaxed"></div>
+                </div>
+            `).join('');
+        }
+
+        // Đếm giờ
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Thời gian làm bài đã kết thúc! Hệ thống đang tự động nộp bài.");
+                    submitQuiz();
+                    return;
+                }
+                timeLeft--;
+                const min = Math.floor(timeLeft / 60);
+                const sec = timeLeft % 60;
+                document.getElementById('timer').innerText = `${min < 10 ? '0' : ''}${min}:${sec < 10 ? '0' : ''}${sec}`;
+            }, 1000);
+        }
+
+        // Cập nhật tiến độ
+        function updateProgress() {
+            let answered = 0;
+            // P1 (18 câu)
+            QUIZ_DATA.part1.forEach(q => {
+                if (document.querySelector(`input[name="p1_q${q.id}"]:checked`)) answered++;
+            });
+            // P2 (4 câu)
+            QUIZ_DATA.part2.forEach(q => {
+                if (p2Answers[q.id] && Object.keys(p2Answers[q.id]).length === 4) answered++;
+            });
+            // P3 (6 câu)
+            QUIZ_DATA.part3.forEach(q => {
+                const val = document.getElementById(`p3_q${q.id}`).value.trim();
+                if (val) answered++;
+            });
+
+            const total = 28;
+            const pct = Math.round((answered / total) * 100);
+            document.getElementById('progress-bar').style.width = pct + '%';
+            document.getElementById('progress-text').innerText = `${answered} / ${total} câu (${pct}%)`;
+        }
+
+        // Chấm điểm và nộp bài
+        function submitQuiz() {
+            if (isSubmitted) return;
+
+            const studentName = document.getElementById('student-name').value.trim();
+            const studentClass = document.getElementById('student-class').value.trim();
+
+            if (!studentName || !studentClass) {
+                alert("Vui lòng điền Họ tên và Lớp trước khi nộp bài!");
+                document.getElementById('student-name').focus();
+                return;
+            }
+
+            if (!confirm("Bạn có chắc chắn muốn nộp bài thi ngay không?")) return;
+
+            isSubmitted = true;
+            clearInterval(timerInterval);
+
+            // Tính điểm
+            let scoreP1 = 0;
+            let correctP1 = 0;
+            QUIZ_DATA.part1.forEach(q => {
+                const checked = document.querySelector(`input[name="p1_q${q.id}"]:checked`);
+                const expBox = document.getElementById(`exp-p1-${q.id}`);
+                const isCorrect = checked && checked.value === q.answer;
+                if (isCorrect) {
+                    scoreP1 += 0.25;
+                    correctP1++;
+                    expBox.innerHTML = `<span class="text-emerald-600 font-bold"><i class="fa-solid fa-check"></i> CHÍNH XÁC!</span> Đáp án đúng: <strong>${q.answer}</strong>.<br>${q.explanation}`;
+                    expBox.classList.remove('hidden');
+                } else {
+                    expBox.innerHTML = `<span class="text-rose-600 font-bold"><i class="fa-solid fa-xmark"></i> CHƯA CHÍNH XÁC!</span> Đáp án đúng là <strong>${q.answer}</strong> (Bạn chọn: ${checked ? checked.value : 'Chưa chọn'}).<br>${q.explanation}`;
+                    expBox.classList.remove('hidden');
+                }
+            });
+
+            // P2 chấm theo quy chế Bộ GD&ĐT (đúng 1: 0.1đ; đúng 2: 0.25đ; đúng 3: 0.5đ; đúng 4: 1.0đ)
+            let scoreP2 = 0;
+            let correctP2 = 0;
+            QUIZ_DATA.part2.forEach(q => {
+                let subCorrectCount = 0;
+                let details = [];
+                q.subquestions.forEach(sub => {
+                    const userVal = (p2Answers[q.id] && p2Answers[q.id][sub.id]) || 'Chưa chọn';
+                    const isRight = userVal === sub.answer;
+                    if (isRight) subCorrectCount++;
+                    details.push(`<strong>${sub.id})</strong> ${sub.answer} (${isRight ? '<span class="text-emerald-600 font-bold">Đúng</span>' : '<span class="text-rose-500">Sai</span> - bạn chọn: ' + userVal}): ${sub.explanation}`);
+                });
+
+                let qScore = 0;
+                if (subCorrectCount === 1) qScore = 0.1;
+                else if (subCorrectCount === 2) qScore = 0.25;
+                else if (subCorrectCount === 3) qScore = 0.5;
+                else if (subCorrectCount === 4) {
+                    qScore = 1.0;
+                    correctP2++;
+                }
+                scoreP2 += qScore;
+
+                const expBox = document.getElementById(`exp-p2-${q.id}`);
+                expBox.innerHTML = `<div class="font-bold mb-1">Kết quả: Đúng ${subCorrectCount}/4 ý (+${qScore} điểm)</div>` + details.join('<br>');
+                expBox.classList.remove('hidden');
+            });
+
+            // P3 chấm trả lời ngắn (0.25đ mỗi câu)
+            let scoreP3 = 0;
+            let correctP3 = 0;
+            QUIZ_DATA.part3.forEach(q => {
+                const userVal = document.getElementById(`p3_q${q.id}`).value.trim();
+                const isRight = userVal.toLowerCase() === q.answer.toLowerCase();
+                const expBox = document.getElementById(`exp-p3-${q.id}`);
+                if (isRight) {
+                    scoreP3 += 0.25;
+                    correctP3++;
+                    expBox.innerHTML = `<span class="text-emerald-600 font-bold"><i class="fa-solid fa-check"></i> CHÍNH XÁC!</span> Đáp số: <strong>${q.answer}</strong>.<br>${q.explanation}`;
+                    expBox.classList.remove('hidden');
+                } else {
+                    expBox.innerHTML = `<span class="text-rose-600 font-bold"><i class="fa-solid fa-xmark"></i> CHƯA CHÍNH XÁC!</span> Đáp số chuẩn là <strong>${q.answer}</strong> (Bạn nhập: ${userVal || 'để trống'}).<br>${q.explanation}`;
+                    expBox.classList.remove('hidden');
+                }
+            });
+
+            const totalScore = Math.round((scoreP1 + scoreP2 + scoreP3) * 100) / 100;
+            const totalCorrect = correctP1 + correctP2 + correctP3;
+
+            // Hiển thị kết quả
+            const resultBox = document.getElementById('result-box');
+            resultBox.classList.remove('hidden');
+            document.getElementById('result-student-info').innerText = `Học sinh: ${studentName} — Lớp: ${studentClass}`;
+            document.getElementById('result-score').innerText = totalScore.toFixed(2);
+            document.getElementById('result-correct-count').innerText = `${correctP1} (P1) + ${correctP2} (P2) + ${correctP3} (P3)`;
+            
+            const elapsed = (50 * 60) - timeLeft;
+            const elMin = Math.floor(elapsed / 60);
+            const elSec = elapsed % 60;
+            document.getElementById('result-time').innerText = `${elMin}p ${elSec}s`;
+
+            // Cuộn xuống bảng kết quả
+            resultBox.scrollIntoView({ behavior: 'smooth' });
+
+            // Vô hiệu hóa input
+            document.querySelectorAll('input').forEach(inp => inp.disabled = true);
+            document.querySelectorAll('button').forEach(btn => {
+                if (btn.id !== 'btn-submit') btn.disabled = true;
+            });
+            document.getElementById('btn-submit').classList.add('hidden');
+
+            // Đồng bộ kết quả lên Google Sheets giáo viên
+            syncToGoogleSheets(studentName, studentClass, totalScore, totalCorrect, `${elMin} phút ${elSec} giây`);
+        }
+
+        // Gửi kết quả về Google Apps Script
+        function syncToGoogleSheets(name, className, score, correct, duration) {
+            const syncStatus = document.getElementById('sync-status');
+            const payload = {
+                action: 'submitQuiz',
+                quizTitle: QUIZ_DATA.title,
+                grade: QUIZ_DATA.grade,
+                subject: QUIZ_DATA.subject,
+                studentName: name,
+                studentClass: className,
+                score: score,
+                correctCount: correct,
+                duration: duration,
+                timestamp: new Date().toLocaleString('vi-VN')
+            };
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                syncStatus.className = "p-3 rounded-xl bg-emerald-50 text-emerald-700 text-xs text-center border border-emerald-200 font-bold";
+                syncStatus.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> Kết quả đã được tự động lưu về Google Sheets của giáo viên thành công!';
+            })
+            .catch(err => {
+                syncStatus.className = "p-3 rounded-xl bg-amber-50 text-amber-700 text-xs text-center border border-amber-200";
+                syncStatus.innerHTML = '<i class="fa-solid fa-circle-info mr-1"></i> Bài đã được chấm xong cục bộ trên máy của bạn.';
+            });
+        }
+
+        // Chạy khởi tạo khi tải trang
+        window.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>
