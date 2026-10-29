@@ -624,6 +624,19 @@
         let hasSentResults = false;
         let lastSyncData = null;
 
+        window.addEventListener('DOMContentLoaded', () => {
+            try {
+                const savedName = localStorage.getItem('vatli102_student_name') || sessionStorage.getItem('vatli102_student_name');
+                const savedClass = localStorage.getItem('vatli102_student_class') || sessionStorage.getItem('vatli102_student_class');
+                if (savedName && document.getElementById('studentName')) {
+                    document.getElementById('studentName').value = savedName;
+                }
+                if (savedClass && document.getElementById('studentClass')) {
+                    document.getElementById('studentClass').value = savedClass;
+                }
+            } catch(e) {}
+        });
+
         function startExam() {
             const name = document.getElementById('studentName').value.trim();
             const sClass = document.getElementById('studentClass').value.trim();
@@ -633,6 +646,12 @@
             }
             window.sName = name;
             window.sClass = sClass;
+            try {
+                localStorage.setItem('vatli102_student_name', name);
+                localStorage.setItem('vatli102_student_class', sClass);
+                sessionStorage.setItem('vatli102_student_name', name);
+                sessionStorage.setItem('vatli102_student_class', sClass);
+            } catch(e) {}
             document.getElementById('displayName').innerText = name;
             document.getElementById('displayClass').innerText = sClass;
             document.getElementById('loginCard').style.display = 'none';
@@ -899,13 +918,17 @@
             document.getElementById('resultsPanel').style.display = 'block';
             document.getElementById('resultsPanel').scrollIntoView({ behavior: 'smooth' });
 
-            let sName = (typeof window.sName !== 'undefined' && window.sName)
-                       || (document.getElementById('displayName') && document.getElementById('displayName').innerText.trim())
+            let sName = (document.getElementById('displayName') && document.getElementById('displayName').innerText.trim())
                        || (document.getElementById('studentName') && document.getElementById('studentName').value.trim())
+                       || (typeof window.sName !== 'undefined' && window.sName && window.sName.trim())
+                       || (function() { try { return localStorage.getItem('vatli102_student_name'); } catch(e){ return ''; } })()
+                       || (function() { try { return sessionStorage.getItem('vatli102_student_name'); } catch(e){ return ''; } })()
                        || 'Học sinh';
-            let sClass = (typeof window.sClass !== 'undefined' && window.sClass)
-                        || (document.getElementById('displayClass') && document.getElementById('displayClass').innerText.trim())
+            let sClass = (document.getElementById('displayClass') && document.getElementById('displayClass').innerText.trim())
                         || (document.getElementById('studentClass') && document.getElementById('studentClass').value.trim())
+                        || (typeof window.sClass !== 'undefined' && window.sClass && window.sClass.trim())
+                        || (function() { try { return localStorage.getItem('vatli102_student_class'); } catch(e){ return ''; } })()
+                        || (function() { try { return sessionStorage.getItem('vatli102_student_class'); } catch(e){ return ''; } })()
                         || '12';
 
             const examTitle = "Đề Ôn Tập Chuyên Đề: Polymer Và Vật Liệu Polymer - Hóa Học 12";
