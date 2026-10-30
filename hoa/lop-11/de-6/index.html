@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📝 ĐỀ KIỂM TRA GIỮA HỌC KÌ 1 - MÔN HÓA HỌC 11 - Trắc Nghiệm Online Hóa Học</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary: #0284c7;
+            --primary-hover: #0369a1;
+            --secondary: #0d9488;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.65;
+            padding-bottom: 40px;
+        }
+
+        p, .question-title, .tf-row > div:first-child, .explanation-box, .score-desc, .form-group label {
+            text-align: justify;
+        }
+
+        .sticky-header {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        }
+        .header-container {
+            max-width: 920px; margin: 0 auto; padding: 10px 15px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .site-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .logo-text {
+            font-size: 1.25rem; font-weight: 800;
+            background: linear-gradient(135deg, #0284c7, #0d9488);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .nav-links { display: flex; gap: 18px; align-items: center; }
+        .timer-badge {
+            background: #fee2e2; color: #ef4444; padding: 4px 10px; border-radius: 8px;
+            font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; gap: 5px;
+        }
+
+        .quiz-container { max-width: 920px; margin: 20px auto; padding: 0 15px; min-height: 80vh; }
+
+        .exam-banner {
+            background: linear-gradient(135deg, #0f172a, #0369a1, #0f766e); color: white;
+            padding: 2.2rem 1.5rem; border-radius: 20px; text-align: center; margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(15,23,42,0.25);
+        }
+        .exam-banner h1 { font-size: 1.7rem; font-weight: 800; margin-bottom: 8px; }
+        .exam-banner p { font-size: 0.95rem; color: #e0f2fe; text-align: center; }
+        .badge-exam { display: inline-block; background: rgba(255,255,255,0.2); padding: 4px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; margin-top: 10px; }
+
+        .login-card {
+            background: white; border-radius: 16px; padding: 30px 20px; text-align: center;
+            border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 30px;
+        }
+        .form-group { margin-bottom: 15px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
+        .form-group label { display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 5px; color: #334155; }
+        .form-control { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; outline: none; }
+        .btn-start {
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; border: none;
+            padding: 12px 30px; border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer;
+            box-shadow: 0 4px 14px rgba(2,132,199,0.3); transition: all 0.2s; width: 100%; max-width: 400px; margin-top: 10px;
+        }
+        .btn-start:hover { transform: translateY(-2px); }
+
+        .student-info-bar {
+            background: #f1f5f9; padding: 10px 16px; border-radius: 10px; margin-bottom: 20px;
+            display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; font-weight: 600;
+        }
+
+        .progress-container { margin-bottom: 25px; }
+        .progress-bar-bg { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #0284c7, #0d9488); transition: width 0.3s; }
+        .progress-text { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--text-muted); margin-top: 5px; }
+
+        .section-header {
+            background: #f0f9ff; color: #0369a1; padding: 12px 18px; border-radius: 12px;
+            font-weight: 800; font-size: 1.05rem; margin: 30px 0 15px 0; border-left: 5px solid #0284c7;
+        }
+
+        .question-card {
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
+            padding: 18px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: border-color 0.2s;
+        }
+        .question-card:hover { border-color: #cbd5e1; }
+        .question-num { font-weight: 800; color: var(--primary); margin-right: 6px; }
+        .question-title { font-size: 0.98rem; font-weight: 600; margin-bottom: 12px; color: #1e293b; line-height: 1.6; }
+        .question-context {
+            background: #f8fafc; border-left: 4px solid var(--primary);
+            padding: 12px 16px; border-radius: 8px; margin-bottom: 14px;
+            font-size: 0.94rem; color: #334155; line-height: 1.65; text-align: justify;
+        }
+
+        .options-grid { display: flex; flex-direction: column; gap: 8px; }
+        .option-item {
+            display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+            border: 1px solid var(--border); border-radius: 8px; cursor: pointer;
+            transition: all 0.15s; font-size: 0.92rem;
+        }
+        .option-item:hover { background: #f8fafc; border-color: #94a3b8; }
+        .option-item.selected { background: #f0f9ff; border-color: var(--primary); color: #0369a1; font-weight: 600; }
+        .option-label { font-weight: 700; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #f1f5f9; font-size: 0.8rem; flex-shrink: 0; }
+        .option-item.selected .option-label { background: var(--primary); color: white; }
+
+        .tf-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-bottom: 1px solid #f1f5f9; gap: 10px; }
+        .tf-row:last-child { border-bottom: none; }
+        .tf-btns { display: flex; gap: 6px; flex-shrink: 0; }
+        .tf-btn {
+            padding: 5px 14px; border: 1px solid var(--border); border-radius: 6px;
+            background: white; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.15s;
+        }
+        .tf-btn.active-true { background: #10b981; border-color: #10b981; color: white; }
+        .tf-btn.active-false { background: #ef4444; border-color: #ef4444; color: white; }
+
+        .short-answer-box { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+        .short-input {
+            padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px;
+            font-size: 1rem; width: 160px; font-weight: 700; outline: none; transition: all 0.2s;
+        }
+        .short-input:focus { border-color: var(--primary); }
+        .short-input.input-correct { border-color: #22c55e !important; background: #f0fdf4 !important; color: #166534 !important; }
+        .short-input.input-incorrect { border-color: #ef4444 !important; background: #fef2f2 !important; color: #991c1c !important; }
+
+        .question-context {
+            background: #f1f5f9;
+            border-left: 4px solid var(--secondary);
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 0.92rem;
+            color: #1e293b;
+            margin: 8px 0 14px 0;
+            line-height: 1.6;
+            text-align: justify;
+        }
+        .tf-btn:disabled { cursor: not-allowed; }
+        .tf-btn.correct-choice {
+            box-shadow: 0 0 0 2.5px #22c55e !important;
+            font-weight: 800;
+        }
+        .tf-btn.incorrect-choice {
+            box-shadow: 0 0 0 2.5px #ef4444 !important;
+            opacity: 0.7;
+            text-decoration: line-through;
+        }
+
+        .option-item.correct {
+            background: #dcfce7 !important; border-color: #22c55e !important; color: #15803d !important; font-weight: 700;
+        }
+        .option-item.correct .option-label { background: #22c55e !important; color: white !important; }
+        .option-item.incorrect {
+            background: #fee2e2 !important; border-color: #ef4444 !important; color: #b91c1c !important;
+        }
+        .option-item.incorrect .option-label { background: #ef4444 !important; color: white !important; }
+
+        .explanation-box {
+            margin-top: 14px; padding: 14px 16px; border-radius: 10px; background: #f8fafc;
+            border-left: 4px solid var(--primary); font-size: 0.9rem; color: #334155; display: none;
+        }
+        .explanation-box.show { display: block; }
+
+        .btn-submit {
+            display: block; width: 100%; max-width: 340px; margin: 30px auto 15px auto; padding: 14px 24px;
+            background: linear-gradient(135deg, #10b981, #059669); color: white; border: none;
+            border-radius: 12px; font-size: 1.1rem; font-weight: 800; cursor: pointer;
+            box-shadow: 0 6px 20px rgba(16,185,129,0.3); transition: all 0.2s;
+        }
+        .btn-submit:hover { transform: translateY(-2px); }
+
+        .results-panel {
+            display: none; background: white; border-radius: 20px; padding: 35px 25px;
+            border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-top: 30px; text-align: center;
+        }
+        .score-circle {
+            width: 120px; height: 120px; border-radius: 50%;
+            background: linear-gradient(135deg, #0284c7, #0d9488); color: white;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            margin: 0 auto 15px auto; box-shadow: 0 8px 20px rgba(2,132,199,0.35);
+        }
+        .score-val { font-size: 2.3rem; font-weight: 900; line-height: 1; }
+        .score-max { font-size: 0.8rem; font-weight: 700; opacity: 0.9; margin-top: 2px; }
+        .score-title { font-size: 1.5rem; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+        .score-desc { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px; text-align: center; }
+
+        .details-summary {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px;
+            margin: 20px 0; text-align: center;
+        }
+        .summary-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 14px 10px; }
+        .summary-num { font-size: 1.35rem; font-weight: 800; margin-bottom: 2px; }
+        .summary-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+
+        footer {
+            background: #0f172a; color: #94a3b8; text-align: center; padding: 25px 15px;
+            font-size: 0.85rem; margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="sticky-header">
+        <div class="header-container">
+            <a href="/" class="site-logo">
+                <img src="/favicon.svg" alt="Vatli102" style="width: 32px; height: 32px; border-radius: 8px;">
+                <span class="logo-text">Vatli102.com</span>
+            </a>
+            <div class="nav-links">
+                <a href="/hoa/" class="nav-item" style="text-decoration: none; color: #475569; font-weight: 700; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 5px;"><i class="fa-solid fa-flask-vial" style="color: #9333ea;"></i> Môn Hóa</a>
+                <a href="/hoa/lop-11/" class="nav-item" style="text-decoration: none; color: #475569; font-weight: 700; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 5px;"><i class="fa-solid fa-graduation-cap" style="color: #0284c7;"></i> Hóa 11</a>
+                <a href="/" class="nav-item" style="text-decoration: none; color: #475569; font-weight: 700; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 5px;"><i class="fa-solid fa-house" style="color: #2563eb;"></i> Trang chủ</a>
+                <span id="timerBadge" class="timer-badge" style="display:none;"><i class="fa-regular fa-clock"></i> <span id="timerText">45:00</span></span>
+            </div>
+        </div>
+    </header>
+
+    <div class="quiz-container">
+        <div class="exam-banner">
+            <span class="badge-exam">HÓA HỌC 11 - GDPT 2018</span>
+            <h1 style="margin-top: 10px;">ĐỀ KIỂM TRA GIỮA HỌC KÌ 1 - MÔN HÓA HỌC 11</h1>
+            <p>Thời gian: 45 phút • Bối cảnh thực tế & Suy luận lí thuyết nâng cao</p>
+        </div>
+
+        <div id="loginCard" class="login-card">
+            <h2 style="font-size: 1.3rem; margin-bottom: 8px; color: #1e293b;">Thông Tin Học Sinh</h2>
+            <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 20px;">Vui lòng điền Họ tên và Lớp để bắt đầu làm bài và nhận kết quả tự động.</p>
+            <div class="form-group">
+                <label for="studentName"><i class="fa-solid fa-user"></i> Họ và tên học sinh:</label>
+                <input type="text" id="studentName" class="form-control" placeholder="Ví dụ: Nguyễn Văn An" required>
+            </div>
+            <div class="form-group">
+                <label for="studentClass"><i class="fa-solid fa-graduation-cap"></i> Lớp:</label>
+                <input type="text" id="studentClass" class="form-control" placeholder="Ví dụ: 12A1" required>
+            </div>
+            <button id="btnStart" class="btn-start" onclick="startExam()"><i class="fa-solid fa-play"></i> BẮT ĐẦU LÀM BÀI</button>
+        </div>
+
+        <div id="examWorkspace" style="display: none;">
+            <div class="student-info-bar">
+                <span><i class="fa-solid fa-user-graduate"></i> Học sinh: <strong id="displayName"></strong></span>
+                <span><i class="fa-solid fa-school"></i> Lớp: <strong id="displayClass"></strong></span>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar-bg">
+                    <div id="progressFill" class="progress-bar-fill"></div>
+                </div>
+                <div class="progress-text">
+                    <span>Tiến độ làm bài</span>
+                    <span id="progressCount">0 / 22 câu</span>
+                </div>
+            </div>
+
+            <div class="section-header">
+                📌 PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn (16 câu)
+            </div>
+            <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 15px;">Thí sinh trả lời từ Câu 1 đến Câu 16. Mỗi câu chọn 1 phương án đúng.</p>
+            <div id="part1Container"></div>
+
+            <div class="section-header">
+                📌 PHẦN II. Câu trắc nghiệm đúng / sai (2 câu)
+            </div>
+            <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 15px;">Thí sinh chọn Đúng hoặc Sai cho mỗi ý a, b, c, d. Barem điểm: Đúng 1 ý = 0,1đ; Đúng 2 ý = 0,25đ; Đúng 3 ý = 0,5đ; Đúng 4 ý = 1,0đ.</p>
+            <div id="part2Container"></div>
+
+            <div class="section-header">
+                📌 PHẦN III. Câu trắc nghiệm trả lời ngắn (4 câu)
+            </div>
+            <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 15px;">Thí sinh điền đáp số ngắn gọn vào ô trống (dạng số hoặc số lượng phát biểu đúng).</p>
+            <div id="part3Container"></div>
+
+            <div style="text-align: center; margin: 35px 0 20px 0;">
+                <button id="btnSubmit" class="btn-submit" onclick="confirmSubmitExam()">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> NỘP BÀI THI & CHẤM ĐIỂM
+                </button>
+            </div>
+
+            <div id="resultsPanel" class="results-panel">
+                <div class="score-circle">
+                    <span id="scoreCircle" class="score-val">0.0</span>
+                    <small class="score-max">/ 10 ĐIỂM</small>
+                </div>
+                <div class="score-title" id="scoreTitle">Hoàn Thành Bài Làm!</div>
+                <div class="score-desc" id="scoreDesc">Xem hướng dẫn giải chi tiết cho từng câu hỏi bên dưới.</div>
+
+                <div class="details-summary">
+                    <div class="summary-card">
+                        <div class="summary-num" style="color: #22c55e;" id="correctCountText">0</div>
+                        <div class="summary-label">Số ý trả lời đúng</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-num" style="color: #ef4444;" id="incorrectCountText">0</div>
+                        <div class="summary-label">Số ý trả lời sai</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-num" style="color: #0284c7;" id="gradeText">0.0/10</div>
+                        <div class="summary-label">Tổng điểm đạt được</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-num" style="color: #0d9488;" id="timeSpentText">--:--</div>
+                        <div class="summary-label">Thời gian làm bài</div>
+                    </div>
+                </div>
+                <div id="sheetSyncStatus" style="display: none; margin: 15px auto; padding: 12px 18px; border-radius: 10px; font-size: 0.92rem; font-weight: 600; background: #f0fdf4; border: 1.5px solid #86efac; color: #166534; max-width: 550px; text-align: center;"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Hệ thống Học tập & Kiểm tra Hóa học Online theo Chương trình GDPT 2018</p>
+    </footer>
+
+    <script>
+        const part1Data = [{"id": 1, "question": "Phản ứng thuận nghịch là phản ứng", "options": {"A": "Trong cùng điều kiện, phản ứng xảy ra theo hai chiều trái ngược nhau.", "B": "Có phương trình hoá học được biểu diễn bằng mũi tên một chiều.", "C": "Chỉ xảy ra theo một chiều nhất định.", "D": "Xảy ra giữa hai chất khí."}, "answer": "A", "explanation": "Theo định nghĩa, phản ứng thuận nghịch là phản ứng hoá học mà trong cùng điều kiện xác định, phản ứng xảy ra đồng thời theo hai chiều trái ngược nhau."}, {"id": 2, "question": "Mối quan hệ giữa tốc độ phản ứng thuận $v_t$ và tốc độ phản ứng nghịch $v_n$ ở trạng thái cân bằng được biểu diễn như thế nào?", "options": {"A": "$v_t = 2v_n$.", "B": "$v_t = v_n \\neq 0$.", "C": "$v_t = 0,5v_n$.", "D": "$v_t = v_n = 0$."}, "answer": "B", "explanation": "Ở trạng thái cân bằng hoá học, tốc độ phản ứng thuận bằng tốc độ phản ứng nghịch và khác 0 ($v_t = v_n \\neq 0$)."}, {"id": 3, "question": "Các yếu tố ảnh hưởng đến cân bằng hoá học là", "options": {"A": "nồng độ, nhiệt độ và chất xúc tác.", "B": "nồng độ, áp suất và diện tích bề mặt.", "C": "nồng độ, nhiệt độ và áp suất.", "D": "áp suất, nhiệt độ và chất xúc tác."}, "answer": "C", "explanation": "Các yếu tố ảnh hưởng đến cân bằng hoá học gồm có: nồng độ, nhiệt độ và áp suất."}, {"id": 4, "question": "Cho phản ứng: $N_2(g) + 3H_2(g) \\rightleftharpoons 2NH_3(g)$; $\\Delta_r H_{298}^o = -92\\text{ kJ}$. Hai biện pháp đều làm cân bằng chuyển dịch theo chiều thuận là", "options": {"A": "Giảm nhiệt độ và giảm áp suất.", "B": "Tăng nhiệt độ và tăng áp suất.", "C": "Giảm nhiệt độ và tăng áp suất.", "D": "Tăng nhiệt độ và giảm áp suất."}, "answer": "C", "explanation": "Phản ứng thuận toả nhiệt ($\\Delta_r H_{298}^o < 0$), nên giảm nhiệt độ cân bằng chuyển dịch theo chiều thuận. Mặt khác số mol khí giảm (từ 4 mol thành 2 mol), nên tăng áp suất cân bằng chuyển dịch theo chiều thuận."}, {"id": 5, "question": "Dung dịch muối, Acid, Base là những chất điện li vì:", "options": {"A": "Chúng có khả năng phân li thành ion trong dung dịch", "B": "Dung dịch của chúng dẫn điện", "C": "Các ion thành phần có tính dẫn điện", "D": "Cả A, B, C"}, "answer": "D", "explanation": "Dung dịch acid, base, muối là những chất điện li vì chúng phân li thành ion trong dung dịch, dung dịch dẫn điện được nhờ các ion mang điện chuyển động tự do."}, {"id": 6, "question": "Dãy chất nào dưới đây chỉ gồm những chất tan và điện li mạnh?", "options": {"A": "$HNO_3, Cu(NO_3)_2, Ca_3(PO_4)_2, H_3PO_4$", "B": "$H_2SO_4, NaCl, KNO_3, Ba(NO_3)_2$", "C": "$CaCl_2, CuSO_4, CaSO_4, HNO_3$", "D": "$KCl, H_2SO_4, H_2O, CaCl_2$"}, "answer": "B", "explanation": "Dãy B gồm $H_2SO_4, NaCl, KNO_3, Ba(NO_3)_2$ đều là các chất tan và điện li mạnh."}, {"id": 7, "question": "Dãy chất nào sau đây, trong nước đều là chất điện li yếu?", "options": {"A": "$H_2S, H_2SO_3, H_2SO_4$.", "B": "$H_2CO_3, H_3PO_4, CH_3COOH, Ba(OH)_2$.", "C": "$H_2S, CH_3COOH, HClO$.", "D": "$H_2CO_3, H_2SO_3, HClO, Al_2(SO_4)_3$."}, "answer": "C", "explanation": "$H_2S, CH_3COOH, HClO$ đều là các acid yếu nên trong nước đều là chất điện li yếu."}, {"id": 8, "question": "Môi trường acid có", "options": {"A": "$pH = 7$.", "B": "$[H^+] > 10^{-7}\\text{ M}$.", "C": "$pH > 7$.", "D": "$[H^+] = 10^{-7}\\text{ M}$."}, "answer": "B", "explanation": "Ở $25^oC$, môi trường acid có $[H^+] > 10^{-7}\\text{ M}$ (tương ứng $pH < 7$)."}, {"id": 9, "question": "Để xác định nồng độ dung dịch NaOH, ta sử dụng dung dịch chuẩn là HCl 0,1M với thể tích là 10,00 ml. Khi kết thúc chuẩn độ, thể tích dung dịch NaOH đã sử dụng là 20 ml. Nồng độ dung dịch NaOH là", "options": {"A": "0,03M.", "B": "0,06M.", "C": "0,04M.", "D": "0,05M."}, "answer": "D", "explanation": "$C_{NaOH} = \\frac{C_{HCl} \\times V_{HCl}}{V_{NaOH}} = \\frac{0,1 \\times 10,00}{20} = 0,05\\text{ M}$."}, {"id": 10, "question": "Ở nhiệt độ thường, nitrogen khá trơ về mặt hoạt động hóa học là do", "options": {"A": "nitrogen có bán kính nguyên tử nhỏ.", "B": "nitrogen có độ âm điện lớn nhất trong nhóm.", "C": "phân tử nitrogen có liên kết ba khá bền.", "D": "phân tử nitrogen không phân cực."}, "answer": "C", "explanation": "Phân tử nitrogen có liên kết ba ($N \\equiv N$) rất bền vững với năng lượng liên kết lớn ($945\\text{ kJ/mol}$) nên ở nhiệt độ thường nitrogen khá trơ về mặt hoá học."}, {"id": 11, "question": "Khi có sấm chớp, khí quyển sinh ra khí", "options": {"A": "CO", "B": "NO.", "C": "$SO_2$.", "D": "$CO_2$."}, "answer": "B", "explanation": "Khi có sấm chớp nhiệt độ cao khoảng $3000^oC$, phản ứng xảy ra: $N_2 + O_2 \\xrightarrow{3000^oC} 2NO$."}, {"id": 12, "question": "Tính base của $NH_3$ do", "options": {"A": "trên N còn cặp e tự do.", "B": "phân tử có 3 liên kết cộng hóa trị phân cực.", "C": "$NH_3$ tan được nhiều trong nước.", "D": "$NH_3$ tác dụng với nước tạo $NH_4OH$."}, "answer": "A", "explanation": "Tính base của $NH_3$ là do trên nguyên tử N còn một cặp electron tự do có khả năng nhận proton $H^+$ của nước."}, {"id": 13, "question": "Nhận xét nào sau đây không đúng về muối ammonium?", "options": {"A": "Muối ammonium bền với nhiệt.", "B": "Các muối ammonium đều là chất điện li mạnh.", "C": "Tất cả các muối ammonium đều tan trong nước.", "D": "các muối ammonium đều bị thủy phân trong nước."}, "answer": "A", "explanation": "Các muối ammonium đều kém bền với nhiệt và dễ bị nhiệt phân huỷ khi đun nóng, do đó nhận xét 'Muối ammonium bền với nhiệt' là không đúng."}, {"id": 14, "question": "Phản ứng hóa học nào sau đây chứng tỏ ammonia là một chất khử?", "options": {"A": "$NH_3 + HCl \\rightarrow NH_4Cl$.", "B": "$2NH_3 + H_2SO_4 \\rightarrow (NH_4)_2SO_4$.", "C": "$2NH_3 + 3CuO \\xrightarrow{t^o} N_2 + 3Cu + 3H_2O$.", "D": "$NH_3 + H_2O \\rightleftharpoons NH_4^+ + OH^-$."}, "answer": "C", "explanation": "Trong phản ứng $2NH_3 + 3CuO \\xrightarrow{t^o} N_2 + 3Cu + 3H_2O$, số oxi hoá của N tăng từ -3 lên 0, chứng tỏ $NH_3$ là chất khử."}, {"id": 15, "question": "Sulfur phản ứng với chất nào sau đây ngay ở nhiệt độ thường?", "options": {"A": "Hg.", "B": "Fe.", "C": "$H_2$.", "D": "$O_2$."}, "answer": "A", "explanation": "Sulfur tác dụng với thủy ngân ($Hg$) ngay ở nhiệt độ thường tạo thành $HgS$: $Hg + S \\rightarrow HgS$."}, {"id": 16, "question": "Trong khí thải do đốt nhiên liệu hóa thạch có chất khí X không màu, mùi hắc, gây viêm đường hô hấp ở người. Khi khuếch tán vào bầu khí quyển, X là nguyên nhân chủ yếu gây hiện tượng “mưa acid”. X là", "options": {"A": "$SO_2$.", "B": "$CO_2$.", "C": "$H_2S$.", "D": "CO."}, "answer": "A", "explanation": "Khí $SO_2$ (sulfur dioxide) mùi hắc, độc và là nguyên nhân chính gây ra hiện tượng mưa acid."}];
+        const part2Data = [{"id": 1, "title": "Cân bằng hóa học tổng hợp sulfur trioxide", "context": "Cho cân bằng hóa học: $2SO_2(g) + O_2(g) \\rightleftharpoons 2SO_3(g)$; $\\Delta_r H_{298}^o = -198\\text{ kJ}$. (1)", "statements": {"a": "Cân bằng (1) chuyển dịch theo chiều thuận khi giảm nhiệt độ của hệ", "b": "Cân bằng (1) không chuyển dịch khi thay đổi áp suất của hệ.", "c": "Cân bằng (1) chuyển dịch theo chiều nghịch khi làm tăng nồng độ khí oxygen", "d": "Khi làm giảm áp suất chung của hệ, cân bằng (1) chuyển dịch theo chiều nghịch."}, "answers": {"a": "Đ", "b": "S", "c": "S", "d": "Đ"}, "explanations": {"a": "Đúng. Vì phản ứng thuận tỏa nhiệt ($\\Delta_r H_{298}^o < 0$), nên khi giảm nhiệt độ cân bằng chuyển dịch theo chiều thuận.", "b": "Sai. Phản ứng có số mol khí chất đầu (3 mol) khác sản phẩm (2 mol), nên áp suất có ảnh hưởng đến cân bằng.", "c": "Sai. Tăng nồng độ oxygen (chất phản ứng) làm cân bằng chuyển dịch theo chiều thuận.", "d": "Đúng. Giảm áp suất cân bằng chuyển dịch theo chiều tăng số mol khí (chiều nghịch)."}}, {"id": 2, "title": "Phản ứng thuận nghịch tổng hợp ammonia", "context": "Xét phản ứng thuận nghịch: $N_2(g) + 3H_2(g) \\rightleftharpoons 2NH_3(g)$; $\\Delta_r H_{298}^o < 0$<br>Mỗi nhận định sau đây là Đúng hay Sai?", "statements": {"a": "Phản ứng thuận là phản ứng tỏa nhiệt, phản ứng nghịch là phản ứng thu nhiệt.", "b": "Ở trạng thái cân bằng hóa học, tốc độ phản ứng thuận bằng tốc độ phản ứng nghịch ($v_t = v_n$).", "c": "Khi hệ đạt trạng thái cân bằng, nồng độ của các chất tham gia và sản phẩm phản ứng tiếp tục thay đổi theo thời gian.", "d": "Khi tăng nhiệt độ của hệ phản ứng, cân bằng hóa học sẽ chuyển dịch theo chiều thuận để sinh ra thêm khí $NH_3$."}, "answers": {"a": "Đ", "b": "Đ", "c": "S", "d": "S"}, "explanations": {"a": "Đúng. $\\Delta_r H_{298}^o < 0$ nên phản ứng thuận toả nhiệt, phản ứng nghịch thu nhiệt.", "b": "Đúng. Ở trạng thái cân bằng hoá học, $v_t = v_n \\neq 0$.", "c": "Sai. Ở trạng thái cân bằng hoá học, nồng độ các chất phản ứng và sản phẩm không đổi theo thời gian.", "d": "Sai. Phản ứng thuận toả nhiệt nên tăng nhiệt độ cân bằng chuyển dịch theo chiều nghịch."}}];
+        const part3Data = [{"id": 1, "question": "Cho các phát biểu sau:<br>(a) Dung dịch các chất điện li dẫn được điện.<br>(b) Trong dung dịch chất điện li yếu gồm cả phân tử và ion.<br>(c) Theo thuyết Bronsted – Lowry thì acid là những chất nhận $H^+$.<br>(d) Theo thuyết Bronsted – Lowry thì acid – base có thể là phân tử hoặc ion.<br>(e) Theo thuyết Bronsted – Lowry thì $H_2O$ là chất lưỡng tính.<br>Có bao nhiêu phát biểu <strong>đúng</strong>?", "answer": "4", "explanation": "Có 4 phát biểu đúng là (a), (b), (d), (e). Phát biểu (c) sai vì acid là chất cho $H^+$, base mới là chất nhận $H^+$."}, {"id": 2, "question": "Cho phản ứng hoá học sau: $PCl_3(g) + Cl_2(g) \\rightleftharpoons PCl_5(g)$<br>Ở $T^oC$, nồng độ các chất ở trạng thái cân bằng như sau: $[PCl_5] = 0,059\\text{ M}$; $[PCl_3] = [Cl_2] = 0,035\\text{ M}$. Hằng số cân bằng ($K_C$) của phản ứng tại $T^oC$ là bao nhiêu? <em>(Làm tròn đến hàng phần mười)</em>", "answer": "48.2", "explanation": "$K_C = \\frac{[PCl_5]}{[PCl_3] \\cdot [Cl_2]} = \\frac{0,059}{0,035 \\times 0,035} = \\frac{0,059}{0,001225} \\approx 48,163$. Làm tròn đến hàng phần mười được 48,2."}, {"id": 3, "question": "Cho $NH_3$ lần lượt tác dụng với $HCl$, $NaOH$, $O_2(t^0)$, dung dịch $FeCl_3$. Có bao nhiêu trường hợp xảy ra phản ứng?", "answer": "3", "explanation": "Có 3 trường hợp xảy ra phản ứng: tác dụng với $HCl$, tác dụng với $O_2(t^o)$, tác dụng với dung dịch $FeCl_3$. Không phản ứng với dung dịch base $NaOH$."}, {"id": 4, "question": "Một oxide của nitrogen có công thức $NO_x$ trong đó N chiếm 30,43% về khối lượng. Giá trị của $x$?", "answer": "2", "explanation": "$\\frac{14}{14 + 16x} \\times 100\\% = 30,43\\% \\Rightarrow 14 + 16x = 46 \\Rightarrow x = 2$."}];
+        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwRRiM81mghvA7cInvJgb4rPLzWOAE3s44wer0BJcURQ4hWwoykS19pkNQ9LyzH6Q8lTQ/exec";
+
+        let userPart1 = {};
+        let userPart2 = {};
+        let userPart3 = {};
+        let examSubmitted = false;
+        let timerInterval = null;
+        let totalTimeSeconds = 45 * 60;
+        let timeRemaining = totalTimeSeconds;
+
+        let lastResultData = null;
+        let hasSentResults = false;
+
+        function retrySync() {
+            if (lastResultData) {
+                hasSentResults = false;
+                sendResultsToGoogleSheet(lastResultData);
+            }
+        }
+
+        function sendResultsToGoogleSheet(data) {
+            // QUY ĐỊNH BẮT BUỘC: CHỈ TỔNG HỢP TRÊN WEBSITE VATLI102.COM
+            // Tuyệt đối không gửi từ GitHub Pages (github.io), localhost hoặc các domain thử nghiệm khác
+            const host = window.location.hostname.toLowerCase();
+            const isVatli102 = (host === 'vatli102.com' || host === 'www.vatli102.com');
+            if (!isVatli102) {
+                console.warn("Chặn tổng hợp Google Sheet: Tên miền " + host + " không phải vatli102.com");
+                const statusEl = document.getElementById("sheetSyncStatus");
+                if (statusEl) {
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-info" style="color: #0284c7;"></i> <strong>Thông báo:</strong> Hệ thống chỉ ghi nhận kết quả chính thức khi học sinh làm bài trên website <strong>vatli102.com</strong> (không tổng hợp từ GitHub Pages).';
+                    statusEl.style.display = 'block';
+                }
+                return;
+            }
+
+            if (hasSentResults) {
+                console.warn("Kết quả đã được gửi trước đó, bỏ qua để tránh trùng lặp.");
+                return;
+            }
+
+            if (!GOOGLE_SHEET_URL || GOOGLE_SHEET_URL.trim() === "" || GOOGLE_SHEET_URL.includes("DAN_LINK")) {
+                return;
+            }
+
+            hasSentResults = true;
+            lastResultData = data;
+            const statusEl = document.getElementById("sheetSyncStatus");
+            if (statusEl) {
+                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tự động lưu kết quả vào Google Sheet của giáo viên...';
+                statusEl.style.display = 'block';
+            }
+
+            const jsonStr = JSON.stringify(data);
+
+            fetch(GOOGLE_SHEET_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: jsonStr
+            })
+            .then(() => {
+                if (statusEl) {
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> <strong>Đã lưu kết quả thành công</strong> vào sổ điểm Google Sheet của giáo viên! <button onclick="retrySync()" style="margin-left: 10px; padding: 3px 10px; font-size: 0.8rem; background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fa-solid fa-rotate"></i> Gửi lại</button>';
+                }
+            })
+            .catch((err) => {
+                console.error("Lỗi đồng bộ Google Sheet:", err);
+                if (statusEl) {
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> Đã gửi kết quả bài làm vào hệ thống. <button onclick="retrySync()" style="margin-left: 10px; padding: 3px 10px; font-size: 0.8rem; background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fa-solid fa-rotate"></i> Thử lại</button>';
+                }
+            });
+        }
+
+        function startExam() {
+            const name = document.getElementById('studentName').value.trim();
+            const sClass = document.getElementById('studentClass').value.trim();
+            if (!name || !sClass) {
+                alert('Vui lòng nhập đầy đủ Họ tên và Lớp trước khi bắt đầu!');
+                return;
+            }
+            window.sName = name;
+            window.sClass = sClass;
+            document.getElementById('displayName').innerText = name;
+            document.getElementById('displayClass').innerText = sClass;
+            document.getElementById('loginCard').style.display = 'none';
+            document.getElementById('examWorkspace').style.display = 'block';
+            document.getElementById('timerBadge').style.display = 'flex';
+
+            renderPart1();
+            renderPart2();
+            renderPart3();
+            startTimer();
+            if (window.MathJax) { MathJax.typesetPromise(); }
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Hết giờ làm bài! Hệ thống tự động nộp bài.');
+                    submitExam();
+                    return;
+                }
+                timeRemaining--;
+                const mins = Math.floor(timeRemaining / 60);
+                const secs = timeRemaining % 60;
+                document.getElementById('timerText').innerText = 
+                    `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }, 1000);
+        }
+
+        function formatContent(str) {
+            if (str === null || str === undefined) return '';
+            return String(str).replace(/\n/g, '<br>');
+        }
+
+        function renderPart1() {
+            const container = document.getElementById('part1Container');
+            let html = '';
+            part1Data.forEach((q, idx) => {
+                html += `
+                <div class="question-card" id="card-p1-${q.id}">
+                    <div class="question-title">
+                        <span class="question-num">Câu ${idx + 1}:</span> ${formatContent(q.question)}
+                    </div>
+                    <div class="options-grid">
+                        ${Object.entries(q.options).map(([k, v]) => `
+                            <div class="option-item" id="opt-${q.id}-${k}" onclick="selectPart1(${q.id}, '${k}')">
+                                <span class="option-label">${k}</span>
+                                <span>${formatContent(v)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="explanation-box" id="exp-p1-${q.id}">
+                        <strong>💡 Hướng dẫn giải:</strong><br>${formatContent(q.explanation)}
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function selectPart1(qId, option) {
+            if (examSubmitted) return;
+            userPart1[qId] = option;
+            const q = part1Data.find(item => item.id === qId);
+            Object.keys(q.options).forEach(k => {
+                const el = document.getElementById(`opt-${qId}-${k}`);
+                if (el) el.classList.remove('selected');
+            });
+            const selectedEl = document.getElementById(`opt-${qId}-${option}`);
+            if (selectedEl) selectedEl.classList.add('selected');
+            updateProgress();
+        }
+
+        function renderPart2() {
+            const container = document.getElementById('part2Container');
+            let html = '';
+            part2Data.forEach((q, idx) => {
+                if (!userPart2[q.id]) userPart2[q.id] = {};
+                const stmts = q.statements || q.subitems || q.sub_items || {};
+                const qTitle = q.context || q.title || `Câu ${idx + 1}`;
+                const qContextText = q.statement || (q.context && q.title ? q.context : '');
+                
+                let expContent = '';
+                if (q.explanation) {
+                    expContent = formatContent(q.explanation);
+                } else if (q.explanations) {
+                    expContent = Object.entries(q.explanations).map(([k, exp]) => `<strong>${k})</strong> ${formatContent(exp)}`).join('<br>');
+                }
+
+                html += `
+                <div class="question-card" id="card-p2-${q.id}">
+                    <div class="question-title">
+                        <span class="question-num">Câu ${idx + 1}:</span> <strong>${formatContent(qTitle)}</strong>
+                    </div>
+                    ${qContextText ? `<div class="question-context">${formatContent(qContextText)}</div>` : ''}
+                    <div class="tf-table">
+                        ${Object.entries(stmts).map(([k, text]) => `
+                            <div class="tf-row">
+                                <div style="font-size: 0.92rem; line-height: 1.55;"><strong>${k})</strong> ${formatContent(text)}</div>
+                                <div class="tf-btns">
+                                    <button class="tf-btn" id="btn-tf-${q.id}-${k}-true" onclick="selectPart2(${q.id}, '${k}', 'Đ')">Đúng</button>
+                                    <button class="tf-btn" id="btn-tf-${q.id}-${k}-false" onclick="selectPart2(${q.id}, '${k}', 'S')">Sai</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="explanation-box" id="exp-p2-${q.id}">
+                        <strong>💡 Hướng dẫn giải chi tiết:</strong><br>${expContent}
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function selectPart2(qId, key, val) {
+            if (examSubmitted) return;
+            if (!userPart2[qId]) userPart2[qId] = {};
+            userPart2[qId][key] = val;
+            const btnT = document.getElementById(`btn-tf-${qId}-${key}-true`);
+            const btnF = document.getElementById(`btn-tf-${qId}-${key}-false`);
+            if (val === 'Đ') {
+                if (btnT) btnT.classList.add('active-true');
+                if (btnF) btnF.classList.remove('active-false');
+            } else {
+                if (btnF) btnF.classList.add('active-false');
+                if (btnT) btnT.classList.remove('active-true');
+            }
+            updateProgress();
+        }
+
+        function renderPart3() {
+            const container = document.getElementById('part3Container');
+            let html = '';
+            part3Data.forEach((q, idx) => {
+                html += `
+                <div class="question-card" id="card-p3-${q.id}">
+                    <div class="question-title">
+                        <span class="question-num">Câu ${idx + 1}:</span> ${formatContent(q.question)}
+                    </div>
+                    <div class="short-answer-box">
+                        <label style="font-size: 0.9rem; font-weight: 600;">Đáp số:</label>
+                        <input type="text" class="short-input" id="input-p3-${q.id}" oninput="recordPart3(${q.id}, this.value)" placeholder="Nhập số...">
+                    </div>
+                    <div class="explanation-box" id="exp-p3-${q.id}">
+                        <strong>💡 Đáp án chuẩn:</strong> <code>${q.answer}</code><br>
+                        <strong>Hướng dẫn giải chi tiết:</strong><br>${formatContent(q.explanation)}
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function recordPart3(qId, val) {
+            if (examSubmitted) return;
+            userPart3[qId] = val.trim();
+            updateProgress();
+        }
+
+        function updateProgress() {
+            let answered = Object.keys(userPart1).length;
+            part2Data.forEach(q => {
+                if (userPart2[q.id]) answered += Object.keys(userPart2[q.id]).length > 0 ? 1 : 0;
+            });
+            answered += Object.keys(userPart3).filter(k => userPart3[k] !== '').length;
+            const total = part1Data.length + part2Data.length + part3Data.length;
+            const pct = Math.min(100, Math.round((answered / total) * 100));
+            document.getElementById('progressFill').style.width = pct + '%';
+            document.getElementById('progressCount').innerText = `${answered} / ${total} câu`;
+        }
+
+        function confirmSubmitExam() {
+            if (confirm('Bạn có chắc chắn muốn nộp bài và kết thúc bài thi không?')) {
+                submitExam();
+            }
+        }
+
+        function submitExam() {
+            if (examSubmitted) return;
+            examSubmitted = true;
+            clearInterval(timerInterval);
+            document.getElementById('btnSubmit').style.display = 'none';
+
+            let totalPoints = 0;
+            let totalCorrectItems = 0;
+            let totalIncorrectItems = 0;
+
+            const p1Weight = 0.25;
+            part1Data.forEach(q => {
+                const userAns = userPart1[q.id];
+                const isCorrect = userAns === q.answer;
+                if (isCorrect) {
+                    totalPoints += p1Weight;
+                    totalCorrectItems++;
+                } else {
+                    totalIncorrectItems++;
+                }
+                Object.keys(q.options).forEach(k => {
+                    const el = document.getElementById(`opt-${q.id}-${k}`);
+                    if (k === q.answer) el.classList.add('correct');
+                    else if (k === userAns) el.classList.add('incorrect');
+                });
+                document.getElementById(`exp-p1-${q.id}`).classList.add('show');
+            });
+
+            const p2Scale = [0, 0.1, 0.25, 0.5, 1.0];
+            part2Data.forEach(q => {
+                let subCorrect = 0;
+                const answers = q.answers || {};
+                Object.entries(answers).forEach(([k, correctVal]) => {
+                    const userVal = (userPart2[q.id] && userPart2[q.id][k]) ? userPart2[q.id][k] : '';
+                    const btnT = document.getElementById(`btn-tf-${q.id}-${k}-true`);
+                    const btnF = document.getElementById(`btn-tf-${q.id}-${k}-false`);
+                    if (btnT) btnT.disabled = true;
+                    if (btnF) btnF.disabled = true;
+
+                    if (userVal === correctVal) {
+                        subCorrect++;
+                        totalCorrectItems++;
+                    } else {
+                        totalIncorrectItems++;
+                    }
+
+                    if (correctVal === 'Đ') {
+                        if (btnT) btnT.classList.add('active-true', 'correct-choice');
+                        if (userVal === 'S' && btnF) btnF.classList.add('incorrect-choice');
+                    } else if (correctVal === 'S') {
+                        if (btnF) btnF.classList.add('active-false', 'correct-choice');
+                        if (userVal === 'Đ' && btnT) btnT.classList.add('incorrect-choice');
+                    }
+                });
+                totalPoints += p2Scale[subCorrect];
+                const expEl = document.getElementById(`exp-p2-${q.id}`);
+                if (expEl) expEl.classList.add('show');
+            });
+
+            const p3Weight = 1.0;
+            part3Data.forEach(q => {
+                const userVal = (userPart3[q.id] || '').replace(',', '.').replace(/\s+/g, '');
+                const correctVal = String(q.answer).replace(',', '.').replace(/\s+/g, '');
+                const inputEl = document.getElementById(`input-p3-${q.id}`);
+                inputEl.disabled = true;
+                if (userVal !== '' && (userVal === correctVal || Math.abs(parseFloat(userVal) - parseFloat(correctVal)) < 0.05)) {
+                    totalPoints += p3Weight;
+                    totalCorrectItems++;
+                    inputEl.classList.add('input-correct');
+                } else {
+                    totalIncorrectItems++;
+                    inputEl.classList.add('input-incorrect');
+                }
+                document.getElementById(`exp-p3-${q.id}`).classList.add('show');
+            });
+
+            const finalScore = Math.min(10.0, Math.max(0.0, totalPoints)).toFixed(2);
+            document.getElementById('scoreCircle').innerText = finalScore;
+            document.getElementById('gradeText').innerText = `${finalScore}/10`;
+            document.getElementById('correctCountText').innerText = totalCorrectItems;
+            document.getElementById('incorrectCountText').innerText = totalIncorrectItems;
+
+            const spentSeconds = totalTimeSeconds - timeRemaining;
+            const sMins = Math.floor(spentSeconds / 60);
+            const sSecs = spentSeconds % 60;
+            document.getElementById('timeSpentText').innerText = 
+                `${sMins < 10 ? '0' : ''}${sMins}:${sSecs < 10 ? '0' : ''}${sSecs}`;
+
+            document.getElementById('resultsPanel').style.display = 'block';
+            document.getElementById('resultsPanel').scrollIntoView({ behavior: 'smooth' });
+
+            const sName = (typeof window.sName !== 'undefined' && window.sName) || (document.getElementById('displayName') && document.getElementById('displayName').innerText.trim()) || (document.getElementById('studentName') && document.getElementById('studentName').value.trim()) || 'Học sinh';
+            const sClass = (typeof window.sClass !== 'undefined' && window.sClass) || (document.getElementById('displayClass') && document.getElementById('displayClass').innerText.trim()) || (document.getElementById('studentClass') && document.getElementById('studentClass').value.trim()) || '11';
+            const tSpent = document.getElementById('timeSpentText').innerText;
+            const totalQ = part1Data.length + part2Data.length + part3Data.length;
+            const wrongCount = totalQ - totalCorrectItems;
+
+            sendResultsToGoogleSheet({
+                timestamp: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
+                time: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
+                subject: "Hóa học",
+                monHoc: "Hóa học",
+                chuyenMuc: "vatli102.com/hoa/",
+                sourceUrl: window.location.href,
+                sourceDomain: window.location.hostname,
+                name: sName,
+                studentName: sName,
+                hoTen: sName,
+                fullName: sName,
+                className: sClass,
+                studentClass: sClass,
+                class: sClass,
+                lop: sClass,
+                lesson: examTitle,
+                examTitle: examTitle,
+                tenBai: examTitle,
+                deThi: examTitle,
+                score: String(finalScore),
+                totalScore: String(finalScore),
+                diem: String(finalScore),
+                diemSo: String(finalScore),
+                grade: `${finalScore}/10`,
+                correct: String(`${totalCorrectItems}/${totalQ}`),
+                correctCount: String(totalCorrectItems),
+                soCauDung: String(totalCorrectItems),
+                tongSoCau: String(totalQ),
+                soCauSai: String(wrongCount),
+                incorrectCount: String(wrongCount),
+                timeSpent: tSpent,
+                details: {
+                    p1: userPart1,
+                    p2: userPart2,
+                    p3: userPart3
+                }
+            });
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise();
+            }
+
+            if (parseFloat(finalScore) >= 7.0 && typeof confetti === 'function') {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+        }
+    </script>
+</body>
+</html>
