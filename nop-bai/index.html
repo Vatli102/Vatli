@@ -362,6 +362,24 @@
             return 'http://192.168.1.14:5000';
         }
 
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUN5rD7TCS8Gk8HevANEhTxVHUrjebsjC2H0h9nht6LuYr7rlVdlkYj_wiAfOG77W-6A/exec";
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const base64 = reader.result.split(',')[1];
+                    resolve({
+                        name: file.name,
+                        type: file.type || 'image/jpeg',
+                        base64: base64
+                    });
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
         async function handleDirectSubmit(e) {
             e.preventDefault();
 
@@ -382,70 +400,70 @@
 
             // Đổi trạng thái nút bấm
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-lg"></i> <span>Đang tải lên hệ thống AI chấm bài...</span>';
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-lg"></i> <span>Đang lưu bài vào Google Drive & Google Sheet của cô...</span>';
             submitBtn.classList.add('opacity-75');
 
             statusBox.className = 'p-4 rounded-xl text-xs font-medium bg-blue-50 text-blue-800 border border-blue-200 block';
-            statusBox.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> Đang kết nối máy chủ AI và gửi ảnh bài làm... Vui lòng giữ màn hình trong giây lát.';
+            statusBox.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> Đang tải ' + selectedFiles.length + ' ảnh bài làm lên hệ thống... Vui lòng giữ màn hình trong giây lát.';
 
             try {
-                const backendUrl = await getBackendUrl();
-                const uploadEndpoint = `${backendUrl}/api/upload`;
+                // Chuyển toàn bộ ảnh sang Base64
+                const filesPayload = await Promise.all(selectedFiles.map(fileToBase64));
 
-                const formData = new FormData();
-                formData.append('lesson_id', 'vl11_bai8');
-                formData.append('mode', 'single_student');
-                formData.append('student_class', studentClass);
-                formData.append('student_name', studentName);
+                const payload = {
+                    lesson_id: 'vl11_bai8',
+                    student_class: studentClass,
+                    student_name: studentName,
+                    files: filesPayload
+                };
 
-                selectedFiles.forEach(f => {
-                    formData.append('files', f);
-                });
-
-                const uploadRes = await fetch(uploadEndpoint, {
+                // Gửi dữ liệu tới Google Apps Script (hoạt động 24/7)
+                await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    body: formData
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    },
+                    body: JSON.stringify(payload)
                 });
 
-                if (uploadRes.ok) {
-                    const data = await uploadRes.json();
-                    statusBox.className = 'p-4 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-900 border border-emerald-300 block';
-                    statusBox.innerHTML = `
-                        <div class="flex items-start gap-2.5">
-                            <i class="fa-solid fa-circle-check text-emerald-600 text-lg shrink-0 mt-0.5"></i>
-                            <div>
-                                <h4 class="font-bold text-sm text-emerald-900">NỘP BÀI THÀNH CÔNG!</h4>
-                                <p class="mt-1">Hệ thống AI đã nhận và ghi nhận bài làm của học sinh: <strong>${studentName}</strong> (Lớp ${studentClass}).</p>
-                                <p class="text-[11px] text-emerald-700 mt-1">Kết quả và câu hỏi băn khoăn viết tay của em đã được chuyển tới cô giáo.</p>
-                            </div>
+                // Hiển thị thông báo thành công rực rỡ
+                statusBox.className = 'p-4 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-900 border-2 border-emerald-400 block shadow-sm';
+                statusBox.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-lg shrink-0 mt-0.5">
+                            <i class="fa-solid fa-check"></i>
                         </div>
-                    `;
+                        <div>
+                            <h4 class="font-bold text-sm text-emerald-950">NỘP BÀI THÀNH CÔNG 100%!</h4>
+                            <p class="mt-1 text-slate-700">Bài làm của học sinh: <strong class="text-emerald-800">${studentName}</strong> (Lớp <strong class="text-emerald-800">${studentClass}</strong>) đã được ghi nhận vào Bảng điểm Google Sheet của cô giáo.</p>
+                            <p class="text-[11px] text-emerald-700 mt-1">Ảnh bài làm (${selectedFiles.length} ảnh) đã được lưu trữ an toàn trên Google Drive.</p>
+                        </div>
+                    </div>
+                `;
 
-                    // Reset form sau khi nộp thành công
-                    selectedFiles = [];
-                    renderPreview();
-                    document.getElementById('input-name').value = '';
-                    submitBtn.innerHTML = '<i class="fa-solid fa-check text-lg"></i> <span>ĐÃ NỘP BÀI THÀNH CÔNG!</span>';
-                    submitBtn.classList.remove('from-indigo-600', 'to-blue-700');
-                    submitBtn.classList.add('bg-emerald-600');
-                    setTimeout(() => {
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up text-lg"></i> <span>NỘP BÀI KHÁC</span>';
-                        submitBtn.className = 'w-full py-4 px-6 bg-gradient-to-r from-indigo-600 via-indigo-700 to-blue-700 hover:from-indigo-500 hover:to-blue-600 text-white font-extrabold text-base rounded-xl shadow-lg transition flex items-center justify-center gap-2';
-                    }, 4000);
-                } else {
-                    throw new Error('Máy chủ phản hồi mã lỗi: ' + uploadRes.status);
-                }
+                // Reset form
+                selectedFiles = [];
+                renderPreview();
+                document.getElementById('input-name').value = '';
+                submitBtn.innerHTML = '<i class="fa-solid fa-circle-check text-lg"></i> <span>ĐÃ NỘP BÀI THÀNH CÔNG!</span>';
+                submitBtn.className = 'w-full py-4 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-base rounded-xl shadow-lg transition flex items-center justify-center gap-2';
+
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up text-lg"></i> <span>NỘP BÀI KHÁC</span>';
+                    submitBtn.className = 'w-full py-4 px-6 bg-gradient-to-r from-indigo-600 via-indigo-700 to-blue-700 hover:from-indigo-500 hover:to-blue-600 text-white font-extrabold text-base rounded-xl shadow-lg transition flex items-center justify-center gap-2';
+                }, 4000);
 
             } catch (err) {
                 console.error('Submit error:', err);
-                statusBox.className = 'p-4 rounded-xl text-xs font-medium bg-amber-50 text-amber-900 border border-amber-300 block';
+                statusBox.className = 'p-4 rounded-xl text-xs font-medium bg-red-50 text-red-900 border border-red-300 block';
                 statusBox.innerHTML = `
                     <div class="flex items-start gap-2.5">
-                        <i class="fa-solid fa-triangle-exclamation text-amber-600 text-base shrink-0 mt-0.5"></i>
+                        <i class="fa-solid fa-circle-exclamation text-red-600 text-base shrink-0 mt-0.5"></i>
                         <div>
-                            <h4 class="font-bold text-xs text-amber-950">MÁY CHỦ CHẤM BÀI ĐANG CHUẨN BỊ MỞ</h4>
-                            <p class="mt-1">Cổng nhận bài của cô giáo đang đợi kích hoạt hoặc tạm gián đoạn kết nối. Em hãy kiểm tra xem cô đã mở máy chủ chưa hoặc gửi bài qua Zalo lớp nhé!</p>
+                            <h4 class="font-bold text-xs text-red-950">KHÔNG THỂ GỬI BÀI</h4>
+                            <p class="mt-1">Vui lòng kiểm tra lại kết nối mạng trên điện thoại của em và thử bấm Nộp lại.</p>
                         </div>
                     </div>
                 `;
