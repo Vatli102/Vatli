@@ -174,43 +174,91 @@
             </div>
         </section>
 
-        <!-- NHIỆM VỤ 3: CỔNG NỘP PHIẾU BÀI TẬP (AI FLIPPED GRADER) -->
-        <section class="bg-gradient-to-br from-indigo-900 via-blue-900 to-slate-950 text-white rounded-2xl p-6 sm:p-7 shadow-xl border border-indigo-700/50">
-            <div class="flex items-center gap-3 border-b border-indigo-800/60 pb-4 mb-4">
-                <div class="w-11 h-11 rounded-xl bg-amber-400 text-blue-950 flex items-center justify-center text-xl font-bold shadow-sm">
+        <!-- NHIỆM VỤ 3: KHUNG CHỤP & NỘP PHIẾU BÀI TẬP TRỰC TIẾP (TÍCH HỢP TRÊN TRANG) -->
+        <section class="bg-white rounded-2xl p-5 sm:p-7 shadow-lg border-2 border-indigo-200 transition">
+            <div class="flex items-center gap-3 border-b border-slate-100 pb-4 mb-5">
+                <div class="w-11 h-11 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xl font-bold shadow-sm">
                     <i class="fa-solid fa-camera"></i>
                 </div>
                 <div>
-                    <h2 class="text-xl font-extrabold text-white">Nhiệm vụ 3: Chụp ảnh & Nộp Phiếu Tự Học Pha 1</h2>
-                    <p class="text-xs text-indigo-200">Hệ thống AI Flipped Grader tự động chấm điểm và đọc câu hỏi thắc mắc viết tay</p>
+                    <h2 class="text-xl font-extrabold text-slate-900">Nhiệm vụ 3: Chụp ảnh & Nộp Phiếu Tự Học Pha 1</h2>
+                    <p class="text-xs text-slate-500">Chụp ảnh bài làm gửi trực tiếp tại đây – Hệ thống AI sẽ chấm và ghi nhận</p>
                 </div>
             </div>
 
-            <div class="space-y-4 mb-6 text-sm text-indigo-100">
-                <div class="flex items-start gap-3 bg-white/10 p-3.5 rounded-xl border border-white/10">
-                    <i class="fa-solid fa-circle-check text-emerald-400 text-base mt-0.5 shrink-0"></i>
+            <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-3.5 text-xs text-indigo-900 mb-6 flex items-start gap-2.5">
+                <i class="fa-solid fa-circle-info text-indigo-600 text-sm mt-0.5 shrink-0"></i>
+                <div>
+                    <strong>Yêu cầu khi chụp ảnh:</strong> Đặt phiếu bài tập trên mặt bàn phẳng, chụp đủ sáng, vuông góc trang giấy, đảm bảo rõ <strong>5 câu trắc nghiệm</strong> và phần <strong>Câu hỏi băn khoăn viết tay</strong> của em.
+                </div>
+            </div>
+
+            <!-- FORM NỘP BÀI TRỰC TIẾP -->
+            <form id="submission-form" onsubmit="handleDirectSubmit(event)" class="space-y-5">
+                
+                <!-- Hàng 1: Chọn Lớp & Điền Họ Tên -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <strong>Yêu cầu bài nộp:</strong> Chụp đủ sáng, vuông góc trang giấy, rõ ràng <strong>5 câu trắc nghiệm</strong> và phần <strong>Câu hỏi băn khoăn viết tay</strong> của em ở cuối phiếu.
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">
+                            <i class="fa-solid fa-users text-indigo-600 mr-1"></i> Lớp học: <span class="text-red-500">*</span>
+                        </label>
+                        <select id="input-class" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                            <option value="11H" selected>Lớp 11H (THPT Mạc Đĩnh Chi)</option>
+                            <option value="11C">Lớp 11C (THPT Mạc Đĩnh Chi)</option>
+                            <option value="11A1">Lớp 11A1</option>
+                            <option value="Khac">Lớp khác...</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">
+                            <i class="fa-solid fa-user text-indigo-600 mr-1"></i> Họ và tên học sinh: <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="input-name" required placeholder="Ví dụ: Nguyễn Văn An" 
+                               class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium text-slate-800 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
                     </div>
                 </div>
-            </div>
 
-            <!-- Nút bấm Mở Cổng Nộp Bài Trực Tuyến -->
-            <div class="bg-white/5 border border-white/10 rounded-2xl p-5 text-center backdrop-blur-sm">
-                <p class="text-xs text-amber-300 font-semibold mb-3 uppercase tracking-wider">
-                    <i class="fa-solid fa-arrow-down animate-bounce mr-1"></i> Bấm nút dưới đây để mở cổng nộp bài
-                </p>
-                <a id="btn-portal-submit" 
-                   href="http://192.168.1.14:5000" 
-                   target="_blank" 
-                   class="inline-flex items-center justify-center gap-2.5 w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-extrabold text-base rounded-xl shadow-lg shadow-amber-400/25 hover:scale-[1.02] active:scale-[0.98] transition">
-                    <i class="fa-solid fa-cloud-arrow-up text-lg"></i>
-                    MỞ CỔNG CHỤP & NỘP BÀI TRỰC TUYẾN
-                </a>
-                <p class="text-[11px] text-indigo-300/80 mt-3">
-                    Nếu mở bằng điện thoại ở trường: Dùng kết nối WiFi trường • Nếu ở nhà: Mở qua link giáo viên cấp trên Zalo.
-                </p>
-            </div>
+                <!-- Hàng 2: Khung Tải / Chụp Ảnh Phiếu Bài Tập -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">
+                        <i class="fa-solid fa-images text-indigo-600 mr-1"></i> Ảnh phiếu bài tập (1 đến 4 ảnh): <span class="text-red-500">*</span>
+                    </label>
+
+                    <!-- Khung bấm chụp ảnh -->
+                    <div id="drop-zone" onclick="document.getElementById('file-input').click()" 
+                         class="border-2 border-dashed border-indigo-300 hover:border-indigo-500 bg-indigo-50/50 hover:bg-indigo-50 rounded-2xl p-6 text-center cursor-pointer transition">
+                        <input type="file" id="file-input" accept="image/*" multiple capture="environment" class="hidden" onchange="handleFileChange(event)">
+                        <div class="w-14 h-14 mx-auto rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl mb-3 shadow-inner">
+                            <i class="fa-solid fa-camera"></i>
+                        </div>
+                        <div class="font-bold text-sm text-indigo-950 mb-1">
+                            Bấm vào đây để CHỤP ẢNH hoặc CHỌN TỪ THƯ VIỆN
+                        </div>
+                        <p class="text-xs text-slate-500">Hỗ trợ định dạng JPG, PNG, HEIC • Cho phép chọn nhiều ảnh cùng lúc</p>
+                    </div>
+
+                    <!-- Khung Xem Trước Ảnh Thumbnail -->
+                    <div id="preview-container" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 hidden">
+                        <!-- Preview items will be injected here -->
+                    </div>
+                </div>
+
+                <!-- Thông báo trạng thái -->
+                <div id="status-box" class="hidden p-4 rounded-xl text-xs font-medium"></div>
+
+                <!-- Nút Bấm Nộp Bài -->
+                <div class="pt-2">
+                    <button type="submit" id="btn-submit-action" 
+                            class="w-full py-4 px-6 bg-gradient-to-r from-indigo-600 via-indigo-700 to-blue-700 hover:from-indigo-500 hover:to-blue-600 text-white font-extrabold text-base rounded-xl shadow-lg shadow-indigo-600/30 hover:scale-[1.01] active:scale-[0.99] transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up text-lg"></i>
+                        <span>NỘP BÀI TẬP VỀ HỆ THỐNG AI</span>
+                    </button>
+                    <p class="text-center text-[11px] text-slate-400 mt-2.5">
+                        <i class="fa-solid fa-lock text-emerald-600 mr-1"></i> Dữ liệu bài nộp được bảo mật và chuyển thẳng về bảng điểm của giáo viên.
+                    </p>
+                </div>
+
+            </form>
         </section>
 
     </main>
@@ -223,6 +271,168 @@
             <p class="text-[11px] text-slate-600 pt-2">© 2026 Vatli102.com • All rights reserved.</p>
         </div>
     </footer>
+
+    <!-- LOGIC XỬ LÝ NỘP BÀI TRỰC TIẾP -->
+    <script>
+        let selectedFiles = [];
+
+        function handleFileChange(e) {
+            const files = Array.from(e.target.files);
+            if (!files.length) return;
+
+            // Gộp thêm file (tối đa 4 ảnh)
+            files.forEach(f => {
+                if (selectedFiles.length < 4) {
+                    selectedFiles.push(f);
+                }
+            });
+
+            renderPreview();
+        }
+
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            renderPreview();
+        }
+
+        function renderPreview() {
+            const container = document.getElementById('preview-container');
+            if (!selectedFiles.length) {
+                container.classList.add('hidden');
+                container.innerHTML = '';
+                return;
+            }
+
+            container.classList.remove('hidden');
+            container.innerHTML = '';
+
+            selectedFiles.forEach((file, idx) => {
+                const url = URL.createObjectURL(file);
+                const item = document.createElement('div');
+                item.className = 'relative group border border-slate-200 rounded-xl overflow-hidden bg-slate-100 aspect-[3/4] shadow-sm';
+                item.innerHTML = `
+                    <img src="${url}" class="w-full h-full object-cover" alt="Trang ${idx + 1}">
+                    <span class="absolute bottom-1.5 left-1.5 bg-black/70 text-white text-[10px] px-2 py-0.5 rounded font-bold">
+                        Trang ${idx + 1}
+                    </span>
+                    <button type="button" onclick="removeFile(${idx})" class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-red-600 text-white flex items-center justify-center text-xs shadow hover:bg-red-700 transition">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        async function getBackendUrl() {
+            try {
+                // Thử đọc portal.json xem có link tunnel đang mở không
+                const res = await fetch('/nop-bai/portal.json?t=' + Date.now());
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.api_url) {
+                        return data.api_url.replace(/\/+$/, '');
+                    }
+                }
+            } catch (err) {
+                console.warn('portal.json not accessible:', err);
+            }
+            // Fallback sang IP nội bộ máy tính
+            return 'http://192.168.1.14:5000';
+        }
+
+        async function handleDirectSubmit(e) {
+            e.preventDefault();
+
+            const studentClass = document.getElementById('input-class').value;
+            const studentName = document.getElementById('input-name').value.trim();
+            const statusBox = document.getElementById('status-box');
+            const submitBtn = document.getElementById('btn-submit-action');
+
+            if (!studentName) {
+                alert('Vui lòng nhập Họ và tên của em!');
+                return;
+            }
+
+            if (!selectedFiles.length) {
+                alert('Vui lòng chụp hoặc chọn ít nhất 1 ảnh phiếu bài tập!');
+                return;
+            }
+
+            // Đổi trạng thái nút bấm
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-lg"></i> <span>Đang tải lên hệ thống AI chấm bài...</span>';
+            submitBtn.classList.add('opacity-75');
+
+            statusBox.className = 'p-4 rounded-xl text-xs font-medium bg-blue-50 text-blue-800 border border-blue-200 block';
+            statusBox.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> Đang kết nối máy chủ AI và gửi ảnh bài làm... Vui lòng giữ màn hình trong giây lát.';
+
+            try {
+                const backendUrl = await getBackendUrl();
+                const uploadEndpoint = `${backendUrl}/api/upload`;
+
+                const formData = new FormData();
+                formData.append('lesson_id', 'vl11_bai8');
+                formData.append('mode', 'single_student');
+                formData.append('student_class', studentClass);
+                formData.append('student_name', studentName);
+
+                selectedFiles.forEach(f => {
+                    formData.append('files', f);
+                });
+
+                const uploadRes = await fetch(uploadEndpoint, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (uploadRes.ok) {
+                    const data = await uploadRes.json();
+                    statusBox.className = 'p-4 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-900 border border-emerald-300 block';
+                    statusBox.innerHTML = `
+                        <div class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-circle-check text-emerald-600 text-lg shrink-0 mt-0.5"></i>
+                            <div>
+                                <h4 class="font-bold text-sm text-emerald-900">NỘP BÀI THÀNH CÔNG!</h4>
+                                <p class="mt-1">Hệ thống AI đã nhận và ghi nhận bài làm của học sinh: <strong>${studentName}</strong> (Lớp ${studentClass}).</p>
+                                <p class="text-[11px] text-emerald-700 mt-1">Kết quả và câu hỏi băn khoăn viết tay của em đã được chuyển tới cô giáo.</p>
+                            </div>
+                        </div>
+                    `;
+
+                    // Reset form sau khi nộp thành công
+                    selectedFiles = [];
+                    renderPreview();
+                    document.getElementById('input-name').value = '';
+                    submitBtn.innerHTML = '<i class="fa-solid fa-check text-lg"></i> <span>ĐÃ NỘP BÀI THÀNH CÔNG!</span>';
+                    submitBtn.classList.remove('from-indigo-600', 'to-blue-700');
+                    submitBtn.classList.add('bg-emerald-600');
+                    setTimeout(() => {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up text-lg"></i> <span>NỘP BÀI KHÁC</span>';
+                        submitBtn.className = 'w-full py-4 px-6 bg-gradient-to-r from-indigo-600 via-indigo-700 to-blue-700 hover:from-indigo-500 hover:to-blue-600 text-white font-extrabold text-base rounded-xl shadow-lg transition flex items-center justify-center gap-2';
+                    }, 4000);
+                } else {
+                    throw new Error('Máy chủ phản hồi mã lỗi: ' + uploadRes.status);
+                }
+
+            } catch (err) {
+                console.error('Submit error:', err);
+                statusBox.className = 'p-4 rounded-xl text-xs font-medium bg-amber-50 text-amber-900 border border-amber-300 block';
+                statusBox.innerHTML = `
+                    <div class="flex items-start gap-2.5">
+                        <i class="fa-solid fa-triangle-exclamation text-amber-600 text-base shrink-0 mt-0.5"></i>
+                        <div>
+                            <h4 class="font-bold text-xs text-amber-950">MÁY CHỦ CHẤM BÀI ĐANG CHUẨN BỊ MỞ</h4>
+                            <p class="mt-1">Cổng nhận bài của cô giáo đang đợi kích hoạt hoặc tạm gián đoạn kết nối. Em hãy kiểm tra xem cô đã mở máy chủ chưa hoặc gửi bài qua Zalo lớp nhé!</p>
+                        </div>
+                    </div>
+                `;
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-rotate-right text-lg"></i> <span>THỬ NỘP LẠI</span>';
+                submitBtn.classList.remove('opacity-75');
+            }
+        }
+    </script>
 
 </body>
 </html>
