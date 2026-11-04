@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Khởi động: Mê Cung Tri Thức - BÀI 9: SÓNG NGANG & SÓNG DỌC</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      background: radial-gradient(circle at center, #110726 0%, #06020f 100%);
+      color: #fff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* Hiệu ứng phát sáng Neon phong cách Wordwall */
+    .glow-cyan {
+      text-shadow: 0 0 10px rgba(6, 182, 212, 0.8), 0 0 20px rgba(6, 182, 212, 0.5);
+    }
+    .glow-purple {
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.5), inset 0 0 15px rgba(168, 85, 247, 0.3);
+    }
+    .glow-gold {
+      text-shadow: 0 0 12px rgba(251, 191, 36, 0.9);
+    }
+
+    /* 4 Thẻ Đáp án Phòng Mê Cung (A, B, C, D) */
+    .room-card {
+      position: absolute;
+      border-radius: 14px;
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      z-index: 30;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+      background: rgba(15, 7, 34, 0.92);
+      backdrop-blur-md;
+      font-weight: 600;
+      line-height: 1.3;
+      border-width: 2.5px;
+    }
+    .room-card:hover {
+      transform: scale(1.04);
+    }
+    .room-card:active {
+      transform: scale(0.97);
+    }
+
+    /* Card A - Đỏ */
+    .card-a {
+      border-color: #ef4444;
+      color: #fca5a5;
+      box-shadow: 0 0 18px rgba(239, 68, 68, 0.4);
+    }
+    .card-a .badge-ans {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    /* Card B - Xanh lá */
+    .card-b {
+      border-color: #10b981;
+      color: #6ee7b7;
+      box-shadow: 0 0 18px rgba(16, 185, 129, 0.4);
+    }
+    .card-b .badge-ans {
+      background: #10b981;
+      color: #fff;
+    }
+
+    /* Card C - Xanh dương */
+    .card-c {
+      border-color: #3b82f6;
+      color: #93c5fd;
+      box-shadow: 0 0 18px rgba(59, 130, 246, 0.4);
+    }
+    .card-c .badge-ans {
+      background: #3b82f6;
+      color: #fff;
+    }
+
+    /* Card D - Vàng Cam */
+    .card-d {
+      border-color: #f59e0b;
+      color: #fde68a;
+      box-shadow: 0 0 18px rgba(245, 158, 11, 0.4);
+    }
+    .card-d .badge-ans {
+      background: #f59e0b;
+      color: #000;
+    }
+
+    .badge-ans {
+      font-size: 0.95rem;
+      font-weight: 900;
+      padding: 1px 10px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+      display: inline-block;
+    }
+
+    /* D-pad cảm ứng góc phải dưới */
+    .d-btn {
+      background: rgba(30, 16, 60, 0.85);
+      border: 2px solid rgba(168, 85, 247, 0.6);
+      color: #06b6d4;
+      font-size: 1.4rem;
+      font-weight: 900;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.1s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    .d-btn:active {
+      background: #06b6d4;
+      color: #000;
+      transform: scale(0.92);
+    }
+  </style>
+</head>
+<body class="selection:bg-cyan-500 selection:text-white">
+
+  <!-- TOP BAR: THÔNG TIN TRÒ CHƠI & ĐIỂM SỐ -->
+  <header class="w-full bg-slate-950/90 border-b border-purple-900/60 px-4 py-2.5 flex items-center justify-between z-50 shrink-0 shadow-lg">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 flex items-center justify-center font-black text-xl shadow-md">
+        🌀
+      </div>
+      <div>
+        <h1 class="text-sm md:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+          <span>MÊ CUNG TRI THỨC</span>
+          <span class="text-xs bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 px-2 py-0.5 rounded-full font-bold">VẬT LÍ 11 - BÀI 9</span>
+        </h1>
+        <p class="text-xs text-purple-300">Khởi động: Kiểm tra bài cũ Bài 8 (Mô tả sóng) bước vào Sóng ngang & Sóng dọc</p>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="flex items-center gap-2 md:gap-4 font-bold text-sm">
+      <!-- Mạng sống -->
+      <div class="bg-slate-900/90 border border-slate-700/80 px-3 py-1 rounded-xl flex items-center gap-1.5 shadow">
+        <span class="text-rose-500 text-base">❤️</span>
+        <span id="lives-display" class="text-rose-400 font-black text-base">3</span>
+      </div>
+
+      <!-- Điểm số -->
+      <div class="bg-slate-900/90 border border-slate-700/80 px-3.5 py-1 rounded-xl flex items-center gap-1.5 shadow">
+        <span class="text-amber-400 text-sm">🏆 ĐIỂM:</span>
+        <span id="score-display" class="text-amber-400 font-black text-base glow-gold">0</span>
+      </div>
+
+      <!-- Thời gian -->
+      <div class="bg-slate-900/90 border border-slate-700/80 px-3.5 py-1 rounded-xl flex items-center gap-1.5 shadow">
+        <span class="text-cyan-400 text-sm">⏱️</span>
+        <span id="timer-display" class="text-cyan-400 font-mono text-base font-black">20s</span>
+      </div>
+
+      <!-- Nút Âm thanh -->
+      <button id="btn-sound" onclick="toggleSound()" class="bg-slate-800 hover:bg-slate-700 active:scale-95 text-xs px-2.5 py-1.5 rounded-xl border border-slate-600 font-bold transition">
+        🔊 Bật tiếng
+      </button>
+    </div>
+  </header>
+
+  <!-- QUESTION BOX ĐỈNH MÀN HÌNH -->
+  <section class="mx-3 md:mx-6 my-2 bg-gradient-to-r from-purple-950/90 via-slate-900/95 to-indigo-950/90 border-2 border-cyan-400/80 rounded-2xl px-5 py-2.5 shadow-2xl z-40 shrink-0">
+    <div class="flex justify-between items-center text-xs font-black uppercase tracking-wider mb-1">
+      <span class="text-amber-400 flex items-center gap-1.5">
+        <span>⚡ CÂU HỎI</span>
+        <span id="q-counter" class="bg-amber-400/20 text-amber-300 px-2 py-0.5 rounded-md border border-amber-400/40">1 / 10</span>
+      </span>
+      <span class="text-cyan-300 font-medium normal-case hidden md:inline">
+        🎮 Dùng các phím <strong class="text-cyan-400">← ↑ → ↓</strong> hoặc <strong class="text-cyan-400">W A S D</strong> để dẫn đường vào phòng đáp án đúng (hoặc click trực tiếp)
+      </span>
+    </div>
+    <div id="q-text" class="text-base md:text-lg lg:text-xl font-extrabold text-white leading-snug">
+      Đang tải câu hỏi...
+    </div>
+  </section>
+
+  <!-- MAIN CANVAS & MAZE AREA -->
+  <main id="game-container" class="relative flex-1 w-full overflow-hidden flex justify-center items-center p-2">
+    <!-- CANVAS MÊ CUNG PAC-MAN -->
+    <canvas id="mazeCanvas" class="rounded-2xl glow-purple bg-slate-950"></canvas>
+
+    <!-- 4 THẺ ĐÁP ÁN NẰM TẠI 4 PHÒNG TRONG MÊ CUNG -->
+    <div id="card-A" class="room-card card-a" onclick="handleCardClick('A')">
+      <div class="badge-ans">A</div>
+      <div id="ans-text-A" class="text-xs md:text-sm">Đáp án A</div>
+    </div>
+
+    <div id="card-B" class="room-card card-b" onclick="handleCardClick('B')">
+      <div class="badge-ans">B</div>
+      <div id="ans-text-B" class="text-xs md:text-sm">Đáp án B</div>
+    </div>
+
+    <div id="card-C" class="room-card card-c" onclick="handleCardClick('C')">
+      <div class="badge-ans">C</div>
+      <div id="ans-text-C" class="text-xs md:text-sm">Đáp án C</div>
+    </div>
+
+    <div id="card-D" class="room-card card-d" onclick="handleCardClick('D')">
+      <div class="badge-ans">D</div>
+      <div id="ans-text-D" class="text-xs md:text-sm">Đáp án D</div>
+    </div>
+
+    <!-- D-PAD CẢM ỨNG (GÓC PHẢI DƯỚI) -->
+    <div id="dpad" class="absolute bottom-3 right-3 grid grid-cols-3 gap-1.5 p-1.5 bg-slate-950/80 backdrop-blur-md rounded-2xl border border-purple-500/40 z-40">
+      <div></div>
+      <button class="d-btn w-12 h-12" onclick="setPlayerDir(0, -1)">▲</button>
+      <div></div>
+      <button class="d-btn w-12 h-12" onclick="setPlayerDir(-1, 0)">◀</button>
+      <button class="d-btn w-12 h-12 text-sm text-purple-400" onclick="centerPlayer()">🎯</button>
+      <button class="d-btn w-12 h-12" onclick="setPlayerDir(1, 0)">▶</button>
+      <div></div>
+      <button class="d-btn w-12 h-12" onclick="setPlayerDir(0, 1)">▼</button>
+      <div></div>
+    </div>
+  </main>
+
+  <!-- MODAL GIẢI THÍCH CHI TIẾT KHI TRẢ LỜI -->
+  <div id="explain-modal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border-2 border-cyan-400 rounded-3xl max-w-lg w-full p-6 text-center shadow-2xl transform scale-100 transition">
+      <div id="modal-icon" class="text-5xl mb-2">🎉</div>
+      <h3 id="modal-title" class="text-2xl font-black text-white mb-2">CHÍNH XÁC! +10 ĐIỂM</h3>
+      <div id="modal-explain" class="text-slate-200 text-sm md:text-base leading-relaxed bg-slate-950/60 p-4 rounded-2xl border border-slate-800 text-left mb-5">
+        Giải thích kiến thức...
+      </div>
+      <button onclick="nextQuestion()" class="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold text-base rounded-xl shadow-lg active:scale-95 transition">
+        Tiếp tục câu tiếp theo ➔
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL KẾT THÚC TRÒ CHƠI / TỔNG KẾT -->
+  <div id="result-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-lg z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border-2 border-amber-400 rounded-3xl max-w-md w-full p-6 text-center shadow-2xl">
+      <div class="text-6xl mb-3 animate-bounce">🏆</div>
+      <h2 class="text-2xl font-black text-amber-400 mb-1">HOÀN THÀNH MÊ CUNG TRI THỨC!</h2>
+      <p class="text-slate-300 text-xs mb-4">Bạn đã xuất sắc vượt qua các thử thách kiểm tra bài cũ Bài 8!</p>
+
+      <div class="grid grid-cols-2 gap-3 mb-5">
+        <div class="bg-slate-950/70 p-3 rounded-2xl border border-slate-800">
+          <div class="text-xs text-slate-400">TỔNG ĐIỂM</div>
+          <div id="res-score" class="text-3xl font-black text-amber-400">100 / 100</div>
+        </div>
+        <div class="bg-slate-950/70 p-3 rounded-2xl border border-slate-800">
+          <div class="text-xs text-slate-400">CÂU TRẢ LỜI ĐÚNG</div>
+          <div id="res-correct" class="text-3xl font-black text-emerald-400">10 / 10</div>
+        </div>
+      </div>
+
+      <div id="res-feedback" class="text-sm text-cyan-300 bg-cyan-950/30 p-3 rounded-xl border border-cyan-800/40 mb-5">
+        Tuyệt vời! Bạn đã nắm chắc toàn bộ kiến thức Bài 8 để tự tin khám phá Bài 9: Sóng ngang & Sóng dọc!
+      </div>
+
+      <div class="flex gap-3 justify-center">
+        <button onclick="restartGame()" class="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-sm rounded-xl shadow-lg active:scale-95 transition">
+          🔄 Chơi lại
+        </button>
+        <button onclick="window.close()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm rounded-xl border border-slate-700 active:scale-95 transition">
+          Đóng trò chơi
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT LOGIC MÊ CUNG & GAME ENGINE -->
+  <script>
+    const QUESTIONS = [
+  {
+    "id": 1,
+    "q": "Sóng cơ là gì?",
+    "optA": "Sự lan truyền dao động cơ học trong môi trường vật chất theo thời gian",
+    "optB": "Sự chuyển động tịnh tiến của các phần tử vật chất môi trường ra xa nguồn",
+    "optC": "Sự lan truyền các phân tử vật chất cùng với năng lượng trong không gian",
+    "optD": "Chuyển động của các hạt vật chất bị cuốn trôi theo dòng sóng",
+    "correct": "A",
+    "explain": "Định nghĩa SGK trang 32: Sóng cơ là sự lan truyền dao động cơ học trong môi trường vật chất theo thời gian. Các phần tử môi trường không bị cuốn trôi theo sóng."
+  },
+  {
+    "id": 2,
+    "q": "Khi sóng cơ truyền qua một môi trường đàn hồi, các phần tử môi trường sẽ:",
+    "optA": "Chuyển động thẳng đều cùng tốc độ truyền sóng",
+    "optB": "Dao động tại chỗ quanh vị trí cân bằng xác định",
+    "optC": "Chuyển động tịnh tiến ngày càng ra xa nguồn sóng",
+    "optD": "Đứng yên tuyệt đối không chịu tác dụng của sóng",
+    "correct": "B",
+    "explain": "Các phần tử môi trường chỉ dao động tại chỗ quanh vị trí cân bằng của chúng, không chuyển động tịnh tiến theo phương truyền sóng."
+  },
+  {
+    "id": 3,
+    "q": "Quá trình truyền sóng cơ học thực chất là quá trình truyền:",
+    "optA": "Các phần tử vật chất của môi trường đi xa",
+    "optB": "Năng lượng và pha dao động qua môi trường",
+    "optC": "Điện tích và khối lượng của nguồn phát sóng",
+    "optD": "Vận tốc tức thời và lực tác dụng của nguồn",
+    "correct": "B",
+    "explain": "Quá trình truyền sóng là quá trình lan truyền dao động, truyền pha dao động và truyền năng lượng từ nguồn tới các phần tử lân cận."
+  },
+  {
+    "id": 4,
+    "q": "Sóng cơ học tuyệt đối KHÔNG thể truyền được trong môi trường nào?",
+    "optA": "Chất khí (không khí loãng)",
+    "optB": "Chất lỏng (nước biển, dầu)",
+    "optC": "Chất rắn (kim loại, đất đá)",
+    "optD": "Môi trường chân không",
+    "correct": "D",
+    "explain": "Sóng cơ cần môi trường vật chất có lực liên kết đàn hồi để lan truyền dao động. Trong chân không không có hạt vật chất nên sóng cơ tuyệt đối không truyền được."
+  },
+  {
+    "id": 5,
+    "q": "Khi sóng cơ truyền từ môi trường này sang môi trường khác, đại lượng nào LUÔN KHÔNG ĐỔI?",
+    "optA": "Tốc độ truyền sóng và bước sóng",
+    "optB": "Chu kì (T) và tần số (f) của sóng",
+    "optC": "Biên độ sóng và tốc độ sóng",
+    "optD": "Bước sóng và mật độ năng lượng sóng",
+    "correct": "B",
+    "explain": "Chu kì T và tần số f do nguồn sóng quy định nên luôn không đổi khi sóng truyền qua các môi trường khác nhau. Tốc độ v và bước sóng λ sẽ thay đổi."
+  },
+  {
+    "id": 6,
+    "q": "Bước sóng λ được định nghĩa chính xác là:",
+    "optA": "Khoảng cách giữa hai điểm bất kì trên cùng phương truyền sóng",
+    "optB": "Quãng đường sóng truyền được trong một chu kì dao động",
+    "optC": "Khoảng cách giữa hai điểm dao động ngược pha nhau",
+    "optD": "Quãng đường sóng truyền đi được trong thời gian một giây",
+    "correct": "B",
+    "explain": "Định nghĩa SGK: Bước sóng λ là quãng đường mà sóng truyền được trong thời gian một chu kì dao động: λ = v·T = v/f."
+  },
+  {
+    "id": 7,
+    "q": "Mối liên hệ chính xác giữa bước sóng λ, tốc độ sóng v, chu kì T và tần số f là:",
+    "optA": "λ = v / T = v · f",
+    "optB": "λ = v · T = v / f",
+    "optC": "v = λ · T = λ / f",
+    "optD": "f = λ · v = v / T",
+    "correct": "B",
+    "explain": "Hệ thức cơ bản của sóng cơ: λ = v · T = v / f (trong đó λ tính bằng mét, v tính bằng m/s, T tính bằng giây, f tính bằng Hz)."
+  },
+  {
+    "id": 8,
+    "q": "Khoảng cách giữa hai điểm gần nhau nhất trên cùng phương truyền sóng dao động CÙNG PHA là:",
+    "optA": "Một bước sóng (λ)",
+    "optB": "Nửa bước sóng (λ/2)",
+    "optC": "Một phần tư bước sóng (λ/4)",
+    "optD": "Hai bước sóng (2λ)",
+    "correct": "A",
+    "explain": "Độ lệch pha Δφ = 2π·d / λ. Cùng pha khi Δφ = 2kπ. Hai điểm gần nhau nhất ứng với k = 1 => d_min = λ."
+  },
+  {
+    "id": 9,
+    "q": "Khoảng cách giữa hai điểm gần nhau nhất trên cùng phương truyền sóng dao động NGƯỢC PHA là:",
+    "optA": "Một bước sóng (λ)",
+    "optB": "Nửa bước sóng (λ/2)",
+    "optC": "Hai bước sóng (2λ)",
+    "optD": "Một phần tư bước sóng (λ/4)",
+    "correct": "B",
+    "explain": "Ngược pha khi Δφ = (2k + 1)π. Hai điểm gần nhau nhất ứng với k = 0 => d_min = λ / 2."
+  },
+  {
+    "id": 10,
+    "q": "Năng lượng mà sóng cơ lan truyền mang theo tỉ lệ thuận với:",
+    "optA": "Căn bậc hai của biên độ dao động",
+    "optB": "Bình phương biên độ dao động của sóng (W ∝ A²)",
+    "optC": "Tỉ lệ nghịch với tần số của nguồn sóng",
+    "optD": "Độ dịch chuyển tức thời của phần tử",
+    "correct": "B",
+    "explain": "Cơ năng dao động W = 1/2 m ω² A² tỉ lệ với bình phương biên độ (A²) và bình phương tần số (f²). Quá trình truyền sóng mang theo năng lượng tỉ lệ với A²."
+  }
+];
+
+    let currentQ = 0;
+    let score = 0;
+    let lives = 3;
+    let timeLeft = 25;
+    let timerInterval = null;
+    let soundEnabled = true;
+    let isAnsweringLocked = false;
+
+    // Web Audio Synthesizer
+    let audioCtx = null;
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+    function playBeep(freq, type, duration, gainVal = 0.15) {
+      if (!soundEnabled) return;
+      try {
+        initAudio();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e) {}
+    }
+    function playSoundCorrect() {
+      playBeep(523.25, 'triangle', 0.12, 0.2); // C5
+      setTimeout(() => playBeep(659.25, 'triangle', 0.15, 0.2), 120); // E5
+      setTimeout(() => playBeep(783.99, 'triangle', 0.25, 0.25), 250); // G5
+    }
+    function playSoundWrong() {
+      playBeep(180, 'sawtooth', 0.2, 0.3);
+      setTimeout(() => playBeep(130, 'sawtooth', 0.3, 0.35), 180);
+    }
+    function playSoundEat() {
+      playBeep(440, 'sine', 0.04, 0.05);
+    }
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      document.getElementById('btn-sound').innerText = soundEnabled ? '🔊 Bật tiếng' : '🔇 Tắt tiếng';
+    }
+
+    // =========================================================================
+    // THIẾT KẾ BẢN ĐỒ MÊ CUNG (GRID 19 x 13)
+    // 0: Đường đi (pellet dot), 1: Tường phát sáng, 2: Cửa/Phòng đáp án
+    // =========================================================================
+    const COLS = 19;
+    const ROWS = 13;
+    const MAZE_LAYOUT = [
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,2,2,0,0,0,1,0,0,0,0,0,1,0,0,0,2,2,1], // Phòng A (trên trái), Phòng B (trên phải)
+      [1,2,2,0,1,0,1,0,1,1,1,0,1,0,1,0,2,2,1],
+      [1,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1],
+      [1,0,1,1,1,0,1,1,0,1,0,1,1,0,1,1,1,0,1],
+      [1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1],
+      [1,1,1,0,1,0,1,0,0,0,0,0,1,0,1,0,1,1,1], // Tâm mê cung (Start)
+      [1,0,0,0,1,0,0,0,1,1,1,0,0,0,1,0,0,0,1],
+      [1,0,1,1,1,0,1,0,0,1,0,0,1,0,1,1,1,0,1],
+      [1,0,0,0,1,0,1,1,0,0,0,1,1,0,1,0,0,0,1],
+      [1,2,2,0,1,0,0,0,0,1,0,0,0,0,1,0,2,2,1],
+      [1,2,2,0,0,0,1,1,0,0,0,1,1,0,0,0,2,2,1], // Phòng C (dưới trái), Phòng D (dưới phải)
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+    ];
+
+    // Tọa độ 4 Phòng đáp án trong lưới
+    const ROOM_LOCS = {
+      'A': { col: 1.5, row: 1.5, elementId: 'card-A' },
+      'B': { col: 16.5, row: 1.5, elementId: 'card-B' },
+      'C': { col: 1.5, row: 10.5, elementId: 'card-C' },
+      'D': { col: 16.5, row: 10.5, elementId: 'card-D' }
+    };
+
+    // CANVAS & RENDER ENGINE
+    const canvas = document.getElementById('mazeCanvas');
+    const ctx = canvas.getContext('2d');
+    let cellW = 32;
+    let cellH = 32;
+
+    // NHÂN VẬT NGƯỜI CHƠI (PAC-MAN STYLE)
+    const player = {
+      x: 9, // Start at center col 9
+      y: 6, // Start at center row 6
+      dirX: 0,
+      dirY: 0,
+      targetX: 9,
+      targetY: 6,
+      speed: 0.12,
+      mouthAngle: 0.2,
+      mouthSpeed: 0.04,
+      mouthDir: 1,
+      color: '#facc15'
+    };
+
+    // QUÁI VẬT TUẦN TRA (PHONG CÁCH WORDWALL)
+    const ghost = {
+      x: 9,
+      y: 4,
+      dirX: 1,
+      dirY: 0,
+      speed: 0.05,
+      color: '#ec4899'
+    };
+
+    // Dấu chấm năng lượng (Pellets)
+    let pellets = [];
+    function initPellets() {
+      pellets = [];
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          if (MAZE_LAYOUT[r][c] === 0) {
+            pellets.push({ c, r, eaten: false });
+          }
+        }
+      }
+    }
+
+    // RESIZE CANVAS THEO MÀN HÌNH
+    function resizeCanvas() {
+      const container = document.getElementById('game-container');
+      const maxW = container.clientWidth - 20;
+      const maxH = container.clientHeight - 20;
+
+      // Giữ tỉ lệ 19 : 13
+      const scale = Math.min(maxW / (COLS * 34), maxH / (ROWS * 34), 1.8);
+      cellW = Math.floor(34 * scale);
+      cellH = Math.floor(34 * scale);
+
+      canvas.width = COLS * cellW;
+      canvas.height = ROWS * cellH;
+
+      positionRoomCards();
+    }
+
+    // ĐỊNH VỊ 4 THẺ ĐÁP ÁN THEO VỊ TRÍ PHÒNG
+    function positionRoomCards() {
+      const rect = canvas.getBoundingClientRect();
+      const containerRect = document.getElementById('game-container').getBoundingClientRect();
+      const offsetX = rect.left - containerRect.left;
+      const offsetY = rect.top - containerRect.top;
+
+      const cardW = cellW * 3.3;
+      const cardH = cellH * 2.5;
+
+      for (const [key, loc] of Object.entries(ROOM_LOCS)) {
+        const el = document.getElementById(loc.elementId);
+        const cx = offsetX + (loc.col * cellW);
+        const cy = offsetY + (loc.row * cellH);
+
+        el.style.width = `${cardW}px`;
+        el.style.height = `${cardH}px`;
+        el.style.left = `${cx - cardW / 2 + cellW / 2}px`;
+        el.style.top = `${cy - cardH / 2 + cellH / 2}px`;
+      }
+    }
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+    });
+
+    // ĐIỀU KHIỂN BÀN PHÍM
+    window.addEventListener('keydown', (e) => {
+      initAudio();
+      if (['ArrowUp', 'KeyW'].includes(e.code)) setPlayerDir(0, -1);
+      else if (['ArrowDown', 'KeyS'].includes(e.code)) setPlayerDir(0, 1);
+      else if (['ArrowLeft', 'KeyA'].includes(e.code)) setPlayerDir(-1, 0);
+      else if (['ArrowRight', 'KeyD'].includes(e.code)) setPlayerDir(1, 0);
+    });
+
+    function setPlayerDir(dx, dy) {
+      player.dirX = dx;
+      player.dirY = dy;
+    }
+
+    function centerPlayer() {
+      player.x = 9;
+      player.y = 6;
+      player.dirX = 0;
+      player.dirY = 0;
+    }
+
+    // VÒNG LẶP RENDER CHÍNH (60 FPS)
+    function gameLoop() {
+      update();
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function update() {
+      if (isAnsweringLocked) return;
+
+      // Di chuyển người chơi
+      const nextX = player.x + player.dirX * player.speed;
+      const nextY = player.y + player.dirY * player.speed;
+
+      // Kiểm tra va chạm tường
+      const gridX = Math.round(nextX);
+      const gridY = Math.round(nextY);
+
+      if (gridX >= 0 && gridX < COLS && gridY >= 0 && gridY < ROWS) {
+        // Cho phép đi nếu không phải tường (1)
+        if (MAZE_LAYOUT[gridY][gridX] !== 1) {
+          player.x = nextX;
+          player.y = nextY;
+        } else {
+          // Dừng lại nếu gặp tường
+          player.dirX = 0;
+          player.dirY = 0;
+        }
+      }
+
+      // Đóng mở miệng Pac-Man
+      player.mouthAngle += player.mouthSpeed * player.mouthDir;
+      if (player.mouthAngle > 0.4 || player.mouthAngle < 0.05) {
+        player.mouthDir *= -1;
+      }
+
+      // Ăn hạt năng lượng
+      pellets.forEach(p => {
+        if (!p.eaten) {
+          const dist = Math.hypot(player.x - p.c, player.y - p.r);
+          if (dist < 0.45) {
+            p.eaten = true;
+            score += 1;
+            document.getElementById('score-display').innerText = score;
+            playSoundEat();
+          }
+        }
+      });
+
+      // Di chuyển quái vật tuần tra đơn giản
+      ghost.x += ghost.dirX * ghost.speed;
+      const gGridX = Math.round(ghost.x);
+      if (gGridX <= 3 || gGridX >= 15 || MAZE_LAYOUT[ghost.y][gGridX + ghost.dirX] === 1) {
+        ghost.dirX *= -1;
+      }
+
+      // Kiểm tra chạm quái vật
+      if (Math.hypot(player.x - ghost.x, player.y - ghost.y) < 0.6) {
+        handleHitGhost();
+      }
+
+      // Kiểm tra xem người chơi đã bước vào phòng đáp án nào chưa
+      checkAnswerRoomTrigger();
+    }
+
+    function handleHitGhost() {
+      lives--;
+      document.getElementById('lives-display').innerText = lives;
+      playSoundWrong();
+      centerPlayer();
+      if (lives <= 0) {
+        endGame();
+      }
+    }
+
+    function checkAnswerRoomTrigger() {
+      for (const [ans, loc] of Object.entries(ROOM_LOCS)) {
+        const dist = Math.hypot(player.x - loc.col, player.y - loc.row);
+        if (dist < 1.1) {
+          // Người chơi đã bước vào phòng đáp án ans
+          submitAnswer(ans);
+          centerPlayer();
+          break;
+        }
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 1. Vẽ Mê cung
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const tile = MAZE_LAYOUT[r][c];
+          const px = c * cellW;
+          const py = r * cellH;
+
+          if (tile === 1) {
+            // Tường Neon phát sáng
+            ctx.fillStyle = '#1e1145';
+            ctx.fillRect(px, py, cellW, cellH);
+            ctx.strokeStyle = '#8b5cf6';
+            ctx.lineWidth = 2.5;
+            ctx.strokeRect(px + 1, py + 1, cellW - 2, cellH - 2);
+          } else if (tile === 2) {
+            // Nền phòng đáp án
+            ctx.fillStyle = 'rgba(15, 7, 34, 0.4)';
+            ctx.fillRect(px, py, cellW, cellH);
+          }
+        }
+      }
+
+      // 2. Vẽ các chấm năng lượng (Pellets)
+      pellets.forEach(p => {
+        if (!p.eaten) {
+          ctx.beginPath();
+          ctx.arc(p.c * cellW + cellW / 2, p.r * cellH + cellH / 2, 3.5, 0, Math.PI * 2);
+          ctx.fillStyle = '#06b6d4';
+          ctx.shadowColor = '#06b6d4';
+          ctx.shadowBlur = 8;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+      });
+
+      // 3. Vẽ Quái vật tuần tra (Ghost)
+      const gx = ghost.x * cellW + cellW / 2;
+      const gy = ghost.y * cellH + cellH / 2;
+      const gr = cellW * 0.42;
+
+      ctx.beginPath();
+      ctx.arc(gx, gy - 2, gr, Math.PI, 0, false);
+      ctx.lineTo(gx + gr, gy + gr);
+      ctx.lineTo(gx + gr * 0.5, gy + gr * 0.7);
+      ctx.lineTo(gx, gy + gr);
+      ctx.lineTo(gx - gr * 0.5, gy + gr * 0.7);
+      ctx.lineTo(gx - gr, gy + gr);
+      ctx.closePath();
+      ctx.fillStyle = ghost.color;
+      ctx.shadowColor = ghost.color;
+      ctx.shadowBlur = 12;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Mắt quái vật
+      ctx.beginPath();
+      ctx.arc(gx - 4, gy - 4, 3, 0, Math.PI * 2);
+      ctx.arc(gx + 4, gy - 4, 3, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(gx - 3, gy - 4, 1.5, 0, Math.PI * 2);
+      ctx.arc(gx + 5, gy - 4, 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#000';
+      ctx.fill();
+
+      // 4. Vẽ Người chơi (Pac-Man)
+      const px = player.x * cellW + cellW / 2;
+      const py = player.y * cellH + cellH / 2;
+      const pr = cellW * 0.44;
+
+      let baseAngle = 0;
+      if (player.dirX === 1) baseAngle = 0;
+      else if (player.dirX === -1) baseAngle = Math.PI;
+      else if (player.dirY === 1) baseAngle = Math.PI / 2;
+      else if (player.dirY === -1) baseAngle = -Math.PI / 2;
+
+      ctx.beginPath();
+      ctx.arc(px, py, pr, baseAngle + player.mouthAngle * Math.PI, baseAngle + (2 - player.mouthAngle) * Math.PI);
+      ctx.lineTo(px, py);
+      ctx.closePath();
+      ctx.fillStyle = player.color;
+      ctx.shadowColor = '#facc15';
+      ctx.shadowBlur = 15;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Mắt người chơi
+      const eyeX = px + Math.cos(baseAngle - Math.PI / 3) * (pr * 0.55);
+      const eyeY = py + Math.sin(baseAngle - Math.PI / 3) * (pr * 0.55);
+      ctx.beginPath();
+      ctx.arc(eyeX, eyeY, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#000';
+      ctx.fill();
+    }
+
+    // =========================================================================
+    // QUẢN LÍ CÂU HỎI & LOGIC TRẢ LỜI
+    // =========================================================================
+    function loadQuestion() {
+      isAnsweringLocked = false;
+      const q = QUESTIONS[currentQ];
+      document.getElementById('q-counter').innerText = `${currentQ + 1} / ${QUESTIONS.length}`;
+      document.getElementById('q-text').innerText = `${q.id}. ${q.q}`;
+
+      document.getElementById('ans-text-A').innerText = q.optA;
+      document.getElementById('ans-text-B').innerText = q.optB;
+      document.getElementById('ans-text-C').innerText = q.optC;
+      document.getElementById('ans-text-D').innerText = q.optD;
+
+      timeLeft = 25;
+      document.getElementById('timer-display').innerText = `${timeLeft}s`;
+
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer-display').innerText = `${timeLeft}s`;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          handleTimeOut();
+        }
+      }, 1000);
+
+      centerPlayer();
+    }
+
+    function handleCardClick(ans) {
+      initAudio();
+      if (isAnsweringLocked) return;
+      submitAnswer(ans);
+    }
+
+    function submitAnswer(chosen) {
+      isAnsweringLocked = true;
+      clearInterval(timerInterval);
+
+      const q = QUESTIONS[currentQ];
+      const isCorrect = (chosen === q.correct);
+
+      const modal = document.getElementById('explain-modal');
+      const icon = document.getElementById('modal-icon');
+      const title = document.getElementById('modal-title');
+      const explain = document.getElementById('modal-explain');
+
+      if (isCorrect) {
+        score += 10;
+        document.getElementById('score-display').innerText = score;
+        playSoundCorrect();
+        icon.innerText = '🎉';
+        title.innerHTML = '<span class="text-emerald-400">CHÍNH XÁC! +10 ĐIỂM</span>';
+      } else {
+        lives--;
+        document.getElementById('lives-display').innerText = lives;
+        playSoundWrong();
+        icon.innerText = '❌';
+        title.innerHTML = `<span class="text-rose-500">CHƯA ĐÚNG! (Đáp án đúng là ${q.correct})</span>`;
+      }
+
+      explain.innerHTML = `
+        <div class="mb-2"><strong>Bạn đã chọn:</strong> [${chosen}]</div>
+        <div class="text-cyan-300 font-semibold mb-1">💡 Giải thích:</div>
+        <div class="text-slate-100">${q.explain}</div>
+      `;
+
+      modal.classList.remove('hidden');
+
+      if (lives <= 0) {
+        setTimeout(() => {
+          endGame();
+        }, 2000);
+      }
+    }
+
+    function handleTimeOut() {
+      submitAnswer('Hết giờ');
+    }
+
+    function nextQuestion() {
+      document.getElementById('explain-modal').classList.add('hidden');
+      currentQ++;
+      if (currentQ < QUESTIONS.length && lives > 0) {
+        loadQuestion();
+      } else {
+        endGame();
+      }
+    }
+
+    function endGame() {
+      clearInterval(timerInterval);
+      document.getElementById('explain-modal').classList.add('hidden');
+      const resModal = document.getElementById('result-modal');
+      resModal.classList.remove('hidden');
+
+      document.getElementById('res-score').innerText = `${score} / 100`;
+      const correctCount = Math.floor(score / 10);
+      document.getElementById('res-correct').innerText = `${correctCount} / ${QUESTIONS.length}`;
+
+      const fb = document.getElementById('res-feedback');
+      if (score >= 80) {
+        fb.innerHTML = '<strong class="text-emerald-400">Xuất sắc!</strong> Bạn đã làm chủ hoàn hảo các kiến thức Bài 8 để bước vào bài Sóng ngang & Sóng dọc!';
+      } else if (score >= 50) {
+        fb.innerHTML = '<strong class="text-cyan-400">Rất tốt!</strong> Nắm chắc các kiến thức cốt lõi sẽ giúp bạn tiếp thu Bài 9 cực kì thuận lợi.';
+      } else {
+        fb.innerHTML = '<strong class="text-amber-400">Cần ôn thêm!</strong> Hãy chú ý theo dõi bài học mới để nắm vững hơn bản chất sóng nhé.';
+      }
+    }
+
+    function restartGame() {
+      currentQ = 0;
+      score = 0;
+      lives = 3;
+      document.getElementById('lives-display').innerText = lives;
+      document.getElementById('score-display').innerText = score;
+      document.getElementById('result-modal').classList.add('hidden');
+      initPellets();
+      loadQuestion();
+    }
+
+    // KHỞI ĐỘNG GAME
+    window.onload = () => {
+      initPellets();
+      resizeCanvas();
+      loadQuestion();
+      gameLoop();
+    };
+  </script>
+</body>
+</html>
