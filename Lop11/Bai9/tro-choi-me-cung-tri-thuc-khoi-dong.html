@@ -490,15 +490,26 @@
       color: '#facc15'
     };
 
-    // QUÁI VẬT TUẦN TRA (PHONG CÁCH WORDWALL)
-    const ghost = {
-      x: 9,
-      y: 4,
-      dirX: 1,
-      dirY: 0,
-      speed: 0.05,
-      color: '#ec4899'
-    };
+    // HỆ THỐNG 3 QUÁI VẬT TUẦN TRA ĐA SẮC MÀU (PHONG CÁCH WORDWALL MAZE CHASE)
+    const GHOST_CONFIGS = [
+      { id: 'blinky', name: 'Blinky Đỏ',  spawnX: 9,  spawnY: 1, color: '#ef4444', dirX: 1,  dirY: 0,  speed: 0.042 },
+      { id: 'pinky',  name: 'Pinky Hồng', spawnX: 5,  spawnY: 9, color: '#ec4899', dirX: 0,  dirY: -1, speed: 0.038 },
+      { id: 'inky',   name: 'Inky Xanh',  spawnX: 13, spawnY: 9, color: '#06b6d4', dirX: 0,  dirY: -1, speed: 0.040 }
+    ];
+
+    let ghosts = [];
+    function initGhosts() {
+      ghosts = GHOST_CONFIGS.map(cfg => ({
+        ...cfg,
+        x: cfg.spawnX,
+        y: cfg.spawnY,
+        gridX: cfg.spawnX,
+        gridY: cfg.spawnY,
+        targetX: cfg.spawnX,
+        targetY: cfg.spawnY,
+        isMoving: false
+      }));
+    }
 
     // Dấu chấm năng lượng (Pellets)
     let pellets = [];
@@ -749,17 +760,62 @@
         }
       });
 
-      // Di chuyển quái vật tuần tra đơn giản
-      ghost.x += ghost.dirX * ghost.speed;
-      const gGridX = Math.round(ghost.x);
-      if (gGridX <= 3 || gGridX >= 15 || MAZE_LAYOUT[ghost.y][gGridX + ghost.dirX] === 1) {
-        ghost.dirX *= -1;
-      }
+      // Di chuyển và kiểm tra va chạm cho toàn bộ 3 quái vật tuần tra
+      const cardinalDirs = [
+        { dx: 0, dy: -1 },
+        { dx: 0, dy: 1 },
+        { dx: -1, dy: 0 },
+        { dx: 1, dy: 0 }
+      ];
 
-      // Kiểm tra chạm quái vật
-      if (Math.hypot(player.x - ghost.x, player.y - ghost.y) < 0.6) {
-        handleHitGhost();
-      }
+      ghosts.forEach(g => {
+        if (!g.isMoving) {
+          // Tìm các hướng đi hợp lệ (chỉ đi trong hành lang MAZE_LAYOUT === 0, không vào tường 1 hay phòng đáp án 2)
+          const validMoves = [];
+          cardinalDirs.forEach(d => {
+            const nx = g.gridX + d.dx;
+            const ny = g.gridY + d.dy;
+            if (ny >= 0 && ny < ROWS && nx >= 0 && nx < COLS) {
+              if (MAZE_LAYOUT[ny][nx] === 0) {
+                validMoves.push(d);
+              }
+            }
+          });
+
+          if (validMoves.length > 0) {
+            // Tránh quay đầu 180 độ trừ khi đường cụt
+            const nonReverse = validMoves.filter(d => !(d.dx === -g.dirX && d.dy === -g.dirY));
+            const choices = nonReverse.length > 0 ? nonReverse : validMoves;
+            const chosen = choices[Math.floor(Math.random() * choices.length)];
+            g.dirX = chosen.dx;
+            g.dirY = chosen.dy;
+            g.targetX = g.gridX + chosen.dx;
+            g.targetY = g.gridY + chosen.dy;
+            g.isMoving = true;
+          }
+        }
+
+        if (g.isMoving) {
+          const diffX = g.targetX - g.x;
+          const diffY = g.targetY - g.y;
+          const dist = Math.hypot(diffX, diffY);
+          if (dist <= g.speed) {
+            g.x = g.targetX;
+            g.y = g.targetY;
+            g.gridX = g.targetX;
+            g.gridY = g.targetY;
+            g.isMoving = false;
+          } else {
+            g.x += g.dirX * g.speed;
+            g.y += g.dirY * g.speed;
+          }
+        }
+
+        // Kiểm tra va chạm giữa người chơi và quái vật
+        if (Math.hypot(player.x - g.x, player.y - g.y) < 0.65) {
+          handleHitGhost();
+        }
+      });
 
       // Kiểm tra xem người chơi đã bước vào phòng đáp án nào chưa
       checkAnswerRoomTrigger();
@@ -782,6 +838,7 @@
       document.getElementById('lives-display').innerText = lives;
       playSoundWrong();
       centerPlayer();
+      initGhosts();
       if (lives <= 0) {
         endGame();
       }
@@ -837,36 +894,42 @@
         }
       });
 
-      // 3. Vẽ Quái vật tuần tra (Ghost)
-      const gx = ghost.x * cellW + cellW / 2;
-      const gy = ghost.y * cellH + cellH / 2;
-      const gr = cellW * 0.42;
+      // 3. Vẽ toàn bộ các Quái vật tuần tra (3 Ghosts) phong cách Wordwall
+      ghosts.forEach(g => {
+        const gx = g.x * cellW + cellW / 2;
+        const gy = g.y * cellH + cellH / 2;
+        const gr = cellW * 0.42;
 
-      ctx.beginPath();
-      ctx.arc(gx, gy - 2, gr, Math.PI, 0, false);
-      ctx.lineTo(gx + gr, gy + gr);
-      ctx.lineTo(gx + gr * 0.5, gy + gr * 0.7);
-      ctx.lineTo(gx, gy + gr);
-      ctx.lineTo(gx - gr * 0.5, gy + gr * 0.7);
-      ctx.lineTo(gx - gr, gy + gr);
-      ctx.closePath();
-      ctx.fillStyle = ghost.color;
-      ctx.shadowColor = ghost.color;
-      ctx.shadowBlur = 12;
-      ctx.fill();
-      ctx.shadowBlur = 0;
+        ctx.beginPath();
+        ctx.arc(gx, gy - 2, gr, Math.PI, 0, false);
+        ctx.lineTo(gx + gr, gy + gr);
+        ctx.lineTo(gx + gr * 0.5, gy + gr * 0.7);
+        ctx.lineTo(gx, gy + gr);
+        ctx.lineTo(gx - gr * 0.5, gy + gr * 0.7);
+        ctx.lineTo(gx - gr, gy + gr);
+        ctx.closePath();
+        ctx.fillStyle = g.color;
+        ctx.shadowColor = g.color;
+        ctx.shadowBlur = 12;
+        ctx.fill();
+        ctx.shadowBlur = 0;
 
-      // Mắt quái vật
-      ctx.beginPath();
-      ctx.arc(gx - 4, gy - 4, 3, 0, Math.PI * 2);
-      ctx.arc(gx + 4, gy - 4, 3, 0, Math.PI * 2);
-      ctx.fillStyle = '#fff';
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(gx - 3, gy - 4, 1.5, 0, Math.PI * 2);
-      ctx.arc(gx + 5, gy - 4, 1.5, 0, Math.PI * 2);
-      ctx.fillStyle = '#000';
-      ctx.fill();
+        // Mắt quái vật
+        ctx.beginPath();
+        ctx.arc(gx - 4, gy - 4, 3.2, 0, Math.PI * 2);
+        ctx.arc(gx + 4, gy - 4, 3.2, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+
+        // Con ngươi hướng theo chiều di chuyển
+        const lookX = g.dirX * 1.5;
+        const lookY = g.dirY * 1.5;
+        ctx.beginPath();
+        ctx.arc(gx - 4 + lookX, gy - 4 + lookY, 1.6, 0, Math.PI * 2);
+        ctx.arc(gx + 4 + lookX, gy - 4 + lookY, 1.6, 0, Math.PI * 2);
+        ctx.fillStyle = '#1e1b4b';
+        ctx.fill();
+      });
 
       // 4. Vẽ Người chơi (Pac-Man)
       const px = player.x * cellW + cellW / 2;
@@ -1017,12 +1080,14 @@
       document.getElementById('score-display').innerText = score;
       document.getElementById('result-modal').classList.add('hidden');
       initPellets();
+      initGhosts();
       loadQuestion();
     }
 
     // KHỞI ĐỘNG GAME
     window.onload = () => {
       initPellets();
+      initGhosts();
       resizeCanvas();
       loadQuestion();
       gameLoop();
