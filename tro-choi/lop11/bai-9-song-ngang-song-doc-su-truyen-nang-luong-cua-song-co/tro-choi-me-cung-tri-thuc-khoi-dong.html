@@ -35,11 +35,11 @@
       text-shadow: 0 0 12px rgba(251, 191, 36, 0.9);
     }
 
-    /* 4 Thẻ Đáp án Phòng Mê Cung (A, B, C, D) */
+    /* 4 Thẻ Đáp án Phòng Mê Cung (A, B, C, D) - Bo góc, chống tràn chữ */
     .room-card {
       position: absolute;
-      border-radius: 14px;
-      padding: 8px 12px;
+      border-radius: 12px;
+      padding: 4px 6px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -48,11 +48,13 @@
       cursor: pointer;
       z-index: 30;
       transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
-      background: rgba(15, 7, 34, 0.92);
-      backdrop-blur-md;
+      background: rgba(15, 7, 34, 0.94);
+      backdrop-filter: blur(8px);
       font-weight: 600;
-      line-height: 1.3;
+      line-height: 1.2;
       border-width: 2.5px;
+      overflow: hidden;
+      box-sizing: border-box;
     }
     .room-card:hover {
       transform: scale(1.04);
@@ -61,11 +63,24 @@
       transform: scale(0.97);
     }
 
+    .room-card .ans-content {
+      font-size: clamp(8.5px, 0.95vw, 11px);
+      line-height: 1.15;
+      font-weight: 600;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-break: break-word;
+      max-width: 100%;
+    }
+
     /* Card A - Đỏ */
     .card-a {
       border-color: #ef4444;
       color: #fca5a5;
-      box-shadow: 0 0 18px rgba(239, 68, 68, 0.4);
+      box-shadow: 0 0 16px rgba(239, 68, 68, 0.45);
     }
     .card-a .badge-ans {
       background: #ef4444;
@@ -76,7 +91,7 @@
     .card-b {
       border-color: #10b981;
       color: #6ee7b7;
-      box-shadow: 0 0 18px rgba(16, 185, 129, 0.4);
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.45);
     }
     .card-b .badge-ans {
       background: #10b981;
@@ -87,7 +102,7 @@
     .card-c {
       border-color: #3b82f6;
       color: #93c5fd;
-      box-shadow: 0 0 18px rgba(59, 130, 246, 0.4);
+      box-shadow: 0 0 16px rgba(59, 130, 246, 0.45);
     }
     .card-c .badge-ans {
       background: #3b82f6;
@@ -98,7 +113,7 @@
     .card-d {
       border-color: #f59e0b;
       color: #fde68a;
-      box-shadow: 0 0 18px rgba(245, 158, 11, 0.4);
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.45);
     }
     .card-d .badge-ans {
       background: #f59e0b;
@@ -106,12 +121,13 @@
     }
 
     .badge-ans {
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       font-weight: 900;
-      padding: 1px 10px;
+      padding: 1px 8px;
       border-radius: 6px;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
       display: inline-block;
+      letter-spacing: 0.5px;
     }
 
     /* D-pad cảm ứng góc phải dưới */
@@ -134,114 +150,183 @@
       color: #000;
       transform: scale(0.92);
     }
+
+    /* Toast nổi giữa màn hình */
+    #toast-notification {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 60;
+    }
+    #toast-notification.active {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
   </style>
 </head>
 <body class="selection:bg-cyan-500 selection:text-white">
 
   <!-- TOP BAR: THÔNG TIN TRÒ CHƠI & ĐIỂM SỐ -->
-  <header class="w-full bg-slate-950/90 border-b border-purple-900/60 px-4 py-2.5 flex items-center justify-between z-50 shrink-0 shadow-lg">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 flex items-center justify-center font-black text-xl shadow-md">
+  <header class="w-full bg-slate-950/90 border-b border-purple-900/60 px-3 md:px-5 py-2 flex items-center justify-between z-50 shrink-0 shadow-lg">
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 flex items-center justify-center font-black text-lg shadow-md">
         🌀
       </div>
       <div>
-        <h1 class="text-sm md:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+        <h1 class="text-xs md:text-sm lg:text-base font-black text-white uppercase tracking-wider flex items-center gap-1.5">
           <span>MÊ CUNG TRI THỨC</span>
-          <span class="text-xs bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 px-2 py-0.5 rounded-full font-bold">VẬT LÍ 11 - BÀI 9</span>
+          <span class="text-[10px] md:text-xs bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 px-2 py-0.5 rounded-full font-bold">VẬT LÍ 11 - BÀI 9</span>
         </h1>
-        <p class="text-xs text-purple-300">Khởi động: Kiểm tra bài cũ Bài 8 (Mô tả sóng) bước vào Sóng ngang & Sóng dọc</p>
+        <p class="text-[11px] text-purple-300 hidden sm:block">Khởi động: Ôn tập Bài 8 (Mô tả sóng) bước vào Sóng ngang & Sóng dọc</p>
       </div>
     </div>
 
     <!-- STATS -->
-    <div class="flex items-center gap-2 md:gap-4 font-bold text-sm">
+    <div class="flex items-center gap-1.5 md:gap-3 font-bold text-xs md:text-sm">
       <!-- Mạng sống -->
-      <div class="bg-slate-900/90 border border-slate-700/80 px-3 py-1 rounded-xl flex items-center gap-1.5 shadow">
-        <span class="text-rose-500 text-base">❤️</span>
-        <span id="lives-display" class="text-rose-400 font-black text-base">3</span>
+      <div class="bg-slate-900/90 border border-slate-700/80 px-2.5 py-1 rounded-xl flex items-center gap-1 shadow" title="Mỗi lần bị quái vật chạm sẽ mất 1 mạng. Bị chạm đủ 3 lần là Game Over!">
+        <span class="text-slate-400 text-xs hidden sm:inline">MẠNG:</span>
+        <span id="lives-display" class="font-black text-sm">❤️❤️❤️</span>
       </div>
 
       <!-- Điểm số -->
-      <div class="bg-slate-900/90 border border-slate-700/80 px-3.5 py-1 rounded-xl flex items-center gap-1.5 shadow">
-        <span class="text-amber-400 text-sm">🏆 ĐIỂM:</span>
-        <span id="score-display" class="text-amber-400 font-black text-base glow-gold">0</span>
+      <div class="bg-slate-900/90 border border-slate-700/80 px-2.5 py-1 rounded-xl flex items-center gap-1 shadow">
+        <span class="text-amber-400 text-xs">🏆 ĐIỂM:</span>
+        <span id="score-display" class="text-amber-400 font-black text-sm md:text-base glow-gold">0</span>
       </div>
 
       <!-- Thời gian -->
-      <div class="bg-slate-900/90 border border-slate-700/80 px-3.5 py-1 rounded-xl flex items-center gap-1.5 shadow">
-        <span class="text-cyan-400 text-sm">⏱️</span>
-        <span id="timer-display" class="text-cyan-400 font-mono text-base font-black">20s</span>
+      <div class="bg-slate-900/90 border border-slate-700/80 px-2.5 py-1 rounded-xl flex items-center gap-1 shadow">
+        <span class="text-cyan-400 text-xs">⏱️</span>
+        <span id="timer-display" class="text-cyan-400 font-mono text-sm md:text-base font-black">25s</span>
       </div>
 
+      <!-- Nút Luật chơi -->
+      <button onclick="openRulesModal()" class="bg-slate-800 hover:bg-slate-700 active:scale-95 text-xs px-2.5 py-1 rounded-xl border border-slate-600 font-bold text-slate-200 transition flex items-center gap-1">
+        ❓ <span class="hidden sm:inline">Luật chơi</span>
+      </button>
+
       <!-- Nút Âm thanh -->
-      <button id="btn-sound" onclick="toggleSound()" class="bg-slate-800 hover:bg-slate-700 active:scale-95 text-xs px-2.5 py-1.5 rounded-xl border border-slate-600 font-bold transition">
-        🔊 Bật tiếng
+      <button id="btn-sound" onclick="toggleSound()" class="bg-slate-800 hover:bg-slate-700 active:scale-95 text-xs px-2.5 py-1 rounded-xl border border-slate-600 font-bold transition">
+        🔊
       </button>
     </div>
   </header>
 
-  <!-- QUESTION BOX ĐỈNH MÀN HÌNH -->
-  <section class="mx-3 md:mx-6 my-2 bg-gradient-to-r from-purple-950/90 via-slate-900/95 to-indigo-950/90 border-2 border-cyan-400/80 rounded-2xl px-5 py-2.5 shadow-2xl z-40 shrink-0">
-    <div class="flex justify-between items-center text-xs font-black uppercase tracking-wider mb-1">
+  <!-- QUESTION BOX ĐỈNH MÀN HÌNH (GỒM CÂU HỎI & THANH HUD 4 ĐÁP ÁN ĐẦY ĐỦ) -->
+  <section class="mx-2 md:mx-4 my-1.5 bg-gradient-to-r from-purple-950/90 via-slate-900/95 to-indigo-950/90 border-2 border-cyan-400/80 rounded-2xl px-3 md:px-5 py-2 shadow-2xl z-40 shrink-0">
+    <div class="flex justify-between items-center text-[11px] font-black uppercase tracking-wider mb-1">
       <span class="text-amber-400 flex items-center gap-1.5">
         <span>⚡ CÂU HỎI</span>
         <span id="q-counter" class="bg-amber-400/20 text-amber-300 px-2 py-0.5 rounded-md border border-amber-400/40">1 / 10</span>
       </span>
-      <span class="text-cyan-300 font-medium normal-case hidden md:inline">
-        🎮 Dùng các phím <strong class="text-cyan-400">← ↑ → ↓</strong> hoặc <strong class="text-cyan-400">W A S D</strong> để dẫn đường vào phòng đáp án đúng (hoặc click trực tiếp)
+      <span class="text-cyan-300 font-medium normal-case hidden md:inline text-xs">
+        🎮 Dùng <strong class="text-cyan-400">← ↑ → ↓</strong> hoặc <strong class="text-cyan-400">W A S D</strong> để dẫn Pac-Man vào phòng đáp án đúng (hoặc click trực tiếp thẻ đáp án)
       </span>
     </div>
-    <div id="q-text" class="text-base md:text-lg lg:text-xl font-extrabold text-white leading-snug">
+
+    <!-- Nội dung câu hỏi -->
+    <div id="q-text" class="text-sm md:text-base lg:text-lg font-extrabold text-white leading-snug">
       Đang tải câu hỏi...
+    </div>
+
+    <!-- BẢNG 4 PHƯƠNG ÁN ĐÁP ÁN ĐẦY ĐỦ (CHỐNG TRÀN CHỮ TRÊN CANVAS) -->
+    <div id="hud-choices-grid" class="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1.5 text-xs">
+      <div class="flex items-start gap-1.5 bg-rose-950/40 hover:bg-rose-900/40 border border-rose-500/50 rounded-xl p-1.5 text-rose-100 transition cursor-pointer" onclick="handleCardClick('A')" title="Click chọn phương án A">
+        <span class="px-2 py-0.5 rounded-lg bg-rose-500 text-white font-black shrink-0 text-xs shadow">A</span>
+        <span id="hud-text-A" class="leading-snug font-medium line-clamp-2">Đang tải...</span>
+      </div>
+      <div class="flex items-start gap-1.5 bg-emerald-950/40 hover:bg-emerald-900/40 border border-emerald-500/50 rounded-xl p-1.5 text-emerald-100 transition cursor-pointer" onclick="handleCardClick('B')" title="Click chọn phương án B">
+        <span class="px-2 py-0.5 rounded-lg bg-emerald-500 text-white font-black shrink-0 text-xs shadow">B</span>
+        <span id="hud-text-B" class="leading-snug font-medium line-clamp-2">Đang tải...</span>
+      </div>
+      <div class="flex items-start gap-1.5 bg-sky-950/40 hover:bg-sky-900/40 border border-sky-500/50 rounded-xl p-1.5 text-sky-100 transition cursor-pointer" onclick="handleCardClick('C')" title="Click chọn phương án C">
+        <span class="px-2 py-0.5 rounded-lg bg-sky-500 text-white font-black shrink-0 text-xs shadow">C</span>
+        <span id="hud-text-C" class="leading-snug font-medium line-clamp-2">Đang tải...</span>
+      </div>
+      <div class="flex items-start gap-1.5 bg-amber-950/40 hover:bg-amber-900/40 border border-amber-500/50 rounded-xl p-1.5 text-amber-100 transition cursor-pointer" onclick="handleCardClick('D')" title="Click chọn phương án D">
+        <span class="px-2 py-0.5 rounded-lg bg-amber-500 text-black font-black shrink-0 text-xs shadow">D</span>
+        <span id="hud-text-D" class="leading-snug font-medium line-clamp-2">Đang tải...</span>
+      </div>
     </div>
   </section>
 
   <!-- MAIN CANVAS & MAZE AREA -->
-  <main id="game-container" class="relative flex-1 w-full overflow-hidden flex justify-center items-center p-2">
+  <main id="game-container" class="relative flex-1 w-full overflow-hidden flex justify-center items-center p-1 md:p-2">
     <!-- CANVAS MÊ CUNG PAC-MAN -->
     <canvas id="mazeCanvas" class="rounded-2xl glow-purple bg-slate-950"></canvas>
 
     <!-- 4 THẺ ĐÁP ÁN NẰM TẠI 4 PHÒNG TRONG MÊ CUNG -->
     <div id="card-A" class="room-card card-a" onclick="handleCardClick('A')">
       <div class="badge-ans">A</div>
-      <div id="ans-text-A" class="text-xs md:text-sm">Đáp án A</div>
+      <div id="ans-text-A" class="ans-content">Đáp án A</div>
     </div>
 
     <div id="card-B" class="room-card card-b" onclick="handleCardClick('B')">
       <div class="badge-ans">B</div>
-      <div id="ans-text-B" class="text-xs md:text-sm">Đáp án B</div>
+      <div id="ans-text-B" class="ans-content">Đáp án B</div>
     </div>
 
     <div id="card-C" class="room-card card-c" onclick="handleCardClick('C')">
       <div class="badge-ans">C</div>
-      <div id="ans-text-C" class="text-xs md:text-sm">Đáp án C</div>
+      <div id="ans-text-C" class="ans-content">Đáp án C</div>
     </div>
 
     <div id="card-D" class="room-card card-d" onclick="handleCardClick('D')">
       <div class="badge-ans">D</div>
-      <div id="ans-text-D" class="text-xs md:text-sm">Đáp án D</div>
+      <div id="ans-text-D" class="ans-content">Đáp án D</div>
+    </div>
+
+    <!-- TOAST NỔI GIỮA MÀN HÌNH -->
+    <div id="toast-notification" class="px-6 py-3.5 rounded-2xl font-black text-sm md:text-base border-2 shadow-2xl backdrop-blur-md">
+      Thông báo
     </div>
 
     <!-- D-PAD CẢM ỨNG (GÓC PHẢI DƯỚI) - HỖ TRỢ NHẤN 1 CÁI ĐI 1 BƯỚC / NHẤN GIỮ ĐI MIẾT -->
-    <div id="dpad" class="absolute bottom-3 right-3 grid grid-cols-3 gap-1.5 p-1.5 bg-slate-950/80 backdrop-blur-md rounded-2xl border border-purple-500/40 z-40">
+    <div id="dpad" class="absolute bottom-2 right-2 grid grid-cols-3 gap-1 p-1 bg-slate-950/80 backdrop-blur-md rounded-2xl border border-purple-500/40 z-40">
       <div></div>
-      <button class="d-btn w-12 h-12" onpointerdown="handleDpadDown(0, -1, event)" onpointerup="handleDpadUp(event)" onpointerleave="handleDpadUp(event)" oncontextmenu="return false;">▲</button>
+      <button class="d-btn w-10 h-10 md:w-11 md:h-11" onpointerdown="handleDpadDown(0, -1, event)" onpointerup="handleDpadUp(event)" onpointerleave="handleDpadUp(event)" oncontextmenu="return false;">▲</button>
       <div></div>
-      <button class="d-btn w-12 h-12" onpointerdown="handleDpadDown(-1, 0, event)" onpointerup="handleDpadUp(event)" onpointerleave="handleDpadUp(event)" oncontextmenu="return false;">◀</button>
-      <button class="d-btn w-12 h-12 text-sm text-purple-400" onclick="centerPlayer()">🎯</button>
-      <button class="d-btn w-12 h-12" onpointerdown="handleDpadDown(1, 0, event)" onpointerup="handleDpadUp(event)" onpointerleave="handleDpadUp(event)" oncontextmenu="return false;">▶</button>
+      <button class="d-btn w-10 h-10 md:w-11 md:h-11" onpointerdown="handleDpadDown(-1, 0, event)" onpointerup="handleDpadUp(event)" onpointerleave="handleDpadUp(event)" oncontextmenu="return false;">◀</button>
+      <button class="d-btn w-10 h-10 md:w-11 md:h-11 text-xs text-purple-400" onclick="centerPlayer()" title="Về tâm mê cung">🎯</button>
+      <button class="d-btn w-10 h-10 md:w-11 md:h-11" onpointerdown="handleDpadDown(1, 0, event)" onpointerup="handleDpadUp(event)" onpointerleave="handleDpadUp(event)" oncontextmenu="return false;">▶</button>
       <div></div>
-      <button class="d-btn w-12 h-12" onpointerdown="handleDpadDown(0, 1, event)" onpointerup="handleDpadUp(event)" onpointerleave="handleDpadUp(event)" oncontextmenu="return false;">▼</button>
+      <button class="d-btn w-10 h-10 md:w-11 md:h-11" onpointerdown="handleDpadDown(0, 1, event)" onpointerup="handleDpadUp(event)" onpointerleave="handleDpadUp(event)" oncontextmenu="return false;">▼</button>
       <div></div>
     </div>
   </main>
+
+  <!-- MODAL LUẬT CHƠI & HƯỚNG DẪN -->
+  <div id="rules-modal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border-2 border-cyan-400 rounded-3xl max-w-lg w-full p-6 text-left shadow-2xl relative">
+      <button onclick="closeRulesModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center font-bold text-sm">✕</button>
+      <h3 class="text-xl font-black text-white mb-3 flex items-center gap-2">
+        <span class="text-cyan-400">🌀</span> LUẬT CHƠI MÊ CUNG TRI THỨC
+      </h3>
+      <div class="space-y-2.5 text-xs md:text-sm text-slate-200 leading-relaxed bg-slate-950/60 p-4 rounded-2xl border border-slate-800">
+        <p>🎯 <strong>Mục tiêu:</strong> Dẫn dắt Pac-Man đến phòng <strong>A, B, C, D</strong> tương ứng với đáp án đúng của câu hỏi kiểm tra bài cũ Bài 8 (Mô tả sóng).</p>
+        <p>❤️ <strong>Mạng sống (3 mạng):</strong> Ban đầu bạn có <strong>3 mạng (❤️❤️❤️)</strong>. Mỗi lần chạm trúng quái vật tuần tra bạn sẽ <strong>mất 1 mạng</strong>. Bị quái vật chạm <strong>đủ 3 lần</strong> (hết 3 mạng) thì trò chơi kết thúc (<strong>Game Over</strong>)! Sau mỗi lần va chạm, Pac-Man được khiên bất tử bảo vệ <strong>1,5 giây</strong> để kịp thoát ra.</p>
+        <p>⚡ <strong>Hạt năng lượng:</strong> Mỗi hạt ăn được cộng <strong>+1 điểm</strong>. Hạt năng lượng tự động hồi sinh ở mỗi câu hỏi mới. Nếu ăn sạch toàn bộ hạt trong một câu, bạn được thưởng thêm <strong>+20 điểm</strong>!</p>
+        <p>🎮 <strong>Điều khiển:</strong> Phím mũi tên / WASD (nhấn 1 cái đi 1 bước, giữ phím đi miết), nút ảo D-pad góc phải dưới, hoặc click trực tiếp vào thẻ đáp án trên màn hình!</p>
+      </div>
+      <div class="mt-4 text-center">
+        <button onclick="closeRulesModal()" class="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold text-sm rounded-xl shadow-lg active:scale-95 transition">
+          Đã hiểu, tiếp tục chơi!
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- MODAL GIẢI THÍCH CHI TIẾT KHI TRẢ LỜI -->
   <div id="explain-modal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
     <div class="bg-slate-900 border-2 border-cyan-400 rounded-3xl max-w-lg w-full p-6 text-center shadow-2xl transform scale-100 transition">
       <div id="modal-icon" class="text-5xl mb-2">🎉</div>
       <h3 id="modal-title" class="text-2xl font-black text-white mb-2">CHÍNH XÁC! +10 ĐIỂM</h3>
-      <div id="modal-explain" class="text-slate-200 text-sm md:text-base leading-relaxed bg-slate-950/60 p-4 rounded-2xl border border-slate-800 text-left mb-5">
+      <div id="modal-explain" class="text-slate-200 text-xs md:text-sm leading-relaxed bg-slate-950/60 p-4 rounded-2xl border border-slate-800 text-left mb-5">
         Giải thích kiến thức...
       </div>
       <button onclick="nextQuestion()" class="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold text-base rounded-xl shadow-lg active:scale-95 transition">
@@ -250,14 +335,17 @@
     </div>
   </div>
 
-  <!-- MODAL KẾT THÚC TRÒ CHƠI / TỔNG KẾT -->
+  <!-- MODAL KẾT THÚC TRÒ CHƠI / TỔNG KẾT (CÓ NÚT ĐÓNG VÀ ĐIỀU HƯỚNG THÔNG MINH) -->
   <div id="result-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-lg z-50 flex items-center justify-center p-4">
-    <div class="bg-slate-900 border-2 border-amber-400 rounded-3xl max-w-md w-full p-6 text-center shadow-2xl">
-      <div class="text-6xl mb-3 animate-bounce">🏆</div>
-      <h2 class="text-2xl font-black text-amber-400 mb-1">HOÀN THÀNH MÊ CUNG TRI THỨC!</h2>
-      <p class="text-slate-300 text-xs mb-4">Bạn đã xuất sắc vượt qua các thử thách kiểm tra bài cũ Bài 8!</p>
+    <div class="bg-slate-900 border-2 border-amber-400 rounded-3xl max-w-md w-full p-6 text-center shadow-2xl relative">
+      <!-- Nút X đóng modal -->
+      <button onclick="closeResultModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center font-bold text-sm transition" title="Đóng bảng tổng kết">✕</button>
 
-      <div class="grid grid-cols-2 gap-3 mb-5">
+      <div id="res-icon" class="text-6xl mb-3 animate-bounce">🏆</div>
+      <h2 id="res-title" class="text-2xl font-black text-amber-400 mb-1">HOÀN THÀNH MÊ CUNG TRI THỨC!</h2>
+      <p id="res-sub" class="text-slate-300 text-xs mb-4">Bạn đã xuất sắc vượt qua các thử thách kiểm tra bài cũ Bài 8!</p>
+
+      <div class="grid grid-cols-2 gap-3 mb-4">
         <div class="bg-slate-950/70 p-3 rounded-2xl border border-slate-800">
           <div class="text-xs text-slate-400">TỔNG ĐIỂM</div>
           <div id="res-score" class="text-3xl font-black text-amber-400">100 / 100</div>
@@ -268,16 +356,20 @@
         </div>
       </div>
 
-      <div id="res-feedback" class="text-sm text-cyan-300 bg-cyan-950/30 p-3 rounded-xl border border-cyan-800/40 mb-5">
+      <div id="res-feedback" class="text-xs md:text-sm text-cyan-300 bg-cyan-950/30 p-3 rounded-xl border border-cyan-800/40 mb-5 text-left leading-relaxed">
         Tuyệt vời! Bạn đã nắm chắc toàn bộ kiến thức Bài 8 để tự tin khám phá Bài 9: Sóng ngang & Sóng dọc!
       </div>
 
-      <div class="flex gap-3 justify-center">
-        <button onclick="restartGame()" class="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-sm rounded-xl shadow-lg active:scale-95 transition">
+      <!-- CÁC NÚT ĐIỀU HƯỚNG THÔNG MINH CHỐNG LỖI WINDOW.CLOSE() -->
+      <div class="flex flex-wrap gap-2.5 justify-center">
+        <button onclick="restartGame()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs md:text-sm rounded-xl shadow-lg active:scale-95 transition flex items-center gap-1.5">
           🔄 Chơi lại
         </button>
-        <button onclick="window.close()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm rounded-xl border border-slate-700 active:scale-95 transition">
-          Đóng trò chơi
+        <button onclick="exitToLesson()" class="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs md:text-sm rounded-xl shadow-lg active:scale-95 transition flex items-center gap-1.5">
+          📖 Về bài giảng Bài 9
+        </button>
+        <button onclick="exitGame()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs md:text-sm rounded-xl border border-slate-700 active:scale-95 transition flex items-center gap-1.5">
+          🚪 Thoát trò chơi
         </button>
       </div>
     </div>
@@ -308,83 +400,83 @@
   },
   {
     "id": 3,
-    "q": "Quá trình truyền sóng cơ học thực chất là quá trình truyền:",
-    "optA": "Các phần tử vật chất của môi trường đi xa",
-    "optB": "Năng lượng và pha dao động qua môi trường",
-    "optC": "Điện tích và khối lượng của nguồn phát sóng",
-    "optD": "Vận tốc tức thời và lực tác dụng của nguồn",
-    "correct": "B",
-    "explain": "Quá trình truyền sóng là quá trình lan truyền dao động, truyền pha dao động và truyền năng lượng từ nguồn tới các phần tử lân cận."
+    "q": "Bước sóng (λ) là gì?",
+    "optA": "Quãng đường mà sóng truyền đi được trong một chu kì dao động",
+    "optB": "Khoảng cách giữa hai điểm bất kì trên cùng một phương truyền sóng",
+    "optC": "Quãng đường mà phần tử môi trường đi được trong một chu kì",
+    "optD": "Khoảng cách giữa một đỉnh sóng và một đáy sóng liền kề",
+    "correct": "A",
+    "explain": "Định nghĩa SGK: Bước sóng λ là quãng đường sóng truyền đi trong một chu kì dao động: λ = v.T = v/f."
   },
   {
     "id": 4,
-    "q": "Sóng cơ học tuyệt đối KHÔNG thể truyền được trong môi trường nào?",
-    "optA": "Chất khí (không khí loãng)",
-    "optB": "Chất lỏng (nước biển, dầu)",
-    "optC": "Chất rắn (kim loại, đất đá)",
-    "optD": "Môi trường chân không",
-    "correct": "D",
-    "explain": "Sóng cơ cần môi trường vật chất có lực liên kết đàn hồi để lan truyền dao động. Trong chân không không có hạt vật chất nên sóng cơ tuyệt đối không truyền được."
+    "q": "Công thức liên hệ đúng giữa bước sóng λ, tốc độ truyền sóng v, chu kì T và tần số f là:",
+    "optA": "λ = v.T = v / f",
+    "optB": "λ = v / T = v.f",
+    "optC": "v = λ.f = λ / T",
+    "optD": "f = v.λ = λ / T",
+    "correct": "A",
+    "explain": "Hệ thức chuẩn: λ = v.T = v / f. Trong đó v phụ thuộc vào bản chất môi trường, f do nguồn quyết định."
   },
   {
     "id": 5,
-    "q": "Khi sóng cơ truyền từ môi trường này sang môi trường khác, đại lượng nào LUÔN KHÔNG ĐỔI?",
-    "optA": "Tốc độ truyền sóng và bước sóng",
-    "optB": "Chu kì (T) và tần số (f) của sóng",
-    "optC": "Biên độ sóng và tốc độ sóng",
-    "optD": "Bước sóng và mật độ năng lượng sóng",
-    "correct": "B",
-    "explain": "Chu kì T và tần số f do nguồn sóng quy định nên luôn không đổi khi sóng truyền qua các môi trường khác nhau. Tốc độ v và bước sóng λ sẽ thay đổi."
+    "q": "Khoảng cách giữa hai điểm gần nhau nhất trên cùng một phương truyền sóng dao động CÙNG PHA là:",
+    "optA": "Một phần tư bước sóng (λ/4)",
+    "optB": "Một nửa bước sóng (λ/2)",
+    "optC": "Một bước sóng (λ)",
+    "optD": "Hai bước sóng (2λ)",
+    "correct": "C",
+    "explain": "Độ lệch pha giữa hai điểm cách nhau d là Δφ = 2πd/λ. Để cùng pha thì Δφ = 2kπ. Với hai điểm gần nhau nhất (k=1) thì d = λ."
   },
   {
     "id": 6,
-    "q": "Bước sóng λ được định nghĩa chính xác là:",
-    "optA": "Khoảng cách giữa hai điểm bất kì trên cùng phương truyền sóng",
-    "optB": "Quãng đường sóng truyền được trong một chu kì dao động",
-    "optC": "Khoảng cách giữa hai điểm dao động ngược pha nhau",
-    "optD": "Quãng đường sóng truyền đi được trong thời gian một giây",
-    "correct": "B",
-    "explain": "Định nghĩa SGK: Bước sóng λ là quãng đường mà sóng truyền được trong thời gian một chu kì dao động: λ = v·T = v/f."
-  },
-  {
-    "id": 7,
-    "q": "Mối liên hệ chính xác giữa bước sóng λ, tốc độ sóng v, chu kì T và tần số f là:",
-    "optA": "λ = v / T = v · f",
-    "optB": "λ = v · T = v / f",
-    "optC": "v = λ · T = λ / f",
-    "optD": "f = λ · v = v / T",
-    "correct": "B",
-    "explain": "Hệ thức cơ bản của sóng cơ: λ = v · T = v / f (trong đó λ tính bằng mét, v tính bằng m/s, T tính bằng giây, f tính bằng Hz)."
-  },
-  {
-    "id": 8,
-    "q": "Khoảng cách giữa hai điểm gần nhau nhất trên cùng phương truyền sóng dao động CÙNG PHA là:",
-    "optA": "Một bước sóng (λ)",
-    "optB": "Nửa bước sóng (λ/2)",
+    "q": "Khoảng cách giữa hai điểm gần nhau nhất trên cùng một phương truyền sóng dao động NGƯỢC PHA là:",
+    "optA": "Một nửa bước sóng (λ/2)",
+    "optB": "Một bước sóng (λ)",
     "optC": "Một phần tư bước sóng (λ/4)",
     "optD": "Hai bước sóng (2λ)",
     "correct": "A",
-    "explain": "Độ lệch pha Δφ = 2π·d / λ. Cùng pha khi Δφ = 2kπ. Hai điểm gần nhau nhất ứng với k = 1 => d_min = λ."
+    "explain": "Để hai phần tử dao động ngược pha thì Δφ = (2k+1)π. Với hai điểm gần nhau nhất (k=0) thì d = λ/2."
+  },
+  {
+    "id": 7,
+    "q": "Tốc độ truyền sóng cơ phụ thuộc chủ yếu vào yếu tố nào sau đây?",
+    "optA": "Bản chất môi trường truyền sóng (tính đàn hồi, mật độ môi trường)",
+    "optB": "Biên độ dao động của nguồn sóng phát ra",
+    "optC": "Tần số dao động của nguồn sóng kích thích",
+    "optD": "Pha ban đầu của nguồn dao động",
+    "correct": "A",
+    "explain": "Tốc độ truyền sóng chỉ phụ thuộc vào tính chất đàn hồi và mật độ của môi trường truyền sóng (thông thường: v_rắn > v_lỏng > v_khí), không phụ thuộc biên độ hay tần số nguồn."
+  },
+  {
+    "id": 8,
+    "q": "Một sóng cơ có tần số f = 50 Hz truyền với tốc độ v = 150 m/s. Bước sóng của sóng này là:",
+    "optA": "3 m",
+    "optB": "300 cm",
+    "optC": "0,33 m",
+    "optD": "7500 m",
+    "correct": "A",
+    "explain": "Áp dụng công thức: λ = v / f = 150 / 50 = 3 m (hoặc 300 cm, tuy nhiên ở đây 3 m là đáp án chuẩn SI)."
   },
   {
     "id": 9,
-    "q": "Khoảng cách giữa hai điểm gần nhau nhất trên cùng phương truyền sóng dao động NGƯỢC PHA là:",
-    "optA": "Một bước sóng (λ)",
-    "optB": "Nửa bước sóng (λ/2)",
-    "optC": "Hai bước sóng (2λ)",
-    "optD": "Một phần tư bước sóng (λ/4)",
-    "correct": "B",
-    "explain": "Ngược pha khi Δφ = (2k + 1)π. Hai điểm gần nhau nhất ứng với k = 0 => d_min = λ / 2."
+    "q": "Đồ thị li độ - khoảng cách (x - u) của một sóng hình sin tại một thời điểm xác định có dạng:",
+    "optA": "Một đường cong hình sin lặp lại tuần hoàn trong không gian",
+    "optB": "Đường thẳng đi qua gốc tọa độ",
+    "optC": "Đường hyperbol dốc đứng",
+    "optD": "Đoạn thẳng nằm ngang song song trục hoành",
+    "correct": "A",
+    "explain": "Tại một thời điểm t xác định, hình dạng của sợi dây hoặc mặt nước có dạng đường cong hình sin tuần hoàn theo không gian với chu kì tuần hoàn là bước sóng λ."
   },
   {
     "id": 10,
-    "q": "Năng lượng mà sóng cơ lan truyền mang theo tỉ lệ thuận với:",
-    "optA": "Căn bậc hai của biên độ dao động",
-    "optB": "Bình phương biên độ dao động của sóng (W ∝ A²)",
-    "optC": "Tỉ lệ nghịch với tần số của nguồn sóng",
-    "optD": "Độ dịch chuyển tức thời của phần tử",
-    "correct": "B",
-    "explain": "Cơ năng dao động W = 1/2 m ω² A² tỉ lệ với bình phương biên độ (A²) và bình phương tần số (f²). Quá trình truyền sóng mang theo năng lượng tỉ lệ với A²."
+    "q": "Quá trình truyền sóng cơ là quá trình truyền:",
+    "optA": "Pha dao động và năng lượng dao động của sóng",
+    "optB": "Vật chất và các phần tử môi trường đi xa",
+    "optC": "Điện tích và từ trường trong không gian",
+    "optD": "Nhiệt lượng và áp suất khí quyển",
+    "correct": "A",
+    "explain": "Sóng mang năng lượng từ nguồn truyền đi xa. Quá trình truyền sóng là quá trình truyền pha dao động và truyền năng lượng, không truyền phần tử vật chất."
   }
 ];
 
@@ -429,11 +521,83 @@
       setTimeout(() => playBeep(130, 'sawtooth', 0.3, 0.35), 180);
     }
     function playSoundEat() {
-      playBeep(440, 'sine', 0.04, 0.05);
+      playBeep(440, 'sine', 0.04, 0.04);
     }
     function toggleSound() {
       soundEnabled = !soundEnabled;
-      document.getElementById('btn-sound').innerText = soundEnabled ? '🔊 Bật tiếng' : '🔇 Tắt tiếng';
+      document.getElementById('btn-sound').innerText = soundEnabled ? '🔊' : '🔇';
+    }
+
+    // HIỂN THỊ MẠNG SỐNG DẠNG TRÁI TIM TRỰC QUAN (❤️❤️❤️)
+    function renderLives() {
+      let html = '';
+      for (let i = 0; i < 3; i++) {
+        if (i < lives) {
+          html += '❤️';
+        } else {
+          html += '🖤';
+        }
+      }
+      document.getElementById('lives-display').innerHTML = `<span class="tracking-widest">${html}</span>`;
+    }
+
+    // TOAST CẢNH BÁO NỔI
+    let toastTimer = null;
+    function showToast(msg, colorScheme = 'cyan') {
+      const toast = document.getElementById('toast-notification');
+      clearTimeout(toastTimer);
+
+      if (colorScheme === 'rose') {
+        toast.className = 'px-5 py-3 rounded-2xl font-black text-sm md:text-base border-2 shadow-2xl backdrop-blur-md bg-rose-950/90 border-rose-500 text-rose-200';
+      } else if (colorScheme === 'emerald') {
+        toast.className = 'px-5 py-3 rounded-2xl font-black text-sm md:text-base border-2 shadow-2xl backdrop-blur-md bg-emerald-950/90 border-emerald-500 text-emerald-200';
+      } else {
+        toast.className = 'px-5 py-3 rounded-2xl font-black text-sm md:text-base border-2 shadow-2xl backdrop-blur-md bg-cyan-950/90 border-cyan-500 text-cyan-200';
+      }
+
+      toast.innerText = msg;
+      toast.classList.add('active');
+
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('active');
+      }, 1600);
+    }
+
+    // HÀM ĐÓNG MODAL VÀ ĐIỀU HƯỚNG THOÁT GAME THÔNG MINH
+    function openRulesModal() {
+      document.getElementById('rules-modal').classList.remove('hidden');
+    }
+    function closeRulesModal() {
+      document.getElementById('rules-modal').classList.add('hidden');
+    }
+    function closeResultModal() {
+      document.getElementById('result-modal').classList.add('hidden');
+    }
+
+    function exitToLesson() {
+      // Chuyển hướng về trang bài giảng Bài 9
+      window.location.href = '../../Lop11/Bai9/Baigiang.html';
+    }
+
+    function exitGame() {
+      // 1. Thử quay lại lịch sử duyệt
+      if (window.history.length > 1) {
+        window.history.back();
+        setTimeout(() => {
+          window.location.href = '../../Lop11/Bai9/Baigiang.html';
+        }, 300);
+        return;
+      }
+      // 2. Chuyển hướng trực tiếp về Bài giảng Bài 9
+      try {
+        window.location.href = '../../Lop11/Bai9/Baigiang.html';
+      } catch(e) {
+        window.location.href = '/';
+      }
+      // 3. Fallback close nếu là popup
+      try {
+        window.close();
+      } catch(e) {}
     }
 
     // =========================================================================
@@ -487,7 +651,9 @@
       mouthAngle: 0.2,
       mouthSpeed: 0.04,
       mouthDir: 1,
-      color: '#facc15'
+      color: '#facc15',
+      isInvulnerable: false, // Khiên bảo vệ bất tử tạm thời sau khi bị ma chạm
+      visible: true
     };
 
     // HỆ THỐNG 3 QUÁI VẬT TUẦN TRA ĐA SẮC MÀU (PHONG CÁCH WORDWALL MAZE CHASE)
@@ -511,7 +677,7 @@
       }));
     }
 
-    // Dấu chấm năng lượng (Pellets)
+    // Dấu chấm năng lượng (Pellets) - Hồi sinh mỗi câu hỏi và khi dọn sạch mê cung
     let pellets = [];
     function initPellets() {
       pellets = [];
@@ -548,7 +714,7 @@
       const offsetX = rect.left - containerRect.left;
       const offsetY = rect.top - containerRect.top;
 
-      const cardW = cellW * 3.3;
+      const cardW = cellW * 3.4;
       const cardH = cellH * 2.5;
 
       for (const [key, loc] of Object.entries(ROOM_LOCS)) {
@@ -659,10 +825,6 @@
       heldDpadDir = null;
     }
 
-    function setPlayerDir(dx, dy) {
-      tryStartMove(dx, dy);
-    }
-
     function centerPlayer() {
       player.x = 9;
       player.y = 6;
@@ -752,10 +914,7 @@
         if (!p.eaten) {
           const dist = Math.hypot(player.x - p.c, player.y - p.r);
           if (dist < 0.5) {
-            p.eaten = true;
-            score += 1;
-            document.getElementById('score-display').innerText = score;
-            playSoundEat();
+            checkPelletAt(p.c, p.r);
           }
         }
       });
@@ -811,8 +970,8 @@
           }
         }
 
-        // Kiểm tra va chạm giữa người chơi và quái vật
-        if (Math.hypot(player.x - g.x, player.y - g.y) < 0.65) {
+        // Kiểm tra va chạm giữa người chơi và quái vật (nếu không đang trong thời gian bất tử)
+        if (!player.isInvulnerable && Math.hypot(player.x - g.x, player.y - g.y) < 0.65) {
           handleHitGhost();
         }
       });
@@ -821,26 +980,67 @@
       checkAnswerRoomTrigger();
     }
 
-    
+    // XỬ LÍ ĂN HẠT NĂNG LƯỢNG & TỰ ĐỘNG HỒI SINH KHI DỌN SẠCH MÊ CUNG
     function checkPelletAt(gx, gy) {
+      let justEaten = false;
+      let remaining = 0;
+
       pellets.forEach(p => {
-        if (!p.eaten && p.c === gx && p.r === gy) {
-          p.eaten = true;
-          score += 1;
-          document.getElementById('score-display').innerText = score;
-          playSoundEat();
+        if (!p.eaten) {
+          if (p.c === gx && p.r === gy) {
+            p.eaten = true;
+            score += 1;
+            document.getElementById('score-display').innerText = score;
+            justEaten = true;
+            playSoundEat();
+          } else {
+            remaining++;
+          }
         }
       });
+
+      // Nếu dọn sạch 100% hạt năng lượng trong câu hiện tại: Thưởng lớn + Hồi sinh đợt mới
+      if (justEaten && remaining === 0 && pellets.length > 0) {
+        score += 20;
+        document.getElementById('score-display').innerText = score;
+        playSoundCorrect();
+        showToast('✨ XUẤT SẮC! Dọn sạch hạt (+20 ĐIỂM) ✨', 'emerald');
+        setTimeout(() => {
+          initPellets();
+        }, 600);
+      }
     }
 
+    // XỬ LÍ VA CHẠM QUÁI VẬT: MẤT 1 MẠNG, KHIÊN BẤT TỬ 1.5S, ĐỦ 3 LẦN LÀ GAME OVER
     function handleHitGhost() {
+      if (player.isInvulnerable) return;
+
       lives--;
-      document.getElementById('lives-display').innerText = lives;
+      renderLives();
       playSoundWrong();
       centerPlayer();
       initGhosts();
-      if (lives <= 0) {
-        endGame();
+
+      // Bật khiên bất tử trong 1.5 giây, Pac-Man nhấp nháy
+      player.isInvulnerable = true;
+      let blinkCount = 0;
+      const blinkTimer = setInterval(() => {
+        player.visible = !player.visible;
+        blinkCount++;
+        if (blinkCount >= 8) {
+          clearInterval(blinkTimer);
+          player.visible = true;
+          player.isInvulnerable = false;
+        }
+      }, 180);
+
+      if (lives > 0) {
+        showToast(`⚠️ Bị quái vật tóm! Mất 1 mạng (Còn ${lives} mạng)`, 'rose');
+      } else {
+        showToast(`💀 BẠN ĐÃ HẾT MẠNG! (3/3 LẦN VA CHẠM)`, 'rose');
+        setTimeout(() => {
+          endGame(true);
+        }, 700);
       }
     }
 
@@ -932,33 +1132,47 @@
       });
 
       // 4. Vẽ Người chơi (Pac-Man)
-      const px = player.x * cellW + cellW / 2;
-      const py = player.y * cellH + cellH / 2;
-      const pr = cellW * 0.44;
+      if (player.visible) {
+        const px = player.x * cellW + cellW / 2;
+        const py = player.y * cellH + cellH / 2;
+        const pr = cellW * 0.44;
 
-      let baseAngle = 0;
-      if (player.dirX === 1) baseAngle = 0;
-      else if (player.dirX === -1) baseAngle = Math.PI;
-      else if (player.dirY === 1) baseAngle = Math.PI / 2;
-      else if (player.dirY === -1) baseAngle = -Math.PI / 2;
+        // Vòng khiên bảo vệ bất tử (nếu có)
+        if (player.isInvulnerable) {
+          ctx.beginPath();
+          ctx.arc(px, py, pr + 4, 0, Math.PI * 2);
+          ctx.strokeStyle = '#06b6d4';
+          ctx.lineWidth = 2.5;
+          ctx.shadowColor = '#06b6d4';
+          ctx.shadowBlur = 12;
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+        }
 
-      ctx.beginPath();
-      ctx.arc(px, py, pr, baseAngle + player.mouthAngle * Math.PI, baseAngle + (2 - player.mouthAngle) * Math.PI);
-      ctx.lineTo(px, py);
-      ctx.closePath();
-      ctx.fillStyle = player.color;
-      ctx.shadowColor = '#facc15';
-      ctx.shadowBlur = 15;
-      ctx.fill();
-      ctx.shadowBlur = 0;
+        let baseAngle = 0;
+        if (player.dirX === 1) baseAngle = 0;
+        else if (player.dirX === -1) baseAngle = Math.PI;
+        else if (player.dirY === 1) baseAngle = Math.PI / 2;
+        else if (player.dirY === -1) baseAngle = -Math.PI / 2;
 
-      // Mắt người chơi
-      const eyeX = px + Math.cos(baseAngle - Math.PI / 3) * (pr * 0.55);
-      const eyeY = py + Math.sin(baseAngle - Math.PI / 3) * (pr * 0.55);
-      ctx.beginPath();
-      ctx.arc(eyeX, eyeY, 2.5, 0, Math.PI * 2);
-      ctx.fillStyle = '#000';
-      ctx.fill();
+        ctx.beginPath();
+        ctx.arc(px, py, pr, baseAngle + player.mouthAngle * Math.PI, baseAngle + (2 - player.mouthAngle) * Math.PI);
+        ctx.lineTo(px, py);
+        ctx.closePath();
+        ctx.fillStyle = player.color;
+        ctx.shadowColor = '#facc15';
+        ctx.shadowBlur = 15;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Mắt người chơi
+        const eyeX = px + Math.cos(baseAngle - Math.PI / 3) * (pr * 0.55);
+        const eyeY = py + Math.sin(baseAngle - Math.PI / 3) * (pr * 0.55);
+        ctx.beginPath();
+        ctx.arc(eyeX, eyeY, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#000';
+        ctx.fill();
+      }
     }
 
     // =========================================================================
@@ -970,10 +1184,26 @@
       document.getElementById('q-counter').innerText = `${currentQ + 1} / ${QUESTIONS.length}`;
       document.getElementById('q-text').innerText = `${q.id}. ${q.q}`;
 
+      // Cập nhật thẻ phòng trong mê cung
       document.getElementById('ans-text-A').innerText = q.optA;
       document.getElementById('ans-text-B').innerText = q.optB;
       document.getElementById('ans-text-C').innerText = q.optC;
       document.getElementById('ans-text-D').innerText = q.optD;
+
+      // Cập nhật tooltip cho thẻ phòng
+      document.getElementById('card-A').title = `Phòng A: ${q.optA}`;
+      document.getElementById('card-B').title = `Phòng B: ${q.optB}`;
+      document.getElementById('card-C').title = `Phòng C: ${q.optC}`;
+      document.getElementById('card-D').title = `Phòng D: ${q.optD}`;
+
+      // Cập nhật thanh HUD 4 đáp án đầy đủ
+      document.getElementById('hud-text-A').innerText = q.optA;
+      document.getElementById('hud-text-B').innerText = q.optB;
+      document.getElementById('hud-text-C').innerText = q.optC;
+      document.getElementById('hud-text-D').innerText = q.optD;
+
+      // Hồi sinh toàn bộ hạt năng lượng cho câu hỏi mới
+      initPellets();
 
       timeLeft = 25;
       document.getElementById('timer-display').innerText = `${timeLeft}s`;
@@ -1017,7 +1247,7 @@
         title.innerHTML = '<span class="text-emerald-400">CHÍNH XÁC! +10 ĐIỂM</span>';
       } else {
         lives--;
-        document.getElementById('lives-display').innerText = lives;
+        renderLives();
         playSoundWrong();
         icon.innerText = '❌';
         title.innerHTML = `<span class="text-rose-500">CHƯA ĐÚNG! (Đáp án đúng là ${q.correct})</span>`;
@@ -1025,7 +1255,7 @@
 
       explain.innerHTML = `
         <div class="mb-2"><strong>Bạn đã chọn:</strong> [${chosen}]</div>
-        <div class="text-cyan-300 font-semibold mb-1">💡 Giải thích:</div>
+        <div class="text-cyan-300 font-semibold mb-1">💡 Giải thích kiến thức Bài 8:</div>
         <div class="text-slate-100">${q.explain}</div>
       `;
 
@@ -1033,8 +1263,9 @@
 
       if (lives <= 0) {
         setTimeout(() => {
-          endGame();
-        }, 2000);
+          modal.classList.add('hidden');
+          endGame(true);
+        }, 2200);
       }
     }
 
@@ -1048,27 +1279,43 @@
       if (currentQ < QUESTIONS.length && lives > 0) {
         loadQuestion();
       } else {
-        endGame();
+        endGame(lives <= 0);
       }
     }
 
-    function endGame() {
+    function endGame(isGameOver = false) {
       clearInterval(timerInterval);
       document.getElementById('explain-modal').classList.add('hidden');
       const resModal = document.getElementById('result-modal');
       resModal.classList.remove('hidden');
 
+      const resIcon = document.getElementById('res-icon');
+      const resTitle = document.getElementById('res-title');
+      const resSub = document.getElementById('res-sub');
+      const fb = document.getElementById('res-feedback');
+
       document.getElementById('res-score').innerText = `${score} / 100`;
-      const correctCount = Math.floor(score / 10);
+      const correctCount = Math.min(QUESTIONS.length, Math.floor(score / 10));
       document.getElementById('res-correct').innerText = `${correctCount} / ${QUESTIONS.length}`;
 
-      const fb = document.getElementById('res-feedback');
-      if (score >= 80) {
-        fb.innerHTML = '<strong class="text-emerald-400">Xuất sắc!</strong> Bạn đã làm chủ hoàn hảo các kiến thức Bài 8 để bước vào bài Sóng ngang & Sóng dọc!';
-      } else if (score >= 50) {
-        fb.innerHTML = '<strong class="text-cyan-400">Rất tốt!</strong> Nắm chắc các kiến thức cốt lõi sẽ giúp bạn tiếp thu Bài 9 cực kì thuận lợi.';
+      if (isGameOver) {
+        resIcon.innerText = '💀';
+        resTitle.innerText = 'HẾT MẠNG SỐNG (GAME OVER)';
+        resTitle.className = 'text-2xl font-black text-rose-500 mb-1';
+        resSub.innerText = 'Bạn đã bị quái vật chạm 3 lần và mất hết mạng!';
+        fb.innerHTML = '<strong class="text-rose-400">Hãy thử lại!</strong> Hãy cẩn thận né tránh quái vật tuần tra và nắm chắc các định nghĩa sóng cơ để chinh phục trọn vẹn điểm số nhé.';
       } else {
-        fb.innerHTML = '<strong class="text-amber-400">Cần ôn thêm!</strong> Hãy chú ý theo dõi bài học mới để nắm vững hơn bản chất sóng nhé.';
+        resIcon.innerText = '🏆';
+        resTitle.innerText = 'HOÀN THÀNH MÊ CUNG TRI THỨC!';
+        resTitle.className = 'text-2xl font-black text-amber-400 mb-1';
+        resSub.innerText = 'Bạn đã xuất sắc vượt qua các thử thách kiểm tra bài cũ Bài 8!';
+        if (score >= 80) {
+          fb.innerHTML = '<strong class="text-emerald-400">Xuất sắc!</strong> Bạn đã làm chủ hoàn hảo các kiến thức Bài 8 để bước vào bài Sóng ngang & Sóng dọc!';
+        } else if (score >= 50) {
+          fb.innerHTML = '<strong class="text-cyan-400">Rất tốt!</strong> Nắm chắc các kiến thức cốt lõi sẽ giúp bạn tiếp thu Bài 9 cực kì thuận lợi.';
+        } else {
+          fb.innerHTML = '<strong class="text-amber-400">Cần ôn thêm!</strong> Hãy chú ý theo dõi bài học mới để nắm vững hơn bản chất sóng nhé.';
+        }
       }
     }
 
@@ -1076,7 +1323,7 @@
       currentQ = 0;
       score = 0;
       lives = 3;
-      document.getElementById('lives-display').innerText = lives;
+      renderLives();
       document.getElementById('score-display').innerText = score;
       document.getElementById('result-modal').classList.add('hidden');
       initPellets();
@@ -1086,6 +1333,7 @@
 
     // KHỞI ĐỘNG GAME
     window.onload = () => {
+      renderLives();
       initPellets();
       initGhosts();
       resizeCanvas();
