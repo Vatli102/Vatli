@@ -114,6 +114,7 @@
                     <button onclick="setTypeFilter('all', this)" class="tab-btn type-tab active px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all">Tất cả thể loại</button>
                     <button onclick="setTypeFilter('mecung', this)" class="tab-btn type-tab px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-purple-100 text-slate-700 transition-all">🕹️ Mê cung Wordwall</button>
                     <button onclick="setTypeFilter('nghiengdau', this)" class="tab-btn type-tab px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-cyan-100 text-slate-700 transition-all">📷 Đấu trí AI nghiêng đầu</button>
+                    <button onclick="setTypeFilter('giotay', this)" class="tab-btn type-tab px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-teal-100 text-slate-700 transition-all">✋ Đấu trí AI giơ tay</button>
                 </div>
 
                 <!-- Input Search -->
@@ -192,10 +193,23 @@
             for (let i = 0; i < filtered.length; i++) {
                 const g = filtered[i];
                 const isMaze = g.type === 'mecung';
-                const tagColor = isMaze ? 'bg-purple-100 text-purple-800 border-purple-200' : 'bg-indigo-100 text-indigo-800 border-indigo-200';
-                const btnGrad = isMaze ? 'from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700' : 'from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700';
-                const icon = isMaze ? 'fa-gamepad' : 'fa-video';
-                const actionText = isMaze ? 'Vào Chơi Mê Cung' : 'Mở Trò Chơi AI';
+                const isHand = g.type === 'giotay';
+                let tagColor = 'bg-indigo-100 text-indigo-800 border-indigo-200';
+                let btnGrad = 'from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700';
+                let icon = 'fa-video';
+                let actionText = 'Mở Trò Chơi AI';
+
+                if (isMaze) {
+                    tagColor = 'bg-purple-100 text-purple-800 border-purple-200';
+                    btnGrad = 'from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700';
+                    icon = 'fa-gamepad';
+                    actionText = 'Vào Chơi Mê Cung';
+                } else if (isHand) {
+                    tagColor = 'bg-teal-100 text-teal-800 border-teal-200';
+                    btnGrad = 'from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700';
+                    icon = 'fa-hand';
+                    actionText = 'Chơi Giơ Tay AI';
+                }
 
                 html += '<div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-lg hover:border-purple-300 transition-all flex flex-col justify-between group">';
                 html += '  <div class="space-y-3">';

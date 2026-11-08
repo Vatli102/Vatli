@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khởi động: Đấu Trí Giơ Tay AI - BÀI 8: MÔ TẢ SÓNG</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
+      50% { box-shadow: 0 0 30px rgba(56, 189, 248, 0.85); }
+    }
+    @keyframes hand-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .glow-cyan { animation: pulse-glow 2s infinite; }
+    .hand-anim { animation: hand-float 1.5s ease-in-out infinite; }
+    .mirror-cam { transform: scaleX(-1); }
+    
+    .active-card-left {
+      border-color: #06B6D4 !important;
+      background: rgba(8, 145, 178, 0.35) !important;
+      box-shadow: 0 0 35px rgba(6, 182, 212, 0.75) !important;
+      transform: scale(1.02);
+    }
+    .active-card-right {
+      border-color: #10B981 !important;
+      background: rgba(16, 185, 129, 0.35) !important;
+      box-shadow: 0 0 35px rgba(16, 185, 129, 0.75) !important;
+      transform: scale(1.02);
+    }
+    .correct-anim {
+      border-color: #22C55E !important;
+      background: rgba(34, 197, 94, 0.45) !important;
+      box-shadow: 0 0 50px rgba(34, 197, 94, 0.9) !important;
+    }
+    .wrong-anim {
+      border-color: #EF4444 !important;
+      background: rgba(239, 68, 68, 0.45) !important;
+      box-shadow: 0 0 50px rgba(239, 68, 68, 0.9) !important;
+    }
+
+    /* Thanh tiến trình giơ tay */
+    .progress-fill {
+      transition: width 0.08s linear;
+    }
+
+    /* Vùng cảm biến giơ tay trên camera */
+    .sensor-zone {
+      transition: all 0.2s ease-in-out;
+    }
+    .sensor-zone.detected {
+      transform: scale(1.05);
+      border-color: #FACC15 !important;
+      background: rgba(250, 204, 21, 0.25) !important;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-slate-100 min-h-screen flex flex-col font-sans select-none overflow-x-hidden">
+
+  <!-- HEADER THANH ĐIỀU KHIỂN TRÊN CÙNG -->
+  <header class="max-w-6xl mx-auto w-full flex flex-wrap items-center justify-between gap-3 py-3 px-6 border-b border-slate-800 bg-slate-950/60 backdrop-blur sticky top-0 z-50">
+    <div class="flex items-center gap-3">
+      <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-600 via-teal-600 to-emerald-600 flex items-center justify-center text-2xl shadow-lg shadow-cyan-500/20 hand-anim">
+        ✋
+      </div>
+      <div>
+        <h1 class="font-extrabold text-base md:text-lg text-white leading-tight">VẬT LÍ 11 — KHỞI ĐỘNG BÀI 8: MÔ TẢ SÓNG</h1>
+        <p class="text-xs text-cyan-400 font-semibold flex items-center gap-2">
+          <span>Đấu Trí Giơ Tay AI</span> • 
+          <span class="text-emerald-400">Giơ Tay Trái = Chọn A | Giơ Tay Phải = Chọn B</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 md:gap-3">
+      <!-- Nút bật tắt Camera -->
+      <button id="btn-toggle-cam" onclick="toggleCamera()" class="px-4 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white text-xs md:text-sm font-bold rounded-xl shadow transition-all flex items-center gap-1.5">
+        <span>📷</span> <span id="cam-status-text">Bật Camera</span>
+      </button>
+
+      <!-- Nút đổi sang Game Nghiêng Đầu -->
+      <a href="tro-choi-nghieng-dau-khoi-dong.html" class="px-3.5 py-1.5 bg-indigo-900/80 hover:bg-indigo-800 border border-indigo-700 text-indigo-200 text-xs md:text-sm font-bold rounded-xl transition-all flex items-center gap-1">
+        <span>🔄</span> Chơi Nghiêng Đầu
+      </a>
+
+      <!-- Điểm số -->
+      <div class="px-4 py-1.5 rounded-xl bg-slate-800/90 border border-slate-700 text-right min-w-[110px]">
+        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">ĐIỂM SỐ</div>
+        <div class="text-lg font-black text-amber-400 leading-none" id="score-display">0</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MÀN HÌNH CHÍNH (MAIN CONTAINER) -->
+  <main class="max-w-6xl mx-auto w-full flex-1 flex flex-col justify-center px-4 py-3 relative">
+
+    <!-- MÀN HÌNH BẮT ĐẦU (START SCREEN) -->
+    <div id="start-screen" class="max-w-2xl mx-auto w-full bg-slate-900/90 border border-cyan-500/40 rounded-3xl p-6 md:p-8 text-center shadow-2xl backdrop-blur">
+      <div class="w-20 h-20 mx-auto rounded-3xl bg-cyan-500/20 border-2 border-cyan-400 flex items-center justify-center text-4xl mb-4 shadow-lg shadow-cyan-500/30 hand-anim">
+        ✋
+      </div>
+      <h2 class="text-2xl md:text-3xl font-black text-white mb-2">ĐẤU TRÍ GIƠ TAY AI</h2>
+      <p class="text-cyan-300 font-semibold text-sm mb-4">Khởi động 10 câu hỏi cốt lõi Dao động điều hòa kết nối bước vào Sóng cơ</p>
+      
+      <div class="bg-slate-950/80 rounded-2xl p-4 text-left border border-slate-800 text-xs md:text-sm space-y-2 mb-6 text-slate-300">
+        <p class="font-bold text-white flex items-center gap-2 text-cyan-400">
+          <span>🎯</span> Hướng dẫn cách thức tương tác giơ tay:
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+          <div class="p-3 bg-cyan-950/40 border border-cyan-800/60 rounded-xl">
+            <div class="font-bold text-cyan-300 text-sm mb-1">👈 CHỌN PHƯƠNG ÁN A:</div>
+            <p class="text-xs text-slate-300">Giơ <strong>TAY TRÁI</strong> lên cao vào vùng cảm biến bên trái và giữ yên trong <strong>0.8 giây</strong>.</p>
+          </div>
+          <div class="p-3 bg-emerald-950/40 border border-emerald-800/60 rounded-xl">
+            <div class="font-bold text-emerald-300 text-sm mb-1">👉 CHỌN PHƯƠNG ÁN B:</div>
+            <p class="text-xs text-slate-300">Giơ <strong>TAY PHẢI</strong> lên cao vào vùng cảm biến bên phải và giữ yên trong <strong>0.8 giây</strong>.</p>
+          </div>
+        </div>
+        <p class="text-[11px] text-amber-300/90 italic pt-1">
+          * Sau khi chọn xong, vui lòng <strong>HẠ TAY XUỐNG</strong> để hệ thống chuẩn bị cho câu hỏi tiếp theo!
+        </p>
+        <p class="text-[11px] text-slate-400">
+          * Dự phòng: Bạn có thể bấm phím mũi tên <strong>←</strong> (Tay trái / A) hoặc <strong>→</strong> (Tay phải / B), hoặc click chuột trực tiếp vào thẻ đáp án.
+        </p>
+      </div>
+
+      <button onclick="startGame()" class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 font-black text-base md:text-lg shadow-xl shadow-cyan-500/25 transition-all transform hover:scale-[1.02]">
+        BẮT ĐẦU KHỞI ĐỘNG NGAY 🚀
+      </button>
+    </div>
+
+    <!-- MÀN HÌNH CHƠI (GAME SCREEN - BAN ĐẦU ẨN) -->
+    <div id="game-screen" class="hidden flex-col gap-3">
+      
+      <!-- THANH TRẠNG THÁI TIẾN TRÌNH CÂU HỎI -->
+      <div class="flex items-center justify-between px-2">
+        <span id="question-badge" class="px-3 py-1 rounded-full text-xs font-black bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+          CÂU HỎI 1 / 10
+        </span>
+        <span id="feedback-badge" class="text-xs md:text-sm font-bold px-4 py-1 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-700 shadow">
+          ✋ Giơ TAY TRÁI (A) hoặc TAY PHẢI (B) và giữ yên 0.8s!
+        </span>
+        <span id="score-counter" class="text-xs font-bold text-slate-400">
+          Đúng: 0 / 10
+        </span>
+      </div>
+
+      <!-- KHUNG HIỂN THỊ CÂU HỎI -->
+      <div class="bg-slate-900/90 border border-cyan-500/40 rounded-2xl p-4 md:p-5 shadow-xl text-center relative overflow-hidden backdrop-blur">
+        <h2 id="question-text" class="text-base md:text-xl font-black text-white leading-snug">
+          Đang tải câu hỏi...
+        </h2>
+      </div>
+
+      <!-- KHU VỰC ĐÁP ÁN 2 BÊN VÀ CAMERA TRUNG TÂM -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-stretch">
+        
+        <!-- THẺ LỰA CHỌN A (BÊN TRÁI - GIƠ TAY TRÁI) -->
+        <div id="card-left" 
+             onclick="handleDirectClick('A')" 
+             onmouseenter="handleZoneHover('A')"
+             onmouseleave="handleZoneLeave('A')"
+             class="md:col-span-4 bg-slate-900/90 border-2 border-cyan-500/40 rounded-3xl p-4 flex flex-col justify-between transition-all cursor-pointer hover:border-cyan-400 shadow-lg relative overflow-hidden group">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-black px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 flex items-center gap-1.5">
+                <span>✋</span> GIƠ TAY TRÁI (A)
+              </span>
+              <span class="text-xl group-hover:scale-125 transition">👈</span>
+            </div>
+            <div id="optA-text" class="text-sm md:text-base font-bold text-slate-100 leading-snug py-2">
+              Đang tải phương án A...
+            </div>
+          </div>
+
+          <!-- Thanh tiến trình giữ tay trái -->
+          <div class="mt-3 pt-3 border-t border-slate-800">
+            <div class="w-full bg-slate-950 rounded-full h-3.5 overflow-hidden border border-slate-700/80 p-0.5">
+              <div id="progress-left" class="bg-gradient-to-r from-cyan-500 to-blue-500 h-full rounded-full w-0 progress-fill shadow-sm"></div>
+            </div>
+            <div class="flex justify-between items-center text-[11px] text-cyan-400 font-bold mt-1.5" id="hold-status-left">
+              <span>👈 Giơ tay trái (hoặc phím ←)</span>
+              <span id="pct-left">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CAMERA TRUNG TÂM VỚI 2 VÙNG CẢM BIẾN TRỰC QUAN -->
+        <div class="md:col-span-4 flex flex-col items-center justify-center">
+          <div class="w-full max-w-[320px] aspect-[4/3] bg-slate-950 rounded-3xl border-2 border-indigo-500/50 shadow-2xl relative overflow-hidden flex items-center justify-center group"
+               id="cam-container">
+            
+            <!-- Video Camera AI (Lật gương để tạo tương tác tự nhiên) -->
+            <video id="webcam" autoplay playsinline muted class="w-full h-full object-cover mirror-cam"></video>
+            
+            <!-- Canvas ẩn để xử lí khung hình -->
+            <canvas id="proc-canvas" width="80" height="60" class="hidden"></canvas>
+
+            <!-- 2 VÙNG CẢM BIẾN BÀN TAY TRÊN KHUNG CAMERA -->
+            <!-- VÙNG TRÁI: TAY TRÁI (A) -->
+            <div id="sensor-zone-left" 
+                 onmouseenter="handleZoneHover('A')"
+                 onmouseleave="handleZoneLeave('A')"
+                 class="sensor-zone absolute top-2 left-2 w-[42%] h-[68%] rounded-2xl border-2 border-dashed border-cyan-400/80 bg-cyan-950/30 flex flex-col items-center justify-between p-1.5 cursor-pointer backdrop-blur-[1px]">
+              <div class="flex items-center gap-1 bg-cyan-950/80 px-2 py-0.5 rounded-full border border-cyan-500/50">
+                <span class="text-sm">✋</span>
+                <span class="text-[10px] font-black text-cyan-300">TAY TRÁI (A)</span>
+              </div>
+              <div id="sensor-hand-icon-left" class="text-2xl text-cyan-300 opacity-60">✋</div>
+              <div class="w-full bg-slate-950/90 rounded-full h-2 overflow-hidden border border-cyan-600/50">
+                <div id="sensor-prog-left" class="bg-cyan-400 h-full w-0 progress-fill"></div>
+              </div>
+            </div>
+
+            <!-- VÙNG PHẢI: TAY PHẢI (B) -->
+            <div id="sensor-zone-right" 
+                 onmouseenter="handleZoneHover('B')"
+                 onmouseleave="handleZoneLeave('B')"
+                 class="sensor-zone absolute top-2 right-2 w-[42%] h-[68%] rounded-2xl border-2 border-dashed border-emerald-400/80 bg-emerald-950/30 flex flex-col items-center justify-between p-1.5 cursor-pointer backdrop-blur-[1px]">
+              <div class="flex items-center gap-1 bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-500/50">
+                <span class="text-sm">✋</span>
+                <span class="text-[10px] font-black text-emerald-300">TAY PHẢI (B)</span>
+              </div>
+              <div id="sensor-hand-icon-right" class="text-2xl text-emerald-300 opacity-60">✋</div>
+              <div class="w-full bg-slate-950/90 rounded-full h-2 overflow-hidden border border-emerald-600/50">
+                <div id="sensor-prog-right" class="bg-emerald-400 h-full w-0 progress-fill"></div>
+              </div>
+            </div>
+
+            <!-- Khung người ở giữa -->
+            <div class="absolute bottom-1 left-1/2 -translate-x-1/2 pointer-events-none text-slate-400/60 text-[10px] font-bold bg-slate-950/70 px-2 py-0.5 rounded-full border border-slate-700/50">
+              👤 VỊ TRÍ ĐẦU / NGƯỜI
+            </div>
+
+            <!-- Overlay khi chưa bật camera -->
+            <div id="cam-fallback" class="absolute inset-0 bg-slate-950/95 flex flex-col items-center justify-center p-4 text-center z-20">
+              <div class="text-3xl mb-2">📷</div>
+              <p class="text-xs text-slate-300 font-bold mb-2">Chưa bật Camera</p>
+              <button onclick="toggleCamera()" class="px-3.5 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold rounded-xl shadow">
+                Bật Camera Ngay
+              </button>
+              <p class="text-[10px] text-slate-500 mt-2">Hoặc dùng phím mũi tên ← / → để chơi</p>
+            </div>
+          </div>
+
+          <!-- Bảng trạng thái cử chỉ bàn tay -->
+          <div class="w-full max-w-[320px] mt-2 bg-slate-900/90 rounded-xl px-3 py-1.5 border border-slate-800 text-center">
+            <span id="hand-status-label" class="text-xs font-bold text-slate-300">
+              Trạng thái: Đang chờ giơ tay...
+            </span>
+          </div>
+        </div>
+
+        <!-- THẺ LỰA CHỌN B (BÊN PHẢI - GIƠ TAY PHẢI) -->
+        <div id="card-right" 
+             onclick="handleDirectClick('B')" 
+             onmouseenter="handleZoneHover('B')"
+             onmouseleave="handleZoneLeave('B')"
+             class="md:col-span-4 bg-slate-900/90 border-2 border-emerald-500/40 rounded-3xl p-4 flex flex-col justify-between transition-all cursor-pointer hover:border-emerald-400 shadow-lg relative overflow-hidden group">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-black px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1.5">
+                <span>✋</span> GIƠ TAY PHẢI (B)
+              </span>
+              <span class="text-xl group-hover:scale-125 transition">👉</span>
+            </div>
+            <div id="optB-text" class="text-sm md:text-base font-bold text-slate-100 leading-snug py-2">
+              Đang tải phương án B...
+            </div>
+          </div>
+
+          <!-- Thanh tiến trình giữ tay phải -->
+          <div class="mt-3 pt-3 border-t border-slate-800">
+            <div class="w-full bg-slate-950 rounded-full h-3.5 overflow-hidden border border-slate-700/80 p-0.5">
+              <div id="progress-right" class="bg-gradient-to-r from-emerald-500 to-teal-500 h-full rounded-full w-0 progress-fill shadow-sm"></div>
+            </div>
+            <div class="flex justify-between items-center text-[11px] text-emerald-400 font-bold mt-1.5" id="hold-status-right">
+              <span>👉 Giơ tay phải (hoặc phím →)</span>
+              <span id="pct-right">0%</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- KHUNG GIẢI THÍCH CHI TIẾT SAU KHI TRẢ LỜI -->
+      <div id="explain-box" class="hidden mt-2 p-4 rounded-2xl border text-sm font-medium transition-all shadow-xl backdrop-blur">
+        <div id="explain-title" class="font-extrabold text-base mb-1 flex items-center gap-2"></div>
+        <div id="explain-content" class="text-slate-200 text-xs md:text-sm leading-relaxed"></div>
+      </div>
+
+    </div>
+
+    <!-- MÀN HÌNH HOÀN THÀNH (RESULT SCREEN - BAN ĐẦU ẨN) -->
+    <div id="result-screen" class="hidden max-w-xl mx-auto w-full bg-slate-900/95 border border-cyan-500/40 rounded-3xl p-6 md:p-8 text-center shadow-2xl backdrop-blur">
+      <div class="w-20 h-20 mx-auto rounded-3xl bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-4xl mb-3 shadow-lg shadow-amber-500/30">
+        🏆
+      </div>
+      <h2 class="text-2xl md:text-3xl font-black text-white mb-2">HOÀN THÀNH KHỞI ĐỘNG!</h2>
+      <p id="result-feedback" class="text-slate-300 text-sm mb-6">Bạn đã sẵn sàng chinh phục Bài 8: Mô tả sóng!</p>
+
+      <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800">
+          <div class="text-xs text-slate-400 font-bold uppercase mb-1">TỔNG ĐIỂM</div>
+          <div class="text-3xl md:text-4xl font-black text-amber-400" id="final-score">0</div>
+        </div>
+        <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800">
+          <div class="text-xs text-slate-400 font-bold uppercase mb-1">CÂU ĐÚNG</div>
+          <div class="text-3xl md:text-4xl font-black text-emerald-400" id="final-correct">0 / 10</div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button onclick="startGame()" class="flex-1 py-3 px-6 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black text-sm shadow-lg transition-all">
+          CHƠI LẠI BẰNG GIƠ TAY 🔄
+        </button>
+        <a href="tro-choi-nghieng-dau-khoi-dong.html" class="flex-1 py-3 px-6 rounded-2xl bg-indigo-900 hover:bg-indigo-800 border border-indigo-700 text-indigo-200 font-bold text-sm shadow-lg transition-all flex items-center justify-center gap-1.5">
+          <span>📷</span> THỬ NGHIỆM ĐẦU AI ➔
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER CHUẨN MỰC SƯ PHẠM -->
+  <footer class="py-2.5 px-4 text-center text-xs text-slate-500 border-t border-slate-800/80">
+    Trường THPT Mạc Đĩnh Chi — Giáo viên: Phan Thị Dừa • Khởi động Vật lí 11 Bài 8: Mô tả sóng
+  </footer>
+
+  <!-- JAVASCRIPT GAME LOGIC & COMPUTER VISION -->
+  <script>
+    // Dữ liệu 10 câu hỏi chuẩn Bài 8
+    const QUESTIONS = [
+  {
+    "q": "1. Dao động cơ học là chuyển động có đặc điểm nổi bật nào sau đây?",
+    "optA": "Lặp đi lặp lại quanh một vị trí cân bằng xác định",
+    "optB": "Dời chỗ tịnh tiến liên tục ngày càng ra xa nguồn",
+    "correct": "A",
+    "explain": "Dao động cơ lặp lại quanh vị trí cân bằng. Đây là nền tảng để hiểu: khi sóng truyền qua, phần tử môi trường chỉ dao động tại chỗ quanh VTCB mà không trôi theo sóng."
+  },
+  {
+    "q": "2. Khoảng thời gian để vật thực hiện trọn vẹn một dao động toàn phần được gọi là:",
+    "optA": "Tần số dao động (f)",
+    "optB": "Chu kì dao động (T)",
+    "correct": "B",
+    "explain": "Chu kì T là thời gian thực hiện 1 dao động toàn phần. Chu kì của sóng bằng đúng chu kì dao động của nguồn sóng và phần tử môi trường."
+  },
+  {
+    "q": "3. Mối liên hệ chính xác giữa tần số dao động f và chu kì dao động T là:",
+    "optA": "f = 1 / T",
+    "optB": "f = 2π · T",
+    "correct": "A",
+    "explain": "Tần số f = 1/T (Hz). Khi sóng truyền qua các môi trường khác nhau, chu kì T và tần số f luôn không đổi."
+  },
+  {
+    "q": "4. Trong phương trình dao động điều hòa x = A·cos(ωt + φ), đại lượng A là:",
+    "optA": "Biên độ dao động (độ lệch cực đại khỏi VTCB, A > 0)",
+    "optB": "Li độ tức thời của vật ở thời điểm t (có thể âm)",
+    "correct": "A",
+    "explain": "Biên độ A là độ lệch lớn nhất khỏi VTCB, luôn dương. Trong sóng cơ, biên độ sóng là biên độ dao động của phần tử môi trường."
+  },
+  {
+    "q": "5. Tần số góc ω liên hệ với chu kì T và tần số f theo công thức nào?",
+    "optA": "ω = 2π / f = T / (2π)",
+    "optB": "ω = 2π / T = 2π · f",
+    "correct": "B",
+    "explain": "Tần số góc ω = 2π/T = 2π·f (đơn vị rad/s). Đại lượng này xuất hiện trực tiếp trong phương trình sóng hình sin u = A·cos(ωt - 2πx/λ)."
+  },
+  {
+    "q": "6. Đại lượng (ωt + φ) trong biểu thức dao động x = A·cos(ωt + φ) được gọi là:",
+    "optA": "Pha dao động ở thời điểm t",
+    "optB": "Pha ban đầu của dao động ở thời điểm t = 0",
+    "correct": "A",
+    "explain": "Pha dao động (ωt + φ) xác định trạng thái dao động ở thời điểm t. Bản chất của quá trình truyền sóng là quá trình lan truyền pha dao động."
+  },
+  {
+    "q": "7. Hai điểm dao động cùng pha khi độ lệch pha giữa chúng bằng:",
+    "optA": "Một số lẻ lần π: Δφ = (2k + 1)π",
+    "optB": "Một số chẵn lần π: Δφ = 2kπ",
+    "correct": "B",
+    "explain": "Hai dao động cùng pha khi Δφ = 2kπ. Đây là tiền đề để học sinh hiểu hai điểm trên cùng phương truyền sóng cách nhau d = kλ sẽ dao động cùng pha."
+  },
+  {
+    "q": "8. Khi hai dao động ngược pha nhau (Δφ = π), nếu vật 1 ở biên dương (+A) thì vật 2 ở:",
+    "optA": "Vị trí biên âm (-A)",
+    "optB": "Vị trí cân bằng (x = 0)",
+    "correct": "A",
+    "explain": "Hai dao động ngược pha luôn có li độ đối dấu nhau. Trên sóng cơ hình sin, đỉnh sóng và đáy sóng liên tiếp ở trạng thái ngược pha."
+  },
+  {
+    "q": "9. Đồ thị biểu diễn li độ theo thời gian x(t) của dao động điều hòa có dạng là:",
+    "optA": "Đoạn thẳng biến thiên tuyến tính",
+    "optB": "Đường cong hình sin tuần hoàn",
+    "correct": "B",
+    "explain": "Đồ thị x(t) có dạng đường hình sin. Khi sóng cơ lan truyền, hình dạng môi trường tại một thời điểm cũng có dạng đường hình sin u(x)."
+  },
+  {
+    "q": "10. Năng lượng dao động (cơ năng) của một vật dao động điều hòa tỉ lệ với:",
+    "optA": "Bình phương biên độ dao động (W tỉ lệ với A²)",
+    "optB": "Căn bậc hai của biên độ dao động",
+    "correct": "A",
+    "explain": "Cơ năng W = 1/2 m ω² A² tỉ lệ với A² và f². Tương tự, sóng cơ lan truyền mang theo năng lượng tỉ lệ thuận với bình phương biên độ sóng."
+  }
+];
+
+    let currentQIndex = 0;
+    let score = 0;
+    let correctCount = 0;
+    let isAnsweringLocked = false;
+    let needsLowerHand = false; // Phải hạ tay xuống trước khi câu tiếp theo sẵn sàng
+
+    // Hệ thống giữ tay (Hold duration)
+    let currentHoldChoice = null;
+    let holdStartTime = null;
+    const REQUIRED_HOLD_MS = 800; // Giữ tay 0.8 giây để chốt
+
+    // Web Audio Synthesizer (Zero MP3 dependencies)
+    let audioCtx = null;
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playBeep(freq, type = 'sine', duration = 0.08) {
+      try {
+        initAudio();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function playCorrectSound() {
+      try {
+        initAudio();
+        const now = audioCtx.currentTime;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.12, now + idx * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.25);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + idx * 0.08);
+          osc.stop(now + idx * 0.08 + 0.25);
+        });
+      } catch (e) {}
+    }
+
+    function playWrongSound() {
+      try {
+        initAudio();
+        const now = audioCtx.currentTime;
+        [220, 196].forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.15, now + idx * 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.25);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + idx * 0.12);
+          osc.stop(now + idx * 0.12 + 0.25);
+        });
+      } catch (e) {}
+    }
+
+    // =========================================================================
+    // WEBCAM & HAND GESTURE DETECTION (CV ENGINE)
+    // =========================================================================
+    const video = document.getElementById('webcam');
+    const procCanvas = document.getElementById('proc-canvas');
+    const procCtx = procCanvas.getContext('2d', { willReadFrequently: true });
+    let cameraActive = false;
+    let videoStream = null;
+
+    // Hiệu chỉnh nền (Auto-calibration)
+    let baselineLeftSkin = 15;
+    let baselineRightSkin = 15;
+    let calibFrameCount = 0;
+    const CALIB_FRAMES_NEEDED = 25;
+    let isCalibrated = false;
+
+    // Bộ lọc làm mịn tín hiệu (Exponential Smoothing)
+    let smoothedLeftHandScore = 0;
+    let smoothedRightHandScore = 0;
+
+    // Chế độ mô phỏng qua Hover chuột
+    let isHoveringLeft = false;
+    let isHoveringRight = false;
+
+    function handleZoneHover(choice) {
+      if (choice === 'A') isHoveringLeft = true;
+      if (choice === 'B') isHoveringRight = true;
+    }
+
+    function handleZoneLeave(choice) {
+      if (choice === 'A') isHoveringLeft = false;
+      if (choice === 'B') isHoveringRight = false;
+      if (!isHoveringLeft && !isHoveringRight && !cameraActive) {
+        updateHandVisuals(0, 0);
+      }
+    }
+
+    function handleDirectClick(choice) {
+      if (isAnsweringLocked || needsLowerHand) return;
+      initAudio();
+      chooseAnswer(choice);
+    }
+
+    async function toggleCamera() {
+      if (cameraActive) {
+        // Tắt camera
+        if (videoStream) {
+          videoStream.getTracks().forEach(t => t.stop());
+        }
+        video.srcObject = null;
+        cameraActive = false;
+        document.getElementById('cam-status-text').innerText = 'Bật Camera';
+        document.getElementById('cam-fallback').classList.remove('hidden');
+        updateHandVisuals(0, 0);
+      } else {
+        // Bật camera
+        try {
+          videoStream = await navigator.mediaDevices.getUserMedia({
+            video: { width: { ideal: 320 }, height: { ideal: 240 }, facingMode: "user" }
+          });
+          video.srcObject = videoStream;
+          video.onloadedmetadata = () => {
+            video.play();
+            cameraActive = true;
+            document.getElementById('cam-fallback').classList.add('hidden');
+            document.getElementById('cam-status-text').innerText = 'Tắt Camera';
+            isCalibrated = false;
+            calibFrameCount = 0;
+            requestAnimationFrame(processVideoFrame);
+          };
+        } catch (err) {
+          alert('Không thể mở Camera: ' + err.message + '\nBạn vẫn có thể chơi bằng cách bấm phím ← / → hoặc click trực tiếp vào thẻ đáp án.');
+        }
+      }
+    }
+
+    function processVideoFrame() {
+      if (!cameraActive || video.paused || video.ended) return;
+
+      if (!isHoveringLeft && !isHoveringRight) {
+        try {
+          procCtx.drawImage(video, 0, 0, 80, 60);
+          const imgData = procCtx.getImageData(0, 0, 80, 60);
+          const data = imgData.data;
+
+          let leftSkinCount = 0;
+          let rightSkinCount = 0;
+
+          // Quét 2 vùng cảm biến trên (Zone A: x=2..30, Zone B: x=50..78, y=4..38)
+          // Lưu ý: video raw chưa bị mirror, nhưng khi hiển thị có transform: scaleX(-1)
+          // Để tay trái của người chơi (bên trái màn hình) trùng với Zone A:
+          // Trong raw video, bên trái màn hình là phần pixel có x lớn (phải của sensor).
+          // Raw x: 0..80. Screen x = 80 - rawX.
+          // Screen Left (Zone A): ScreenX: 2..32  => RawX: 48..78
+          // Screen Right (Zone B): ScreenX: 48..78 => RawX: 2..32
+
+          for (let y = 4; y < 38; y++) {
+            for (let x = 0; x < 80; x++) {
+              const idx = (y * 80 + x) * 4;
+              const r = data[idx];
+              const g = data[idx + 1];
+              const b = data[idx + 2];
+
+              // Thuật toán nhận diện màu da người thông minh
+              const isSkin = (r > 65 && g > 40 && b > 25 && (r - g) > 10 && (r - b) > 12 && r > g && r > b);
+
+              if (isSkin) {
+                // Screen Left (ScreenX: 2..32 => RawX: 48..78)
+                if (x >= 48 && x <= 78) {
+                  leftSkinCount++;
+                }
+                // Screen Right (ScreenX: 48..78 => RawX: 2..32)
+                else if (x >= 2 && x <= 32) {
+                  rightSkinCount++;
+                }
+              }
+            }
+          }
+
+          // Tự động hiệu chỉnh nền trong 25 khung hình đầu
+          if (!isCalibrated) {
+            baselineLeftSkin = (baselineLeftSkin * calibFrameCount + leftSkinCount) / (calibFrameCount + 1);
+            baselineRightSkin = (baselineRightSkin * calibFrameCount + rightSkinCount) / (calibFrameCount + 1);
+            calibFrameCount++;
+            if (calibFrameCount >= CALIB_FRAMES_NEEDED) {
+              isCalibrated = true;
+            }
+          }
+
+          // Điểm số giơ tay (vượt ngưỡng so với nền)
+          const netLeft = Math.max(0, leftSkinCount - baselineLeftSkin);
+          const netRight = Math.max(0, rightSkinCount - baselineRightSkin);
+
+          // Chuẩn hóa điểm 0.0 -> 1.0 (ngưỡng phát hiện giơ tay rõ ràng ~ 40 pixel)
+          const rawLeftScore = Math.min(1.0, netLeft / 45.0);
+          const rawRightScore = Math.min(1.0, netRight / 45.0);
+
+          smoothedLeftHandScore = smoothedLeftHandScore * 0.70 + rawLeftScore * 0.30;
+          smoothedRightHandScore = smoothedRightHandScore * 0.70 + rawRightScore * 0.30;
+
+          updateHandVisuals(smoothedLeftHandScore, smoothedRightHandScore);
+
+        } catch (e) {}
+      } else {
+        // Nếu đang hover chuột
+        const simLeft = isHoveringLeft ? 1.0 : 0.0;
+        const simRight = isHoveringRight ? 1.0 : 0.0;
+        updateHandVisuals(simLeft, simRight);
+      }
+
+      requestAnimationFrame(processVideoFrame);
+    }
+
+    function updateHandVisuals(leftScore, rightScore) {
+      const zoneLeft = document.getElementById('sensor-zone-left');
+      const zoneRight = document.getElementById('sensor-zone-right');
+      const cardLeft = document.getElementById('card-left');
+      const cardRight = document.getElementById('card-right');
+      const label = document.getElementById('hand-status-label');
+      const badge = document.getElementById('feedback-badge');
+
+      const isLeftRaised = leftScore > 0.45 && leftScore > rightScore * 1.35;
+      const isRightRaised = rightScore > 0.45 && rightScore > leftScore * 1.35;
+      const areHandsDown = leftScore < 0.25 && rightScore < 0.25;
+
+      // Cập nhật viền cảm biến trên camera
+      if (isLeftRaised) {
+        zoneLeft.classList.add('detected');
+        zoneRight.classList.remove('detected');
+      } else if (isRightRaised) {
+        zoneRight.classList.add('detected');
+        zoneLeft.classList.remove('detected');
+      } else {
+        zoneLeft.classList.remove('detected');
+        zoneRight.classList.remove('detected');
+      }
+
+      // KIỂM TRA TRẠNG THÁI HẠ TAY XUỐNG (MUST-LOWER-HAND)
+      if (needsLowerHand) {
+        if (areHandsDown) {
+          needsLowerHand = false;
+          if (badge && !isAnsweringLocked) {
+            badge.innerText = '✋ Giơ TAY TRÁI (A) hoặc TAY PHẢI (B) và giữ yên 0.8s!';
+            badge.className = 'text-xs md:text-sm font-bold px-4 py-1 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-700 shadow';
+          }
+          if (label) {
+            label.innerText = '🟢 Đã sẵn sàng! Hãy giơ tay chọn đáp án.';
+            label.className = 'text-xs font-bold text-emerald-400';
+          }
+        } else {
+          if (badge && !isAnsweringLocked) {
+            badge.innerText = '⬇️ VUI LÒNG HẠ TAY XUỐNG ĐỂ SẴN SÀNG CÂU TIẾP THEO!';
+            badge.className = 'text-xs md:text-sm font-bold px-4 py-1 rounded-full bg-amber-950 text-amber-300 border border-amber-600 shadow animate-pulse';
+          }
+          if (label) {
+            label.innerText = '⬇️ Vui lòng hạ cả 2 tay xuống...';
+            label.className = 'text-xs font-bold text-amber-300 animate-pulse';
+          }
+        }
+        resetHoldProgress();
+        return;
+      }
+
+      // KHI ĐÃ SẴN SÀNG: NHẬN DIỆN CỬ CHỈ GIƠ TAY
+      if (isLeftRaised) {
+        // GIƠ TAY TRÁI (CHỌN A)
+        if (label) {
+          label.innerText = '✋ ĐANG GIƠ TAY TRÁI (A)';
+          label.className = 'text-xs font-black text-cyan-400 animate-pulse';
+        }
+        if (cardLeft) cardLeft.classList.add('active-card-left');
+        if (cardRight) cardRight.classList.remove('active-card-right');
+
+        if (!isAnsweringLocked) handleHoldProgress('A');
+      } else if (isRightRaised) {
+        // GIƠ TAY PHẢI (CHỌN B)
+        if (label) {
+          label.innerText = '✋ ĐANG GIƠ TAY PHẢI (B)';
+          label.className = 'text-xs font-black text-emerald-400 animate-pulse';
+        }
+        if (cardRight) cardRight.classList.add('active-card-right');
+        if (cardLeft) cardLeft.classList.remove('active-card-left');
+
+        if (!isAnsweringLocked) handleHoldProgress('B');
+      } else {
+        // CẢ 2 TAY ĐANG HẠ HOẶC Ở VỊ TRÍ NGHỈ
+        if (label) {
+          label.innerText = 'Vị trí nghỉ: Đang chờ giơ tay...';
+          label.className = 'text-xs font-bold text-slate-400';
+        }
+        if (cardLeft) cardLeft.classList.remove('active-card-left');
+        if (cardRight) cardRight.classList.remove('active-card-right');
+        resetHoldProgress();
+      }
+    }
+
+    function handleHoldProgress(choice) {
+      if (isAnsweringLocked || needsLowerHand) return;
+
+      const now = Date.now();
+      if (currentHoldChoice !== choice) {
+        currentHoldChoice = choice;
+        holdStartTime = now;
+        playBeep(440, 'sine', 0.05);
+      }
+
+      const elapsed = now - holdStartTime;
+      const percent = Math.min(100, Math.round((elapsed / REQUIRED_HOLD_MS) * 100));
+
+      const progLeft = document.getElementById('progress-left');
+      const progRight = document.getElementById('progress-right');
+      const sensorProgLeft = document.getElementById('sensor-prog-left');
+      const sensorProgRight = document.getElementById('sensor-prog-right');
+      const pctLeft = document.getElementById('pct-left');
+      const pctRight = document.getElementById('pct-right');
+      const holdStatusLeft = document.getElementById('hold-status-left');
+      const holdStatusRight = document.getElementById('hold-status-right');
+
+      if (choice === 'A') {
+        if (progLeft) progLeft.style.width = `${percent}%`;
+        if (sensorProgLeft) sensorProgLeft.style.width = `${percent}%`;
+        if (progRight) progRight.style.width = '0%';
+        if (sensorProgRight) sensorProgRight.style.width = '0%';
+        if (pctLeft) pctLeft.innerText = `${percent}%`;
+        if (pctRight) pctRight.innerText = '0%';
+        if (holdStatusLeft) holdStatusLeft.innerHTML = `<span class="font-extrabold text-white bg-cyan-600 px-2 py-0.5 rounded shadow">ĐANG GIỮ TAY TRÁI: ${percent}%</span><span>👈</span>`;
+      } else {
+        if (progRight) progRight.style.width = `${percent}%`;
+        if (sensorProgRight) sensorProgRight.style.width = `${percent}%`;
+        if (progLeft) progLeft.style.width = '0%';
+        if (sensorProgLeft) sensorProgLeft.style.width = '0%';
+        if (pctRight) pctRight.innerText = `${percent}%`;
+        if (pctLeft) pctLeft.innerText = '0%';
+        if (holdStatusRight) holdStatusRight.innerHTML = `<span class="font-extrabold text-white bg-emerald-600 px-2 py-0.5 rounded shadow">ĐANG GIỮ TAY PHẢI: ${percent}%</span><span>👉</span>`;
+      }
+
+      // Đạt 100% thời gian giữ -> Chốt câu trả lời
+      if (elapsed >= REQUIRED_HOLD_MS) {
+        resetHoldProgress();
+        chooseAnswer(choice);
+      }
+    }
+
+    function resetHoldProgress() {
+      currentHoldChoice = null;
+      holdStartTime = null;
+
+      const progLeft = document.getElementById('progress-left');
+      const progRight = document.getElementById('progress-right');
+      const sensorProgLeft = document.getElementById('sensor-prog-left');
+      const sensorProgRight = document.getElementById('sensor-prog-right');
+      const pctLeft = document.getElementById('pct-left');
+      const pctRight = document.getElementById('pct-right');
+      const holdStatusLeft = document.getElementById('hold-status-left');
+      const holdStatusRight = document.getElementById('hold-status-right');
+
+      if (progLeft) progLeft.style.width = '0%';
+      if (progRight) progRight.style.width = '0%';
+      if (sensorProgLeft) sensorProgLeft.style.width = '0%';
+      if (sensorProgRight) sensorProgRight.style.width = '0%';
+      if (pctLeft) pctLeft.innerText = '0%';
+      if (pctRight) pctRight.innerText = '0%';
+      if (holdStatusLeft) holdStatusLeft.innerHTML = `<span>👈 Giơ tay trái (hoặc phím ←)</span><span id="pct-left">0%</span>`;
+      if (holdStatusRight) holdStatusRight.innerHTML = `<span>👉 Giơ tay phải (hoặc phím →)</span><span id="pct-right">0%</span>`;
+    }
+
+    function startGame() {
+      currentQIndex = 0;
+      score = 0;
+      correctCount = 0;
+      document.getElementById('score-display').innerText = '0';
+      document.getElementById('score-counter').innerText = 'Đúng: 0 / 10';
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.add('hidden');
+      document.getElementById('game-screen').classList.remove('hidden');
+      document.getElementById('explain-box').classList.add('hidden');
+
+      if (!cameraActive) {
+        toggleCamera();
+      }
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      if (currentQIndex >= QUESTIONS.length) {
+        finishGame();
+        return;
+      }
+
+      const q = QUESTIONS[currentQIndex];
+      document.getElementById('question-badge').innerText = `CÂU HỎI ${currentQIndex + 1} / ${QUESTIONS.length}`;
+      document.getElementById('question-text').innerText = q.q;
+      document.getElementById('optA-text').innerText = q.optA;
+      document.getElementById('optB-text').innerText = q.optB;
+
+      // Xóa các class highlight
+      const cardLeft = document.getElementById('card-left');
+      const cardRight = document.getElementById('card-right');
+      cardLeft.className = cardLeft.className.replace(/active-card-left|correct-anim|wrong-anim/g, '').trim();
+      cardRight.className = cardRight.className.replace(/active-card-right|correct-anim|wrong-anim/g, '').trim();
+
+      document.getElementById('explain-box').classList.add('hidden');
+
+      isAnsweringLocked = false;
+      needsLowerHand = true; // Yêu cầu hạ tay trước khi bắt đầu nhận diện câu này
+      resetHoldProgress();
+    }
+
+    function chooseAnswer(selectedChoice) {
+      if (isAnsweringLocked) return;
+      isAnsweringLocked = true;
+
+      const q = QUESTIONS[currentQIndex];
+      const isCorrect = (selectedChoice === q.correct);
+
+      const cardLeft = document.getElementById('card-left');
+      const cardRight = document.getElementById('card-right');
+      const chosenCard = (selectedChoice === 'A') ? cardLeft : cardRight;
+      const explainBox = document.getElementById('explain-box');
+      const explainTitle = document.getElementById('explain-title');
+      const explainContent = document.getElementById('explain-content');
+
+      if (isCorrect) {
+        score += 10;
+        correctCount += 1;
+        document.getElementById('score-display').innerText = score;
+        document.getElementById('score-counter').innerText = `Đúng: ${correctCount} / 10`;
+
+        playCorrectSound();
+        chosenCard.classList.add('correct-anim');
+
+        explainBox.className = 'mt-2 p-4 rounded-2xl border text-sm font-medium transition-all shadow-xl backdrop-blur bg-emerald-950/90 border-emerald-500/60 text-emerald-200';
+        explainTitle.innerHTML = '<span class="text-xl">🎉</span> <span class="text-emerald-300 font-black">CHÍNH XÁC! +10 ĐIỂM</span>';
+      } else {
+        playWrongSound();
+        chosenCard.classList.add('wrong-anim');
+
+        // Highlight đáp án đúng
+        const correctCard = (q.correct === 'A') ? cardLeft : cardRight;
+        correctCard.classList.add('correct-anim');
+
+        explainBox.className = 'mt-2 p-4 rounded-2xl border text-sm font-medium transition-all shadow-xl backdrop-blur bg-rose-950/90 border-rose-500/60 text-rose-200';
+        explainTitle.innerHTML = '<span class="text-xl">❌</span> <span class="text-rose-300 font-black">CHƯA CHÍNH XÁC!</span>';
+      }
+
+      explainContent.innerHTML = `<span class="font-extrabold text-cyan-400">💡 GIẢI THÍCH:</span> ${q.explain}`;
+      explainBox.classList.remove('hidden');
+
+      // Tạm dừng 2.2 giây để quan sát giải thích rồi chuyển câu
+      setTimeout(() => {
+        currentQIndex++;
+        loadQuestion();
+      }, 2200);
+    }
+
+    function finishGame() {
+      document.getElementById('game-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.remove('hidden');
+
+      document.getElementById('final-score').innerText = `${score} / 100`;
+      document.getElementById('final-correct').innerText = `${correctCount} / ${QUESTIONS.length}`;
+
+      const fb = document.getElementById('result-feedback');
+      if (score >= 90) {
+        fb.innerHTML = '<strong class="text-emerald-400">Xuất sắc!</strong> Bạn đã làm chủ hoàn hảo các kiến thức cốt lõi để bước vào Bài 8: Mô tả sóng!';
+      } else if (score >= 70) {
+        fb.innerHTML = '<strong class="text-cyan-400">Rất tốt!</strong> Nắm chắc bản chất dao động sẽ giúp bạn học rất nhanh hiện tượng truyền sóng!';
+      } else {
+        fb.innerHTML = '<strong class="text-amber-400">Cần cố gắng!</strong> Hãy xem lại phần giải thích để tự tin hơn trong tiết học nhé!';
+      }
+
+      playCorrectSound();
+    }
+
+    // =========================================================================
+    // HỖ TRỢ BÀN PHÍM (KEYBOARD ARROWS <- / -> HOẶC A / B)
+    // =========================================================================
+    let activeKey = null;
+    let keyHoldInterval = null;
+
+    window.addEventListener('keydown', (e) => {
+      if (isAnsweringLocked || needsLowerHand) return;
+      initAudio();
+
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        if (activeKey !== 'A') {
+          activeKey = 'A';
+          handleHoldProgress('A');
+          clearInterval(keyHoldInterval);
+          keyHoldInterval = setInterval(() => {
+            handleHoldProgress('A');
+          }, 50);
+        }
+      } else if (e.key === 'ArrowRight' || e.key === 'b' || e.key === 'B') {
+        if (activeKey !== 'B') {
+          activeKey = 'B';
+          handleHoldProgress('B');
+          clearInterval(keyHoldInterval);
+          keyHoldInterval = setInterval(() => {
+            handleHoldProgress('B');
+          }, 50);
+        }
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A' ||
+          e.key === 'ArrowRight' || e.key === 'b' || e.key === 'B') {
+        activeKey = null;
+        clearInterval(keyHoldInterval);
+        resetHoldProgress();
+      }
+    });
+  </script>
+</body>
+</html>

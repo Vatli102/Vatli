@@ -120,6 +120,18 @@ window.GAMES_DATA = [
         "featured": false
     },
     {
+        "id": "giotay-vl11-b8",
+        "title": "Đấu Trí Giơ Tay AI: Bài 8 - Mô tả sóng",
+        "grade": "11",
+        "lesson": "Bài 8 - Vật lí 11",
+        "type": "giotay",
+        "typeName": "✋ Game Giơ Tay AI",
+        "badgeColor": "teal",
+        "desc": "Khởi động nhận diện cử chỉ Giơ tay Trái (A) hoặc Tay phải (B) qua Webcam AI, 10 câu trắc nghiệm dao động điều hòa kết nối sóng cơ.",
+        "url": "/tro-choi/lop11/bai-8-mo-ta-song/tro-choi-gio-tay-khoi-dong.html",
+        "featured": true
+    },
+    {
         "id": "tilt-vl11-b9",
         "title": "Đấu Trí Nghiêng Đầu AI: Bài 9 - Sóng ngang. Sóng dọc. Sự truyền năng lượng của sóng cơ",
         "grade": "11",
