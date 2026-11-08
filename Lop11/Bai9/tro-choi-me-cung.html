@@ -222,16 +222,16 @@
       <div id="ans-text-D" class="text-xs md:text-sm">Đáp án D</div>
     </div>
 
-    <!-- D-PAD CẢM ỨNG (GÓC PHẢI DƯỚI) -->
+    <!-- D-PAD CẢM ỨNG (GÓC PHẢI DƯỚI) - HỖ TRỢ NHẤN 1 CÁI ĐI 1 BƯỚC / NHẤN GIỮ ĐI MIẾT -->
     <div id="dpad" class="absolute bottom-3 right-3 grid grid-cols-3 gap-1.5 p-1.5 bg-slate-950/80 backdrop-blur-md rounded-2xl border border-purple-500/40 z-40">
       <div></div>
-      <button class="d-btn w-12 h-12" onclick="setPlayerDir(0, -1)">▲</button>
+      <button class="d-btn w-12 h-12" onpointerdown="handleDpadDown(0, -1, event)" onpointerup="handleDpadUp(event)" onpointerleave="handleDpadUp(event)" oncontextmenu="return false;">▲</button>
       <div></div>
-      <button class="d-btn w-12 h-12" onclick="setPlayerDir(-1, 0)">◀</button>
+      <button class="d-btn w-12 h-12" onpointerdown="handleDpadDown(-1, 0, event)" onpointerup="handleDpadUp(event)" onpointerleave="handleDpadUp(event)" oncontextmenu="return false;">◀</button>
       <button class="d-btn w-12 h-12 text-sm text-purple-400" onclick="centerPlayer()">🎯</button>
-      <button class="d-btn w-12 h-12" onclick="setPlayerDir(1, 0)">▶</button>
+      <button class="d-btn w-12 h-12" onpointerdown="handleDpadDown(1, 0, event)" onpointerup="handleDpadUp(event)" onpointerleave="handleDpadUp(event)" oncontextmenu="return false;">▶</button>
       <div></div>
-      <button class="d-btn w-12 h-12" onclick="setPlayerDir(0, 1)">▼</button>
+      <button class="d-btn w-12 h-12" onpointerdown="handleDpadDown(0, 1, event)" onpointerup="handleDpadUp(event)" onpointerleave="handleDpadUp(event)" oncontextmenu="return false;">▼</button>
       <div></div>
     </div>
   </main>
@@ -474,13 +474,16 @@
 
     // NHÂN VẬT NGƯỜI CHƠI (PAC-MAN STYLE)
     const player = {
-      x: 9, // Start at center col 9
-      y: 6, // Start at center row 6
+      x: 9, // Tọa độ thực (float) trên lưới
+      y: 6,
+      gridX: 9, // Tọa độ ô nguyên (integer)
+      gridY: 6,
+      targetX: 9, // Ô đích đang trượt tới
+      targetY: 6,
       dirX: 0,
       dirY: 0,
-      targetX: 9,
-      targetY: 6,
-      speed: 0.12,
+      speed: 0.125, // Tốc độ 1/8 ô mỗi frame (8 frames = 1 ô hoàn chỉnh)
+      isMoving: false,
       mouthAngle: 0.2,
       mouthSpeed: 0.04,
       mouthDir: 1,
@@ -553,25 +556,115 @@
       resizeCanvas();
     });
 
-    // ĐIỀU KHIỂN BÀN PHÍM
+    // HỆ THỐNG ĐIỀU KHIỂN BƯỚC ĐI TỪNG Ô (NHẤN 1 CÁI ĐI 1 BƯỚC, NHẤN GIỮ ĐI MIẾT)
+    const heldKeys = new Set();
+    let heldDpadDir = null;
+    let nextBufferedDir = null;
+
+    function canMoveTo(c, r) {
+      if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return false;
+      return MAZE_LAYOUT[r][c] !== 1;
+    }
+
+    function getActiveDir() {
+      if (heldDpadDir) return heldDpadDir;
+      if (heldKeys.has('ArrowUp') || heldKeys.has('KeyW')) return { dx: 0, dy: -1 };
+      if (heldKeys.has('ArrowDown') || heldKeys.has('KeyS')) return { dx: 0, dy: 1 };
+      if (heldKeys.has('ArrowLeft') || heldKeys.has('KeyA')) return { dx: -1, dy: 0 };
+      if (heldKeys.has('ArrowRight') || heldKeys.has('KeyD')) return { dx: 1, dy: 0 };
+      return null;
+    }
+
+    function tryStartMove(dx, dy) {
+      if (isAnsweringLocked) return;
+
+      if (!player.isMoving) {
+        const nextCol = player.gridX + dx;
+        const nextRow = player.gridY + dy;
+
+        if (canMoveTo(nextCol, nextRow)) {
+          player.dirX = dx;
+          player.dirY = dy;
+          player.targetX = nextCol;
+          player.targetY = nextRow;
+          player.isMoving = true;
+        } else {
+          player.dirX = dx;
+          player.dirY = dy;
+        }
+      } else {
+        nextBufferedDir = { dx, dy };
+      }
+    }
+
+    // BÀN PHÍM: NHẤN 1 CÁI ĐI 1 BƯỚC, GIỮ PHÍM ĐI MIẾT
     window.addEventListener('keydown', (e) => {
-      initAudio();
-      if (['ArrowUp', 'KeyW'].includes(e.code)) setPlayerDir(0, -1);
-      else if (['ArrowDown', 'KeyS'].includes(e.code)) setPlayerDir(0, 1);
-      else if (['ArrowLeft', 'KeyA'].includes(e.code)) setPlayerDir(-1, 0);
-      else if (['ArrowRight', 'KeyD'].includes(e.code)) setPlayerDir(1, 0);
+      const code = e.code;
+      if (['ArrowUp', 'KeyW', 'ArrowDown', 'KeyS', 'ArrowLeft', 'KeyA', 'ArrowRight', 'KeyD'].includes(code)) {
+        e.preventDefault();
+        initAudio();
+
+        let dx = 0, dy = 0;
+        if (['ArrowUp', 'KeyW'].includes(code)) dy = -1;
+        else if (['ArrowDown', 'KeyS'].includes(code)) dy = 1;
+        else if (['ArrowLeft', 'KeyA'].includes(code)) dx = -1;
+        else if (['ArrowRight', 'KeyD'].includes(code)) dx = 1;
+
+        if (!heldKeys.has(code)) {
+          heldKeys.add(code);
+          tryStartMove(dx, dy);
+        } else {
+          nextBufferedDir = { dx, dy };
+          if (!player.isMoving) {
+            tryStartMove(dx, dy);
+          }
+        }
+      }
     });
 
+    window.addEventListener('keyup', (e) => {
+      heldKeys.delete(e.code);
+      if (heldKeys.size === 0) {
+        nextBufferedDir = null;
+      }
+    });
+
+    window.addEventListener('blur', () => {
+      heldKeys.clear();
+      heldDpadDir = null;
+      nextBufferedDir = null;
+    });
+
+    // D-PAD CẢM ỨNG & CHUỘT: NHẤN 1 CÁI ĐI 1 BƯỚC, GIỮ NÚT ĐI MIẾT
+    function handleDpadDown(dx, dy, e) {
+      if (e) e.preventDefault();
+      initAudio();
+      heldDpadDir = { dx, dy };
+      tryStartMove(dx, dy);
+    }
+
+    function handleDpadUp(e) {
+      if (e) e.preventDefault();
+      heldDpadDir = null;
+    }
+
     function setPlayerDir(dx, dy) {
-      player.dirX = dx;
-      player.dirY = dy;
+      tryStartMove(dx, dy);
     }
 
     function centerPlayer() {
       player.x = 9;
       player.y = 6;
+      player.gridX = 9;
+      player.gridY = 6;
+      player.targetX = 9;
+      player.targetY = 6;
       player.dirX = 0;
       player.dirY = 0;
+      player.isMoving = false;
+      nextBufferedDir = null;
+      heldKeys.clear();
+      heldDpadDir = null;
     }
 
     // VÒNG LẶP RENDER CHÍNH (60 FPS)
@@ -584,23 +677,56 @@
     function update() {
       if (isAnsweringLocked) return;
 
-      // Di chuyển người chơi
-      const nextX = player.x + player.dirX * player.speed;
-      const nextY = player.y + player.dirY * player.speed;
+      // Di chuyển theo từng ô lưới: Nhấn 1 cái đi 1 bước, Nhấn giữ đi miết
+      if (player.isMoving) {
+        const diffX = player.targetX - player.x;
+        const diffY = player.targetY - player.y;
+        const dist = Math.hypot(diffX, diffY);
 
-      // Kiểm tra va chạm tường
-      const gridX = Math.round(nextX);
-      const gridY = Math.round(nextY);
+        if (dist <= player.speed) {
+          // Đã tới ô đích trọn vẹn
+          player.x = player.targetX;
+          player.y = player.targetY;
+          player.gridX = player.targetX;
+          player.gridY = player.targetY;
+          player.isMoving = false;
 
-      if (gridX >= 0 && gridX < COLS && gridY >= 0 && gridY < ROWS) {
-        // Cho phép đi nếu không phải tường (1)
-        if (MAZE_LAYOUT[gridY][gridX] !== 1) {
-          player.x = nextX;
-          player.y = nextY;
+          // Ăn hạt năng lượng và kiểm tra phòng đáp án
+          checkPelletAt(player.gridX, player.gridY);
+          checkAnswerRoomTrigger();
+
+          if (!isAnsweringLocked) {
+            // Kiểm tra xem có đang giữ phím/nút không
+            const desired = nextBufferedDir || getActiveDir();
+            nextBufferedDir = null;
+
+            if (desired && canMoveTo(player.gridX + desired.dx, player.gridY + desired.dy)) {
+              // ĐANG GIỮ PHÍM: TIẾP TỤC ĐI BƯỚC TIẾP THEO (ĐI MIẾT)!
+              player.dirX = desired.dx;
+              player.dirY = desired.dy;
+              player.targetX = player.gridX + desired.dx;
+              player.targetY = player.gridY + desired.dy;
+              player.isMoving = true;
+            } else {
+              // ĐÃ THẢ PHÍM: DỪNG LẠI TẠI Ô ĐÍCH (ĐI ĐÚNG 1 BƯỚC)!
+              player.dirX = 0;
+              player.dirY = 0;
+            }
+          }
         } else {
-          // Dừng lại nếu gặp tường
-          player.dirX = 0;
-          player.dirY = 0;
+          // Trượt mượt mà đến ô đích
+          player.x += player.dirX * player.speed;
+          player.y += player.dirY * player.speed;
+        }
+      } else {
+        // Nếu đang đứng yên nhưng có phím đang được giữ
+        const desired = getActiveDir();
+        if (desired && canMoveTo(player.gridX + desired.dx, player.gridY + desired.dy)) {
+          player.dirX = desired.dx;
+          player.dirY = desired.dy;
+          player.targetX = player.gridX + desired.dx;
+          player.targetY = player.gridY + desired.dy;
+          player.isMoving = true;
         }
       }
 
@@ -610,11 +736,11 @@
         player.mouthDir *= -1;
       }
 
-      // Ăn hạt năng lượng
+      // Ăn hạt năng lượng khi lướt qua
       pellets.forEach(p => {
         if (!p.eaten) {
           const dist = Math.hypot(player.x - p.c, player.y - p.r);
-          if (dist < 0.45) {
+          if (dist < 0.5) {
             p.eaten = true;
             score += 1;
             document.getElementById('score-display').innerText = score;
@@ -637,6 +763,18 @@
 
       // Kiểm tra xem người chơi đã bước vào phòng đáp án nào chưa
       checkAnswerRoomTrigger();
+    }
+
+    
+    function checkPelletAt(gx, gy) {
+      pellets.forEach(p => {
+        if (!p.eaten && p.c === gx && p.r === gy) {
+          p.eaten = true;
+          score += 1;
+          document.getElementById('score-display').innerText = score;
+          playSoundEat();
+        }
+      });
     }
 
     function handleHitGhost() {
