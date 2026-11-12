@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thí Nghiệm Ảo: Sóng Dọc &amp; Sóng Ngang Trên Lò Xo — Vật Lí 11 (KNTT)</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --surface: #111827;
+      --surface-2: #1e293b;
+      --border: #334155;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-2: #818cf8;
+      --compress: #f97316;
+      --rarefy: #06b6d4;
+      --marker-a: #ef4444;
+      --marker-b: #22c55e;
+      --gold: #facc15;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #0b1120;
+      font-weight: 800;
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .brand h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .brand p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover {
+      border-color: var(--accent);
+      background: #273549;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      border-color: #38bdf8;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.1);
+    }
+
+    .btn-warning {
+      background: #b45309;
+      border-color: #f59e0b;
+      color: #fff;
+    }
+
+    .btn-pulse {
+      background: linear-gradient(135deg, #059669, #0d9488);
+      border-color: #34d399;
+      color: #fff;
+    }
+
+    .btn-quiz {
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      border-color: #a78bfa;
+      color: #fff;
+    }
+
+    /* Main Layout */
+    .workspace {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 355px;
+      gap: 18px;
+      padding: 18px 24px;
+      max-width: 1600px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 1080px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Left Stage */
+    .stage-column {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .canvas-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .stage-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .playback-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .speed-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg);
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+    }
+
+    .speed-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.82rem;
+    }
+
+    .speed-btn.active {
+      background: var(--accent);
+      color: #0b1120;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      background: radial-gradient(circle at 50% 35%, #162238 0%, #090e1a 100%);
+      border-radius: 10px;
+      border: 1px solid #263248;
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    /* Live Telemetry Bar */
+    .telemetry-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+    }
+
+    .metric-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
+
+    .metric-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .metric-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .metric-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Legend & Theory Box */
+    .info-strip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+    }
+
+    .info-item h3 {
+      font-size: 0.92rem;
+      color: var(--gold);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .info-item p {
+      font-size: 0.84rem;
+      color: #cbd5e1;
+    }
+
+    .dot-legend {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    /* Right Control Panel */
+    .control-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .panel-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .panel-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .slider-group {
+      margin-bottom: 14px;
+    }
+
+    .slider-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 5px;
+      font-size: 0.88rem;
+    }
+
+    .slider-val {
+      font-weight: 700;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .toggle-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toggle-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.86rem;
+      color: #e2e8f0;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .toggle-item input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .mode-pills {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: var(--bg);
+      padding: 4px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .mode-pills-3 {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .mode-pill {
+      padding: 7px 6px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+      text-align: center;
+    }
+
+    .mode-pill.active {
+      background: var(--accent-2);
+      color: #fff;
+    }
+
+    .mode-pill.active-cyan {
+      background: #0284c7;
+      color: #fff;
+    }
+
+    .formula-box {
+      background: #0f172a;
+      border: 1px dashed #475569;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.84rem;
+      color: #e2e8f0;
+      margin-top: 8px;
+    }
+
+    .formula-box code {
+      color: var(--gold);
+      font-family: 'Cambria Math', 'Times New Roman', serif;
+      font-size: 0.96rem;
+    }
+
+    /* Quiz Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.78);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 50;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      max-width: 720px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 22px 24px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .quiz-q {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .quiz-q h4 {
+      font-size: 0.94rem;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .quiz-opt {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 8px 12px;
+      margin-bottom: 6px;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.86rem;
+    }
+
+    .quiz-opt:hover {
+      border-color: var(--accent);
+    }
+
+    .quiz-opt.correct {
+      background: rgba(34, 197, 94, 0.2);
+      border-color: #22c55e;
+      color: #bbf7d0;
+    }
+
+    .quiz-opt.wrong {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+      color: #fecaca;
+    }
+
+    .quiz-explain {
+      margin-top: 8px;
+      font-size: 0.83rem;
+      color: #cbd5e1;
+      display: none;
+      padding-top: 6px;
+      border-top: 1px dashed var(--border);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <span class="brand-badge">Vật lí 11 • KNTT • Bài 9</span>
+      <div>
+        <h1>Thí Nghiệm Ảo: Sóng Dọc &amp; Sóng Ngang Trên Lò Xo</h1>
+        <p>Chuyển đổi linh hoạt giữa kích thích sóng dọc, sóng ngang, tạo 1 xung hoặc dao động liên tục</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-quiz" id="btnOpenQuiz">📝 Câu hỏi khám phá nhanh</button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <!-- Left Simulation Stage -->
+    <section class="stage-column">
+      <div class="canvas-card">
+        <div class="stage-toolbar">
+          <div class="playback-group">
+            <button class="btn btn-primary" id="btnPlayPause">⏸ Tạm dừng</button>
+            <button class="btn" id="btnStep">⏭ Tiến 1 bước (+0,02s)</button>
+            <button class="btn btn-pulse" id="btnSendPulse">⚡ Kích thích 1 xung</button>
+            <button class="btn btn-warning" id="btnReset">↺ Đặt lại (t = 0)</button>
+          </div>
+          <div class="speed-group">
+            <span>Tốc độ:</span>
+            <button class="speed-btn" data-speed="0.25">0,25×</button>
+            <button class="speed-btn" data-speed="0.5">0,5×</button>
+            <button class="speed-btn active" data-speed="1">1×</button>
+          </div>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="simCanvas" width="1100" height="540"></canvas>
+        </div>
+      </div>
+
+      <!-- Telemetry -->
+      <div class="telemetry-grid">
+        <div class="metric-box">
+          <div class="metric-label">Thời gian (t)</div>
+          <div class="metric-value" id="valTime">0,00 s</div>
+          <div class="metric-sub">Chu kì T = <span id="valPeriod">0,83</span> s</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Bước sóng (λ = v / f)</div>
+          <div class="metric-value" id="valLambda">20,0 cm</div>
+          <div class="metric-sub" id="subLambdaDesc">Khoảng cách 2 tâm nén liên tiếp</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Li độ vòng A (x₀ = 15 cm)</div>
+          <div class="metric-value" id="valUa" style="color: var(--marker-a);">0,00 cm</div>
+          <div class="metric-sub" id="subDirA">Dao động dọc trục Ox</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Li độ vòng B (x₀ = 35 cm)</div>
+          <div class="metric-value" id="valUb" style="color: var(--marker-b);">0,00 cm</div>
+          <div class="metric-sub">Khoảng cách Δx₀ = <span id="valDeltaX">20,0</span> cm</div>
+        </div>
+      </div>
+
+      <!-- Pedagogical Takeaways -->
+      <div class="info-strip">
+        <div class="info-item">
+          <h3><span class="dot-legend" style="background: var(--compress);"></span> <span id="infoTitle1">Vùng Nén &amp; Vùng Dãn</span></h3>
+          <p id="infoDesc1">Khi sóng dọc truyền qua lò xo, các vòng lò xo dao động dọc theo trục, tạo nên các <strong>vùng nén</strong> (vòng xít lại) và <strong>vùng dãn</strong> (vòng thưa ra) xen kẽ lan truyền đi.</p>
+        </div>
+        <div class="info-item">
+          <h3><span class="dot-legend" style="background: var(--marker-a);"></span> Phần tử môi trường</h3>
+          <p>Vòng đỏ (A) và vòng xanh (B) chỉ <strong>dao động qua lại quanh vị trí cân bằng</strong> (vạch đứt), hoàn toàn không bị cuốn trôi theo sóng; chỉ có <strong>pha dao động và năng lượng</strong> truyền đi.</p>
+        </div>
+        <div class="info-item">
+          <h3 id="infoTitle3">📏 Định nghĩa Sóng dọc</h3>
+          <p id="infoDesc3">Sóng dọc là sóng trong đó các phần tử của môi trường dao động theo phương <strong>trùng với phương truyền sóng</strong>. Khoảng cách giữa hai tâm nén (hoặc hai tâm dãn) liên tiếp là một bước sóng <strong>λ</strong>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Controls -->
+    <aside class="control-panel">
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>⚙️ Loại sóng &amp; Chế độ kích thích</span>
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Loại sóng trên lò xo</span>
+          </div>
+          <div class="mode-pills">
+            <button class="mode-pill active-cyan" id="btnTypeLong">↔ Sóng dọc</button>
+            <button class="mode-pill" id="btnTypeTrans">↕ Sóng ngang</button>
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Chế độ kích thích nguồn</span>
+          </div>
+          <div class="mode-pills mode-pills-3">
+            <button class="mode-pill active" id="modeWavefront">Từ nguồn</button>
+            <button class="mode-pill" id="modeSteady">Ổn định</button>
+            <button class="mode-pill" id="modePulse">1 xung</button>
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <label for="sliderFreq">Tần số nguồn rung (f)</label>
+            <span class="slider-val" id="lblFreq">1,20 Hz</span>
+          </div>
+          <input type="range" id="sliderFreq" min="0.5" max="2.5" step="0.05" value="1.2" />
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <label for="sliderSpeed">Tốc độ truyền sóng (v)</label>
+            <span class="slider-val" id="lblSpeed">24,0 cm/s</span>
+          </div>
+          <input type="range" id="sliderSpeed" min="12" max="40" step="1" value="24" />
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <label for="sliderAmp">Biên độ dao động (A)</label>
+            <span class="slider-val" id="lblAmp">1,8 cm</span>
+          </div>
+          <input type="range" id="sliderAmp" min="0.6" max="2.6" step="0.1" value="1.8" />
+        </div>
+
+        <div class="formula-box">
+          Phương trình sóng tại điểm có VTCB <em>x₀</em>:<br />
+          <code>u(x₀, t) = A·sin(2πft − 2πx₀/λ)</code>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>👁️ Lớp hiển thị trực quan</span>
+        </div>
+        <div class="toggle-list">
+          <label class="toggle-item">
+            <span>Đánh dấu vòng A (đỏ), B (xanh) &amp; VTCB</span>
+            <input type="checkbox" id="chkMarkers" checked />
+          </label>
+          <label class="toggle-item">
+            <span id="lblChkDensity">Tô màu vùng Nén (cam) / Dãn (lam)</span>
+            <input type="checkbox" id="chkDensity" />
+          </label>
+          <label class="toggle-item">
+            <span>Hiện đồ thị li độ u(x) đồng bộ</span>
+            <input type="checkbox" id="chkGraph" checked />
+          </label>
+          <label class="toggle-item">
+            <span>Hiện thước đo bước sóng λ</span>
+            <input type="checkbox" id="chkRuler" checked />
+          </label>
+          <label class="toggle-item">
+            <span>Hiện vectơ phương dao động &amp; truyền sóng</span>
+            <input type="checkbox" id="chkVectors" checked />
+          </label>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>💡 Gợi ý thao tác trên lớp</span>
+        </div>
+        <p style="font-size: 0.83rem; color: #cbd5e1;">
+          1. Chọn <strong>Sóng dọc</strong> hoặc <strong>Sóng ngang</strong> để so sánh phương dao động của vòng A, B với phương truyền sóng.<br />
+          2. Nhấn <strong>⚡ Kích thích 1 xung</strong> để HS thấy một xung đơn lẻ (hoặc 1 vùng nén) lan truyền dọc theo lò xo.<br />
+          3. Bấm <strong>Tạm dừng</strong> và bật <strong>Thước đo λ</strong> để đo khoảng cách giữa 2 tâm nén (sóng dọc) hoặc 2 đỉnh sóng (sóng ngang).
+        </p>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Quiz Modal -->
+  <div class="modal-backdrop" id="quizModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>📝 Câu hỏi khám phá thí nghiệm Sóng dọc &amp; Sóng ngang (Vật lí 11)</h3>
+        <button class="btn" id="btnCloseQuiz">✕ Đóng</button>
+      </div>
+
+      <div class="quiz-q" data-answer="2">
+        <h4>Câu 1. Quan sát vòng lò xo màu đỏ (A) và màu xanh (B) khi sóng truyền qua, nhận xét nào sau đây đúng?</h4>
+        <button class="quiz-opt" data-idx="0">A. Các vòng lò xo bị sóng cuốn trôi dần về phía bên phải.</button>
+        <button class="quiz-opt" data-idx="1">B. Các vòng lò xo luôn đứng yên tại vị trí cân bằng.</button>
+        <button class="quiz-opt" data-idx="2">C. Các vòng lò xo chỉ dao động qua lại quanh VTCB (theo phương ngang với sóng dọc, phương thẳng đứng với sóng ngang).</button>
+        <button class="quiz-opt" data-idx="3">D. Khi tăng biên độ A thì tốc độ truyền sóng v tăng tỉ lệ thuận.</button>
+        <div class="quiz-explain"><strong>Giải thích:</strong> Phần tử vật chất của môi trường không truyền đi theo sóng mà chỉ dao động quanh vị trí cân bằng của nó.</div>
+      </div>
+
+      <div class="quiz-q" data-answer="1">
+        <h4>Câu 2. Điểm khác nhau cơ bản giữa sóng dọc và sóng ngang trên lò xo là:</h4>
+        <button class="quiz-opt" data-idx="0">A. Sóng dọc có bước sóng còn sóng ngang không có bước sóng.</button>
+        <button class="quiz-opt" data-idx="1">B. Sóng dọc có phương dao động trùng với phương truyền sóng; sóng ngang có phương dao động vuông góc với phương truyền sóng.</button>
+        <button class="quiz-opt" data-idx="2">C. Sóng dọc truyền năng lượng còn sóng ngang không truyền năng lượng.</button>
+        <button class="quiz-opt" data-idx="3">D. Sóng ngang tạo ra các vùng nén – dãn còn sóng dọc tạo ra các đỉnh – hõm sóng.</button>
+        <div class="quiz-explain"><strong>Giải thích:</strong> Theo định nghĩa SGK Vật lí 11 (KNTT), sóng ngang có phương dao động vuông góc phương truyền sóng; sóng dọc có phương dao động trùng với phương truyền sóng.</div>
+      </div>
+
+      <div class="quiz-q" data-answer="0">
+        <h4>Câu 3. Nếu giữ nguyên tốc độ truyền sóng v trên lò xo và tăng tần số nguồn rung f lên gấp đôi thì bước sóng λ sẽ:</h4>
+        <button class="quiz-opt" data-idx="0">A. Giảm đi một nửa.</button>
+        <button class="quiz-opt" data-idx="1">B. Tăng lên gấp đôi.</button>
+        <button class="quiz-opt" data-idx="2">C. Không thay đổi.</button>
+        <button class="quiz-opt" data-idx="3">D. Tăng lên bốn lần.</button>
+        <div class="quiz-explain"><strong>Giải thích:</strong> Theo công thức λ = v / f, khi tốc độ truyền sóng v không đổi, bước sóng λ tỉ lệ nghịch với tần số f.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById('simCanvas');
+      const ctx = canvas.getContext('2d');
+
+      const L_CM = 80;        // Chiều dài lò xo 80 cm
+      const N_COILS = 64;     // Số vòng lò xo
+      const X_A_CM = 15;      // Vòng A
+      const X_B_CM = 35;      // Vòng B
+
+      const state = {
+        waveType: 'longitudinal', // 'longitudinal' | 'transverse'
+        exciteMode: 'wavefront',  // 'wavefront' | 'steady' | 'pulse'
+        freq: 1.2,                // Hz
+        speed: 24,                // cm/s
+        amp: 1.8,                 // cm
+        time: 0,
+        playing: true,
+        speedFactor: 1,
+        showMarkers: true,
+        showDensity: false,
+        showGraph: true,
+        showRuler: true,
+        showVectors: true
+      };
+
+      // UI Elements
+      const btnPlayPause = document.getElementById('btnPlayPause');
+      const btnStep = document.getElementById('btnStep');
+      const btnSendPulse = document.getElementById('btnSendPulse');
+      const btnReset = document.getElementById('btnReset');
+
+      const btnTypeLong = document.getElementById('btnTypeLong');
+      const btnTypeTrans = document.getElementById('btnTypeTrans');
+      const modeWavefront = document.getElementById('modeWavefront');
+      const modeSteady = document.getElementById('modeSteady');
+      const modePulse = document.getElementById('modePulse');
+
+      const sliderFreq = document.getElementById('sliderFreq');
+      const sliderSpeed = document.getElementById('sliderSpeed');
+      const sliderAmp = document.getElementById('sliderAmp');
+      const lblFreq = document.getElementById('lblFreq');
+      const lblSpeed = document.getElementById('lblSpeed');
+      const lblAmp = document.getElementById('lblAmp');
+
+      const valTime = document.getElementById('valTime');
+      const valPeriod = document.getElementById('valPeriod');
+      const valLambda = document.getElementById('valLambda');
+      const valUa = document.getElementById('valUa');
+      const valUb = document.getElementById('valUb');
+      const valDeltaX = document.getElementById('valDeltaX');
+
+      const subLambdaDesc = document.getElementById('subLambdaDesc');
+      const subDirA = document.getElementById('subDirA');
+      const infoTitle1 = document.getElementById('infoTitle1');
+      const infoDesc1 = document.getElementById('infoDesc1');
+      const infoTitle3 = document.getElementById('infoTitle3');
+      const infoDesc3 = document.getElementById('infoDesc3');
+      const lblChkDensity = document.getElementById('lblChkDensity');
+
+      const fmt = (num, dec = 2) => num.toFixed(dec).replace('.', ',');
+
+      function getEffAmp() {
+        const lambda = state.speed / state.freq;
+        if (state.waveType === 'longitudinal') {
+          const maxSafeAmp = (0.82 * lambda) / (2 * Math.PI);
+          return Math.min(state.amp, maxSafeAmp);
+        }
+        return state.amp;
+      }
+
+      // Hàm tính li độ u(x0, t)
+      function getDisplacement(x0, t) {
+        const lambda = state.speed / state.freq;
+        const effAmp = getEffAmp();
+        const arrival = x0 / state.speed;
+
+        if (state.exciteMode === 'pulse') {
+          const tau = t - arrival;
+          const pulseDur = 1 / state.freq; // độ rộng 1 chu kì xung (1 nhịp đẩy/giật)
+          if (tau < 0 || tau > pulseDur) return 0;
+          // Xung hình chuông mượt (nửa sin dương hoặc 1 chu kì sin): dùng 1/2 chu kì để tạo 1 đỉnh xung rõ rệt
+          return effAmp * Math.sin(Math.PI * (tau / pulseDur));
+        }
+
+        if (state.exciteMode === 'wavefront') {
+          if (t < arrival) return 0;
+          return effAmp * Math.sin(2 * Math.PI * state.freq * (t - arrival));
+        }
+
+        // 'steady'
+        return effAmp * Math.sin(2 * Math.PI * (state.freq * t - x0 / lambda));
+      }
+
+      function updateWaveTypeUI() {
+        const isLong = state.waveType === 'longitudinal';
+        btnTypeLong.classList.toggle('active-cyan', isLong);
+        btnTypeTrans.classList.toggle('active-cyan', !isLong);
+
+        if (isLong) {
+          subLambdaDesc.textContent = 'Khoảng cách 2 tâm nén liên tiếp';
+          subDirA.textContent = 'Dao động dọc trục Ox';
+          lblChkDensity.textContent = 'Tô màu vùng Nén (cam) / Dãn (lam)';
+          infoTitle1.textContent = 'Vùng Nén & Vùng Dãn';
+          infoDesc1.innerHTML = 'Khi sóng dọc truyền qua lò xo, các vòng lò xo dao động dọc theo trục, tạo nên các <strong>vùng nén</strong> (vòng xít lại) và <strong>vùng dãn</strong> (vòng thưa ra) xen kẽ lan truyền đi.';
+          infoTitle3.textContent = '📏 Định nghĩa Sóng dọc';
+          infoDesc3.innerHTML = 'Sóng dọc là sóng trong đó các phần tử của môi trường dao động theo phương <strong>trùng với phương truyền sóng</strong>. Khoảng cách giữa hai tâm nén (hoặc hai tâm dãn) liên tiếp là một bước sóng <strong>λ</strong>.';
+        } else {
+          subLambdaDesc.textContent = 'Khoảng cách 2 đỉnh sóng liên tiếp';
+          subDirA.textContent = 'Dao động vuông góc trục Ox';
+          lblChkDensity.textContent = 'Tô màu vùng Đỉnh (cam) / Hõm (lam)';
+          infoTitle1.textContent = 'Đỉnh sóng & Hõm sóng';
+          infoDesc1.innerHTML = 'Khi sóng ngang truyền qua lò xo, các vòng lò xo dao động lên xuống vuông góc với trục lò xo, tạo thành các <strong>đỉnh sóng</strong> và <strong>hõm sóng</strong> lan truyền từ trái sang phải.';
+          infoTitle3.textContent = '📏 Định nghĩa Sóng ngang';
+          infoDesc3.innerHTML = 'Sóng ngang là sóng trong đó các phần tử của môi trường dao động theo phương <strong>vuông góc với phương truyền sóng</strong>. Khoảng cách giữa hai đỉnh sóng liên tiếp là một bước sóng <strong>λ</strong>.';
+        }
+      }
+
+      function setExciteMode(mode) {
+        state.exciteMode = mode;
+        modeWavefront.classList.toggle('active', mode === 'wavefront');
+        modeSteady.classList.toggle('active', mode === 'steady');
+        modePulse.classList.toggle('active', mode === 'pulse');
+        state.time = 0;
+        if (!state.playing) {
+          state.playing = true;
+          btnPlayPause.textContent = '⏸ Tạm dừng';
+        }
+        draw();
+      }
+
+      // Controls wiring
+      btnTypeLong.addEventListener('click', () => {
+        state.waveType = 'longitudinal';
+        updateWaveTypeUI();
+        draw();
+      });
+
+      btnTypeTrans.addEventListener('click', () => {
+        state.waveType = 'transverse';
+        updateWaveTypeUI();
+        draw();
+      });
+
+      modeWavefront.addEventListener('click', () => setExciteMode('wavefront'));
+      modeSteady.addEventListener('click', () => setExciteMode('steady'));
+      modePulse.addEventListener('click', () => setExciteMode('pulse'));
+
+      btnSendPulse.addEventListener('click', () => {
+        setExciteMode('pulse');
+      });
+
+      btnPlayPause.addEventListener('click', () => {
+        state.playing = !state.playing;
+        btnPlayPause.textContent = state.playing ? '⏸ Tạm dừng' : '▶ Tiếp tục';
+      });
+
+      btnStep.addEventListener('click', () => {
+        state.playing = false;
+        btnPlayPause.textContent = '▶ Tiếp tục';
+        state.time += 0.02;
+        draw();
+      });
+
+      btnReset.addEventListener('click', () => {
+        state.time = 0;
+        draw();
+      });
+
+      document.querySelectorAll('.speed-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.speedFactor = parseFloat(btn.dataset.speed);
+        });
+      });
+
+      sliderFreq.addEventListener('input', e => {
+        state.freq = parseFloat(e.target.value);
+        lblFreq.textContent = `${fmt(state.freq, 2)} Hz`;
+        draw();
+      });
+
+      sliderSpeed.addEventListener('input', e => {
+        state.speed = parseFloat(e.target.value);
+        lblSpeed.textContent = `${fmt(state.speed, 1)} cm/s`;
+        draw();
+      });
+
+      sliderAmp.addEventListener('input', e => {
+        state.amp = parseFloat(e.target.value);
+        lblAmp.textContent = `${fmt(state.amp, 1)} cm`;
+        draw();
+      });
+
+      document.getElementById('chkMarkers').addEventListener('change', e => { state.showMarkers = e.target.checked; draw(); });
+      document.getElementById('chkDensity').addEventListener('change', e => { state.showDensity = e.target.checked; draw(); });
+      document.getElementById('chkGraph').addEventListener('change', e => { state.showGraph = e.target.checked; draw(); });
+      document.getElementById('chkRuler').addEventListener('change', e => { state.showRuler = e.target.checked; draw(); });
+      document.getElementById('chkVectors').addEventListener('change', e => { state.showVectors = e.target.checked; draw(); });
+
+      // Quiz Modal
+      const quizModal = document.getElementById('quizModal');
+      document.getElementById('btnOpenQuiz').addEventListener('click', () => quizModal.classList.add('open'));
+      document.getElementById('btnCloseQuiz').addEventListener('click', () => quizModal.classList.remove('open'));
+      quizModal.addEventListener('click', e => { if (e.target === quizModal) quizModal.classList.remove('open'); });
+
+      document.querySelectorAll('.quiz-q').forEach(qEl => {
+        const correctIdx = parseInt(qEl.dataset.answer, 10);
+        const explain = qEl.querySelector('.quiz-explain');
+        qEl.querySelectorAll('.quiz-opt').forEach(opt => {
+          opt.addEventListener('click', () => {
+            qEl.querySelectorAll('.quiz-opt').forEach(o => o.classList.remove('correct', 'wrong'));
+            const chosen = parseInt(opt.dataset.idx, 10);
+            if (chosen === correctIdx) {
+              opt.classList.add('correct');
+            } else {
+              opt.classList.add('wrong');
+              qEl.querySelectorAll('.quiz-opt')[correctIdx].classList.add('correct');
+            }
+            explain.style.display = 'block';
+          });
+        });
+      });
+
+      function drawArrow(x1, y1, x2, y2, color, lineWidth = 2.5, headLen = 9) {
+        const angle = Math.atan2(y2 - y1, x2 - x1);
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.lineWidth = lineWidth;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(x2, y2);
+        ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 6), y2 - headLen * Math.sin(angle - Math.PI / 6));
+        ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 6), y2 - headLen * Math.sin(angle + Math.PI / 6));
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function draw() {
+        const W = canvas.width;
+        const H = canvas.height;
+        ctx.clearRect(0, 0, W, H);
+
+        const padLeft = 105;
+        const padRight = 55;
+        const usableW = W - padLeft - padRight;
+        const cmToPx = usableW / L_CM;
+        const springY = state.showGraph ? 175 : 265;
+        const springRadius = state.waveType === 'longitudinal' ? 44 : 26;
+        const transScalePx = 15; // Hệ số phóng đại biên độ theo phương đứng cho sóng ngang dễ nhìn
+
+        const lambda = state.speed / state.freq;
+        const period = 1 / state.freq;
+        const effAmp = getEffAmp();
+        const isLong = state.waveType === 'longitudinal';
+
+        // Telemetry
+        valTime.textContent = `${fmt(state.time, 2)} s`;
+        valPeriod.textContent = fmt(period, 2);
+        valLambda.textContent = `${fmt(lambda, 1)} cm`;
+        const uA = getDisplacement(X_A_CM, state.time);
+        const uB = getDisplacement(X_B_CM, state.time);
+        valUa.textContent = `${uA >= 0 ? '+' : ''}${fmt(uA, 2)} cm`;
+        valUb.textContent = `${uB >= 0 ? '+' : ''}${fmt(uB, 2)} cm`;
+        valDeltaX.textContent = fmt(X_B_CM - X_A_CM, 1);
+
+        // Background grid & ruler ticks
+        ctx.save();
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.14)';
+        ctx.fillStyle = 'rgba(148, 163, 184, 0.55)';
+        ctx.font = '12px Segoe UI, sans-serif';
+        ctx.textAlign = 'center';
+        for (let xCm = 0; xCm <= L_CM; xCm += 5) {
+          const px = padLeft + xCm * cmToPx;
+          ctx.beginPath();
+          ctx.moveTo(px, springY - 72);
+          ctx.lineTo(px, springY + 72);
+          ctx.stroke();
+          if (xCm % 10 === 0) {
+            ctx.fillText(`${xCm} cm`, px, springY - 78);
+          }
+        }
+        // Equilibrium centerline for transverse wave
+        if (!isLong) {
+          ctx.setLineDash([5, 5]);
+          ctx.strokeStyle = 'rgba(148, 163, 184, 0.35)';
+          ctx.beginPath();
+          ctx.moveTo(padLeft, springY);
+          ctx.lineTo(padLeft + usableW, springY);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+        ctx.restore();
+
+        // Compute coil positions
+        const dx0 = L_CM / N_COILS;
+        const coils = [];
+        for (let i = 0; i <= N_COILS; i++) {
+          const x0 = i * dx0;
+          const u = getDisplacement(x0, state.time);
+          const x = isLong ? x0 + u : x0;
+          const yPx = isLong ? springY : springY - u * transScalePx;
+          coils.push({
+            i,
+            x0,
+            u,
+            x,
+            px: padLeft + x * cmToPx,
+            py: yPx,
+            px0: padLeft + x0 * cmToPx
+          });
+        }
+
+        // Background shading (Nén/Dãn for longitudinal, Đỉnh/Hõm for transverse)
+        if (state.showDensity) {
+          for (let i = 0; i < N_COILS; i++) {
+            const c1 = coils[i];
+            const c2 = coils[i + 1];
+            if (isLong) {
+              const dx = c2.x - c1.x;
+              const strain = (dx0 - dx) / dx0;
+              const alpha = Math.min(0.42, Math.abs(strain) * 0.72);
+              if (alpha > 0.02) {
+                ctx.fillStyle = strain > 0
+                  ? `rgba(249, 115, 22, ${alpha})`
+                  : `rgba(6, 182, 212, ${alpha})`;
+                ctx.fillRect(c1.px, springY - springRadius - 8, c2.px - c1.px + 1, springRadius * 2 + 16);
+              }
+            } else {
+              const uMid = (c1.u + c2.u) / 2;
+              const alpha = Math.min(0.32, (Math.abs(uMid) / (effAmp || 1)) * 0.32);
+              if (alpha > 0.03) {
+                ctx.fillStyle = uMid > 0
+                  ? `rgba(249, 115, 22, ${alpha})`
+                  : `rgba(6, 182, 212, ${alpha})`;
+                const topY = uMid > 0 ? (c1.py + c2.py) / 2 - springRadius : springY;
+                const h = Math.abs(springY - (c1.py + c2.py) / 2) + springRadius;
+                ctx.fillRect(c1.px, topY, c2.px - c1.px + 1, h);
+              }
+            }
+          }
+        }
+
+        // No fixed wall on the right: wave propagates freely along a very long spring (open boundary)
+        // Extended coils beyond L_CM will fade out smoothly at the right edge of the viewport
+
+        // Left oscillator piston
+        const pistonX = coils[0].px;
+        const pistonY = coils[0].py;
+        ctx.save();
+        if (isLong) {
+          ctx.fillStyle = '#475569';
+          ctx.fillRect(14, springY - 12, Math.max(10, pistonX - 18), 24);
+          ctx.fillStyle = '#38bdf8';
+          ctx.fillRect(pistonX - 10, springY - 50, 10, 100);
+          ctx.strokeStyle = '#bae6fd';
+          ctx.lineWidth = 1.5;
+          ctx.strokeRect(pistonX - 10, springY - 50, 10, 100);
+          ctx.fillStyle = '#e0f2fe';
+          ctx.font = 'bold 12px Segoe UI, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('Nguồn rung', 48, springY - 26);
+        } else {
+          // Thanh trượt thẳng đứng cho nguồn sóng ngang
+          ctx.fillStyle = '#475569';
+          ctx.fillRect(pistonX - 14, springY - 64, 8, 128);
+          ctx.fillStyle = '#38bdf8';
+          ctx.fillRect(pistonX - 18, pistonY - 18, 16, 36);
+          ctx.strokeStyle = '#bae6fd';
+          ctx.lineWidth = 1.5;
+          ctx.strokeRect(pistonX - 18, pistonY - 18, 16, 36);
+          ctx.fillStyle = '#e0f2fe';
+          ctx.font = 'bold 12px Segoe UI, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('Nguồn rung', 48, springY - 16);
+        }
+        ctx.restore();
+
+        // Draw 3D helical spring with perspective tilt, Z-sorting & metallic shading
+        const idxA = Math.round(X_A_CM / dx0);
+        const idxB = Math.round(X_B_CM / dx0);
+        const SEG_PER_COIL = 18;
+        const totalSegs = N_COILS * SEG_PER_COIL;
+        const segments = [];
+
+        // Soft 3D drop shadow under the spring
+        ctx.save();
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.36)';
+        ctx.lineWidth = springRadius * 0.7;
+        ctx.lineCap = 'round';
+        ctx.filter = 'blur(8px)';
+        ctx.beginPath();
+        for (let k = 0; k <= N_COILS; k++) {
+          const c = coils[k];
+          const sx = c.px;
+          const sy = c.py + springRadius + 18;
+          if (k === 0) ctx.moveTo(sx, sy);
+          else ctx.lineTo(sx, sy);
+        }
+        ctx.stroke();
+        ctx.restore();
+
+        // Build 3D helix segments (extending smoothly past L_CM with fade-out to represent an open, very long spring)
+        const N_DRAW_COILS = N_COILS + 6;
+        const totalDrawSegs = N_DRAW_COILS * SEG_PER_COIL;
+        let prevPt = null;
+        for (let s = 0; s <= totalDrawSegs; s++) {
+          const coilFloat = s / SEG_PER_COIL;
+          const coilIdx = Math.floor(coilFloat);
+          const theta = coilFloat * Math.PI * 2;
+          const x0 = coilFloat * dx0;
+          const u = getDisplacement(x0, state.time);
+
+          const baseX = padLeft + (isLong ? (x0 + u) : x0) * cmToPx;
+          const baseY = isLong ? springY : springY - u * transScalePx;
+
+          // Subtle 3D perspective tilt
+          const cosT = Math.cos(theta);
+          const sinT = Math.sin(theta);
+          const px = baseX + cosT * (springRadius * 0.16);
+          const py = baseY + sinT * springRadius;
+          const z = cosT; // -1 (back) to +1 (front)
+
+          // Fade out beyond L_CM so wave propagates freely with no obstacle
+          const fade = x0 <= L_CM ? 1 : Math.max(0, 1 - (x0 - L_CM) / (6 * dx0));
+
+          const pt = { px, py, z, sinT, coilIdx, fade };
+          if (prevPt !== null) {
+            segments.push({
+              x1: prevPt.px,
+              y1: prevPt.py,
+              x2: pt.px,
+              y2: pt.py,
+              zMid: (prevPt.z + pt.z) * 0.5,
+              sinMid: (prevPt.sinT + pt.sinT) * 0.5,
+              coilIdx: prevPt.coilIdx,
+              fade: (prevPt.fade + pt.fade) * 0.5
+            });
+          }
+          prevPt = pt;
+        }
+
+        // Painter's algorithm: draw back segments before front segments
+        segments.sort((a, b) => a.zMid - b.zMid);
+
+        ctx.save();
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        for (let i = 0; i < segments.length; i++) {
+          const seg = segments[i];
+          if (seg.fade <= 0.01) continue;
+          ctx.globalAlpha = seg.fade;
+          const depth = (seg.zMid + 1) * 0.5; // 0 (back) -> 1 (front)
+          const lum = 0.25 + 0.72 * depth;
+
+          const isMarkerA = state.showMarkers && seg.coilIdx === idxA;
+          const isMarkerB = state.showMarkers && seg.coilIdx === idxB;
+
+          let strokeColor;
+          if (isMarkerA) {
+            const r = Math.round(150 + 100 * lum);
+            const g = Math.round(35 + 45 * lum);
+            const b = Math.round(35 + 45 * lum);
+            strokeColor = `rgb(${r},${g},${b})`;
+          } else if (isMarkerB) {
+            const r = Math.round(25 + 35 * lum);
+            const g = Math.round(135 + 105 * lum);
+            const b = Math.round(55 + 45 * lum);
+            strokeColor = `rgb(${r},${g},${b})`;
+          } else {
+            // Clean uniform silver-steel shading
+            const r = Math.round(70 + 165 * lum);
+            const g = Math.round(84 + 158 * lum);
+            const b = Math.round(105 + 144 * lum);
+            strokeColor = `rgb(${r},${g},${b})`;
+          }
+
+          const baseW = (isMarkerA || isMarkerB) ? 4.2 : 2.8;
+          ctx.strokeStyle = strokeColor;
+          ctx.lineWidth = baseW + depth * 1.1;
+          ctx.beginPath();
+          ctx.moveTo(seg.x1, seg.y1);
+          ctx.lineTo(seg.x2, seg.y2);
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        // Equilibrium guides & labels for marker coils A & B
+        if (state.showMarkers) {
+          const markers = [
+            { coil: coils[idxA], color: '#ef4444', label: 'A', xLabel: X_A_CM },
+            { coil: coils[idxB], color: '#22c55e', label: 'B', xLabel: X_B_CM }
+          ];
+
+          markers.forEach(m => {
+            const c = m.coil;
+            ctx.save();
+            ctx.setLineDash([4, 4]);
+            ctx.strokeStyle = m.color;
+            ctx.globalAlpha = 0.7;
+            ctx.beginPath();
+            ctx.moveTo(c.px0, springY - 62);
+            ctx.lineTo(c.px0, springY + 62);
+            ctx.stroke();
+            ctx.restore();
+
+            ctx.save();
+            ctx.fillStyle = m.color;
+            ctx.beginPath();
+            ctx.arc(c.px, c.py + springRadius, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            ctx.font = 'bold 13px Segoe UI, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(`Vòng ${m.label}`, c.px, c.py + springRadius + 24);
+            ctx.font = '11px Segoe UI, sans-serif';
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillText(`VTCB: ${m.xLabel}cm`, c.px0, springY - 66);
+            ctx.restore();
+          });
+        }
+
+        // Vectors: propagation vs oscillation
+        if (state.showVectors) {
+          const vx = padLeft + 110;
+          const vy = 40;
+          drawArrow(vx, vy, vx + 110, vy, '#38bdf8', 3, 10);
+          ctx.fillStyle = '#38bdf8';
+          ctx.font = 'bold 13px Segoe UI, sans-serif';
+          ctx.textAlign = 'left';
+          ctx.fillText('Phương truyền sóng (v)', vx + 118, vy + 4);
+
+          const ox = vx + 365;
+          if (isLong) {
+            drawArrow(ox, vy, ox - 40, vy, '#facc15', 3, 9);
+            drawArrow(ox, vy, ox + 40, vy, '#facc15', 3, 9);
+            ctx.fillStyle = '#facc15';
+            ctx.fillText('Phương dao động (trùng phương truyền)', ox + 50, vy + 4);
+          } else {
+            drawArrow(ox, vy, ox, vy - 24, '#facc15', 3, 8);
+            drawArrow(ox, vy, ox, vy + 24, '#facc15', 3, 8);
+            ctx.fillStyle = '#facc15';
+            ctx.fillText('Phương dao động (vuông góc phương truyền)', ox + 20, vy + 4);
+          }
+        }
+
+        // Wavelength Ruler (not shown in single-pulse mode)
+        if (state.showRuler && state.exciteMode !== 'pulse') {
+          const phaseAt0 = state.freq * state.time;
+          let firstPeakCycles = phaseAt0 - Math.floor(phaseAt0);
+          // Sóng dọc: tâm nén tại 2k*pi; Sóng ngang: đỉnh sóng (sin = 1) tại 2k*pi + pi/2 => lệch 1/4 chu kì
+          let offsetCycle = isLong ? 0 : -0.25;
+          let xPeak1 = (firstPeakCycles + offsetCycle) * lambda;
+          while (xPeak1 < 2) xPeak1 += lambda;
+          const xPeak2 = xPeak1 + lambda;
+
+          const maxVisibleX = state.exciteMode === 'wavefront' ? Math.min(L_CM, state.speed * state.time) : L_CM;
+
+          if (xPeak2 <= maxVisibleX && xPeak2 <= L_CM) {
+            const p1 = padLeft + xPeak1 * cmToPx;
+            const p2 = padLeft + xPeak2 * cmToPx;
+            const ry = springY - 96;
+
+            ctx.save();
+            ctx.strokeStyle = '#facc15';
+            ctx.fillStyle = '#facc15';
+            ctx.lineWidth = 2;
+
+            ctx.setLineDash([3, 3]);
+            ctx.beginPath();
+            ctx.moveTo(p1, ry);
+            ctx.lineTo(p1, isLong ? springY - springRadius + 4 : springY - effAmp * transScalePx);
+            ctx.moveTo(p2, ry);
+            ctx.lineTo(p2, isLong ? springY - springRadius + 4 : springY - effAmp * transScalePx);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            drawArrow((p1 + p2) / 2, ry, p1, ry, '#facc15', 2.2, 8);
+            drawArrow((p1 + p2) / 2, ry, p2, ry, '#facc15', 2.2, 8);
+
+            const mid = (p1 + p2) / 2;
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(mid - 58, ry - 12, 116, 22);
+            ctx.strokeRect(mid - 58, ry - 12, 116, 22);
+            ctx.fillStyle = '#facc15';
+            ctx.font = 'bold 13px Segoe UI, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(`λ = ${fmt(lambda, 1)} cm`, mid, ry + 4);
+            ctx.restore();
+          }
+        }
+
+        // Synchronous u(x0) graph below spring
+        if (state.showGraph) {
+          const graphTop = 305;
+          const graphH = 195;
+          const axisY = graphTop + graphH / 2;
+          const ampPx = (graphH / 2 - 22) * (effAmp / 2.6);
+
+          ctx.save();
+          ctx.fillStyle = 'rgba(15, 23, 42, 0.72)';
+          ctx.strokeStyle = '#334155';
+          ctx.lineWidth = 1;
+          ctx.fillRect(padLeft - 10, graphTop, usableW + 20, graphH);
+          ctx.strokeRect(padLeft - 10, graphTop, usableW + 20, graphH);
+
+          drawArrow(padLeft, axisY, padLeft + usableW + 15, axisY, '#64748b', 1.5, 7);
+          drawArrow(padLeft, graphTop + graphH - 10, padLeft, graphTop + 10, '#64748b', 1.5, 7);
+
+          ctx.fillStyle = '#94a3b8';
+          ctx.font = '12px Segoe UI, sans-serif';
+          ctx.textAlign = 'right';
+          ctx.fillText('u (cm)', padLeft - 14, graphTop + 20);
+          ctx.fillText('+A', padLeft - 14, axisY - ampPx + 4);
+          ctx.fillText('0', padLeft - 14, axisY + 4);
+          ctx.fillText('−A', padLeft - 14, axisY + ampPx + 4);
+          ctx.textAlign = 'left';
+          ctx.fillText('x₀ (cm)', padLeft + usableW + 18, axisY + 4);
+
+          ctx.setLineDash([4, 4]);
+          ctx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+          ctx.beginPath();
+          ctx.moveTo(padLeft, axisY - ampPx);
+          ctx.lineTo(padLeft + usableW, axisY - ampPx);
+          ctx.moveTo(padLeft, axisY + ampPx);
+          ctx.lineTo(padLeft + usableW, axisY + ampPx);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          ctx.strokeStyle = '#38bdf8';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          const samples = 300;
+          for (let s = 0; s <= samples; s++) {
+            const x0 = (s / samples) * L_CM;
+            const u = getDisplacement(x0, state.time);
+            const px = padLeft + x0 * cmToPx;
+            const py = axisY - (u / (effAmp || 1)) * ampPx;
+            if (s === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.stroke();
+
+          if (state.showMarkers) {
+            const pts = [
+              { x0: X_A_CM, u: uA, color: '#ef4444' },
+              { x0: X_B_CM, u: uB, color: '#22c55e' }
+            ];
+            pts.forEach(p => {
+              const px = padLeft + p.x0 * cmToPx;
+              const py = axisY - (p.u / (effAmp || 1)) * ampPx;
+              ctx.fillStyle = p.color;
+              ctx.beginPath();
+              ctx.arc(px, py, 6, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.strokeStyle = '#fff';
+              ctx.lineWidth = 1.5;
+              ctx.stroke();
+            });
+          }
+
+          ctx.fillStyle = '#e2e8f0';
+          ctx.font = 'bold 13px Segoe UI, sans-serif';
+          ctx.textAlign = 'left';
+          ctx.fillText(`Đồ thị li độ u(x₀) của ${isLong ? 'sóng dọc' : 'sóng ngang'} tại thời điểm t`, padLeft + 12, graphTop + 20);
+          ctx.restore();
+        }
+      }
+
+      let lastTs = null;
+      function loop(ts) {
+        if (lastTs === null) lastTs = ts;
+        const dt = Math.min(0.05, (ts - lastTs) / 1000);
+        lastTs = ts;
+
+        if (state.playing) {
+          state.time += dt * state.speedFactor;
+          draw();
+        }
+        requestAnimationFrame(loop);
+      }
+
+      updateWaveTypeUI();
+      draw();
+      requestAnimationFrame(loop);
+    })();
+  </script>
+</body>
+</html>
