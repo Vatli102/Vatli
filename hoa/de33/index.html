@@ -16,6 +16,18 @@
             },
             options: {
                 skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            },
+            startup: {
+                pageReady: () => {
+                    return MathJax.startup.defaultPageReady().then(() => {
+                        const examBody = document.getElementById("examBody");
+                        if (examBody && examBody.style.display !== "none") {
+                            if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+                                window.MathJax.typesetPromise().catch(err => console.warn('MathJax error:', err));
+                            }
+                        }
+                    });
+                }
             }
         };
     </script>
@@ -622,8 +634,29 @@
             document.getElementById("examBody").style.display = "block";
 
             renderQuestions();
+            ensureMathJax();
             startTimer();
             window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        function ensureMathJax() {
+            if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+                window.MathJax.typesetPromise().catch(function(err) {
+                    console.warn("MathJax typeset error:", err);
+                });
+            } else {
+                let attempts = 0;
+                const checkInterval = setInterval(function() {
+                    attempts++;
+                    if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+                        clearInterval(checkInterval);
+                        window.MathJax.typesetPromise().catch(function(err) {
+                            console.warn("MathJax typeset error:", err);
+                        });
+                    }
+                    if (attempts > 50) clearInterval(checkInterval);
+                }, 100);
+            }
         }
 
         function startTimer() {
@@ -934,9 +967,7 @@
             lastSyncData = payload;
             syncToGoogleSheet(payload);
 
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                MathJax.typesetPromise();
-            }
+            ensureMathJax();
 
             if (parseFloat(finalScore) >= 7.0 && typeof confetti === 'function') {
                 confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
