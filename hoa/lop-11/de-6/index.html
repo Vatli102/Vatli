@@ -315,26 +315,33 @@
         let userAnswers = {};
         let examSubmitted = false;
         let hasSentResults = false;
+        let lastResultData = null;
         const totalTimeSeconds = 45 * 60;
         let timeRemaining = totalTimeSeconds;
         let timerInterval = null;
 
         const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwRRiM81mghvA7cInvJgb4rPLzWOAE3s44wer0BJcURQ4hWwoykS19pkNQ9LyzH6Q8lTQ/exec";
 
-        function sendResultsToGoogleSheet(payload) {
-            const host = window.location.hostname.toLowerCase();
-            const isVatli102 = (host === 'vatli102.com' || host === 'www.vatli102.com');
-            const statusEl = document.getElementById('sheetSyncStatus');
-
-            if (!isVatli102) {
-                if (statusEl) {
-                    statusEl.innerHTML = '<i class="fa-solid fa-shield-halved" style="color: #64748b;"></i> <em>Môi trường kiểm thử / nội bộ: Không đồng bộ vào Google Sheet giáo viên.</em>';
-                }
-                return;
+        function retrySync() {
+            if (lastResultData) {
+                hasSentResults = false;
+                executeSheetFetch(lastResultData, true);
             }
+        }
 
-            if (hasSentResults) return;
-            hasSentResults = true;
+        function forceSyncLocal() {
+            if (lastResultData) {
+                hasSentResults = false;
+                executeSheetFetch(lastResultData, true);
+            }
+        }
+
+        function executeSheetFetch(payload, isManual) {
+            const statusEl = document.getElementById("sheetSyncStatus");
+            if (statusEl) {
+                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-blue-500 mr-1.5"></i> Đang tự động lưu kết quả vào Google Sheet của giáo viên...';
+                statusEl.style.display = 'block';
+            }
 
             const jsonStr = JSON.stringify(payload);
             fetch(GOOGLE_SHEET_URL, {
@@ -342,16 +349,44 @@
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: jsonStr
-            }).then(() => {
+            })
+            .then(() => {
+                hasSentResults = true;
                 if (statusEl) {
-                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> <strong>Đồng bộ thành công:</strong> Kết quả bài làm của em đã được ghi nhận vào sổ điểm điện tử của giáo viên.';
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> <strong>Đã lưu kết quả thành công</strong> vào sổ điểm Google Sheet của giáo viên! <button type="button" onclick="retrySync()" style="margin-left: 10px; padding: 3px 10px; font-size: 0.8rem; background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fa-solid fa-rotate"></i> Gửi lại</button>';
+                    statusEl.style.display = 'block';
                 }
-            }).catch(err => {
-                console.error("Lỗi gửi điểm:", err);
+            })
+            .catch(err => {
+                console.error("Lỗi đồng bộ Google Sheet:", err);
                 if (statusEl) {
-                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> Đã gửi kết quả bài làm vào hệ thống.';
+                    statusEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color: #eab308;"></i> Đã gửi kết quả bài làm vào hệ thống. <button type="button" onclick="retrySync()" style="margin-left: 10px; padding: 3px 10px; font-size: 0.8rem; background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fa-solid fa-rotate"></i> Thử lại</button>';
+                    statusEl.style.display = 'block';
                 }
             });
+        }
+
+        function sendResultsToGoogleSheet(payload) {
+            lastResultData = payload;
+            const host = window.location.hostname.toLowerCase();
+            const isVatli102 = (host === 'vatli102.com' || host === 'www.vatli102.com');
+            const statusEl = document.getElementById("sheetSyncStatus");
+
+            if (!isVatli102) {
+                console.warn("Chặn tự động gửi ngoài vatli102.com: host =", host);
+                if (statusEl) {
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-info" style="color: #0284c7;"></i> Đang xem ở môi trường kiểm thử/nội bộ. <button type="button" onclick="forceSyncLocal()" style="margin-left: 8px; padding: 4px 10px; font-size: 0.82rem; background: #2563eb; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fa-solid fa-paper-plane"></i> Bấm để đồng bộ thử nghiệm vào Google Sheet</button>';
+                    statusEl.style.display = 'block';
+                }
+                return;
+            }
+
+            if (hasSentResults) {
+                console.warn("Kết quả đã được gửi trước đó, bỏ qua để tránh trùng lặp.");
+                return;
+            }
+
+            executeSheetFetch(payload, false);
         }
 
         function startExam() {
@@ -496,34 +531,59 @@
                 confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
             }
 
+            const examTitle = "Đề số 06: Đề Ôn Tập Sulfur, Sulfur Dioxide & Sulfur Trioxide (Hóa học 11)";
             const payload = {
+                timestamp: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
+                time: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
+                submittedAt: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
+                thoiGianNop: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
+
+                // Subject & domain identifiers
+                subject: "Hóa học",
+                monHoc: "Hóa học",
+                chuyenMuc: "vatli102.com/hoa/",
+                sourceUrl: window.location.href,
+                sourceDomain: window.location.hostname || "vatli102.com",
+
+                // Student name aliases
                 name: sName,
                 studentName: sName,
                 hoTen: sName,
                 fullName: sName,
+
+                // Class aliases
                 className: sClass,
                 studentClass: sClass,
                 class: sClass,
                 lop: sClass,
-                lesson: "ĐỀ ÔN TẬP: SULFUR, SULFUR DIOXIDE VÀ SULFUR TRIOXIDE (30 CÂU TRẮC NGHIỆM)",
-                examTitle: "ĐỀ ÔN TẬP: SULFUR, SULFUR DIOXIDE VÀ SULFUR TRIOXIDE (30 CÂU TRẮC NGHIỆM)",
-                tenBai: "ĐỀ ÔN TẬP: SULFUR, SULFUR DIOXIDE VÀ SULFUR TRIOXIDE (30 CÂU TRẮC NGHIỆM)",
-                deThi: "ĐỀ ÔN TẬP: SULFUR, SULFUR DIOXIDE VÀ SULFUR TRIOXIDE (30 CÂU TRẮC NGHIỆM)",
+
+                // Lesson / Exam aliases
+                lesson: examTitle,
+                examTitle: examTitle,
+                tenBai: examTitle,
+                deThi: examTitle,
+
+                // Score aliases (String)
                 score: String(totalScore),
                 totalScore: String(totalScore),
                 diem: String(totalScore),
                 diemSo: String(totalScore),
-                grade: String(totalScore),
+                grade: `${totalScore}/10`,
+
+                // Correct count aliases (Mandatory String)
                 correct: `${correctCount}/${questionsData.length}`,
                 correctCount: String(correctCount),
                 soCauDung: String(correctCount),
+
+                // Question count & incorrect aliases
                 tongSoCau: String(questionsData.length),
                 soCauSai: String(wrongCount),
                 incorrectCount: String(wrongCount),
+
+                // Time spent
                 timeSpent: timeSpent,
-                submittedAt: new Date().toLocaleString('vi-VN'),
-                monHoc: "Hóa học",
-                chuyenMuc: "vatli102.com/hoa/"
+                thoiGian: timeSpent,
+                thoiGianLamBai: timeSpent
             };
 
             sendResultsToGoogleSheet(payload);
