@@ -547,9 +547,10 @@
             const examTitle = "Đề số 34: Đề Ôn Tập 30 Câu Trắc Nghiệm Chuyên Đề Pin Điện Hóa - Hóa Học 12";
 
             const payload = {
+                subject: "Hóa Học",
                 monHoc: "Hóa học",
                 chuyenMuc: "vatli102.com/hoa/",
-                domain: window.location.hostname,
+                domain: window.location.hostname || "local",
                 name: sName,
                 studentName: sName,
                 hoTen: sName,
@@ -590,21 +591,29 @@
         function syncToGoogleSheet(payload) {
             const host = window.location.hostname.toLowerCase();
             const isVatli102 = (host === 'vatli102.com' || host === 'www.vatli102.com');
-            const statusEl = document.getElementById("sheetSyncStatus");
+            const isLocal = (host === '' || host === 'localhost' || host === '127.0.0.1');
 
-            if (!isVatli102) {
-                console.log("Môi trường ngoài vatli102.com - Giữ an toàn cho Google Sheet giáo viên.");
+            if (!isVatli102 && !isLocal) {
+                console.warn("Chặn đồng bộ: tên miền " + host + " không thuộc vatli102.com");
+                const statusEl = document.getElementById("sheetSyncStatus");
                 if (statusEl) {
                     statusEl.style.display = 'block';
-                    statusEl.style.background = '#f8fafc';
-                    statusEl.style.border = '1.5px solid #cbd5e1';
-                    statusEl.style.color = '#475569';
-                    statusEl.innerHTML = '<i class="fa-solid fa-circle-info"></i> Chế độ xem trước nội bộ (Google Sheet chỉ nhận dữ liệu từ domain chính thức <b>vatli102.com</b>).';
+                    statusEl.style.background = '#fefce8';
+                    statusEl.style.border = '1.5px solid #fef08a';
+                    statusEl.style.color = '#854d0e';
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-info"></i> Hệ thống chỉ đồng bộ chính thức khi học sinh làm bài trên <b>vatli102.com</b>.<br><button type="button" onclick="forceSync()" style="margin-top: 8px; padding: 6px 14px; font-size: 0.85rem; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700;"><i class="fa-solid fa-cloud-arrow-up"></i> Bấm để đồng bộ ngay vào Google Sheet</button>';
                 }
                 return;
             }
 
             executeSheetFetch(payload);
+        }
+
+        function forceSync() {
+            if (lastSyncData) {
+                hasSentResults = false;
+                executeSheetFetch(lastSyncData);
+            }
         }
 
         function executeSheetFetch(payload) {
@@ -640,7 +649,7 @@
                     statusEl.style.background = '#fef2f2';
                     statusEl.style.border = '1.5px solid #fecaca';
                     statusEl.style.color = '#991b1b';
-                    statusEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Chưa thể đồng bộ lên Google Sheet do lỗi mạng.';
+                    statusEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Chưa thể đồng bộ do mạng hoặc chính sách bảo mật trình duyệt.<br><button type="button" onclick="forceSync()" style="margin-top: 6px; padding: 4px 12px; font-size: 0.8rem; background: #dc2626; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 700;"><i class="fa-solid fa-rotate-right"></i> Thử lại</button>';
                 }
             });
         }
