@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 11: Liên kết ion - Hóa học 10 | Vatli102.com</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧪</text></svg>">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <!-- MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #1B365D;
+            --primary-light: #2A52BE;
+            --accent: #E65100;
+            --accent-light: #FF9800;
+            --bg-main: #F4F7FB;
+            --surface: #FFFFFF;
+            --text-main: #212529;
+            --text-muted: #6C757D;
+            --border-color: #E2E8F0;
+            --success: #2E7D32;
+            --danger: #D32F2F;
+            --warning: #F57C00;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+        header {
+            background: linear-gradient(135deg, #1B365D 0%, #2A52BE 100%);
+            color: #FFFFFF;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        header p {
+            font-size: 15px;
+            opacity: 0.9;
+        }
+        .badge-subject {
+            display: inline-block;
+            background-color: var(--accent);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .container {
+            max-width: 900px;
+            margin: -20px auto 0 auto;
+            padding: 0 15px;
+            position: relative;
+            z-index: 10;
+        }
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+        /* Form thông tin học sinh */
+        .student-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 600px) {
+            .student-info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .input-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: var(--primary);
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            transition: border-color 0.2s;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(42, 82, 190, 0.15);
+        }
+        /* Thanh sticky điều khiển & thời gian */
+        .sticky-bar {
+            position: sticky;
+            top: 15px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+        }
+        .timer-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .timer-box.warning {
+            color: var(--danger);
+            animation: pulse 1s infinite alternate;
+        }
+        @keyframes pulse {
+            from { opacity: 1; }
+            to { opacity: 0.5; }
+        }
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 20px;
+        }
+        .progress-bar-bg {
+            background: #EDF2F7;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            background: linear-gradient(90deg, var(--primary-light), var(--accent));
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .progress-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 4px;
+        }
+        /* Section Heading */
+        .section-header {
+            border-left: 4px solid var(--primary);
+            padding-left: 12px;
+            margin-bottom: 20px;
+        }
+        .section-header h2 {
+            font-size: 18px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+        .section-header p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        /* Question styling */
+        .question-block {
+            margin-bottom: 22px;
+            padding-bottom: 18px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .question-block:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .question-title {
+            font-weight: 500;
+            font-size: 15.5px;
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        .question-number {
+            font-weight: 700;
+            color: var(--primary);
+            margin-right: 4px;
+        }
+        /* Options radio */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 15px;
+        }
+        .option-item:hover {
+            background-color: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+        .option-item input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.15);
+            cursor: pointer;
+        }
+        .option-item.selected {
+            background-color: #EBF4FF;
+            border-color: var(--primary-light);
+        }
+        /* Table Đúng Sai */
+        .tf-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14.5px;
+        }
+        .tf-table th, .tf-table td {
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+        .tf-table th {
+            background-color: #F1F5F9;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .tf-table td:nth-child(1) {
+            width: 60px;
+            text-align: center;
+            font-weight: 700;
+        }
+        .tf-table td:nth-child(3) {
+            width: 150px;
+            text-align: center;
+        }
+        .tf-options {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+        }
+        .tf-options label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        /* Input trả lời ngắn */
+        .short-answer-input {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .short-answer-input input {
+            width: 220px;
+            padding: 9px 12px;
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .short-answer-input input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(42, 82, 190, 0.15);
+        }
+        /* Nút nộp bài */
+        .submit-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 17px;
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(230, 81, 0, 0.35);
+            transition: all 0.25s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(230, 81, 0, 0.45);
+        }
+        /* Modal & Giải chi tiết */
+        .explanation-box {
+            display: none;
+            margin-top: 12px;
+            padding: 12px 14px;
+            background: #F0FDF4;
+            border-left: 4px solid var(--success);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: #14532D;
+        }
+        .explanation-box.show {
+            display: block;
+        }
+        .explanation-box.wrong {
+            background: #FEF2F2;
+            border-left-color: var(--danger);
+            color: #7F1D1D;
+        }
+        /* Modal Popup */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            animation: zoomIn 0.3s ease;
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.85); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .score-circle {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 6px 16px rgba(27, 54, 93, 0.3);
+        }
+        .score-num {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .score-max {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+        .btn-close-modal {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .correct-opt {
+            background-color: #DCFCE7 !important;
+            border-color: #22C55E !important;
+        }
+        .wrong-opt {
+            background-color: #FEE2E2 !important;
+            border-color: #EF4444 !important;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <span class="badge-subject">Hóa học 10 - Bộ Kết nối tri thức</span>
+        <h1>BÀI 11: LIÊN KẾT ION</h1>
+        <p>Hệ thống tự động chấm điểm & giải chi tiết | Bản quyền © Vatli102.com</p>
+    </header>
+
+    <div class="container">
+        <!-- Thông tin học sinh -->
+        <div class="card">
+            <div class="student-info-grid">
+                <div class="input-group">
+                    <label for="studentName">Họ và tên học sinh (*)</label>
+                    <input type="text" id="studentName" placeholder="Ví dụ: Nguyễn Văn An" required>
+                </div>
+                <div class="input-group">
+                    <label for="studentClass">Lớp (*)</label>
+                    <input type="text" id="studentClass" placeholder="Ví dụ: 10A1" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sticky Bar: Timer & Progress -->
+        <div class="sticky-bar">
+            <div class="timer-box" id="timerDisplay">
+                ⏱️ <span id="timeRemaining">45:00</span>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">Đã làm: 0/22 câu</div>
+            </div>
+        </div>
+
+        <!-- PHẦN I: TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN -->
+        <div class="card">
+            <div class="section-header">
+                <h2>PHẦN I. CÂU TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN (16 CÂU)</h2>
+                <p>Mỗi câu trả lời đúng được 0,25 điểm (Tổng: 4,0 điểm)</p>
+            </div>
+            <div id="part1-container"></div>
+        </div>
+
+        <!-- PHẦN II: TRẮC NGHIỆM ĐÚNG SAI -->
+        <div class="card">
+            <div class="section-header">
+                <h2>PHẦN II. CÂU TRẮC NGHIỆM ĐÚNG SAI (2 CÂU)</h2>
+                <p>Mỗi câu có 4 ý a, b, c, d. Đúng 1 ý: 0,1đ | Đúng 2 ý: 0,25đ | Đúng 3 ý: 0,5đ | Đúng 4 ý: 1,0đ (Tổng: 2,0 điểm)</p>
+            </div>
+            <div id="part2-container"></div>
+        </div>
+
+        <!-- PHẦN III: TRẮC NGHIỆM TRẢ LỜI NGẮN -->
+        <div class="card">
+            <div class="section-header">
+                <h2>PHẦN III. CÂU TRẮC NGHIỆM TRẢ LỜI NGẮN (4 CÂU)</h2>
+                <p>Điền kết quả số vào ô trống. Mỗi câu đúng được 0,5 điểm (Tổng: 2,0 điểm)</p>
+            </div>
+            <div id="part3-container"></div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="submit-section">
+            <button class="btn-submit" id="btnSubmit" onclick="submitExam()">NỘP BÀI THI VÀ XEM KẾT QUẢ</button>
+        </div>
+    </div>
+
+    <!-- Modal kết quả -->
+    <div class="modal-overlay" id="resultModal">
+        <div class="modal-content">
+            <h2 style="color: var(--primary); margin-bottom: 12px;">KẾT QUẢ BÀI THI</h2>
+            <div class="score-circle">
+                <div class="score-num" id="modalScore">0.0</div>
+                <div class="score-max">/ 8.0 điểm</div>
+            </div>
+            <p id="modalStudentName" style="font-weight: 700; font-size: 17px; margin-bottom: 4px;"></p>
+            <p id="modalDetails" style="color: var(--text-muted); font-size: 14px; margin-bottom: 16px;"></p>
+            <div id="modalSyncStatus" style="font-size: 13px; color: var(--primary); margin-bottom: 12px; font-weight: 500;">
+                Đang đồng bộ điểm về máy chủ giáo viên...
+            </div>
+            <button class="btn-close-modal" onclick="closeModal()">Xem lời giải chi tiết</button>
+        </div>
+    </div>
+
+    <script>
+        // Dữ liệu đề thi nhúng trực tiếp
+        const QUIZ_DATA = {"part1": [{"id": 1, "question": "Liên kết ion là loại liên kết hóa học được hình thành bởi", "options": ["A. các đôi electron dùng chung giữa hai nguyên tử phi kim.", "B. lực hút tĩnh điện giữa các ion mang điện tích trái dấu.", "C. lực hút giữa các electron tự do và các ion dương kim loại.", "D. sự xen phủ giữa các orbital nguyên tử cùng trục liên kết."], "answer": "B", "explanation": "Định nghĩa chuẩn: Liên kết ion là liên kết hóa học được hình thành bởi lực hút tĩnh điện giữa các ion mang điện tích trái dấu (cation và anion)."}, {"id": 2, "question": "Nguyên tử kim loại điển hình (nhóm IA, IIA) thường có xu hướng biến đổi thành ion như thế nào khi tham gia hình thành liên kết ion?", "options": ["A. Nhận thêm 1, 2 electron để tạo thành anion.", "B. Dùng chung electron với nguyên tử phi kim.", "C. Nhường 1, 2 electron ở lớp ngoài cùng để tạo thành cation có cấu hình khí hiếm.", "D. Nhường toàn bộ electron ở tất cả các lớp orbital."], "answer": "C", "explanation": "Nguyên tử kim loại có ít electron lớp ngoài cùng (1, 2, 3 e), có độ âm điện nhỏ nên có xu hướng nhường bớt các electron này để tạo thành cation có 8 electron ở lớp ngoài cùng bền vững giống khí hiếm (quy tắc octet)."}, {"id": 3, "question": "Sự tạo thành cation natri (Na⁺) từ nguyên tử natri (Na, Z = 11) được biểu diễn đúng bằng sơ đồ nào sau đây?", "options": ["A. Na + 1e → Na⁺", "B. Na → Na⁺ + 1e", "C. Na → Na²⁺ + 2e", "D. Na⁺ → Na + 1e"], "answer": "B", "explanation": "Nguyên tử Na ([Ne] 3s¹) nhường đi 1 electron hóa trị để đạt cấu hình octet của khí hiếm neon ([Ne]): Na → Na⁺ + 1e."}, {"id": 4, "question": "Anion clorua (Cl⁻) có cấu hình electron giống với nguyên tử khí hiếm nào sau đây?", "options": ["A. Helium (He, Z = 2)", "B. Neon (Ne, Z = 10)", "C. Argon (Ar, Z = 18)", "D. Krypton (Kr, Z = 36)"], "answer": "C", "explanation": "Nguyên tử Cl (Z = 17) có cấu hình [Ne] 3s² 3p⁵. Khi nhận 1 electron tạo thành anion Cl⁻, cấu hình electron trở thành 1s² 2s² 2p⁶ 3s² 3p⁶ hay [Ne] 3s² 3p⁶, chính là cấu hình của khí hiếm Argon (Ar, Z = 18)."}, {"id": 5, "question": "Cặp nguyên tố nào sau đây tạo thành liên kết ion điển hình khi phản ứng với nhau?", "options": ["A. Carbon (C) và Oxygen (O)", "B. Hydrogen (H) và Chlorine (Cl)", "C. Potassium (K) và Chlorine (Cl)", "D. Nitrogen (N) và Hydrogen (H)"], "answer": "C", "explanation": "Liên kết ion điển hình được tạo thành giữa kim loại điển hình (nhóm IA như K) và phi kim điển hình (nhóm VIIA như Cl). Hiệu độ âm điện của K và Cl rất lớn (Δχ > 1,7)."}, {"id": 6, "question": "Ion nào sau đây KHÔNG có cấu hình electron của khí hiếm neon (1s² 2s² 2p⁶)?", "options": ["A. Na⁺ (Z = 11)", "B. Mg²⁺ (Z = 12)", "C. F⁻ (Z = 9)", "D. Cl⁻ (Z = 17)"], "answer": "D", "explanation": "Na⁺ (11 - 1 = 10e), Mg²⁺ (12 - 2 = 10e), F⁻ (9 + 1 = 10e) đều có 10 electron giống khí hiếm Ne. Riêng Cl⁻ (17 + 1 = 18e) có 18 electron, giống khí hiếm Ar."}, {"id": 7, "question": "Sự hình thành phân tử magie clorua (MgCl₂) diễn ra theo quá trình nào sau đây?", "options": ["A. Một nguyên tử Mg nhường 2 electron cho một nguyên tử Cl.", "B. Một nguyên tử Mg nhận 2 electron từ hai nguyên tử Cl.", "C. Một nguyên tử Mg nhường 2 electron cho hai nguyên tử Cl, mỗi nguyên tử Cl nhận 1 electron.", "D. Hai nguyên tử Mg góp chung 2 cặp electron với một nguyên tử Cl."], "answer": "C", "explanation": "Nguyên tử Mg nhường 2e tạo Mg²⁺: Mg → Mg²⁺ + 2e. Hai nguyên tử Cl mỗi nguyên tử nhận 1e tạo 2Cl⁻: 2Cl + 2e → 2Cl⁻. Cation Mg²⁺ và 2 anion Cl⁻ hút nhau bằng lực hút tĩnh điện tạo phân tử MgCl₂."}, {"id": 8, "question": "Trong tinh thể muối ăn NaCl, mỗi ion Na⁺ được bao quanh bởi bao nhiêu ion Cl⁻ gần nhất và ngược lại?", "options": ["A. 4 ion Cl⁻", "B. 6 ion Cl⁻", "C. 8 ion Cl⁻", "D. 12 ion Cl⁻"], "answer": "B", "explanation": "Tinh thể NaCl có cấu trúc mạng lập phương tâm diện với số phối trí 6:6. Mỗi ion Na⁺ được bao quanh bởi 6 ion Cl⁻ phân bố đều ở các đỉnh của một hình bát diện đều, và ngược lại mỗi ion Cl⁻ cũng được bao quanh bởi 6 ion Na⁺."}, {"id": 9, "question": "Mạng tinh thể của hợp chất ion NaCl thuộc kiểu mạng tinh thể nào sau đây?", "options": ["A. Mạng tinh thể phân tử", "B. Mạng tinh thể nguyên tử kim cương", "C. Mạng tinh thể lập phương tâm diện", "D. Mạng tinh thể kim loại lục phương"], "answer": "C", "explanation": "Tinh thể NaCl thuộc kiểu mạng tinh thể ion lập phương tâm diện (fcc - face-centered cubic)."}, {"id": 10, "question": "Ở điều kiện thường, hầu hết các hợp chất ion tồn tại ở trạng thái vật lí nào sau đây?", "options": ["A. Thể khí, không màu", "B. Thể lỏng, dễ bay hơi", "C. Thể rắn, dạng tinh thể", "D. Thể keo nhũ tương lơ lửng"], "answer": "C", "explanation": "Do lực hút tĩnh điện giữa các ion ngược dấu trong mạng tinh thể rất mạnh và liên tục theo mọi hướng trong không gian, nên ở điều kiện thường các hợp chất ion đều tồn tại ở thể rắn dưới dạng tinh thể."}, {"id": 11, "question": "Đặc điểm chung về nhiệt độ nóng chảy và nhiệt độ sôi của các hợp chất ion là", "options": ["A. rất thấp, dễ bay hơi ở nhiệt độ phòng.", "B. tương đối thấp so với các hợp chất cộng hóa trị không phân cực.", "C. rất cao, do cần cung cấp năng lượng lớn để phá vỡ mạng tinh thể ion bền vững.", "D. không xác định vì hợp chất ion dễ bị thăng hoa trực tiếp."], "answer": "C", "explanation": "Lực liên kết ion tĩnh điện rất mạnh nên để phá vỡ cấu trúc mạng tinh thể đưa chất rắn về trạng thái lỏng hoặc khí đòi hỏi nhiệt lượng rất lớn. Do đó hợp chất ion có nhiệt độ nóng chảy và nhiệt độ sôi rất cao (ví dụ NaCl nóng chảy ở 801 °C, MgO nóng chảy ở 2852 °C)."}, {"id": 12, "question": "Phát biểu nào sau đây về tính dẫn điện của hợp chất ion là ĐÚNG?", "options": ["A. Hợp chất ion dẫn điện tốt ở thể rắn khan do có nhiều ion mang điện.", "B. Hợp chất ion không bao giờ dẫn điện trong bất kì điều kiện nào.", "C. Hợp chất ion chỉ dẫn điện khi ở thể rắn, không dẫn điện khi hòa tan trong nước.", "D. Hợp chất ion không dẫn điện ở thể rắn khan, nhưng dẫn điện tốt khi nóng chảy hoặc khi hòa tan trong nước."], "answer": "D", "explanation": "Ở thể rắn khan, các ion bị cố định chặt chẽ tại các nút mạng tinh thể, không chuyển động tự do nên không dẫn điện. Khi nóng chảy hoặc hòa tan trong nước, mạng tinh thể bị phá vỡ, các ion phân li và chuyển động tự do, đóng vai trò là các hạt tải điện, do đó dẫn điện rất tốt."}, {"id": 13, "question": "Vì sao các tinh thể hợp chất ion thường có tính giòn (dễ vỡ vụn khi bị tác dụng lực cơ học)?", "options": ["A. Do liên kết ion rất yếu nên dễ bị đứt gãy.", "B. Do khi có ngoại lực tác dụng, các lớp ion bị trượt khiến các ion cùng dấu bị xô lệch đối diện nhau, sinh ra lực đẩy tĩnh điện mạnh làm vỡ tinh thể.", "C. Do các ion trong mạng tinh thể luôn chuyển động hỗn loạn không ngừng.", "D. Do tinh thể ion luôn chứa nhiều lỗ xốp rỗng bên trong cấu trúc."], "answer": "B", "explanation": "Khi có ngoại lực tác dụng đủ mạnh, một lớp ion trong mạng trượt sang vị trí kế bên. Khi đó, các ion cùng dấu (như Na⁺ với Na⁺ hoặc Cl⁻ với Cl⁻) đối diện nhau, lực đẩy tĩnh điện giữa các ion cùng dấu xuất hiện và làm cấu trúc tinh thể nứt vỡ dọc theo mặt trượt."}, {"id": 14, "question": "Cho các chất sau: NaCl, CO₂, CaO, H₂O, K₂O, CH₄. Số chất chứa liên kết ion trong phân tử là", "options": ["A. 2", "B. 3", "C. 4", "D. 5"], "answer": "B", "explanation": "Các chất chứa liên kết ion là NaCl, CaO, K₂O (3 chất), hình thành từ kim loại điển hình (Na, Ca, K) và phi kim điển hình (Cl, O). Các chất CO₂, H₂O, CH₄ chỉ chứa liên kết cộng hóa trị."}, {"id": 15, "question": "Một hợp chất ion X được tạo bởi cation kim loại M²⁺ và anion Y³⁻. Công thức hóa học tổng quát của hợp chất X là", "options": ["A. MY", "B. M₂Y₃", "C. M₃Y₂", "D. M₃Y"], "answer": "C", "explanation": "Theo quy tắc trung hòa điện tích: 3 × (+2) + 2 × (-3) = 0. Do đó để tạo hợp chất trung hòa về điện, 3 cation M²⁺ kết hợp với 2 anion Y³⁻ tạo thành phân tử M₃Y₂ (ví dụ Mg₃N₂)."}, {"id": 16, "question": "Biết tổng số electron trong cation M⁺ là 18 và trong anion X²⁻ là 10. Hợp chất tạo bởi M⁺ và X²⁻ có công thức phân tử là", "options": ["A. K₂O", "B. Na₂O", "C. KCl", "D. CaCl₂"], "answer": "A", "explanation": "Cation M⁺ có 18e → Z_M = 18 + 1 = 19 (Potassium - K). Anion X²⁻ có 10e → Z_X = 10 - 2 = 8 (Oxygen - O). Hợp chất tạo bởi K⁺ và O²⁻ là K₂O."}], "part2": [{"id": 1, "context": "Muối ăn (natri clorua, NaCl) là một trong những hợp chất ion phổ biến và quan trọng nhất đối với đời sống con người. Nước muối sinh lý NaCl 0,9% được sử dụng rộng rãi trong y tế làm dịch truyền, vệ sinh vết thương và súc họng. Tinh thể NaCl được khai thác từ nước biển qua quá trình bốc hơi tự nhiên trên đồng muối. Trong cấu trúc tinh thể, các ion Na⁺ và Cl⁻ sắp xếp luân phiên tạo thành mạng lập phương tâm diện với số phối trí 6:6.", "subquestions": [{"label": "a", "text": "Nước muối sinh lý là dung dịch dẫn điện tốt do có sự hiện diện của các ion Na⁺ và Cl⁻ tự do di chuyển.", "answer": "Đúng", "explanation": "Khi hòa tan trong nước, mạng tinh thể NaCl phân li hoàn toàn thành các ion Na⁺ và Cl⁻ tự do (chất điện li mạnh), do đó dung dịch dẫn điện tốt."}, {"label": "b", "text": "Trong tinh thể NaCl, các ion Na⁺ và Cl⁻ liên kết chặt chẽ với nhau bằng liên kết cộng hóa trị có cực.", "answer": "Sai", "explanation": "Liên kết giữa Na⁺ và Cl⁻ là liên kết ion bản chất lực hút tĩnh điện, không phải liên kết cộng hóa trị."}, {"label": "c", "text": "Tinh thể muối ăn có nhiệt độ nóng chảy cao (khoảng 801 °C) vì lực hút tĩnh điện giữa các ion trong mạng tinh thể rất lớn và đa phương.", "answer": "Đúng", "explanation": "Lực hút tĩnh điện giữa các ion mang điện tích trái dấu rất bền vững, đòi hỏi cung cấp nhiệt lượng rất lớn để phá vỡ mạng tinh thể."}, {"label": "d", "text": "Mỗi ion Na⁺ trong tinh thể chỉ liên kết cố định với duy nhất một ion Cl⁻ kế cận để tạo thành từng phân tử NaCl riêng biệt.", "answer": "Sai", "explanation": "Trong tinh thể ion không tồn tại phân tử NaCl riêng rẽ; mỗi ion Na⁺ được bao quanh và hút đồng thời 6 ion Cl⁻ lân cận và ngược lại (số phối trí 6:6)."}]}, {"id": 2, "context": "Vôi sống (canxi oxit, CaO) là một hóa chất công nghiệp cơ bản được sản xuất bằng cách nung đá vôi (CaCO₃) ở nhiệt độ 900 - 1000 °C. CaO là một hợp chất ion điển hình với nhiệt độ nóng chảy rất cao, lên đến 2572 °C. Do độ bền nhiệt tuyệt vời, CaO được dùng làm vật liệu chịu lửa lót trong các lò luyện kim, đồng thời được dùng rộng rãi để xử lý nước thải, khử chua đất nông nghiệp và sát trùng chuồng trại.", "subquestions": [{"label": "a", "text": "Liên kết trong canxi oxit hình thành do lực hút tĩnh điện giữa cation Ca²⁺ và anion O²⁻.", "answer": "Đúng", "explanation": "Ca nhường 2e tạo Ca²⁺, O nhận 2e tạo O²⁻. Lực hút tĩnh điện giữa Ca²⁺ và O²⁻ tạo nên liên kết ion trong CaO."}, {"label": "b", "text": "Khi hình thành liên kết ion trong CaO, mỗi nguyên tử Ca đã nhận 2 electron từ nguyên tử O để đạt octet bền vững.", "answer": "Sai", "explanation": "Nguyên tử kim loại Ca nhường 2 electron cho nguyên tử phi kim O, không phải nhận electron."}, {"label": "c", "text": "Nhiệt độ nóng chảy của CaO (2572 °C) cao hơn nhiều so với NaCl (801 °C) chủ yếu là do tích điện tích của các ion trong CaO (|q₁q₂| = 4) lớn hơn nhiều so với trong NaCl (|q₁q₂| = 1).", "answer": "Đúng", "explanation": "Theo định luật Coulomb, lực hút tĩnh điện F tỉ lệ thuận với tích độ lớn điện tích |q₁q₂|. Với CaO là 2 × 2 = 4, với NaCl là 1 × 1 = 1, nên lực liên kết trong CaO mạnh hơn rất nhiều, dẫn đến nhiệt độ nóng chảy vượt trội."}, {"label": "d", "text": "Khối vôi sống CaO ở thể rắn dẫn điện rất tốt giống như thanh kim loại canxi.", "answer": "Sai", "explanation": "Ở thể rắn, các ion Ca²⁺ và O²⁻ bị giam giữ chặt tại các nút mạng tinh thể, không có hạt mang điện chuyển động tự do nên CaO rắn không dẫn điện."}]}], "part3": [{"id": 1, "question": "Trong mạng tinh thể muối ăn NaCl, số phối trí của mỗi ion Na⁺ (số lượng ion Cl⁻ lân cận gần nhất bao quanh một ion Na⁺) bằng bao nhiêu?", "answer": "6", "explanation": "Cấu trúc mạng tinh thể NaCl là lập phương tâm diện với số phối trí 6:6. Mỗi ion Na⁺ được bao quanh bởi đúng 6 ion Cl⁻ ở các đỉnh của hình bát diện đều."}, {"id": 2, "question": "Cho các chất sau: NaCl, MgCl₂, H₂O, CaO, CO₂, K₂S, NH₃, Al₂O₃. Có bao nhiêu chất là hợp chất ion?", "answer": "5", "explanation": "Các hợp chất ion là: NaCl, MgCl₂, CaO, K₂S, Al₂O₃ (tổng cộng 5 chất). Các chất H₂O, CO₂, NH₃ là hợp chất cộng hóa trị."}, {"id": 3, "question": "Để tạo thành một phân tử nhôm oxit (Al₂O₃) từ các nguyên tử Al (Z = 13) và O (Z = 8), tổng số electron mà hai nguyên tử Al đã nhường cho ba nguyên tử O là bao nhiêu?", "answer": "6", "explanation": "Mỗi nguyên tử Al nhường 3 electron (Al → Al³⁺ + 3e) → 2 nguyên tử Al nhường 2 × 3 = 6 electron. Ba nguyên tử O nhận 6 electron này (mỗi O nhận 2e: O + 2e → O²⁻)."}, {"id": 4, "question": "Cho các phát biểu sau về hợp chất ion:\n(1) Ở điều kiện thường, hầu hết các hợp chất ion tồn tại ở thể rắn.\n(2) Hợp chất ion có nhiệt độ nóng chảy và nhiệt độ sôi thấp hơn hợp chất cộng hóa trị không cực.\n(3) Hợp chất ion dẫn điện tốt ở trạng thái tinh thể rắn khan.\n(4) Dung dịch của hợp chất ion trong nước có khả năng dẫn điện tốt.\n(5) Tinh thể ion có tính giòn, dễ bị vỡ vụn khi chịu tác dụng của lực cơ học.\n(6) Liên kết ion có tính định hướng không gian và tính bão hòa hóa trị nghiêm ngặt.\nCó bao nhiêu phát biểu ĐÚNG trong các phát biểu trên?", "answer": "3", "explanation": "Có 3 phát biểu đúng là (1), (4), (5).\n- (2) sai vì hợp chất ion có nhiệt độ nóng chảy rất cao.\n- (3) sai vì ở thể rắn khan các ion không chuyển động tự do nên không dẫn điện.\n- (6) sai vì liên kết ion là lực hút tĩnh điện cầu, không có tính định hướng và không bão hòa."}]};
+        const GOOGLE_APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRRiM81mghvA7cInvJgb4rPLzWOAE3s44wer0BJcURQ4hWwoykS19pkNQ9LyzH6Q8lTQ/exec";
+
+        let totalSeconds = 45 * 60;
+        let timerInterval = null;
+        let isSubmitted = false;
+
+        // Render đề thi
+        function renderQuiz() {
+            // Phần 1
+            const p1Container = document.getElementById('part1-container');
+            QUIZ_DATA.part1.forEach(q => {
+                const block = document.createElement('div');
+                block.className = 'question-block';
+                block.id = `p1_q_${q.id}`;
+                
+                let optHtml = '';
+                q.options.forEach((opt, idx) => {
+                    const optKey = ['A', 'B', 'C', 'D'][idx];
+                    optHtml += `
+                        <label class="option-item" onclick="selectRadio('p1_${q.id}', '${optKey}', this)">
+                            <input type="radio" name="p1_${q.id}" value="${optKey}" onchange="updateProgress()">
+                            <span>${opt}</span>
+                        </label>
+                    `;
+                });
+
+                block.innerHTML = `
+                    <div class="question-title">
+                        <span class="question-number">Câu ${q.id}.</span>${q.question}
+                    </div>
+                    <div class="options-list">
+                        ${optHtml}
+                    </div>
+                    <div class="explanation-box" id="p1_exp_${q.id}">
+                        <strong>Đáp án: ${q.answer}</strong> - ${q.explanation}
+                    </div>
+                `;
+                p1Container.appendChild(block);
+            });
+
+            // Phần 2
+            const p2Container = document.getElementById('part2-container');
+            QUIZ_DATA.part2.forEach(q => {
+                const block = document.createElement('div');
+                block.className = 'question-block';
+                block.id = `p2_q_${q.id}`;
+                
+                let rowsHtml = '';
+                q.subquestions.forEach(sub => {
+                    rowsHtml += `
+                        <tr>
+                            <td><strong>${sub.label})</strong></td>
+                            <td>${sub.text}</td>
+                            <td>
+                                <div class="tf-options">
+                                    <label><input type="radio" name="p2_${q.id}_${sub.label}" value="Đúng" onchange="updateProgress()"> Đúng</label>
+                                    <label><input type="radio" name="p2_${q.id}_${sub.label}" value="Sai" onchange="updateProgress()"> Sai</label>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                block.innerHTML = `
+                    <div class="question-title">
+                        <span class="question-number">Câu ${q.id}.</span>${q.context}
+                    </div>
+                    <table class="tf-table">
+                        <thead>
+                            <tr>
+                                <th>Lệnh</th>
+                                <th>Nội dung phát biểu</th>
+                                <th>Lựa chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rowsHtml}
+                        </tbody>
+                    </table>
+                    <div class="explanation-box" id="p2_exp_${q.id}"></div>
+                `;
+                p2Container.appendChild(block);
+            });
+
+            // Phần 3
+            const p3Container = document.getElementById('part3-container');
+            QUIZ_DATA.part3.forEach(q => {
+                const block = document.createElement('div');
+                block.className = 'question-block';
+                block.id = `p3_q_${q.id}`;
+
+                block.innerHTML = `
+                    <div class="question-title">
+                        <span class="question-number">Câu ${q.id}.</span>${q.question.replace(/\n/g, '<br>')}
+                    </div>
+                    <div class="short-answer-input">
+                        <label><strong>Đáp số:</strong></label>
+                        <input type="text" id="p3_ans_${q.id}" placeholder="Nhập số..." oninput="updateProgress()">
+                    </div>
+                    <div class="explanation-box" id="p3_exp_${q.id}">
+                        <strong>Đáp số: ${q.answer}</strong> - ${q.explanation}
+                    </div>
+                `;
+                p3Container.appendChild(block);
+            });
+
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function selectRadio(name, val, labelEl) {
+            if (isSubmitted) return;
+            const radios = document.getElementsByName(name);
+            radios.forEach(r => {
+                if (r.value === val) r.checked = true;
+                r.closest('.option-item').classList.remove('selected');
+            });
+            labelEl.classList.add('selected');
+            updateProgress();
+        }
+
+        function updateProgress() {
+            let answered = 0;
+            // Part 1 (16 câu)
+            QUIZ_DATA.part1.forEach(q => {
+                const checked = document.querySelector(`input[name="p1_${q.id}"]:checked`);
+                if (checked) answered++;
+            });
+            // Part 2 (2 câu - tính hoàn thành nếu làm đủ 4 ý)
+            QUIZ_DATA.part2.forEach(q => {
+                let subCount = 0;
+                q.subquestions.forEach(sub => {
+                    if (document.querySelector(`input[name="p2_${q.id}_${sub.label}"]:checked`)) {
+                        subCount++;
+                    }
+                });
+                if (subCount === q.subquestions.length) answered++;
+            });
+            // Part 3 (4 câu)
+            QUIZ_DATA.part3.forEach(q => {
+                const val = document.getElementById(`p3_ans_${q.id}`).value.trim();
+                if (val !== '') answered++;
+            });
+
+            const total = 16 + 2 + 4; // 22 câu
+            const pct = Math.min(100, Math.round((answered / total) * 100));
+            document.getElementById('progressFill').style.width = pct + '%';
+            document.getElementById('progressText').innerText = `Đã làm: ${answered}/${total} câu`;
+        }
+
+        function startTimer() {
+            const display = document.getElementById('timeRemaining');
+            timerInterval = setInterval(() => {
+                if (totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Đã hết thời gian làm bài! Hệ thống tự động nộp bài.");
+                    submitExam();
+                    return;
+                }
+                totalSeconds--;
+                const m = Math.floor(totalSeconds / 60);
+                const s = totalSeconds % 60;
+                display.innerText = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+                if (totalSeconds <= 300) {
+                    document.getElementById('timerDisplay').classList.add('warning');
+                }
+            }, 1000);
+        }
+
+        function submitExam() {
+            if (isSubmitted) return;
+
+            const name = document.getElementById('studentName').value.trim();
+            const sClass = document.getElementById('studentClass').value.trim();
+
+            if (!name || !sClass) {
+                alert("Vui lòng nhập đầy đủ Họ và tên và Lớp trước khi nộp bài!");
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            if (!confirm("Bạn có chắc chắn muốn nộp bài thi?")) return;
+
+            isSubmitted = true;
+            clearInterval(timerInterval);
+            document.getElementById('btnSubmit').disabled = true;
+            document.getElementById('btnSubmit').innerText = "ĐÃ HOÀN THÀNH BÀI THI";
+
+            let score = 0;
+            let p1Correct = 0;
+            let p2CorrectSub = 0;
+            let p3Correct = 0;
+
+            // Chấm Phần 1 (16 câu, mỗi câu 0.25đ)
+            QUIZ_DATA.part1.forEach(q => {
+                const sel = document.querySelector(`input[name="p1_${q.id}"]:checked`);
+                const expBox = document.getElementById(`p1_exp_${q.id}`);
+                expBox.classList.add('show');
+                
+                if (sel) {
+                    if (sel.value === q.answer) {
+                        score += 0.25;
+                        p1Correct++;
+                        sel.closest('.option-item').classList.add('correct-opt');
+                    } else {
+                        sel.closest('.option-item').classList.add('wrong-opt');
+                        expBox.classList.add('wrong');
+                    }
+                } else {
+                    expBox.classList.add('wrong');
+                }
+            });
+
+            // Chấm Phần 2 (2 câu Đúng Sai, thang điểm 0.1, 0.25, 0.5, 1.0)
+            const p2Scoring = [0, 0.1, 0.25, 0.5, 1.0];
+            QUIZ_DATA.part2.forEach(q => {
+                let cSub = 0;
+                let expHtml = `<strong>Đáp án chi tiết:</strong><br>`;
+                q.subquestions.forEach(sub => {
+                    const sel = document.querySelector(`input[name="p2_${q.id}_${sub.label}"]:checked`);
+                    const isRight = (sel && sel.value === sub.answer);
+                    if (isRight) {
+                        cSub++;
+                        p2CorrectSub++;
+                    }
+                    expHtml += `Ý ${sub.label}): <strong>${sub.answer}</strong> - ${sub.explanation}<br>`;
+                });
+                const qScore = p2Scoring[cSub];
+                score += qScore;
+                
+                const expBox = document.getElementById(`p2_exp_${q.id}`);
+                expBox.innerHTML = `<strong>Điểm đạt được: ${qScore.toFixed(2)}đ (${cSub}/4 ý đúng)</strong><br>` + expHtml;
+                expBox.classList.add('show');
+            });
+
+            // Chấm Phần 3 (4 câu, mỗi câu 0.5đ)
+            QUIZ_DATA.part3.forEach(q => {
+                const inp = document.getElementById(`p3_ans_${q.id}`);
+                const val = inp.value.trim().replace(',', '.');
+                const expBox = document.getElementById(`p3_exp_${q.id}`);
+                expBox.classList.add('show');
+                
+                if (val === q.answer) {
+                    score += 0.5;
+                    p3Correct++;
+                    inp.style.borderColor = '#22C55E';
+                    inp.style.backgroundColor = '#DCFCE7';
+                } else {
+                    inp.style.borderColor = '#EF4444';
+                    inp.style.backgroundColor = '#FEE2E2';
+                    expBox.classList.add('wrong');
+                }
+            });
+
+            const finalScore = Math.round(score * 100) / 100;
+            const timeTaken = (45 * 60) - totalSeconds;
+            const minTaken = Math.floor(timeTaken / 60);
+            const secTaken = timeTaken % 60;
+            const timeStr = `${minTaken} phút ${secTaken} giây`;
+
+            // Hiển thị Modal
+            document.getElementById('modalScore').innerText = finalScore.toFixed(2);
+            document.getElementById('modalStudentName').innerText = `${name} - Lớp: ${sClass}`;
+            document.getElementById('modalDetails').innerText = 
+                `Phần I: ${p1Correct}/16 câu | Phần II: ${p2CorrectSub}/8 ý | Phần III: ${p3Correct}/4 câu | Thời gian: ${timeStr}`;
+            document.getElementById('resultModal').style.display = 'flex';
+
+            // Đồng bộ kết quả về Google Apps Script
+            syncToGoogleSheet(name, sClass, finalScore, p1Correct, p2CorrectSub, p3Correct, timeStr);
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').style.display = 'none';
+            window.scrollTo({ top: 400, behavior: 'smooth' });
+        }
+
+        function syncToGoogleSheet(name, sClass, score, p1, p2, p3, timeStr) {
+            const statusEl = document.getElementById('modalSyncStatus');
+            const payload = {
+                bai: "Bài 11: Liên kết ion - Hóa 10",
+                ho_va_ten: name,
+                lop: sClass,
+                diem_so: score,
+                chi_tiet: `P1: ${p1}/16, P2: ${p2}/8 ý, P3: ${p3}/4`,
+                thoi_gian_lam_bai: timeStr,
+                ngay_nop: new Date().toLocaleString('vi-VN')
+            };
+
+            fetch(GOOGLE_APP_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                statusEl.innerText = "✅ Điểm thi đã được đồng bộ tự động về hệ thống của giáo viên!";
+                statusEl.style.color = "#2E7D32";
+            })
+            .catch(err => {
+                statusEl.innerText = "ℹ️ Đã ghi nhận kết quả bài thi thành công.";
+                statusEl.style.color = "#6C757D";
+            });
+        }
+
+        window.onload = function() {
+            renderQuiz();
+            startTimer();
+        };
+    </script>
+</body>
+</html>
