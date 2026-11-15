@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 12: Liên kết cộng hóa trị - Hóa học 10 | Vatli102.com</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔬</text></svg>">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <!-- MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #1E3A8A;
+            --primary-light: #2563EB;
+            --accent: #E65100;
+            --accent-light: #FF9800;
+            --bg-main: #F4F7FB;
+            --surface: #FFFFFF;
+            --text-main: #212529;
+            --text-muted: #6C757D;
+            --border-color: #E2E8F0;
+            --success: #2E7D32;
+            --danger: #D32F2F;
+            --warning: #F57C00;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+        header {
+            background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
+            color: #FFFFFF;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        header p {
+            font-size: 15px;
+            opacity: 0.9;
+        }
+        .badge-subject {
+            display: inline-block;
+            background-color: var(--accent);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .container {
+            max-width: 900px;
+            margin: -20px auto 0 auto;
+            padding: 0 15px;
+            position: relative;
+            z-index: 10;
+        }
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+        .student-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 600px) {
+            .student-info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .input-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: var(--primary);
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            transition: border-color 0.2s;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+        .sticky-bar {
+            position: sticky;
+            top: 15px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+        }
+        .timer-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .timer-box.warning {
+            color: var(--danger);
+            animation: pulse 1s infinite alternate;
+        }
+        @keyframes pulse {
+            from { opacity: 1; }
+            to { opacity: 0.5; }
+        }
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 20px;
+        }
+        .progress-bar-bg {
+            background: #EDF2F7;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            background: linear-gradient(90deg, var(--primary-light), var(--accent));
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .progress-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 4px;
+        }
+        .section-header {
+            border-left: 4px solid var(--primary);
+            padding-left: 12px;
+            margin-bottom: 20px;
+        }
+        .section-header h2 {
+            font-size: 18px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+        .section-header p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .question-block {
+            margin-bottom: 22px;
+            padding-bottom: 18px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .question-block:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .question-title {
+            font-weight: 500;
+            font-size: 15.5px;
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        .question-number {
+            font-weight: 700;
+            color: var(--primary);
+            margin-right: 4px;
+        }
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 15px;
+        }
+        .option-item:hover {
+            background-color: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+        .option-item input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.15);
+            cursor: pointer;
+        }
+        .option-item.selected {
+            background-color: #EBF4FF;
+            border-color: var(--primary-light);
+        }
+        .tf-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14.5px;
+        }
+        .tf-table th, .tf-table td {
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+        .tf-table th {
+            background-color: #F1F5F9;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .tf-table td:nth-child(1) {
+            width: 60px;
+            text-align: center;
+            font-weight: 700;
+        }
+        .tf-table td:nth-child(3) {
+            width: 150px;
+            text-align: center;
+        }
+        .tf-options {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+        }
+        .tf-options label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .short-answer-input {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .short-answer-input input {
+            width: 220px;
+            padding: 9px 12px;
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .short-answer-input input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+        .submit-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 17px;
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(230, 81, 0, 0.35);
+            transition: all 0.25s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(230, 81, 0, 0.45);
+        }
+        .explanation-box {
+            display: none;
+            margin-top: 12px;
+            padding: 12px 14px;
+            background: #F0FDF4;
+            border-left: 4px solid var(--success);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: #14532D;
+        }
+        .explanation-box.show {
+            display: block;
+        }
+        .explanation-box.wrong {
+            background: #FEF2F2;
+            border-left-color: var(--danger);
+            color: #7F1D1D;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            animation: zoomIn 0.3s ease;
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.85); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .score-circle {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 6px 16px rgba(30, 58, 138, 0.3);
+        }
+        .score-num {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .score-max {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+        .btn-close-modal {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .correct-opt {
+            background-color: #DCFCE7 !important;
+            border-color: #22C55E !important;
+        }
+        .wrong-opt {
+            background-color: #FEE2E2 !important;
+            border-color: #EF4444 !important;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <span class="badge-subject">Hóa học 10 - Bộ Kết nối tri thức</span>
+        <h1>BÀI 12: LIÊN KẾT CỘNG HÓA TRỊ</h1>
+        <p>Hệ thống tự động chấm điểm & giải chi tiết | Bản quyền © Vatli102.com</p>
+    </header>
+
+    <div class="container">
+        <!-- Thông tin học sinh -->
+        <div class="card">
+            <div class="student-info-grid">
+                <div class="input-group">
+                    <label for="studentName">Họ và tên học sinh (*)</label>
+                    <input type="text" id="studentName" placeholder="Ví dụ: Nguyễn Văn An" required>
+                </div>
+                <div class="input-group">
+                    <label for="studentClass">Lớp (*)</label>
+                    <input type="text" id="studentClass" placeholder="Ví dụ: 10A1" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sticky Bar: Timer & Progress -->
+        <div class="sticky-bar">
+            <div class="timer-box" id="timerDisplay">
+                ⏱️ <span id="timeRemaining">45:00</span>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">Đã làm: 0/22 câu</div>
+            </div>
+        </div>
+
+        <!-- PHẦN I: TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN -->
+        <div class="card">
+            <div class="section-header">
+                <h2>PHẦN I. CÂU TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN (16 CÂU)</h2>
+                <p>Mỗi câu trả lời đúng được 0,25 điểm (Tổng: 4,0 điểm)</p>
+            </div>
+            <div id="part1-container"></div>
+        </div>
+
+        <!-- PHẦN II: TRẮC NGHIỆM ĐÚNG SAI -->
+        <div class="card">
+            <div class="section-header">
+                <h2>PHẦN II. CÂU TRẮC NGHIỆM ĐÚNG SAI (2 CÂU)</h2>
+                <p>Mỗi câu có 4 ý a, b, c, d. Đúng 1 ý: 0,1đ | Đúng 2 ý: 0,25đ | Đúng 3 ý: 0,5đ | Đúng 4 ý: 1,0đ (Tổng: 2,0 điểm)</p>
+            </div>
+            <div id="part2-container"></div>
+        </div>
+
+        <!-- PHẦN III: TRẮC NGHIỆM TRẢ LỜI NGẮN -->
+        <div class="card">
+            <div class="section-header">
+                <h2>PHẦN III. CÂU TRẮC NGHIỆM TRẢ LỜI NGẮN (4 CÂU)</h2>
+                <p>Điền kết quả số vào ô trống. Mỗi câu đúng được 0,5 điểm (Tổng: 2,0 điểm)</p>
+            </div>
+            <div id="part3-container"></div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="submit-section">
+            <button class="btn-submit" id="btnSubmit" onclick="submitExam()">NỘP BÀI THI VÀ XEM KẾT QUẢ</button>
+        </div>
+    </div>
+
+    <!-- Modal kết quả -->
+    <div class="modal-overlay" id="resultModal">
+        <div class="modal-content">
+            <h2 style="color: var(--primary); margin-bottom: 12px;">KẾT QUẢ BÀI THI</h2>
+            <div class="score-circle">
+                <div class="score-num" id="modalScore">0.0</div>
+                <div class="score-max">/ 8.0 điểm</div>
+            </div>
+            <p id="modalStudentName" style="font-weight: 700; font-size: 17px; margin-bottom: 4px;"></p>
+            <p id="modalDetails" style="color: var(--text-muted); font-size: 14px; margin-bottom: 16px;"></p>
+            <div id="modalSyncStatus" style="font-size: 13px; color: var(--primary); margin-bottom: 12px; font-weight: 500;">
+                Đang đồng bộ điểm về máy chủ giáo viên...
+            </div>
+            <button class="btn-close-modal" onclick="closeModal()">Xem lời giải chi tiết</button>
+        </div>
+    </div>
+
+    <script>
+        const QUIZ_DATA = {"part1": [{"id": 1, "question": "Liên kết cộng hóa trị là loại liên kết hóa học được hình thành giữa hai nguyên tử bằng", "options": ["A. lực hút tĩnh điện giữa các ion mang điện tích trái dấu.", "B. một hay nhiều cặp electron dùng chung.", "C. lực tương tác giữa các proton trong hạt nhân.", "D. lực hút giữa các electron tự do và cation kim loại."], "answer": "B", "explanation": "Định nghĩa chuẩn: Liên kết cộng hóa trị là liên kết được hình thành giữa hai nguyên tử bằng một hay nhiều cặp electron dùng chung."}, {"id": 2, "question": "Trong phân tử hydrogen (H₂), hai nguyên tử hydrogen liên kết với nhau bằng một liên kết", "options": ["A. đơn, gồm 1 cặp electron dùng chung.", "B. đôi, gồm 2 cặp electron dùng chung.", "C. ba, gồm 3 cặp electron dùng chung.", "D. ion, do lực hút giữa H⁺ và H⁻."], "answer": "A", "explanation": "Mỗi nguyên tử H có 1e hóa trị, cùng góp 1e tạo 1 cặp electron dùng chung (H:H hay H-H), thuộc loại liên kết đơn."}, {"id": 3, "question": "Phân tử nào sau đây có chứa liên kết ba giữa hai nguyên tử?", "options": ["A. Hydrogen (H₂)", "B. Chlorine (Cl₂)", "C. Oxygen (O₂)", "D. Nitrogen (N₂)"], "answer": "D", "explanation": "Mỗi nguyên tử N (nhóm VA, có 5e hóa trị) góp chung 3 electron để cùng đạt octet, hình thành liên kết ba N≡N (gồm 3 cặp electron dùng chung)."}, {"id": 4, "question": "Trong phân tử oxygen (O₂), số cặp electron dùng chung và số cặp electron chưa tham gia liên kết lần lượt là", "options": ["A. 1 cặp e dùng chung và 4 cặp e chưa liên kết.", "B. 2 cặp e dùng chung và 4 cặp e chưa liên kết.", "C. 2 cặp e dùng chung và 2 cặp e chưa liên kết.", "D. 3 cặp e dùng chung và 2 cặp e chưa liên kết."], "answer": "B", "explanation": "Mỗi nguyên tử O có 6e hóa trị, góp 2e tạo 2 cặp e dùng chung (O=O). Mỗi nguyên tử O còn lại 4e (2 cặp e riêng) chưa liên kết → Tổng cộng có 2 cặp e dùng chung và 4 cặp e chưa liên kết."}, {"id": 5, "question": "Liên kết cộng hóa trị không phân cực là liên kết cộng hóa trị trong đó", "options": ["A. cặp electron dùng chung bị hút lệch hẳn về phía nguyên tử có độ âm điện lớn hơn.", "B. một nguyên tử nhường hẳn electron cho nguyên tử kia.", "C. cặp electron dùng chung phân bố đều giữa hai nguyên tử, không bị hút lệch về phía nào.", "D. chỉ có một nguyên tử đóng góp electron tạo liên kết."], "answer": "C", "explanation": "Liên kết cộng hóa trị không phân cực là liên kết trong đó cặp electron dùng chung phân bố đối xứng giữa hai nguyên tử liên kết (thường giữa 2 nguyên tử giống nhau hoặc hiệu độ âm điện Δχ < 0,4)."}, {"id": 6, "question": "Chất nào sau đây chứa liên kết cộng hóa trị phân cực (có cực)?", "options": ["A. Cl₂", "B. N₂", "C. HCl", "D. H₂"], "answer": "C", "explanation": "Trong phân tử HCl, do độ âm điện của Cl (3,16) lớn hơn H (2,20) nên cặp electron dùng chung bị hút lệch về phía Cl, tạo liên kết CHT phân cực: H(δ+) - Cl(δ-)."}, {"id": 7, "question": "Biết độ âm điện của H là 2,20 và Cl là 3,16. Hiệu độ âm điện giữa Cl và H trong phân tử HCl là", "options": ["A. 0,96, liên kết thuộc loại CHT phân cực.", "B. 0,96, liên kết thuộc loại ion.", "C. 5,36, liên kết thuộc loại CHT không cực.", "D. 0,40, liên kết thuộc loại liên kết kim loại."], "answer": "A", "explanation": "Hiệu độ âm điện: Δχ = 3,16 - 2,20 = 0,96. Vì 0,4 ≤ Δχ < 1,7 nên liên kết H-Cl là liên kết cộng hóa trị phân cực."}, {"id": 8, "question": "Liên kết cho - nhận (liên kết phối trí) là trường hợp đặc biệt của liên kết cộng hóa trị, trong đó", "options": ["A. mỗi nguyên tử đóng góp một nửa số electron dùng chung.", "B. cặp electron dùng chung chỉ do một nguyên tử đóng góp.", "C. các electron chuyển động tự do trong toàn bộ mạng tinh thể.", "D. hai nguyên tử đều bị mất hết các electron lớp ngoài cùng."], "answer": "B", "explanation": "Định nghĩa chuẩn: Liên kết cho - nhận là liên kết cộng hóa trị mà cặp electron dùng chung chỉ do một nguyên tử (nguyên tử cho, còn cặp e tự do) đóng góp vào orbital trống của nguyên tử kia (nguyên tử nhận)."}, {"id": 9, "question": "Trong ion ammonium (NH₄⁺), liên kết giữa phân tử NH₃ và ion H⁺ được hình thành theo cơ chế nào?", "options": ["A. Liên kết ion", "B. Liên kết kim loại", "C. Liên kết cho - nhận", "D. Liên kết hydrogen"], "answer": "C", "explanation": "Nguyên tử N trong NH₃ còn 1 cặp electron tự do, đã xen phủ với orbital 1s trống của ion H⁺ tạo thành liên kết cho - nhận: H₃N: + H⁺ → [NH₄]⁺."}, {"id": 10, "question": "Theo thang độ âm điện của Pauling, liên kết giữa hai nguyên tử được xếp vào loại liên kết ion khi hiệu độ âm điện (Δχ) thỏa mãn điều kiện nào sau đây?", "options": ["A. 0 ≤ Δχ < 0,4", "B. 0,4 ≤ Δχ < 1,7", "C. Δχ ≥ 1,7", "D. Δχ = 0"], "answer": "C", "explanation": "Quy ước Pauling: 0 ≤ Δχ < 0,4 là CHT không cực; 0,4 ≤ Δχ < 1,7 là CHT phân cực; Δχ ≥ 1,7 là liên kết ion."}, {"id": 11, "question": "Sự xen phủ trục (axial overlap) của các orbital nguyên tử dẫn đến sự hình thành liên kết nào sau đây?", "options": ["A. Liên kết pi (π)", "B. Liên kết sigma (σ)", "C. Liên kết kim loại", "D. Liên kết ion"], "answer": "B", "explanation": "Sự xen phủ diễn ra dọc theo trục liên kết nối tâm hai hạt nhân nguyên tử (xen phủ trục) tạo thành liên kết sigma (σ) bền vững."}, {"id": 12, "question": "Sự xen phủ bên (lateral overlap) giữa hai orbital p song song với nhau tạo nên loại liên kết nào?", "options": ["A. Liên kết sigma (σ)", "B. Liên kết pi (π)", "C. Liên kết hydrogen", "D. Liên kết van der Waals"], "answer": "B", "explanation": "Sự xen phủ diễn ra ở hai bên của mặt phẳng chứa trục liên kết giữa hai orbital p song song (xen phủ bên) tạo thành liên kết pi (π)."}, {"id": 13, "question": "Trong một liên kết đôi (như trong phân tử O₂ hoặc C₂H₄), thành phần cấu tạo của liên kết gồm", "options": ["A. 2 liên kết sigma (σ).", "B. 2 liên kết pi (π).", "C. 1 liên kết sigma (σ) và 1 liên kết pi (π).", "D. 1 liên kết sigma (σ) và 2 liên kết pi (π)."], "answer": "C", "explanation": "Một liên kết đôi luôn gồm 1 liên kết sigma (σ) bền vững do xen phủ trục và 1 liên kết pi (π) kém bền hơn do xen phủ bên."}, {"id": 14, "question": "Trong phân tử nitrogen (N≡N), số liên kết sigma (σ) và số liên kết pi (π) lần lượt là", "options": ["A. 1 liên kết σ và 2 liên kết π.", "B. 2 liên kết σ và 1 liên kết π.", "C. 3 liên kết σ và 0 liên kết π.", "D. 0 liên kết σ và 3 liên kết π."], "answer": "A", "explanation": "Trong liên kết ba N≡N, có 1 liên kết sigma (σ) hình thành do sự xen phủ trục của 2 AO 2p và 2 liên kết pi (π) hình thành do sự xen phủ bên của các cặp AO 2p còn lại."}, {"id": 15, "question": "Năng lượng liên kết cộng hóa trị (Eb) đặc trưng cho", "options": ["A. khả năng dẫn điện của hợp chất cộng hóa trị ở thể lỏng.", "B. độ bền vững của liên kết (năng lượng liên kết càng lớn thì liên kết càng bền).", "C. khối lượng phân tử của hợp chất.", "D. bán kính của nguyên tử tham gia liên kết."], "answer": "B", "explanation": "Năng lượng liên kết (Eb) là thước đo độ bền của liên kết: Năng lượng liên kết càng lớn thì liên kết càng bền vững và phân tử càng khó bị phá vỡ."}, {"id": 16, "question": "Ở điều kiện thường, khí nitrogen (N₂) rất trơ về mặt hóa học chủ yếu là do", "options": ["A. phân tử N₂ có khối lượng rất nhẹ so với không khí.", "B. nguyên tử N có bán kính nguyên tử rất nhỏ.", "C. liên kết ba N≡N trong phân tử N₂ có năng lượng liên kết rất lớn (945 kJ/mol).", "D. nitrogen là nguyên tố phi kim có độ âm điện yếu nhất nhóm VA."], "answer": "C", "explanation": "Phân tử N₂ có liên kết ba N≡N rất bền vững với năng lượng liên kết lên tới 945 kJ/mol, đòi hỏi nhiệt độ rất cao mới có thể phá vỡ liên kết để tham gia phản ứng."}], "part2": [{"id": 1, "context": "Khí nitrogen (N₂) là thành phần chính chiếm khoảng 78% thể tích khí quyển Trái Đất. Trong phân tử N₂, hai nguyên tử nitrogen liên kết với nhau bằng một liên kết ba N≡N rất bền vững với năng lượng liên kết lên tới 945 kJ/mol. Do đặc tính rất trơ về mặt hóa học ở nhiệt độ thường, nitrogen được sử dụng rộng rãi trong công nghiệp đóng gói thực phẩm (bơm căng các túi snack, khoai tây chiên để chống ôi thiu và chống vỡ), tạo môi trường trơ trong luyện kim và bảo quản mẫu sinh học.", "subquestions": [{"label": "a", "text": "Liên kết ba trong phân tử N₂ được cấu tạo bởi 1 liên kết sigma (σ) bền vững và 2 liên kết pi (π) kém bền hơn.", "answer": "Đúng", "explanation": "Theo quy tắc cấu tạo liên kết hóa học, liên kết ba gồm 1 liên kết σ hình thành do xen phủ trục và 2 liên kết π hình thành do xen phủ bên."}, {"label": "b", "text": "Khí nitrogen rất trơ ở nhiệt độ phòng vì năng lượng liên kết ba N≡N rất lớn (945 kJ/mol), cần cung cấp nhiệt độ rất cao mới phá vỡ được liên kết.", "answer": "Đúng", "explanation": "Năng lượng liên kết 945 kJ/mol thuộc hàng lớn nhất trong các phân tử hai nguyên tử, khiến phân tử N₂ cực kì bền nhiệt và trơ hóa học ở nhiệt độ thường."}, {"label": "c", "text": "Liên kết trong phân tử N₂ thuộc loại liên kết cộng hóa trị phân cực mạnh vì độ âm điện của nitrogen lớn (χ = 3,04).", "answer": "Sai", "explanation": "Hai nguyên tử N giống nhau nên hiệu độ âm điện Δχ = 0, cặp electron dùng chung phân bố đối xứng hoàn toàn, do đó là liên kết cộng hóa trị không phân cực."}, {"label": "d", "text": "Ở nhiệt độ rất cao (khoảng 3000 °C hoặc có tia lửa điện sét đánh), liên kết ba trong N₂ có thể bị bẻ gãy để phản ứng trực tiếp với O₂ tạo khí NO.", "answer": "Đúng", "explanation": "Ở nhiệt độ trên 3000 °C hoặc có tia sét đánh trong tự nhiên, N₂ phản ứng với O₂: N₂ + O₂ ⇌ 2NO."}]}, {"id": 2, "context": "Nước (H₂O) là hợp chất cộng hóa trị có vai trò thiết yếu nhất đối với sự sống. Trong phân tử nước, một nguyên tử oxygen (độ âm điện 3,44) liên kết với hai nguyên tử hydrogen (độ âm điện 2,20) bằng hai liên kết đơn O-H. Do nguyên tử oxygen còn hai cặp electron chưa liên kết, phân tử nước có dạng hình học gấp khúc (chữ V) với góc liên kết H-O-H xấp xỉ 104,5°. Khi hòa tan trong nước, một phần nhỏ phân tử H₂O kết hợp với proton H⁺ tạo thành cation hydronium (H₃O⁺).", "subquestions": [{"label": "a", "text": "Hiệu độ âm điện giữa O và H là Δχ = 1,24, nên liên kết O-H trong phân tử nước là liên kết cộng hóa trị phân cực.", "answer": "Đúng", "explanation": "Δχ = 3,44 - 2,20 = 1,24 nằm trong khoảng 0,4 ≤ Δχ < 1,7 nên liên kết O-H là liên kết cộng hóa trị phân cực."}, {"label": "b", "text": "Trong phân tử nước, các cặp electron dùng chung bị hút lệch về phía nguyên tử hydrogen do nguyên tử hydrogen có khối lượng nhẹ hơn.", "answer": "Sai", "explanation": "Cặp electron dùng chung bị hút lệch về phía nguyên tử oxygen vì oxygen có độ âm điện lớn hơn nhiều so với hydrogen (3,44 so với 2,20)."}, {"label": "c", "text": "Do cấu trúc phân tử gấp khúc và các liên kết O-H phân cực, phân tử H₂O là một phân tử phân cực (có cực).", "answer": "Đúng", "explanation": "Dạng gấp khúc khiến tổng hai vectơ mômen lưỡng cực của hai liên kết O-H không triệt tiêu nhau, dẫn đến toàn bộ phân tử nước là phân tử phân cực."}, {"label": "d", "text": "Liên kết thứ ba được hình thành giữa phân tử H₂O và proton H⁺ trong cation H₃O⁺ là liên kết cho - nhận.", "answer": "Đúng", "explanation": "Nguyên tử O trong H₂O sử dụng một cặp electron tự do để xen phủ với orbital 1s trống của H⁺ tạo liên kết cho - nhận: H₂O: + H⁺ → [H₃O]⁺."}]}], "part3": [{"id": 1, "question": "Trong một phân tử nitrogen (N₂), có bao nhiêu cặp electron dùng chung giữa hai nguyên tử?", "answer": "3", "explanation": "Phân tử N₂ chứa liên kết ba N≡N, tức là có đúng 3 cặp electron dùng chung."}, {"id": 2, "question": "Cho các phân tử sau: H₂, Cl₂, HCl, O₂, H₂O, N₂, NaCl, CaO. Có bao nhiêu phân tử chứa liên kết cộng hóa trị KHÔNG phân cực?", "answer": "4", "explanation": "Các phân tử chứa liên kết cộng hóa trị không phân cực là H₂, Cl₂, O₂, N₂ (tổng cộng 4 phân tử, đều tạo bởi 2 nguyên tử của cùng một nguyên tố phi kim)."}, {"id": 3, "question": "Tổng số liên kết sigma (σ) có trong một phân tử methane (CH₄) bằng bao nhiêu?", "answer": "4", "explanation": "Phân tử methane (CH₄) có 4 liên kết đơn C-H. Mỗi liên kết đơn là 1 liên kết sigma (σ) → Tổng cộng có 4 liên kết σ."}, {"id": 4, "question": "Cho các phát biểu sau về liên kết cộng hóa trị:\n(1) Liên kết cộng hóa trị được hình thành giữa hai nguyên tử bằng các cặp electron dùng chung.\n(2) Mọi liên kết đơn đều được cấu tạo bởi 1 liên kết sigma (σ) bền vững.\n(3) Liên kết pi (π) bền vững hơn liên kết sigma (σ) do có diện tích xen phủ lớn hơn.\n(4) Hợp chất có hiệu độ âm điện Δχ ≥ 1,7 thường được xếp vào loại liên kết ion.\n(5) Trong ion NH₄⁺ có 1 liên kết cho - nhận được hình thành giữa NH₃ và H⁺.\n(6) Năng lượng liên kết Eb càng nhỏ thì liên kết cộng hóa trị đó càng bền vững.\nCó bao nhiêu phát biểu ĐÚNG trong các phát biểu trên?", "answer": "4", "explanation": "Có 4 phát biểu đúng là (1), (2), (4), (5).\n- Phát biểu (3) sai vì liên kết π kém bền hơn liên kết σ do xen phủ bên có diện tích xen phủ nhỏ hơn.\n- Phát biểu (6) sai vì năng lượng liên kết Eb càng LỚN thì liên kết càng bền."}]};
+        const GOOGLE_APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRRiM81mghvA7cInvJgb4rPLzWOAE3s44wer0BJcURQ4hWwoykS19pkNQ9LyzH6Q8lTQ/exec";
+
+        let totalSeconds = 45 * 60;
+        let timerInterval = null;
+        let isSubmitted = false;
+
+        function renderQuiz() {
+            const p1Container = document.getElementById('part1-container');
+            QUIZ_DATA.part1.forEach(q => {
+                const block = document.createElement('div');
+                block.className = 'question-block';
+                block.id = `p1_q_${q.id}`;
+
+                let optHtml = '';
+                q.options.forEach((opt, idx) => {
+                    const optKey = ['A', 'B', 'C', 'D'][idx];
+                    optHtml += `
+                        <label class="option-item" onclick="selectRadio('p1_${q.id}', '${optKey}', this)">
+                            <input type="radio" name="p1_${q.id}" value="${optKey}" onchange="updateProgress()">
+                            <span>${opt}</span>
+                        </label>
+                    `;
+                });
+
+                block.innerHTML = `
+                    <div class="question-title">
+                        <span class="question-number">Câu ${q.id}.</span>${q.question}
+                    </div>
+                    <div class="options-list">
+                        ${optHtml}
+                    </div>
+                    <div class="explanation-box" id="p1_exp_${q.id}">
+                        <strong>Đáp án: ${q.answer}</strong> - ${q.explanation}
+                    </div>
+                `;
+                p1Container.appendChild(block);
+            });
+
+            const p2Container = document.getElementById('part2-container');
+            QUIZ_DATA.part2.forEach(q => {
+                const block = document.createElement('div');
+                block.className = 'question-block';
+                block.id = `p2_q_${q.id}`;
+
+                let rowsHtml = '';
+                q.subquestions.forEach(sub => {
+                    rowsHtml += `
+                        <tr>
+                            <td><strong>${sub.label})</strong></td>
+                            <td>${sub.text}</td>
+                            <td>
+                                <div class="tf-options">
+                                    <label><input type="radio" name="p2_${q.id}_${sub.label}" value="Đúng" onchange="updateProgress()"> Đúng</label>
+                                    <label><input type="radio" name="p2_${q.id}_${sub.label}" value="Sai" onchange="updateProgress()"> Sai</label>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                block.innerHTML = `
+                    <div class="question-title">
+                        <span class="question-number">Câu ${q.id}.</span>${q.context}
+                    </div>
+                    <table class="tf-table">
+                        <thead>
+                            <tr>
+                                <th>Lệnh</th>
+                                <th>Nội dung phát biểu</th>
+                                <th>Lựa chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rowsHtml}
+                        </tbody>
+                    </table>
+                    <div class="explanation-box" id="p2_exp_${q.id}"></div>
+                `;
+                p2Container.appendChild(block);
+            });
+
+            const p3Container = document.getElementById('part3-container');
+            QUIZ_DATA.part3.forEach(q => {
+                const block = document.createElement('div');
+                block.className = 'question-block';
+                block.id = `p3_q_${q.id}`;
+
+                block.innerHTML = `
+                    <div class="question-title">
+                        <span class="question-number">Câu ${q.id}.</span>${q.question.replace(/\n/g, '<br>')}
+                    </div>
+                    <div class="short-answer-input">
+                        <label><strong>Đáp số:</strong></label>
+                        <input type="text" id="p3_ans_${q.id}" placeholder="Nhập số..." oninput="updateProgress()">
+                    </div>
+                    <div class="explanation-box" id="p3_exp_${q.id}">
+                        <strong>Đáp số: ${q.answer}</strong> - ${q.explanation}
+                    </div>
+                `;
+                p3Container.appendChild(block);
+            });
+
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function selectRadio(name, val, labelEl) {
+            if (isSubmitted) return;
+            const radios = document.getElementsByName(name);
+            radios.forEach(r => {
+                if (r.value === val) r.checked = true;
+                r.closest('.option-item').classList.remove('selected');
+            });
+            labelEl.classList.add('selected');
+            updateProgress();
+        }
+
+        function updateProgress() {
+            let answered = 0;
+            QUIZ_DATA.part1.forEach(q => {
+                const checked = document.querySelector(`input[name="p1_${q.id}"]:checked`);
+                if (checked) answered++;
+            });
+            QUIZ_DATA.part2.forEach(q => {
+                let subCount = 0;
+                q.subquestions.forEach(sub => {
+                    if (document.querySelector(`input[name="p2_${q.id}_${sub.label}"]:checked`)) {
+                        subCount++;
+                    }
+                });
+                if (subCount === q.subquestions.length) answered++;
+            });
+            QUIZ_DATA.part3.forEach(q => {
+                const val = document.getElementById(`p3_ans_${q.id}`).value.trim();
+                if (val !== '') answered++;
+            });
+
+            const total = 16 + 2 + 4;
+            const pct = Math.min(100, Math.round((answered / total) * 100));
+            document.getElementById('progressFill').style.width = pct + '%';
+            document.getElementById('progressText').innerText = `Đã làm: ${answered}/${total} câu`;
+        }
+
+        function startTimer() {
+            const display = document.getElementById('timeRemaining');
+            timerInterval = setInterval(() => {
+                if (totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Đã hết thời gian làm bài! Hệ thống tự động nộp bài.");
+                    submitExam();
+                    return;
+                }
+                totalSeconds--;
+                const m = Math.floor(totalSeconds / 60);
+                const s = totalSeconds % 60;
+                display.innerText = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+                if (totalSeconds <= 300) {
+                    document.getElementById('timerDisplay').classList.add('warning');
+                }
+            }, 1000);
+        }
+
+        function submitExam() {
+            if (isSubmitted) return;
+
+            const name = document.getElementById('studentName').value.trim();
+            const sClass = document.getElementById('studentClass').value.trim();
+
+            if (!name || !sClass) {
+                alert("Vui lòng nhập đầy đủ Họ và tên và Lớp trước khi nộp bài!");
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            if (!confirm("Bạn có chắc chắn muốn nộp bài thi?")) return;
+
+            isSubmitted = true;
+            clearInterval(timerInterval);
+            document.getElementById('btnSubmit').disabled = true;
+            document.getElementById('btnSubmit').innerText = "ĐÃ HOÀN THÀNH BÀI THI";
+
+            let score = 0;
+            let p1Correct = 0;
+            let p2CorrectSub = 0;
+            let p3Correct = 0;
+
+            QUIZ_DATA.part1.forEach(q => {
+                const sel = document.querySelector(`input[name="p1_${q.id}"]:checked`);
+                const expBox = document.getElementById(`p1_exp_${q.id}`);
+                expBox.classList.add('show');
+
+                if (sel) {
+                    if (sel.value === q.answer) {
+                        score += 0.25;
+                        p1Correct++;
+                        sel.closest('.option-item').classList.add('correct-opt');
+                    } else {
+                        sel.closest('.option-item').classList.add('wrong-opt');
+                        expBox.classList.add('wrong');
+                    }
+                } else {
+                    expBox.classList.add('wrong');
+                }
+            });
+
+            const p2Scoring = [0, 0.1, 0.25, 0.5, 1.0];
+            QUIZ_DATA.part2.forEach(q => {
+                let cSub = 0;
+                let expHtml = `<strong>Đáp án chi tiết:</strong><br>`;
+                q.subquestions.forEach(sub => {
+                    const sel = document.querySelector(`input[name="p2_${q.id}_${sub.label}"]:checked`);
+                    const isRight = (sel && sel.value === sub.answer);
+                    if (isRight) {
+                        cSub++;
+                        p2CorrectSub++;
+                    }
+                    expHtml += `Ý ${sub.label}): <strong>${sub.answer}</strong> - ${sub.explanation}<br>`;
+                });
+                const qScore = p2Scoring[cSub];
+                score += qScore;
+
+                const expBox = document.getElementById(`p2_exp_${q.id}`);
+                expBox.innerHTML = `<strong>Điểm đạt được: ${qScore.toFixed(2)}đ (${cSub}/4 ý đúng)</strong><br>` + expHtml;
+                expBox.classList.add('show');
+            });
+
+            QUIZ_DATA.part3.forEach(q => {
+                const inp = document.getElementById(`p3_ans_${q.id}`);
+                const val = inp.value.trim().replace(',', '.');
+                const expBox = document.getElementById(`p3_exp_${q.id}`);
+                expBox.classList.add('show');
+
+                if (val === q.answer) {
+                    score += 0.5;
+                    p3Correct++;
+                    inp.style.borderColor = '#22C55E';
+                    inp.style.backgroundColor = '#DCFCE7';
+                } else {
+                    inp.style.borderColor = '#EF4444';
+                    inp.style.backgroundColor = '#FEE2E2';
+                    expBox.classList.add('wrong');
+                }
+            });
+
+            const finalScore = Math.round(score * 100) / 100;
+            const timeTaken = (45 * 60) - totalSeconds;
+            const minTaken = Math.floor(timeTaken / 60);
+            const secTaken = timeTaken % 60;
+            const timeStr = `${minTaken} phút ${secTaken} giây`;
+
+            document.getElementById('modalScore').innerText = finalScore.toFixed(2);
+            document.getElementById('modalStudentName').innerText = `${name} - Lớp: ${sClass}`;
+            document.getElementById('modalDetails').innerText =
+                `Phần I: ${p1Correct}/16 câu | Phần II: ${p2CorrectSub}/8 ý | Phần III: ${p3Correct}/4 câu | Thời gian: ${timeStr}`;
+            document.getElementById('resultModal').style.display = 'flex';
+
+            syncToGoogleSheet(name, sClass, finalScore, p1Correct, p2CorrectSub, p3Correct, timeStr);
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').style.display = 'none';
+            window.scrollTo({ top: 400, behavior: 'smooth' });
+        }
+
+        function syncToGoogleSheet(name, sClass, score, p1, p2, p3, timeStr) {
+            const statusEl = document.getElementById('modalSyncStatus');
+            const payload = {
+                bai: "Bài 12: Liên kết cộng hóa trị - Hóa 10",
+                ho_va_ten: name,
+                lop: sClass,
+                diem_so: score,
+                chi_tiet: `P1: ${p1}/16, P2: ${p2}/8 ý, P3: ${p3}/4`,
+                thoi_gian_lam_bai: timeStr,
+                ngay_nop: new Date().toLocaleString('vi-VN')
+            };
+
+            fetch(GOOGLE_APP_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                statusEl.innerText = "✅ Điểm thi đã được đồng bộ tự động về hệ thống của giáo viên!";
+                statusEl.style.color = "#2E7D32";
+            })
+            .catch(err => {
+                statusEl.innerText = "ℹ️ Đã ghi nhận kết quả bài thi thành công.";
+                statusEl.style.color = "#6C757D";
+            });
+        }
+
+        window.onload = function() {
+            renderQuiz();
+            startTimer();
+        };
+    </script>
+</body>
+</html>
