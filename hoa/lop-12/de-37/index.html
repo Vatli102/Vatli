@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đề Số 37: Đề Ôn Tập Toàn Diện Chương 5: Pin Điện Và Điện Phân — Hóa Học 12</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- MathJax 3 -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            svg: {
+                fontCache: 'global'
+            },
+            startup: {
+                pageReady: () => {
+                    return MathJax.startup.defaultPageReady();
+                }
+            }
+        };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- Confetti JS -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #1d4ed8;
+            --primary-hover: #1e40af;
+            --secondary: #0d9488;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #f59e0b;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+        header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #0369a1 100%);
+            color: white;
+            box-shadow: 0 4px 20px rgba(30, 58, 138, 0.15);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        .q-card {
+            background: var(--card-bg);
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.2s ease-in-out;
+        }
+        .q-card:hover {
+            border-color: #93c5fd;
+            box-shadow: 0 6px 18px rgba(59, 130, 246, 0.08);
+        }
+        .q-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 14px;
+        }
+        .q-badge {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1e40af;
+            font-weight: 700;
+            font-size: 0.78rem;
+            padding: 3px 10px;
+            border-radius: 9999px;
+            margin-right: 8px;
+            text-transform: uppercase;
+        }
+        .option-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .option-item:hover {
+            background-color: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+        .option-item.selected {
+            background-color: #eff6ff;
+            border-color: #3b82f6;
+            color: #1d4ed8;
+            font-weight: 600;
+        }
+        .option-label {
+            font-weight: 700;
+            color: #475569;
+            min-width: 24px;
+        }
+        .option-item.selected .option-label {
+            color: #1d4ed8;
+        }
+        .sub-row {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        @media (min-width: 640px) {
+            .sub-row {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+        .btn-ds {
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: 1.5px solid #cbd5e1;
+            background: white;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .btn-ds:hover {
+            background: #f1f5f9;
+        }
+        .btn-ds.active-d {
+            background: #16a34a;
+            color: white;
+            border-color: #16a34a;
+        }
+        .btn-ds.active-s {
+            background: #dc2626;
+            color: white;
+            border-color: #dc2626;
+        }
+        .explanation-box {
+            background: #f0fdf4;
+            border: 1.5px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 14px;
+            display: none;
+            font-size: 0.92rem;
+            color: #166534;
+        }
+        .timer-badge {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 8px 16px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sticky-bar {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="py-8 px-4 text-center">
+        <div class="max-w-4xl mx-auto space-y-3">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-white/20 text-white tracking-wide uppercase">
+                <i class="fa-solid fa-graduation-cap"></i> HÓA HỌC 12 - GDPT 2018
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Đề Số 37: Đề Ôn Tập Toàn Diện Chương 5: Pin Điện Và Điện Phân — Hóa Học 12</h1>
+            <p class="text-sm sm:text-base text-blue-100 max-w-2xl mx-auto">
+                Thời gian làm bài: <strong>50 phút</strong> | Cấu trúc chuẩn Đề thi Tốt nghiệp THPT Bộ GD&ĐT
+            </p>
+        </div>
+    </header>
+
+    <!-- FORM THÔNG TIN HỌC SINH -->
+    <div id="startScreen" class="max-w-xl mx-auto mt-8 px-4">
+        <div class="glass-card p-6 sm:p-8 space-y-6">
+            <div class="text-center space-y-2">
+                <h2 class="text-xl font-bold text-slate-800"><i class="fa-solid fa-user-pen text-blue-600"></i> Thông Tin Thí Sinh</h2>
+                <p class="text-xs text-slate-500">Vui lòng điền chính xác họ tên và lớp trước khi bắt đầu tính giờ làm bài</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Họ và tên học sinh *</label>
+                    <input type="text" id="studentName" placeholder="Ví dụ: Nguyễn Văn An" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium text-slate-800">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Lớp học *</label>
+                    <input type="text" id="studentClass" placeholder="Ví dụ: 12A1" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium text-slate-800">
+                </div>
+                <button type="button" onclick="startExam()" class="w-full py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold text-base rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play"></i> BẮT ĐẦU LÀM BÀI
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- KHU VỰC LÀM BÀI (MẶC ĐỊNH ẨN) -->
+    <div id="examContainer" style="display: none;">
+        
+        <!-- THANH TIẾN ĐỘ VÀ THỜI GIAN CỐ ĐỊNH -->
+        <div class="sticky-bar py-3 px-4 shadow-sm mb-6">
+            <div class="max-w-4xl mx-auto flex items-center justify-between gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-slate-500 hidden sm:inline">Thí sinh:</span>
+                    <span id="displayName" class="text-xs sm:text-sm font-extrabold text-blue-700 truncate max-w-[140px] sm:max-w-[200px]"></span>
+                    <span id="displayClass" class="text-xs font-bold px-2 py-0.5 bg-blue-100 text-blue-800 rounded-md"></span>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <div class="text-right">
+                        <div class="text-[11px] font-bold text-slate-400 uppercase">Thời gian còn lại</div>
+                        <div id="timerText" class="text-base sm:text-lg font-black text-rose-600 font-mono">50:00</div>
+                    </div>
+                    <button type="button" onclick="submitExam()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold rounded-xl shadow transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-paper-plane"></i> Nộp bài
+                    </button>
+                </div>
+            </div>
+            <!-- Progress Bar -->
+            <div class="max-w-4xl mx-auto mt-2 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                <div id="progressFill" class="h-full bg-blue-600 transition-all duration-300" style="width: 0%;"></div>
+            </div>
+        </div>
+
+        <main class="max-w-4xl mx-auto px-4">
+            
+            <!-- PHẦN I -->
+            <section class="mb-10">
+                <div class="bg-blue-50 border-l-4 border-blue-600 p-4 rounded-r-xl mb-6">
+                    <h2 class="text-base sm:text-lg font-black text-blue-900 uppercase">PHẦN I. Câu hỏi trắc nghiệm nhiều phương án lựa chọn (18 câu - 4,5 điểm)</h2>
+                    <p class="text-xs text-blue-700 mt-1">Thí sinh trả lời từ câu 1 đến câu 18. Mỗi câu hỏi thí sinh chỉ chọn một phương án.</p>
+                </div>
+                <div id="part1Container"></div>
+            </section>
+
+            <!-- PHẦN II -->
+            <section class="mb-10">
+                <div class="bg-indigo-50 border-l-4 border-indigo-600 p-4 rounded-r-xl mb-6">
+                    <h2 class="text-base sm:text-lg font-black text-indigo-900 uppercase">PHẦN II. Câu hỏi trắc nghiệm đúng / sai (4 câu - 16 lệnh hỏi - 4,0 điểm)</h2>
+                    <p class="text-xs text-indigo-700 mt-1">Thí sinh trả lời từ câu 1 đến câu 4. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn Đúng hoặc Sai.</p>
+                </div>
+                <div id="part2Container"></div>
+            </section>
+
+            <!-- PHẦN III -->
+            <section class="mb-10">
+                <div class="bg-teal-50 border-l-4 border-teal-600 p-4 rounded-r-xl mb-6">
+                    <h2 class="text-base sm:text-lg font-black text-teal-900 uppercase">PHẦN III. Câu hỏi trắc nghiệm trả lời ngắn (6 câu - 1,5 điểm)</h2>
+                    <p class="text-xs text-teal-700 mt-1">Thí sinh trả lời từ câu 1 đến câu 6. Điền kết quả số vào ô trả lời tương ứng.</p>
+                </div>
+                <div id="part3Container"></div>
+            </section>
+
+            <!-- NÚT NỘP BÀI DƯỚI CÙNG -->
+            <div class="text-center py-8">
+                <button type="button" onclick="submitExam()" class="px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black text-base sm:text-lg rounded-2xl shadow-xl transition-all">
+                    <i class="fa-solid fa-check-double mr-2"></i> HOÀN THÀNH VÀ NỘP BÀI
+                </button>
+            </div>
+
+            <!-- BẢNG KẾT QUẢ VÀ HƯỚNG DẪN GIẢI CHI TIẾT (MẶC ĐỊNH ẨN) -->
+            <div id="resultPanel" style="display: none;" class="glass-card p-6 sm:p-8 mt-6 border-2 border-emerald-500 space-y-6">
+                <div class="text-center space-y-2">
+                    <div class="inline-block p-3 bg-emerald-100 text-emerald-600 rounded-full text-2xl">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <h3 class="text-2xl font-black text-slate-800">KẾT QUẢ BÀI LÀM</h3>
+                    <div class="text-4xl font-extrabold text-blue-600" id="finalScore">0.00</div>
+                    <div class="text-xs text-slate-500" id="scoreScale">Thang điểm 10,0</div>
+                </div>
+
+                <div id="resultDetails" class="bg-slate-50 p-4 rounded-xl text-xs sm:text-sm text-slate-700 space-y-2 border border-slate-200">
+                    <!-- Chi tiết điểm từng phần sẽ được render bằng JS -->
+                </div>
+
+                <!-- Trạng thái đồng bộ Google Sheet -->
+                <div id="sheetSyncStatus" class="p-3.5 rounded-xl text-xs font-semibold text-center" style="display: none;"></div>
+
+                <div class="text-center pt-2">
+                    <button type="button" onclick="scrollToTop()" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl shadow">
+                        <i class="fa-solid fa-arrow-up mr-1"></i> Xem lại chi tiết từng câu phía trên
+                    </button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- SCRIPT ĐIỀU KHIỂN LOGIC -->
+    <script>
+        const RAW_PART1 = [{"id": 1, "question": "Trong hóa học, cặp oxi hoá – khử liên hợp $M^{n+}/M$ gồm dạng oxi hoá và dạng khử của cùng một nguyên tố kim loại. Xét cặp oxi hoá – khử $Cu^{2+}/Cu$, khẳng định nào sau đây là đúng?", "options": {"A": "$Cu^{2+}$ là dạng oxi hoá, có khả năng nhận electron.", "B": "$Cu$ là dạng oxi hoá, có khả năng nhận electron.", "C": "$Cu^{2+}$ là dạng khử, có khả năng nhường electron.", "D": "$Cu$ là dạng oxi hoá, $Cu^{2+}$ là dạng khử."}, "answer": "A", "explanation": "<strong>Giải thích chi tiết:</strong><br>Cặp oxi hoá – khử được viết theo quy ước quốc tế là (dạng oxi hoá)/(dạng khử). Cation $Cu^{2+}$ là dạng oxi hoá vì có khả năng nhận 2 electron để tạo thành $Cu$ ($Cu^{2+} + 2e \\rightarrow Cu$), còn nguyên tử $Cu$ là dạng khử vì có khả năng nhường 2 electron để tạo thành $Cu^{2+}$ ($Cu \\rightarrow Cu^{2+} + 2e$)."}, {"id": 2, "question": "Cho các giá trị thế điện cực chuẩn: $E^\\circ(Mg^{2+}/Mg) = -2{,}37\\text{ V}$; $E^\\circ(Zn^{2+}/Zn) = -0{,}76\\text{ V}$; $E^\\circ(Fe^{2+}/Fe) = -0{,}44\\text{ V}$; $E^\\circ(Cu^{2+}/Cu) = +0{,}34\\text{ V}$. Trong số các ion trên, ion có tính oxi hoá mạnh nhất ở điều kiện chuẩn là", "options": {"A": "$Mg^{2+}$.", "B": "$Cu^{2+}$.", "C": "$Fe^{2+}$.", "D": "$Zn^{2+}$."}, "answer": "B", "explanation": "<strong>Giải thích chi tiết:</strong><br>Thế điện cực chuẩn $E^\\circ(M^{n+}/M)$ càng lớn thì tính oxi hoá của cation $M^{n+}$ càng mạnh. Trong các cặp trên, $E^\\circ(Cu^{2+}/Cu) = +0{,}34\\text{ V}$ có giá trị dương và lớn nhất nên ion $Cu^{2+}$ có tính oxi hoá mạnh nhất."}, {"id": 3, "question": "Cho biết thế điện cực chuẩn của các cặp oxi hoá – khử: $E^\\circ(Mg^{2+}/Mg) = -2{,}37\\text{ V}$; $E^\\circ(Fe^{2+}/Fe) = -0{,}44\\text{ V}$; $E^\\circ(Cu^{2+}/Cu) = +0{,}34\\text{ V}$; $E^\\circ(Ag^+/Ag) = +0{,}80\\text{ V}$. Trong dung dịch ở điều kiện chuẩn, kim loại sắt ($Fe$) có thể khử được cation nào sau đây?", "options": {"A": "$Cu^{2+}$.", "B": "$Mg^{2+}$.", "C": "$Al^{3+}$.", "D": "$Na^+$."}, "answer": "A", "explanation": "<strong>Giải thích chi tiết:</strong><br>Theo quy tắc alpha (hoặc so sánh thế điện cực), dạng khử của cặp có thế điện cực âm hơn ($Fe$) khử được dạng oxi hoá của cặp có thế điện cực dương hơn ($Cu^{2+}$). Vì $E^\\circ(Cu^{2+}/Cu) = +0{,}34\\text{ V} > E^\\circ(Fe^{2+}/Fe) = -0{,}44\\text{ V}$ nên phản ứng tự diễn biến: $Fe + Cu^{2+} \\rightarrow Fe^{2+} + Cu$. Kim loại sắt không khử được $Mg^{2+}, Al^{3+}, Na^+$ vì các cation này có thế điện cực âm hơn rất nhiều."}, {"id": 4, "question": "Trong quá trình hoạt động của một pin điện hoá Galvani (phóng điện qua mạch ngoài), nhận định nào sau đây là đúng?", "options": {"A": "Anode là cực dương, tại đó xảy ra quá trình oxi hoá.", "B": "Cathode là cực âm, tại đó xảy ra quá trình khử.", "C": "Ở mạch ngoài, dòng electron di chuyển từ cathode sang anode.", "D": "Anode là cực âm, tại đó chất khử nhường electron (xảy ra quá trình oxi hoá)."}, "answer": "D", "explanation": "<strong>Giải thích chi tiết:</strong><br>Trong pin điện hoá Galvani: Anode là cực âm (tại đó chất khử nhường electron, xảy ra quá trình oxi hoá), còn cathode là cực dương (tại đó chất oxi hoá nhận electron, xảy ra quá trình khử). Ở mạch ngoài, dòng electron luôn di chuyển tự phát từ anode (cực âm) sang cathode (cực dương)."}, {"id": 5, "question": "Trong pin điện hoá Daniell ($Zn - Cu$), hai cốc đựng dung dịch điện cực được nối thông với nhau bằng một ống chữ U chứa dung dịch chất điện li trơ như $KNO_3$ gọi là cầu muối (salt bridge). Vai trò cốt lõi của cầu muối là", "options": {"A": "dẫn dòng electron di chuyển trực tiếp giữa hai dung dịch điện cực.", "B": "duy trì tính trung hòa điện tích cho hai dung dịch điện cực và khép kín mạch điện.", "C": "tăng cường nồng độ ion $Cu^{2+}$ và $Zn^{2+}$ để thúc đẩy tốc độ phản ứng.", "D": "ngăn cản hoàn toàn sự chuyển động của các ion giữa hai cốc."}, "answer": "B", "explanation": "<strong>Giải thích chi tiết:</strong><br>Khi pin hoạt động, tại anode nồng độ cation $Zn^{2+}$ tăng dần làm dung dịch thừa điện tích dương; tại cathode ion $Cu^{2+}$ bị khử làm dung dịch thừa điện tích âm. Cầu muối duy trì tính trung hòa điện tích cho cả hai dung dịch (anion $NO_3^-$ khuếch tán sang cốc anode, cation $K^+$ khuếch tán sang cốc cathode) và tạo thành mạch điện kín."}, {"id": 6, "question": "Cho biết thế điện cực chuẩn: $E^\\circ(Ni^{2+}/Ni) = -0{,}26\\text{ V}$ và $E^\\circ(Ag^+/Ag) = +0{,}80\\text{ V}$. Sức điện động chuẩn ($E^\\circ_{pin}$) của pin điện hoá tạo bởi hai điện cực niken và bạc ($Ni - Ag$) là", "options": {"A": "$+0{,}54\\text{ V}$.", "B": "$-1{,}06\\text{ V}$.", "C": "$+1{,}06\\text{ V}$.", "D": "$-0{,}54\\text{ V}$."}, "answer": "C", "explanation": "<strong>Giải thích chi tiết:</strong><br>Do $E^\\circ(Ag^+/Ag) = +0{,}80\\text{ V} > E^\\circ(Ni^{2+}/Ni) = -0{,}26\\text{ V}$, nên điện cực bạc là cathode (cực dương) và điện cực niken là anode (cực âm). Sức điện động chuẩn của pin là: $E^\\circ_{pin} = E^\\circ_{cathode} - E^\\circ_{anode} = E^\\circ(Ag^+/Ag) - E^\\circ(Ni^{2+}/Ni) = +0{,}80 - (-0{,}26) = +1{,}06\\text{ V}$."}, {"id": 7, "question": "Pin nhiên liệu hydrogen – oxygen ($H_2 - O_2$) đang được ưu tiên phát triển ứng dụng trong các phương tiện giao thông xanh vì ưu điểm nổi bật nào sau đây?", "options": {"A": "Khí thải duy nhất sinh ra là hơi nước ($H_2O$), không gây ô nhiễm môi trường và hiệu suất năng lượng cao.", "B": "Năng lượng được nạp lại tức thì bằng cách kết nối trực tiếp vào nguồn điện xoay chiều dân dụng.", "C": "Chi phí sản xuất các màng điện phân và chất xúc tác cực kì rẻ, dễ chế tạo từ vật liệu tái chế.", "D": "Hai bản cực tự động sản sinh ra khí hydrogen liên tục mà không cần cung cấp nhiên liệu từ bình chứa bên ngoài."}, "answer": "A", "explanation": "<strong>Giải thích chi tiết:</strong><br>Pin nhiên liệu $H_2 - O_2$ hoạt động dựa trên phản ứng tổng cộng: $2H_2 + O_2 \\rightarrow 2H_2O$. Sản phẩm thải duy nhất là nước tinh khiết, hoàn toàn không phát thải khí nhà kính hay khí độc hại. Hơn nữa, vì biến đổi trực tiếp hóa năng thành điện năng không qua chu trình nhiệt Carnot nên hiệu suất của pin nhiên liệu rất cao (đạt $60 - 70\\%$)."}, {"id": 8, "question": "Khi một ắc quy chì – acid đang phóng điện cung cấp năng lượng cho động cơ xe khởi động, nồng độ của dung dịch sulfuric acid ($H_2SO_4$) trong ắc quy biến đổi như thế nào?", "options": {"A": "Tăng lên do lượng nước bị điện phân tạo thành khí hydrogen và oxygen.", "B": "Giảm đi do sulfuric acid bị tiêu thụ trong phản ứng tạo kết tủa $PbSO_4$ trên hai bản cực.", "C": "Hoàn toàn không thay đổi vì acid đóng vai trò là chất xúc tác không bị tiêu hao.", "D": "Ban đầu tăng mạnh sau đó giảm nhanh về bằng 0."}, "answer": "B", "explanation": "<strong>Giải thích chi tiết:</strong><br>Phương trình phản ứng khi ắc quy chì phóng điện: $Pb + PbO_2 + 2H_2SO_4 \\rightarrow 2PbSO_4\\downarrow + 2H_2O$. Sulfuric acid đóng vai trò là chất phản ứng và bị tiêu thụ liên tục đồng thời sinh ra nước, do đó nồng độ và khối lượng riêng của dung dịch $H_2SO_4$ giảm dần theo thời gian phóng điện."}, {"id": 9, "question": "Loại pin sạc hiện đại có mật độ năng lượng cao, trọng lượng nhẹ, điện áp làm việc cao (khoảng $3{,}7\\text{ V}$) và không bị hiệu ứng nhớ, đang được ứng dụng rộng rãi trong điện thoại thông minh, laptop và xe ô tô điện là", "options": {"A": "Pin Lithium-ion (Li-ion).", "B": "Pin khô Leclanché kẽm – carbon.", "C": "Pin kiềm (Alkaline).", "D": "Pin cúc áo kẽm – không khí."}, "answer": "A", "explanation": "<strong>Giải thích chi tiết:</strong><br>Pin Lithium-ion (Li-ion) sử dụng cơ chế dịch chuyển của ion $Li^+$ giữa hai điện cực, sở hữu ưu điểm vượt trội: mật độ năng lượng rất cao, trọng lượng nhẹ, không bị hiện tượng chai nhớ dung lượng (hiệu ứng nhớ) và có tuổi thọ chu kì sạc xả cao nên là nguồn điện hàng đầu cho thiết bị di động và xe điện."}, {"id": 10, "question": "Trong quá trình điện phân dung dịch hoặc nóng chảy, cathode là điện cực", "options": {"A": "dương, tại đó xảy ra sự oxi hoá.", "B": "dương, tại đó xảy ra sự khử.", "C": "âm, tại đó xảy ra sự khử.", "D": "âm, tại đó xảy ra sự oxi hoá."}, "answer": "C", "explanation": "<strong>Giải thích chi tiết:</strong><br>Trong bình điện phân (nối với nguồn điện một chiều bên ngoài):<br>– Cathode nối với cực âm của nguồn điện, thu hút các cation ($M^{n+}, H^+$); tại cathode luôn xảy ra quá trình KHỬ (nhận electron).<br>– Anode nối với cực dương của nguồn điện, thu hút các anion; tại anode luôn xảy ra quá trình OXI HOÁ (nhường electron)."}, {"id": 11, "question": "Kim loại nào sau đây bắt buộc phải điều chế bằng phương pháp điện phân nóng chảy hợp chất trong công nghiệp?", "options": {"A": "Đồng ($Cu$).", "B": "Bạc ($Ag$).", "C": "Sắt ($Fe$).", "D": "Sodium ($Na$)."}, "answer": "D", "explanation": "<strong>Giải thích chi tiết:</strong><br>Sodium ($Na$) là kim loại kiềm có tính khử rất mạnh, ion $Na^+$ có thế điện cực rất âm ($-2{,}71\\text{ V}$) nên không thể bị khử bởi các chất khử thông thường ($CO, H_2, C$) hay điện phân dung dịch nước (nước sẽ bị khử trước $Na^+$). Vì vậy, trong công nghiệp người ta bắt buộc phải dùng phương pháp điện phân nóng chảy muối $NaCl$ để điều chế sodium."}, {"id": 12, "question": "Trong công nghiệp sản xuất nhôm ($Al$) bằng phương pháp điện phân nóng chảy aluminium oxide ($Al_2O_3$), người ta thêm cryolite ($Na_3AlF_6$) vào quặng bauxite nhằm mục đích chính nào sau đây?", "options": {"A": "Làm tăng nhiệt độ nóng chảy của hỗn hợp để phản ứng điện phân triệt để hơn.", "B": "Đóng vai trò chất xúc tác làm chậm quá trình tạo khí ở anode.", "C": "Hạ nhiệt độ nóng chảy của $Al_2O_3$ từ $2050^\\circ\\text{C}$ xuống khoảng $900^\\circ\\text{C}$, tiết kiệm năng lượng và tăng độ dẫn điện.", "D": "Hòa tan khí oxygen sinh ra để bảo vệ các điện cực than chì không bị cháy hao mòn."}, "answer": "C", "explanation": "<strong>Giải thích chi tiết:</strong><br>$Al_2O_3$ nóng chảy ở nhiệt độ rất cao ($2050^\\circ\\text{C}$). Thêm cryolite ($Na_3AlF_6$) giúp hạ nhiệt độ nóng chảy của hỗn hợp xuống còn khoảng $900 - 950^\\circ\\text{C}$, giúp tiết kiệm một lượng điện năng khổng lồ, đồng thời làm tăng độ dẫn điện của hỗn hợp và tạo lớp chất lỏng nhẹ nổi lên ngăn nhôm lỏng không bị oxi hóa lại."}, {"id": 13, "question": "Điện phân một dung dịch chứa đồng thời các muối: $CuSO_4, FeSO_4, AgNO_3$ với các điện cực trơ. Biết các cặp oxi hoá – khử có thế điện cực chuẩn: $E^\\circ(Ag^+/Ag) = +0{,}80\\text{ V}$; $E^\\circ(Cu^{2+}/Cu) = +0{,}34\\text{ V}$; $E^\\circ(Fe^{2+}/Fe) = -0{,}44\\text{ V}$. Thứ tự các cation kim loại bị khử tại cathode từ trước đến sau là", "options": {"A": "$Fe^{2+} \\rightarrow Cu^{2+} \\rightarrow Ag^+$.", "B": "$Ag^+ \\rightarrow Fe^{2+} \\rightarrow Cu^{2+}$.", "C": "$Ag^+ \\rightarrow Cu^{2+} \\rightarrow Fe^{2+}$.", "D": "$Cu^{2+} \\rightarrow Ag^+ \\rightarrow Fe^{2+}$."}, "answer": "C", "explanation": "<strong>Giải thích chi tiết:</strong><br>Tại cathode, cation nào có tính oxi hoá mạnh hơn (thế điện cực chuẩn $E^\\circ$ lớn hơn) sẽ bị khử trước. Do $E^\\circ(Ag^+/Ag) = +0{,}80\\text{ V} > E^\\circ(Cu^{2+}/Cu) = +0{,}34\\text{ V} > E^\\circ(Fe^{2+}/Fe) = -0{,}44\\text{ V}$ nên thứ tự bị khử lần lượt là ion $Ag^+$, kế tiếp là $Cu^{2+}$, cuối cùng là $Fe^{2+}$."}, {"id": 14, "question": "Khi điện phân dung dịch copper(II) sulfate ($CuSO_4$) với các điện cực trơ (graphite), tại cực dương (anode) xảy ra quá trình hóa học nào sau đây?", "options": {"A": "Khử ion $Cu^{2+}$ thành kim loại đồng bám lên điện cực.", "B": "Khử các phân tử $H_2O$ giải phóng khí hydrogen ($H_2$).", "C": "Oxi hoá các anion $SO_4^{2-}$ tạo thành khí sulfur dioxide ($SO_2$).", "D": "Oxi hoá các phân tử $H_2O$ giải phóng khí oxygen ($O_2$) và tạo môi trường acid."}, "answer": "D", "explanation": "<strong>Giải thích chi tiết:</strong><br>Tại anode trơ (cực dương), ion $SO_4^{2-}$ chứa lưu huỳnh ở mức oxi hoá cao nhất (+6) nên không bị oxi hoá trong dung dịch. Thay vào đó, phân tử nước bị oxi hoá: $2H_2O \\rightarrow O_2\\uparrow + 4H^+ + 4e$, giải phóng khí oxygen ($O_2$) và sinh ra ion $H^+$ làm dung dịch có tính acid."}, {"id": 15, "question": "Khi điện phân dung dịch $NaCl$ bão hoà với các điện cực trơ trong điều kiện không có màng ngăn giữa hai điện cực, dung dịch thu được sau một thời gian điện phân là", "options": {"A": "Nước Javel (hỗn hợp gồm $NaCl, NaClO$ và $H_2O$).", "B": "Dung dịch $NaOH$ nguyên chất.", "C": "Dung dịch $HCl$ bão hoà khí chlorine.", "D": "Dung dịch chứa muối sodium chlorate ($NaClO_3$)."}, "answer": "A", "explanation": "<strong>Giải thích chi tiết:</strong><br>Khi không có màng ngăn, khí $Cl_2$ thoát ra ở anode sẽ khuếch tán và phản ứng trực tiếp với dung dịch $NaOH$ sinh ra ở cathode ngay trong dung dịch theo phương trình: $Cl_2 + 2NaOH \\rightarrow NaCl + NaClO + H_2O$. Dung dịch thu được là hỗn hợp muối $NaCl$ và $NaClO$, gọi là nước Javel."}, {"id": 16, "question": "Để mạ một lớp niken ($Ni$) bảo vệ và trang trí lên bề mặt một chiếc chìa khóa bằng đồng thau ($Cu - Zn$), cách bố trí bình điện phân nào sau đây là chính xác?", "options": {"A": "Chiếc chìa khóa làm anode, thanh niken làm cathode, dung dịch điện li là $CuSO_4$.", "B": "Chiếc chìa khóa làm cathode, thanh niken làm anode, dung dịch điện li chứa muối $Ni^{2+}$ (như $NiSO_4$).", "C": "Chiếc chìa khóa làm cathode, thanh đồng làm anode, dung dịch điện li là $H_2SO_4$.", "D": "Chiếc chìa khóa làm anode, thanh than chì làm cathode, dung dịch điện li là $NiSO_4$."}, "answer": "B", "explanation": "<strong>Giải thích chi tiết:</strong><br>Trong kỹ thuật mạ điện: Vật cần mạ (chìa khóa) luôn được nối với cực âm (cathode) để ion kim loại mạ nhận electron bám đều lên bề mặt: $Ni^{2+} + 2e \\rightarrow Ni$. Kim loại dùng để mạ (thanh niken nguyên chất) nối với cực dương (anode) để tan ra bù trừ ion: $Ni \\rightarrow Ni^{2+} + 2e$. Dung dịch điện li phải chứa ion của kim loại mạ ($Ni^{2+}$)."}, {"id": 17, "question": "Trong công nghiệp luyện kim, để thu được đồng cathode có độ tinh khiết cao ($> 99{,}9\\%$), người ta dùng phương pháp điện phân dung dịch $CuSO_4$ với", "options": {"A": "Anode làm bằng thanh đồng tinh khiết, cathode là tấm đồng thô.", "B": "Cả hai điện cực đều làm bằng than chì trơ và dòng điện xoay chiều.", "C": "Anode làm bằng tấm đồng thô (chứa tạp chất), cathode là lá đồng tinh khiết.", "D": "Anode làm bằng thanh kẽm, cathode là khối đồng thô."}, "answer": "C", "explanation": "<strong>Giải thích chi tiết:</strong><br>Quá trình tinh luyện đồng bằng điện phân cực tan dùng: Anode là khối đồng thô đúc từ lò luyện kim (nối cực dương để tan ra: $Cu \\rightarrow Cu^{2+} + 2e$), cathode là lá đồng mỏng nguyên chất (nối cực âm để ion $Cu^{2+}$ bám vào: $Cu^{2+} + 2e \\rightarrow Cu$). Tạp chất kém hoạt động như $Ag, Au$ lắng xuống thành bùn anode."}, {"id": 18, "question": "Nhận định nào sau đây là đúng khi so sánh quá trình hóa học xảy ra tại các điện cực trong pin điện hoá Galvani và bình điện phân?", "options": {"A": "Cực âm của cả pin điện hóa và bình điện phân đều xảy ra sự khử.", "B": "Cực dương của cả pin điện hóa và bình điện phân đều xảy ra sự oxi hoá.", "C": "Tại cathode của pin điện hóa xảy ra sự oxi hoá, còn tại cathode của bình điện phân xảy ra sự khử.", "D": "Tại cực anode luôn xảy ra quá trình oxi hoá, còn tại cực cathode luôn xảy ra quá trình khử."}, "answer": "D", "explanation": "<strong>Giải thích chi tiết:</strong><br>Quy ước quốc tế trong điện hoá học: Anode luôn là điện cực xảy ra quá trình oxi hoá (nhường electron), còn cathode luôn là điện cực xảy ra quá trình khử (nhận electron), áp dụng cho cả pin điện hóa và bình điện phân. Sự khác nhau duy nhất là dấu của điện cực: trong pin Galvani anode là cực âm (-), cathode là cực dương (+); còn trong bình điện phân anode nối với cực dương (+), cathode nối với cực âm (-)."}];
+        const RAW_PART2 = [{"id": 1, "context": "Một nhóm học sinh tiến hành lắp ráp pin điện hóa Daniell trong phòng thí nghiệm.", "statement": "Thiết bị gồm: Cốc (1) đựng $100\\text{ mL}$ dung dịch $ZnSO_4\\ 1\\text{ M}$ cắm thanh kẽm ($Zn$); Cốc (2) đựng $100\\text{ mL}$ dung dịch $CuSO_4\\ 1\\text{ M}$ cắm thanh đồng ($Cu$). Cầu muối chứa dung dịch bão hòa $KNO_3$ nối giữa hai cốc. Nối hai thanh kim loại qua một vôn kế và điện trở mạch ngoài. Biết thế điện cực chuẩn: $E^\\circ(Zn^{2+}/Zn) = -0{,}76\\text{ V}$; $E^\\circ(Cu^{2+}/Cu) = +0{,}34\\text{ V}$.", "subitems": {"a": "Thanh kẽm ($Zn$) đóng vai trò là cực âm (anode), tại đó xảy ra quá trình oxi hoá kẽm: $Zn \\rightarrow Zn^{2+} + 2e$.", "b": "Vôn kế chỉ giá trị sức điện động chuẩn của pin xấp xỉ $+0{,}42\\text{ V}$.", "c": "Trong quá trình pin hoạt động phóng điện, khối lượng thanh kẽm giảm dần và khối lượng thanh đồng tăng dần.", "d": "Trong cầu muối, các cation $K^+$ di chuyển về phía cốc đựng dung dịch $ZnSO_4$ để trung hòa điện tích âm."}, "answers": {"a": "Đ", "b": "S", "c": "Đ", "d": "S"}, "explanation": "<strong>Giải thích chi tiết:</strong><br>– <strong>Ý a ĐÚNG:</strong> $Zn$ có thế điện cực âm hơn nên đóng vai trò là anode (cực âm), bị oxi hoá nhường 2 electron.<br>– <strong>Ý b SAI:</strong> Sức điện động chuẩn của pin: $E^\\circ_{pin} = E^\\circ(Cu^{2+}/Cu) - E^\\circ(Zn^{2+}/Zn) = +0{,}34 - (-0{,}76) = 1{,}10\\text{ V}$, không phải $0{,}42\\text{ V}$.<br>– <strong>Ý c ĐÚNG:</strong> Thanh $Zn$ bị tan mòn dần ($Zn \\rightarrow Zn^{2+} + 2e$), còn cation $Cu^{2+}$ nhận electron tạo $Cu$ kim loại bám vào thanh đồng làm tăng khối lượng thanh đồng.<br>– <strong>Ý d SAI:</strong> Ở cốc $ZnSO_4$ phát sinh thêm $Zn^{2+}$ (thừa điện tích dương) nên anion $NO_3^-$ sẽ khuếch tán vào đây; ngược lại ion $K^+$ khuếch tán sang cốc $CuSO_4$ nơi nồng độ $Cu^{2+}$ bị giảm hụt."}, {"id": 2, "context": "Pin nhiên liệu hydrogen – oxygen ($H_2 - O_2$) đang được xem là giải pháp năng lượng sạch mang tính đột phá cho các phương tiện giao thông thế hệ mới.", "statement": "Pin hoạt động liên tục khi được cung cấp khí $H_2$ ở cực âm và khí $O_2$ ở cực dương trong môi trường kiềm (chất điện li dung dịch $KOH$).", "subitems": {"a": "Tại cực âm (anode), khí $H_2$ bị oxi hoá theo bán phản ứng: $2H_2 + 4OH^- \\rightarrow 4H_2O + 4e$.", "b": "Tại cực dương (cathode), khí $O_2$ bị khử theo bán phản ứng: $O_2 + 2H_2O + 4e \\rightarrow 4OH^-$.", "c": "Sau một thời gian hoạt động, pin bị cạn kiệt năng lượng hóa học bên trong các bản cực và bắt buộc phải cắm sạc điện một chiều trong nhiều giờ để phục hồi.", "d": "Pin nhiên liệu $H_2 - O_2$ có hiệu suất năng lượng thấp hơn động cơ đốt trong vì phần lớn năng lượng bị chuyển hóa thành nhiệt năng."}, "answers": {"a": "Đ", "b": "Đ", "c": "S", "d": "S"}, "explanation": "<strong>Giải thích chi tiết:</strong><br>– <strong>Ý a ĐÚNG:</strong> Tại anode, $H_2$ bị oxi hóa trong môi trường kiềm nhường electron: $2H_2 + 4OH^- \\rightarrow 4H_2O + 4e$.<br>– <strong>Ý b ĐÚNG:</strong> Tại cathode, $O_2$ nhận electron bị khử tạo ion hydroxide: $O_2 + 2H_2O + 4e \\rightarrow 4OH^-$.<br>– <strong>Ý c SAI:</strong> Pin nhiên liệu không tích trữ năng lượng trong vật liệu điện cực như ắc quy hay pin sạc thông thường mà chuyển hóa trực tiếp nhiên liệu liên tục được cấp từ ngoài vào, do đó chỉ cần tiếp nhiên liệu $H_2$ là pin tiếp tục phát điện mà không cần sạc điện.<br>– <strong>Ý d SAI:</strong> Hiệu suất pin nhiên liệu đạt $60 - 70\\%$, cao gấp đôi so với động cơ đốt trong ($25 - 35\\%$) do không bị giới hạn bởi chu trình nhiệt Carnot."}, {"id": 3, "context": "Trong công nghiệp hóa chất hiện đại, xút ($NaOH$) và khí chlorine ($Cl_2$) được sản xuất chủ yếu bằng phương pháp điện phân dung dịch $NaCl$ bão hòa sử dụng bình điện phân có màng trao đổi cation (cation exchange membrane).", "statement": "Màng này chỉ cho phép cation $Na^+$ đi qua từ khoang anode sang khoang cathode mà ngăn cản các anion ($Cl^-, OH^-$) và chất khí.", "subitems": {"a": "Tại cực dương (anode trơ), các ion $Cl^-$ bị oxi hoá tạo thành khí chlorine: $2Cl^- \\rightarrow Cl_2 + 2e$.", "b": "Tại cực âm (cathode trơ), các ion $Na^+$ bị khử tạo thành kim loại natri nóng chảy nổi lên trên bề mặt dung dịch.", "c": "Màng trao đổi cation ngăn không cho khí $Cl_2$ tiếp xúc với khí $H_2$ (tránh nguy cơ gây nổ) và ngăn không cho $Cl_2$ phản ứng với $OH^-$ tạo ra nước Javel ($NaClO$).", "d": "Nếu không may màng trao đổi ion bị rách thủng hoàn toàn, nồng độ dung dịch $NaOH$ thu được tại cathode sẽ tăng lên đáng kể."}, "answers": {"a": "Đ", "b": "S", "c": "Đ", "d": "S"}, "explanation": "<strong>Giải thích chi tiết:</strong><br>– <strong>Ý a ĐÚNG:</strong> Anion $Cl^-$ bị oxi hoá tại anode trơ sinh ra khí chlorine: $2Cl^- \\rightarrow Cl_2\\uparrow + 2e$.<br>– <strong>Ý b SAI:</strong> Trong dung dịch nước, cation $Na^+$ không bị khử do tính oxi hoá quá yếu; thay vào đó, các phân tử nước bị khử: $2H_2O + 2e \\rightarrow H_2\\uparrow + 2OH^-$.<br>– <strong>Ý c ĐÚNG:</strong> Màng trao đổi ngăn cản sự tiếp xúc giữa $Cl_2$ và $H_2$ tránh cháy nổ, đồng thời ngăn $Cl_2$ phản ứng với dung dịch $NaOH$ kiềm.<br>– <strong>Ý d SAI:</strong> Nếu màng ngăn rách, $Cl_2$ sẽ phản ứng với $NaOH$ tạo thành $NaCl$ và $NaClO$ (nước Javel), làm suy giảm nghiêm trọng lượng và nồng độ $NaOH$ thu được."}, {"id": 4, "context": "Phương pháp điện phân có ý nghĩa đặc biệt quan trọng trong luyện kim và xử lý bề mặt kim loại.", "statement": "Để tinh luyện đồng ($Cu$) thương phẩm từ đồng thô chứa $98\\%$ đồng cùng các tạp chất ($Fe, Zn, Ag, Au$), người ta sử dụng phương pháp điện phân cực tan với dung dịch chất điện li $CuSO_4$ và $H_2SO_4$.", "subitems": {"a": "Khối đồng thô cần tinh luyện được gắn vào cực âm (cathode) của nguồn điện một chiều.", "b": "Trong quá trình điện phân, các kim loại có tính khử mạnh hơn đồng như $Fe, Zn$ bị oxi hóa tan vào dung dịch dưới dạng cation ($Fe^{2+}, Zn^{2+}$) nhưng không bị khử bám vào cathode trước $Cu^{2+}$.", "c": "Các kim loại quý trơ hơn đồng như bạc ($Ag$) và vàng ($Au$) bị oxi hóa ở anode rồi khuếch tán sang cathode bám cùng với đồng làm giảm độ tinh khiết của đồng cathode.", "d": "Để mạ một lớp bạc ($Ag$) bảo vệ và tăng tính thẩm mỹ lên bề mặt vỏ điện thoại bằng hợp kim, ta nối vỏ điện thoại với cực âm (cathode) và thanh bạc nguyên chất với cực dương (anode) trong dung dịch chứa muối $Ag^+$."}, "answers": {"a": "S", "b": "Đ", "c": "S", "d": "Đ"}, "explanation": "<strong>Giải thích chi tiết:</strong><br>– <strong>Ý a SAI:</strong> Khối đồng thô bắt buộc phải gắn vào cực dương (anode) để đồng tan ra: $Cu \\rightarrow Cu^{2+} + 2e$.<br>– <strong>Ý b ĐÚNG:</strong> Các kim loại hoạt động hơn đồng ($Fe, Zn$) bị oxi hóa tan thành ion, nhưng do $E^\\circ(Cu^{2+}/Cu) = +0{,}34\\text{ V}$ lớn hơn $E^\\circ(Fe^{2+}/Fe)$ và $E^\\circ(Zn^{2+}/Zn)$ nên tại cathode chỉ có ion $Cu^{2+}$ bị khử tạo thành đồng tinh khiết.<br>– <strong>Ý c SAI:</strong> $Ag, Au$ có thế điện cực lớn hơn đồng, không bị oxi hoá ở điện thế của đồng mà lắng xuống đáy bể tạo thành bùn anode.<br>– <strong>Ý d ĐÚNG:</strong> Đây là nguyên tắc chuẩn của kỹ thuật mạ điện: vật cần mạ gắn vào cathode (cực âm), kim loại mạ gắn vào anode (cực dương) trong bể chứa ion kim loại mạ."}];
+        const RAW_PART3 = [{"id": 1, "question": "Cho biết giá trị thế điện cực chuẩn của hai cặp oxi hoá – khử: $E^\\circ(Zn^{2+}/Zn) = -0{,}76\\text{ V}$ và $E^\\circ(Ag^+/Ag) = +0{,}80\\text{ V}$. Sức điện động chuẩn của pin điện hoá ($Zn - Ag$) tạo bởi hai cặp oxi hoá – khử trên có giá trị bằng bao nhiêu vôn (V)? *(Làm tròn kết quả đến chữ số thập phân thứ hai).*", "answer": "1,56", "accepted_answers": ["1,56", "1.56", "1.56 V", "1,56 V", "1.56V", "1,56V"], "explanation": "<strong>Giải thích chi tiết:</strong><br>Cặp $Ag^+/Ag$ có thế điện cực chuẩn lớn hơn ($+0{,}80\\text{ V}$) nên đóng vai trò là cathode (cực dương).<br>Cặp $Zn^{2+}/Zn$ có thế điện cực chuẩn nhỏ hơn ($-0{,}76\\text{ V}$) nên đóng vai trò là anode (cực âm).<br>Sức điện động chuẩn của pin: $E^\\circ_{pin} = E^\\circ_{cathode} - E^\\circ_{anode} = E^\\circ(Ag^+/Ag) - E^\\circ(Zn^{2+}/Zn) = 0{,}80 - (-0{,}76) = 1{,}56\\text{ V}$."}, {"id": 2, "question": "Tiến hành điện phân $500\\text{ mL}$ dung dịch $CuSO_4\\ 0{,}2\\text{ M}$ với các điện cực trơ, cường độ dòng điện không đổi $I = 1{,}93\\text{ A}$ trong thời gian $2000\\text{ giây}$. Giả thiết hiệu suất phản ứng điện phân đạt $100\\%$, ion $Cu^{2+}$ chưa bị điện phân hết. Khối lượng đồng (tính theo gam) bám lên cathode sau thời gian điện phân trên là bao nhiêu? *(Làm tròn kết quả đến chữ số thập phân thứ hai).*", "answer": "1,28", "accepted_answers": ["1,28", "1.28", "1.28 g", "1,28 g", "1.28g", "1,28g"], "explanation": "<strong>Giải thích chi tiết:</strong><br>Điện lượng truyền qua bình điện phân: $Q = I \\cdot t = 1{,}93 \\times 2000 = 3860\\text{ C}$.<br>Số mol electron trao đổi: $n_e = \\frac{Q}{F} = \\frac{3860}{96500} = 0{,}04\\text{ mol}$.<br>Tại cathode xảy ra quá trình khử: $Cu^{2+} + 2e \\rightarrow Cu$.<br>Số mol đồng bám ở cathode: $n_{Cu} = \\frac{n_e}{2} = \\frac{0{,}04}{2} = 0{,}02\\text{ mol}$.<br>Số mol $CuSO_4$ ban đầu: $n_{CuSO_4} = 0{,}5 \\times 0{,}2 = 0{,}1\\text{ mol} > 0{,}02\\text{ mol}$ (thỏa mãn $Cu^{2+}$ dư).<br>Khối lượng đồng tạo thành: $m_{Cu} = 0{,}02 \\times 64 = 1{,}28\\text{ gam}$."}, {"id": 3, "question": "Tiến hành điện phân dung dịch chứa $0{,}06\\text{ mol } NaCl$ với các điện cực trơ có màng ngăn xốp cho tới khi ion $Cl^-$ vừa bị điện phân hết thì dừng lại. Toàn bộ thể tích khí chlorine ($Cl_2$) thoát ra ở cực dương (anode) đo ở điều kiện chuẩn ($25^\\circ\\text{C}, 1\\text{ bar}$, thể tích 1 mol khí là $24{,}79\\text{ lít}$) có giá trị bằng bao nhiêu lít? *(Làm tròn kết quả đến chữ số thập phân thứ hai).*", "answer": "0,74", "accepted_answers": ["0,74", "0.74", "0.74 l", "0,74 l", "0.74L", "0,74L"], "explanation": "<strong>Giải thích chi tiết:</strong><br>Bán phản ứng xảy ra tại cực dương (anode): $2Cl^- \\rightarrow Cl_2\\uparrow + 2e$.<br>Số mol $Cl^- = 0{,}06\\text{ mol} \\Rightarrow n_{Cl_2} = \\frac{0{,}06}{2} = 0{,}03\\text{ mol}$.<br>Thể tích khí $Cl_2$ ở điều kiện chuẩn ($25^\\circ\\text{C}, 1\\text{ bar}$):<br>$V_{Cl_2} = 0{,}03 \\times 24{,}79 = 0{,}7437\\text{ lít} \\approx 0{,}74\\text{ lít}$."}, {"id": 4, "question": "Một bình điện phân tinh luyện đồng hoạt động với cường độ dòng điện không đổi $I = 9{,}65\\text{ A}$. Biết khối lượng đồng nguyên chất bám vào cathode sau quá trình điện phân là $19{,}2\\text{ gam}$. Bỏ qua các hao phí năng lượng, thời gian điện phân đã diễn ra là bao nhiêu giây?", "answer": "6000", "accepted_answers": ["6000", "6000 s", "6000s", "6000 giây"], "explanation": "<strong>Giải thích chi tiết:</strong><br>Số mol đồng bám vào cathode: $n_{Cu} = \\frac{19{,}2}{64} = 0{,}3\\text{ mol}$.<br>Quá trình khử tại cathode: $Cu^{2+} + 2e \\rightarrow Cu$.<br>Số mol electron trao đổi: $n_e = 2 \\times n_{Cu} = 2 \\times 0{,}3 = 0{,}6\\text{ mol}$.<br>Theo định luật Faraday: $t = \\frac{n_e \\cdot F}{I} = \\frac{0{,}6 \\times 96500}{9{,}65} = 6000\\text{ giây}$."}, {"id": 5, "question": "Tiến hành điện phân dung dịch với các điện cực trơ (có màng ngăn xốp) đối với từng dung dịch muối riêng biệt sau: (1) $AgNO_3$; (2) $CuSO_4$; (3) $MgCl_2$; (4) $NaCl$; (5) $Fe(NO_3)_3$; (6) $Al_2(SO_4)_3$. Khi cho dòng điện một chiều chạy qua đủ lâu, có bao nhiêu dung dịch sau điện phân thu được kim loại tự do bám trên bề mặt cathode?", "answer": "3", "accepted_answers": ["3", "3 dung dịch"], "explanation": "<strong>Giải thích chi tiết:</strong><br>Trong dung dịch nước, các cation đứng sau nhôm trong dãy thế điện cực mới có khả năng bị khử thành kim loại tự do tại cathode:<br>(1) $AgNO_3$: Cation $Ag^+$ bị khử thành kim loại $Ag$ bám vào cathode. (Thoả mãn)<br>(2) $CuSO_4$: Cation $Cu^{2+}$ bị khử thành kim loại $Cu$ bám vào cathode. (Thoả mãn)<br>(3) $MgCl_2$: Cation $Mg^{2+}$ không bị khử trong dung dịch nước; $H_2O$ bị khử tạo khí $H_2$. (Không tạo kim loại)<br>(4) $NaCl$: Cation $Na^+$ không bị khử trong dung dịch nước; $H_2O$ bị khử tạo khí $H_2$. (Không tạo kim loại)<br>(5) $Fe(NO_3)_3$: Cation $Fe^{3+}$ bị khử thành $Fe^{2+}$, sau đó $Fe^{2+}$ tiếp tục bị khử thành kim loại $Fe$ bám vào cathode. (Thoả mãn)<br>(6) $Al_2(SO_4)_3$: Cation $Al^{3+}$ không bị khử trong dung dịch nước. (Không tạo kim loại)<br>Vậy có 3 dung dịch sinh ra kim loại tại cathode là: (1), (2), (5)."}, {"id": 6, "question": "Cho các phát biểu sau đây liên quan đến pin điện hoá và sự điện phân:\n(a) Trong pin điện hoá Galvani, phản ứng hoá học tự diễn biến sinh ra dòng điện một chiều.\n(b) Trong mọi quá trình điện phân dung dịch, tại cathode luôn xảy ra quá trình oxi hoá.\n(c) Trong pin nhiên liệu hydrogen – oxygen, khí hydrogen ($H_2$) được nạp vào cathode.\n(d) Khi điện phân dung dịch $CuSO_4$ với anode bằng đồng (hiện tượng cực tan), nồng độ ion $Cu^{2+}$ trong dung dịch về cơ bản không đổi.\n(e) Kim loại nhôm ($Al$) được điều chế trong công nghiệp bằng cách điện phân nóng chảy $Al_2O_3$ có mặt cryolite.\n(g) Trong bình điện phân, các cation di chuyển về phía cực âm (cathode).\nCó bao nhiêu phát biểu đúng trong các phát biểu trên?", "answer": "4", "accepted_answers": ["4", "4 phát biểu", "4 ý"], "explanation": "<strong>Giải thích chi tiết:</strong><br>– (a) ĐÚNG: Pin điện hóa biến đổi hóa năng của phản ứng oxi hoá – khử tự diễn biến thành điện năng.<br>– (b) SAI: Tại cathode luôn luôn xảy ra quá trình KHỬ (nhận electron), không phải quá trình oxi hoá.<br>– (c) SAI: Khí hydrogen ($H_2$) là chất khử nên được nạp vào cực âm ANODE, còn oxygen nạp vào cathode.<br>– (d) ĐÚNG: Tại anode đồng tan ra ($Cu \\rightarrow Cu^{2+} + 2e$), tại cathode $Cu^{2+}$ kết tủa ($Cu^{2+} + 2e \\rightarrow Cu$), tốc độ tan và kết tủa bằng nhau nên nồng độ $Cu^{2+}$ trong dung dịch không đổi.<br>– (e) ĐÚNG: Đây là phương pháp công nghiệp duy nhất sản xuất nhôm hiện đại (công nghệ Hall – Héroult).<br>– (g) ĐÚNG: Cation mang điện tích dương nên bị hút về phía cực âm (cathode) của bình điện phân.<br>Số phát biểu đúng là 4 gồm: (a), (d), (e), (g)."}];
+        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwRRiM81mghvA7cInvJgb4rPLzWOAE3s44wer0BJcURQ4hWwoykS19pkNQ9LyzH6Q8lTQ/exec";
+        const EXAM_TITLE = "Đề Số 37: Đề Ôn Tập Toàn Diện Chương 5: Pin Điện Và Điện Phân — Hóa Học 12";
+        const TOTAL_DURATION_SEC = 50 * 60;
+
+        let examSubmitted = false;
+        let hasSentResults = false;
+        let lastSyncData = null;
+        let timerInterval = null;
+        let remainingSeconds = TOTAL_DURATION_SEC;
+
+        window.sName = "";
+        window.sClass = "";
+
+        const USER_STATE = {
+            p1: {},
+            p2: {},
+            p3: {}
+        };
+
+        function ensureMathJax(retries = 25) {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.warn('MathJax err:', err));
+            } else if (retries > 0) {
+                setTimeout(() => ensureMathJax(retries - 1), 100);
+            }
+        }
+
+        function startExam() {
+            const nameInp = document.getElementById("studentName");
+            const classInp = document.getElementById("studentClass");
+
+            const name = nameInp ? nameInp.value.trim() : "";
+            const sClass = classInp ? classInp.value.trim() : "";
+
+            if (!name) {
+                alert("Vui lòng nhập Họ và tên của bạn!");
+                if (nameInp) nameInp.focus();
+                return;
+            }
+            if (!sClass) {
+                alert("Vui lòng nhập Lớp học của bạn!");
+                if (classInp) classInp.focus();
+                return;
+            }
+
+            window.sName = name;
+            window.sClass = sClass;
+
+            document.getElementById("displayName").innerText = name;
+            document.getElementById("displayClass").innerText = sClass;
+
+            document.getElementById("startScreen").style.display = "none";
+            document.getElementById("examContainer").style.display = "block";
+
+            renderQuestions();
+            startTimer();
+            ensureMathJax();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function startTimer() {
+            const timerEl = document.getElementById("timerText");
+            timerInterval = setInterval(() => {
+                remainingSeconds--;
+                if (remainingSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    timerEl.innerText = "00:00";
+                    alert("Đã hết thời gian làm bài! Hệ thống tự động nộp bài của bạn.");
+                    submitExam();
+                    return;
+                }
+                const m = Math.floor(remainingSeconds / 60);
+                const s = remainingSeconds % 60;
+                timerEl.innerText = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+            }, 1000);
+        }
+
+        function renderQuestions() {
+            // Render Part 1
+            const c1 = document.getElementById("part1Container");
+            c1.innerHTML = "";
+            RAW_PART1.forEach(q => {
+                let optHtml = "";
+                ['A', 'B', 'C', 'D'].forEach(opt => {
+                    optHtml += `
+                        <div class="option-item" id="opt_p1_${q.id}_${opt}" onclick="selectOptionP1(${q.id}, '${opt}')">
+                            <span class="option-label">${opt}.</span>
+                            <span class="option-text">${q.options[opt]}</span>
+                        </div>
+                    `;
+                });
+                c1.innerHTML += `
+                    <div class="q-card" id="card_p1_${q.id}">
+                        <div class="q-title"><span class="q-badge">Câu ${q.id}</span>${q.question}</div>
+                        <div class="options-list">${optHtml}</div>
+                        <div class="explanation-box" id="exp_p1_${q.id}">
+                            <div class="font-bold text-emerald-800 mb-1"><i class="fa-solid fa-circle-check"></i> Đáp án đúng: ${q.answer}</div>
+                            <div>${q.explanation}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Render Part 2
+            const c2 = document.getElementById("part2Container");
+            c2.innerHTML = "";
+            RAW_PART2.forEach(q => {
+                let subHtml = "";
+                ['a', 'b', 'c', 'd'].forEach(label => {
+                    subHtml += `
+                        <div class="sub-row">
+                            <div class="text-xs sm:text-sm font-medium text-slate-800 leading-relaxed">
+                                <span class="font-bold text-indigo-700">${label})</span> ${q.subitems[label]}
+                            </div>
+                            <div class="flex items-center gap-2 self-end sm:self-center">
+                                <button type="button" class="btn-ds" id="btn_p2_${q.id}_${label}_D" onclick="selectSubP2(${q.id}, '${label}', 'Đ')">ĐÚNG</button>
+                                <button type="button" class="btn-ds" id="btn_p2_${q.id}_${label}_S" onclick="selectSubP2(${q.id}, '${label}', 'S')">SAI</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                c2.innerHTML += `
+                    <div class="q-card" id="card_p2_${q.id}">
+                        <div class="q-title"><span class="q-badge">Câu ${q.id}</span>${q.context} ${q.statement}</div>
+                        <div class="subs-list">${subHtml}</div>
+                        <div class="explanation-box" id="exp_p2_${q.id}">
+                            <div class="font-bold text-indigo-900 mb-1"><i class="fa-solid fa-circle-check"></i> Đáp án chuẩn: a) ${q.answers.a} | b) ${q.answers.b} | c) ${q.answers.c} | d) ${q.answers.d}</div>
+                            <div>${q.explanation}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Render Part 3
+            const c3 = document.getElementById("part3Container");
+            c3.innerHTML = "";
+            RAW_PART3.forEach(q => {
+                c3.innerHTML += `
+                    <div class="q-card" id="card_p3_${q.id}">
+                        <div class="q-title"><span class="q-badge">Câu ${q.id}</span>${q.question}</div>
+                        <div class="flex items-center gap-3 mt-3">
+                            <label class="text-xs sm:text-sm font-bold text-slate-600">Trả lời:</label>
+                            <input type="text" id="ans_p3_${q.id}" oninput="updateProgress()" placeholder="Nhập đáp số..." class="px-4 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 font-bold text-slate-800 text-sm max-w-[220px]">
+                        </div>
+                        <div class="explanation-box" id="exp_p3_${q.id}">
+                            <div class="font-bold text-teal-900 mb-1"><i class="fa-solid fa-circle-check"></i> Đáp số: ${q.answer}</div>
+                            <div>${q.explanation}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function selectOptionP1(qid, opt) {
+            if (examSubmitted) return;
+            USER_STATE.p1[qid] = opt;
+            ['A', 'B', 'C', 'D'].forEach(o => {
+                const el = document.getElementById(`opt_p1_${qid}_${o}`);
+                if (el) el.classList.remove("selected");
+            });
+            const cur = document.getElementById(`opt_p1_${qid}_${opt}`);
+            if (cur) cur.classList.add("selected");
+            updateProgress();
+        }
+
+        function selectSubP2(qid, label, val) {
+            if (examSubmitted) return;
+            if (!USER_STATE.p2[qid]) USER_STATE.p2[qid] = {};
+            USER_STATE.p2[qid][label] = val;
+
+            const btnD = document.getElementById(`btn_p2_${qid}_${label}_D`);
+            const btnS = document.getElementById(`btn_p2_${qid}_${label}_S`);
+
+            if (val === 'Đ') {
+                if (btnD) btnD.classList.add("active-d");
+                if (btnS) btnS.classList.remove("active-s");
+            } else {
+                if (btnS) btnS.classList.add("active-s");
+                if (btnD) btnD.classList.remove("active-d");
+            }
+            updateProgress();
+        }
+
+        function updateProgress() {
+            let answered = 0;
+            // Count P1
+            answered += Object.keys(USER_STATE.p1).length;
+            // Count P2
+            Object.keys(USER_STATE.p2).forEach(qid => {
+                if (Object.keys(USER_STATE.p2[qid]).length === 4) answered++;
+            });
+            // Count P3
+            RAW_PART3.forEach(q => {
+                const inp = document.getElementById(`ans_p3_${q.id}`);
+                if (inp && inp.value.trim() !== "") answered++;
+            });
+
+            const total = 18 + 4 + 6;
+            const pct = Math.min(100, Math.round((answered / total) * 100));
+            document.getElementById("progressFill").style.width = pct + "%";
+        }
+
+        function submitExam() {
+            if (examSubmitted) return;
+            examSubmitted = true;
+
+            clearInterval(timerInterval);
+
+            // Thu thập đáp án Part 3
+            RAW_PART3.forEach(q => {
+                const inp = document.getElementById(`ans_p3_${q.id}`);
+                USER_STATE.p3[q.id] = inp ? inp.value.trim() : "";
+            });
+
+            // TÍNH ĐIỂM CHUẨN FORM BỘ GD&ĐT
+            let scoreP1 = 0;
+            let correctP1 = 0;
+            RAW_PART1.forEach(q => {
+                const uAns = USER_STATE.p1[q.id];
+                const card = document.getElementById(`card_p1_${q.id}`);
+                if (uAns === q.answer) {
+                    scoreP1 += 0.25;
+                    correctP1++;
+                    if (card) card.style.borderColor = "#22c55e";
+                } else {
+                    if (card) card.style.borderColor = "#ef4444";
+                }
+            });
+
+            let scoreP2 = 0;
+            let correctSubP2 = 0;
+            RAW_PART2.forEach(q => {
+                const uMap = USER_STATE.p2[q.id] || {};
+                let cCount = 0;
+                ['a', 'b', 'c', 'd'].forEach(label => {
+                    if (uMap[label] === q.answers[label]) {
+                        cCount++;
+                        correctSubP2++;
+                    }
+                });
+                // Quy chuẩn điểm Part 2 của Bộ GD&ĐT:
+                if (cCount === 1) scoreP2 += 0.1;
+                else if (cCount === 2) scoreP2 += 0.25;
+                else if (cCount === 3) scoreP2 += 0.5;
+                else if (cCount === 4) scoreP2 += 1.0;
+
+                const card = document.getElementById(`card_p2_${q.id}`);
+                if (cCount === 4) {
+                    if (card) card.style.borderColor = "#22c55e";
+                } else if (cCount >= 2) {
+                    if (card) card.style.borderColor = "#f59e0b";
+                } else {
+                    if (card) card.style.borderColor = "#ef4444";
+                }
+            });
+
+            let scoreP3 = 0;
+            let correctP3 = 0;
+            RAW_PART3.forEach(q => {
+                const uAns = (USER_STATE.p3[q.id] || "").trim().toLowerCase();
+                const accepted = q.accepted_answers.map(a => a.toLowerCase());
+                const card = document.getElementById(`card_p3_${q.id}`);
+                if (accepted.includes(uAns)) {
+                    scoreP3 += 0.25;
+                    correctP3++;
+                    if (card) card.style.borderColor = "#22c55e";
+                } else {
+                    if (card) card.style.borderColor = "#ef4444";
+                }
+            });
+
+            const totalScore = (scoreP1 + scoreP2 + scoreP3).toFixed(2);
+            const totalCorrectQuestions = correctP1 + (correctSubP2 === 16 ? 4 : Math.floor(correctSubP2 / 4)) + correctP3;
+
+            // Hiển thị kết quả lên giao diện
+            document.getElementById("resultPanel").style.display = "block";
+            document.getElementById("finalScore").innerText = totalScore;
+            document.getElementById("resultDetails").innerHTML = `
+                Thí sinh: <strong>${window.sName}</strong> | Lớp: <strong>${window.sClass}</strong><br>
+                Điểm Phần I: <strong>${scoreP1.toFixed(2)}/4,5</strong> (${correctP1}/18 câu đúng)<br>
+                Điểm Phần II: <strong>${scoreP2.toFixed(2)}/4,0</strong> (${correctSubP2}/16 ý lệnh hỏi đúng)<br>
+                Điểm Phần III: <strong>${scoreP3.toFixed(2)}/1,5</strong> (${correctP3}/6 câu đúng)<br>
+                Tổng điểm toàn bài: <span class="text-base font-extrabold text-blue-700">${totalScore} / 10,0</span>
+            `;
+
+            // Mở tất cả hộp giải thích
+            document.querySelectorAll(".explanation-box").forEach(box => {
+                box.style.display = "block";
+            });
+
+            // Bắn pháo hoa nếu điểm cao
+            if (parseFloat(totalScore) >= 8.0 && window.confetti) {
+                window.confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+
+            ensureMathJax();
+
+            // CUỘN XUỐNG KẾT QUẢ
+            document.getElementById("resultPanel").scrollIntoView({ behavior: "smooth" });
+
+            // GỬI KẾT QUẢ VÀO GOOGLE SHEET (FULL ALIAS MATRIX)
+            const payload = {
+                name: window.sName,
+                studentName: window.sName,
+                hoTen: window.sName,
+                fullName: window.sName,
+                className: window.sClass,
+                studentClass: window.sClass,
+                class: window.sClass,
+                lop: window.sClass,
+                lesson: EXAM_TITLE,
+                examTitle: EXAM_TITLE,
+                tenBai: EXAM_TITLE,
+                deThi: EXAM_TITLE,
+                score: String(totalScore),
+                totalScore: String(totalScore),
+                diem: String(totalScore),
+                diemSo: String(totalScore),
+                grade: String(totalScore),
+                correct: `${correctP1 + correctP3}/${18 + 6} (P1+P3), P2: ${correctSubP2}/16`,
+                correctCount: String(correctP1 + correctP3),
+                soCauDung: String(correctP1 + correctP3),
+                tongSoCau: "28",
+                soCauSai: String(28 - totalCorrectQuestions),
+                incorrectCount: String(28 - totalCorrectQuestions),
+                subject: "Hóa Học",
+                monHoc: "Hóa học",
+                chuyenMuc: "vatli102.com/hoa/",
+                timeRemaining: document.getElementById("timerText").innerText
+            };
+
+            lastSyncData = payload;
+            syncToGoogleSheet(payload);
+        }
+
+        function forceSyncLocal() {
+            if (lastSyncData) {
+                hasSentResults = false;
+                executeSheetFetch(lastSyncData, true);
+            }
+        }
+
+        function syncToGoogleSheet(payload) {
+            const host = window.location.hostname.toLowerCase();
+            const isVatli102 = (host === 'vatli102.com' || host === 'www.vatli102.com');
+            const statusEl = document.getElementById("sheetSyncStatus");
+
+            if (!isVatli102) {
+                if (statusEl) {
+                    statusEl.style.display = 'block';
+                    statusEl.style.background = '#f0f9ff';
+                    statusEl.style.border = '1.5px solid #bae6fd';
+                    statusEl.style.color = '#0369a1';
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-info"></i> <strong>Chế độ xem trước cục bộ:</strong> Kết quả chính thức tự động đồng bộ khi học sinh làm bài trên <strong>vatli102.com</strong>.<br><button type="button" onclick="forceSyncLocal()" style="margin-top: 8px; padding: 5px 14px; font-size: 0.82rem; background: #1d4ed8; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700;"><i class="fa-solid fa-cloud-arrow-up"></i> Bấm để đồng bộ thử nghiệm vào Google Sheet</button>';
+                }
+                return;
+            }
+
+            executeSheetFetch(payload, false);
+        }
+
+        function executeSheetFetch(payload, isManual) {
+            if (hasSentResults) return;
+            hasSentResults = true;
+
+            const statusEl = document.getElementById("sheetSyncStatus");
+            if (statusEl) {
+                statusEl.style.display = 'block';
+                statusEl.style.background = '#fefce8';
+                statusEl.style.border = '1.5px solid #fef08a';
+                statusEl.style.color = '#854d0e';
+                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang đồng bộ kết quả lên sổ điểm giáo viên...';
+            }
+
+            fetch(GOOGLE_SHEET_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                if (statusEl) {
+                    statusEl.style.background = '#f0fdf4';
+                    statusEl.style.border = '1.5px solid #bbf7d0';
+                    statusEl.style.color = '#166534';
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> Đã đồng bộ điểm thành công vào Google Sheet môn Hóa của giáo viên!';
+                }
+            })
+            .catch(err => {
+                console.error("Sheet sync error:", err);
+                if (statusEl) {
+                    statusEl.style.background = '#fef2f2';
+                    statusEl.style.border = '1.5px solid #fecaca';
+                    statusEl.style.color = '#991b1b';
+                    statusEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Có lỗi khi gửi kết quả lên Google Sheet: ' + err.message;
+                }
+            });
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
