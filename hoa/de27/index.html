@@ -823,12 +823,14 @@
 
             // Chấm Phần I (18 câu x 0.25đ = 4.5đ)
             const p1Weight = 0.25;
+            let correctP1 = 0;
             part1Data.forEach(q => {
                 const userAns = userPart1[q.id];
                 const isCorrect = userAns === q.answer;
                 if (isCorrect) {
                     totalPoints += p1Weight;
                     totalCorrectItems++;
+                    correctP1++;
                 } else {
                     totalIncorrectItems++;
                 }
@@ -842,6 +844,8 @@
 
             // Chấm Phần II (4 câu x 1.0đ = 4.0đ; Barem lũy tiến: 0.1, 0.25, 0.5, 1.0)
             const p2Scale = [0, 0.1, 0.25, 0.5, 1.0];
+            let correctSubP2 = 0;
+            let fullyCorrectP2 = 0;
             part2Data.forEach(q => {
                 let subCorrect = 0;
                 const answers = q.answers || {};
@@ -852,6 +856,7 @@
                     if (userVal === correctVal) {
                         subCorrect++;
                         totalCorrectItems++;
+                        correctSubP2++;
                     } else {
                         totalIncorrectItems++;
                     }
@@ -861,12 +866,14 @@
                         if (btnS) btnS.style.outline = '2.5px solid #dc2626';
                     }
                 });
+                if (subCorrect === 4) fullyCorrectP2++;
                 totalPoints += p2Scale[subCorrect];
                 document.getElementById(`exp-p2-${q.id}`).classList.add('show');
             });
 
             // Chấm Phần III (6 câu x 0.25đ = 1.5đ)
             const p3Weight = 0.25;
+            let correctP3 = 0;
             part3Data.forEach(q => {
                 const userVal = (userPart3[q.id] || '').replace(',', '.').replace(/\s+/g, '');
                 const correctVal = String(q.answer).replace(',', '.').replace(/\s+/g, '');
@@ -875,6 +882,7 @@
                 if (userVal !== '' && (userVal === correctVal || Math.abs(parseFloat(userVal) - parseFloat(correctVal)) < 0.05)) {
                     totalPoints += p3Weight;
                     totalCorrectItems++;
+                    correctP3++;
                     inputEl.classList.add('input-correct');
                 } else {
                     totalIncorrectItems++;
@@ -908,12 +916,14 @@
                         || '12';
 
             const examTitle = "Đề Ôn Tập Số 02: Thế Điện Cực Chuẩn Và Pin Điện Hóa - Hóa Học 12";
-            const totalQ = part1Data.length + part2Data.length + part3Data.length;
+            const totalQ = 28;
+            const totalCorrectQuestions = correctP1 + fullyCorrectP2 + correctP3;
+            const totalWrongQuestions = 28 - totalCorrectQuestions;
 
             const payload = {
                 timestamp: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
                 time: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
-                subject: "Hóa học",
+                subject: "Hóa Học",
                 monHoc: "Hóa học",
                 chuyenMuc: "vatli102.com/hoa/",
                 sourceUrl: window.location.href,
@@ -931,12 +941,12 @@
                 totalScore: String(finalScore),
                 diemSo: String(finalScore),
                 grade: `${finalScore}/10`,
-                correctCount: String(totalCorrectItems),
-                soCauDung: String(totalCorrectItems),
-                correct: `${totalCorrectItems}/${totalQ} câu`,
-                incorrectCount: String(totalIncorrectItems),
-                soCauSai: String(totalIncorrectItems),
-                tongSoCau: String(totalQ),
+                correctCount: String(totalCorrectQuestions),
+                soCauDung: String(totalCorrectQuestions),
+                correct: `${correctP1 + correctP3}/24 (P1+P3), P2: ${correctSubP2}/16 ý (Điểm: ${finalScore}/10)`,
+                incorrectCount: String(totalWrongQuestions),
+                soCauSai: String(totalWrongQuestions),
+                tongSoCau: "28",
                 timeSpent: tSpent,
                 thoiGian: tSpent,
                 examTitle: examTitle,
@@ -965,21 +975,7 @@
         }
 
         function syncToGoogleSheet(payload) {
-            const host = window.location.hostname.toLowerCase();
-            const isVatli102 = (host === 'vatli102.com' || host === 'www.vatli102.com');
-            const statusEl = document.getElementById("sheetSyncStatus");
-
-            if (!isVatli102) {
-                if (statusEl) {
-                    statusEl.style.display = 'block';
-                    statusEl.style.background = '#f0f9ff';
-                    statusEl.style.border = '1.5px solid #bae6fd';
-                    statusEl.color = '#0369a1';
-                    statusEl.innerHTML = '<i class="fa-solid fa-circle-info"></i> <strong>Chế độ xem trước cục bộ:</strong> Kết quả chính thức tự động đồng bộ khi học sinh làm bài trên <strong>vatli102.com</strong>.<br><button type="button" onclick="forceSyncLocal()" style="margin-top: 8px; padding: 5px 14px; font-size: 0.82rem; background: #1d4ed8; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700;"><i class="fa-solid fa-cloud-arrow-up"></i> Bấm để đồng bộ thử nghiệm vào Google Sheet</button>';
-                }
-                return;
-            }
-
+            // Tự động đồng bộ trên vatli102.com và môi trường kiểm thử cục bộ (file:/// hoặc localhost)
             executeSheetFetch(payload, false);
         }
 
@@ -1004,19 +1000,23 @@
             })
             .then(() => {
                 if (statusEl) {
+                    statusEl.style.display = 'block';
                     statusEl.style.background = '#f0fdf4';
                     statusEl.style.border = '1.5px solid #bbf7d0';
                     statusEl.style.color = '#15803d';
-                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> Đã đồng bộ điểm số thành công vào sổ điểm Google Sheet của giáo viên!';
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> Đã đồng bộ điểm số thành công vào Google Sheet môn Hóa của giáo viên! ' +
+                        '<button type="button" onclick="forceSyncLocal()" style="margin-left: 10px; padding: 4px 12px; font-size: 0.8rem; background: #16a34a; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fa-solid fa-rotate-right"></i> Đồng bộ lại</button>';
                 }
             })
             .catch(err => {
                 console.error("Lỗi đồng bộ:", err);
                 if (statusEl) {
+                    statusEl.style.display = 'block';
                     statusEl.style.background = '#fef2f2';
                     statusEl.style.border = '1.5px solid #fecaca';
                     statusEl.style.color = '#991b1b';
-                    statusEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Chưa thể đồng bộ lên Google Sheet do lỗi mạng.';
+                    statusEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Chưa thể đồng bộ lên Google Sheet do sự cố mạng. ' +
+                        '<button type="button" onclick="forceSyncLocal()" style="margin-left: 10px; padding: 4px 12px; font-size: 0.8rem; background: #dc2626; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fa-solid fa-cloud-arrow-up"></i> Bấm để đồng bộ ngay</button>';
                 }
             });
         }
