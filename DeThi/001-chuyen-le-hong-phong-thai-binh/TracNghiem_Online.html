@@ -229,7 +229,7 @@
                 <span><i class="fa-solid fa-list-check"></i> Gồm 28 câu hỏi (Phần I: 18 câu, Phần II: 4 câu, Phần III: 6 câu)</span>
             </div>
             <div style="margin-top: 18px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
-                <a href="001_THPT_Chuyen_Le_Hong_Phong_Thai_Binh.pdf" download="001_THPT_Chuyen_Le_Hong_Phong_Thai_Binh.pdf" class="btn-download-pdf">
+                <a href="001_THPT_Chuyen_Le_Hong_Phong_Thai_Binh.pdf" download="001_THPT_Chuyen_Le_Hong_Phong_Thai_Binh.pdf" class="btn-download-pdf" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #ef4444; color: #ffffff !important; padding: 10px 24px; border-radius: 12px; font-weight: 700; font-size: 0.95rem; text-decoration: none; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);">
                     <i class="fa-solid fa-file-pdf"></i> Tải Đề Thi Bản PDF (Gốc)
                 </a>
             </div>
@@ -268,7 +268,7 @@
         </div>
 
         <!-- QUIZ QUESTIONS CONTAINER -->
-        <div id="quizArea">
+        <div id="quizArea" style="display: none;">
             <!-- Part 1 -->
             <div class="section-header">
                 <i class="fa-solid fa-circle-dot"></i> PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn (18 câu - 4,5 điểm)
@@ -358,8 +358,6 @@
             const savedClass = localStorage.getItem('saved_student_class');
             if (savedName) document.getElementById('studentName').value = savedName;
             if (savedClass) document.getElementById('studentClass').value = savedClass;
-            renderQuiz();
-            typesetMath();
         };
 
         function typesetMath() {
@@ -388,10 +386,20 @@
 
             document.getElementById('loginCard').style.display = 'none';
             document.getElementById('metaBar').style.display = 'flex';
+            document.getElementById('quizArea').style.display = 'block';
             document.getElementById('floatingBar').style.display = 'flex';
 
-            startTimer();
+            renderQuiz();
             typesetMath();
+            startTimer();
+
+            setTimeout(function() {
+                var qa = document.getElementById('quizArea');
+                if (qa) {
+                    var topPos = qa.getBoundingClientRect().top + window.pageYOffset - 70;
+                    window.scrollTo({ top: Math.max(0, topPos), behavior: 'smooth' });
+                }
+            }, 80);
         }
 
         function startTimer() {
