@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thí nghiệm ảo 3D Real: Bộ thí nghiệm Tổng hợp lực đồng quy (Vật lí 10 - Bài 13)</title>
+  <!-- Tải Three.js offline (cùng thư mục) kèm fallback CDN -->
+  <script src="three.min.js"></script>
+  <script>
+    if (typeof THREE === 'undefined') {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');
+    }
+  </script>
+  <style>
+    :root {
+      --panel-bg: rgba(255, 255, 255, 0.92);
+      --border: rgba(148, 163, 184, 0.45);
+      --navy: #0f172a;
+      --blue: #1d4ed8;
+      --green: #15803d;
+      --amber: #b45309;
+      --red: #be123c;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+      background: #e2e8f0;
+      color: var(--navy);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      user-select: none;
+    }
+
+    #viewport3d {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      cursor: grab;
+    }
+    #viewport3d:active { cursor: grabbing; }
+
+    .hud-card {
+      background: var(--panel-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 8px 28px rgba(15, 23, 42, 0.14);
+      pointer-events: auto;
+    }
+
+    /* TOP BAR */
+    header {
+      position: fixed;
+      top: 12px;
+      left: 16px;
+      right: 16px;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .brand {
+      padding: 9px 16px;
+    }
+    .brand h1 {
+      font-size: 1.05rem;
+      color: #1e3a8a;
+      font-weight: 800;
+    }
+    .brand p {
+      font-size: 0.78rem;
+      color: #475569;
+      margin-top: 2px;
+    }
+
+    .step-bar {
+      padding: 6px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .step-btn {
+      padding: 8px 13px;
+      border-radius: 10px;
+      border: 1.5px solid #cbd5e1;
+      background: #f8fafc;
+      color: #334155;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .step-btn:hover {
+      border-color: #3b82f6;
+      color: #1e3a8a;
+    }
+    .step-btn.active {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      border-color: #1d4ed8;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    }
+
+    /* CAMERA BAR BOTTOM LEFT */
+    .cam-bar {
+      position: fixed;
+      bottom: 14px;
+      left: 16px;
+      z-index: 10;
+      padding: 7px 10px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .cam-btn {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: #1e293b;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.16s;
+    }
+    .cam-btn:hover, .cam-btn.active {
+      background: #1e3a8a;
+      border-color: #1e3a8a;
+      color: #ffffff;
+    }
+
+    .cam-hint {
+      font-size: 0.74rem;
+      color: #475569;
+      margin-left: 4px;
+      font-weight: 500;
+    }
+
+    /* RIGHT SIDEBAR */
+    .sidebar {
+      position: fixed;
+      top: 74px;
+      right: 16px;
+      bottom: 14px;
+      width: 345px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow-y: auto;
+      padding-right: 2px;
+      pointer-events: none;
+    }
+    .sidebar::-webkit-scrollbar { width: 5px; }
+    .sidebar::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 6px; }
+
+    .panel {
+      padding: 12px 14px;
+    }
+
+    .panel h2 {
+      font-size: 0.84rem;
+      color: #1e3a8a;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 5px;
+    }
+
+    .ctrl-row { margin-bottom: 8px; }
+    .ctrl-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.83rem;
+      font-weight: 600;
+      margin-bottom: 3px;
+      color: #1e293b;
+    }
+
+    .badge {
+      padding: 1px 7px;
+      border-radius: 6px;
+      font-weight: 800;
+      font-size: 0.82rem;
+    }
+    .b-f1 { background: #ffe4e6; color: #be123c; }
+    .b-f2 { background: #e0f2fe; color: #0369a1; }
+    .b-ang { background: #fef3c7; color: #b45309; }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #2563eb;
+      cursor: pointer;
+    }
+
+    .preset-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .btn {
+      padding: 7px 8px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: #1e293b;
+      font-size: 0.77rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+    }
+    .btn:hover { background: #eff6ff; border-color: #3b82f6; color: #1d4ed8; }
+
+    .btn-amber {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      border-color: #d97706;
+      color: #ffffff;
+      font-size: 0.83rem;
+      padding: 9px;
+      width: 100%;
+    }
+    .btn-amber:hover { background: #b45309; color: #fff; }
+
+    .btn-purple {
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      border-color: #6d28d9;
+      color: #ffffff;
+      font-size: 0.83rem;
+      padding: 9px;
+      width: 100%;
+    }
+    .btn-purple:hover { background: #5b21b6; color: #fff; }
+
+    .btn-green {
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      border-color: #15803d;
+      color: #ffffff;
+      font-size: 0.83rem;
+      padding: 9px;
+      width: 100%;
+    }
+    .btn-green:hover { background: #166534; color: #fff; }
+
+    .readout-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .readout-card {
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 9px;
+      padding: 7px;
+      text-align: center;
+    }
+    .readout-card .lbl { font-size: 0.72rem; color: #64748b; font-weight: 600; }
+    .readout-card .val { font-size: 1.18rem; font-weight: 800; margin-top: 2px; }
+
+    .formula-box {
+      margin-top: 8px;
+      background: #fefce8;
+      border: 1px solid #fde047;
+      border-left: 4px solid #eab308;
+      padding: 8px 10px;
+      border-radius: 7px;
+      font-size: 0.79rem;
+      line-height: 1.45;
+      color: #1e293b;
+    }
+    .formula-box strong { color: #b45309; }
+
+    .toggle-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 7px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #334155;
+    }
+    .toggle-row label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+
+    table.log-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.75rem;
+      margin-top: 4px;
+    }
+    table.log-table th, table.log-table td {
+      border: 1px solid #cbd5e1;
+      padding: 4px 3px;
+      text-align: center;
+    }
+    table.log-table th { background: #eff6ff; color: #1e3a8a; }
+  </style>
+</head>
+<body>
+
+<div id="viewport3d"></div>
+
+<header>
+  <div class="hud-card brand">
+    <h1>🔬 BỘ THÍ NGHIỆM 3D REAL: TỔNG HỢP HAI LỰC ĐỒNG QUY (VẬT LÍ 10 – BÀI 13)</h1>
+    <p>Mô phỏng chuẩn bộ thiết bị THPT: Bảng thép trắng đứng • Đế 3 chạc • Lực kế ống vàng • Dây cao su & Vòng nhẫn O</p>
+  </div>
+  <div class="hud-card step-bar">
+    <button class="step-btn active" id="btnStep1" onclick="setStep(1)">① Bước 1: 2 Lực kế</button>
+    <button class="step-btn" id="btnStep2" onclick="setStep(2)">② Bước 2: Thay 1 Lực kế</button>
+    <button class="step-btn" id="btnStep3" onclick="setStep(3)">③ Bước 3: Dựng Hình bình hành</button>
+  </div>
+</header>
+
+<div class="hud-card cam-bar">
+  <button class="cam-btn active" id="camFront" onclick="setCameraPreset('front')">📐 Nhìn trực diện</button>
+  <button class="cam-btn" id="cam3d" onclick="setCameraPreset('3d')">🎥 Góc 3D Nghiêng</button>
+  <button class="cam-btn" id="camClose" onclick="setCameraPreset('close')">🔍 Cận cảnh Thước & Vòng nhẫn</button>
+  <span class="cam-hint">🖱️ Kéo chuột để xoay 3D quanh giá thí nghiệm • Cuộn để phóng to đọc vạch lực kế</span>
+</div>
+
+<aside class="sidebar">
+  <div class="hud-card panel">
+    <h2>⚙️ Điều chỉnh bộ thí nghiệm</h2>
+
+    <div class="ctrl-row">
+      <div class="ctrl-label">
+        <span>Lực kế trái (F₁)</span>
+        <span class="badge b-f1" id="lblF1">3,0 N</span>
+      </div>
+      <input type="range" id="rngF1" min="1" max="5" step="0.5" value="3" oninput="onSliderChange()" />
+    </div>
+
+    <div class="ctrl-row">
+      <div class="ctrl-label">
+        <span>Lực kế phải (F₂)</span>
+        <span class="badge b-f2" id="lblF2">4,0 N</span>
+      </div>
+      <input type="range" id="rngF2" min="1" max="5" step="0.5" value="4" oninput="onSliderChange()" />
+    </div>
+
+    <div class="ctrl-row">
+      <div class="ctrl-label">
+        <span>Góc giữa hai sợi dây (α)</span>
+        <span class="badge b-ang" id="lblAlpha">90°</span>
+      </div>
+      <input type="range" id="rngAlpha" min="0" max="160" step="5" value="90" oninput="onSliderChange()" />
+    </div>
+
+    <div class="preset-grid">
+      <button class="btn" onclick="applyPreset(3, 4, 90)">🎯 Chuẩn 3N–4N (90°)</button>
+      <button class="btn" onclick="applyPreset(3, 3, 60)">⚖️ Đối xứng 3N (60°)</button>
+      <button class="btn" onclick="applyPreset(4, 4, 120)">💎 Hình thoi 4N (120°)</button>
+      <button class="btn" onclick="applyPreset(2.5, 2.5, 0)">⬆️ Cùng chiều (0°)</button>
+      <button class="btn" id="btnSweep" onclick="toggleSweep()" style="grid-column: span 2;">🎬 Quét góc α liên tục (0° → 150°)</button>
+    </div>
+
+    <div class="toggle-row">
+      <label><input type="checkbox" id="chkVectors" checked onchange="sync3DScene()"> Hiện mũi tên lực trên giấy</label>
+      <label><input type="checkbox" id="chkLabels" checked onchange="sync3DScene()"> Nhãn số đo lớn</label>
+    </div>
+  </div>
+
+  <div class="hud-card panel">
+    <h2>🧪 Thao tác thực nghiệm</h2>
+    <div style="display:flex; flex-direction:column; gap:7px;">
+      <button class="btn btn-amber" id="btnAutoPull" onclick="autoPullToO()" style="display:none;">
+        ⚡ Kéo Lực kế thay thế đưa vòng nhẫn về đúng tâm O
+      </button>
+      <button class="btn btn-purple" id="btnAnimHBH" onclick="triggerHBHAnim()" style="display:none;">
+        📐 Chạy hiệu ứng kẻ Hình bình hành trên giấy
+      </button>
+      <button class="btn btn-green" onclick="recordMeasurement()">
+        📝 Ghi kết quả đo vào bảng
+      </button>
+    </div>
+
+    <div class="readout-grid">
+      <div class="readout-card">
+        <div class="lbl">Lực kế thay thế (Đo)</div>
+        <div class="val" id="readExp" style="color:#15803d;">— N</div>
+      </div>
+      <div class="readout-card">
+        <div class="lbl">Tính lí thuyết (Công thức)</div>
+        <div class="val" id="readTheory" style="color:#b45309;">5,00 N</div>
+      </div>
+    </div>
+
+    <div class="formula-box" id="formulaBox">
+      <strong>Kiểm chứng Toán học (THCS):</strong><br>
+      Vuông góc (α = 90° – Pythagore):<br>
+      F = √(3² + 4²) = <strong>5,00 N</strong>
+    </div>
+  </div>
+
+  <div class="hud-card panel">
+    <h2>
+      <span>📊 Bảng số liệu thực nghiệm</span>
+      <button class="btn" style="padding:2px 7px; font-size:0.7rem;" onclick="clearLog()">Xóa</button>
+    </h2>
+    <table class="log-table">
+      <thead>
+        <tr><th>Lần</th><th>F₁</th><th>F₂</th><th>α</th><th>F đo</th><th>F LT</th></tr>
+      </thead>
+      <tbody id="logBody">
+        <tr><td colspan="6" style="color:#64748b; padding:8px;">Bấm sang Bước 2/3 rồi Ghi kết quả đo!</td></tr>
+      </tbody>
+    </table>
+  </div>
+</aside>
+
+<script>
+  // =========================================================================
+  // 1. MÔ HÌNH HÌNH HỌC & VẬT LÍ BẢNG THÍ NGHIỆM ĐỨNG (CHUẨN BỘ GIÁO DỤC)
+  //    Mặt phẳng bảng thép trắng đứng song song mặt phẳng XY tại z = 0!
+  //    - Tâm thước đo góc O nằm tại (0, 0, 0.14)
+  //    - Dây cao su màu cam/nâu kéo THẲNG ĐỨNG XUỐNG DƯỚI về chốt nam châm (0, -3.55, 0.14)
+  //    - Hai lực kế F1 (trái trên) và F2 (phải trên) có hợp lực F hướng THẲNG ĐỨNG LÊN TRÊN (+Y)!
+  //    - Tỉ xích vẽ vectơ trên tờ giấy trắng: 1 N = 0.62 đơn vị 3D (để lực 5 N vừa đẹp trên bảng đứng!)
+  // =========================================================================
+  let step = 1; // 1: 2 lực kế | 2: thay 1 lực kế thẳng đứng | 3: kẻ hình bình hành trên giấy
+  let F1 = 3.0;
+  let F2 = 4.0;
+  let alphaDeg = 90;
+
+  const BOARD_Z = 0.15;      // mặt trước bảng thép trắng
+  const VEC_SCALE = 0.62;    // 1 N = 0.62 unit 3D trên giấy
+  const ANCHOR_Y = -3.75;    // vị trí đế nam châm giữ đầu dưới dây cao su
+  const RUBBER_REST_LEN = 1.65; // chiều dài tự nhiên của dây cao su khi chưa kéo
+
+  let ringY = 0;             // vị trí hiện tại của vòng nhẫn O theo trục dọc Y
+  let ringX = 0;
+  let rubberK = 1.0;
+  let isBalancedAtO = true;
+  let measuredF3 = 5.0;
+
+  let hbhProgress = 0;
+  let hbhAnimating = false;
+  let sweepInterval = null;
+  let logs = [];
+
+  function fmt(num, d = 2) {
+    return num.toFixed(d).replace('.', ',');
+  }
+
+  // Tính hợp lực F và góc nghiêng chính xác θ1 (lệch trái so với +Y), θ2 (lệch phải so với +Y)
+  // sao cho hợp lực F luôn hướng THẲNG ĐỨNG LÊN TRÊN (+Y) cân bằng hoàn toàn với dây cao su!
+  function solveForceGeometry() {
+    const rad = (alphaDeg * Math.PI) / 180;
+    const F = Math.sqrt(F1 * F1 + F2 * F2 + 2 * F1 * F2 * Math.cos(rad));
+    let theta1 = 0, theta2 = 0;
+    if (F > 0.001) {
+      const c1 = Math.max(-1, Math.min(1, (F1 + F2 * Math.cos(rad)) / F));
+      const c2 = Math.max(-1, Math.min(1, (F2 + F1 * Math.cos(rad)) / F));
+      theta1 = Math.acos(c1);
+      theta2 = Math.acos(c2);
+    } else {
+      theta1 = Math.PI / 2;
+      theta2 = Math.PI / 2;
+    }
+    return { F, theta1, theta2 };
+  }
+
+  function updateRubberPhysics() {
+    const { F } = solveForceGeometry();
+    const stretchAtO = Math.abs(ANCHOR_Y) - RUBBER_REST_LEN; // 3.75 - 1.65 = 2.10 unit
+    rubberK = F / stretchAtO;
+  }
+
+  function getStep2Tension() {
+    const dist = Math.hypot(ringX, ringY - ANCHOR_Y);
+    const stretch = Math.max(0, dist - RUBBER_REST_LEN);
+    return stretch * rubberK;
+  }
+
+  // =========================================================================
+  // 2. KHỞI TẠO KHÔNG GIAN PHÒNG THÍ NGHIỆM 3D SÁNG CHÂN THỰC (THREE.JS)
+  // =========================================================================
+  const container = document.getElementById('viewport3d');
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xdbe4f0); // Không gian phòng lab sáng sạch sẽ!
+
+  const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 150);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.08;
+  container.appendChild(renderer.domElement);
+
+  // Ánh sáng studio phòng thí nghiệm sáng tự nhiên + bóng đổ mềm thực tế
+  const hemiLight = new THREE.HemisphereLight(0xffffff, 0x94a3b8, 0.95);
+  scene.add(hemiLight);
+
+  const keyLight = new THREE.DirectionalLight(0xfffbeb, 1.05);
+  keyLight.position.set(8, 14, 16);
+  keyLight.castShadow = true;
+  keyLight.shadow.mapSize.width = 2048;
+  keyLight.shadow.mapSize.height = 2048;
+  keyLight.shadow.camera.left = -14;
+  keyLight.shadow.camera.right = 14;
+  keyLight.shadow.camera.top = 14;
+  keyLight.shadow.camera.bottom = -14;
+  keyLight.shadow.bias = -0.0005;
+  scene.add(keyLight);
+
+  const fillLight = new THREE.DirectionalLight(0xe0f2fe, 0.45);
+  fillLight.position.set(-10, 5, 10);
+  scene.add(fillLight);
+
+  // =========================================================================
+  // 3. MẶT BÀN THÍ NGHIỆM & CHÂN ĐẾ 3 CHẠC MÀU ĐEN (Y HỆT ẢNH THẬT!)
+  // =========================================================================
+  function createLabDeskTexture() {
+    const c = document.createElement('canvas');
+    c.width = 512; c.height = 512;
+    const g = c.getContext('2d');
+    g.fillStyle = '#d6c7b2';
+    g.fillRect(0, 0, 512, 512);
+    for (let i = 0; i < 140; i++) {
+      g.fillStyle = i % 2 === 0 ? 'rgba(138, 109, 77, 0.12)' : 'rgba(255, 250, 240, 0.16)';
+      g.fillRect(0, Math.random() * 512, 512, 2 + Math.random() * 5);
+    }
+    const tex = new THREE.CanvasTexture(c);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(5, 3);
+    return tex;
+  }
+
+  // Bàn phòng thí nghiệm
+  const desk = new THREE.Mesh(
+    new THREE.BoxGeometry(36, 0.8, 22),
+    new THREE.MeshStandardMaterial({ map: createLabDeskTexture(), roughness: 0.55, metalness: 0.02 })
+  );
+  desk.position.set(0, -8.55, 0);
+  desk.receiveShadow = true;
+  scene.add(desk);
+
+  // Tường phòng lab mờ phía sau tạo chiều sâu không gian
+  const backWall = new THREE.Mesh(
+    new THREE.PlaneGeometry(60, 40),
+    new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.9 })
+  );
+  backWall.position.set(0, 6, -8);
+  backWall.receiveShadow = true;
+  scene.add(backWall);
+
+  // --- CHÂN ĐẾ 3 CHẠC BẰNG GANG SƠN ĐEN (GIỐNG 100% ẢNH MẪU!) ---
+  const tripodGroup = new THREE.Group();
+  const castIronMat = new THREE.MeshStandardMaterial({ color: 0x1e2024, roughness: 0.45, metalness: 0.65 });
+  const screwGreenMat = new THREE.MeshStandardMaterial({ color: 0x14532d, roughness: 0.35, metalness: 0.25 });
+  const steelMat = new THREE.MeshStandardMaterial({ color: 0xdbe4ee, metalness: 0.88, roughness: 0.22 });
+
+  // Trụ trung tâm đế
+  const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.68, 0.78, 1.3, 28), castIronMat);
+  hub.position.set(0, -6.95, -0.15);
+  hub.castShadow = true;
+  tripodGroup.add(hub);
+
+  // Núm vặn cố định trục ở giữa
+  const centerKnob = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 0.35, 24), castIronMat);
+  centerKnob.rotation.x = Math.PI / 2;
+  centerKnob.position.set(0, -6.95, 0.55);
+  tripodGroup.add(centerKnob);
+
+  // 3 chân chữ Y xòe xuống mặt bàn (-8.15) có ốc chỉnh thăng bằng xanh đen!
+  const legAngles = [-Math.PI / 6, Math.PI + Math.PI / 6, Math.PI / 2]; // Trái trước, Phải trước, Sau
+  legAngles.forEach((ang, idx) => {
+    const legLen = idx === 2 ? 3.2 : 3.4;
+    const legGroup = new THREE.Group();
+    legGroup.position.set(0, -6.9, -0.15);
+    legGroup.rotation.y = ang;
+
+    // Thanh chân gang nghiêng xuống
+    const bar = new THREE.Mesh(new THREE.BoxGeometry(legLen, 0.48, 0.52), castIronMat);
+    bar.position.set(legLen / 2, -0.42, 0);
+    bar.rotation.z = -0.26;
+    bar.castShadow = true;
+    legGroup.add(bar);
+
+    // Ốc chỉnh thăng bằng ở đầu chân
+    const footX = legLen - 0.15;
+    const footCap = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.36, 20), screwGreenMat);
+    footCap.position.set(footX, -0.68, 0);
+    legGroup.add(footCap);
+
+    const screwBolt = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.65, 16), steelMat);
+    screwBolt.position.set(footX, -0.95, 0);
+    legGroup.add(screwBolt);
+
+    tripodGroup.add(legGroup);
+  });
+  scene.add(tripodGroup);
+
+  // =========================================================================
+  // 4. BẢNG THÉP TRẮNG ĐỨNG + TỜ GIẤY KẸP 4 NAM CHÂM + THƯỚC ĐO GÓC 360°
+  // =========================================================================
+  // Bảng thép sơn trắng sáng bóng (kích thước 9.8 x 13.0)
+  const whiteBoard = new THREE.Mesh(
+    new THREE.BoxGeometry(9.8, 13.0, 0.24),
+    new THREE.MeshStandardMaterial({ color: 0xf4f7fa, roughness: 0.28, metalness: 0.18 })
+  );
+  whiteBoard.position.set(0, 0.15, 0);
+  whiteBoard.castShadow = true;
+  whiteBoard.receiveShadow = true;
+  scene.add(whiteBoard);
+
+  // Viền mép thép mảnh xung quanh bảng trắng
+  const rimMat = new THREE.MeshStandardMaterial({ color: 0xcbd5e1, metalness: 0.7, roughness: 0.3 });
+  const rimTop = new THREE.Mesh(new THREE.BoxGeometry(9.92, 0.1, 0.28), rimMat);
+  rimTop.position.set(0, 6.66, 0); scene.add(rimTop);
+  const rimBot = rimTop.clone(); rimBot.position.y = -6.36; scene.add(rimBot);
+  const rimL = new THREE.Mesh(new THREE.BoxGeometry(0.1, 13.12, 0.28), rimMat);
+  rimL.position.set(-4.92, 0.15, 0); scene.add(rimL);
+  const rimR = rimL.clone(); rimR.position.x = 4.92; scene.add(rimR);
+
+  // Đinh vít trang trí 2 mép bảng giống ảnh thật
+  [-4.65, 4.65].forEach(vx => {
+    [5.6, 0.4, -0.4, -5.6].forEach(vy => {
+      const rivet = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.06, 12), steelMat);
+      rivet.rotation.x = Math.PI / 2;
+      rivet.position.set(vx, vy, 0.13);
+      scene.add(rivet);
+    });
+  });
+
+  // Tờ giấy trắng + Thước đo góc 360° in cực nét gắn giữa bảng!
+  function createProtractorSheetTexture() {
+    const c = document.createElement('canvas');
+    c.width = 1600; c.height = 1400;
+    const g = c.getContext('2d');
+
+    // Nền giấy trắng có ô li rất mờ để hỗ trợ nhìn tỉ xích
+    g.fillStyle = '#fcfdfe';
+    g.fillRect(0, 0, c.width, c.height);
+
+    g.strokeStyle = 'rgba(148, 163, 184, 0.16)';
+    g.lineWidth = 1.5;
+    const gridPx = 62;
+    for (let x = 0; x <= c.width; x += gridPx) {
+      g.beginPath(); g.moveTo(x, 0); g.lineTo(x, c.height); g.stroke();
+    }
+    for (let y = 0; y <= c.height; y += gridPx) {
+      g.beginPath(); g.moveTo(0, y); g.lineTo(c.width, y); g.stroke();
+    }
+
+    // Viền tờ giấy
+    g.strokeStyle = '#cbd5e1';
+    g.lineWidth = 5;
+    g.strokeRect(12, 12, c.width - 24, c.height - 24);
+
+    // Thước đo góc tròn 360° chính giữa (0° ở ĐỈNH TRÊN 12 GIỜ — giống hệt ảnh thật!)
+    const cx = c.width / 2;
+    const cy = c.height / 2;
+    const R = 540;
+
+    // Đường chữ thập chuẩn tâm O
+    g.strokeStyle = 'rgba(71, 85, 105, 0.45)';
+    g.lineWidth = 2.5;
+    g.beginPath(); g.moveTo(cx - R - 40, cy); g.lineTo(cx + R + 40, cy); g.stroke();
+    g.beginPath(); g.moveTo(cx, cy - R - 40); g.lineTo(cx, cy + R + 40); g.stroke();
+
+    // Vòng ngoài & vòng trong thước đo góc
+    g.strokeStyle = '#1e293b';
+    g.lineWidth = 4;
+    g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.stroke();
+    g.strokeStyle = '#64748b';
+    g.lineWidth = 2;
+    g.beginPath(); g.arc(cx, cy, R - 75, 0, Math.PI * 2); g.stroke();
+
+    // Vạch chia độ từ 0° (12 giờ) ra hai bên 10°..180°
+    for (let deg = 0; deg < 360; deg += 2) {
+      // 0° ở trên cùng (-PI/2)
+      const rad = ((deg - 90) * Math.PI) / 180;
+      const is10 = deg % 10 === 0;
+      const is5 = deg % 5 === 0;
+      const inner = is10 ? R - 38 : (is5 ? R - 24 : R - 14);
+
+      g.strokeStyle = is10 ? '#0f172a' : '#475569';
+      g.lineWidth = is10 ? 3.2 : (is5 ? 2 : 1.2);
+      g.beginPath();
+      g.moveTo(cx + Math.cos(rad) * inner, cy + Math.sin(rad) * inner);
+      g.lineTo(cx + Math.cos(rad) * R, cy + Math.sin(rad) * R);
+      g.stroke();
+
+      if (is10) {
+        const displayDeg = deg <= 180 ? deg : 360 - deg;
+        g.save();
+        g.translate(cx + Math.cos(rad) * (R - 58), cy + Math.sin(rad) * (R - 58));
+        g.rotate(rad + Math.PI / 2);
+        g.fillStyle = (displayDeg % 30 === 0) ? '#0f172a' : '#334155';
+        g.font = (displayDeg % 30 === 0) ? 'bold 26px Segoe UI' : '600 21px Segoe UI';
+        g.textAlign = 'center';
+        g.textBaseline = 'middle';
+        g.fillText(displayDeg + '°', 0, 0);
+        g.restore();
+      }
+    }
+
+    // Dòng chữ "THƯỚC ĐO GÓC" in nhỏ phía trên tâm O giống ảnh mẫu!
+    g.fillStyle = '#1e293b';
+    g.font = 'bold 24px Segoe UI';
+    g.textAlign = 'center';
+    g.fillText('THƯỚC ĐO GÓC', cx, cy - 135);
+
+    const tex = new THREE.CanvasTexture(c);
+    tex.anisotropy = 8;
+    return tex;
+  }
+
+  const paperSheet = new THREE.Mesh(
+    new THREE.PlaneGeometry(7.2, 6.3),
+    new THREE.MeshStandardMaterial({ map: createProtractorSheetTexture(), roughness: 0.75, metalness: 0.0 })
+  );
+  paperSheet.position.set(0, 0, 0.132);
+  paperSheet.receiveShadow = true;
+  scene.add(paperSheet);
+
+  // 4 viên nam châm tròn nhỏ kẹp 4 góc tờ giấy (viền đen, nút vàng/kem y hệt ảnh thật!)
+  const magBlackMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.4, metalness: 0.35 });
+  const magBrassMat = new THREE.MeshStandardMaterial({ color: 0xe6d5a8, roughness: 0.3, metalness: 0.45 });
+  [[-3.0, 2.55], [3.0, 2.55], [-3.0, -2.55], [3.0, -2.55]].forEach(([mx, my]) => {
+    const mGroup = new THREE.Group();
+    const outer = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.24, 0.14, 24), magBlackMat);
+    outer.rotation.x = Math.PI / 2; outer.castShadow = true; mGroup.add(outer);
+    const inner = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.16, 20), magBrassMat);
+    inner.rotation.x = Math.PI / 2; mGroup.add(inner);
+    mGroup.position.set(mx, my, 0.18);
+    scene.add(mGroup);
+  });
+
+  // Đế nam châm tròn lớn ở dưới cùng giữ đầu dưới dây cao su (vỏ đen, lõi trắng y hệt ảnh thật!)
+  const bottomMagnet = new THREE.Group();
+  const bmOuter = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.48, 0.24, 32), magBlackMat);
+  bmOuter.rotation.x = Math.PI / 2; bmOuter.castShadow = true; bottomMagnet.add(bmOuter);
+  const bmInner = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.28, 28),
+    new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.3 }));
+  bmInner.rotation.x = Math.PI / 2; bottomMagnet.add(bmInner);
+  bottomMagnet.position.set(0, ANCHOR_Y, 0.22);
+  scene.add(bottomMagnet);
+
+  // Vòng sáng báo khớp tâm O
+  const targetHaloMat = new THREE.MeshBasicMaterial({ color: 0x16a34a, side: THREE.DoubleSide });
+  const targetHalo = new THREE.Mesh(new THREE.RingGeometry(0.26, 0.34, 36), targetHaloMat);
+  targetHalo.position.set(0, 0, 0.142);
+  scene.add(targetHalo);
+
+  // =========================================================================
+  // 5. VÒNG NHẪN KIM LOẠI TẠI TÂM O + SỢI DÂY CAO SU ĐÀN HỒI MÀU CAM/NÂU
+  // =========================================================================
+  const metalRing = new THREE.Mesh(
+    new THREE.TorusGeometry(0.2, 0.055, 18, 40),
+    new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.9, roughness: 0.2 })
+  );
+  metalRing.castShadow = true;
+  scene.add(metalRing);
+
+  // Dây cao su màu nâu cam đàn hồi (càng kéo căng càng hơi mảnh lại chân thực!)
+  const rubberBand = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.042, 0.042, 1, 16),
+    new THREE.MeshStandardMaterial({ color: 0xc27849, roughness: 0.65, metalness: 0.05 })
+  );
+  rubberBand.castShadow = true;
+  scene.add(rubberBand);
+
+  function updateRubberBand(rx, ry) {
+    const dx = rx - 0;
+    const dy = ry - ANCHOR_Y;
+    const len = Math.hypot(dx, dy);
+    rubberBand.position.set(rx / 2, (ry + ANCHOR_Y) / 2, 0.26);
+    rubberBand.rotation.z = -Math.atan2(dx, dy);
+    const stretchRatio = Math.max(1, len / RUBBER_REST_LEN);
+    const thin = 1 / Math.sqrt(stretchRatio);
+    rubberBand.scale.set(thin, Math.max(0.05, len), thin);
+  }
+
+  // =========================================================================
+  // 6. LỰC KẾ ỐNG VÀNG TRONG SUỐT CHUẨN THIẾT BỊ GIÁO DỤC VIỆT NAM (Y HỆT ẢNH!)
+  // =========================================================================
+  function createScaleTexture(maxN = 5) {
+    const c = document.createElement('canvas');
+    c.width = 256; c.height = 512;
+    const g = c.getContext('2d');
+    g.fillStyle = '#fef9c3';
+    g.fillRect(0, 0, 256, 512);
+
+    // Thang chia 0 -> maxN sắc nét
+    g.strokeStyle = '#0f172a';
+    g.fillStyle = '#0f172a';
+    g.font = 'bold 26px Segoe UI';
+    g.textAlign = 'left';
+
+    const topY = 40, botY = 472;
+    const totalTicks = 50;
+    for (let i = 0; i <= totalTicks; i++) {
+      const y = topY + (i / totalTicks) * (botY - topY);
+      const isMajor = i % 10 === 0;
+      const isHalf = i % 5 === 0;
+      const w = isMajor ? 85 : (isHalf ? 58 : 36);
+      g.lineWidth = isMajor ? 4 : 2;
+      g.beginPath(); g.moveTo(25, y); g.lineTo(25 + w, y); g.stroke();
+      if (isMajor) {
+        const val = (i / totalTicks) * maxN;
+        g.fillText(val.toFixed(0) + 'N', 120, y + 9);
+      }
+    }
+    const tex = new THREE.CanvasTexture(c);
+    tex.anisotropy = 8;
+    return tex;
+  }
+
+  const scaleTex5N = createScaleTexture(5);
+  const scaleTex10N = createScaleTexture(10);
+
+  function createLabelSprite(text, bgColor, borderColor) {
+    const c = document.createElement('canvas');
+    c.width = 320; c.height = 96;
+    const g = c.getContext('2d');
+    const tex = new THREE.CanvasTexture(c);
+    const spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false }));
+    spr.scale.set(2.15, 0.65, 1);
+    spr.renderOrder = 999;
+    const obj = { sprite: spr, ctx: g, tex, bgColor, borderColor };
+    updateLabelSprite(obj, text);
+    return obj;
+  }
+
+  function updateLabelSprite(obj, text) {
+    const g = obj.ctx;
+    g.clearRect(0, 0, 320, 96);
+    g.fillStyle = obj.bgColor;
+    g.strokeStyle = obj.borderColor;
+    g.lineWidth = 6;
+    g.beginPath();
+    g.roundRect(8, 8, 304, 80, 20);
+    g.fill();
+    g.stroke();
+
+    g.fillStyle = '#ffffff';
+    g.font = 'bold 38px Segoe UI';
+    g.textAlign = 'center';
+    g.textBaseline = 'middle';
+    g.fillText(text, 160, 49);
+    obj.tex.needsUpdate = true;
+  }
+
+  function createVietnameseDynamometer3D(accentColorHex, labelBg, labelBorder, maxN = 5) {
+    // Hệ trục cục bộ: Gốc tại vòng nhẫn O, kéo dọc theo trục +Y cục bộ!
+    const root = new THREE.Group();
+
+    // Sợi dây mảnh nối từ vòng nhẫn đến móc câu chữ S
+    const cord = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.018, 0.018, 1, 10),
+      new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.6 })
+    );
+    root.add(cord);
+
+    // Cụm thân lực kế
+    const body = new THREE.Group();
+
+    // Móc sắt sáng bóng phía dưới thân lực kế
+    const hookStem = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.55, 12), steelMat);
+    hookStem.position.y = 0.25; body.add(hookStem);
+    const hookLoop = new THREE.Mesh(new THREE.TorusGeometry(0.11, 0.028, 10, 24, Math.PI * 1.45), steelMat);
+    hookLoop.position.set(0.04, 0.0, 0);
+    hookLoop.rotation.z = Math.PI * 0.6;
+    body.add(hookLoop);
+
+    // Đế nam châm đen tròn hít sau lưng lực kế vào bảng thép trắng (giống ảnh!)
+    const magnetBack1 = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.34, 0.16, 24), magBlackMat);
+    magnetBack1.rotation.x = Math.PI / 2; magnetBack1.position.set(0, 0.75, -0.24); body.add(magnetBack1);
+    const magnetBack2 = magnetBack1.clone(); magnetBack2.position.set(0, 3.25, -0.24); body.add(magnetBack2);
+
+    // Mặt bảng chia độ dẹt bên trong ống
+    const scalePlate = new THREE.Mesh(
+      new THREE.BoxGeometry(0.32, 2.7, 0.04),
+      new THREE.MeshStandardMaterial({ map: maxN === 10 ? scaleTex10N : scaleTex5N, roughness: 0.4 })
+    );
+    scalePlate.position.set(0, 2.05, 0.02);
+    body.add(scalePlate);
+
+    // Vỏ ống trụ nhựa/thủy tinh màu VÀNG HỔ PHÁCH trong suốt đặc trưng lực kế VN!
+    const yellowTube = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.27, 0.27, 2.95, 28),
+      new THREE.MeshPhysicalMaterial({
+        color: 0xeab308,
+        transparent: true,
+        opacity: 0.42,
+        roughness: 0.12,
+        metalness: 0.1,
+        clearcoat: 1.0
+      })
+    );
+    yellowTube.position.set(0, 2.05, 0);
+    yellowTube.castShadow = true;
+    body.add(yellowTube);
+
+    // 2 nắp ống bằng đồng vàng đậm ở đầu và đuôi ống
+    const brassCapMat = new THREE.MeshStandardMaterial({ color: 0xca8a04, metalness: 0.72, roughness: 0.28 });
+    const capBot = new THREE.Mesh(new THREE.CylinderGeometry(0.29, 0.29, 0.22, 24), brassCapMat);
+    capBot.position.y = 0.58; body.add(capBot);
+    const capTop = new THREE.Mesh(new THREE.CylinderGeometry(0.29, 0.29, 0.3, 24), brassCapMat);
+    capTop.position.y = 3.55; body.add(capTop);
+
+    // Núm vặn chỉnh 0 kim loại trên đỉnh
+    const topRing = new THREE.Mesh(new THREE.TorusGeometry(0.14, 0.032, 10, 24), steelMat);
+    topRing.position.y = 3.82; body.add(topRing);
+
+    // Kim chỉ thị màu nổi (đỏ / xanh dương / xanh lá) trượt dọc thang chia!
+    const pointerDisk = new THREE.Mesh(
+      new THREE.BoxGeometry(0.46, 0.1, 0.24),
+      new THREE.MeshStandardMaterial({ color: accentColorHex, emissive: accentColorHex, emissiveIntensity: 0.3 })
+    );
+    pointerDisk.position.set(0, 3.2, 0.1);
+    body.add(pointerDisk);
+
+    root.add(body);
+
+    const lbl = createLabelSprite('F = 0,0 N', labelBg, labelBorder);
+    root.add(lbl.sprite);
+
+    scene.add(root);
+    return { root, cord, body, pointerDisk, lbl, maxN };
+  }
+
+  const dyn1 = createVietnameseDynamometer3D(0xe11d48, 'rgba(190, 18, 60, 0.92)', '#fda4af', 5);
+  const dyn2 = createVietnameseDynamometer3D(0x0284c7, 'rgba(3, 105, 161, 0.92)', '#7dd3fc', 5);
+  const dyn3 = createVietnameseDynamometer3D(0x16a34a, 'rgba(21, 128, 61, 0.92)', '#86efac', 10);
+
+  function positionDynamometer(dyn, originX, originY, angleFromUpRad, forceVal, textLabel) {
+    dyn.root.visible = true;
+    dyn.root.position.set(originX, originY, 0.38);
+    // angleFromUpRad > 0 xoay sang trái (+Z CCW), < 0 xoay sang phải (-Z CW)
+    dyn.root.rotation.z = angleFromUpRad;
+
+    // Độ dài dây nối từ vòng nhẫn đến móc lực kế để 2 đế nam châm hít trọn lên bảng thép trắng!
+    const cordLen = 3.0;
+    dyn.cord.scale.y = cordLen;
+    dyn.cord.position.y = cordLen / 2;
+
+    dyn.body.position.y = cordLen;
+
+    // Kim chỉ thị trượt xuống từ vạch 0N (y=3.25) xuống vạch maxN (y=0.95)
+    const ratio = Math.min(1, Math.max(0, forceVal / dyn.maxN));
+    dyn.pointerDisk.position.y = 3.25 - ratio * 2.30;
+
+    // Vị trí nhãn số đo
+    dyn.lbl.sprite.visible = document.getElementById('chkLabels').checked;
+    dyn.lbl.sprite.position.set(0, cordLen + 4.3, 0.5);
+    updateLabelSprite(dyn.lbl, textLabel);
+  }
+
+  // =========================================================================
+  // 7. MŨI TÊN LỰC & ĐƯỜNG NÉT ĐỨT HÌNH BÌNH HÀNH VẼ TRÊN TỜ GIẤY TRẮNG
+  // =========================================================================
+  function createPaperArrow(colorHex) {
+    const g = new THREE.Group();
+    const mat = new THREE.MeshBasicMaterial({ color: colorHex });
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.036, 0.036, 1, 12), mat);
+    const head = new THREE.Mesh(new THREE.ConeGeometry(0.11, 0.28, 16), mat);
+    g.add(shaft);
+    g.add(head);
+    scene.add(g);
+    return { g, shaft, head };
+  }
+
+  function updatePaperArrow(arr, ox, oy, dx, dy) {
+    const len = Math.hypot(dx, dy);
+    if (len < 0.08) { arr.g.visible = false; return; }
+    arr.g.visible = true;
+    arr.g.position.set(ox, oy, 0.16);
+    arr.g.rotation.z = -Math.atan2(dx, dy);
+
+    const headLen = 0.28;
+    const shaftLen = Math.max(0.01, len - headLen);
+    arr.shaft.scale.y = shaftLen;
+    arr.shaft.position.y = shaftLen / 2;
+    arr.head.position.y = shaftLen + headLen / 2;
+  }
+
+  const arrowF1 = createPaperArrow(0xe11d48);
+  const arrowF2 = createPaperArrow(0x0284c7);
+  const arrowF  = createPaperArrow(0x16a34a);
+
+  const dashMat = new THREE.LineDashedMaterial({ color: 0xd97706, dashSize: 0.15, gapSize: 0.1, linewidth: 2 });
+  const dash1 = new THREE.Line(new THREE.BufferGeometry(), dashMat);
+  const dash2 = new THREE.Line(new THREE.BufferGeometry(), dashMat);
+  scene.add(dash1);
+  scene.add(dash2);
+
+  const hbhFillMat = new THREE.MeshBasicMaterial({
+    color: 0xfacc15,
+    transparent: true,
+    opacity: 0.26,
+    side: THREE.DoubleSide,
+    depthWrite: false
+  });
+  const hbhFill = new THREE.Mesh(new THREE.BufferGeometry(), hbhFillMat);
+  scene.add(hbhFill);
+
+  function updateParallelogramOnPaper(f1x, f1y, f2x, f2y, fx, fy, prog) {
+    const vis = (step === 3 && prog > 0.02);
+    dash1.visible = dash2.visible = hbhFill.visible = vis;
+    if (!vis) return;
+
+    const z = 0.155;
+    const p1x = f1x + (fx - f1x) * prog;
+    const p1y = f1y + (fy - f1y) * prog;
+    const p2x = f2x + (fx - f2x) * prog;
+    const p2y = f2y + (fy - f2y) * prog;
+
+    dash1.geometry.dispose();
+    dash1.geometry = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(f1x, f1y, z),
+      new THREE.Vector3(p1x, p1y, z)
+    ]);
+    dash1.computeLineDistances();
+
+    dash2.geometry.dispose();
+    dash2.geometry = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(f2x, f2y, z),
+      new THREE.Vector3(p2x, p2y, z)
+    ]);
+    dash2.computeLineDistances();
+
+    const verts = new Float32Array([
+      0, 0, z - 0.01,
+      f1x, f1y, z - 0.01,
+      fx, fy, z - 0.01,
+      0, 0, z - 0.01,
+      fx, fy, z - 0.01,
+      f2x, f2y, z - 0.01
+    ]);
+    hbhFill.geometry.dispose();
+    hbhFill.geometry = new THREE.BufferGeometry();
+    hbhFill.geometry.setAttribute('position', new THREE.BufferAttribute(verts, 3));
+    hbhFillMat.opacity = 0.28 * prog;
+  }
+
+  // =========================================================================
+  // 8. ĐỒNG BỘ TOÀN BỘ MÔ HÌNH 3D
+  // =========================================================================
+  function sync3DScene() {
+    const showVec = document.getElementById('chkVectors').checked;
+    const { F, theta1, theta2 } = solveForceGeometry();
+
+    // Tọa độ đầu mũi tên trên tờ giấy (tỉ xích 1 N = VEC_SCALE)
+    const f1x = -F1 * Math.sin(theta1) * VEC_SCALE;
+    const f1y =  F1 * Math.cos(theta1) * VEC_SCALE;
+    const f2x =  F2 * Math.sin(theta2) * VEC_SCALE;
+    const f2y =  F2 * Math.cos(theta2) * VEC_SCALE;
+    const fx  =  0;
+    const fy  =  F * VEC_SCALE;
+
+    metalRing.position.set(ringX, ringY, 0.28);
+    updateRubberBand(ringX, ringY);
+
+    const distO = Math.hypot(ringX, ringY);
+    targetHaloMat.color.setHex(distO < 0.14 ? 0x16a34a : 0xd97706);
+
+    if (step === 1) {
+      dyn3.root.visible = false;
+      positionDynamometer(dyn1, ringX, ringY,  theta1, F1, `F₁ = ${fmt(F1, 1)} N`);
+      positionDynamometer(dyn2, ringX, ringY, -theta2, F2, `F₂ = ${fmt(F2, 1)} N`);
+
+      if (showVec) {
+        updatePaperArrow(arrowF1, 0, 0, f1x, f1y);
+        updatePaperArrow(arrowF2, 0, 0, f2x, f2y);
+      } else {
+        arrowF1.g.visible = arrowF2.g.visible = false;
+      }
+      arrowF.g.visible = false;
+      updateParallelogramOnPaper(0, 0, 0, 0, 0, 0, 0);
+    } else if (step === 2) {
+      dyn1.root.visible = false;
+      dyn2.root.visible = false;
+
+      const tension = isBalancedAtO ? F : getStep2Tension();
+      // Hướng kéo của lực kế 3 ngược lại hướng dây cao su
+      const pullAngle = -Math.atan2(ringX, ringY - ANCHOR_Y);
+      positionDynamometer(dyn3, ringX, ringY, pullAngle, tension, `F = ${fmt(tension, 2)} N`);
+
+      if (showVec) {
+        updatePaperArrow(arrowF1, 0, 0, f1x, f1y);
+        updatePaperArrow(arrowF2, 0, 0, f2x, f2y);
+        const f3Len = tension * VEC_SCALE;
+        updatePaperArrow(arrowF, ringX, ringY, -Math.sin(pullAngle) * f3Len, Math.cos(pullAngle) * f3Len);
+      } else {
+        arrowF1.g.visible = arrowF2.g.visible = arrowF.g.visible = false;
+      }
+      updateParallelogramOnPaper(0, 0, 0, 0, 0, 0, 0);
+    } else if (step === 3) {
+      dyn1.root.visible = false;
+      dyn2.root.visible = false;
+      positionDynamometer(dyn3, 0, 0, 0, F, `F = ${fmt(F, 2)} N`);
+
+      updatePaperArrow(arrowF1, 0, 0, f1x, f1y);
+      updatePaperArrow(arrowF2, 0, 0, f2x, f2y);
+      updatePaperArrow(arrowF,  0, 0, fx,  fy);
+      updateParallelogramOnPaper(f1x, f1y, f2x, f2y, fx, fy, hbhProgress);
+    }
+  }
+
+  // =========================================================================
+  // 9. LOGIC CÁC BƯỚC THỰC NGHIỆM & TƯƠNG TÁC
+  // =========================================================================
+  let ringAnim = null;
+
+  function animateRingTo(tx, ty, duration = 500, onDone = null) {
+    ringAnim = { sx: ringX, sy: ringY, tx, ty, t0: performance.now(), duration, onDone };
+  }
+
+  function setStep(newStep) {
+    stopSweep();
+    step = newStep;
+
+    document.getElementById('btnStep1').classList.toggle('active', step === 1);
+    document.getElementById('btnStep2').classList.toggle('active', step === 2);
+    document.getElementById('btnStep3').classList.toggle('active', step === 3);
+
+    const btnAuto = document.getElementById('btnAutoPull');
+    const btnHBH = document.getElementById('btnAnimHBH');
+
+    updateRubberPhysics();
+    const { F } = solveForceGeometry();
+
+    if (step === 1) {
+      ringX = 0; ringY = 0;
+      isBalancedAtO = true;
+      btnAuto.style.display = 'none';
+      btnHBH.style.display = 'none';
+      document.getElementById('readExp').textContent = 'Chưa đo';
+    } else if (step === 2) {
+      btnAuto.style.display = 'block';
+      btnHBH.style.display = 'none';
+      isBalancedAtO = false;
+
+      // Khi tháo 2 lực kế, dây cao su co đàn hồi kéo vòng nhẫn tụt xuống dưới!
+      const restY = ANCHOR_Y + RUBBER_REST_LEN;
+      animateRingTo(0, restY, 380);
+
+      document.getElementById('readExp').textContent = '0,00 N';
+    } else if (step === 3) {
+      ringX = 0; ringY = 0;
+      isBalancedAtO = true;
+      measuredF3 = F;
+      btnAuto.style.display = 'none';
+      btnHBH.style.display = 'block';
+      document.getElementById('readExp').textContent = fmt(F) + ' N';
+      triggerHBHAnim();
+    }
+
+    updateFormulaPanel();
+    sync3DScene();
+  }
+
+  function autoPullToO() {
+    if (step !== 2) return;
+    animateRingTo(0, 0, 680, () => updateStep2Readout());
+  }
+
+  function updateStep2Readout() {
+    const distO = Math.hypot(ringX, ringY);
+    const { F } = solveForceGeometry();
+    const tension = getStep2Tension();
+
+    if (distO <= 0.16) {
+      ringX = 0; ringY = 0;
+      isBalancedAtO = true;
+      measuredF3 = F;
+      document.getElementById('readExp').textContent = fmt(F) + ' N';
+    } else {
+      isBalancedAtO = false;
+      document.getElementById('readExp').textContent = fmt(tension) + ' N';
+    }
+  }
+
+  function triggerHBHAnim() {
+    hbhProgress = 0;
+    hbhAnimating = true;
+  }
+
+  function onSliderChange() {
+    F1 = parseFloat(document.getElementById('rngF1').value);
+    F2 = parseFloat(document.getElementById('rngF2').value);
+    alphaDeg = parseFloat(document.getElementById('rngAlpha').value);
+
+    document.getElementById('lblF1').textContent = fmt(F1, 1) + ' N';
+    document.getElementById('lblF2').textContent = fmt(F2, 1) + ' N';
+    document.getElementById('lblAlpha').textContent = alphaDeg + '°';
+
+    updateRubberPhysics();
+    if (step === 2) { setStep(1); return; }
+    if (step === 3) {
+      measuredF3 = solveForceGeometry().F;
+      document.getElementById('readExp').textContent = fmt(measuredF3) + ' N';
+      hbhProgress = 1;
+    }
+    updateFormulaPanel();
+    sync3DScene();
+  }
+
+  function applyPreset(f1, f2, ang) {
+    stopSweep();
+    F1 = f1; F2 = f2; alphaDeg = ang;
+    document.getElementById('rngF1').value = f1;
+    document.getElementById('rngF2').value = f2;
+    document.getElementById('rngAlpha').value = ang;
+    document.getElementById('lblF1').textContent = fmt(F1, 1) + ' N';
+    document.getElementById('lblF2').textContent = fmt(F2, 1) + ' N';
+    document.getElementById('lblAlpha').textContent = alphaDeg + '°';
+    setStep(1);
+  }
+
+  function toggleSweep() {
+    if (sweepInterval) { stopSweep(); return; }
+    setStep(3);
+    hbhProgress = 1;
+    alphaDeg = 0;
+    document.getElementById('btnSweep').textContent = '⏹ Dừng quét góc';
+    sweepInterval = setInterval(() => {
+      alphaDeg += 2;
+      if (alphaDeg > 150) alphaDeg = 0;
+      document.getElementById('rngAlpha').value = alphaDeg;
+      document.getElementById('lblAlpha').textContent = alphaDeg + '°';
+      updateRubberPhysics();
+      measuredF3 = solveForceGeometry().F;
+      document.getElementById('readExp').textContent = fmt(measuredF3) + ' N';
+      updateFormulaPanel();
+      sync3DScene();
+    }, 65);
+  }
+
+  function stopSweep() {
+    if (sweepInterval) {
+      clearInterval(sweepInterval);
+      sweepInterval = null;
+      document.getElementById('btnSweep').textContent = '🎬 Quét góc α liên tục (0° → 150°)';
+    }
+  }
+
+  function updateFormulaPanel() {
+    const { F, theta1, theta2 } = solveForceGeometry();
+    document.getElementById('readTheory').textContent = fmt(F) + ' N';
+    const d1 = (theta1 * 180 / Math.PI).toFixed(1).replace('.', ',');
+    const d2 = (theta2 * 180 / Math.PI).toFixed(1).replace('.', ',');
+
+    const box = document.getElementById('formulaBox');
+    let line = '';
+    if (alphaDeg === 0) {
+      line = `Cùng phương cùng chiều (α = 0°): F = F₁ + F₂ = <strong>${fmt(F)} N</strong>`;
+    } else if (alphaDeg === 90) {
+      line = `Vuông góc (Pythagore): F = √(${fmt(F1,1)}² + ${fmt(F2,1)}²) = <strong>${fmt(F)} N</strong>`;
+    } else if (Math.abs(F1 - F2) < 0.01) {
+      line = `Đối xứng (F₁ = F₂): F = 2·${fmt(F1,1)}·cos(${alphaDeg/2}°) = <strong>${fmt(F)} N</strong>`;
+    } else {
+      line = `F = √(F₁² + F₂² + 2F₁F₂·cos ${alphaDeg}°) = <strong>${fmt(F)} N</strong>`;
+    }
+    box.innerHTML = `<strong>Kiểm chứng Toán học:</strong><br>${line}<br><span style="color:#475569;">Đọc trên thước: Trái ${d1}° • Phải ${d2}° (Tổng α = ${alphaDeg}°)</span>`;
+  }
+
+  function recordMeasurement() {
+    const { F } = solveForceGeometry();
+    const expVal = (step === 1) ? F : (isBalancedAtO ? measuredF3 : getStep2Tension());
+    logs.push({ f1: F1, f2: F2, ang: alphaDeg, exp: expVal, theory: F });
+    if (logs.length > 6) logs.shift();
+    renderLog();
+  }
+
+  function clearLog() { logs = []; renderLog(); }
+
+  function renderLog() {
+    const tbody = document.getElementById('logBody');
+    if (logs.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="color:#64748b; padding:8px;">Bấm sang Bước 2/3 rồi Ghi kết quả đo!</td></tr>';
+      return;
+    }
+    tbody.innerHTML = logs.map((r, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${fmt(r.f1, 1)}</td>
+        <td>${fmt(r.f2, 1)}</td>
+        <td>${r.ang}°</td>
+        <td style="color:#15803d; font-weight:700;">${fmt(r.exp)}</td>
+        <td style="color:#b45309; font-weight:700;">${fmt(r.theory)}</td>
+      </tr>
+    `).join('');
+  }
+
+  // =========================================================================
+  // 10. CAMERA ORBIT 3D MƯỢT + KÉO LỰC KẾ 3 TRỰC TIẾP TRONG BƯỚC 2
+  // =========================================================================
+  let camSpherical = { theta: 0.0, phi: 1.52, radius: 22.5 };
+  let camTarget    = { theta: 0.0, phi: 1.52, radius: 22.5 };
+  let lookAtCur    = new THREE.Vector3(1.6, 0.2, 0);
+  let lookAtTgt    = new THREE.Vector3(1.6, 0.2, 0);
+
+  function setCameraPreset(mode) {
+    document.getElementById('camFront').classList.toggle('active', mode === 'front');
+    document.getElementById('cam3d').classList.toggle('active', mode === '3d');
+    document.getElementById('camClose').classList.toggle('active', mode === 'close');
+
+    if (mode === 'front') {
+      camTarget = { theta: 0.0, phi: 1.53, radius: 22.5 };
+      lookAtTgt.set(1.6, 0.2, 0);
+    } else if (mode === '3d') {
+      camTarget = { theta: -0.45, phi: 1.28, radius: 22.0 };
+      lookAtTgt.set(1.2, 0.0, 0);
+    } else if (mode === 'close') {
+      camTarget = { theta: -0.15, phi: 1.48, radius: 11.5 };
+      lookAtTgt.set(0.8, 0.6, 0);
+    }
+  }
+
+  const raycaster = new THREE.Raycaster();
+  const boardPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), -0.3);
+  let pointerMode = null; // 'orbit' | 'drag_ring'
+  let lastMouse = { x: 0, y: 0 };
+  let dragOffset = { x: 0, y: 0 };
+
+  function getBoardHit(clientX, clientY) {
+    const ndc = new THREE.Vector2(
+      (clientX / window.innerWidth) * 2 - 1,
+      -(clientY / window.innerHeight) * 2 + 1
+    );
+    raycaster.setFromCamera(ndc, camera);
+    const hit = new THREE.Vector3();
+    return raycaster.ray.intersectPlane(boardPlane, hit) ? hit : null;
+  }
+
+  const domEl = renderer.domElement;
+
+  domEl.addEventListener('pointerdown', (e) => {
+    lastMouse = { x: e.clientX, y: e.clientY };
+    const hit = getBoardHit(e.clientX, e.clientY);
+
+    if (e.button === 0 && step === 2 && hit) {
+      // Kiểm tra nếu bấm vào vòng nhẫn hoặc dọc thân lực kế 3 phía trên vòng nhẫn
+      const nearRing = Math.hypot(hit.x - ringX, hit.y - ringY) < 1.3;
+      const nearDyn3 = Math.abs(hit.x - ringX) < 1.2 && hit.y >= ringY && hit.y <= ringY + 7.2;
+      if (nearRing || nearDyn3) {
+        pointerMode = 'drag_ring';
+        ringAnim = null;
+        dragOffset.x = ringX - hit.x;
+        dragOffset.y = ringY - hit.y;
+        return;
+      }
+    }
+    pointerMode = 'orbit';
+  });
+
+  window.addEventListener('pointermove', (e) => {
+    if (!pointerMode) return;
+    const dx = e.clientX - lastMouse.x;
+    const dy = e.clientY - lastMouse.y;
+    lastMouse = { x: e.clientX, y: e.clientY };
+
+    if (pointerMode === 'orbit') {
+      camTarget.theta = Math.max(-1.25, Math.min(1.25, camTarget.theta - dx * 0.006));
+      camTarget.phi   = Math.max(0.55, Math.min(1.75, camTarget.phi - dy * 0.006));
+    } else if (pointerMode === 'drag_ring') {
+      const hit = getBoardHit(e.clientX, e.clientY);
+      if (hit) {
+        let nx = hit.x + dragOffset.x;
+        let ny = hit.y + dragOffset.y;
+        nx = Math.max(-2.6, Math.min(2.6, nx));
+        ny = Math.max(ANCHOR_Y + RUBBER_REST_LEN, Math.min(2.0, ny));
+        if (Math.hypot(nx, ny) < 0.22) { nx = 0; ny = 0; }
+        ringX = nx;
+        ringY = ny;
+        updateStep2Readout();
+        sync3DScene();
+      }
+    }
+  });
+
+  window.addEventListener('pointerup', () => { pointerMode = null; });
+
+  domEl.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    camTarget.radius = Math.max(8.5, Math.min(34, camTarget.radius + e.deltaY * 0.015));
+  }, { passive: false });
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  // =========================================================================
+  // 11. VÒNG LẶP RENDER 60 FPS
+  // =========================================================================
+  function animate(now) {
+    requestAnimationFrame(animate);
+
+    camSpherical.theta  += (camTarget.theta  - camSpherical.theta)  * 0.1;
+    camSpherical.phi    += (camTarget.phi    - camSpherical.phi)    * 0.1;
+    camSpherical.radius += (camTarget.radius - camSpherical.radius) * 0.1;
+    lookAtCur.lerp(lookAtTgt, 0.1);
+
+    const r = camSpherical.radius;
+    const sinPhi = Math.sin(camSpherical.phi);
+    camera.position.set(
+      lookAtCur.x + r * sinPhi * Math.sin(camSpherical.theta),
+      lookAtCur.y + r * Math.cos(camSpherical.phi),
+      lookAtCur.z + r * sinPhi * Math.cos(camSpherical.theta)
+    );
+    camera.lookAt(lookAtCur);
+
+    if (ringAnim) {
+      const t = Math.min(1, (now - ringAnim.t0) / ringAnim.duration);
+      const ease = 1 - Math.pow(1 - t, 3);
+      ringX = ringAnim.sx + (ringAnim.tx - ringAnim.sx) * ease;
+      ringY = ringAnim.sy + (ringAnim.ty - ringAnim.sy) * ease;
+      sync3DScene();
+      if (t >= 1) {
+        const done = ringAnim.onDone;
+        ringAnim = null;
+        if (done) done();
+      }
+    }
+
+    if (hbhAnimating) {
+      hbhProgress = Math.min(1, hbhProgress + 0.025);
+      sync3DScene();
+      if (hbhProgress >= 1) hbhAnimating = false;
+    }
+
+    renderer.render(scene, camera);
+  }
+
+  // Khởi chạy với mẫu chuẩn 3N - 4N - 90°
+  updateRubberPhysics();
+  updateFormulaPanel();
+  sync3DScene();
+  requestAnimationFrame(animate);
+</script>
+</body>
+</html>
