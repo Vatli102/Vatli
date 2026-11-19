@@ -244,7 +244,7 @@
             </div>
             <div style="margin-top: 18px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
                 <a href="001_THPT_Thang_Long_Giua_HK1.pdf" download="001_THPT_Thang_Long_Giua_HK1.pdf" class="btn-download-pdf">
-                    <i class="fa-solid fa-file-pdf"></i> Tải Đề Thi PDF (Bản đẹp không watermark)
+                    <i class="fa-solid fa-file-pdf"></i> Tải Đề Thi PDF
                 </a>
             </div>
         </div>
@@ -294,7 +294,7 @@
         </div>
 
         <!-- Questions Container -->
-        <div id="quizForm" class="tex2jax_process">
+        <div id="quizForm" class="tex2jax_process" style="display: none;">
             <!-- SECTION 1 -->
             <div class="section-header">
                 <i class="fa-solid fa-check-double"></i> PHẦN I: Câu trắc nghiệm nhiều phương án lựa chọn (3,0 điểm)
@@ -382,8 +382,6 @@
             const savedClass = localStorage.getItem('saved_student_class');
             if (savedName && document.getElementById('studentName')) document.getElementById('studentName').value = savedName;
             if (savedClass && document.getElementById('studentClass')) document.getElementById('studentClass').value = savedClass;
-            renderQuiz();
-            typesetMath();
         };
 
         function typesetMath() {
@@ -412,11 +410,21 @@
 
             document.getElementById('loginCard').style.display = 'none';
             document.getElementById('metaBar').style.display = 'flex';
+            document.getElementById('quizForm').style.display = 'block';
             document.getElementById('floatingBar').style.display = 'flex';
 
+            renderQuiz();
+            typesetMath();
             startTime = Date.now();
             startTimer();
-            typesetMath();
+
+            setTimeout(function() {
+                var qf = document.getElementById('quizForm');
+                if (qf) {
+                    var topPos = qf.getBoundingClientRect().top + window.pageYOffset - 70;
+                    window.scrollTo({ top: Math.max(0, topPos), behavior: 'smooth' });
+                }
+            }, 80);
         }
 
         function startTimer() {
