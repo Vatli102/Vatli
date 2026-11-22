@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phòng thí nghiệm ảo: Bài 14 – Thí nghiệm Máng nghiêng Galileo & Định luật 1 Newton | Vật Lí 10 | Vatli102.com</title>
+    <meta name="description" content="Mô phỏng 3D thí nghiệm lịch sử máng nghiêng của Galileo Galilei (Bài 14 Vật lí 10 KNTT). Khảo sát bảo toàn độ cao, hạ góc nghiêng máng 2 về 0 độ, chuyển động thẳng đều không ma sát và định luật 1 Newton.">
+    
+    <!-- Google Fonts & Tailwind -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Three.js & Controls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- MathJax 3 -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: 'Lexend', sans-serif;
+            background-color: #0b1120;
+            color: #f1f5f9;
+            overflow-x: hidden;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+        }
+        .glass-panel-accent {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+        input[type="range"] {
+            accent-color: #38bdf8;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            #printReportSection {
+                display: block !important;
+                position: static !important;
+                background: white !important;
+                color: black !important;
+                padding: 0 !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+
+    <!-- HEADER BAR -->
+    <header class="no-print bg-slate-900/90 border-b border-slate-800 sticky top-0 z-50 backdrop-blur-md px-4 py-2.5 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <a href="/thi-nghiem-ao.html" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors" title="Về danh mục Thí nghiệm ảo">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="text-[11px] font-bold tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">VẬT LÍ 10</span>
+                    <span class="text-xs text-slate-400 font-medium">BÀI 14: ĐỊNH LUẬT 1 NEWTON</span>
+                </div>
+                <h1 class="text-sm md:text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-compass-drafting text-amber-400"></i>
+                    Thí nghiệm Máng nghiêng Galileo (Galileo's Inclined Plane)
+                </h1>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <button id="btnToggle2D3D" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5">
+                <i class="fa-solid fa-cube text-amber-400"></i>
+                <span id="textToggleMode">Chế độ 3D</span>
+            </button>
+            <button id="btnToggleSound" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5">
+                <i class="fa-solid fa-volume-high text-amber-400" id="soundIcon"></i>
+                <span id="soundLabel">Âm thanh</span>
+            </button>
+            <button onclick="openTheoryModal()" class="px-3 py-1.5 rounded-lg bg-amber-600/20 hover:bg-amber-600/30 border border-amber-500/40 text-xs font-semibold text-amber-300 transition-colors flex items-center gap-1.5">
+                <i class="fa-solid fa-book-open"></i>
+                <span>Lí thuyết SGK</span>
+            </button>
+            <a href="/thi-nghiem-ao.html" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white shadow transition-colors flex items-center gap-1.5">
+                <i class="fa-solid fa-flask"></i>
+                <span class="hidden sm:inline">Phòng Lab</span>
+            </a>
+            <a href="/" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 hover:text-white transition-colors">
+                <i class="fa-solid fa-house"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN INTERFACE -->
+    <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-0 relative overflow-hidden">
+        
+        <!-- 3D / 2D SIMULATION CANVAS CONTAINER (8 COLS) -->
+        <div class="lg:col-span-8 xl:col-span-8 relative bg-slate-950 flex flex-col min-h-[480px] lg:min-h-[calc(100vh-60px)]">
+            
+            <!-- 3D WebGL Canvas -->
+            <div id="canvas3dContainer" class="w-full h-full absolute inset-0"></div>
+
+            <!-- 2D Canvas Fallback -->
+            <canvas id="canvas2d" class="w-full h-full absolute inset-0 hidden bg-slate-900"></canvas>
+
+            <!-- CAMERA & VIEW CONTROLS -->
+            <div class="no-print absolute top-3 left-3 z-10 flex flex-wrap gap-1.5 bg-slate-900/80 backdrop-blur-md p-1.5 rounded-xl border border-slate-700/70 text-xs shadow-lg">
+                <button id="camPresetPerspective" class="px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 font-bold transition-all flex items-center gap-1">
+                    <i class="fa-solid fa-video"></i> Phối cảnh 3D
+                </button>
+                <button id="camPresetFront" class="px-2.5 py-1 rounded-lg hover:bg-slate-800 text-slate-300 font-medium transition-all flex items-center gap-1">
+                    <i class="fa-solid fa-arrows-to-eye"></i> Chính diện (2D)
+                </button>
+                <button id="camPresetFollow" class="px-2.5 py-1 rounded-lg hover:bg-slate-800 text-slate-300 font-medium transition-all flex items-center gap-1">
+                    <i class="fa-solid fa-crosshairs"></i> Bám theo hòn bi
+                </button>
+                <button id="btnToggleFullscreen" class="px-2 py-1 rounded-lg hover:bg-slate-800 text-slate-300 transition-all ml-1" title="Toàn màn hình">
+                    <i class="fa-solid fa-expand"></i>
+                </button>
+            </div>
+
+            <!-- HUD REAL-TIME TELEMETRY OVERLAY -->
+            <div class="absolute bottom-3 left-3 z-10 pointer-events-none flex flex-col gap-2 max-w-sm">
+                <div class="glass-panel p-3 rounded-xl border border-slate-700/80 pointer-events-auto text-xs shadow-xl">
+                    <div class="flex items-center justify-between pb-1.5 mb-1.5 border-b border-slate-700/60 font-semibold text-slate-300">
+                        <span class="flex items-center gap-1.5 text-amber-400">
+                            <i class="fa-solid fa-gauge-high"></i> ĐO ĐẠC THỰC NGHIỆM
+                        </span>
+                        <span id="badgeState" class="px-2 py-0.5 rounded text-[10px] bg-slate-700 text-slate-300">Sẵn sàng</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-[11px]">
+                        <div class="bg-slate-900/60 p-1.5 rounded border border-slate-800">
+                            <span class="text-slate-400">Độ cao thả $h_1$:</span>
+                            <div class="font-mono font-bold text-amber-300 text-sm" id="hudH1">1.20 m</div>
+                        </div>
+                        <div class="bg-slate-900/60 p-1.5 rounded border border-slate-800">
+                            <span class="text-slate-400">Độ cao đạt được $h_2$:</span>
+                            <div class="font-mono font-bold text-emerald-400 text-sm" id="hudH2">0.00 m</div>
+                        </div>
+                        <div class="bg-slate-900/60 p-1.5 rounded border border-slate-800">
+                            <span class="text-slate-400">Vận tốc đáy $v_{đáy}$:</span>
+                            <div class="font-mono font-bold text-sky-300 text-sm" id="hudVbot">0.00 m/s</div>
+                        </div>
+                        <div class="bg-slate-900/60 p-1.5 rounded border border-slate-800">
+                            <span class="text-slate-400">Quãng đường máng 2:</span>
+                            <div class="font-mono font-bold text-purple-300 text-sm" id="hudS2">0.00 m</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Energy Progress Bar -->
+                    <div class="mt-2 pt-2 border-t border-slate-800">
+                        <div class="flex justify-between text-[10px] text-slate-400 mb-1">
+                            <span>Thế năng $W_t$ (<span id="txtWtVal" class="text-amber-400">0</span> J)</span>
+                            <span>Động năng $W_d$ (<span id="txtWdVal" class="text-sky-400">0</span> J)</span>
+                        </div>
+                        <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden flex">
+                            <div id="barWt" class="bg-amber-500 h-full transition-all duration-75" style="width: 50%;"></div>
+                            <div id="barWd" class="bg-sky-500 h-full transition-all duration-75" style="width: 50%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Observation Box -->
+                <div id="boxObservation" class="glass-panel p-2.5 rounded-xl border border-amber-500/40 text-xs text-amber-200 shadow-lg pointer-events-auto flex items-start gap-2">
+                    <i class="fa-solid fa-lightbulb text-amber-400 text-sm mt-0.5"></i>
+                    <div id="textObservation" class="leading-relaxed">
+                        Galileo suy luận: Khi ma sát bằng 0, hòn bi luôn lăn lên máng 2 tới đúng độ cao ban đầu ($h_2 = h_1$).
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOGGLE DISPLAY VECTORS & LASER GUIDE -->
+            <div class="no-print absolute top-3 right-3 z-10 flex flex-col gap-1.5 bg-slate-900/80 backdrop-blur-md p-2 rounded-xl border border-slate-700/70 text-xs shadow-lg">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Hiển thị trực quan</span>
+                <label class="flex items-center gap-2 cursor-pointer text-slate-200 hover:text-white">
+                    <input type="checkbox" id="chkLaserGuide" checked class="rounded bg-slate-800 border-slate-600 text-amber-500 focus:ring-0">
+                    <span>Đường gióng laser độ cao $h_1$</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-slate-200 hover:text-white">
+                    <input type="checkbox" id="chkVectors" checked class="rounded bg-slate-800 border-slate-600 text-sky-500 focus:ring-0">
+                    <span>Vectơ lực $(\vec{P}, \vec{N}, \vec{F}_{ms})$</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-slate-200 hover:text-white">
+                    <input type="checkbox" id="chkVelocityVector" checked class="rounded bg-slate-800 border-slate-600 text-emerald-500 focus:ring-0">
+                    <span>Vectơ vận tốc $\vec{v}$</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-slate-200 hover:text-white">
+                    <input type="checkbox" id="chkGrid" checked class="rounded bg-slate-800 border-slate-600 text-purple-500 focus:ring-0">
+                    <span>Lưới toạ độ thước đo mét</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- RIGHT CONTROL PANEL (4 COLS) -->
+        <div class="lg:col-span-4 xl:col-span-4 bg-slate-900/95 border-l border-slate-800 p-4 flex flex-col gap-4 overflow-y-auto max-h-[calc(100vh-60px)]">
+            
+            <!-- MAIN EXPERIMENT ACTION BUTTONS -->
+            <div class="glass-panel p-3 rounded-2xl border border-amber-500/30">
+                <div class="flex items-center justify-between mb-2">
+                    <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-gamepad text-amber-400"></i>
+                        ĐIỀU KHIỂN THÍ NGHIỆM
+                    </h2>
+                    <span class="text-[11px] text-slate-400 font-mono" id="simTimeDisplay">t = 0.00s</span>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 mb-2">
+                    <button id="btnPlay" class="col-span-2 py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-sm shadow-lg shadow-amber-950/40 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-play" id="iconPlay"></i>
+                        <span id="textBtnPlay">THẢ BI</span>
+                    </button>
+                    <button id="btnReset" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition-all flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-rotate-left"></i> ĐẶT LẠI
+                    </button>
+                </div>
+
+                <!-- Simulation Speed -->
+                <div class="flex items-center justify-between pt-2 border-t border-slate-800 text-xs">
+                    <span class="text-slate-400"><i class="fa-solid fa-forward-step mr-1 text-slate-500"></i>Tốc độ mô phỏng:</span>
+                    <div class="flex gap-1" id="speedGroup">
+                        <button class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-300" data-speed="0.25">0.25x</button>
+                        <button class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-300" data-speed="0.5">0.5x</button>
+                        <button class="px-2 py-1 rounded bg-amber-500 text-slate-950 font-bold text-[11px]" data-speed="1.0">1.0x</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GALILEO'S EXPERIMENTAL STAGES: INCLINATION PRESETS -->
+            <div class="glass-panel p-3 rounded-2xl border border-slate-700">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold text-white flex items-center gap-1.5">
+                        <i class="fa-solid fa-sliders text-amber-400"></i>
+                        GÓC NGHIÊNG MÁNG 2 ($\theta_2$)
+                    </span>
+                    <span class="text-xs font-bold font-mono text-amber-300" id="valAngle2Display">30°</span>
+                </div>
+                
+                <!-- Quick Preset Stages (The historic sequence) -->
+                <div class="grid grid-cols-4 gap-1.5 mb-3">
+                    <button class="btn-angle-preset py-2 px-1 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-center transition-all" data-angle="45">
+                        <div class="text-[11px] font-bold text-slate-300">45°</div>
+                        <div class="text-[9px] text-slate-500">Dốc lớn</div>
+                    </button>
+                    <button class="btn-angle-preset py-2 px-1 rounded-xl bg-amber-500/20 border border-amber-500 text-amber-300 text-center transition-all" data-angle="30">
+                        <div class="text-[11px] font-bold">30°</div>
+                        <div class="text-[9px]">Vừa phải</div>
+                    </button>
+                    <button class="btn-angle-preset py-2 px-1 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-center transition-all" data-angle="15">
+                        <div class="text-[11px] font-bold text-slate-300">15°</div>
+                        <div class="text-[9px] text-slate-500">Thoai thoải</div>
+                    </button>
+                    <button class="btn-angle-preset py-2 px-1 rounded-xl bg-emerald-500/20 border border-emerald-500/50 hover:bg-emerald-500/30 text-emerald-300 text-center transition-all font-semibold" data-angle="0">
+                        <div class="text-[11px] font-bold">0° (Ngang)</div>
+                        <div class="text-[9px] text-emerald-400 font-normal">Galileo</div>
+                    </button>
+                </div>
+
+                <!-- Custom Slider -->
+                <div class="space-y-1">
+                    <div class="flex justify-between text-[11px] text-slate-400">
+                        <span>0° (Nằm ngang)</span>
+                        <span>Tinh chỉnh liên tục</span>
+                        <span>60° (Dốc cao)</span>
+                    </div>
+                    <input type="range" id="sliderAngle2" min="0" max="60" step="1" value="30" class="w-full h-1.5 bg-slate-700 rounded-lg cursor-pointer">
+                </div>
+            </div>
+
+            <!-- PHYSICAL PARAMETERS -->
+            <div class="glass-panel p-3 rounded-2xl border border-slate-700 space-y-3">
+                <h3 class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                    <i class="fa-solid fa-atom text-sky-400"></i> THÔNG SỐ VẬT LÍ
+                </h3>
+
+                <!-- Initial Height h1 -->
+                <div>
+                    <div class="flex items-center justify-between text-xs mb-1">
+                        <span class="text-slate-300">Độ cao thả ban đầu ($h_1$):</span>
+                        <span class="font-mono font-bold text-amber-400" id="valH1Display">1.20 m</span>
+                    </div>
+                    <input type="range" id="sliderH1" min="0.4" max="2.0" step="0.05" value="1.20" class="w-full h-1.5 bg-slate-700 rounded-lg cursor-pointer">
+                </div>
+
+                <!-- Friction Coefficient mu -->
+                <div>
+                    <div class="flex items-center justify-between text-xs mb-1">
+                        <span class="text-slate-300">Hệ số ma sát ($\mu$):</span>
+                        <span class="font-mono font-bold text-purple-300" id="valMuDisplay">0.00 (Lí tưởng)</span>
+                    </div>
+                    <input type="range" id="sliderMu" min="0.00" max="0.10" step="0.01" value="0.00" class="w-full h-1.5 bg-slate-700 rounded-lg cursor-pointer">
+                    <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                        <span class="text-amber-400 font-semibold cursor-pointer" onclick="setMu(0.00)">0.00 (Không ma sát)</span>
+                        <span class="cursor-pointer" onclick="setMu(0.02)">0.02 (Rất trơn)</span>
+                        <span class="cursor-pointer" onclick="setMu(0.06)">0.06 (Có ma sát)</span>
+                    </div>
+                </div>
+
+                <!-- Ball Mass & Material -->
+                <div class="grid grid-cols-2 gap-2 text-xs pt-2 border-t border-slate-800">
+                    <div>
+                        <span class="text-slate-400 block mb-1">Khối lượng bi ($m$):</span>
+                        <select id="selBallMass" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-slate-200">
+                            <option value="0.2">0.2 kg (Nhẹ)</option>
+                            <option value="0.5" selected>0.5 kg (Chuẩn)</option>
+                            <option value="1.0">1.0 kg (Nặng)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 block mb-1">Góc máng 1 ($\theta_1$):</span>
+                        <select id="selAngle1" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-slate-200">
+                            <option value="30" selected>30° (Chuẩn)</option>
+                            <option value="45">45°</option>
+                            <option value="60">60°</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DATA LOGGING & EXPORT -->
+            <div class="glass-panel p-3 rounded-2xl border border-slate-700">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                        <i class="fa-solid fa-table-list text-purple-400"></i> BẢNG SỐ LIỆU ĐỐI CHỨNG
+                    </h3>
+                    <div class="flex gap-1.5">
+                        <button onclick="exportCSV()" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 text-[10px] text-slate-300 hover:text-white transition-colors" title="Xuất file CSV/Excel">
+                            <i class="fa-solid fa-file-excel text-emerald-400 mr-1"></i>CSV
+                        </button>
+                        <button onclick="printReport()" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 text-[10px] text-slate-300 hover:text-white transition-colors" title="In phiếu thực hành">
+                            <i class="fa-solid fa-print text-sky-400 mr-1"></i>In A4
+                        </button>
+                        <button onclick="clearHistory()" class="px-2 py-1 rounded bg-slate-800 hover:bg-rose-900/40 border border-slate-700 text-[10px] text-slate-400 hover:text-rose-300 transition-colors" title="Xóa dữ liệu">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto max-h-44 text-[11px]">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-slate-400 bg-slate-900/80 sticky top-0">
+                                <th class="p-1.5">Lần</th>
+                                <th class="p-1.5">Góc $\theta_2$</th>
+                                <th class="p-1.5">$h_1$ (m)</th>
+                                <th class="p-1.5">$h_2$ (m)</th>
+                                <th class="p-1.5">$s_2$ (m)</th>
+                                <th class="p-1.5">Nhận xét</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableDataBody" class="divide-y divide-slate-800/60 font-mono text-slate-300">
+                            <!-- Populated dynamically -->
+                            <tr>
+                                <td colspan="6" class="p-3 text-center text-slate-500 font-sans">Chưa có số liệu. Nhấn <strong>THẢ BI</strong> để bắt đầu ghi nhận.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- HISTORICAL MEANING ACCORDION -->
+            <div class="glass-panel p-3 rounded-2xl border border-amber-500/30 text-xs">
+                <div class="flex items-center gap-2 text-amber-300 font-bold mb-1.5">
+                    <i class="fa-solid fa-quote-left text-amber-400"></i>
+                    BƯỚC NGOẶT LỊCH SỬ CỦA GALILEO
+                </div>
+                <p class="text-slate-300 leading-relaxed text-[11px]">
+                    Aristotle từng cho rằng: <em>"Muốn duy trì chuyển động phải có lực tác dụng"</em>. 
+                    Nhưng qua thí nghiệm tưởng tượng này, <strong>Galileo Galilei (1564–1642)</strong> đã chỉ ra:
+                    <strong class="text-amber-200"> Lực không phải là nguyên nhân duy trì chuyển động</strong>, 
+                    mà lực là nguyên nhân làm biến đổi vận tốc! Khi không có ma sát, bi sẽ lăn trên mặt phẳng ngang mãi mãi với vận tốc không đổi.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- THEORY MODAL -->
+    <div id="modalTheory" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-book-bookmark text-amber-400"></i>
+                    Lí thuyết SGK: Thí nghiệm máng nghiêng của Galileo & Định luật 1 Newton
+                </h3>
+                <button onclick="closeTheoryModal()" class="text-slate-400 hover:text-white text-lg p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 text-xs text-slate-300 leading-relaxed">
+                <div>
+                    <h4 class="font-bold text-amber-300 text-sm mb-1">1. Thí nghiệm lịch sử của Galileo (Hình 14.1 SGK)</h4>
+                    <p>Galileo bố trí hai máng nghiêng trơn nhẵn nối tiếp nhau:</p>
+                    <ul class="list-disc pl-5 mt-1 space-y-1">
+                        <li>Thả hòn bi từ độ cao $h$ ở máng 1, bi lăn xuống và leo lên máng 2 đến độ cao gần bằng $h$.</li>
+                        <li>Hạ thấp dần góc nghiêng của máng 2, hòn bi lăn được quãng đường dài hơn trước khi dừng lại ở cùng độ cao $h$.</li>
+                        <li><strong>Thí nghiệm tưởng tượng:</strong> Nếu máng 2 nằm ngang ($\theta_2 = 0^\circ$) và không có ma sát, hòn bi sẽ lăn mãi mãi với vận tốc không đổi ($v = \text{const}$).</li>
+                    </ul>
+                </div>
+
+                <div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700">
+                    <h4 class="font-bold text-sky-300 text-sm mb-1">2. Định luật 1 Newton</h4>
+                    <p class="text-slate-200 italic">
+                        "Nếu một vật không chịu tác dụng của lực nào hoặc chịu tác dụng của các lực có hợp lực bằng không, thì vật đang đứng yên sẽ tiếp tục đứng yên, đang chuyển động sẽ tiếp tục chuyển động thẳng đều."
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-purple-300 text-sm mb-1">3. Khái niệm Quán tính</h4>
+                    <p>
+                        <strong>Quán tính</strong> là tính chất của mọi vật có xu hướng bảo toàn vận tốc cả về hướng và độ lớn. Định luật 1 Newton còn được gọi là <em>Định luật quán tính</em>.
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-6 pt-3 border-t border-slate-800 flex justify-end">
+                <button onclick="closeTheoryModal()" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-xs transition-colors">
+                    Đã hiểu, quay lại thí nghiệm
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRINT REPORT MODAL / SECTION -->
+    <div id="printReportSection" class="hidden p-8 max-w-4xl mx-auto bg-white text-black font-sans">
+        <div class="border-b-2 border-black pb-4 mb-6 text-center">
+            <h2 class="text-xl font-bold uppercase">BÁO CÁO KẾT QUẢ THÍ NGHIỆM THỰC HÀNH ẢO</h2>
+            <h3 class="text-base font-semibold">BÀI 14: THÍ NGHIỆM MÁNG NGHIÊNG GALILEO & ĐỊNH LUẬT 1 NEWTON</h3>
+            <p class="text-xs italic text-gray-600">Hệ thống Thí nghiệm ảo Vật lí chuẩn KNTT - Nền tảng Vatli102.com</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 text-xs mb-6 border p-4 rounded">
+            <div><strong>Họ và tên học sinh / Nhóm:</strong> ............................................................</div>
+            <div><strong>Lớp:</strong> ............................................................</div>
+            <div><strong>Trường:</strong> ............................................................</div>
+            <div><strong>Ngày thực hiện:</strong> <span id="printDate"></span></div>
+        </div>
+
+        <div class="mb-6">
+            <h4 class="font-bold text-sm mb-2">I. BẢNG SỐ LIỆU ĐO ĐẠC THỰC NGHIỆM</h4>
+            <table class="w-full border-collapse border border-black text-xs text-center">
+                <thead>
+                    <tr class="bg-gray-100 font-bold">
+                        <th class="border border-black p-2">Lần TN</th>
+                        <th class="border border-black p-2">Góc nghiêng $\theta_2$</th>
+                        <th class="border border-black p-2">Độ cao thả $h_1$ (m)</th>
+                        <th class="border border-black p-2">Độ cao đạt được $h_2$ (m)</th>
+                        <th class="border border-black p-2">Quãng đường $s_2$ (m)</th>
+                        <th class="border border-black p-2">Hệ số ma sát $\mu$</th>
+                        <th class="border border-black p-2">Nhận xét</th>
+                    </tr>
+                </thead>
+                <tbody id="printTableBody">
+                    <!-- Cloned from history -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="space-y-4 text-xs mb-8">
+            <h4 class="font-bold text-sm">II. TRẢ LỜI CÂU HỎI THẢO LUẬN</h4>
+            <p><strong>1. Khi giảm dần góc nghiêng $\theta_2$ của máng 2, quãng đường hòn bi lăn được thay đổi như thế nào?</strong></p>
+            <p class="border-b border-dotted border-gray-400 pb-4">........................................................................................................................................................................................................</p>
+            <p><strong>2. Trong điều kiện lí tưởng không có ma sát ($\mu = 0$) và máng 2 nằm ngang ($\theta_2 = 0^\circ$), dự đoán chuyển động của hòn bi:</strong></p>
+            <p class="border-b border-dotted border-gray-400 pb-4">........................................................................................................................................................................................................</p>
+            <p><strong>3. Phát biểu nội dung Định luật 1 Newton rút ra từ thí nghiệm:</strong></p>
+            <p class="border-b border-dotted border-gray-400 pb-4">........................................................................................................................................................................................................</p>
+        </div>
+
+        <div class="flex justify-between text-xs text-center pt-6">
+            <div>
+                <strong>HỌC SINH THỰC HIỆN</strong><br>
+                <em class="text-gray-500">(Ký và ghi rõ họ tên)</em>
+            </div>
+            <div>
+                <strong>GIÁO VIÊN ĐÁNH GIÁ</strong><br>
+                <em class="text-gray-500">(Nhận xét và cho điểm)</em>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN JAVASCRIPT LOGIC -->
+    <script>
+        /* ==================== GLOBAL CONSTANTS & STATE ==================== */
+        const GRAVITY = 9.8; // m/s^2
+        
+        let simState = {
+            isRunning: false,
+            isPaused: false,
+            simTime: 0,
+            timeScale: 1.0,
+            soundEnabled: true,
+            is3D: true,
+            cameraMode: 'perspective', // 'perspective', 'front', 'follow'
+
+            // Physical parameters
+            h1: 1.20,             // initial height (m)
+            angle1Deg: 30,        // ramp 1 angle
+            angle2Deg: 30,        // ramp 2 angle (0 to 60)
+            frictionMu: 0.00,     // friction coefficient
+            ballMass: 0.5,        // kg
+            ballRadius: 0.12,     // m
+
+            // Ball kinematic state
+            currentTrack: 1,      // 1: on Ramp 1, 0: bottom transition, 2: on Ramp 2 / horizontal
+            s1: 0,                // distance along ramp 1 from start
+            s2: 0,                // distance along ramp 2 from bottom
+            v: 0,                 // current linear velocity (m/s)
+            direction: 1,         // 1: forward, -1: backward
+            ballPos: { x: 0, y: 0, z: 0 },
+            
+            // Peak measurements
+            h2Max: 0,
+            s2Max: 0,
+            vBottom: 0,
+            trialCount: 0
+        };
+
+        const historyData = [];
+
+        /* ==================== SOUND SYNTHESIZER ==================== */
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function playTone(freq, duration, type = 'sine') {
+            if (!simState.soundEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new AudioContext();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        /* ==================== THREE.JS 3D ENVIRONMENT ==================== */
+        let scene, camera, renderer, controls;
+        let ramp1Mesh, ramp2Mesh, ballMesh, laserGuideLine, gridHelper;
+        let arrowP, arrowN, arrowFms, arrowV;
+        let ramp2Pivot;
+
+        function init3D() {
+            const container = document.getElementById('canvas3dContainer');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x060b18);
+            scene.fog = new THREE.FogExp2(0x060b18, 0.035);
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+            camera.position.set(0, 3.2, 7.5);
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            container.appendChild(renderer.domElement);
+
+            // OrbitControls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.maxPolarAngle = Math.PI / 2 - 0.02; // do not go below ground
+            controls.target.set(0, 0.8, 0);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+
+            const hemiLight = new THREE.HemisphereLight(0x38bdf8, 0x0f172a, 0.6);
+            scene.add(hemiLight);
+
+            const dirLight = new THREE.DirectionalLight(0xfff7ed, 1.2);
+            dirLight.position.set(5, 10, 7);
+            dirLight.castShadow = true;
+            dirLight.shadow.mapSize.width = 1024;
+            dirLight.shadow.mapSize.height = 1024;
+            dirLight.shadow.bias = -0.0005;
+            scene.add(dirLight);
+
+            // Subtle cyan point light near apparatus
+            const pointLight = new THREE.PointLight(0x38bdf8, 1.5, 12);
+            pointLight.position.set(0, 2, 2);
+            scene.add(pointLight);
+
+            // Ground plane & Grid
+            const floorGeo = new THREE.PlaneGeometry(30, 20);
+            const floorMat = new THREE.MeshStandardMaterial({
+                color: 0x0a1122,
+                roughness: 0.85,
+                metalness: 0.2
+            });
+            const floor = new THREE.Mesh(floorGeo, floorMat);
+            floor.rotation.x = -Math.PI / 2;
+            floor.position.y = -0.01;
+            floor.receiveShadow = true;
+            scene.add(floor);
+
+            gridHelper = new THREE.GridHelper(24, 24, 0x38bdf8, 0x1e293b);
+            gridHelper.position.y = 0.0;
+            scene.add(gridHelper);
+
+            // Build Apparatus
+            buildApparatus();
+
+            // Window resize handler
+            window.addEventListener('resize', onWindowResize);
+
+            // Start animation loop
+            animate();
+        }
+
+        /* Build Galileo Apparatus: Ramp 1, Ramp 2 (Pivotable), Ball, Laser Line */
+        function buildApparatus() {
+            // Remove previous if any
+            if (ramp2Pivot) scene.remove(ramp2Pivot);
+            if (ramp1Mesh) scene.remove(ramp1Mesh);
+            if (ballMesh) scene.remove(ballMesh);
+            if (laserGuideLine) scene.remove(laserGuideLine);
+
+            const rampWidth = 0.5;
+            const rampThickness = 0.06;
+
+            // Material for Ramps
+            const rampMat = new THREE.MeshStandardMaterial({
+                color: 0x1e293b,
+                roughness: 0.3,
+                metalness: 0.7
+            });
+            const railGlowMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
+            const railGoldMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.2, metalness: 0.8 });
+
+            // 1. RAMP 1 (Left Ramp - slopes down from left to x=0, y=0)
+            const angle1Rad = THREE.MathUtils.degToRad(simState.angle1Deg);
+            const length1 = simState.h1 / Math.sin(angle1Rad);
+            const ramp1Geo = new THREE.BoxGeometry(length1, rampThickness, rampWidth);
+            ramp1Mesh = new THREE.Group();
+
+            const ramp1Board = new THREE.Mesh(ramp1Geo, rampMat);
+            ramp1Board.castShadow = true;
+            ramp1Board.receiveShadow = true;
+            ramp1Mesh.add(ramp1Board);
+
+            // Add side glowing rails
+            const railGeo = new THREE.BoxGeometry(length1, 0.08, 0.03);
+            const rail1 = new THREE.Mesh(railGeo, railGoldMat);
+            rail1.position.set(0, 0.04, rampWidth / 2);
+            const rail2 = new THREE.Mesh(railGeo, railGoldMat);
+            rail2.position.set(0, 0.04, -rampWidth / 2);
+            ramp1Mesh.add(rail1);
+            ramp1Mesh.add(rail2);
+
+            // Position Ramp 1: bottom end meets x=0, y=0
+            ramp1Mesh.rotation.z = -angle1Rad;
+            const center1X = -(length1 / 2) * Math.cos(angle1Rad);
+            const center1Y = (length1 / 2) * Math.sin(angle1Rad);
+            ramp1Mesh.position.set(center1X, center1Y, 0);
+            scene.add(ramp1Mesh);
+
+            // Support stand for Ramp 1
+            const standHeight = simState.h1;
+            const standGeo = new THREE.CylinderGeometry(0.04, 0.06, standHeight, 16);
+            const standMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.9, roughness: 0.2 });
+            const stand = new THREE.Mesh(standGeo, standMat);
+            stand.position.set(-length1 * Math.cos(angle1Rad), standHeight / 2, 0);
+            stand.castShadow = true;
+            scene.add(stand);
+
+            // 2. RAMP 2 PIVOT (Right Ramp - pivot at x=0, y=0)
+            ramp2Pivot = new THREE.Group();
+            ramp2Pivot.position.set(0, 0, 0);
+
+            // Length of Ramp 2: long enough to accommodate horizontal motion (e.g. 10m)
+            const length2 = 12.0;
+            const ramp2Geo = new THREE.BoxGeometry(length2, rampThickness, rampWidth);
+            const ramp2Board = new THREE.Mesh(ramp2Geo, rampMat);
+            ramp2Board.position.set(length2 / 2, 0, 0);
+            ramp2Board.castShadow = true;
+            ramp2Board.receiveShadow = true;
+            ramp2Pivot.add(ramp2Board);
+
+            // Side rails for Ramp 2
+            const rail2Geo = new THREE.BoxGeometry(length2, 0.08, 0.03);
+            const rail2A = new THREE.Mesh(rail2Geo, railGoldMat);
+            rail2A.position.set(length2 / 2, 0.04, rampWidth / 2);
+            const rail2B = new THREE.Mesh(rail2Geo, railGoldMat);
+            rail2B.position.set(length2 / 2, 0.04, -rampWidth / 2);
+            ramp2Pivot.add(rail2A);
+            ramp2Pivot.add(rail2B);
+
+            // Meter marks on Ramp 2
+            for (let m = 1; m <= 10; m++) {
+                const markGeo = new THREE.BoxGeometry(0.02, 0.005, rampWidth * 0.8);
+                const markMat = new THREE.MeshBasicMaterial({ color: m % 2 === 0 ? 0xf59e0b : 0x38bdf8 });
+                const mark = new THREE.Mesh(markGeo, markMat);
+                mark.position.set(m, rampThickness / 2 + 0.003, 0);
+                ramp2Pivot.add(mark);
+            }
+
+            // Pivot joint cylinder
+            const jointGeo = new THREE.CylinderGeometry(rampThickness * 1.2, rampThickness * 1.2, rampWidth * 1.2, 24);
+            const jointMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.9, roughness: 0.1 });
+            const joint = new THREE.Mesh(jointGeo, jointMat);
+            joint.rotation.x = Math.PI / 2;
+            ramp2Pivot.add(joint);
+
+            // Rotate ramp 2 to current angle
+            ramp2Pivot.rotation.z = THREE.MathUtils.degToRad(simState.angle2Deg);
+            scene.add(ramp2Pivot);
+
+            // 3. BALL MESH (Chrome Metal Ball with glowing core)
+            const ballGeo = new THREE.SphereGeometry(simState.ballRadius, 32, 32);
+            const ballMat = new THREE.MeshStandardMaterial({
+                color: 0xf97316,
+                metalness: 0.95,
+                roughness: 0.1,
+                emissive: 0x7c2d12,
+                emissiveIntensity: 0.3
+            });
+            ballMesh = new THREE.Mesh(ballGeo, ballMat);
+            ballMesh.castShadow = true;
+            scene.add(ballMesh);
+
+            // 4. LASER HEIGHT GUIDE LINE (At y = h1)
+            const lineMat = new THREE.LineDashedMaterial({
+                color: 0xf59e0b,
+                dashSize: 0.2,
+                gapSize: 0.1,
+                linewidth: 2
+            });
+            const lineGeo = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(-6, simState.h1, 0),
+                new THREE.Vector3(10, simState.h1, 0)
+            ]);
+            laserGuideLine = new THREE.Line(lineGeo, lineMat);
+            laserGuideLine.computeLineDistances();
+            scene.add(laserGuideLine);
+
+            // 5. VECTOR ARROWS
+            arrowP = new THREE.ArrowHelper(new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 0, 0), 0.7, 0xef4444, 0.15, 0.08); // Red P
+            arrowN = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 0), 0.7, 0x38bdf8, 0.15, 0.08);  // Cyan N
+            arrowFms = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 0, 0), 0.5, 0xa855f7, 0.12, 0.06); // Purple Fms
+            arrowV = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 0, 0), 0.8, 0x22c55e, 0.18, 0.09);  // Green V
+            scene.add(arrowP);
+            scene.add(arrowN);
+            scene.add(arrowFms);
+            scene.add(arrowV);
+
+            // Reset ball to starting position
+            resetBallPosition();
+        }
+
+        /* Calculate starting position of ball on Ramp 1 */
+        function resetBallPosition() {
+            const angle1Rad = THREE.MathUtils.degToRad(simState.angle1Deg);
+            const length1 = simState.h1 / Math.sin(angle1Rad);
+
+            // Ball starts at top of Ramp 1
+            simState.currentTrack = 1; // on ramp 1
+            simState.s1 = 0;          // 0 at top, increases as it rolls down to length1
+            simState.s2 = 0;
+            simState.v = 0;
+            simState.direction = 1;
+            simState.simTime = 0;
+            simState.h2Max = 0;
+            simState.s2Max = 0;
+            simState.vBottom = 0;
+
+            updateBallCoordinates();
+            updateHUD(0, 0);
+            updateEnergyBars(simState.ballMass * GRAVITY * simState.h1, 0);
+        }
+
+        /* Update Ball 3D Coordinates based on currentTrack and s1/s2 */
+        function updateBallCoordinates() {
+            const angle1Rad = THREE.MathUtils.degToRad(simState.angle1Deg);
+            const angle2Rad = THREE.MathUtils.degToRad(simState.angle2Deg);
+            const length1 = simState.h1 / Math.sin(angle1Rad);
+            const r = simState.ballRadius;
+            const rampThick = 0.06;
+
+            let bx = 0, by = 0, bz = 0;
+
+            if (simState.currentTrack === 1) {
+                // Moving on Ramp 1
+                // Top coordinate:
+                const topX = -length1 * Math.cos(angle1Rad);
+                const topY = simState.h1;
+                
+                // Position along ramp 1 from top
+                const distFromTop = simState.s1;
+                bx = topX + distFromTop * Math.cos(angle1Rad);
+                by = topY - distFromTop * Math.sin(angle1Rad);
+
+                // Offset perpendicular to ramp surface
+                bx += r * Math.sin(angle1Rad);
+                by += (r + rampThick / 2) * Math.cos(angle1Rad);
+
+                // Normal vector for Ramp 1: points up-right
+                const normal1 = new THREE.Vector3(Math.sin(angle1Rad), Math.cos(angle1Rad), 0).normalize();
+                const tang1 = new THREE.Vector3(Math.cos(angle1Rad), -Math.sin(angle1Rad), 0).normalize();
+
+                updateVectorArrows(bx, by, bz, normal1, tang1);
+            } else {
+                // Moving on Ramp 2 (or horizontal when angle2 = 0)
+                const distAlong2 = simState.s2;
+                bx = distAlong2 * Math.cos(angle2Rad);
+                by = distAlong2 * Math.sin(angle2Rad);
+
+                // Offset perpendicular to ramp 2 surface
+                bx -= r * Math.sin(angle2Rad);
+                by += (r + rampThick / 2) * Math.cos(angle2Rad);
+
+                // Normal vector for Ramp 2: points up-left
+                const normal2 = new THREE.Vector3(-Math.sin(angle2Rad), Math.cos(angle2Rad), 0).normalize();
+                const tang2 = new THREE.Vector3(Math.cos(angle2Rad), Math.sin(angle2Rad), 0).normalize();
+
+                updateVectorArrows(bx, by, bz, normal2, tang2);
+            }
+
+            simState.ballPos = { x: bx, y: by, z: bz };
+            if (ballMesh) {
+                ballMesh.position.set(bx, by, bz);
+                // Rotate ball as it rolls
+                ballMesh.rotation.z -= (simState.v / r) * 0.016 * simState.direction;
+            }
+        }
+
+        /* Update Force & Velocity Arrows */
+        function updateVectorArrows(x, y, z, normal, tangent) {
+            const showForces = document.getElementById('chkVectors').checked;
+            const showVelocity = document.getElementById('chkVelocityVector').checked;
+
+            arrowP.visible = showForces;
+            arrowN.visible = showForces;
+            arrowFms.visible = showForces && (simState.frictionMu > 0);
+            arrowV.visible = showVelocity && (Math.abs(simState.v) > 0.05);
+
+            if (!showForces && !showVelocity) return;
+
+            const origin = new THREE.Vector3(x, y, z);
+            
+            // Gravity P = mg (down)
+            arrowP.position.copy(origin);
+            arrowP.setDirection(new THREE.Vector3(0, -1, 0));
+            arrowP.setLength(0.7);
+
+            // Normal N (perpendicular to surface)
+            arrowN.position.copy(origin);
+            arrowN.setDirection(normal);
+            arrowN.setLength(0.65);
+
+            // Friction Fms (opposes motion)
+            if (arrowFms.visible) {
+                arrowFms.position.copy(origin);
+                const fmsDir = tangent.clone().multiplyScalar(-simState.direction);
+                arrowFms.setDirection(fmsDir);
+                arrowFms.setLength(Math.min(0.5, simState.frictionMu * 6));
+            }
+
+            // Velocity V
+            if (arrowV.visible) {
+                arrowV.position.copy(origin);
+                const vDir = tangent.clone().multiplyScalar(simState.direction);
+                arrowV.setDirection(vDir);
+                arrowV.setLength(Math.min(1.5, Math.abs(simState.v) * 0.25));
+            }
+        }
+
+        /* Main Physics Step */
+        function stepPhysics(dt) {
+            const angle1Rad = THREE.MathUtils.degToRad(simState.angle1Deg);
+            const angle2Rad = THREE.MathUtils.degToRad(simState.angle2Deg);
+            const length1 = simState.h1 / Math.sin(angle1Rad);
+            const mu = simState.frictionMu;
+
+            if (simState.currentTrack === 1) {
+                // TRACK 1 (Ramp 1)
+                // a = g * (sin theta1 - mu * cos theta1 * dir)
+                let a = GRAVITY * Math.sin(angle1Rad);
+                if (simState.direction > 0) {
+                    a -= mu * GRAVITY * Math.cos(angle1Rad); // rolling down
+                } else {
+                    a += mu * GRAVITY * Math.cos(angle1Rad); // rolling back up
+                }
+
+                if (simState.direction > 0) {
+                    simState.v += a * dt;
+                    simState.s1 += simState.v * dt;
+
+                    // Did it reach the bottom (x=0, y=0)?
+                    if (simState.s1 >= length1) {
+                        simState.s1 = length1;
+                        simState.currentTrack = 2; // transfer to Ramp 2
+                        simState.s2 = 0;
+                        simState.vBottom = simState.v;
+                        playTone(520, 0.08, 'triangle'); // bottom ding
+                    }
+                } else {
+                    // rolling back up Ramp 1
+                    simState.v -= a * dt;
+                    simState.s1 -= simState.v * dt;
+                    if (simState.v <= 0 || simState.s1 <= 0) {
+                        // peak reached on ramp 1, roll down again
+                        simState.v = 0;
+                        simState.direction = 1;
+                    }
+                }
+            } else {
+                // TRACK 2 (Ramp 2 or Horizontal Plane)
+                if (simState.angle2Deg === 0) {
+                    // HORIZONTAL MOTION (Galileo's ideal case)
+                    if (mu === 0) {
+                        // NO FRICTION: UNIFORM MOTION FOREVER!
+                        simState.s2 += simState.v * dt;
+                        simState.h2Max = 0;
+                        simState.s2Max = simState.s2;
+                    } else {
+                        // WITH FRICTION: DECELERATES TO STOP
+                        const aDecel = mu * GRAVITY;
+                        simState.v -= aDecel * dt;
+                        if (simState.v <= 0) {
+                            simState.v = 0;
+                            simState.isRunning = false;
+                            recordHistory();
+                            playTone(440, 0.15, 'sine');
+                        } else {
+                            simState.s2 += simState.v * dt;
+                            simState.s2Max = simState.s2;
+                        }
+                    }
+                } else {
+                    // INCLINED RAMP 2
+                    if (simState.direction > 0) {
+                        // Rolling UP Ramp 2: a = -g * (sin theta2 + mu * cos theta2)
+                        const aDecel = GRAVITY * (Math.sin(angle2Rad) + mu * Math.cos(angle2Rad));
+                        simState.v -= aDecel * dt;
+                        
+                        if (simState.v <= 0) {
+                            // PEAK REACHED on Ramp 2!
+                            simState.v = 0;
+                            simState.s2Max = simState.s2;
+                            simState.h2Max = simState.s2 * Math.sin(angle2Rad);
+                            recordHistory();
+                            playTone(660, 0.15, 'sine');
+
+                            // Check if it rolls back down: sin theta2 > mu * cos theta2
+                            if (Math.sin(angle2Rad) > mu * Math.cos(angle2Rad)) {
+                                simState.direction = -1; // roll back down
+                            } else {
+                                // Stuck due to static friction
+                                simState.isRunning = false;
+                            }
+                        } else {
+                            simState.s2 += simState.v * dt;
+                            simState.s2Max = Math.max(simState.s2Max, simState.s2);
+                            simState.h2Max = simState.s2Max * Math.sin(angle2Rad);
+                        }
+                    } else {
+                        // Rolling BACK DOWN Ramp 2
+                        const aAccel = GRAVITY * (Math.sin(angle2Rad) - mu * Math.cos(angle2Rad));
+                        simState.v += aAccel * dt;
+                        simState.s2 -= simState.v * dt;
+
+                        if (simState.s2 <= 0) {
+                            // Reached bottom, transfers back to Ramp 1
+                            simState.s2 = 0;
+                            simState.currentTrack = 1;
+                            simState.s1 = length1;
+                            simState.direction = -1; // rolling up Ramp 1
+                            playTone(520, 0.08, 'triangle');
+                        }
+                    }
+                }
+            }
+
+            // Update time
+            simState.simTime += dt;
+            document.getElementById('simTimeDisplay').textContent = `t = ${simState.simTime.toFixed(2)}s`;
+
+            // Update Ball position & UI
+            updateBallCoordinates();
+            
+            // Calculate current height and mechanical energy
+            const currentH = (simState.currentTrack === 1) ? 
+                (simState.h1 - simState.s1 * Math.sin(angle1Rad)) : 
+                (simState.s2 * Math.sin(angle2Rad));
+            const Wt = Math.max(0, simState.ballMass * GRAVITY * currentH);
+            const Wd = 0.5 * simState.ballMass * simState.v * simState.v;
+            
+            updateHUD(currentH, simState.v);
+            updateEnergyBars(Wt, Wd);
+        }
+
+        /* Update HUD overlay */
+        function updateHUD(currentH, v) {
+            document.getElementById('hudH1').textContent = `${simState.h1.toFixed(2)} m`;
+            document.getElementById('hudH2').textContent = `${simState.h2Max.toFixed(2)} m`;
+            document.getElementById('hudVbot').textContent = `${simState.vBottom.toFixed(2)} m/s`;
+            document.getElementById('hudS2').textContent = `${simState.s2.toFixed(2)} m`;
+
+            const badge = document.getElementById('badgeState');
+            if (simState.isRunning) {
+                badge.className = 'px-2 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+                badge.textContent = simState.angle2Deg === 0 ? 'Thẳng đều không ma sát' : 'Đang chuyển động';
+            } else {
+                badge.className = 'px-2 py-0.5 rounded text-[10px] bg-slate-700 text-slate-300';
+                badge.textContent = 'Sẵn sàng';
+            }
+
+            // Pedagogical comment in boxObservation
+            const obs = document.getElementById('textObservation');
+            if (simState.angle2Deg === 0 && simState.frictionMu === 0) {
+                obs.innerHTML = '<strong class="text-emerald-300">Định luật 1 Newton:</strong> Khi máng 2 nằm ngang ($\theta_2 = 0^\circ$) và không có ma sát, hợp lực bằng 0, hòn bi lăn <em>thẳng đều mãi mãi</em> với vận tốc không đổi $v = ' + simState.vBottom.toFixed(2) + '\\text{ m/s}$.';
+            } else if (simState.frictionMu === 0) {
+                obs.innerHTML = '<strong>Bảo toàn cơ năng:</strong> Không ma sát, bi luôn đạt độ cao $h_2 = h_1 = ' + simState.h1.toFixed(2) + '\\text{ m}$. Góc nghiêng càng nhỏ thì quãng đường $s_2$ càng dài!';
+            } else {
+                obs.innerHTML = '<strong>Thực tế có ma sát:</strong> Công cản làm tiêu hao cơ năng, độ cao đạt được $h_2 = ' + simState.h2Max.toFixed(2) + '\\text{ m} < h_1$.';
+            }
+        }
+
+        /* Update Energy Bar Display */
+        function updateEnergyBars(Wt, Wd) {
+            const total = Math.max(0.1, Wt + Wd);
+            const pWt = Math.min(100, (Wt / total) * 100);
+            const pWd = Math.min(100, (Wd / total) * 100);
+
+            document.getElementById('barWt').style.width = `${pWt}%`;
+            document.getElementById('barWd').style.width = `${pWd}%`;
+            document.getElementById('txtWtVal').textContent = Wt.toFixed(1);
+            document.getElementById('txtWdVal').textContent = Wd.toFixed(1);
+        }
+
+        /* Animation Loop */
+        let lastTimestamp = 0;
+        function animate(timestamp) {
+            requestAnimationFrame(animate);
+
+            if (!lastTimestamp) lastTimestamp = timestamp;
+            const deltaMs = Math.min(50, timestamp - lastTimestamp);
+            lastTimestamp = timestamp;
+
+            if (simState.isRunning && !simState.isPaused) {
+                const dt = (deltaMs / 1000) * simState.timeScale;
+                stepPhysics(dt);
+            }
+
+            // Camera follow mode
+            if (simState.cameraMode === 'follow' && ballMesh) {
+                controls.target.lerp(new THREE.Vector3(ballMesh.position.x, ballMesh.position.y + 0.3, 0), 0.1);
+            }
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        /* Resize Handler */
+        function onWindowResize() {
+            const container = document.getElementById('canvas3dContainer');
+            if (!container || !renderer || !camera) return;
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+        }
+
+        /* ==================== EVENT HANDLERS & CONTROLS ==================== */
+        
+        // Play / Pause Button
+        const btnPlay = document.getElementById('btnPlay');
+        btnPlay.addEventListener('click', () => {
+            if (!simState.isRunning) {
+                // Start new trial
+                simState.isRunning = true;
+                simState.isPaused = false;
+                document.getElementById('iconPlay').className = 'fa-solid fa-pause';
+                document.getElementById('textBtnPlay').textContent = 'TẠM DỪNG';
+                playTone(440, 0.1, 'sine');
+            } else {
+                // Toggle Pause
+                simState.isPaused = !simState.isPaused;
+                if (simState.isPaused) {
+                    document.getElementById('iconPlay').className = 'fa-solid fa-play';
+                    document.getElementById('textBtnPlay').textContent = 'TIẾP TỤC';
+                } else {
+                    document.getElementById('iconPlay').className = 'fa-solid fa-pause';
+                    document.getElementById('textBtnPlay').textContent = 'TẠM DỪNG';
+                }
+            }
+        });
+
+        // Reset Button
+        document.getElementById('btnReset').addEventListener('click', () => {
+            simState.isRunning = false;
+            simState.isPaused = false;
+            document.getElementById('iconPlay').className = 'fa-solid fa-play';
+            document.getElementById('textBtnPlay').textContent = 'THẢ BI';
+            resetBallPosition();
+        });
+
+        // Angle 2 Preset Buttons
+        const presetBtns = document.querySelectorAll('.btn-angle-preset');
+        presetBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const angle = parseInt(btn.dataset.angle, 10);
+                setAngle2(angle);
+            });
+        });
+
+        // Angle 2 Slider
+        const sliderAngle2 = document.getElementById('sliderAngle2');
+        sliderAngle2.addEventListener('input', (e) => {
+            setAngle2(parseInt(e.target.value, 10));
+        });
+
+        function setAngle2(angle) {
+            simState.angle2Deg = angle;
+            document.getElementById('valAngle2Display').textContent = `${angle}°`;
+            sliderAngle2.value = angle;
+
+            // Highlight active preset button
+            presetBtns.forEach(btn => {
+                if (parseInt(btn.dataset.angle, 10) === angle) {
+                    btn.className = 'btn-angle-preset py-2 px-1 rounded-xl bg-amber-500/20 border border-amber-500 text-amber-300 text-center transition-all';
+                } else {
+                    btn.className = 'btn-angle-preset py-2 px-1 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-center transition-all';
+                }
+            });
+
+            // Rotate Ramp 2 in 3D
+            if (ramp2Pivot) {
+                ramp2Pivot.rotation.z = THREE.MathUtils.degToRad(angle);
+            }
+
+            // If stopped, reset
+            if (!simState.isRunning) {
+                resetBallPosition();
+            }
+        }
+
+        // Height h1 Slider
+        const sliderH1 = document.getElementById('sliderH1');
+        sliderH1.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            simState.h1 = val;
+            document.getElementById('valH1Display').textContent = `${val.toFixed(2)} m`;
+            buildApparatus();
+        });
+
+        // Friction Slider
+        const sliderMu = document.getElementById('sliderMu');
+        sliderMu.addEventListener('input', (e) => {
+            setMu(parseFloat(e.target.value));
+        });
+
+        function setMu(mu) {
+            simState.frictionMu = mu;
+            sliderMu.value = mu;
+            const txt = mu === 0 ? '0.00 (Lí tưởng)' : mu.toFixed(2);
+            document.getElementById('valMuDisplay').textContent = txt;
+        }
+
+        // Mass Selector
+        document.getElementById('selBallMass').addEventListener('change', (e) => {
+            simState.ballMass = parseFloat(e.target.value);
+        });
+
+        // Angle 1 Selector
+        document.getElementById('selAngle1').addEventListener('change', (e) => {
+            simState.angle1Deg = parseInt(e.target.value, 10);
+            buildApparatus();
+        });
+
+        // Simulation Speed Buttons
+        document.querySelectorAll('#speedGroup button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#speedGroup button').forEach(b => {
+                    b.className = 'px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-300';
+                });
+                btn.className = 'px-2 py-1 rounded bg-amber-500 text-slate-950 font-bold text-[11px]';
+                simState.timeScale = parseFloat(btn.dataset.speed);
+            });
+        });
+
+        // Camera Views
+        document.getElementById('camPresetPerspective').addEventListener('click', () => {
+            simState.cameraMode = 'perspective';
+            camera.position.set(0, 3.2, 7.5);
+            controls.target.set(0, 0.8, 0);
+            updateCamButtons('camPresetPerspective');
+        });
+
+        document.getElementById('camPresetFront').addEventListener('click', () => {
+            simState.cameraMode = 'front';
+            camera.position.set(1.5, 1.2, 8.5);
+            controls.target.set(1.5, 1.0, 0);
+            updateCamButtons('camPresetFront');
+        });
+
+        document.getElementById('camPresetFollow').addEventListener('click', () => {
+            simState.cameraMode = 'follow';
+            updateCamButtons('camPresetFollow');
+        });
+
+        function updateCamButtons(activeId) {
+            ['camPresetPerspective', 'camPresetFront', 'camPresetFollow'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (id === activeId) {
+                    btn.className = 'px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 font-bold transition-all flex items-center gap-1';
+                } else {
+                    btn.className = 'px-2.5 py-1 rounded-lg hover:bg-slate-800 text-slate-300 font-medium transition-all flex items-center gap-1';
+                }
+            });
+        }
+
+        // Toggle Grid & Guides
+        document.getElementById('chkGrid').addEventListener('change', (e) => {
+            if (gridHelper) gridHelper.visible = e.target.checked;
+        });
+
+        document.getElementById('chkLaserGuide').addEventListener('change', (e) => {
+            if (laserGuideLine) laserGuideLine.visible = e.target.checked;
+        });
+
+        // Toggle Fullscreen
+        document.getElementById('btnToggleFullscreen').addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                document.exitFullscreen().catch(() => {});
+            }
+        });
+
+        // Toggle Sound
+        document.getElementById('btnToggleSound').addEventListener('click', () => {
+            simState.soundEnabled = !simState.soundEnabled;
+            const icon = document.getElementById('soundIcon');
+            const lbl = document.getElementById('soundLabel');
+            if (simState.soundEnabled) {
+                icon.className = 'fa-solid fa-volume-high text-amber-400';
+                lbl.textContent = 'Âm thanh';
+            } else {
+                icon.className = 'fa-solid fa-volume-xmark text-slate-500';
+                lbl.textContent = 'Tắt tiếng';
+            }
+        });
+
+        /* ==================== DATA LOGGING & EXPORT ==================== */
+        function recordHistory() {
+            simState.trialCount++;
+            const diffH = Math.abs(simState.h2Max - simState.h1);
+            let remark = '';
+            if (simState.angle2Deg === 0) {
+                remark = simState.frictionMu === 0 ? 'Lăn thẳng đều v = const' : 'Dừng do ma sát';
+            } else if (diffH < 0.05) {
+                remark = 'h2 ≈ h1 (Bảo toàn độ cao)';
+            } else {
+                remark = `Hao hụt ${(diffH).toFixed(2)}m do ma sát`;
+            }
+
+            const record = {
+                trial: simState.trialCount,
+                angle2: simState.angle2Deg,
+                h1: simState.h1.toFixed(2),
+                h2: simState.angle2Deg === 0 ? '0.00' : simState.h2Max.toFixed(2),
+                s2: simState.s2Max.toFixed(2),
+                mu: simState.frictionMu.toFixed(2),
+                remark: remark
+            };
+
+            historyData.unshift(record);
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableDataBody');
+            if (historyData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="p-3 text-center text-slate-500 font-sans">Chưa có số liệu.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = historyData.map(r => `
+                <tr class="hover:bg-slate-800/40 transition-colors">
+                    <td class="p-1.5 font-bold text-amber-400">#${r.trial}</td>
+                    <td class="p-1.5">${r.angle2}°</td>
+                    <td class="p-1.5">${r.h1}</td>
+                    <td class="p-1.5 text-emerald-300 font-bold">${r.h2}</td>
+                    <td class="p-1.5 text-purple-300">${r.s2}</td>
+                    <td class="p-1.5 text-[10px] text-slate-300 font-sans">${r.remark}</td>
+                </tr>
+            `).join('');
+        }
+
+        function clearHistory() {
+            historyData.length = 0;
+            simState.trialCount = 0;
+            renderTable();
+        }
+
+        function exportCSV() {
+            if (historyData.length === 0) {
+                alert('Chưa có số liệu thực nghiệm để xuất!');
+                return;
+            }
+
+            let csvContent = '\uFEFF'; // UTF-8 BOM
+            csvContent += 'Lan_TN,Goc_Nghieng_Theta2(do),Do_Cao_H1(m),Do_Cao_Dat_Duoc_H2(m),Quang_Duong_S2(m),He_So_Ma_Sat_mu,Nhan_Xet\n';
+            historyData.forEach(r => {
+                csvContent += `${r.trial},${r.angle2},${r.h1},${r.h2},${r.s2},${r.mu},"${r.remark}"\n`;
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `So_Lieu_Thi_Nghiem_Galileo_Bai14_VatLi10_${Date.now()}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function printReport() {
+            const printTbody = document.getElementById('printTableBody');
+            document.getElementById('printDate').textContent = new Date().toLocaleDateString('vi-VN');
+
+            if (historyData.length === 0) {
+                printTbody.innerHTML = '<tr><td colspan="7" class="p-2 border border-black italic">Chưa có số liệu thực hành.</td></tr>';
+            } else {
+                printTbody.innerHTML = historyData.map(r => `
+                    <tr>
+                        <td class="border border-black p-2 font-bold">${r.trial}</td>
+                        <td class="border border-black p-2">${r.angle2}°</td>
+                        <td class="border border-black p-2">${r.h1}</td>
+                        <td class="border border-black p-2 font-bold">${r.h2}</td>
+                        <td class="border border-black p-2">${r.s2}</td>
+                        <td class="border border-black p-2">${r.mu}</td>
+                        <td class="border border-black p-2 text-left">${r.remark}</td>
+                    </tr>
+                `).join('');
+            }
+
+            window.print();
+        }
+
+        /* Modal Theory Handlers */
+        function openTheoryModal() {
+            document.getElementById('modalTheory').classList.remove('hidden');
+            if (window.MathJax && typeof MathJax.typesetPromise === 'function') {
+                try { MathJax.typesetPromise(); } catch(e){}
+            }
+        }
+
+        function closeTheoryModal() {
+            document.getElementById('modalTheory').classList.add('hidden');
+        }
+
+        /* 2D/3D Mode Toggle */
+        document.getElementById('btnToggle2D3D').addEventListener('click', () => {
+            simState.is3D = !simState.is3D;
+            const c3d = document.getElementById('canvas3dContainer');
+            const c2d = document.getElementById('canvas2d');
+            const txt = document.getElementById('textToggleMode');
+
+            if (simState.is3D) {
+                c3d.classList.remove('hidden');
+                c2d.classList.add('hidden');
+                txt.textContent = 'Chế độ 3D';
+            } else {
+                c3d.classList.add('hidden');
+                c2d.classList.remove('hidden');
+                txt.textContent = 'Chế độ 2D';
+            }
+        });
+
+        // Initialize when DOM ready
+        window.addEventListener('DOMContentLoaded', () => {
+            init3D();
+        });
+    </script>
+</body>
+</html>
