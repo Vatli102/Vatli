@@ -54,7 +54,7 @@ export const STR = {
   // Fixed text on the page (title top, school name top right).
   chrome: {
     title: 'THÍ NGHIỆM MÔ PHỎNG GIAO THOA SÓNG NƯỚC',
-    footer: 'VATLI102.COM • THPT MẠC ĐĨNH CHI',
+    footer: 'VATLI102.COM',
   },
 
   panel: {
