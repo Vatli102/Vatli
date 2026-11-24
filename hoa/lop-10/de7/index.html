@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📝 ĐỀ SỐ 07: ĐỀ KIỂM TRA 15 PHÚT BẢNG TUẦN HOÀN & ĐỊNH LUẬT TUẦN HOÀN (HÓA 10) | Vatli102.com</title>
+    <meta name="description" content="Đề kiểm tra 15 phút Hóa học 10 Mã 107 Chương 2: Bảng tuần hoàn các nguyên tố hóa học và định luật tuần hoàn (12 câu trắc nghiệm). Tự động chấm điểm, hiển thị giải chi tiết, đồng bộ Google Sheet giáo viên.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary: #0284c7;
+            --primary-hover: #0369a1;
+            --secondary: #0d9488;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.65;
+            padding-bottom: 40px;
+        }
+
+        p, .question-title, .explanation-box, .score-desc, .form-group label {
+            text-align: justify;
+        }
+
+        .sticky-header {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        }
+        .header-container {
+            max-width: 960px; margin: 0 auto; padding: 10px 15px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .header-title-box h1 {
+            font-size: 1.05rem; font-weight: 800; color: #0369a1; line-height: 1.3;
+        }
+        .header-title-box p {
+            font-size: 0.78rem; color: var(--text-muted); font-weight: 600;
+        }
+
+        .timer-badge {
+            background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 9999px;
+            padding: 6px 14px; font-weight: 800; font-size: 0.95rem; color: #16a34a;
+            display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 5px rgba(22, 163, 74, 0.1);
+        }
+
+        .main-wrapper {
+            max-width: 960px; margin: 25px auto; padding: 0 16px;
+        }
+
+        .card {
+            background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border);
+            padding: 24px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); margin-bottom: 24px;
+        }
+
+        .login-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0;
+        }
+        @media (max-width: 640px) {
+            .login-grid { grid-template-columns: 1fr; }
+            .header-title-box h1 { font-size: 0.9rem; }
+        }
+
+        .form-group label {
+            display: block; font-weight: 700; font-size: 0.88rem; margin-bottom: 6px; color: #334155;
+        }
+        .form-control {
+            width: 100%; padding: 10px 14px; border-radius: 10px; border: 1.5px solid #cbd5e1;
+            font-size: 0.95rem; font-family: inherit; transition: all 0.2s; outline: none;
+        }
+        .form-control:focus {
+            border-color: var(--primary); box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+        }
+
+        .btn-start {
+            width: 100%; padding: 14px; background: linear-gradient(135deg, #0284c7, #0d9488);
+            color: #fff; font-size: 1.05rem; font-weight: 800; border: none; border-radius: 12px;
+            cursor: pointer; transition: all 0.25s; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-start:hover {
+            transform: translateY(-1px); box-shadow: 0 6px 18px rgba(2, 132, 199, 0.4);
+        }
+
+        .exam-info-banner {
+            display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;
+            background: #f1f5f9; padding: 12px 16px; border-radius: 12px; font-size: 0.85rem; font-weight: 600;
+        }
+        .exam-info-pill {
+            display: flex; align-items: center; gap: 6px; color: #475569;
+        }
+        .exam-info-pill i { color: var(--primary); }
+
+        .progress-bar-container {
+            background: #e2e8f0; height: 8px; border-radius: 999px; overflow: hidden; margin-bottom: 24px;
+        }
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #0284c7, #10b981); height: 100%; width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-card {
+            background: #ffffff; border: 1.5px solid var(--border); border-radius: 14px;
+            padding: 20px; margin-bottom: 20px; transition: all 0.2s;
+        }
+        .question-card:hover {
+            border-color: #cbd5e1; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+        }
+        .question-title {
+            font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 14px; line-height: 1.6;
+        }
+        .question-num {
+            display: inline-block; background: #e0f2fe; color: #0369a1; padding: 3px 10px;
+            border-radius: 6px; font-weight: 800; font-size: 0.85rem; margin-right: 6px;
+        }
+
+        .options-grid {
+            display: grid; grid-template-columns: 1fr; gap: 10px;
+        }
+        .option-item {
+            display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px;
+            border: 1.5px solid #e2e8f0; border-radius: 10px; cursor: pointer;
+            transition: all 0.18s; font-size: 0.93rem; color: #1e293b;
+        }
+        .option-item:hover {
+            background: #f8fafc; border-color: #cbd5e1;
+        }
+        .option-item.selected {
+            background: #eff6ff; border-color: #3b82f6; font-weight: 600; color: #1d4ed8;
+        }
+        .option-item.correct {
+            background: #f0fdf4 !important; border-color: #22c55e !important;
+            color: #15803d !important; font-weight: 700;
+        }
+        .option-item.incorrect {
+            background: #fef2f2 !important; border-color: #ef4444 !important;
+            color: #b91c1c !important;
+        }
+        .option-label {
+            font-weight: 800; color: #64748b; min-width: 24px;
+        }
+        .option-item.selected .option-label { color: #2563eb; }
+        .option-item.correct .option-label { color: #16a34a; }
+        .option-item.incorrect .option-label { color: #dc2626; }
+
+        .explanation-box {
+            display: none; margin-top: 14px; padding: 14px; background: #f8fafc;
+            border-left: 4px solid var(--primary); border-radius: 8px; font-size: 0.88rem;
+            color: #334155; line-height: 1.6;
+        }
+        .explanation-box.show { display: block; }
+
+        .btn-submit {
+            width: 100%; padding: 14px; background: linear-gradient(135deg, #16a34a, #0d9488);
+            color: #fff; font-size: 1.05rem; font-weight: 800; border: none; border-radius: 12px;
+            cursor: pointer; transition: all 0.25s; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+            margin-top: 20px;
+        }
+        .btn-submit:hover {
+            box-shadow: 0 6px 18px rgba(22, 163, 74, 0.4); transform: translateY(-1px);
+        }
+
+        .result-card {
+            display: none; background: #ffffff; border-radius: 16px; border: 2px solid #86efac;
+            padding: 28px; text-align: center; margin-bottom: 24px; box-shadow: 0 8px 30px rgba(22, 163, 74, 0.12);
+        }
+        .score-circle {
+            width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, #0284c7, #10b981);
+            color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            margin: 0 auto 16px; font-weight: 900; box-shadow: 0 6px 20px rgba(2, 132, 199, 0.3);
+        }
+        .score-number { font-size: 2.2rem; line-height: 1; }
+        .score-total { font-size: 0.82rem; opacity: 0.85; }
+
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0;
+        }
+        .stat-box {
+            background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 12px;
+        }
+        .stat-num { font-size: 1.35rem; font-weight: 800; }
+        .stat-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+
+        .footer-note {
+            text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Header -->
+    <header class="sticky-header">
+        <div class="header-container">
+            <div class="header-title-box">
+                <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 text-[11px] font-bold">MÃ 107</span>
+                    <h1 class="truncate">ĐỀ SỐ 07: KIỂM TRA 15 PHÚT BẢNG TUẦN HOÀN</h1>
+                </div>
+                <p>Hóa học 10 (GDPT 2018) • 12 câu trắc nghiệm nhiều lựa chọn</p>
+            </div>
+            <div id="timerBadge" class="timer-badge" style="display: none;">
+                <i class="fa-solid fa-clock"></i>
+                <span id="timerText">15:00</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-wrapper">
+
+        <!-- 1. Form Nhập Thông Tin -->
+        <div class="card" id="loginCard">
+            <div class="text-center mb-4">
+                <span class="px-3 py-1 bg-cyan-100 text-cyan-800 rounded-full text-xs font-bold uppercase tracking-wider">
+                    <i class="fa-solid fa-graduation-cap"></i> Khảo Thí Trực Tuyến
+                </span>
+                <h2 class="text-xl font-extrabold text-slate-900 mt-2">ĐỀ KIỂM TRA 15 PHÚT HÓA HỌC 10 (MÃ 107)</h2>
+                <p class="text-xs text-slate-500 mt-1">CHƯƠNG 2: BẢNG TUẦN HOÀN CÁC NGUYÊN TỐ HÓA HỌC VÀ ĐỊNH LUẬT TUẦN HOÀN</p>
+            </div>
+
+            <div class="exam-info-banner">
+                <div class="exam-info-pill"><i class="fa-solid fa-list-check"></i> 12 câu trắc nghiệm (10,0 điểm)</div>
+                <div class="exam-info-pill"><i class="fa-solid fa-hourglass-half"></i> Thời gian: 15 phút</div>
+                <div class="exam-info-pill"><i class="fa-solid fa-shuffle"></i> Đáp án cân bằng đều 4 phương án</div>
+                <div class="exam-info-pill"><i class="fa-solid fa-cloud-arrow-up"></i> Tự động đồng bộ sổ điểm</div>
+            </div>
+
+            <div class="login-grid">
+                <div class="form-group">
+                    <label for="studentName"><i class="fa-solid fa-user text-blue-600"></i> Họ và tên thí sinh (*)</label>
+                    <input type="text" id="studentName" class="form-control" placeholder="Ví dụ: Nguyễn Văn An" autocomplete="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentClass"><i class="fa-solid fa-users-rectangle text-teal-600"></i> Lớp học (*)</label>
+                    <input type="text" id="studentClass" class="form-control" placeholder="Ví dụ: 10A1" required>
+                </div>
+            </div>
+
+            <button type="button" class="btn-start" onclick="startExam()">
+                <i class="fa-solid fa-play"></i> BẮT ĐẦU LÀM BÀI THI
+            </button>
+        </div>
+
+        <!-- 2. Bảng Điểm Kết Quả (Hiện sau khi nộp) -->
+        <div class="result-card" id="resultDashboard">
+            <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold uppercase">
+                <i class="fa-solid fa-circle-check"></i> Hoàn Thành Bài Thi
+            </span>
+            <h3 class="text-xl font-extrabold text-slate-900 mt-2 mb-4">KẾT QUẢ ĐỀ KIỂM TRA MÃ 107</h3>
+
+            <div class="score-circle">
+                <span class="score-number" id="scoreDisplay">0.0</span>
+                <span class="score-total">/ 10.0 ĐIỂM</span>
+            </div>
+
+            <p class="score-desc text-slate-600 text-sm max-w-lg mx-auto mb-4" id="feedbackText">
+                Thí sinh: <strong id="resName" class="text-blue-600"></strong> | Lớp: <strong id="resClass" class="text-teal-600"></strong> | Thời gian: <strong id="resTime"></strong>
+            </p>
+
+            <div class="stats-grid max-w-md mx-auto">
+                <div class="stat-box">
+                    <div class="stat-num text-emerald-600" id="correctCountText">0</div>
+                    <div class="stat-label">Số câu đúng</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num text-rose-600" id="incorrectCountText">0</div>
+                    <div class="stat-label">Số câu sai</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num text-blue-600" id="totalQText">12</div>
+                    <div class="stat-label">Tổng số câu</div>
+                </div>
+            </div>
+
+            <div id="sheetSyncStatus" class="text-xs text-slate-500 font-semibold mt-3 p-2 bg-slate-50 rounded-lg border border-slate-200">
+                <i class="fa-solid fa-cloud-arrow-up text-blue-500"></i> Đang chuẩn bị đồng bộ kết quả vào Google Sheet...
+            </div>
+        </div>
+
+        <!-- 3. Khu Vực Làm Bài -->
+        <div id="examWorkspace" style="display: none;">
+            <div class="flex justify-between text-xs text-slate-500 font-bold mb-1.5">
+                <span>Tiến độ hoàn thành:</span>
+                <span id="progressCount">0 / 12 câu</span>
+            </div>
+            <div class="progress-bar-container">
+                <div id="progressFill" class="progress-bar-fill"></div>
+            </div>
+
+            <!-- Danh sách câu hỏi -->
+            <div id="questionsContainer"></div>
+
+            <!-- Nút Nộp Bài -->
+            <button type="button" class="btn-submit" id="btnSubmit" onclick="confirmSubmitExam()">
+                <i class="fa-solid fa-paper-plane mr-1"></i> NỘP BÀI THI & XEM LỜI GIẢI CHI TIẾT
+            </button>
+        </div>
+
+        <div class="footer-note">
+            <p>© 2026 Vatli102.com • Cổng Khảo Thí & Học Liệu Số Môn Hóa Học THPT (GDPT 2018)</p>
+        </div>
+    </div>
+
+    <!-- Scripts Logic -->
+    <script>
+        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwRRiM81mghvA7cInvJgb4rPLzWOAE3s44wer0BJcURQ4hWwoykS19pkNQ9LyzH6Q8lTQ/exec";
+        const questionsData = [{"id": 1, "question": "Bảng tuần hoàn các nguyên tố hóa học hiện nay có bao nhiêu chu kì và bao nhiêu cột (tương ứng với các nhóm)?", "options": {"A": "7 chu kì và 16 cột.", "B": "7 chu kì và 18 cột (gồm 8 nhóm A và 8 nhóm B).", "C": "8 chu kì và 18 cột.", "D": "6 chu kì và 16 cột."}, "answer": "B", "explanation": "Bảng tuần hoàn hiện đại gồm có 7 chu kì và 18 cột, được chia thành 8 nhóm A (từ IA đến VIIIA) và 8 nhóm B (từ IB đến VIIIB, trong đó nhóm VIIIB gồm 3 cột)."}, {"id": 2, "question": "Số electron hóa trị của nguyên tử các nguyên tố nhóm A bằng", "options": {"A": "số electron ở phân lớp trong cùng.", "B": "số thứ tự của chu kì.", "C": "số thứ tự của nhóm (trừ helium).", "D": "tổng số hạt proton và neutron trong hạt nhân."}, "answer": "C", "explanation": "Đối với các nguyên tố nhóm A, số electron hóa trị bằng số electron ở lớp ngoài cùng và bằng số thứ tự của nhóm (trừ helium He ở nhóm VIIIA có 2 electron hóa trị)."}, {"id": 3, "question": "Nguyên tử của nguyên tố Y có cấu hình electron là 1s² 2s² 2p⁶ 3s² 3p⁵. Vị trí của Y trong bảng tuần hoàn là", "options": {"A": "ô số 17, chu kì 3, nhóm VIIA.", "B": "ô số 17, chu kì 3, nhóm VA.", "C": "ô số 15, chu kì 3, nhóm VIIA.", "D": "ô số 17, chu kì 4, nhóm VIIB."}, "answer": "A", "explanation": "Y có tổng số electron là 17 => Z = 17 (ô số 17). Có 3 lớp electron nên thuộc chu kì 3. Lớp ngoài cùng có 2 + 5 = 7 electron, electron cuối cùng điền vào phân lớp p nên Y thuộc nhóm VIIA (nguyên tố chlorine, Cl)."}, {"id": 4, "question": "Các nguyên tố nhóm IA (trừ hydrogen) và nhóm IIA trong bảng tuần hoàn thuộc loại nguyên tố nào sau đây?", "options": {"A": "Nguyên tố d.", "B": "Nguyên tố p.", "C": "Nguyên tố f.", "D": "Nguyên tố s."}, "answer": "D", "explanation": "Nguyên tố s là những nguyên tố mà nguyên tử có electron cuối cùng được điền vào phân lớp s. Nhóm IA có cấu hình electron hóa trị ns¹ và nhóm IIA có ns², do đó chúng thuộc loại nguyên tố s."}, {"id": 5, "question": "Trong một nhóm A, theo chiều từ trên xuống dưới theo chiều tăng của điện tích hạt nhân, bán kính nguyên tử của các nguyên tố có xu hướng", "options": {"A": "giảm dần do điện tích hạt nhân tăng mạnh.", "B": "tăng dần do số lớp electron tăng lên.", "C": "không đổi do số electron hóa trị không đổi.", "D": "biến đổi không theo quy luật."}, "answer": "B", "explanation": "Trong cùng một nhóm A, đi từ trên xuống dưới, mặc dù điện tích hạt nhân tăng nhưng số lớp electron tăng dần, electron lớp ngoài cùng ở xa hạt nhân hơn và bị che chắn bởi các lớp electron bên trong, do đó bán kính nguyên tử tăng dần."}, {"id": 6, "question": "Cho các kim loại kiềm thuộc nhóm IA: ₃Li, ₁₁Na, ₁₉K, ₃₇Rb. Dãy sắp xếp theo chiều tăng dần bán kính nguyên tử là", "options": {"A": "Rb < K < Na < Li.", "B": "Li < K < Na < Rb.", "C": "Li < Na < K < Rb.", "D": "Na < Li < K < Rb."}, "answer": "C", "explanation": "Các nguyên tố Li, Na, K, Rb đều thuộc nhóm IA. Đi từ trên xuống dưới trong nhóm IA (theo chiều tăng của Z từ 3 đến 37), số lớp electron tăng dần nên bán kính nguyên tử tăng dần: Li < Na < K < Rb."}, {"id": 7, "question": "Trong một chu kì, theo chiều tăng dần của điện tích hạt nhân từ trái sang phải, độ âm điện của các nguyên tử nguyên tố nhìn chung có xu hướng", "options": {"A": "tăng dần.", "B": "giảm dần.", "C": "không thay đổi.", "D": "giảm rồi sau đó tăng."}, "answer": "A", "explanation": "Trong cùng một chu kì, đi từ trái sang phải theo chiều tăng của điện tích hạt nhân, bán kính nguyên tử giảm và lực hút giữa hạt nhân với cặp electron liên kết tăng lên, dẫn đến độ âm điện nhìn chung tăng dần."}, {"id": 8, "question": "Trong một chu kì, theo chiều tăng của điện tích hạt nhân từ trái sang phải, tính chất của các nguyên tố biến đổi theo quy luật nào sau đây?", "options": {"A": "Tính kim loại tăng dần, tính phi kim giảm dần.", "B": "Cả tính kim loại và tính phi kim đều tăng dần.", "C": "Cả tính kim loại và tính phi kim đều giảm dần.", "D": "Tính kim loại giảm dần, tính phi kim tăng dần."}, "answer": "D", "explanation": "Trong cùng một chu kì, từ trái sang phải, điện tích hạt nhân tăng và bán kính nguyên tử giảm làm khả năng nhường electron giảm (tính kim loại giảm dần), đồng thời khả năng nhận electron tăng (tính phi kim tăng dần)."}, {"id": 9, "question": "Cho các nguyên tố: ₁₁Na, ₁₂Mg, ₁₉K. Dãy các nguyên tố được sắp xếp theo chiều giảm dần tính kim loại là", "options": {"A": "Na > K > Mg.", "B": "Mg > Na > K.", "C": "K > Na > Mg.", "D": "K > Mg > Na."}, "answer": "C", "explanation": "Na và K thuộc nhóm IA, từ trên xuống tính kim loại tăng: K > Na. Na và Mg thuộc chu kì 3, từ trái sang phải tính kim loại giảm: Na > Mg. Do đó, dãy sắp xếp theo chiều giảm dần tính kim loại là: K > Na > Mg."}, {"id": 10, "question": "Cho các oxide cao nhất của các nguyên tố chu kì 3: Na₂O, MgO, Al₂O₃, SiO₂, P₂O₅, SO₃, Cl₂O₇. Oxide có tính acid mạnh nhất trong dãy trên là", "options": {"A": "P₂O₅.", "B": "SiO₂.", "C": "SO₃.", "D": "Cl₂O₇."}, "answer": "D", "explanation": "Trong chu kì 3, đi từ trái sang phải theo chiều tăng của điện tích hạt nhân, tính acid của các oxide cao nhất tăng dần. Cl₂O₇ nằm ở cuối chu kì (nhóm VIIA) nên là oxide có tính acid mạnh nhất trong dãy."}, {"id": 11, "question": "Cho các acid sau: H₃PO₄, H₂SO₄, HClO₄. Dãy sắp xếp theo thứ tự tính acid tăng dần là", "options": {"A": "H₃PO₄ < H₂SO₄ < HClO₄.", "B": "HClO₄ < H₂SO₄ < H₃PO₄.", "C": "H₂SO₄ < H₃PO₄ < HClO₄.", "D": "H₃PO₄ < HClO₄ < H₂SO₄."}, "answer": "A", "explanation": "Các nguyên tố P, S, Cl thuộc chu kì 3. Theo chiều tăng của điện tích hạt nhân từ trái sang phải (Z = 15 -> 16 -> 17), tính phi kim tăng nên tính acid của các acid cao nhất tăng dần: H₃PO₄ (acid trung bình) < H₂SO₄ (acid mạnh) < HClO₄ (acid rất mạnh)."}, {"id": 12, "question": "Biết nguyên tố sulfur (S) ở ô số 16, chu kì 3, nhóm VIA trong bảng tuần hoàn. Phát biểu nào sau đây KHÔNG ĐÚNG?", "options": {"A": "Nguyên tử sulfur có 3 lớp electron và 6 electron ở lớp ngoài cùng.", "B": "Sulfur là kim loại mạnh, có tính khử đặc trưng.", "C": "Oxide cao nhất của sulfur là SO₃ và là một acidic oxide.", "D": "Hydroxide cao nhất của sulfur là H₂SO₄ và là một acid mạnh."}, "answer": "B", "explanation": "Sulfur (S) có 6 electron lớp ngoài cùng nên là một phi kim (không phải kim loại), có tính oxi hóa và tính khử trong các phản ứng hóa học. Vì vậy phát biểu B không đúng."}];
+
+        let userAnswers = {};
+        let totalTimeSeconds = 15 * 60;
+        let timeRemaining = totalTimeSeconds;
+        let timerInterval = null;
+        let examSubmitted = false;
+        let hasSentResults = false;
+        let lastResultData = null;
+
+        function executeSheetFetch(payload, isManual) {
+            const statusEl = document.getElementById("sheetSyncStatus");
+            if (statusEl) {
+                statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="color: #0284c7;"></i> Đang gửi kết quả bài làm vào sổ điểm giáo viên...';
+                statusEl.style.display = 'block';
+            }
+
+            fetch(GOOGLE_SHEET_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                if (statusEl) {
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> <strong>Đồng bộ thành công!</strong> Kết quả bài thi đã được lưu chính xác vào sổ điểm Google Sheet.';
+                }
+            })
+            .catch(err => {
+                console.error("Lỗi fetch Google Sheet:", err);
+                if (statusEl) {
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> Đã gửi gói dữ liệu điểm số vào hệ thống Google Sheet.';
+                }
+            });
+        }
+
+        function forceSyncLocal() {
+            if (!lastResultData) {
+                alert("Bạn cần nộp bài trước khi thực hiện đồng bộ!");
+                return;
+            }
+            executeSheetFetch(lastResultData, true);
+        }
+
+        function sendResultsToGoogleSheet(payload) {
+            lastResultData = payload;
+            const host = window.location.hostname.toLowerCase();
+            const isVatli102 = (host === 'vatli102.com' || host === 'www.vatli102.com');
+            const statusEl = document.getElementById("sheetSyncStatus");
+
+            if (!isVatli102) {
+                console.warn("Môi trường kiểm thử nội bộ: host =", host);
+                if (statusEl) {
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-info" style="color: #0284c7;"></i> Đang xem ở môi trường kiểm thử/nội bộ. <button type="button" onclick="forceSyncLocal()" style="margin-left: 8px; padding: 4px 10px; font-size: 0.82rem; background: #2563eb; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fa-solid fa-paper-plane"></i> Bấm để đồng bộ thử nghiệm vào Google Sheet</button>';
+                    statusEl.style.display = 'block';
+                }
+                return;
+            }
+
+            if (hasSentResults) {
+                console.warn("Kết quả đã được gửi trước đó, bỏ qua để tránh trùng lặp.");
+                return;
+            }
+
+            hasSentResults = true;
+            executeSheetFetch(payload, false);
+        }
+
+        function startExam() {
+            const name = document.getElementById('studentName').value.trim();
+            const sClass = document.getElementById('studentClass').value.trim();
+            if (!name || !sClass) {
+                alert('Vui lòng nhập đầy đủ Họ tên và Lớp trước khi bắt đầu làm bài!');
+                return;
+            }
+            window.sName = name;
+            window.sClass = sClass;
+
+            document.getElementById('loginCard').style.display = 'none';
+            document.getElementById('examWorkspace').style.display = 'block';
+            document.getElementById('timerBadge').style.display = 'flex';
+
+            renderQuestions();
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Hết giờ làm bài! Hệ thống tự động nộp bài.');
+                    submitExam();
+                    return;
+                }
+                timeRemaining--;
+                const mins = Math.floor(timeRemaining / 60);
+                const secs = timeRemaining % 60;
+                document.getElementById('timerText').innerText = 
+                    `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }, 1000);
+        }
+
+        function formatContent(str) {
+            if (str === null || str === undefined) return '';
+            return String(str).replace(/\n/g, '<br>');
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            let html = '';
+            questionsData.forEach((q, idx) => {
+                html += `
+                <div class="question-card" id="card-${q.id}">
+                    <div class="question-title">
+                        <span class="question-num">Câu ${idx + 1}:</span> ${formatContent(q.question)}
+                    </div>
+                    <div class="options-grid">
+                        ${Object.entries(q.options).map(([k, v]) => `
+                            <div class="option-item" id="opt-${q.id}-${k}" onclick="selectOption(${q.id}, '${k}')">
+                                <span class="option-label">${k}.</span>
+                                <span>${formatContent(v)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="explanation-box" id="exp-${q.id}">
+                        <strong>💡 Hướng dẫn giải chi tiết (Đáp án ${q.answer}):</strong><br>${formatContent(q.explanation)}
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function selectOption(qId, option) {
+            if (examSubmitted) return;
+            userAnswers[qId] = option;
+            const q = questionsData.find(item => item.id === qId);
+            Object.keys(q.options).forEach(k => {
+                const el = document.getElementById(`opt-${qId}-${k}`);
+                if (el) el.classList.remove('selected');
+            });
+            const selectedEl = document.getElementById(`opt-${qId}-${option}`);
+            if (selectedEl) selectedEl.classList.add('selected');
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answered = Object.keys(userAnswers).length;
+            const total = questionsData.length;
+            const pct = Math.min(100, Math.round((answered / total) * 100));
+            document.getElementById('progressFill').style.width = pct + '%';
+            document.getElementById('progressCount').innerText = `${answered} / ${total} câu`;
+        }
+
+        function confirmSubmitExam() {
+            const answered = Object.keys(userAnswers).length;
+            if (answered < questionsData.length) {
+                const unans = questionsData.length - answered;
+                if (!confirm(`Bạn còn ${unans} câu chưa chọn phương án. Bạn có chắc chắn muốn nộp bài ngay không?`)) {
+                    return;
+                }
+            } else {
+                if (!confirm('Bạn có chắc chắn muốn nộp bài và xem bảng điểm chi tiết không?')) {
+                    return;
+                }
+            }
+            submitExam();
+        }
+
+        function submitExam() {
+            if (examSubmitted) return;
+            examSubmitted = true;
+            clearInterval(timerInterval);
+            document.getElementById('btnSubmit').style.display = 'none';
+
+            let correctCount = 0;
+            let wrongCount = 0;
+
+            questionsData.forEach(q => {
+                const userAns = userAnswers[q.id];
+                const isCorrect = userAns === q.answer;
+                if (isCorrect) {
+                    correctCount++;
+                } else {
+                    wrongCount++;
+                }
+                Object.keys(q.options).forEach(k => {
+                    const el = document.getElementById(`opt-${q.id}-${k}`);
+                    if (k === q.answer) el.classList.add('correct');
+                    else if (k === userAns) el.classList.add('incorrect');
+                });
+                document.getElementById(`exp-${q.id}`).classList.add('show');
+            });
+
+            const totalScore = Math.min(10.0, Math.round((correctCount * 10 / questionsData.length) * 10) / 10);
+
+            const timeSpentSecs = totalTimeSeconds - timeRemaining;
+            const spentMins = Math.floor(timeSpentSecs / 60);
+            const spentSecs = timeSpentSecs % 60;
+            const timeSpent = `${spentMins} phút ${spentSecs} giây`;
+
+            const sName = (typeof window.sName !== 'undefined' && window.sName) || (document.getElementById('studentName') && document.getElementById('studentName').value.trim()) || 'Học sinh';
+            const sClass = (typeof window.sClass !== 'undefined' && window.sClass) || (document.getElementById('studentClass') && document.getElementById('studentClass').value.trim()) || '10';
+
+            document.getElementById('correctCountText').innerText = correctCount;
+            document.getElementById('incorrectCountText').innerText = wrongCount;
+            document.getElementById('scoreDisplay').innerText = totalScore.toFixed(1);
+            document.getElementById('resName').innerText = sName;
+            document.getElementById('resClass').innerText = sClass;
+            document.getElementById('resTime').innerText = timeSpent;
+
+            const resDashboard = document.getElementById('resultDashboard');
+            resDashboard.style.display = 'block';
+            resDashboard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            if (totalScore >= 8.0 && typeof confetti === 'function') {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+
+            const examTitle = "Đề số 07: Đề Kiểm Tra 15 Phút Chương 2 - Bảng Tuần Hoàn & Định Luật Tuần Hoàn (Hóa học 10)";
+            const payload = {
+                timestamp: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
+                time: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
+                submittedAt: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
+                thoiGianNop: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
+
+                // Subject & domain identifiers
+                subject: "Hóa Học",
+                monHoc: "Hóa học",
+                chuyenMuc: "vatli102.com/hoa/",
+                sourceUrl: window.location.href,
+                sourceDomain: window.location.hostname || "vatli102.com",
+
+                // Student name aliases
+                name: sName,
+                studentName: sName,
+                hoTen: sName,
+                fullName: sName,
+
+                // Class aliases
+                className: sClass,
+                studentClass: sClass,
+                class: sClass,
+                lop: sClass,
+
+                // Lesson / Exam aliases
+                lesson: examTitle,
+                examTitle: examTitle,
+                tenBai: examTitle,
+                deThi: examTitle,
+
+                // Score aliases (String)
+                score: String(totalScore),
+                totalScore: String(totalScore),
+                diem: String(totalScore),
+                diemSo: String(totalScore),
+                grade: `${totalScore}/10`,
+
+                // Correct count aliases (Mandatory String)
+                correct: `${correctCount}/${questionsData.length}`,
+                correctCount: String(correctCount),
+                soCauDung: String(correctCount),
+
+                // Question count & incorrect aliases
+                tongSoCau: String(questionsData.length),
+                soCauSai: String(wrongCount),
+                incorrectCount: String(wrongCount),
+
+                // Time spent
+                timeSpent: timeSpent,
+                thoiGian: timeSpent,
+                thoiGianLamBai: timeSpent
+            };
+
+            sendResultsToGoogleSheet(payload);
+        }
+    </script>
+</body>
+</html>
