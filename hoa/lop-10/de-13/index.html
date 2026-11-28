@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bài 13: Liên kết hydrogen và tương tác van der Waals | Hóa học 10 KNTT</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; }
+    .opt-btn:hover { border-color: #4f46e5; background-color: #eef2ff; }
+    .selected { border-color: #4f46e5 !important; background-color: #e0e7ff !important; font-weight: 600; color: #3730a3; }
+    .correct { border-color: #16a34a !important; background-color: #dcfce7 !important; color: #15803d; }
+    .wrong { border-color: #dc2626 !important; background-color: #fee2e2 !important; color: #b91c1c; }
+  </style>
+</head>
+<body class="text-slate-800 antialiased pb-24">
+
+  <!-- Top Sticky Header -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <a href="../../index.html" class="text-indigo-600 hover:text-indigo-800 transition">
+          <i class="fa-solid fa-arrow-left text-lg"></i>
+        </a>
+        <div>
+          <h1 class="text-base md:text-lg font-bold text-slate-900 leading-tight">Bài 13: Liên kết hydrogen & Tương tác van der Waals</h1>
+          <p class="text-xs text-slate-500">Hóa học 10 • Chương 3: Liên kết hóa học</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <!-- Timer -->
+        <div class="flex items-center space-x-2 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-lg text-indigo-700 font-mono font-bold text-sm">
+          <i class="fa-regular fa-clock"></i>
+          <span id="timer">45:00</span>
+        </div>
+        <!-- Progress badge -->
+        <div class="hidden sm:flex items-center space-x-1.5 bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold">
+          <span>Tiến độ:</span>
+          <span id="answered-count" class="text-indigo-600 font-bold">0</span>
+          <span>/ 22 câu</span>
+        </div>
+      </div>
+    </div>
+    <!-- Progress Bar -->
+    <div class="w-full bg-slate-100 h-1">
+      <div id="progress-bar" class="bg-indigo-600 h-1 transition-all duration-300" style="width: 0%"></div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-4xl mx-auto px-4 pt-6">
+
+    <!-- Student Info Form Card -->
+    <div id="student-card" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 mb-6">
+      <h2 class="text-lg font-bold text-slate-900 mb-3 flex items-center">
+        <i class="fa-solid fa-user-graduate text-indigo-600 mr-2"></i>
+        Thông tin học sinh làm bài
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Họ và tên học sinh *</label>
+          <input type="text" id="student-name" placeholder="Nguyễn Văn A" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Lớp học *</label>
+          <input type="text" id="student-class" placeholder="10A1" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz Intro Banner -->
+    <div class="bg-gradient-to-r from-indigo-600 to-blue-600 rounded-2xl p-6 text-white shadow-md mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="inline-block px-2.5 py-1 bg-white/20 rounded-full text-xs font-medium tracking-wide uppercase mb-2">Đề luyện tập số 13</span>
+          <h2 class="text-xl md:text-2xl font-black">Phiếu bài tập trắc nghiệm trực tuyến</h2>
+          <p class="text-indigo-100 text-sm mt-1">Gồm 16 câu TN nhiều lựa chọn (4,0đ) + 2 câu Đúng/Sai (2,0đ) + 4 câu Trả lời ngắn (1,0đ).</p>
+        </div>
+        <div class="hidden md:block text-5xl opacity-80">
+          <i class="fa-solid fa-water"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHẦN I: TRẮC NGHIỆM 4 LỰA CHỌN -->
+    <div class="mb-10">
+      <div class="flex items-center space-x-2 border-b-2 border-indigo-600 pb-2 mb-6">
+        <span class="px-2.5 py-1 bg-indigo-600 text-white rounded font-bold text-xs">PHẦN I</span>
+        <h3 class="text-base md:text-lg font-bold text-slate-900">Câu trắc nghiệm nhiều phương án lựa chọn (16 câu - 4,0 điểm)</h3>
+      </div>
+      <div id="part1-container" class="space-y-6"></div>
+    </div>
+
+    <!-- PHẦN II: TRẮC NGHIỆM ĐÚNG SAI -->
+    <div class="mb-10">
+      <div class="flex items-center space-x-2 border-b-2 border-emerald-600 pb-2 mb-6">
+        <span class="px-2.5 py-1 bg-emerald-600 text-white rounded font-bold text-xs">PHẦN II</span>
+        <h3 class="text-base md:text-lg font-bold text-slate-900">Câu trắc nghiệm Đúng / Sai (2 câu - 2,0 điểm)</h3>
+      </div>
+      <div id="part2-container" class="space-y-6"></div>
+    </div>
+
+    <!-- PHẦN III: TRẢ LỜI NGẮN -->
+    <div class="mb-10">
+      <div class="flex items-center space-x-2 border-b-2 border-amber-500 pb-2 mb-6">
+        <span class="px-2.5 py-1 bg-amber-500 text-white rounded font-bold text-xs">PHẦN III</span>
+        <h3 class="text-base md:text-lg font-bold text-slate-900">Câu trắc nghiệm trả lời ngắn (4 câu - 1,0 điểm)</h3>
+      </div>
+      <div id="part3-container" class="space-y-6"></div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mt-8 text-center flex flex-col sm:flex-row items-center justify-center gap-4">
+      <button id="btn-submit" onclick="submitQuiz()" class="w-full sm:w-auto px-8 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-lg hover:shadow-indigo-200 transition transform hover:-translate-y-0.5 text-base flex items-center justify-center space-x-2">
+        <i class="fa-solid fa-paper-plane"></i>
+        <span>Nộp bài & Chấm điểm</span>
+      </button>
+      <button id="btn-reset" onclick="resetQuiz()" class="w-full sm:w-auto px-6 py-3.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold transition text-base flex items-center justify-center space-x-2">
+        <i class="fa-solid fa-rotate-right"></i>
+        <span>Làm lại từ đầu</span>
+      </button>
+    </div>
+
+    <!-- Result Modal / Card -->
+    <div id="result-modal" class="hidden mt-10 bg-white rounded-2xl p-6 sm:p-8 shadow-xl border border-slate-200">
+      <div class="text-center pb-6 border-b border-slate-200">
+        <div id="result-badge" class="w-16 h-16 mx-auto rounded-full flex items-center justify-center text-3xl mb-3 bg-emerald-100 text-emerald-600">
+          <i class="fa-solid fa-trophy"></i>
+        </div>
+        <h3 class="text-2xl font-black text-slate-900">KẾT QUẢ BÀI LÀM</h3>
+        <p id="result-student" class="text-sm text-slate-600 mt-1">Học sinh: ... | Lớp: ...</p>
+        <div class="text-4xl font-black text-indigo-600 mt-3" id="final-score">0.0 / 7.0</div>
+        <p class="text-xs text-slate-400 mt-1">Dữ liệu đã tự động đồng bộ về hệ thống giáo viên</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-6">
+        <div class="bg-indigo-50 p-4 rounded-xl text-center">
+          <p class="text-xs text-indigo-600 font-bold uppercase">Phần 1: Trắc nghiệm</p>
+          <p class="text-xl font-bold text-indigo-900 mt-1" id="score-p1">0 / 4,0 điểm</p>
+        </div>
+        <div class="bg-emerald-50 p-4 rounded-xl text-center">
+          <p class="text-xs text-emerald-600 font-bold uppercase">Phần 2: Đúng / Sai</p>
+          <p class="text-xl font-bold text-emerald-900 mt-1" id="score-p2">0 / 2,0 điểm</p>
+        </div>
+        <div class="bg-amber-50 p-4 rounded-xl text-center">
+          <p class="text-xs text-amber-600 font-bold uppercase">Phần 3: Trả lời ngắn</p>
+          <p class="text-xl font-bold text-amber-900 mt-1" id="score-p3">0 / 1,0 điểm</p>
+        </div>
+      </div>
+
+      <div class="text-center pt-2">
+        <p class="text-sm text-slate-600 mb-4">Các câu hỏi phía trên đã được hiển thị đáp án đúng và lời giải chi tiết!</p>
+        <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="px-6 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-sm font-semibold transition">
+          <i class="fa-solid fa-arrow-up mr-1.5"></i> Cuộn lên xem giải thích chi tiết
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- QUIZ DATA & SCRIPTS -->
+  <script>
+    const quizData = {
+      p1: [{"id": 1, "question": "Liên kết hydrogen là một loại liên kết liên phân tử yếu, được hình thành giữa nguyên tử hydrogen mang điện tích dương bộ phận với", "options": ["A. một nguyên tử kim loại có bán kính nguyên tử lớn.", "B. cặp electron hóa trị chưa liên kết của một nguyên tử có độ âm điện lớn (thường là N, O, F).", "C. hạt nhân tích điện dương của nguyên tử phi kim khác.", "D. một ion dương kim loại tự do trong mạng tinh thể."], "answer": "B", "explanation": "Bản chất liên kết hydrogen là lực hút tĩnh điện giữa nguyên tử H tích điện dương bộ phận (δ+) đã liên kết cộng hóa trị với nguyên tử có độ âm điện lớn với cặp electron hóa trị chưa liên kết của nguyên tử N, O, F mang điện tích âm bộ phận (δ-)."}, {"id": 2, "question": "Trong hóa học, liên kết hydrogen liên phân tử thường được biểu diễn theo quy ước bằng kí hiệu nào sau đây?", "options": ["A. Dấu gạch nối đơn (-).", "B. Dấu mũi tên một chiều (->).", "C. Dấu ba chấm (...).", "D. Dấu gạch đôi (=)."], "answer": "C", "explanation": "Để phân biệt với liên kết cộng hóa trị (biểu diễn bằng dấu gạch nối '-'), liên kết hydrogen được quy ước biểu diễn bằng dấu ba chấm '...' (ví dụ: X-H...Y)."}, {"id": 3, "question": "Phân tử nào sau đây có khả năng tạo liên kết hydrogen liên phân tử với chính các phân tử cùng loại?", "options": ["A. Methane (CH4).", "B. Nước (H2O).", "C. Hydrogen sulfide (H2S).", "D. Phosphine (PH3)."], "answer": "B", "explanation": "Nước (H2O) có nguyên tử H liên kết trực tiếp với nguyên tử O có độ âm điện lớn (3,44) và O còn 2 cặp electron tự do nên tạo được mạng lưới liên kết hydrogen bền vững giữa các phân tử H2O."}, {"id": 4, "question": "Chất nào dưới đây KHÔNG có khả năng tạo liên kết hydrogen liên phân tử giữa các phân tử của nó?", "options": ["A. HF.", "B. NH3.", "C. CH4.", "D. C2H5OH."], "answer": "C", "explanation": "Trong phân tử CH4, độ âm điện của C (2,55) không đủ lớn để làm phân cực mạnh liên kết C-H, đồng thời C không còn cặp electron tự do, do đó CH4 không tạo được liên kết hydrogen."}, {"id": 5, "question": "Điều kiện cần để nguyên tử hydrogen có thể tham gia tạo liên kết hydrogen là nguyên tử hydrogen đó phải", "options": ["A. liên kết với bất kì nguyên tử kim loại kiềm nào.", "B. liên kết trực tiếp với một nguyên tử có độ âm điện lớn như N, O, F.", "C. tồn tại dưới dạng ion H+ tự do trong dung dịch nước.", "D. có số oxi hóa bằng 0 trong đơn chất khí H2."], "answer": "B", "explanation": "Nguyên tử H phải liên kết trực tiếp với nguyên tử có độ âm điện lớn (N, O, F) thì cặp electron chung mới bị hút mạnh về phía phi kim, làm hạt nhân H bị lộ ra và tích điện dương δ+ rõ rệt."}, {"id": 6, "question": "Trong phân tử ethanol (CH3-CH2-OH), nguyên tử hydrogen nào có khả năng tham gia tạo liên kết hydrogen với phân tử khác?", "options": ["A. Cả 6 nguyên tử hydrogen trong phân tử.", "B. 3 nguyên tử hydrogen thuộc nhóm methyl (-CH3).", "C. 2 nguyên tử hydrogen thuộc nhóm methylene (-CH2-).", "D. Duy nhất 1 nguyên tử hydrogen liên kết trực tiếp với nguyên tử oxygen trong nhóm -OH."], "answer": "D", "explanation": "Chỉ có nguyên tử H liên kết trực tiếp với nguyên tử O (độ âm điện lớn) trong nhóm hydroxyl (-OH) mới tích điện dương δ+ và tham gia tạo liên kết hydrogen; 5 nguyên tử H gắn với C không tạo được liên kết H."}, {"id": 7, "question": "Ở điều kiện chuẩn, nước (H2O, M = 18) sôi ở 100 °C trong khi hydrogen sulfide (H2S, M = 34) sôi ở -60,7 °C. Nguyên nhân chủ yếu dẫn đến sự chênh lệch lớn này là do", "options": ["A. phân tử H2O có khối lượng phân tử nhẹ hơn H2S.", "B. giữa các phân tử H2O tồn tại mạng lưới liên kết hydrogen liên phân tử bền vững.", "C. liên kết cộng hóa trị trong H2O kém bền hơn trong H2S.", "D. phân tử H2S có kích thước hình học lớn hơn phân tử H2O."], "answer": "B", "explanation": "Giữa các phân tử H2O hình thành mạng lưới liên kết hydrogen liên phân tử rất bền, cần cung cấp lượng nhiệt lớn để bẻ gãy liên kết khi chuyển sang thể hơi. Trong khi đó giữa các phân tử H2S không có liên kết hydrogen."}, {"id": 8, "question": "Hiện tượng nước đá nổi trên mặt nước lỏng được giải thích khoa học là do", "options": ["A. nước đá có khối lượng riêng lớn hơn nước lỏng.", "B. nước đá có cấu trúc mạng tinh thể rỗng dạng tứ diện làm thể tích tăng và khối lượng riêng giảm.", "C. nước đá chứa nhiều bọt khí oxygen và nitrogen bên trong.", "D. lực tương tác van der Waals trong nước đá mạnh hơn trong nước lỏng."], "answer": "B", "explanation": "Ở trạng thái rắn, mỗi phân tử H2O liên kết hydrogen với 4 phân tử H2O khác tạo cấu trúc tứ diện rỗng, thể tích tăng lên làm khối lượng riêng của nước đá nhỏ hơn nước lỏng (d_đá ≈ 0,917 g/cm³ < d_nước lỏng ≈ 1,00 g/cm³)."}, {"id": 9, "question": "Hợp chất nào sau đây có khả năng tan vô hạn trong nước ở điều kiện thường nhờ tạo được liên kết hydrogen với phân tử nước?", "options": ["A. Methane (CH4).", "B. Ethanol (C2H5OH).", "C. Benzene (C6H6).", "D. Hexane (C6H14)."], "answer": "B", "explanation": "Ethanol (C2H5OH) tạo được liên kết hydrogen liên phân tử với các phân tử nước (C2H5-O-H...O(H)-H), do đó rượu etylic tan vô hạn trong nước."}, {"id": 10, "question": "Tương tác van der Waals là lực tương tác tĩnh điện yếu giữa các phân tử, được hình thành chủ yếu do", "options": ["A. lực hút giữa các ion trái dấu trong mạng tinh thể.", "B. sự góp chung các electron hóa trị độc thân.", "C. lực hút tĩnh điện giữa các lưỡng cực cảm ứng (hoặc lưỡng cực tạm thời).", "D. lực tương tác mạnh giữa các proton trong hạt nhân nguyên tử."], "answer": "C", "explanation": "Tương tác van der Waals là lực hút tĩnh điện yếu giữa các lưỡng cực tạm thời và lưỡng cực cảm ứng xuất hiện do sự dao động chuyển động không ngừng của các electron trong phân tử."}, {"id": 11, "question": "Độ mạnh của tương tác van der Waals giữa các phân tử sẽ tăng lên khi", "options": ["A. kích thước phân tử và số electron trong phân tử tăng.", "B. khối lượng phân tử giảm và số electron giảm.", "C. nhiệt độ của môi trường tăng cao làm tăng vận tốc phân tử.", "D. khoảng cách giữa các phân tử ngày càng xa nhau."], "answer": "A", "explanation": "Khi kích thước phân tử và số electron tăng (khối lượng phân tử tăng), đám mây electron càng dễ bị biến dạng (phân cực hóa), làm cho lưỡng cực cảm ứng càng mạnh và tương tác van der Waals càng lớn."}, {"id": 12, "question": "Trong dãy khí hiếm từ helium đến xenon: He (-269 °C) -> Ne (-246 °C) -> Ar (-186 °C) -> Kr (-153 °C) -> Xe (-108 °C), nhiệt độ sôi tăng dần là do", "options": ["A. độ âm điện của các nguyên tử khí hiếm tăng dần.", "B. liên kết cộng hóa trị giữa các nguyên tử khí hiếm ngày càng mạnh.", "C. tương tác van der Waals tăng dần do số electron và khối lượng nguyên tử tăng.", "D. số liên kết hydrogen giữa các nguyên tử khí hiếm tăng lên."], "answer": "C", "explanation": "Từ He đến Xe, số electron tăng dần (từ 2 đến 54) làm tăng khả năng xuất hiện các lưỡng cực cảm ứng, tương tác van der Waals tăng mạnh làm nhiệt độ sôi tăng dần."}, {"id": 13, "question": "Ở điều kiện thường, fluorine (F2) và chlorine (Cl2) là chất khí, bromine (Br2) là chất lỏng, còn iodine (I2) là chất rắn. Quy luật biến đổi trạng thái tập hợp này được quyết định bởi", "options": ["A. năng lượng liên kết cộng hóa trị phân tử giảm dần.", "B. độ bền nhiệt của phân tử tăng dần.", "C. tương tác van der Waals giữa các phân tử tăng dần từ F2 đến I2.", "D. tính oxi hóa của các halogen tăng dần từ F2 đến I2."], "answer": "C", "explanation": "Từ F2 đến I2, khối lượng phân tử tăng mạnh (từ 38 đến 254 amu) và số electron tăng làm tương tác van der Waals giữa các phân tử tăng rõ rệt, đưa các phân tử lại gần nhau hơn, chuyển từ thể khí sang lỏng và rắn."}, {"id": 14, "question": "Hai chất pentane (CH3-CH2-CH2-CH2-CH3) và neopentane (C(CH3)4) đều có cùng công thức phân tử C5H12. Pentane có nhiệt độ sôi (36,1 °C) cao hơn nhiều so với neopentane (9,5 °C) là do", "options": ["A. pentane có phân tử khối lớn hơn neopentane.", "B. phân tử pentane có thể tạo được liên kết hydrogen liên phân tử.", "C. phân tử pentane có mạch thẳng nên diện tích tiếp xúc giữa các phân tử lớn hơn neopentane mạch nhánh.", "D. neopentane kém bền hơn nên dễ bị phân hủy thành khí."], "answer": "C", "explanation": "Cùng công thức phân tử C5H12, phân tử pentane mạch thẳng có diện tích tiếp xúc bề mặt lớn hơn nhiều so với neopentane dạng hình cầu. Diện tích tiếp xúc càng lớn thì tương tác van der Waals càng mạnh, dẫn đến nhiệt độ sôi cao hơn."}, {"id": 15, "question": "Khi sắp xếp theo thứ tự độ bền liên kết giảm dần, dãy nào dưới đây là đúng?", "options": ["A. Tương tác van der Waals > Liên kết hydrogen > Liên kết cộng hóa trị.", "B. Liên kết cộng hóa trị > Liên kết hydrogen > Tương tác van der Waals.", "C. Liên kết hydrogen > Liên kết cộng hóa trị > Tương tác van der Waals.", "D. Liên kết cộng hóa trị > Tương tác van der Waals > Liên kết hydrogen."], "answer": "B", "explanation": "Năng lượng liên kết cộng hóa trị (100 - 1000 kJ/mol) lớn hơn nhiều so với liên kết hydrogen (10 - 40 kJ/mol), và liên kết hydrogen lại bền hơn tương tác van der Waals (1 - 10 kJ/mol)."}, {"id": 16, "question": "Loài thằn lằn gecko có thể bám dính chắc chắn và chạy nhanh trên các bề mặt kính thẳng đứng nhẵn bóng mà không cần tiết ra chất keo là nhờ cơ chế nào?", "options": ["A. Lực hút từ trường giữa bàn chân và bề mặt kính.", "B. Các giác hút chân không ở đầu ngón chân.", "C. Hàng triệu sợi lông nano ở bàn chân tạo diện tích tiếp xúc khổng lồ với bề mặt, sinh ra lực tương tác van der Waals lớn.", "D. Khả năng tạo liên kết cộng hóa trị tạm thời với bề mặt kính."], "answer": "C", "explanation": "Bàn chân thằn lằn gecko có hàng triệu sợi lông siêu nhỏ (setae kích thước nano). Khi tiếp xúc với mặt kính, diện tích tiếp xúc cực lớn tạo ra tổng lực tương tác van der Waals đủ mạnh để nâng đỡ cơ thể thằn lằn."}],
+      p2: [{"id": 1, "context": "Xét ba chất phân tử phổ biến: nước (H2O, M = 18, t_sôi = 100 °C), hydrogen sulfide (H2S, M = 34, t_sôi = -60,7 °C) và ethanol (C2H5OH, M = 46, t_sôi = 78,3 °C). Các nhận định sau đây về tính chất vật lí và liên kết liên phân tử của chúng:", "statements": [{"label": "a)", "text": "Ở điều kiện thường, H2O là chất lỏng trong khi H2S là chất khí dù phân tử khối của H2O nhỏ hơn H2S.", "is_correct": true, "explanation": "Đúng. Do giữa các phân tử H2O có liên kết hydrogen liên phân tử bền vững giữ các phân tử ở trạng thái lỏng (sôi ở 100 °C), còn giữa các phân tử H2S không có liên kết H nên sôi ở -60,7 °C (trạng thái khí)."}, {"label": "b)", "text": "Phân tử H2S có khả năng tạo được liên kết hydrogen liên phân tử bền tương tự như phân tử H2O.", "is_correct": false, "explanation": "Sai. Độ âm điện của S (2,58) nhỏ hơn O (3,44) nhiều và bán kính nguyên tử S lớn, mật độ điện tích thấp nên H2S không thể tạo liên kết hydrogen bền vững."}, {"label": "c)", "text": "Ethanol (C2H5OH) có nhiệt độ sôi (78,3 °C) cao hơn nhiều so với đồng phân dimethyl ether (CH3-O-CH3, sôi ở -24 °C) do ethanol có liên kết hydrogen liên phân tử.", "is_correct": true, "explanation": "Đúng. Ethanol có nhóm -OH chứa nguyên tử H linh động liên kết với O nên tạo được liên kết hydrogen liên phân tử, trong khi dimethyl ether không có H gắn với O nên không tạo được liên kết H."}, {"label": "d)", "text": "Khi đun sôi nước đến 100 °C, các liên kết cộng hóa trị O-H trong phân tử nước bị phá vỡ tạo thành các nguyên tử H và O tự do.", "is_correct": false, "explanation": "Sai. Quá trình sôi là hiện tượng vật lí chuyển thể từ lỏng sang hơi, chỉ làm phá vỡ các liên kết hydrogen liên phân tử; các liên kết cộng hóa trị O-H bên trong phân tử H2O vẫn được bảo toàn nguyên vẹn."}]}, {"id": 2, "context": "Tương tác van der Waals là lực liên kết liên phân tử có vai trò quyết định đến trạng thái tập hợp và tính chất của nhiều hợp chất trong đời sống và tự nhiên. Xem xét các nhận định sau:", "statements": [{"label": "a)", "text": "Tương tác van der Waals xuất hiện do sự hình thành các lưỡng cực tạm thời và lưỡng cực cảm ứng giữa các phân tử.", "is_correct": true, "explanation": "Đúng. Sự chuyển động hỗn loạn không ngừng của electron làm mật độ điện tích phân bố không đều tại từng thời điểm, tạo ra các lưỡng cực tạm thời và cảm ứng hút nhau."}, {"label": "b)", "text": "Tương tác van der Waals chỉ xuất hiện giữa các phân tử có cực (phân cực), hoàn toàn không tồn tại giữa các phân tử không phân cực như N2, O2, CH4 hay các nguyên tử khí hiếm He, Ne.", "is_correct": false, "explanation": "Sai. Tương tác van der Waals tồn tại giữa mọi phân tử và nguyên tử, kể cả các chất hoàn toàn không phân cực như N2, O2, CH4, He, Ne, Ar."}, {"label": "c)", "text": "Trong dãy alkane mạch thẳng từ methane (CH4) đến butane (C4H10), nhiệt độ sôi tăng dần do khối lượng phân tử tăng làm tăng lực tương tác van der Waals.", "is_correct": true, "explanation": "Đúng. Khi mạch carbon dài ra, khối lượng phân tử và số electron tăng làm tương tác van der Waals tăng, do đó nhiệt độ sôi tăng dần (CH4: -161,5 °C -> C4H10: -0,5 °C)."}, {"label": "d)", "text": "Băng dính phỏng sinh học lấy cảm hứng từ cấu tạo bàn chân thằn lằn gecko có thể bám dính chắc chắn trên bề mặt là nhờ được bôi một lớp keo hóa học dính ướt.", "is_correct": false, "explanation": "Sai. Bàn chân gecko và băng keo phỏng sinh học hoàn toàn khô ráo, hoạt động bám dính dựa trên tổng lực tương tác van der Waals sinh ra từ hàng triệu sợi cấu trúc nano tiếp xúc với bề mặt."}]}],
+      p3: [{"id": 1, "question": "Cho các chất sau: H2O, CH4, NH3, HF, H2S, C2H5OH. Có bao nhiêu chất có khả năng tạo liên kết hydrogen liên phân tử giữa các phân tử cùng loại?", "answer": "4", "alt_answers": ["bốn"], "explanation": "Các chất tạo được liên kết hydrogen giữa các phân tử cùng loại là: H2O, NH3, HF, C2H5OH (đều chứa nguyên tử H liên kết trực tiếp với N, O, F). Có 4 chất."}, {"id": 2, "question": "Một đoạn phân tử DNA mạch kép được giữ vững cấu trúc nhờ các liên kết hydrogen giữa các cặp base nitơ. Biết đoạn DNA đó có 10 cặp Adenine – Thymine (mỗi cặp gồm 2 liên kết hydrogen) và 15 cặp Guanine – Cytosine (mỗi cặp gồm 3 liên kết hydrogen). Tổng số liên kết hydrogen có trong đoạn phân tử DNA này là bao nhiêu?", "answer": "65", "alt_answers": ["sáu mươi lăm"], "explanation": "Tổng số liên kết hydrogen = (10 * 2) + (15 * 3) = 20 + 45 = 65 liên kết."}, {"id": 3, "question": "Cho các nhận định sau:\n(1) Liên kết hydrogen yếu hơn liên kết cộng hóa trị khoảng 10 đến 20 lần.\n(2) Nước đá có khối lượng riêng lớn hơn nước lỏng nên chìm xuống đáy hồ vào mùa đông.\n(3) Tương tác van der Waals tăng khi kích thước phân tử và số electron trong phân tử tăng.\n(4) Trong cùng một dãy đồng phân alkane, phân tử càng nhiều phân nhánh thì nhiệt độ sôi càng cao.\n(5) Khả năng tạo liên kết hydrogen với nước giúp ethanol và ammonia tan rất nhiều trong nước.\nSố nhận định đúng là bao nhiêu?", "answer": "3", "alt_answers": ["ba"], "explanation": "Các nhận định đúng là (1), (3), (5). Nhận định (2) sai vì nước đá có cấu trúc rỗng nên nhẹ hơn nước lỏng và nổi trên mặt nước. Nhận định (4) sai vì phân nhánh làm giảm diện tích tiếp xúc, tương tác van der Waals giảm nên nhiệt độ sôi giảm. Vậy có 3 nhận định đúng."}, {"id": 4, "question": "Cho các hydride nhóm IVA: CH4, SiH4, GeH4, SnH4 có nhiệt độ sôi lần lượt là: -161,5 °C; -111,8 °C; -88,5 °C; -52,0 °C. Trong số các chất trên, chất có nhiệt độ sôi cao nhất chứa tổng cộng bao nhiêu nguyên tử trong một phân tử?", "answer": "5", "alt_answers": ["năm"], "explanation": "Chất có nhiệt độ sôi cao nhất là SnH4 (-52,0 °C). Một phân tử SnH4 gồm 1 nguyên tử Sn và 4 nguyên tử H => Tổng số nguyên tử = 1 + 4 = 5 nguyên tử."}]
+    };
+
+    let userAnswers = {
+      p1: {},
+      p2: {},
+      p3: {}
+    };
+
+    let isSubmitted = false;
+    let timerSeconds = 45 * 60;
+    let timerInterval = null;
+
+    // Render Quiz
+    function renderQuiz() {
+      // Part 1
+      const c1 = document.getElementById('part1-container');
+      c1.innerHTML = quizData.p1.map(q => `
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200" id="card-p1-${q.id}">
+          <div class="flex items-start space-x-2">
+            <span class="px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded font-bold text-xs mt-0.5">Câu ${q.id}</span>
+            <div class="text-sm font-medium text-slate-800 flex-1">${q.question}</div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3 pl-8">
+            ${q.options.map((opt, idx) => {
+              const letter = opt.substring(0, 1);
+              return `
+                <button type="button" onclick="selectP1(${q.id}, '${letter}')" id="opt-p1-${q.id}-${letter}" class="opt-btn w-full text-left p-2.5 rounded-lg border border-slate-200 text-sm transition">
+                  ${opt}
+                </button>
+              `;
+            }).join('')}
+          </div>
+          <div id="exp-p1-${q.id}" class="hidden mt-3 p-3 bg-indigo-50 border border-indigo-100 rounded-lg text-xs text-indigo-900">
+            <strong>Lời giải:</strong> ${q.explanation}
+          </div>
+        </div>
+      `).join('');
+
+      // Part 2
+      const c2 = document.getElementById('part2-container');
+      c2.innerHTML = quizData.p2.map(q => `
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200" id="card-p2-${q.id}">
+          <div class="flex items-start space-x-2 mb-3">
+            <span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded font-bold text-xs mt-0.5">Câu ${q.id}</span>
+            <div class="text-sm font-medium text-slate-800 flex-1">${q.context}</div>
+          </div>
+          <div class="space-y-3 pl-8">
+            ${q.statements.map(st => `
+              <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div class="text-xs sm:text-sm text-slate-700 flex-1">
+                  <span class="font-bold text-slate-900">${st.label}</span> ${st.text}
+                </div>
+                <div class="flex items-center space-x-2 shrink-0">
+                  <button type="button" onclick="selectP2(${q.id}, '${st.label}', true)" id="btn-p2-${q.id}-${st.label}-t" class="px-3 py-1 rounded text-xs font-semibold border border-slate-300 hover:bg-emerald-50">Đúng</button>
+                  <button type="button" onclick="selectP2(${q.id}, '${st.label}', false)" id="btn-p2-${q.id}-${st.label}-f" class="px-3 py-1 rounded text-xs font-semibold border border-slate-300 hover:bg-rose-50">Sai</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          <div id="exp-p2-${q.id}" class="hidden mt-3 p-3 bg-emerald-50 border border-emerald-100 rounded-lg text-xs text-emerald-900 space-y-1">
+            <strong>Lời giải chi tiết:</strong>
+            ${q.statements.map(st => `<div><strong>${st.label}</strong> (${st.is_correct ? 'ĐÚNG' : 'SAI'}): ${st.explanation}</div>`).join('')}
+          </div>
+        </div>
+      `).join('');
+
+      // Part 3
+      const c3 = document.getElementById('part3-container');
+      c3.innerHTML = quizData.p3.map(q => `
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200" id="card-p3-${q.id}">
+          <div class="flex items-start space-x-2">
+            <span class="px-2 py-0.5 bg-amber-100 text-amber-700 rounded font-bold text-xs mt-0.5">Câu ${q.id}</span>
+            <div class="text-sm font-medium text-slate-800 flex-1 whitespace-pre-line">${q.question}</div>
+          </div>
+          <div class="mt-3 pl-8 flex items-center space-x-3">
+            <label class="text-xs font-semibold text-slate-600">Đáp số của bạn:</label>
+            <input type="text" id="input-p3-${q.id}" onchange="inputP3(${q.id}, this.value)" placeholder="Ví dụ: 4 hoặc 65" class="px-3 py-1.5 border border-slate-300 rounded-lg text-sm w-44 focus:outline-none focus:ring-2 focus:ring-amber-500">
+          </div>
+          <div id="exp-p3-${q.id}" class="hidden mt-3 p-3 bg-amber-50 border border-amber-100 rounded-lg text-xs text-amber-900">
+            <strong>Đáp án chuẩn: ${q.answer}</strong> | ${q.explanation}
+          </div>
+        </div>
+      `).join('');
+
+      if (window.MathJax) {
+        window.MathJax.typesetPromise();
+      }
+    }
+
+    function selectP1(qid, letter) {
+      if (isSubmitted) return;
+      userAnswers.p1[qid] = letter;
+      ['A', 'B', 'C', 'D'].forEach(l => {
+        const btn = document.getElementById(`opt-p1-${qid}-${l}`);
+        if (btn) btn.classList.toggle('selected', l === letter);
+      });
+      updateProgress();
+    }
+
+    function selectP2(qid, label, val) {
+      if (isSubmitted) return;
+      if (!userAnswers.p2[qid]) userAnswers.p2[qid] = {};
+      userAnswers.p2[qid][label] = val;
+
+      const btnT = document.getElementById(`btn-p2-${qid}-${label}-t`);
+      const btnF = document.getElementById(`btn-p2-${qid}-${label}-f`);
+      if (val) {
+        btnT.classList.add('bg-emerald-600', 'text-white', 'border-emerald-600');
+        btnF.classList.remove('bg-rose-600', 'text-white', 'border-rose-600');
+      } else {
+        btnF.classList.add('bg-rose-600', 'text-white', 'border-rose-600');
+        btnT.classList.remove('bg-emerald-600', 'text-white', 'border-emerald-600');
+      }
+      updateProgress();
+    }
+
+    function inputP3(qid, val) {
+      if (isSubmitted) return;
+      userAnswers.p3[qid] = val.trim();
+      updateProgress();
+    }
+
+    function updateProgress() {
+      let count = 0;
+      count += Object.keys(userAnswers.p1).length;
+      Object.values(userAnswers.p2).forEach(obj => {
+        if (Object.keys(obj).length === 4) count++;
+      });
+      count += Object.keys(userAnswers.p3).filter(k => userAnswers.p3[k] !== '').length;
+
+      document.getElementById('answered-count').innerText = count;
+      const pct = Math.round((count / 22) * 100);
+      document.getElementById('progress-bar').style.width = pct + '%';
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        timerSeconds--;
+        if (timerSeconds <= 0) {
+          clearInterval(timerInterval);
+          submitQuiz();
+          return;
+        }
+        const mins = Math.floor(timerSeconds / 60);
+        const secs = timerSeconds % 60;
+        document.getElementById('timer').innerText = 
+          `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      }, 1000);
+    }
+
+    function submitQuiz() {
+      if (isSubmitted) return;
+      const name = document.getElementById('student-name').value.trim() || 'Học sinh ẩn danh';
+      const className = document.getElementById('student-class').value.trim() || '10';
+
+      isSubmitted = true;
+      clearInterval(timerInterval);
+
+      // Chấm điểm Phần 1 (16 câu, mỗi câu 0,25đ = 4,0đ)
+      let scoreP1 = 0;
+      quizData.p1.forEach(q => {
+        const userA = userAnswers.p1[q.id];
+        const isRight = userA === q.answer;
+        if (isRight) scoreP1 += 0.25;
+
+        // Visual
+        ['A', 'B', 'C', 'D'].forEach(l => {
+          const b = document.getElementById(`opt-p1-${q.id}-${l}`);
+          if (l === q.answer) b.classList.add('correct');
+          else if (l === userA) b.classList.add('wrong');
+        });
+        document.getElementById(`exp-p1-${q.id}`).classList.remove('hidden');
+      });
+
+      // Chấm điểm Phần 2 (2 câu, quy đổi 0.1, 0.25, 0.5, 1.0)
+      let scoreP2 = 0;
+      quizData.p2.forEach(q => {
+        let rightStatements = 0;
+        const uObj = userAnswers.p2[q.id] || {};
+        q.statements.forEach(st => {
+          const uVal = uObj[st.label];
+          if (uVal === st.is_correct) rightStatements++;
+        });
+
+        if (rightStatements === 1) scoreP2 += 0.1;
+        else if (rightStatements === 2) scoreP2 += 0.25;
+        else if (rightStatements === 3) scoreP2 += 0.5;
+        else if (rightStatements === 4) scoreP2 += 1.0;
+
+        document.getElementById(`exp-p2-${q.id}`).classList.remove('hidden');
+      });
+
+      // Chấm điểm Phần 3 (4 câu, mỗi câu 0,25đ = 1,0đ)
+      let scoreP3 = 0;
+      quizData.p3.forEach(q => {
+        const userVal = (userAnswers.p3[q.id] || '').replace(',', '.');
+        const standardAns = q.answer.replace(',', '.');
+        const altAnswers = (q.alt_answers || []).map(a => a.replace(',', '.'));
+        const isRight = userVal === standardAns || altAnswers.includes(userVal);
+        if (isRight) scoreP3 += 0.25;
+
+        const inp = document.getElementById(`input-p3-${q.id}`);
+        if (isRight) {
+          inp.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-900');
+        } else {
+          inp.classList.add('border-rose-500', 'bg-rose-50', 'text-rose-900');
+        }
+        document.getElementById(`exp-p3-${q.id}`).classList.remove('hidden');
+      });
+
+      const totalScore = Math.round((scoreP1 + scoreP2 + scoreP3) * 100) / 100;
+
+      // Render Modal Result (Trắc nghiệm 7.0 điểm)
+      document.getElementById('result-student').innerText = `Học sinh: ${name} • Lớp: ${className}`;
+      document.getElementById('final-score').innerText = `${totalScore.toFixed(2)} / 7.0`;
+      document.getElementById('score-p1').innerText = `${scoreP1.toFixed(2)} / 4,0 điểm`;
+      document.getElementById('score-p2').innerText = `${scoreP2.toFixed(2)} / 2,0 điểm`;
+      document.getElementById('score-p3').innerText = `${scoreP3.toFixed(2)} / 1,0 điểm`;
+      document.getElementById('result-modal').classList.remove('hidden');
+
+      // Scroll to result
+      document.getElementById('result-modal').scrollIntoView({ behavior: 'smooth' });
+
+      // Sync Google Sheets
+      syncToGoogleSheet(name, className, totalScore, scoreP1, scoreP2, scoreP3);
+    }
+
+    function syncToGoogleSheet(name, className, total, s1, s2, s3) {
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbwRRiM81mghvA7cInvJgb4rPLzWOAE3s44wer0BJcURQ4hWwoykS19pkNQ9LyzH6Q8lTQ/exec';
+      const payload = {
+        timestamp: new Date().toISOString(),
+        bai: 'Bài 13: Liên kết hydrogen và tương tác van der Waals',
+        mon: 'Hóa học 10 (KNTT)',
+        hoTen: name,
+        lop: className,
+        diemTong: total,
+        diemP1: s1,
+        diemP2: s2,
+        diemP3: s3,
+        thoiGianLam: (45 * 60 - timerSeconds) + ' giây'
+      };
+
+      fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(err => console.error('Lỗi sync Google Sheets:', err));
+    }
+
+    function resetQuiz() {
+      if (confirm('Bạn có chắc muốn làm lại toàn bộ bài kiểm tra?')) {
+        window.location.reload();
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderQuiz();
+      startTimer();
+    });
+  </script>
+</body>
+</html>
